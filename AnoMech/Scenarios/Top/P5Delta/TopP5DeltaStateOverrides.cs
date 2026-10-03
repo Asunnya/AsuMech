@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using AnoMech.Core.Game.Party;
 
@@ -21,6 +22,13 @@ public sealed class TopP5DeltaStateOverrides
     public PerRoleSetting<bool> Monitor { get; set; } = new();
     public PerRoleSetting<HelloWorldOption> HelloWorld { get; set; } = new();
     public PerRoleSetting<bool> BeyondDefence { get; set; } = new();
+
+    // Headless runs pin the rest of the roll. Internal, so settings sync and the summary skip them.
+    internal IReadOnlyList<PartyRole>? TetherOrder { get; set; }
+    internal IReadOnlyList<uint>? FistColors { get; set; }
+    internal IReadOnlyList<Side>? ArmHandedness { get; set; }
+    internal Side? OmegaMonitorSide { get; set; }
+    internal Side? PlayerMonitorSide { get; set; }
 
     // The band a seat actually lands in once its other choices are taken into account. Mirrors
     // TopP5DeltaState's own resolution: Beyond Defence is eaten close inner, and the monitor and

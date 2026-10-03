@@ -39,7 +39,7 @@ public record TopUtils(SimWorld World)
                                           Placement: new Placement(pos, 0f)));
         if (helper != null) World.Events.Add(Duration.MonitorHelperLifetime, helper.Despawn);
         helper?.Cast(ActionId.HelloWorldFail);
-        World.Party.WipeAllPlayers("Hello World Fail");
+        World.Party.WipeAllPlayers(ActionLookup.Name(ActionId.HelloWorldFail));
     }
 
     public static IReadOnlyList<Waymark> TopWaymarks => WaymarkPresets.Ring(13.63f);
@@ -169,6 +169,7 @@ public record TopUtils(SimWorld World)
             if (utils.IsDamageLethal(soaker, ruin: false))
             {
                 Plugin.Log.Info($"Hit: {(soaker as ISimPartyMember)?.Role} by Hello World (lethal) → raidwide fail");
+                soaker.Die(ActionLookup.Name(actionId));
                 utils.HelloWorldFail(pos);
                 return;
             }

@@ -277,7 +277,7 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
         if (tether.A is not { } a || tether.B is not { } b) return;
         Plugin.Log.Info($"Tether failed {tether.TetherId}");
         tether.Resolved = true;
-        party.WipeAllPlayers("HW Tether Fail (raidwide wipe)");
+        party.WipeAllPlayers(ActionLookup.Name(ActionId.HwTetherFail));
         SpawnHwTetherHelper(a.Position, ActionId.HwTetherFail);
         SpawnHwTetherHelper(b.Position, ActionId.HwTetherFail);
         tether.Despawn();
@@ -300,7 +300,7 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
 
     private void ApplyHwTetherBreakHit(SimCharacter player)
     {
-        if (IsDamageLethal(player, magic: true, comeRuin: 3)) { player.Die("HW Tether Break"); return; }
+        if (IsDamageLethal(player, magic: true, comeRuin: 3)) { player.Die(ActionLookup.Name(ActionId.HwTetherBreak)); return; }
         player.AddStatus(StatusId.TriceComeRuin, Duration.HwTetherBreakStack);
         player.AddStatus(StatusId.MagicVulnerabilityUpMini, Duration.HwTetherBreakStack);
     }
@@ -347,13 +347,13 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
              .ForEach(hit =>
              {
                  Plugin.Log.Info($"Hit: {(hit as ISimPartyMember)?.Role} by Rocket Punch AOE (lethal)");
-                 hit.Die("Rocket Punch AOE");
+                 hit.Die(ActionLookup.Name(ActionId.DeltaExplosion));
              });
         state.PunchTargets = null;
         if (state.PunchExplosionUnmitigated)
         {
             Plugin.Log.Info("Hit: ALL PARTY by Rocket Punch — unmitigated explosion (lethal raidwide)");
-            party.WipeAllPlayers("Rocket Punch — unmitigated explosion");
+            party.WipeAllPlayers(ActionLookup.Name(ActionId.DeltaUnmitigatedExplosion));
         }
     }
 
@@ -466,14 +466,11 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
             aoePositions.Add(m.Position);
         playerMonitor.RemoveStatus(state.PlayerMonitorSide.MonitorDebuffId);
 
-        var hit = new HashSet<SimCharacter>();
+        // Each circle hits on its own: a second one lands on the first one's Magic Vulnerability Up.
         foreach (var pos in aoePositions)
-            foreach (var member in party.Find.InsideCircle(pos, Geometry.OversampledWaveCannonAoeRadius))
-                hit.Add(member);
-
-        foreach (var member in hit)
+        foreach (var member in party.Find.InsideCircle(pos, Geometry.OversampledWaveCannonAoeRadius))
         {
-            if (!member.IsActive) continue;
+            if (!member.IsAlive()) continue;
             var lethal = IsDamageLethal(member, magic: true, comeRuin: 2);
             Plugin.Log.Info($"Hit: {(member as ISimPartyMember)?.Role} by Oversampled Wave Cannon ({(lethal ? "lethal" : "non-lethal")})");
             if (lethal)

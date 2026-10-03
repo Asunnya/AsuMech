@@ -87,6 +87,7 @@ public sealed class TopP5DeltaState
         var beyond = Requests(overrides.BeyondDefence, playerRole);
 
         SeatTethers(rng, roles, tethers, monitors, hellos, beyond);
+        if (overrides.TetherOrder is { } order) roles = order.ToArray();
         TetherOrder = roles;
 
         // Wanting Near or Far is a claim on that one slot; No refuses both.
@@ -102,18 +103,21 @@ public sealed class TopP5DeltaState
 
         EyeSpawn = overrides.EyeSpawn ?? (rng.Next(2) == 0 ? NorthSouth.North : NorthSouth.South);
         FistRotations = ShuffleInPlace(new[] { 1, 1, 1, -1, -1, -1 }, rng);
-        ArmHandedness = ShuffleSides(rng);
+        var arms = ShuffleSides(rng);
+        ArmHandedness = overrides.ArmHandedness ?? arms;
 
         var colors = new uint[8];
         var first = ShuffleInPlace(new[] { BNpcBaseId.RocketPunchYellow, BNpcBaseId.RocketPunchYellow, BNpcBaseId.RocketPunchBlue, BNpcBaseId.RocketPunchBlue }, rng);
         var second = ShuffleInPlace(new[] { BNpcBaseId.RocketPunchYellow, BNpcBaseId.RocketPunchYellow, BNpcBaseId.RocketPunchBlue, BNpcBaseId.RocketPunchBlue }, rng);
         Array.Copy(first, 0, colors, 0, 4);
         Array.Copy(second, 0, colors, 4, 4);
-        FistColors = colors;
+        FistColors = overrides.FistColors ?? colors;
 
         SwivelCannonSide = overrides.SwivelCannonSide ?? RandomSide(rng);
-        OmegaMonitorSide = RandomSide(rng);
-        PlayerMonitorSide = RandomSide(rng);
+        var omegaMonitor = RandomSide(rng);
+        var playerMonitor = RandomSide(rng);
+        OmegaMonitorSide = overrides.OmegaMonitorSide ?? omegaMonitor;
+        PlayerMonitorSide = overrides.PlayerMonitorSide ?? playerMonitor;
 
         PlayerMonitorIndex = PickCloseSlot(rng, roles, monitors);
 
