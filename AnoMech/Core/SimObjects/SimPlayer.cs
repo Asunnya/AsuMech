@@ -11,6 +11,8 @@ namespace AnoMech.Core.SimObjects;
 public sealed class SimPlayer(Coordinates coordinates) : SimCharacter(coordinates), ISimPartyMember
 {
     private const ushort StunStatusId = 896;  // "Down for the Count" (896) — IsPermanent + LockControl variant.
+    // Out-of-combat speed buff; it only ends on entering battle, which the firewalled server never signals.
+    private const ushort JogStatusId = 4209;
 
     // The real HP bar is only touched on a scenario KO (a 1-HP sliver), restored in RestoreHpBar.
     public void DropHpBar()
@@ -84,6 +86,7 @@ public sealed class SimPlayer(Coordinates coordinates) : SimCharacter(coordinate
     public override void Tick(float deltaSeconds)
     {
         base.Tick(deltaSeconds);
+        if (Proxy is { Exists: true } chara) chara.RemoveStatus(JogStatusId);
         SampleActivity();
         SyncInputLock();
     }
