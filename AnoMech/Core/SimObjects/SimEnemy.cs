@@ -1,3 +1,4 @@
+using AnoMech.Core.EnemyActions;
 using AnoMech.Core.Game;
 using AnoMech.Core.Native.Interfaces;
 using FFXIVClientStructs.FFXIV.Client.Game;
@@ -69,6 +70,7 @@ public sealed class SimEnemy : SimNpc
     // Cast bar, action-effect release, omen telegraph, and animation lock live in
     // SimCast. SimEnemy just converts target coords to world space and reads IsBusy.
     private readonly SimCast cast;
+    private readonly EnemyActionHandler actions;
 
     // Peer-only smoothing for ApplyNetworkPosition, same model as SimNetworkPuppet: the
     // catch-up speed is a floor once the real snapshot interval is known, anything beyond
@@ -228,13 +230,14 @@ public sealed class SimEnemy : SimNpc
     // The last SetVisible value; IsEngineVisible lags behind the async model load.
     public bool Visible => desiredVisible;
 
-    internal SimEnemy(IBattleCharaProxy proxy, uint bNpcBaseId, string displayName, EnemyListMode enemyListMode, Coordinates coordinates, bool packetSpawned = false) : base(proxy, coordinates, pendingDraw: !packetSpawned)
+    internal SimEnemy(IBattleCharaProxy proxy, uint bNpcBaseId, string displayName, EnemyListMode enemyListMode, SimWorld world, bool packetSpawned = false) : base(proxy, world.Coordinates, pendingDraw: !packetSpawned)
     {
         BNpcBaseId = bNpcBaseId;
         DisplayName = displayName;
         EnemyListMode = enemyListMode;
         this.packetSpawned = packetSpawned;
-        cast = new SimCast(this, coordinates);
+        cast = new SimCast(this, world.Coordinates);
+        actions = new EnemyActionHandler(this, world);
     }
 
     // Created by the engine's own NpcSpawn handler (SpawnFromPacket); the engine owns its draw
@@ -263,7 +266,7 @@ public sealed class SimEnemy : SimNpc
         if (config.NpcSpawnTemplate is not null) return SpawnFromPacket(config, world);
 
         if (Natives.BattleCharas.SpawnBattleNpc(config, world.Coordinates.ToGlobal(config.Placement)) is not { } chara) return null;
-        var enemy = new SimEnemy(chara, config.BNpcBaseId, chara.Name, config.EnemyList, world.Coordinates)
+        var enemy = new SimEnemy(chara, config.BNpcBaseId, chara.Name, config.EnemyList, world)
         {
             SpawnConfig = config,
         };
@@ -281,7 +284,7 @@ public sealed class SimEnemy : SimNpc
         if (Natives.BattleCharas.SpawnBattleNpcFromPacket(config, world.Coordinates.ToGlobal(config.Placement), out var entityId) is not { } chara)
             return null;
         var displayName = Natives.Data.BNpcName(config.NameId) ?? $"BNpc {config.BNpcBaseId:X}";
-        var enemy = new SimEnemy(chara, config.BNpcBaseId, displayName, config.EnemyList, world.Coordinates, packetSpawned: true)
+        var enemy = new SimEnemy(chara, config.BNpcBaseId, displayName, config.EnemyList, world, packetSpawned: true)
         {
             SpawnConfig = config,
             packetEntityId = entityId,
@@ -630,6 +633,14 @@ public sealed class SimEnemy : SimNpc
         // targetLocation stays scenario-local; SimCast lifts to world at native boundaries.
         return cast.Start(actionId, targetLocation, castSeconds, targetId, omenDelay, omenRotate, animationVariation, animationLock, fireDelay);
     }
+
+    public void Cast(EnemyAction action) => actions.Start(action, null, null);
+
+    // A null target casts on the caster.
+    public void Cast(EnemyAction action, SimCharacter? target) => actions.Start(action, target, null);
+
+    // Scenario-local ground target, fixed at the call.
+    public void Cast(EnemyAction action, Vector3 location) => actions.Start(action, null, location);
 
     public void NativeCast(uint actionId, ActionType actionType, float omenDelay, float castTime, bool interruptible, float? rotation = null, Vector3? position = null, GameObjectId? targetId = null, GameObjectId? ballistaId = null)
     {

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AnoMech.Core;
+using AnoMech.Core.EnemyActions;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.Native.Interfaces;
@@ -240,19 +241,4 @@ public class DamageSolver
         SetStatuses(type, statuses);
         foreach (var status in statuses) vulnUpRequiredMitigation[status] = requiredMitigation;
     }
-}
-
-public enum DamageType
-{
-    Lethal,
-    Any,
-    Magic,
-    TankBuster,
-    Fire,
-    Ice,
-    Lightning,
-    Earth,
-    Wind,
-    Black,
-    White,
 }

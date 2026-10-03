@@ -8,6 +8,7 @@ using AnoMech.Core.Map;
 using AnoMech.Core.SimObjects;
 using AnoMech.Multiplayer;
 using static AnoMech.Scenarios.Top.TopConstants;
+using Actions = AnoMech.Scenarios.Top.P2PartySynergy.TopP2PartySynergyActions;
 
 namespace AnoMech.Scenarios.Top.P2PartySynergy;
 
@@ -31,7 +32,6 @@ public sealed class TopP2PartySynergyScenario : IMultiplayerReplayable
     private SimParty party = null!;
     private TopP2PartySynergyState state = null!;
     private TopUtils topUtils = null!;
-    private DamageSolver damage = null!;
 
     // Exposed so MultiplayerManager can read the AI-relevant subset after a host Start and
     // broadcast it -- see UmadP3BlackHoleScenario.LastState for the pattern.
@@ -44,9 +44,6 @@ public sealed class TopP2PartySynergyScenario : IMultiplayerReplayable
         state = new TopP2PartySynergyState(world.Rng, world.Party, settingsWindow.Overrides);
         LastState = state;
         topUtils = new TopUtils(world);
-        damage = new DamageSolver(world.Party);
-        damage.SetStatuses(DamageType.Any, StatusId.VulnerabilityUp);
-        damage.SetStatuses(DamageType.Magic, StatusId.MagicVulnerabilityUp);
         var solo = selectedAi is null;
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<TopP2PartySynergyState>)AiStrats[idx]).Run(state, world);
@@ -136,8 +133,7 @@ public sealed class TopP2PartySynergyScenario : IMultiplayerReplayable
         world.Events.Add(24.82f, () => omega_4000A4E9?.Cast(ActionId.Unknown7b20, castSeconds: 0f, targetId: omega_4000A4E9?.GameObjectId));
         world.Events.Add(25.46f, () => omega_4000A4E9?.SetVisible(true));
         world.Events.Add(25.44f, () => omega_4000A4E9?.SetModelState((byte)0x0B));
-        world.Events.Add(28.42f, () => omega_4000A4E9?.Cast(ActionId.Discharger, castSeconds: 0f, targetId: party.Get(PartyRole.RegenHealer)?.GameObjectId));
-        world.Events.Add(28.92f, () => { if (omega_4000A4E9 != null) world.Party.Knockback(omega_4000A4E9.Position, KnockbackId.Discharger); });
+        world.Events.Add(28.42f, () => omega_4000A4E9?.Cast(Actions.Discharger, party.Get(PartyRole.RegenHealer)));
         world.Events.Add(36.50f, () => omega_4000A4E9?.SetTargetable(true));
     }
 
@@ -166,8 +162,7 @@ public sealed class TopP2PartySynergyScenario : IMultiplayerReplayable
         // world.Events.Add(24.04f, () => omega_4000A4E8?.SetVisible(true));
         world.Events.Add(24.82f, () => omega_4000A4E8?.Cast(ActionId.Unknown7b1f, castSeconds: 0f, targetId: omega_4000A4E8?.GameObjectId));
         world.Events.Add(25.62f, () => omega_4000A4E8?.SetModelState((byte)0x0B));
-        world.Events.Add(31.82f, () => omega_4000A4E8?.Cast(ActionId.EfficientBladework, castSeconds: 1.200f, targetId: omega_4000A4E8?.GameObjectId, omenDelay: Duration.OmegaAttackOmenDelay));
-        world.Events.Add(33.02f, () => topUtils.ResolveOmegaAttack(omega_4000A4E8 ,ActionId.EfficientBladework));
+        world.Events.Add(31.82f, () => omega_4000A4E8?.Cast(Actions.EfficientBladework));
         world.Events.Add(36.50f, () => omega_4000A4E8?.SetTargetable(true));
     }
 
@@ -209,8 +204,7 @@ public sealed class TopP2PartySynergyScenario : IMultiplayerReplayable
             world.Events.Add(10.07f, () => omega_M_4000A4FF?.SetPosition(position));
             world.Events.Add(16.17f, () => omega_M_4000A4FF?.PlayActionTimeline(TimelineId.Spawn));
             world.Events.Add(16.23f, () => omega_M_4000A4FF?.SetVisible(true));
-            world.Events.Add(31.82f, () => omega_M_4000A4FF?.Cast(ActionId.EfficientBladework, castSeconds: 1.200f, targetId: omega_M_4000A4FF?.GameObjectId, omenDelay: Duration.OmegaAttackOmenDelay));
-            world.Events.Add(33.02f, () => topUtils.ResolveOmegaAttack(omega_M_4000A4FF, ActionId.EfficientBladework));
+            world.Events.Add(31.82f, () => omega_M_4000A4FF?.Cast(Actions.EfficientBladework));
             world.Events.Add(36.45f, () => omega_M_4000A4FF?.PlayActionTimeline(TimelineId.WarpOut));
             // world.Events.Add(37.95f, () => omega_M_4000A4FF?.SetVisible(false));
             world.Events.Add(38.71f, () => omega_M_4000A4FF?.Despawn());
@@ -274,8 +268,7 @@ public sealed class TopP2PartySynergyScenario : IMultiplayerReplayable
         {
             if (state.Order.Get(i) is not {} character) continue;
             world.Events.Add(0f, () => omega_4000A405 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.OmegaHelper, NameId: BNpcNameId.OmegaBeetle, Level: 1, Targetable: false, EnemyList: EnemyListMode.Never, IsVisible: false, Placement: new Placement(new Vector3(0.000f, 0.000f, -10.000f), -0.000f))));
-            world.Events.Add(21.74f, () => omega_4000A405?.Cast(ActionId.OptimizedFireIII, castSeconds: 0f, targetId: character.GameObjectId));
-            world.Events.Add(21.74f, () => damage.Resolve(character, ActionId.OptimizedFireIII, [DamageType.Magic], [(StatusId.MagicVulnerabilityUp, 1.96f)]));
+            world.Events.Add(21.74f, () => omega_4000A405?.Cast(Actions.OptimizedFireIII, character));
         }
     }
 
@@ -286,8 +279,7 @@ public sealed class TopP2PartySynergyScenario : IMultiplayerReplayable
             SimEnemy? omega_M_4000A40B_3 = null;
             if (state.Stacks.Get(i) is not {} character) continue;
             world.Events.Add(33.21f, () => omega_M_4000A40B_3 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.OmegaHelper, NameId: BNpcNameId.OmegaM, Level: 1, Targetable: false, EnemyList: EnemyListMode.Never, IsVisible: false, Placement: new Placement(new Vector3(0.000f, -0.000f, 0.000f), -0.000f))));
-            world.Events.Add(33.25f, () => omega_M_4000A40B_3?.Cast(ActionId.Spotlight, castSeconds: 0f, targetId: character.GameObjectId));
-            world.Events.Add(33.25f, () => damage.Resolve(character, ActionId.Spotlight, [DamageType.Magic], [(StatusId.MagicVulnerabilityUp, 1.96f)], stackMinTargets: 4));
+            world.Events.Add(33.25f, () => omega_M_4000A40B_3?.Cast(Actions.Spotlight, character));
         }
     }
 

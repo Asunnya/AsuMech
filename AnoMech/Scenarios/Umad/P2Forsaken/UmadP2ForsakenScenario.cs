@@ -11,6 +11,7 @@
 // Suppressed 261|Change keys (state-sync churn — no C# emission):
 //   CurrentMP, Heading, MaxHP, NPCTargetID, PCTargetID, PosX, PosY, PosZ
 
+using AnoMech.Core.EnemyActions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

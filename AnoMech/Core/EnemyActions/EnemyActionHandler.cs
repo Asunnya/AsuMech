@@ -1,0 +1,76 @@
+using System;
+using System.Linq;
+using System.Numerics;
+using AnoMech.Core.Game;
+using AnoMech.Core.Native.Interfaces;
+using AnoMech.Core.SimObjects;
+using FFXIVClientStructs.FFXIV.Client.Game;
+using FFXIVClientStructs.FFXIV.Client.Game.Object;
+
+namespace AnoMech.Core.EnemyActions;
+
+// Runs EnemyActions for one SimEnemy: the visuals go through SimEnemy.NativeCast /
+// NativeActionEffect, everything mechanical goes on the scenario's EventScheduler.
+internal sealed class EnemyActionHandler(SimEnemy caster, SimWorld world)
+{
+    // `target` and `location` are exclusive; neither = centred on the caster.
+    public void Start(EnemyAction action, SimCharacter? target, Vector3? location)
+    {
+        var id = action.ActionId;
+        var castTime = action.Cast.CastTime ?? Natives.Data.Action(id)?.CastSeconds ?? 0f;
+        GameObjectId? castTarget = location is null ? (target ?? caster).GameObjectId : null;
+        DiagnosticLog.Info(
+            $"[EnemyAction] Cast: {ActionLookup.Name(id)} ({id}) by {caster.DisplayName} from ({caster.Position.X:F1},{caster.Position.Z:F1}) castSeconds={castTime:F2}.");
+
+        if (castTime > 0f)
+            caster.NativeCast(id, ActionType.Action, action.Cast.OmenDelay, castTime, interruptible: false, position: location, targetId: castTarget);
+
+        Schedule(castTime + action.Timing.VfxOffset, () => caster.NativeActionEffect(
+            id, action.Cast.AnimationLock, (ushort)id, action.Cast.Variation, ActionType.Action, 0,
+            position: location ?? caster.Position, animationTargetId: castTarget));
+        Schedule(castTime + action.Timing.ResolveOffset, () => Resolve(action, target, location));
+    }
+
+    private void Resolve(EnemyAction action, SimCharacter? target, Vector3? location)
+    {
+        var party = world.Party;
+        var origin = target?.Placement()
+                     ?? (location is { } at ? new Placement(at, caster.Rotation) : caster.Placement());
+        var ctx = new EnemyActionContext(action, caster, target, origin, party);
+
+        var query = new AoeQuery(action.ActionId, origin, size: action.Area.Size);
+#if DEBUG
+        AnoMech.Windows.DamageDebugWindow.Instance?.Record(query);
+#endif
+        var hits = query.Run(party.Find);
+        if (action.Area.AdjustTargets is { } adjust) hits = adjust(ctx, hits);
+        ctx.Hits = hits;
+        DiagnosticLog.Info(
+            $"[EnemyAction] Resolve: {ActionLookup.Name(action.ActionId)} at ({origin.Position.X:F1},{origin.Position.Z:F1}) rot={origin.Rotation:F3} -- {hits.Count} target(s): "
+            + string.Join(", ", hits.Select(t => (t as ISimPartyMember)?.Role.ToString() ?? "?")));
+
+        foreach (var effect in action.Effects)
+            effect.Apply(ctx);
+
+        var name = ActionLookup.Name(action.ActionId);
+        foreach (var (who, amount, icon) in ctx.DamageShown)
+            Schedule(action.Timing.DamageDelay, () => ShowFlyText(who, amount, icon, name));
+        foreach (var (who, cause) in ctx.Killed)
+            Schedule(action.Timing.DeathDelay, () => who.Die(cause));
+    }
+
+    // The game shows a player only the damage they take, never a party member's.
+    private static void ShowFlyText(SimCharacter who, uint amount, FlyTextIcon icon, string name)
+    {
+        if (who is SimPlayer && who.IsAlive() && who.Proxy is { Exists: true } chara)
+            chara.ShowFlyText(amount, name, (uint)icon);
+    }
+
+    // Anything due now runs inline: an instant action resolves inside the Cast() call, so casts
+    // issued in one timeline event see each other's statuses in call order.
+    private void Schedule(float delay, Action run)
+    {
+        if (delay <= 0f) run();
+        else world.Events.Add(delay, run);
+    }
+}

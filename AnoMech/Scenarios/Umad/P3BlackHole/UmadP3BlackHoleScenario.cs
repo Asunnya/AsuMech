@@ -3,6 +3,7 @@
 //   1001875C MT, 10056A3A OT, 10019262 H1, 10018A1B H2,
 //   10018BF0 M1, 10018DC8 M2, 100188C6 R1, 1004E71C C.
 
+using AnoMech.Core.EnemyActions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
