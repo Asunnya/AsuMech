@@ -1,5 +1,5 @@
 using System;
-using Lumina.Excel.Sheets;
+using AnoMech.Core.Native.Interfaces;
 
 namespace AnoMech.Scenarios.Dsr;
 
@@ -15,7 +15,7 @@ internal static unsafe class DsrNpcSpawn
 
     public static byte[]? Build(uint baseId, uint nameId, uint maxHp)
     {
-        if (!Plugin.DataManager.GetExcelSheet<BNpcBase>().TryGetRow(baseId, out var bnpc)) return null;
+        if (Natives.Data.BNpcBase(baseId) is not { } bnpc) return null;
         var bytes = new byte[PacketSize];
         fixed (byte* packet = bytes)
         {
@@ -34,28 +34,24 @@ internal static unsafe class DsrNpcSpawn
             *(uint*)(c + 0x54) = 0x40008;
             *(ushort*)(c + 0x5A) = 10000;
             *(ushort*)(c + 0x5C) = 10000;
-            *(ushort*)(c + 0x60) = (ushort)bnpc.ModelChara.RowId;
+            *(ushort*)(c + 0x60) = (ushort)bnpc.ModelChara;
             c[0x6F] = 1;
             c[0x71] = 2;
             c[0x72] = 5;
             c[0x75] = 4;
             c[0x76] = DsrConstants.Level;
-            if (bnpc.NpcEquip.ValueNullable is { } equip) WriteGear(c, equip);
+            if (bnpc.NpcEquip != 0 && Natives.Data.NpcEquip(bnpc.NpcEquip) is { } equip) WriteGear(c, equip);
         }
         return bytes;
     }
 
-    private static void WriteGear(byte* c, NpcEquip equip)
+    private static void WriteGear(byte* c, NpcEquipRow equip)
     {
-        *(ulong*)(c + 0x10) = Weapon(equip.ModelMainHand, equip.DyeMainHand.RowId);
-        *(ulong*)(c + 0x18) = Weapon(equip.ModelOffHand, equip.DyeOffHand.RowId);
-        uint[] models = [equip.ModelHead, equip.ModelBody, equip.ModelHands, equip.ModelLegs, equip.ModelFeet,
-            equip.ModelEars, equip.ModelNeck, equip.ModelWrists, equip.ModelRightRing, equip.ModelLeftRing];
-        uint[] dyes = [equip.DyeHead.RowId, equip.DyeBody.RowId, equip.DyeHands.RowId, equip.DyeLegs.RowId, equip.DyeFeet.RowId,
-            equip.DyeEars.RowId, equip.DyeNeck.RowId, equip.DyeWrists.RowId, equip.DyeRightRing.RowId, equip.DyeLeftRing.RowId];
+        *(ulong*)(c + 0x10) = Weapon(equip.ModelMainHand, equip.DyeMainHand);
+        *(ulong*)(c + 0x18) = Weapon(equip.ModelOffHand, equip.DyeOffHand);
         var slots = (uint*)(c + 0x1FC);
-        for (var i = 0; i < models.Length; i++)
-            slots[i] = (models[i] & 0x00FFFFFF) | (Math.Min(dyes[i], 0xFFu) << 24);
+        for (var i = 0; i < equip.Models.Count; i++)
+            slots[i] = (equip.Models[i] & 0x00FFFFFF) | (Math.Min(equip.Dyes[i], 0xFFu) << 24);
     }
 
     private static ulong Weapon(ulong model, uint dye) => (model & 0x0000FFFFFFFFFFFF) | ((ulong)Math.Min(dye, 0xFFu) << 48);

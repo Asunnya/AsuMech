@@ -5,6 +5,7 @@ using System.Numerics;
 using AnoMech.Core;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Ai;
+using AnoMech.Core.Game.Geometry;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.SimObjects;
 using FFXIVClientStructs.FFXIV.Client.Game;
@@ -49,7 +50,9 @@ public sealed class DsrP1KnightsScenario : IScenario
     private const float ShiningBladeHalfWidth = 3f;
     private const float ShiningBladeLandDelay = 0.35f;
     private const float BrightFlareRadius = 9f;
-    private const float BrightFlareDelay = 1.15f;
+    private const float BrightFlareCastDelay = 1.17f;
+    private const float BrightFlareCastSeconds = 0.7f;
+    private const float BrightFlareDelay = 2.16f;
     private const float AntiKnockbackSeconds = 6f;
     private const float BotInterruptDelay = 1.6f;
     // Despawning an effect's caster cuts its VFX short.
@@ -117,12 +120,16 @@ public sealed class DsrP1KnightsScenario : IScenario
         hallowingCasting = false;
         playerAntiKnockbackUntil = -1f;
 
-        Plugin.PlayerInputHooks.ActionExecuted -= OnPlayerAction;
-        Plugin.PlayerInputHooks.ActionExecuted += OnPlayerAction;
+        if (Plugin.PlayerInputHooks is { } hooks)
+        {
+            hooks.ActionExecuted -= OnPlayerAction;
+            hooks.ActionExecuted += OnPlayerAction;
+        }
 
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<DsrP1KnightsState>)AiStrats[idx]).Run(state, world);
 
+        world.Events.Add(0f, () => world.EnforceArenaBoundary(new SquareArena(Geometry.ArenaHalfWidth), "Touched the arena wall"));
         world.Events.Add(0f, () => world.Map.DirectorUpdate(ArenaDirector.Layout, 0U, ArenaDirector.KnightsLayout));
         world.Events.Add(0f, () => world.Map.DirectorUpdate(ArenaDirector.MapChange, ArenaDirector.KnightsMap));
         world.Events.Add(0f, SpawnKnights);
@@ -155,7 +162,7 @@ public sealed class DsrP1KnightsScenario : IScenario
         ScheduleShiningBlade([59.09f, 60.15f, 61.22f, 62.29f]);
         world.Events.Add(64.83f, ResolveExecution);
         world.Events.Add(67.74f, ClosePortals);
-        world.Events.Add(68.17f, StartHoliestHallowing);
+        world.Events.Add(67.96f, StartHoliestHallowing);
         world.Events.Add(70.50f, () => adelphel?.MoveTo(new Vector3(-0.6f, 0f, 0.3f), 4f, MathF.PI));
 
         world.Events.Add(76.90f, MarkChainSymbols);
@@ -172,7 +179,7 @@ public sealed class DsrP1KnightsScenario : IScenario
         world.Events.Add(98.17f, () => Raidwide(adelphel, ActionId.HoliestOfHoly, HoliestOfHolyDamage));
         world.Events.Add(100.18f, () => ResolveDimension(state.SecondDimension));
 
-        world.Events.Add(104.27f, StartHoliestHallowing);
+        world.Events.Add(105.41f, StartHoliestHallowing);
 
         world.Events.Add(108.70f, () => world.Map.DirectorUpdate(ArenaDirector.Layout, 0U, ArenaDirector.PrisonLayout));
         world.Events.Add(108.70f, KnightsFall);
@@ -181,7 +188,10 @@ public sealed class DsrP1KnightsScenario : IScenario
         world.Events.Add(112.31f, ResolvePlanarPrison);
         world.Events.Add(112.31f, ZephirinThrowsSpear);
         world.Events.Add(112.62f, SpawnPrisonCircle);
+        world.Events.Add(112.71f, ImprisonParty);
         world.Events.Add(112.84f, () => charibert?.NativeCast(ActionId.PureOfHeart, ActionType.Action, 0f, 35.2f, false, targetId: charibert.GameObjectId));
+        world.Events.Add(113.11f, EmpowerCharibert);
+        world.Events.Add(114.26f, () => prisonActive = true);
         world.Events.Add(115.28f, () => prisonCircle?.SetState(1));
         world.Events.Add(121.39f, HaurchefantArrives);
         world.Events.Add(122.28f, () => PlayEffect(zephirin, ActionId.SpearOfTheFury, 1.1f, target: haurchefant?.GameObjectId));
@@ -199,6 +209,7 @@ public sealed class DsrP1KnightsScenario : IScenario
         world.Events.Add(149.40f, KnightsDepart);
         world.Events.Add(151.38f, ThordanArrives);
         world.Events.Add(151.38f, () => world.PlaceWaymarks(NaurWaymarks));
+        world.Events.Add(151.38f, () => world.EnforceArenaBoundary(Geometry.ThordanArenaRadius, "Touched the death wall"));
         world.Events.Add(151.51f, () => world.Map.DirectorUpdate(ArenaDirector.Layout, 0U, ArenaDirector.ThordanLayout));
         world.Events.Add(151.51f, () => world.Map.DirectorUpdate(ArenaDirector.MapChange, ArenaDirector.ThordanMap));
         world.Events.Add(159.00f, DespawnAll);
@@ -484,7 +495,7 @@ public sealed class DsrP1KnightsScenario : IScenario
     private void ScheduleShiningBlade(float[] dashTimes)
     {
         var path = state.AdelphelDashPath();
-        float[][] orbOffsets = [[0.08f, 0.50f, 0.90f], [0.30f, 0.69f, 1.02f], [0.39f, 0.39f], [0.17f, 0.55f, 0.99f]];
+        float[][] orbOffsets = [[0.24f, 0.51f, 0.91f], [0.30f, 0.52f, 0.96f], [0.26f, 0.48f], [0.25f, 0.55f, 0.99f]];
         float[][] orbFractions = [[0f, 0.5f, 1f], [0.33f, 0.67f, 1f], [0.5f, 1f], [0.33f, 0.67f, 1f]];
         for (var dash = 0; dash < dashTimes.Length; dash++)
         {
@@ -516,7 +527,7 @@ public sealed class DsrP1KnightsScenario : IScenario
     {
         var orb = SpawnEnemy(BNpcBaseId.Brightsphere, BNpcNameId.Brightsphere, new Placement(at, 0f), false, true, EnemyListMode.Never);
         if (orb != null) helpers.Add(orb);
-        orb?.NativeCast(ActionId.BrightFlare, ActionType.Action, 0f, BrightFlareDelay, false, position: at);
+        world.Events.Add(BrightFlareCastDelay, () => orb?.NativeCast(ActionId.BrightFlare, ActionType.Action, 0f, BrightFlareCastSeconds, false, position: at));
         if (portals.Any(p => FlatDistance(p.At, at) < PortalBrightsphereRange))
         {
             world.Announce("A Brightsphere dropped next to a portal and set it off.");
@@ -576,7 +587,7 @@ public sealed class DsrP1KnightsScenario : IScenario
     private void ResolveHoliestHallowing(PartyRole assigned)
     {
         hallowingCasting = false;
-        if (hallowingInterrupted) return;
+        if (hallowingInterrupted || adelphel == null) return;
         PlayEffect(adelphel, ActionId.HoliestHallowing, 2.1f, target: grinnaux?.GameObjectId);
         world.Announce($"Holiest Hallowing was not interrupted ({assigned} had it).");
         if (party.Get(assigned) is { } member && member.IsAlive())
@@ -703,15 +714,25 @@ public sealed class DsrP1KnightsScenario : IScenario
         if (grinnaux == null) return;
         PlayEffect(grinnaux, ActionId.PlanarPrison, 2.1f);
         PlayEffect(adelphel, ActionId.BrightwingedFlight, 1.1f, target: charibert?.GameObjectId);
+    }
+
+    private void ImprisonParty()
+    {
+        if (grinnaux == null) return;
         foreach (var member in AliveMembers().ToList())
         {
             world.Tether(grinnaux, member, TetherId.PlanarPrison, 2f);
             member.AddStatus(StatusId.Stun, 1f);
-            member.AddStatus(StatusId.PlanarImprisonment, 32.4f);
+            member.AddStatus(StatusId.PlanarImprisonment);
             if (FlatDistance(member.Position, DsrP1KnightsState.PrisonCentre) > PrisonRadius - 2f)
                 (member as ISimPartyMember)?.CarryTo(DsrP1KnightsState.PrisonCentre + new Vector3(0f, 0f, 1f));
         }
-        world.Events.Add(2f, () => prisonActive = true);
+    }
+
+    private void EmpowerCharibert()
+    {
+        charibert?.AddStatus(StatusId.BrightwingedFortitude, 33f);
+        charibert?.AddStatus(StatusId.BrightwingedFury, 33f);
     }
 
     private void KillPrisonEscapees()
@@ -816,7 +837,7 @@ public sealed class DsrP1KnightsScenario : IScenario
 
     private void DespawnAll()
     {
-        Plugin.PlayerInputHooks.ActionExecuted -= OnPlayerAction;
+        if (Plugin.PlayerInputHooks is { } hooks) hooks.ActionExecuted -= OnPlayerAction;
         ClosePortals();
         foreach (var chain in burningChains) chain.Despawn();
         burningChains.Clear();

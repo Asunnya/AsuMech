@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Numerics;
 using AnoMech.Core.Game;
-using AnoMech.Core.Game.Geometry;
-using AnoMech.Core.SimObjects;
 
 namespace AnoMech.Scenarios.Dsr;
 
@@ -13,6 +11,7 @@ public sealed class DsrZone : IZone
 
     public static readonly DsrZone Instance = new();
     public static readonly Phase Knights = new(Instance, "P1", null, BgmId);
+    public static readonly Phase Thordan = new(Instance, "P2", null, BgmId);
 
     public string Name => "Dragonsong's Reprise";
     public uint TerritoryId => 968;
@@ -22,7 +21,4 @@ public sealed class DsrZone : IZone
 
     public IReadOnlyList<WaymarkLayout> WaymarkPresets { get; } =
         [new WaymarkLayout("DSR Phase 1", DsrConstants.Phase1Waymarks), new WaymarkLayout("NAUR", DsrConstants.NaurWaymarks)];
-
-    public void Run(SimWorld world) =>
-        world.EnforceArenaBoundary(new SquareArena(DsrConstants.Geometry.ArenaHalfWidth), "Touched the arena wall");
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using AnoMech.Scenarios.Dsr.P1Knights;
+using AnoMech.Scenarios.Dsr.P2Thordan;
 using AnoMech.Scenarios.M9s.Aetherletting;
 using AnoMech.Scenarios.M9s.Coffinmaker;
 using AnoMech.Scenarios.M9s.Deathmatch;
@@ -59,6 +60,7 @@ public static class ScenarioCatalog
         new UltimateSuppressionScenario(),
         new UcobP5ExaflaresScenario(),
         new DsrP1KnightsScenario(),
+        new DsrP2ThordanScenario(),
         new M9sVampStompScenario(),
         new M9sCoffinmakerScenario(),
         new M9sAetherlettingScenario(),

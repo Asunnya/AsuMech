@@ -14,6 +14,8 @@ public class DsrConstants
     public static class Geometry
     {
         public const float ArenaHalfWidth = 22f;
+        // UNVERIFIED: players stand alive at up to 20.85y; where the wall starts killing was never observed.
+        public const float ThordanArenaRadius = 21.5f;
     }
 
     // Numbers north and letters south are the Hyperdimensional Slash prey spots.
@@ -58,6 +60,15 @@ public class DsrConstants
         public const uint Charibert = 12603;
         public const uint Thordan = 12604;
         public const uint Zephirin = 12592;
+        public const uint Janlenoux = 12632;
+        public const uint Vellguine = 12633;
+        public const uint Paulecrain = 12634;
+        public const uint Ignasse = 12635;
+        public const uint Hermenost = 12636;
+        public const uint Guerrique = 12637;
+        public const uint Haumeric = 12638;
+        public const uint Noudenet = 12639;
+        public const uint HolyComet = 12591;
         public const uint Haurchefant = 13117;
         public const uint SpearOfTheFury = 11810;
         public const uint Brightsphere = 13070;
@@ -72,6 +83,15 @@ public class DsrConstants
         public const uint Charibert = 3642;
         public const uint Thordan = 3632;
         public const uint Zephirin = 3633;
+        public const uint Janlenoux = 3635;
+        public const uint Vellguine = 3636;
+        public const uint Paulecrain = 3637;
+        public const uint Ignasse = 3638;
+        public const uint Hermenost = 3640;
+        public const uint Guerrique = 3641;
+        public const uint Haumeric = 3643;
+        public const uint Noudenet = 3644;
+        public const uint HolyComet = 11321;
         public const uint Haurchefant = 1455;
         public const uint SpearOfTheFury = 11320;
         public const uint Brightsphere = 4385;
@@ -84,6 +104,7 @@ public class DsrConstants
         public const uint BrightFlare = 0x62CF;
         public const uint HoliestHallowing = 0x62D0;
         public const uint HolyShieldBash = 0x62D1;
+        public const uint HolyBladedanceWindup = 0x62D2;
         public const uint HolyBladedance = 0x62D3;
         public const uint HoliestOfHoly = 0x62D4;
         public const uint Execution = 0x62D5;
@@ -105,6 +126,59 @@ public class DsrConstants
         public const uint Brightwing = 0x6319;
         public const uint Skyblind = 0x631A;
 
+        public const uint ThordanAttack = 0x63BB;
+        public const uint ThordanLeap = 0x63C4;
+        public const uint AscalonsMight = 0x63C5;
+        public const uint AncientQuaga = 0x63C6;
+        public const uint HeavenlyHeel = 0x63C7;
+        public const uint AscalonsMercyConcealed = 0x63C8;
+        public const uint AscalonsMercyConcealedCone = 0x63C9;
+        public const uint LightningStorm = 0x63CC;
+        public const uint LightningStormHit = 0x63CD;
+        public const uint DragonsRage = 0x63CE;
+        public const uint DragonsRageHit = 0x63CF;
+        public const uint StrengthOfTheWard = 0x63D3;
+        public const uint SpiralThrust = 0x63D4;
+        public const uint HeavyImpactWindup = 0x63D5;
+        public const uint HeavyImpact = 0x63D6;
+        public const uint HeavyImpactRing1 = 0x63D7;
+        public const uint HeavyImpactRing2 = 0x63D8;
+        public const uint HeavyImpactRing3 = 0x63D9;
+        public const uint HeavyImpactRing4 = 0x63DA;
+        public const uint DimensionalCollapseWindup = 0x63DB;
+        public const uint DimensionalCollapse = 0x63DC;
+        public const uint SkywardLeap = 0x63DD;
+        public const uint ConvictionWindup = 0x63DE;
+        public const uint Conviction = 0x63DF;
+        public const uint EternalConviction = 0x63E0;
+        public const uint SanctityOfTheWard = 0x63E1;
+        public const uint SanctityShiningBlade = 0x63E2;
+        public const uint SacredSever = 0x63E3;
+        public const uint DragonsGaze = 0x63D0;
+        public const uint DragonsGazeHit = 0x63D1;
+        public const uint DragonsGlory = 0x63D2;
+        public const uint HiemalStorm = 0x63E6;
+        public const uint HiemalStormHit = 0x63E7;
+        public const uint HolyComet = 0x63E8;
+        public const uint HolyCometHit = 0x63E9;
+        public const uint HolyImpact = 0x63EA;
+        public const uint HeavensStake = 0x6FAE;
+        public const uint HeavensStakeCircle = 0x6FAF;
+        public const uint HeavensStakeDonut = 0x6FB0;
+        public const uint SecondConvictionWindup = 0x6FEA;
+        public const uint SecondConviction = 0x6FEB;
+        public const uint FirstConvictionWindup = 0x737B;
+        public const uint FirstConviction = 0x737C;
+        public const uint UltimateEndArrival = 0x63BC;
+        public const uint UltimateEnd = 0x63BD;
+        public const uint UltimateEndHit = 0x63BE;
+        public const uint BroadSwingWindup = 0x63BF;
+        public const uint BroadSwingRightFirst = 0x63C0;
+        public const uint BroadSwingLeftFirst = 0x63C1;
+        public const uint BroadSwing = 0x63C2;
+        public const uint AethericBurst = 0x63C3;
+        public const uint KnightsOfTheRound = 0x63ED;
+
         public const uint Interject = 7538;
         public const uint HeadGraze = 7551;
         public const uint ArmsLength = 7548;
@@ -116,12 +190,19 @@ public class DsrConstants
         public const ushort Stun = 0x95;
         public const ushort BurningChains = 0x301;
         public const ushort LightResistanceDown = 0x8E6;
+        public const ushort BrightwingedFortitude = 0xA64;
         public const ushort Skyblind = 0xA65;
         public const ushort PlanarImprisonment = 0xA66;
+        public const ushort BrightwingedFury = 0xA68;
         public const ushort FireResistanceDownII = 0xB56;
+        public const ushort IceResistanceDownII = 0xB57;
+        public const ushort LightningResistanceDownII = 0xBB6;
+        public const ushort PhysicalVulnerabilityUp = 0xB7C;
         public const ushort MagicVulnerabilityUp = 0xB7D;
         public const ushort DownForTheCount = 0xC5D;
         public const ushort DamageDown = 0xC5E;
+        public const ushort SlashingResistanceDown = 0xC3A;
+        public const ushort Hysteria = 0x128;
     }
 
     public class TetherId
@@ -134,11 +215,17 @@ public class DsrConstants
     public class EObjId
     {
         public const uint PlanarPrison = 0x1EB681;
+        public const uint IcePuddle = 0x1EB682;
+        public const uint FirePuddle = 0x1EB686;
     }
 
     public class LockonId
     {
         public const uint HyperdimensionalSlash = 0xEA;
+        public const uint SkywardLeap = 0x14A;
+        public const uint OneSword = 0x32;
+        public const uint TwoSwords = 0x33;
+        public const uint MeteorPrey = 0x11D;
         public const uint Circle = 0x119;
         public const uint Triangle = 0x11A;
         public const uint Square = 0x11B;
@@ -155,9 +242,21 @@ public class DsrConstants
         public const uint KnightsLayout = 0x01;
         public const uint PrisonLayout = 0x14;
         public const uint ThordanLayout = 0x1E;
+        public const uint WardLayout = 0x25;
+        public const uint SanctityLayout = 0x2F;
+        public const uint UltimateEndLayout = 0x39;
         public const uint KnightsMap = 758;
         public const uint ThordanMap = 765;
         public const uint ThordanMusic = 0x1AF3;
+    }
+
+    // UNVERIFIED as timelines: the log sends them as ActorControl 0x197 on the knights.
+    public class TimelineId
+    {
+        public const ushort KnightAppear = 0x11D2;
+        public const ushort KnightVanish = 0x11DD;
+        public const ushort WarpStart = 0x1E39;
+        public const ushort WarpEnd = 0x1E43;
     }
 
     public class KnockbackId
