@@ -210,7 +210,7 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
             var lethal = topUtils.IsDamageLethal(hit, ruin: false);
             Plugin.Log.Info($"Hit: {(hit as ISimPartyMember)?.Role} by Hyper Pulse ({(lethal ? "lethal" : "non-lethal")})");
             if (lethal)
-                hit.Die("Hyper Pulse");
+                hit.Die(ActionId.HyperPulseSigma, "had vuln up debuff");
             else
                 hit.AddStatus(StatusId.MagicVulnerabilityUp, 4.96f);
         }
@@ -277,7 +277,7 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
             var lethal = topUtils.IsDamageLethal(hit, ruin: false);
             Plugin.Log.Info($"Hit: {(hit as ISimPartyMember)?.Role} by Wave Cannon ({(lethal ? "lethal" : "non-lethal")})");
             if (lethal)
-                hit.Die("Wave Cannon");
+                hit.Die(ActionId.WaveCannonAoe, "had vuln up debuff");
             else
                 hit.AddStatus(StatusId.MagicVulnerabilityUp, 4.96f);
         }
@@ -291,7 +291,7 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
         Plugin.Log.Info($"Hit: {(player as ISimPartyMember)?.Role} by Storage Violation ({(lethal ? "lethal" : "non-lethal")})");
         if (lethal)
         {
-            player.Die("Storage Violation");
+            player.Die(ActionId.StorageViolation, "had vuln up or Twice-come Ruin");
         }
     }
 
@@ -299,7 +299,7 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
     {
         Plugin.Log.Info("Hit: ALL PARTY by Storage Violation — tower unfilled (lethal raidwide)");
         omega4000A408?.Cast(ActionId.StorageViolationFail);
-        party.WipeAllPlayers("Storage Violation — tower unfilled");
+        party.WipeAllPlayers(ActionId.StorageViolationFail, "tower unfilled");
     }
 
     private void Run_EventObj_1EB83C_4000A6E7()
@@ -357,7 +357,7 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
         foreach (var hit in party.Find.InsideActionAoe(ActionId.RearLasersShoot, unit.Placement()))
         {
             Plugin.Log.Info($"Hit: {(hit as ISimPartyMember)?.Role} by Rear Lasers (lethal)");
-            hit.Die("Rear Lasers");
+            hit.Die(ActionId.RearLasersShoot);
         }
     }
 

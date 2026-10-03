@@ -73,6 +73,11 @@ public static class TopActions
     };
 
     // -- Delta-specific --
+    public static readonly EnemyAction RunMiDeltaVersion = new(ActionId.RunMiDeltaVersion)
+    {
+        Effects = [Damage(Magic)],
+    };
+
     public static readonly EnemyAction DeltaExplosion = new(ActionId.DeltaExplosion)
     {
         Effects = [Damage(DamageType.Lethal)],

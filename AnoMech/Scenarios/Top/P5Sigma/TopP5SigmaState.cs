@@ -52,13 +52,14 @@ namespace AnoMech.Scenarios.Top.P5Sigma
         public TopP5SigmaState(Rng rng, SimParty party, TopP5SigmaStateOverrides overrides)
         {
             this.rng = rng;
-            Order = RoleList.Random(rng, party);
+            var order = RoleList.Random(rng, party);
+            Order = overrides.Order is { } pinnedOrder ? new RoleList(party, pinnedOrder) : order;
             DynamisTargets = new RoleListBuilder
             {
                 Size = 6,
                 Membership = overrides.ResolveDynamis(party.PlayerRole),
             }.Build(rng, party);
-            WaveCannonTargets = SelectWaveCannonTargets(Order);
+            WaveCannonTargets = SelectWaveCannonTargets(Order, overrides.WaveCannonSkips);
 
             NewNorthA = overrides.NewNorthA ?? rng.NextDirection();
             GlitchType = overrides.CloseFarTether ?? rng.NextObj(GlitchType.Mid, GlitchType.Far);
@@ -75,9 +76,13 @@ namespace AnoMech.Scenarios.Top.P5Sigma
                 Membership = helloMembership,
             }.Build(rng, party);
 
-            HandBait = DynamisTargets.Random(rng, 2, HelloWorldTargets.List);
-            HelloWorldJumpOrder = new RoleList(party, Enum.GetValues<PartyRole>())
+            var handBait = DynamisTargets.Random(rng, 2, HelloWorldTargets.List);
+            HandBait = overrides.HandBait is { } pinnedHandBait ? new RoleList(party, pinnedHandBait) : handBait;
+            var jumpOrder = new RoleList(party, Enum.GetValues<PartyRole>())
                 .Random(rng, 4, HelloWorldTargets.List.Concat(HandBait.List).ToArray());
+            HelloWorldJumpOrder = overrides.HelloWorldJumpOrder is { } pinnedJumpOrder
+                ? new RoleList(party, pinnedJumpOrder)
+                : jumpOrder;
 
             Towers = (GlitchType == GlitchType.Mid ? MidGlitchTowers : FarGlitchTowers)
                      .Select(t => t == null ? t : t with { Position = AdjustedNorthA.Apply(t.Position) })
@@ -151,11 +156,12 @@ namespace AnoMech.Scenarios.Top.P5Sigma
             null
         };
 
-        private RoleList SelectWaveCannonTargets(RoleList tethers)
+        private RoleList SelectWaveCannonTargets(RoleList tethers, (int First, int Second)? pinned)
         {
             var skip1 = rng.NextInt(8);
             var skip2 = rng.NextInt(6);
             if (skip2 >= skip1 / 2 * 2) skip2 += 2;
+            if (pinned is { } skips) (skip1, skip2) = skips;
             FirstMissing = skip1;
             SecondMissing = skip2;
             return RoleList.AllExcept(rng, tethers.Party, tethers[skip1], tethers[skip2]);

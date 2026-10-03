@@ -23,6 +23,13 @@ public sealed class TopP5SigmaStateOverrides
     // Whether this seat starts in the six-player Dynamis group.
     public PerRoleSetting<bool> Dynamis { get; set; } = new();
 
+    // Headless runs pin the rest of the roll. Internal, so settings sync and the summary skip them.
+    internal IReadOnlyList<PartyRole>? Order { get; set; }
+    // Indices into Order of the two players Wave Cannon passes over, in different pairs.
+    internal (int First, int Second)? WaveCannonSkips { get; set; }
+    internal IReadOnlyList<PartyRole>? HandBait { get; set; }
+    internal IReadOnlyList<PartyRole>? HelloWorldJumpOrder { get; set; }
+
     // Near/Far are indices into the two-long Hello World list; None keeps the seat out of it.
     public (Dictionary<PartyRole, int[]> Slots, Dictionary<PartyRole, bool> Membership) ResolveHelloWorld(PartyRole localPlayerRole)
     {

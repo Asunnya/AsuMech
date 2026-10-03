@@ -65,7 +65,7 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
         topUtils = new TopUtils(world);
 
         world.Events.Add(0.1f, SpawnOmega);
-        world.Events.Add(2f, () => omega?.Cast(ActionId.RunMiDeltaVersion));
+        world.Events.Add(2f, () => omega?.Cast(Actions.RunMiDeltaVersion));
         // Delta arena transition animation (index 0x07) — real game fires these
         // at +8/+24/+27/+42s relative to the Run: mi cast. Cast is at t=2f here.
         world.Events.Add(10f, EyeSpawn);
