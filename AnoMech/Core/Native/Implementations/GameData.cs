@@ -6,6 +6,7 @@ using LuminaClassJob = Lumina.Excel.Sheets.ClassJob;
 using LuminaKnockback = Lumina.Excel.Sheets.Knockback;
 using LuminaModelChara = Lumina.Excel.Sheets.ModelChara;
 using LuminaModelSkeleton = Lumina.Excel.Sheets.ModelSkeleton;
+using LuminaNpcEquip = Lumina.Excel.Sheets.NpcEquip;
 using LuminaStatus = Lumina.Excel.Sheets.Status;
 
 namespace AnoMech.Core.Native.Implementations;
@@ -41,8 +42,16 @@ internal sealed class GameData : IGameData
 
     public BNpcBaseRow? BNpcBase(uint bnpcBaseId)
         => Plugin.DataManager.GetExcelSheet<LuminaBNpcBase>().TryGetRow(bnpcBaseId, out var row)
-            ? new BNpcBaseRow(bnpcBaseId, row.Scale, row.ModelChara.RowId)
+            ? new BNpcBaseRow(bnpcBaseId, row.Scale, row.ModelChara.RowId, row.NpcEquip.RowId)
             : null;
+
+    public NpcEquipRow? NpcEquip(uint npcEquipId)
+    {
+        if (!Plugin.DataManager.GetExcelSheet<LuminaNpcEquip>().TryGetRow(npcEquipId, out var row)) return null;
+        return new NpcEquipRow(npcEquipId, row.ModelMainHand, row.DyeMainHand.RowId, row.ModelOffHand, row.DyeOffHand.RowId,
+            [row.ModelHead, row.ModelBody, row.ModelHands, row.ModelLegs, row.ModelFeet, row.ModelEars, row.ModelNeck, row.ModelWrists, row.ModelRightRing, row.ModelLeftRing],
+            [row.DyeHead.RowId, row.DyeBody.RowId, row.DyeHands.RowId, row.DyeLegs.RowId, row.DyeFeet.RowId, row.DyeEars.RowId, row.DyeNeck.RowId, row.DyeWrists.RowId, row.DyeRightRing.RowId, row.DyeLeftRing.RowId]);
+    }
 
     public ModelCharaRow? ModelChara(uint modelCharaId)
         => Plugin.DataManager.GetExcelSheet<LuminaModelChara>().TryGetRow(modelCharaId, out var row)

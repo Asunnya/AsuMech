@@ -8,6 +8,7 @@ public interface IGameData
     ClassJobRow? ClassJob(uint classJobId);
     BNpcBaseRow? BNpcBase(uint bnpcBaseId);
     ModelCharaRow? ModelChara(uint modelCharaId);
+    NpcEquipRow? NpcEquip(uint npcEquipId);
     ModelSkeletonRow? ModelSkeleton(uint skeletonId);
 
     // Null for a missing row or an empty name.
