@@ -11,16 +11,16 @@ namespace AnoMech.Core.EnemyActions;
 // per-scenario registry.
 internal static class DamageCheck
 {
-    // Null when the hit is survivable, otherwise the death-message parenthetical.
+    // Null when the hit is survivable, otherwise why it kills ("" when it simply does).
     public static string? LethalCause(SimCharacter target, DamageSpec spec, SimParty party, float requiredMitigation)
     {
         var vulnMitigation = VulnRequiredMitigation(target, spec);
         var kind = spec.Kind;
         if (spec.Has(DamageType.Lethal)) return "";
-        if (vulnMitigation >= 1f) return " (had vuln up debuff)";
-        if (spec.Has(DamageType.TankBuster) && !IsTank(target)) return " (tank buster)";
+        if (vulnMitigation >= 1f) return "had vuln up debuff";
+        if (spec.Has(DamageType.TankBuster) && !IsTank(target)) return "tank buster";
         if (Survives(target, party, MathF.Max(requiredMitigation, vulnMitigation ?? 0f), kind)) return null;
-        return vulnMitigation != null ? " (not enough mitigation for a hit with vuln up)" : " (not enough mitigation)";
+        return vulnMitigation != null ? "not enough mitigation for a hit with vuln up" : "not enough mitigation";
     }
 
     public static bool IsTank(SimCharacter target) => target is ISimPartyMember { Role: PartyRole.OffTank or PartyRole.MainTank };
@@ -29,7 +29,7 @@ internal static class DamageCheck
     {
         foreach (var vuln in spec.Vulnerabilities)
         {
-            if (!target.HasStatus(vuln.StatusId)) continue;
+            if (target.FindStatus(vuln.StatusId) is not { } status || status.Stacks < vuln.MinStacks) continue;
             DiagnosticLog.Info($"[EnemyAction] {(target as ISimPartyMember)?.Role} is hit carrying vuln up {vuln.StatusId}: needs {vuln.RequiredMitigation:P0} mitigation.");
             return vuln.RequiredMitigation;
         }

@@ -8,7 +8,7 @@ using AnoMech.Core.Map;
 using AnoMech.Core.SimObjects;
 using AnoMech.Multiplayer;
 using static AnoMech.Scenarios.Top.TopConstants;
-using Actions = AnoMech.Scenarios.Top.P2PartySynergy.TopP2PartySynergyActions;
+using Actions = AnoMech.Scenarios.Top.TopActions;
 
 namespace AnoMech.Scenarios.Top.P2PartySynergy;
 

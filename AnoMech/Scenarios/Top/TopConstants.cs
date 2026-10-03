@@ -289,7 +289,6 @@ public static class TopConstants
 
     public static class VfxPath
     {
-        public const string OpticalLaserRect = "vfx/omen/eff/general02f.avfx";
         // A rocket punch's spawn burst (P5 Delta).
         public const string RocketPunchSpawn = "vfx/monster/m0114/eff/m0114cbbm_sp_pop_c0i.avfx";
     }

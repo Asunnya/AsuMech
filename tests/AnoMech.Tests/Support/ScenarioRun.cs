@@ -6,7 +6,8 @@ using AnoMech.Scenarios;
 
 namespace AnoMech.Tests;
 
-internal sealed record Death(PartyRole Role, string Cause, float Time, string Snapshot);
+// ActionId is null for a death through the obsolete Die(string).
+internal sealed record Death(PartyRole Role, string Cause, uint? ActionId, float Time, string Snapshot);
 
 internal sealed record ScenarioRunOptions
 {
@@ -94,10 +95,10 @@ internal sealed record ScenarioRun(
         try
         {
             scenario = game.Scenarios.Single(s => s.GetType() == scenarioType);
-            game.PartyMemberKilled += (r, cause) =>
+            game.PartyMemberKilled += (r, cause, actionId) =>
             {
                 var snapshot = WorldSnapshot.Describe(game.World, RecentAoeChecks(), game.World.Party.Get(r), includeHidden: true);
-                deaths.Add(new Death(r, cause, game.World.Events.Elapsed, snapshot));
+                deaths.Add(new Death(r, cause, actionId, game.World.Events.Elapsed, snapshot));
             };
             if (options.Overrides is { } setOverrides)
                 setOverrides(scenario.SettingsOverrides

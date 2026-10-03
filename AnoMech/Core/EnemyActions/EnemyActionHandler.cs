@@ -23,12 +23,27 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimWorld world)
             $"[EnemyAction] Cast: {ActionLookup.Name(id)} ({id}) by {caster.DisplayName} from ({caster.Position.X:F1},{caster.Position.Z:F1}) castSeconds={castTime:F2}.");
 
         if (castTime > 0f)
-            caster.NativeCast(id, ActionType.Action, action.Cast.OmenDelay, castTime, interruptible: false, position: location, targetId: castTarget);
+            caster.NativeCast(id, ActionType.Action, action.Cast.OmenDelay, castTime, interruptible: false,
+                rotation: caster.Rotation + action.Area.Rotation, position: location, targetId: castTarget);
 
-        Schedule(castTime + action.Timing.VfxOffset, () => caster.NativeActionEffect(
-            id, action.Cast.AnimationLock, (ushort)id, action.Cast.Variation, ActionType.Action, 0,
-            position: location ?? caster.Position, animationTargetId: castTarget));
+        Schedule(castTime + action.Timing.VfxOffset, () => Release(action, target, location, castTarget));
         Schedule(castTime + action.Timing.ResolveOffset, () => Resolve(action, target, location));
+    }
+
+    // Faces the aim point first: the packet carries the caster's rotation. Some actions animate
+    // only when delivered to a target, but one outside CharacterManager null-derefs ApplyAll.
+    private void Release(EnemyAction action, SimCharacter? target, Vector3? location, GameObjectId? castTarget)
+    {
+        var id = action.ActionId;
+        if (target == caster) target = null;
+        var aim = location ?? target?.Position;
+        caster.Face(aim);
+        GameObjectId? deliverTo = target is not null && Natives.BattleCharas.IsInCharacterManager(target.GameObjectId.ObjectId)
+            ? target.GameObjectId
+            : null;
+        caster.NativeActionEffect(
+            id, action.Cast.AnimationLock, (ushort)id, action.Cast.Variation, ActionType.Action, 0,
+            position: aim ?? caster.Position, animationTargetId: castTarget, actionTargetId: deliverTo);
     }
 
     private void Resolve(EnemyAction action, SimCharacter? target, Vector3? location)
@@ -38,7 +53,7 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimWorld world)
                      ?? (location is { } at ? new Placement(at, caster.Rotation) : caster.Placement());
         var ctx = new EnemyActionContext(action, caster, target, origin, party);
 
-        var query = new AoeQuery(action.ActionId, origin, size: action.Area.Size);
+        var query = new AoeQuery(action.ActionId, origin, action.Area.Rotation, action.Area.Size);
 #if DEBUG
         AnoMech.Windows.DamageDebugWindow.Instance?.Record(query);
 #endif
@@ -55,9 +70,12 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimWorld world)
         var name = ActionLookup.Name(action.ActionId);
         foreach (var (who, amount, icon) in ctx.DamageShown)
             Schedule(action.Timing.DamageDelay, () => ShowFlyText(who, amount, icon, name));
-        foreach (var (who, cause) in ctx.Killed)
-            Schedule(action.Timing.DeathDelay, () => who.Die(cause));
+        foreach (var (who, explanation) in ctx.Killed)
+            Schedule(action.Timing.DeathDelay, () => who.Die(action.ActionId, Explain(action.DeathExplanation, explanation)));
     }
+
+    private static string? Explain(string? action, string? hit)
+        => action is null ? hit : hit is null ? action : $"{action}; {hit}";
 
     // The game shows a player only the damage they take, never a party member's.
     private static void ShowFlyText(SimCharacter who, uint amount, FlyTextIcon icon, string name)

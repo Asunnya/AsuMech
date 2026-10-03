@@ -337,7 +337,7 @@ public sealed partial class MultiplayerManager
         return (null, null);
     }
 
-    private void OnPartyMemberKilledHost(PartyRole role, string cause)
+    private void OnPartyMemberKilledHost(PartyRole role, string cause, uint? actionId)
         => _ = relay?.SendAsync(new RoleKilledMessage(role, cause));
 
     private void OnOmenSpawnedHost(string path, Placement placement, Vector3 scale, float durationSeconds)

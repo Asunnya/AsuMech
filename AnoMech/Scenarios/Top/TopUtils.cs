@@ -39,7 +39,7 @@ public record TopUtils(SimWorld World)
                                           Placement: new Placement(pos, 0f)));
         if (helper != null) World.Events.Add(Duration.MonitorHelperLifetime, helper.Despawn);
         helper?.Cast(ActionId.HelloWorldFail);
-        World.Party.WipeAllPlayers(ActionLookup.Name(ActionId.HelloWorldFail));
+        World.Party.WipeAllPlayers(ActionId.HelloWorldFail);
     }
 
     public static IReadOnlyList<Waymark> TopWaymarks => WaymarkPresets.Ring(13.63f);
@@ -65,7 +65,7 @@ public record TopUtils(SimWorld World)
             foreach (var hit in World.Party.Find.OutsideRect(omega.Placement().MoveForward(-10f), Geometry.SuperliminalSteelSafeHalfWidth, Geometry.OmegaFAttackHalfLength))
             {
                 Plugin.Log.Info($"Hit: {(hit as ISimPartyMember)?.Role} by Superliminal Steel (lethal)");
-                hit.Die("Superliminal Steel");
+                hit.Die(actionId);
             }
         }
         else if (actionId == ActionId.OptimizedBlizzardIII)
@@ -73,7 +73,7 @@ public record TopUtils(SimWorld World)
             foreach (var hit in World.Party.Find.InsideCross(omega.Placement(), Geometry.OptimizedBlizzardArmHalfWidth, Geometry.OmegaFAttackHalfLength))
             {
                 Plugin.Log.Info($"Hit: {(hit as ISimPartyMember)?.Role} by Optimized Blizzard III (lethal)");
-                hit.Die("Optimized Blizzard III");
+                hit.Die(actionId);
             }
         } 
         else if (actionId == ActionId.BeyondStrength)
@@ -81,7 +81,7 @@ public record TopUtils(SimWorld World)
             foreach (var hit in World.Party.Find.OutsideCircle(omega.Position, Geometry.BeyondStrengthSafeRadius))
             {
                 Plugin.Log.Info($"Hit: {(hit as ISimPartyMember)?.Role} by Beyond Strength (lethal)");
-                hit.Die("Beyond Strength");
+                hit.Die(actionId);
             }
         }
         else if (actionId == ActionId.EfficientBladework)
@@ -89,7 +89,7 @@ public record TopUtils(SimWorld World)
             foreach (var hit in World.Party.Find.InsideActionAoe(actionId, omega.Placement()))
             {
                 Plugin.Log.Info($"Hit: {(hit as ISimPartyMember)?.Role} by Efficient Bladework (lethal)");
-                hit.Die("Efficient Bladework");
+                hit.Die(actionId);
             }
         }
         else
@@ -169,7 +169,7 @@ public record TopUtils(SimWorld World)
             if (utils.IsDamageLethal(soaker, ruin: false))
             {
                 Plugin.Log.Info($"Hit: {(soaker as ISimPartyMember)?.Role} by Hello World (lethal) → raidwide fail");
-                soaker.Die(ActionLookup.Name(actionId));
+                soaker.Die(actionId);
                 utils.HelloWorldFail(pos);
                 return;
             }
@@ -187,25 +187,10 @@ public record TopUtils(SimWorld World)
     public void ResolveOpticalLaser(SimEnemy? opticalUnit)
     {
         if (opticalUnit is not { IsActive: true }) return;
-        // The canonical eye-laser beam is duty-scripted scenery we can't reproduce;
-        // flash a synthetic rectangle omen over the lethal zone so the AOE is visible.
-        // Same placement + (halfWidth, 1, length) scale InsideRect uses, so it overlaps 1:1.
-        World.SpawnOmen(
-            VfxPath.OpticalLaserRect,
-            new Placement(new (0, 0, 0), opticalUnit.Rotation)
-                .MoveForward(-20),
-            new Vector3(Geometry.OpticalLaserHalfWidth, 1f, 40),
-            durationSeconds: 1f);
-        
-        // World.SpawnOmen(
-        //     "vfx/omen/eff/general02f.avfx",
-        //     opticalUnit.Placement(),
-        //     new Vector3(Geometry.OpticalLaserHalfWidth, 1f, Geometry.OpticalLaserLength),
-        //     durationSeconds: 1.0f);
         foreach (var hit in World.Party.Find.InsideRect(opticalUnit.Placement(), Geometry.OpticalLaserHalfWidth, Geometry.OpticalLaserLength))
         {
             Plugin.Log.Info($"Hit: {(hit as ISimPartyMember)?.Role} by Optical Laser (lethal)");
-            hit.Die("Optical Laser");
+            hit.Die(ActionId.OpticalLaser);
         }
     }
 }

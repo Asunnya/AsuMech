@@ -126,10 +126,10 @@ public class TopP2PartySynergyScenarioTests
             .TeleportAt(33.1f, to: new(-18.9f, -3.9f))
             .ShouldKill(ActionId.Spotlight, RegenHealer, OffTank);
 
-    // The four Omega-M clones stand on the diagonals, 13y out.
+    // The four Omega-M clones stand on the diagonals, 13y out; the NW one's reaches into the west stack.
     [Test]
     public void DiesToSwordDuringStack()
         => Healer(PlaystationSymbol.Circle, GlitchType.Mid)
-            .TeleportAt(31f, to: new(-9, -9))
+            .TeleportAt(31f, to: new(-13, -3))
             .ShouldKill(ActionId.EfficientBladework, RegenHealer);
 }

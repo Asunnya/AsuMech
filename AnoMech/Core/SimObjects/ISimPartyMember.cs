@@ -78,6 +78,9 @@ public static class SimCharacterDeathExtensions
     public static bool IsAlive(this SimCharacter? c)
         => c is { IsActive: true } and not ISimPartyMember { Dead: true };
 
+    // A death no action deals (the arena wall): Die's explanation is then the whole message.
+    public const uint NoAction = 0;
+
     // Death is party-member-only. Calling Die on a non-party character is a no-op
     // (logged) — bosses are removed via Despawn, not killed.
     extension(SimCharacter c)
@@ -85,16 +88,28 @@ public static class SimCharacterDeathExtensions
         // Returns true only when the member actually went down (see Game.Kill):
         // false on a non-party character, an already-dead member, or one that
         // survived via UseInvuln/godmode. Gate extra on-death logic on this.
-        public bool Die(string cause)
+        // The message is the action's name, with `explanation` after it in parentheses.
+        public bool Die(uint actionId, string? explanation = null)
         {
-            if (c is ISimPartyMember pm) return Plugin.GameInstance.Kill(pm, cause);
-            Plugin.Log.Warning($"Die() on non-party {c.GetType().Name} ignored: {cause}");
-            return false;
+            var name = actionId == NoAction ? null : ActionLookup.Name(actionId);
+            var message = name is null ? explanation ?? "" : explanation is null ? name : $"{name} ({explanation})";
+            return Kill(c, message, actionId);
         }
+
+        // Names no action, so nothing downstream can tell which mechanic it was.
+        [Obsolete("Name the action: Die(actionId, explanation).")]
+        public bool Die(string cause) => Kill(c, cause, null);
 
         public void PlayKoActionTimeline()
         {
             c.PlayActionTimeline(KoTimelineId, KoLoopTimelineId);
         }
+    }
+
+    private static bool Kill(SimCharacter c, string cause, uint? actionId)
+    {
+        if (c is ISimPartyMember pm) return Plugin.GameInstance.Kill(pm, cause, actionId);
+        Plugin.Log.Warning($"Die() on non-party {c.GetType().Name} ignored: {cause}");
+        return false;
     }
 }

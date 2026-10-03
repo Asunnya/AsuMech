@@ -229,8 +229,9 @@ public sealed class Game : IDisposable
     }
 
     // Raised when Kill actually takes a slot down; the host broadcasts RoleKilled from it. A
-    // peer's own Kill calls are reactions to a received RoleKilled, so nothing echoes.
-    public event Action<PartyRole, string>? PartyMemberKilled;
+    // peer's own Kill calls are reactions to a received RoleKilled, so nothing echoes. The action
+    // id is null for a death that names none (the obsolete Die(string)).
+    public event Action<PartyRole, string, uint?>? PartyMemberKilled;
 
     // The selected preset, or [0] as the default.
     private static IReadOnlyList<Waymark> ResolveWaymarks(IZone zone, int selectedWaymark)
@@ -438,7 +439,7 @@ public sealed class Game : IDisposable
     // false when it was already dead, invulnerable (UseInvuln), or godmode
     // swallowed it. Callers that run extra on-death logic should gate on this
     // so an invuln'd/godmode'd "death" doesn't trigger gameplay consequences.
-    public bool Kill(ISimPartyMember target, string cause)
+    public bool Kill(ISimPartyMember target, string cause, uint? actionId = null)
     {
         if (target == null) return false;
         if (target.Dead) return false;
@@ -478,7 +479,7 @@ public sealed class Game : IDisposable
             return false;
         }
         target.OnKilled();
-        PartyMemberKilled?.Invoke(target.Role, cause);
+        PartyMemberKilled?.Invoke(target.Role, cause, actionId);
         MechanicStreak = 0;
         deathOccurredThisRun = true;
         AutoRestart = false;

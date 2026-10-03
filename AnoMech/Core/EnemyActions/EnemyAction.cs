@@ -12,6 +12,10 @@ public sealed record EnemyAction(uint ActionId)
     public AreaSpec Area { get; init; } = new();
     public IReadOnlyList<IEnemyActionEffect> Effects { get; init; } = [];
     public TimingSpec Timing { get; init; } = new();
+
+    // Said of every death this action deals, ahead of the hit's own reason: "Hello, World (Failed
+    // Hello World mechanic; had vuln up debuff)".
+    public string? DeathExplanation { get; init; }
 }
 
 public sealed record CastSpec
@@ -29,6 +33,9 @@ public sealed record AreaSpec
 {
     // The dimension the sheet lacks; meaning depends on CastType (see InsideActionAoe).
     public float? Size { get; init; }
+
+    // Turns the omen and the area from the caster's facing, in radians.
+    public float Rotation { get; init; }
 
     // Runs before any effect, so it also decides who counts toward a stack.
     public Func<EnemyActionContext, IReadOnlyList<SimCharacter>, IReadOnlyList<SimCharacter>>? AdjustTargets { get; init; }

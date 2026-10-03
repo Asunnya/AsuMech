@@ -73,6 +73,10 @@ public sealed class SimParty : ISimObject
 
     // Kills every alive member with the given cause. Raidwide wipe primitive
     // used by mechanics whose failure is unsurvivable.
+    public void WipeAllPlayers(uint actionId, string? explanation = null)
+        => ForEachActive(m => { if (m.IsAlive()) m.Die(actionId, explanation); });
+
+    [Obsolete("Name the action: WipeAllPlayers(actionId, explanation).")]
     public void WipeAllPlayers(string cause)
         => ForEachActive(m => { if (m.IsAlive()) m.Die(cause); });
 

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using AnoMech.Core.SimObjects;
 
 namespace AnoMech.Core.EnemyActions;
@@ -23,8 +24,29 @@ public static class EnemyActionEffects
     // Survivors only.
     public static IEnemyActionEffect ApplyStatus(ushort statusId, float duration) => new ApplyStatusEffect(statusId, duration);
 
+    // One more stack of the family's `times` status, or the death it completes. Survivors only.
+    public static IEnemyActionEffect ApplyRuin(RuinSpec ruin, int times, float duration)
+        => new ApplyRuinEffect(ruin, ruin.StatusId(times), times, duration);
+
     // Away from the caster, by a Knockback sheet row. Survivors only.
     public static IEnemyActionEffect Knockback(uint knockbackId) => new KnockbackEffect(knockbackId);
+
+    // `effect` applied to the cast's target alone, when the area caught it.
+    public static IEnemyActionEffect OnTarget(IEnemyActionEffect effect) => new FilteredEffect(effect, castTarget: true);
+
+    // `effect` applied to everyone hit but the cast's target.
+    public static IEnemyActionEffect OnOthers(IEnemyActionEffect effect) => new FilteredEffect(effect, castTarget: false);
+}
+
+internal sealed class FilteredEffect(IEnemyActionEffect effect, bool castTarget) : IEnemyActionEffect
+{
+    public void Apply(EnemyActionContext ctx)
+    {
+        var hits = ctx.Hits;
+        ctx.Hits = hits.Where(t => ReferenceEquals(t, ctx.Target) == castTarget).ToList();
+        try { effect.Apply(ctx); }
+        finally { ctx.Hits = hits; }
+    }
 }
 
 internal sealed class DamageEffect(DamageSpec spec) : IEnemyActionEffect
@@ -39,16 +61,17 @@ internal sealed class DamageEffect(DamageSpec spec) : IEnemyActionEffect
     {
         var distance = DistanceXZ(target, ctx.Origin);
         var killCause = distance < spec.LethalWithin
-            ? $" ({distance:F0}y from it, lethal inside {spec.LethalWithin:F0}y)"
+            ? $"{distance:F0}y from it, lethal inside {spec.LethalWithin:F0}y"
             : DamageCheck.LethalCause(target, spec, ctx.Party, requiredMitigation);
         Land(ctx, spec, target, killCause);
     }
 
-    // A hit on someone an earlier hit already kills still shows its own number.
+    // A hit on someone an earlier hit already kills still shows its own number. `killCause` "" kills
+    // with no explanation.
     internal static void Land(EnemyActionContext ctx, DamageSpec spec, SimCharacter target, string? killCause)
     {
         ctx.ShowDamage(target, spec.FlyTextAmount(kills: killCause != null), spec.Icon);
-        if (killCause != null) ctx.Kill(target, $"Died to {ActionLookup.Name(ctx.Action.ActionId)}{killCause}");
+        if (killCause != null) ctx.Kill(target, killCause.Length == 0 ? null : killCause);
     }
 
     private static float DistanceXZ(SimCharacter target, Game.Placement origin)
@@ -69,7 +92,7 @@ internal sealed class StackDamageEffect(DamageSpec spec, int min, float? underst
             var tankSoaks = understacked && understackedTankMitigation != null && DamageCheck.IsTank(target);
             if (understacked && !tankSoaks)
             {
-                DamageEffect.Land(ctx, spec, target, $" ({ctx.Hits.Count}/{min} players in stack)");
+                DamageEffect.Land(ctx, spec, target, $"{ctx.Hits.Count}/{min} players in stack");
                 continue;
             }
             var required = tankSoaks ? MathF.Max(spec.RequiredMitigation, understackedTankMitigation!.Value) : spec.RequiredMitigation;
@@ -85,6 +108,21 @@ internal sealed class ApplyStatusEffect(ushort statusId, float duration) : IEnem
         foreach (var target in ctx.Hits)
             if (!ctx.IsKilled(target) && target.IsAlive())
                 target.AddStatus(statusId, duration);
+    }
+}
+
+internal sealed class ApplyRuinEffect(RuinSpec ruin, ushort statusId, int times, float duration) : IEnemyActionEffect
+{
+    public void Apply(EnemyActionContext ctx)
+    {
+        foreach (var target in ctx.Hits)
+        {
+            if (ctx.IsKilled(target) || !target.IsAlive()) continue;
+            if (ruin.Overloads(target, times))
+                ctx.Kill(target, $"{StatusLookup.Name(statusId)} overload");
+            else
+                target.AddStatus(statusId, duration);
+        }
     }
 }
 

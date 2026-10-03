@@ -139,7 +139,7 @@ public class TopP5DeltaScenarioTests
     public void DiesStayingInFrontOfBaitedArm()
         => Delta(RegenHealer)
             .FreezeAt(36f)
-            .ShouldKill(ActionId.HyperPulseDeltaShoot, RegenHealer);
+            .ShouldKill(ActionId.HyperPulseDeltaCharging, RegenHealer);
 
     // The NW arm turns counter-clockwise; baited from its clockwise side it sweeps into the arena
     // and catches M2 on the way to its monitor spot.
@@ -245,8 +245,8 @@ public class TopP5DeltaScenarioTests
     [Test]
     public void NearWorldJumpingBackToFirstTargetWipes()
         => Delta(MeleeDpsB)
-            .TeleportAt(53.5f, to: new(8, -5))
-            .MoveBotAt(53.5f, PhysRangedDps, to: new(-19, -3))
+            .TeleportAt(53.6f, to: new(8, -5))
+            .MoveBotAt(53.6f, PhysRangedDps, to: new(-19, -3))
             .ShouldKill(ActionId.HelloNearWorldJump, OffTank)
             .ShouldKill(ActionId.HelloWorldFail, AllBut(OffTank));
 

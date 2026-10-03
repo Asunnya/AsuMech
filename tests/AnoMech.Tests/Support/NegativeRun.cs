@@ -1,6 +1,7 @@
 using System.Numerics;
 using AnoMech.Core;
 using AnoMech.Core.Game.Party;
+using AnoMech.Core.SimObjects;
 using AnoMech.Scenarios;
 
 namespace AnoMech.Tests;
@@ -14,7 +15,7 @@ namespace AnoMech.Tests;
 //         .ShouldKill(ActionId.BeyondStrength, PartyRole.MeleeDpsA);
 internal static class NegativeRun
 {
-    public const uint ArenaWall = 0;
+    public const uint ArenaWall = SimCharacterDeathExtensions.NoAction;
 
     public static NegativeRun<TScenario> Negative<TScenario>(PartyRole role, int strat = 0) where TScenario : IScenario
         => new(role, strat);
@@ -56,41 +57,31 @@ internal sealed class NegativeRun<TScenario>(PartyRole role, int strat) where TS
 
     // The run starts at the first ShouldKill; each call judges the next group of deaths, in order.
     // Deaths no call judges are consequences (a stack one short, a tether partner left alone), not
-    // what the test broke. `actionId` 0 = the arena wall.
+    // what the test broke. Matched on the action the death names, so only Die(actionId, ...) counts.
     public NegativeRun<TScenario> ShouldKill(uint actionId, params PartyRole[] roles)
-        => Judge(() =>
-        {
-            var cause = CauseOf(actionId);
-            return ($"{string.Join(", ", roles)} to die to {cause}", c => c.Contains(cause, StringComparison.Ordinal), roles, roles);
-        });
+        => Judge(() => $"{string.Join(", ", roles)} to die to {NameOf(actionId)}", actionId, roles, roles);
 
     // When the roll decides who is hit.
     public NegativeRun<TScenario> ShouldKillSomeone(uint actionId)
-        => Judge(() =>
-        {
-            var cause = CauseOf(actionId);
-            return ($"someone to die to {cause}", c => c.Contains(cause, StringComparison.Ordinal), PerRole.All, []);
-        });
+        => Judge(() => $"someone to die to {NameOf(actionId)}", actionId, PerRole.All, []);
 
-    private static string CauseOf(uint actionId) => actionId == NegativeRun.ArenaWall ? ArenaWallCause : ActionLookup.Name(actionId);
-
-    private const string ArenaWallCause = "Walked out of arena";
+    private static string NameOf(uint actionId)
+        => actionId == NegativeRun.ArenaWall ? "the arena wall" : $"{ActionLookup.Name(actionId)} ({actionId})";
 
     private ScenarioRun? run;
     private int runSeed;
     private int judgedDeaths;
 
-    // Names resolve only once the run has installed the game data.
-    private NegativeRun<TScenario> Judge(Func<(string Expected, Func<string, bool> CauseMatches, PartyRole[] Allowed, PartyRole[] MustDie)> group)
+    // `expected` is lazy: names resolve only once the run has installed the game data.
+    private NegativeRun<TScenario> Judge(Func<string> expected, uint actionId, PartyRole[] allowed, PartyRole[] mustDie)
     {
         if (run is null)
         {
             runSeed = seed ?? Random.Shared.Next();
             run = ScenarioRun.Execute(typeof(TScenario), strat, runSeed, options);
         }
-        var (expected, causeMatches, allowed, mustDie) = group();
-        expected = (judgedDeaths == 0 ? "expected " : "then expected ") + expected;
-        if (GroupMismatch(run, judgedDeaths, expected, causeMatches, allowed, mustDie, out var count) is not { } problem)
+        var message = (judgedDeaths == 0 ? "expected " : "then expected ") + expected();
+        if (GroupMismatch(run, judgedDeaths, message, actionId, allowed, mustDie, out var count) is not { } problem)
         {
             judgedDeaths += count;
             return this;
@@ -102,19 +93,18 @@ internal sealed class NegativeRun<TScenario>(PartyRole role, int strat) where TS
         return this;
     }
 
-    // A group is the deaths from `start` on, in one frame, to the expected cause. A raidwide they set
-    // off (a tether partner gone, a Hello World holder down) can land in that same frame, so this
+    // A group is the deaths from `start` on, in one frame, to the expected action. A raidwide they
+    // set off (a tether partner gone, a Hello World holder down) can land in that same frame, so this
     // goes by order rather than by time alone.
     private static string? GroupMismatch(
-        ScenarioRun run, int start, string expected, Func<string, bool> causeMatches, PartyRole[] allowed, PartyRole[] mustDie,
-        out int count)
+        ScenarioRun run, int start, string expected, uint actionId, PartyRole[] allowed, PartyRole[] mustDie, out int count)
     {
         count = 0;
         if (run.Failure is not null) return $"{expected}, but the run failed.";
         if (run.Deaths.Count <= start) return $"{expected}, but nobody {(start == 0 ? "" : "else ")}died.";
         var time = run.Deaths[start].Time;
         var group = run.Deaths.Skip(start)
-                       .TakeWhile(d => d.Time <= time + ScenarioRun.FrameSeconds / 2 && causeMatches(d.Cause))
+                       .TakeWhile(d => d.Time <= time + ScenarioRun.FrameSeconds / 2 && d.ActionId == actionId)
                        .ToList();
         if (group.Count == 0) return $"{expected}, but {Describe([run.Deaths[start]])} first.";
         var wrong = group.Where(d => !allowed.Contains(d.Role)).ToList();
@@ -126,5 +116,5 @@ internal sealed class NegativeRun<TScenario>(PartyRole role, int strat) where TS
     }
 
     private static string Describe(IEnumerable<Death> deaths)
-        => string.Join("; ", deaths.Select(d => $"{d.Role} died to \"{d.Cause}\" at t={d.Time:F2}"));
+        => string.Join("; ", deaths.Select(d => $"{d.Role} died to \"{d.Cause}\" ({(d.ActionId is { } id ? $"action {id}" : "no action")}) at t={d.Time:F2}"));
 }

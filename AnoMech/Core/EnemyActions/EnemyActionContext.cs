@@ -7,7 +7,7 @@ namespace AnoMech.Core.EnemyActions;
 // One resolve of one cast, shared by its effects in list order.
 public sealed class EnemyActionContext
 {
-    private readonly Dictionary<SimCharacter, string> killed = [];
+    private readonly Dictionary<SimCharacter, string?> killed = [];
     private readonly List<(SimCharacter Target, uint Amount, FlyTextIcon Icon)> damageShown = [];
 
     internal EnemyActionContext(EnemyAction action, SimEnemy caster, SimCharacter? target, Placement origin, SimParty party)
@@ -27,11 +27,11 @@ public sealed class EnemyActionContext
     // Nearest to Origin first.
     public IReadOnlyList<SimCharacter> Hits { get; internal set; } = [];
 
-    // Decided now; the character dies after TimingSpec.DeathDelay. The first cause wins.
-    public void Kill(SimCharacter who, string cause) => killed.TryAdd(who, cause);
+    // Decided now; the character dies to this action after TimingSpec.DeathDelay. The first kill wins.
+    public void Kill(SimCharacter who, string? explanation = null) => killed.TryAdd(who, explanation);
     public bool IsKilled(SimCharacter who) => killed.ContainsKey(who);
     public void ShowDamage(SimCharacter who, uint amount, FlyTextIcon icon) => damageShown.Add((who, amount, icon));
 
-    internal IReadOnlyDictionary<SimCharacter, string> Killed => killed;
+    internal IReadOnlyDictionary<SimCharacter, string?> Killed => killed;
     internal IReadOnlyList<(SimCharacter Target, uint Amount, FlyTextIcon Icon)> DamageShown => damageShown;
 }

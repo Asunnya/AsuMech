@@ -66,8 +66,6 @@ public sealed class TopP5DeltaState
     public PartyRole? BeyondDefenseTarget { get; set; }
     public PartyRole NearWorldRole { get; set; }
     public PartyRole FarWorldRole { get; set; }
-    public bool PunchExplosionUnmitigated { get; set; }
-    public List<Vector3>? PunchTargets { get; set; }
 
     public int BeyondDefenseIndex()
     {
@@ -210,8 +208,7 @@ public sealed class TopP5DeltaState
     // starts null -- not knowable at run start, set later via TopP5DeltaBeyondDefenseUpdateMessage
     // (same pattern as Umad P2 Forsaken's P2LockonsUpdateMessage). Side/NorthSouth are carried
     // as bools (two named static instances each, no delegate). FistRotations/
-    // NearWorldTetherIndex/Beyond Defence requests/PunchExplosionUnmitigated/PunchTargets are
-    // harmless placeholders -- only the scenario's own host-only resolution reads them.
+    // NearWorldTetherIndex/Beyond Defence requests are harmless placeholders -- only the scenario's own host-only resolution reads them.
     private TopP5DeltaState(
         PartyRole[] tetherOrder, uint[] fistColors, int playerMonitorIndex,
         bool playerMonitorSideIsLeft, bool omegaMonitorSideIsLeft, bool eyeSpawnIsNorth,
