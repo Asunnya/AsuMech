@@ -10,7 +10,6 @@ using AnoMech.Core.Game.Party;
 using AnoMech.Core.SimObjects;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
-using FFXIVClientStructs.FFXIV.Client.Network;
 using static AnoMech.Scenarios.Dsr.DsrConstants;
 
 namespace AnoMech.Scenarios.Dsr.P1Knights;
@@ -576,12 +575,12 @@ public sealed class DsrP1KnightsScenario : IScenario
         world.Events.Add(HallowingCastSeconds, () => ResolveHoliestHallowing(assigned));
     }
 
-    private unsafe void InterruptHallowing()
+    private void InterruptHallowing()
     {
         if (!hallowingCasting || hallowingInterrupted || adelphel == null) return;
         hallowingInterrupted = true;
         hallowingCasting = false;
-        PacketDispatcher.HandleActorControlPacket(adelphel.EntityId, CancelCastControl, CancelCastReason, 1, ActionId.HoliestHallowing, 1, 0, 0, 0, 0, 0xE0000000, false);
+        adelphel.ActorControl(CancelCastControl, CancelCastReason, 1, ActionId.HoliestHallowing, 1);
     }
 
     private void ResolveHoliestHallowing(PartyRole assigned)

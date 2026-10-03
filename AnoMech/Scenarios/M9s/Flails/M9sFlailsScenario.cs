@@ -69,8 +69,11 @@ public sealed class M9sFlailsScenario : IScenario
         corridorActive = false;
         hazardTime = 0f;
         Array.Clear(doornailDown);
-        Plugin.PlayerInputHooks.ActionExecuted -= OnPlayerAction;
-        Plugin.PlayerInputHooks.ActionExecuted += OnPlayerAction;
+        if (Plugin.PlayerInputHooks is { } hooks)
+        {
+            hooks.ActionExecuted -= OnPlayerAction;
+            hooks.ActionExecuted += OnPlayerAction;
+        }
 
         state = new M9sFlailsState(world.Rng, settingsWindow.Overrides);
         if (selectedAi is { } idx && idx < AiStrats.Count)
@@ -389,9 +392,8 @@ public sealed class M9sFlailsScenario : IScenario
     private void ChipDoornailWithBots()
     {
         if (doornail is not { IsActive: true }) return;
-        var playerRole = world.Party.PlayerRole;
         // An empty slot (solo) still counts, so the player alone isn't asked to out-damage a group.
-        var bots = DoornailKillers.Count(role => role != playerRole && (world.Party.Get(role) is not { } bot || bot.IsAlive()));
+        var bots = DoornailKillers.Count(role => world.Party.Get(role) is not { } bot || (bot.IsAlive() && world.Party.IsBotDriven(bot)));
         DamageDoornail(bots * ContributorShare * HazardStep);
     }
 
@@ -464,7 +466,7 @@ public sealed class M9sFlailsScenario : IScenario
 
     private void DespawnAll()
     {
-        Plugin.PlayerInputHooks.ActionExecuted -= OnPlayerAction;
+        if (Plugin.PlayerInputHooks is { } hooks) hooks.ActionExecuted -= OnPlayerAction;
         vamp?.Despawn();
         foreach (var helper in helpers) helper.Despawn();
         helpers.Clear();

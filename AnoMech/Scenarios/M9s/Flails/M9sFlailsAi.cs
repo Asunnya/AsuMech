@@ -12,7 +12,7 @@ public sealed class M9sFlailsAi : IScenarioAi<M9sFlailsState>
     public string Name => "Toxic / Hector";
 
     private const float PlanFrom = 12f;
-    private const float PlanUntil = 78f;
+    private const float PlanUntil = 84f;
     private const float DecisionStep = 0.25f;
     private const float Horizon = 2.5f;
     private const float RunSpeed = 6f;
@@ -42,11 +42,9 @@ public sealed class M9sFlailsAi : IScenarioAi<M9sFlailsState>
     {
         var saws = M9sFlailsState.SawHitsBetween(now - 0.2f, now + Horizon + 0.2f);
         var checkTimes = CheckTimes(now, saws);
-        var playerSlot = (int)world.Party.PlayerRole;
         for (var slot = 0; slot < 8; slot++)
         {
-            if (slot == playerSlot) continue;
-            if (world.Party.Get(slot) is not { } bot || !bot.IsAlive()) continue;
+            if (world.Party.Get(slot) is not { } bot || !bot.IsAlive() || !world.Party.IsBotDriven(bot)) continue;
             if (SafestSpotNearHome(slot, bot.Position, now, checkTimes, saws) is { } spot)
                 bot.MoveTo(spot, RunSpeed);
         }

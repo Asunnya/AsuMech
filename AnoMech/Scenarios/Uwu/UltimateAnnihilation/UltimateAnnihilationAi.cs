@@ -75,7 +75,8 @@ public class UltimateAnnihilationAi : IScenarioAi<UltimateAnnihilationState>
         ai.Move(27.3f, () => Plan(Group(NorthEdge, MainTankOrb, OffTankOrb, searingWind: new(0f, 17.5f), firstMesohigh: new(11.5f, -11f))));
         ai.Move(28.8f, () => Plan(Group(null, new(-1.5f, -15.5f), new(1f, -16.5f))));
         ai.Move(29.2f, () => Plan(Only(state.FirstMesohighTaker, NorthEdge)));
-        ai.Move(31.8f, () => Plan(Group(NorthWestOutOfLines, new(-8.5f, -10f), new(7.5f, -11f), searingWind: new(9f, 11f))));
+        ai.Move(31.8f, () => Plan(SearingWindHoldsStill(Group(NorthWestOutOfLines, new(-8.5f, -10f), new(7.5f, -11f)))));
+        ai.Move(32.2f, () => Plan(Only(state.SearingWindTarget, new(9f, 11f))));
         ai.Move(35.3f, () => Plan(Group(NorthWestStack, NorthWestStack, OffTankOrb, searingWind: new(0f, 10.5f))));
         ai.Move(40.3f, () => Plan(Only(PartyRole.MainTank, new(-2.5f, -6f))));
         ai.Move(43.02f, () => AheadOfFeatherRain(43.02f, 44.22f,
@@ -238,9 +239,9 @@ public class UltimateAnnihilationAi : IScenarioAi<UltimateAnnihilationState>
         return distance < 0.01f ? position : position + (heading - position) / distance * MathF.Min(distance, RunSpeed * MathF.Max(0f, at - now));
     }
 
-    private bool IsBot(int slot) => world.Party.Get(slot) is { } member && member is not SimPlayer && member.IsAlive();
+    private bool IsBot(int slot) => world.Party.Get(slot) is { } member && world.Party.IsBotDriven(member) && member.IsAlive();
 
-    private bool IsLivePlayer(int slot) => world.Party.Get(slot) is SimPlayer player && player.IsAlive();
+    private bool IsLivePlayer(int slot) => world.Party.Get(slot) is { } member && !world.Party.IsBotDriven(member) && member.IsAlive();
 
     private static bool IsTank(int slot) => slot is (int)PartyRole.MainTank or (int)PartyRole.OffTank;
 
@@ -253,6 +254,12 @@ public class UltimateAnnihilationAi : IScenarioAi<UltimateAnnihilationState>
 
     private PartyRole OtherHealer =>
         state.SearingWindTarget == PartyRole.RegenHealer ? PartyRole.ShieldHealer : PartyRole.RegenHealer;
+
+    private Vector2?[] SearingWindHoldsStill(Vector2?[] spots)
+    {
+        spots[(int)state.SearingWindTarget] = null;
+        return spots;
+    }
 
     private Vector2?[] BothHealersWest(Vector2?[] spots)
     {

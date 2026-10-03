@@ -7,7 +7,6 @@ using AnoMech.Core.Game;
 using AnoMech.Core.SimObjects;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
-using FFXIVClientStructs.FFXIV.Client.Network;
 using static AnoMech.Scenarios.Uwu.UwuConstants;
 
 namespace AnoMech.Scenarios.Uwu;
@@ -61,7 +60,7 @@ public class UwuUtils(SimWorld world)
     public static void Lockon(SimCharacter? target, uint lockonId)
     {
         if (target == null) return;
-        PacketDispatcher.HandleActorControlPacket(target.EntityId, SetLockonControl, lockonId, target.GameObjectId.ObjectId, 0, 0, 0, 0, 0, 0, 0xE0000000, false);
+        target.ActorControl(SetLockonControl, lockonId, target.GameObjectId.ObjectId);
     }
 
     private const uint SetLockonControl = 34;

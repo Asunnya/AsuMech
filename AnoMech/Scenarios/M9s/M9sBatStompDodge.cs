@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using AnoMech.Core.SimObjects;
 using static AnoMech.Scenarios.M9s.M9sConstants;
@@ -46,14 +47,13 @@ public sealed class M9sBatStompDodge(SimWorld world, M9sBatPattern pattern, Func
         {
             if (world.Party.Get(slot) is not { } member || !member.IsAlive()) continue;
             vulnUntil[slot] = decidedAt + (member.FindStatus(StatusId.MagicVulnerabilityUp)?.Remaining ?? float.NegativeInfinity);
-            if (slot == playerSlot)
+            if (!world.Party.IsBotDriven(member))
                 planned[slot] = new Trajectory(pattern, decidedAt, Flat(member.Position), Flat(member.Position), IsCursed(member), steps);
         }
 
-        for (var slot = 0; slot < 8; slot++)
+        foreach (var slot in Enumerable.Range(0, 8).OrderBy(slot => slot != playerSlot))
         {
-            if (slot == playerSlot) continue;
-            if (world.Party.Get(slot) is not { } bot || !bot.IsAlive()) continue;
+            if (world.Party.Get(slot) is not { } bot || !bot.IsAlive() || !world.Party.IsBotDriven(bot)) continue;
             var from = Flat(bot.Position);
             var cursed = IsCursed(bot);
             var choice = SafestSpotNearMarker(slot, from, cursed, blasts, blastAt, decidedAt, steps, planned, vulnUntil, playerSlot);
