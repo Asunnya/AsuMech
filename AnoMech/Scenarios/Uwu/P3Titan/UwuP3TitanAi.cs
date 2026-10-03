@@ -25,7 +25,7 @@ public sealed class UwuP3TitanAi : IScenarioAi<UwuP3TitanState>
     private const float TankStandOff = 2.5f;
     private const float PlanStep = 0.3f;
     private const float TightSpread = 0.3f;
-    private const float ReactionDelay = 0.3f;
+    private const float ReactionDelay = 0f;
     private const float TimeToDodgeLater = 1.3f;
     private const float TooCloseToPutOff = 2.5f;
     private const float StackedMargin = 0.3f;
@@ -69,7 +69,7 @@ public sealed class UwuP3TitanAi : IScenarioAi<UwuP3TitanState>
         ai.Move(46.8f, BaitTheGaolWindowLandslideThroughTheMiddle, jitter: 0f);
         ai.Move(48.6f, () => PartyTo(new Vector2(-0.8f, -6.1f), withGaolTargets: false), jitter: 0f);
         ai.Move(48.6f, () => MainTankTo(new Vector2(-11f, -5f * state.SafeSide)));
-        ai.Move(50.40f, JailedIntoTheChain, jitter: 0f, sprint: true);
+        ai.Move(50.70f, JailedIntoTheChain, jitter: 0f, sprint: true);
         ai.Move(50.75f, () => PartyTo(new Vector2(9.5f, -10.2f), withGaolTargets: false), jitter: 0f);
         ai.Move(50.8f, () => MainTankTo(new Vector2(-11f, 0f)));
         ai.Move(53.05f, () => MainTankTo(new Vector2(-8f, -6f * state.SafeSide)));
@@ -77,8 +77,9 @@ public sealed class UwuP3TitanAi : IScenarioAi<UwuP3TitanState>
         ai.Move(57.8f, () => PartyTo(TitansLeftSide, withGaolTargets: true), jitter: 0f);
 
         ai.Move(70.3f, () => PartyTo(TitansRightSide, withGaolTargets: true), jitter: 0f);
+        ai.Move(70.3f, () => MainTankTo(new Vector2(1f, 0f)), jitter: 0f);
         ai.Move(73.3f, () => PartyTo(new Vector2(4f, 8.5f), withGaolTargets: true), jitter: 0f);
-        ai.Move(73.3f, () => MainTankTo(new Vector2(1f, 0f)), jitter: 0f);
+        ai.Move(73.3f, () => MainTankTo(new Vector2(8f, 0f)), jitter: 0f);
         PlanEvery(ai, 76.1f, 80.3f, _ => []);
 
         ai.Move(84.9f, () => Group(OppositeSecondJump(10f)));
@@ -402,7 +403,8 @@ public sealed class UwuP3TitanAi : IScenarioAi<UwuP3TitanState>
             return ClearOfHazardsOnTheWay(at, spot, now, hazards, margin, slowest: slowest);
         if (Vector2.Distance(heading, spot) < 0.1f)
             return ClearOfHazardsOnTheWay(at, spot, now, hazards, margin, reaction: MathF.Max(0f, headingSince[slot] + ReactionDelay - now), slowest: slowest);
-        return ClearOfHazardsOnTheWay(WhereItTurns(slot, at), spot, now + ReactionDelay, hazards, margin, reaction: 0f, slowest: slowest);
+        return ClearOfHazardsOnTheWay(WhereItTurns(slot, at), spot, now + ReactionDelay, hazards, margin, reaction: 0f, slowest: slowest)
+            && ClearOfHazardsOnTheWay(at, spot, now, hazards, margin, reaction: 0f, slowest: slowest);
     }
 
     private static Vector2 CentreOfTheBots(List<SimCharacter> members)
@@ -484,7 +486,7 @@ public sealed class UwuP3TitanAi : IScenarioAi<UwuP3TitanState>
         {
             var running = MathF.Max(0f, hazard.At - now - reaction);
             var nearest = MathF.Min(distance, slowest * running);
-            var farthest = running > 0f ? MathF.Min(distance, FastestRun * (running + LateFrame)) : nearest;
+            var farthest = hazard.At > now ? MathF.Min(distance, FastestRun * (hazard.At - now + LateFrame)) : nearest;
             var closest = Math.Clamp(Vector2.Dot(hazard.Origin - from, direction), nearest, farthest);
             var hazardMargin = hazard.IsLane ? laneMargin ?? margin : margin;
             if (IsInside(from + direction * nearest, hazard, hazardMargin)

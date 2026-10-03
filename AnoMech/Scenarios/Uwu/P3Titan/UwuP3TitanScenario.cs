@@ -32,6 +32,8 @@ public sealed class UwuP3TitanScenario : IScenario
     private const float LandslideKnockback = 15f;
     private const float UpheavalKnockback = 24f;
     private const float FreefireRadius = 6f;
+    // Gaols chain along spots 6.7-7y apart; a player's gaol may land this far off its spot.
+    private const float GaolSpotTolerance = 2.5f;
     private const float GaolChainDelay = 0.7f;
     private const float BurstReachesGaolAfter = 0.35f;
     private const float GaolDespawnsAfterBreaking = 1f;
@@ -41,6 +43,7 @@ public sealed class UwuP3TitanScenario : IScenario
     private const float GeocrushLandingFalloff = 20f;
     private const float GeocrushJumpDamage = 0.8f;
     private const float GeocrushJumpFalloff = 32f;
+    private const float GeocrushSafeBand = 7f;
     private const float EarthenFuryDamage = 0.57f;
     private const float TumultDamage = 0.13f;
     private const float RockBusterDamage = 0.28f;
@@ -99,7 +102,7 @@ public sealed class UwuP3TitanScenario : IScenario
         world.Events.Add(0f, SpawnTitan);
         world.Events.Add(2.56f, () => titan?.SetVisible(true));
         world.Events.Add(2.56f, () => CastSelf(titan, ActionId.GeocrushLanding, 2.7f));
-        world.Events.Add(5.55f, () => Geocrush(ActionId.GeocrushLanding, GeocrushLandingDamage, GeocrushLandingFalloff));
+        world.Events.Add(5.55f, () => Geocrush(ActionId.GeocrushLanding, GeocrushLandingDamage, GeocrushLandingFalloff, Geometry.ArenaRadius));
         world.Events.Add(7.91f, () => TitanTargetable(true));
         world.Events.Add(8.00f, () => CastSelf(titan, ActionId.EarthenFury, 2.7f));
         world.Events.Add(10.98f, () => Raidwide(ActionId.EarthenFury, EarthenFuryDamage));
@@ -119,12 +122,12 @@ public sealed class UwuP3TitanScenario : IScenario
         world.Events.Add(32.67f, () => CastSelf(titan, ActionId.GeocrushJump, 2.7f));
         world.Events.Add(32.40f, () => floor = utils.SpawnTitanArena());
         world.Events.Add(32.67f, () => AnimateFloor(1, 2));
-        world.Events.Add(35.66f, () => Geocrush(ActionId.GeocrushJump, GeocrushJumpDamage, GeocrushJumpFalloff));
+        world.Events.Add(35.66f, () => Geocrush(ActionId.GeocrushJump, GeocrushJumpDamage, GeocrushJumpFalloff, Geometry.ArenaRadius));
         world.Events.Add(36.70f, () => world.EnforceArenaBoundary(FirstShrinkRadius, ShrunkenFloorDeath));
         world.Events.Add(38.02f, () => TitanTargetable(true));
 
         world.Events.Add(40.01f, () => SpawnUpheavalBombs(41.14f));
-        world.Events.Add(40.21f, () => titanFacesTank = false);
+        world.Events.Add(40.00f, FaceTheCentreThroughUpheaval);
         world.Events.Add(40.21f, () => CastSelf(titan, ActionId.Upheaval, 3.7f));
         world.Events.Add(41.14f, () => BuryBombs(bombs, 0, 5));
         world.Events.Add(43.23f, () => CastBursts(bombs, 0, 5, 46.71f));
@@ -171,7 +174,7 @@ public sealed class UwuP3TitanScenario : IScenario
         world.Events.Add(86.95f, () => LandOnEdge(state.SecondJumpBearing));
         world.Events.Add(87.02f, () => CastSelf(titan, ActionId.GeocrushJump, 2.7f));
         world.Events.Add(87.02f, () => AnimateFloor(10, 20));
-        world.Events.Add(90.00f, () => Geocrush(ActionId.GeocrushJump, GeocrushJumpDamage, GeocrushJumpFalloff));
+        world.Events.Add(90.00f, () => Geocrush(ActionId.GeocrushJump, GeocrushJumpDamage, GeocrushJumpFalloff, FirstShrinkRadius));
         world.Events.Add(91.00f, () => world.EnforceArenaBoundary(SecondShrinkRadius, ShrunkenFloorDeath));
         world.Events.Add(92.36f, () => TitanTargetable(true));
         world.Events.Add(92.40f, PullTitanTowardCentre);
@@ -332,15 +335,25 @@ public sealed class UwuP3TitanScenario : IScenario
     }
 
     // Damage falls off with distance from where Titan lands.
-    private void Geocrush(uint actionId, float peak, float falloff)
+    // The party reads left or right off Titan's facing, so it holds on the centre whatever the tank does.
+    private void FaceTheCentreThroughUpheaval()
+    {
+        titanFacesTank = false;
+        if (titan == null) return;
+        titan.SetPosition(new Placement(titan.Position, FacingCentre(titan.Position)));
+    }
+
+    // UNVERIFIED: survivable band beside the far edge; anyone closer to Titan dies.
+    private void Geocrush(uint actionId, float peak, float falloff, float arenaRadius)
     {
         if (titan == null) return;
         PlayEffect(titan, actionId, 2.1f);
+        var lethalWithin = Flat(titan.Position).Length() + arenaRadius - GeocrushSafeBand;
         foreach (var member in party.ActiveMembers().ToList())
         {
             var distance = Vector2.Distance(Flat(member.Position), Flat(titan.Position));
             var fraction = peak * MathF.Max(0f, 1f - distance / falloff);
-            damage.ApplyDamage(member, fraction, actionId, "Proximity", false);
+            damage.ApplyDamage(member, fraction, actionId, "Proximity", distance < lethalWithin);
         }
     }
 
@@ -506,7 +519,7 @@ public sealed class UwuP3TitanScenario : IScenario
     private void BurstSixthBombIntoGaols()
     {
         if (bombs[5] is not { } bomb) return;
-        var reached = gaols.Keys.Where(g => Vector2.Distance(Flat(g.Position), Flat(bomb.Position)) <= BurstRadius + g.HitboxRadius).ToList();
+        var reached = gaols.Keys.Where(g => Vector2.Distance(Flat(g.Position), Flat(bomb.Position)) <= BurstRadius + g.HitboxRadius + GaolSpotTolerance).ToList();
         ResolveBursts(bombs, 5, 1);
         foreach (var gaol in reached) world.Events.Add(BurstReachesGaolAfter, () => BreakGaol(gaol, explode: true));
     }
@@ -520,7 +533,7 @@ public sealed class UwuP3TitanScenario : IScenario
             PlayEffect(gaol, ActionId.Freefire, 1.1f);
             var at = gaol.Position;
             damage.Resolve(gaol, ActionId.Freefire, [DamageType.Lethal], [], excludeTargets: Jailed());
-            foreach (var next in gaols.Keys.Where(g => Vector2.Distance(Flat(g.Position), Flat(at)) <= FreefireRadius + g.HitboxRadius).ToList())
+            foreach (var next in gaols.Keys.Where(g => Vector2.Distance(Flat(g.Position), Flat(at)) <= FreefireRadius + g.HitboxRadius + GaolSpotTolerance).ToList())
                 world.Events.Add(GaolChainDelay, () => BreakGaol(next, explode: true));
         }
         world.Events.Add(PrisonerFreedAfter, () => Free(role));
