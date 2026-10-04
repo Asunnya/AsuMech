@@ -27,7 +27,8 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimWorld world)
                 rotation: caster.Rotation + action.Area.Rotation, position: location, targetId: castTarget);
 
         Schedule(castTime + action.Timing.VfxOffset, () => Release(action, target, location, castTarget));
-        Schedule(castTime + action.Timing.ResolveOffset, () => Resolve(action, target, location));
+        if (action.Effects.Count > 0)
+            Schedule(castTime + action.Timing.ResolveOffset, () => Resolve(action, target, location));
     }
 
     // Faces a target first: the packet carries the caster's rotation. A ground location doesn't turn
@@ -75,6 +76,8 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimWorld world)
             Schedule(action.Timing.DamageDelay, () => ShowFlyText(who, amount, icon, name));
         foreach (var (who, explanation) in ctx.Killed)
             Schedule(action.Timing.DeathDelay, () => who.Die(action.ActionId, Explain(action.DeathExplanation, explanation)));
+        foreach (var run in ctx.AfterResolveActions)
+            run();
     }
 
     // Cones and lines (InsideActionAoe's CastTypes 3, 4, 8, 12, 13).

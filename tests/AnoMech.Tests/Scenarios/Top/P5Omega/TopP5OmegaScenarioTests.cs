@@ -116,7 +116,7 @@ public class TopP5OmegaScenarioTests
     public void DiesToSuperliminalSteel()
         => Omega(MainTank)
             .TeleportAt(27.5f, to: Around(Direction.SE, 6, 9.8f))
-            .ShouldKill(ActionId.SuperliminalSteel, MainTank);
+            .ShouldKill(ActionId.SuperliminalSteelOmenL, MainTank);
 
     // On F's line, so Superliminal Steel misses, but far from M.
     [Test]
@@ -125,12 +125,12 @@ public class TopP5OmegaScenarioTests
             .TeleportAt(27.5f, to: Around(Direction.SE, 0, -5))
             .ShouldKill(ActionId.BeyondStrength, MainTank);
 
-    // Clear of the first Omega attacks, 22.6° off the middle of a first cone.
+    // Clear of the first Omega attacks, 26.6° off the middle of a first cone.
     [TestCase(true)]
     [TestCase(false)]
     public void DiesToFirstDiffuseWaveCannon(bool front)
         => Omega(MainTank, o => o.FirstWaveCannonFront = front)
-            .TeleportAt(23.5f, to: front ? new(-5, -12) : new(-12, -5))
+            .TeleportAt(23.5f, to: front ? new(-6, -12) : new(-12, -6))
             .ShouldKill(ActionId.OmegaDiffuseWaveCannonAOE, MainTank);
 
     // Clear of the second Omega attacks, 36.9° off the middle of a second cone.

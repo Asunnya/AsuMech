@@ -12,14 +12,13 @@ namespace AnoMech.Core.EnemyActions;
 internal static class DamageCheck
 {
     // Null when the hit is survivable, otherwise why it kills ("" when it simply does).
-    public static string? LethalCause(SimCharacter target, DamageSpec spec, SimParty party, float requiredMitigation)
+    public static string? LethalCause(SimCharacter target, DamageSpec spec, Severity severity, SimParty party)
     {
+        if (severity.Kind == SeverityKind.Lethal) return "";
         var vulnMitigation = VulnRequiredMitigation(target, spec);
-        var kind = spec.Kind;
-        if (spec.Has(DamageType.Lethal)) return "";
         if (vulnMitigation >= 1f) return "had vuln up debuff";
-        if (spec.Has(DamageType.TankBuster) && !IsTank(target)) return "tank buster";
-        if (Survives(target, party, MathF.Max(requiredMitigation, vulnMitigation ?? 0f), kind)) return null;
+        if (severity.Kind == SeverityKind.TankBuster && !IsTank(target)) return "tank buster";
+        if (Survives(target, party, MathF.Max(severity.MinMitigation, vulnMitigation ?? 0f), spec.Kind)) return null;
         return vulnMitigation != null ? "not enough mitigation for a hit with vuln up" : "not enough mitigation";
     }
 

@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using AnoMech.Core.Game.Party;
+
 namespace AnoMech.Scenarios.Top.P6WaveCannon2;
 
 // User-controlled overrides for TopP6WaveCannon2State's randomized fields. Bound
@@ -8,4 +11,7 @@ public sealed class TopP6WaveCannon2StateOverrides
 {
     // Cosmo Arrow: true = In first, false = Out first, null = randomized.
     public bool? InFirst { get; set; }
+
+    internal IReadOnlyList<PartyRole>? ProteanOrder { get; set; }
+    internal PartyRole? WildChargeTarget { get; set; }
 }

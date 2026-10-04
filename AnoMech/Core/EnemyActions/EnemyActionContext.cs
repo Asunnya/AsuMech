@@ -9,6 +9,7 @@ public sealed class EnemyActionContext
 {
     private readonly Dictionary<SimCharacter, string?> killed = [];
     private readonly List<(SimCharacter Target, uint Amount, FlyTextIcon Icon)> damageShown = [];
+    private readonly List<System.Action> afterResolve = [];
 
     internal EnemyActionContext(EnemyAction action, SimEnemy caster, SimCharacter? target, Placement origin, SimParty party)
     {
@@ -32,6 +33,11 @@ public sealed class EnemyActionContext
     public bool IsKilled(SimCharacter who) => killed.ContainsKey(who);
     public void ShowDamage(SimCharacter who, uint amount, FlyTextIcon icon) => damageShown.Add((who, amount, icon));
 
+    // Runs once every effect has applied and the deaths due now have been dealt, so a follow-up
+    // cast can't claim this action's kills.
+    public void AfterResolve(System.Action run) => afterResolve.Add(run);
+
     internal IReadOnlyDictionary<SimCharacter, string?> Killed => killed;
     internal IReadOnlyList<(SimCharacter Target, uint Amount, FlyTextIcon Icon)> DamageShown => damageShown;
+    internal IReadOnlyList<System.Action> AfterResolveActions => afterResolve;
 }

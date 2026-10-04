@@ -1,19 +1,32 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Text.Json.Serialization;
 using AnoMech.Core;
+using AnoMech.Core.EnemyActions;
 using AnoMech.Core.Game;
 using AnoMech.Core.SimObjects;
 using static AnoMech.Scenarios.Top.TopConstants;
 
 namespace AnoMech.Scenarios.Top;
 
+// Travels in TopP5OmegaAiReplayStateMessage, so it stays a plain value: Action is derived, not stored.
 public sealed record OmegaAttack(byte AttributeFlags, uint ActionId)
 {
     public static readonly OmegaAttack Legs   = new(49, TopConstants.ActionId.SuperliminalSteel);
     public static readonly OmegaAttack Staff  = new(16, TopConstants.ActionId.OptimizedBlizzardIII);
     public static readonly OmegaAttack Sword  = new(16, TopConstants.ActionId.EfficientBladework);
     public static readonly OmegaAttack Shield = new(0,  TopConstants.ActionId.BeyondStrength);
+
+    [JsonIgnore]
+    public EnemyAction Action => ActionId switch
+    {
+        TopConstants.ActionId.SuperliminalSteel => TopActions.SuperliminalSteel,
+        TopConstants.ActionId.OptimizedBlizzardIII => TopActions.OptimizedBlizzardIII,
+        TopConstants.ActionId.EfficientBladework => TopActions.EfficientBladework,
+        TopConstants.ActionId.BeyondStrength => TopActions.BeyondStrength,
+        _ => throw new InvalidOperationException($"No EnemyAction for omega attack {ActionId}"),
+    };
 }
 
 public sealed record GlitchType(ushort StatusId, Predicate<SimTether> Condition)
@@ -298,9 +311,6 @@ public static class TopConstants
     public static class Geometry
     {
         public const float ArenaRadius = 20f;                       // TOP arena ring
-        public const float SuperliminalSteelSafeHalfWidth = 4f;
-        public const float OptimizedBlizzardArmHalfWidth = 4f;
-        public const float OmegaFAttackHalfLength = 50f;
         public const float PunchBackDistance = 2f;
         public const float HyperPulseStep = MathF.PI / 9f;          // 20° in radians
         public const float HwTetherBreakDistance = 10f;             // remote (short) breaks above; local (long) breaks below
@@ -315,8 +325,6 @@ public static class TopConstants
         public const float SwivelCannonHalfAngle = MathF.PI * 7f / 12f;
         public const float HyperPulseHalfWidth = 4f;
         public const float HyperPulseLength = 100f;
-        public const float OpticalLaserHalfWidth = 8f;   // sheet XAxisModifier=16 -> half-width 8
-        public const float OpticalLaserLength = 100f;
         // 20, not 21: BossMod's P2PartySynergy DistanceRange is (20, 26) for Mid glitch. The
         // AI's Mid-glitch stacks sit 90 degrees apart at radius 15 = 21.21y, which is inside the
         // real window with 1.2y to spare but was only 0.21y above the old 21 -- AiManager's 0.3y

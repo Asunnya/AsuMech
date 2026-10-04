@@ -20,7 +20,7 @@ public sealed class TopZone : IZone
     public ushort ItemLevel => 365;
 
     public IReadOnlyList<WaymarkLayout> WaymarkPresets { get; } =
-        [new WaymarkLayout("Ring", TopUtils.TopWaymarks)];
+        [new WaymarkLayout("Ring", Core.Game.WaymarkPresets.Ring(13.63f))];
 
     public void Run(SimWorld world)
     {

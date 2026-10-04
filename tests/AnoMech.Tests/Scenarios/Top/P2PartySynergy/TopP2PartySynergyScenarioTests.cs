@@ -48,7 +48,7 @@ public class TopP2PartySynergyScenarioTests
     public void DiesToLegs()
         => Healer(PlaystationSymbol.Cross, GlitchType.Mid, f: OmegaAttack.Legs, m: OmegaAttack.Sword)
             .TeleportAt(12f, to: new(8, -5))
-            .ShouldKill(ActionId.SuperliminalSteel, RegenHealer);
+            .ShouldKill(ActionId.SuperliminalSteelOmenR, RegenHealer);
 
     [Test]
     public void DiesToStaff()

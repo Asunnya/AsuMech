@@ -163,7 +163,7 @@ public class TopP5SigmaScenarioTests
     {
         var rotation = clockwise ? Rotation.Clockwise : Rotation.CounterClockwise;
         Sigma(CasterDps, o => o.SpinnerRotation = rotation)
-            .TeleportAt(58f, to: new Vector2(15 * rotation.Mul, 5) * (behind ? -1 : 1))
+            .TeleportAt(58f, to: new Vector2(15 * rotation.Mul, 4) * (behind ? -1 : 1))
             .ShouldKill(ActionId.RearLasersShoot, CasterDps);
     }
 
@@ -185,7 +185,7 @@ public class TopP5SigmaScenarioTests
     public void DiesToSuperliminalSteel()
         => Sigma(MainTank, o => o.OmegaFForm = OmegaAttack.Legs)
             .TeleportAt(58.5f, to: new(-6.5f, -17))
-            .ShouldKill(ActionId.SuperliminalSteel, MainTank);
+            .ShouldKill(ActionId.SuperliminalSteelOmenL, MainTank);
 
     // Steps onto the second arm's line to MT just after Near World's first hit made it vulnerable.
     [Test]

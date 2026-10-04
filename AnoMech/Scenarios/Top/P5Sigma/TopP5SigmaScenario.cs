@@ -28,7 +28,6 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new TopP5SigmaAi()];
 
-    private TopUtils topUtils = null!;
 
     private TopP5SigmaState state = null!;
     private SimWorld world = null!;
@@ -46,7 +45,6 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
         LastState = state;
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<TopP5SigmaState>)AiStrats[idx]).Run(state, world);
-        topUtils = new TopUtils(world);
 
         Run_Omega_M_4000A63C();
         Run_Omega_4000A68F();
@@ -66,7 +64,7 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
     
     public void Tick(float delta, float elapsed)
     {
-        topUtils.CheckHelloWorldDeath();
+        HelloWorld.CheckHolderDeaths(world);
     }
     
     private void Run_PlayerTethers()
@@ -140,8 +138,7 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
         });
         world.Events.Add(45.97f, () => omega_M_4000A63C?.PlayActionTimeline(TimelineId.Spawn));
         world.Events.Add(46.93f, () => omega_M_4000A63C?.SetVisible(true));
-        world.Events.Add(59.62f, () => omega_M_4000A63C?.Cast(state.OmegaFAttack.ActionId, targetLocation: omega_M_4000A63C.Position, targetId: omega_M_4000A63C.GameObjectId, castSeconds: 1.200f, omenDelay: Duration.OmegaAttackOmenDelay));
-        world.Events.Add(60.82f, () => topUtils.ResolveOmegaAttack(omega_M_4000A63C, state.OmegaFAttack.ActionId));
+        world.Events.Add(59.62f, () => omega_M_4000A63C?.Cast(state.OmegaFAttack.Action));
         world.Events.Add(64.21f, () => omega_M_4000A63C?.PlayActionTimeline(TimelineId.WarpOut));
         world.Events.Add(65.77f, () => omega_M_4000A63C?.SetVisible(false));
         world.Events.Add(66.26f, () => omega_M_4000A63C?.SetModeAttributeFlags(0x32));
@@ -210,9 +207,9 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
 
     private void Run_Omega_4000A408()
     {
-        TopUtils.HelloWorldSolver[] solvers = [
-            topUtils.HelloWorld(state.HelloWorldTargets[0], true),
-            topUtils.HelloWorld(state.HelloWorldTargets[1], false)];
+        HelloWorld[] solvers = [
+            new HelloWorld(world.Party, state.HelloWorldTargets[0], true),
+            new HelloWorld(world.Party, state.HelloWorldTargets[1], false)];
         for (int index = 0; index < 6; index++)
         {
             SimEnemy? omega_4000A408 = null;
@@ -295,7 +292,7 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
         {
             SimEnemy? omega_F_4000A40B_2 = null;
             world.Events.Add(59.62f, () => omega_F_4000A40B_2 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.OmegaHelper, NameId: BNpcNameId.OmegaFDynamis, Level: 1, Targetable: false, EnemyList: EnemyListMode.Never, IsVisible: false, Placement: state.NewNorthB.Apply(Geometry.SuperliminalSteelOmenPlacement))));
-            world.Events.Add(59.66f, () => omega_F_4000A40B_2?.Cast(ActionId.SuperliminalSteelOmenR, targetLocation: state.NewNorthB.Apply(Geometry.SuperliminalSteelOmenTargetR), castSeconds: 1.200f, targetId: omega_F_4000A40B_2?.GameObjectId, omenDelay: Duration.OmegaAttackOmenDelay));
+            world.Events.Add(59.66f, () => omega_F_4000A40B_2?.Cast(Actions.SuperliminalSteelR, state.NewNorthB.Apply(Geometry.SuperliminalSteelOmenTargetR)));
         }
     }
 
@@ -305,7 +302,7 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
         {
             SimEnemy? omega_F_4000A40C_2 = null;
             world.Events.Add(59.62f, () => omega_F_4000A40C_2 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.OmegaHelper, NameId: BNpcNameId.OmegaFDynamis, Level: 1, Targetable: false, EnemyList: EnemyListMode.Never, IsVisible: false, Placement: state.NewNorthB.Apply(Geometry.SuperliminalSteelOmenPlacement))));
-            world.Events.Add(59.66f, () => omega_F_4000A40C_2?.Cast(ActionId.SuperliminalSteelOmenL, targetLocation: state.NewNorthB.Apply(Geometry.SuperliminalSteelOmenTargetL), castSeconds: 1.200f, targetId: omega_F_4000A40C_2?.GameObjectId, omenDelay: Duration.OmegaAttackOmenDelay));
+            world.Events.Add(59.66f, () => omega_F_4000A40C_2?.Cast(Actions.SuperliminalSteelL, state.NewNorthB.Apply(Geometry.SuperliminalSteelOmenTargetL)));
         }
     }
 

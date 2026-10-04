@@ -29,7 +29,6 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new TopP5DeltaAi()];
 
-    private TopUtils topUtils = null!;
 
     private TopP5DeltaState state = null!;
     private SimWorld world = null!;
@@ -51,8 +50,8 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
     private List<SimEnemy?>? armUnits;
     private List<SimTether> tethersShort = [];
     private List<SimTether> tethersLong = [];
-    private TopUtils.HelloWorldSolver? nearSolver;
-    private TopUtils.HelloWorldSolver? farSolver;
+    private HelloWorld? nearSolver;
+    private HelloWorld? farSolver;
 
     public void Run(SimWorld worldParam, int? selectedAi)
     {
@@ -62,7 +61,6 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
         LastState = state;
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<TopP5DeltaState>)AiStrats[idx]).Run(state, world);
-        topUtils = new TopUtils(world);
 
         world.Events.Add(0.1f, SpawnOmega);
         world.Events.Add(2f, () => omega?.Cast(Actions.RunMiDeltaVersion));
@@ -80,9 +78,9 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
         world.Events.Add(20.3f, () =>finalHelper?.Cast(ActionId.ArchivePeripheral));
         world.Events.Add(23.5f, SpawnArmUnits);               // Archive Peripheral fires t=20.30s
         world.Events.Add(25.3f, MarkArmUnitRotations);        // +1s after arm spawn
-        world.Events.Add(28.4f, () => omega?.PlayActionTimeline(TimelineId.Spawn));
         world.Events.Add(28.1f, ApplyDeltaRealTethers); // same window as optical laser
-        world.Events.Add(29.5f, () => topUtils.ResolveOpticalLaser(opticalUnit));
+        world.Events.Add(28.2f, () => opticalUnit?.Cast(Actions.OpticalLaser));
+        world.Events.Add(28.4f, () => omega?.PlayActionTimeline(TimelineId.Spawn));
         world.Events.Add(30.5f, StartMonitors);         // BeyondDefense + OWC casts start t=30.43/30.47s
         world.Events.Add(30.1f, StartPunchExplosions);  // 3s cast, resolves at 33.5f
         world.Events.Add(35.3f, FireBeyondDefenseAoe);        // BeyondDefense jump t=35.336s, AOE lands t=35.649s
@@ -120,7 +118,7 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
     {
         TickTethers(tethersLong, tether => tether.StretchLt(Geometry.HwTetherBreakDistance));
         TickTethers(tethersShort, tether => tether.StretchGt(Geometry.HwTetherBreakDistance));
-        topUtils.CheckHelloWorldDeath();
+        HelloWorld.CheckHolderDeaths(world);
     }
 
 
@@ -421,9 +419,9 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
     private void DropHelloPuddle(PartyRole role, bool near)
     {
         if (near)
-            nearSolver = topUtils.HelloWorld(role, true);
+            nearSolver = new HelloWorld(world.Party, role, true);
         else
-            farSolver = topUtils.HelloWorld(role, false);
+            farSolver = new HelloWorld(world.Party, role, false);
         HopHelloPuddle(near);
     }
 

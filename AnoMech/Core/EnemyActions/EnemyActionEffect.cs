@@ -14,12 +14,8 @@ public interface IEnemyActionEffect
 // Authoring helpers: `using static AnoMech.Core.EnemyActions.EnemyActionEffects;`.
 public static class EnemyActionEffects
 {
-    public static IEnemyActionEffect Damage(DamageSpec spec) => new DamageEffect(spec);
-
-    // Too few players in the stack kills all of them, unless a tank is allowed to take it on
-    // `understackedTankMitigation`.
-    public static IEnemyActionEffect StackDamage(DamageSpec spec, int min, float? understackedTankMitigation = null)
-        => new StackDamageEffect(spec, min, understackedTankMitigation);
+    public static IEnemyActionEffect Damage(DamageSpec spec, Severity? severity = null, Distribution? split = null)
+        => new DamageEffect(spec, severity ?? Severity.Normal, split ?? Distribution.Each);
 
     // Survivors only.
     public static IEnemyActionEffect ApplyStatus(ushort statusId, float duration) => new ApplyStatusEffect(statusId, duration);
@@ -30,6 +26,14 @@ public static class EnemyActionEffects
     // One more stack of the family's `times` status, or the death it completes. Survivors only.
     public static IEnemyActionEffect ApplyRuin(RuinSpec ruin, int times, float duration)
         => new ApplyRuinEffect(ruin, ruin.StatusId(times), times, duration);
+
+    // ApplyStatus, except whoever already holds `maxStacks` dies instead. Survivors only.
+    public static IEnemyActionEffect ApplyStatusOrOverload(ushort statusId, int maxStacks, float duration = 0f)
+        => new ApplyStatusOrOverloadEffect(statusId, maxStacks, duration);
+
+    // `followUp` cast by the same caster once this resolve's deaths are dealt, when `when` holds.
+    public static IEnemyActionEffect FollowUp(EnemyAction followUp, Func<EnemyActionContext, bool> when)
+        => new FollowUpEffect(followUp, when);
 
     // Away from the caster, by a Knockback sheet row. Survivors only.
     public static IEnemyActionEffect Knockback(uint knockbackId) => new KnockbackEffect(knockbackId);
@@ -52,56 +56,26 @@ internal sealed class FilteredEffect(IEnemyActionEffect effect, bool castTarget)
     }
 }
 
-internal sealed class DamageEffect(DamageSpec spec) : IEnemyActionEffect
+// A hit on someone an earlier hit already kills still shows its own number.
+internal sealed class DamageEffect(DamageSpec spec, Severity severity, Distribution split) : IEnemyActionEffect
 {
     public void Apply(EnemyActionContext ctx)
     {
-        foreach (var target in ctx.Hits)
-            Hit(ctx, spec, target, spec.RequiredMitigation);
-    }
-
-    internal static void Hit(EnemyActionContext ctx, DamageSpec spec, SimCharacter target, float requiredMitigation)
-    {
-        var distance = DistanceXZ(target, ctx.Origin);
-        var killCause = distance < spec.LethalWithin
-            ? $"{distance:F0}y from it, lethal inside {spec.LethalWithin:F0}y"
-            : DamageCheck.LethalCause(target, spec, ctx.Party, requiredMitigation);
-        Land(ctx, spec, target, killCause);
-    }
-
-    // A hit on someone an earlier hit already kills still shows its own number. `killCause` "" kills
-    // with no explanation.
-    internal static void Land(EnemyActionContext ctx, DamageSpec spec, SimCharacter target, string? killCause)
-    {
-        ctx.ShowDamage(target, spec.FlyTextAmount(kills: killCause != null), spec.Icon);
-        if (killCause != null) ctx.Kill(target, killCause.Length == 0 ? null : killCause);
-    }
-
-    private static float DistanceXZ(SimCharacter target, Game.Placement origin)
-    {
-        var dx = target.Position.X - origin.Position.X;
-        var dz = target.Position.Z - origin.Position.Z;
-        return MathF.Sqrt(dx * dx + dz * dz);
-    }
-}
-
-internal sealed class StackDamageEffect(DamageSpec spec, int min, float? understackedTankMitigation) : IEnemyActionEffect
-{
-    public void Apply(EnemyActionContext ctx)
-    {
-        var understacked = ctx.Hits.Count < min;
-        foreach (var target in ctx.Hits)
+        for (var i = 0; i < ctx.Hits.Count; i++)
         {
-            var tankSoaks = understacked && understackedTankMitigation != null && DamageCheck.IsTank(target);
-            if (understacked && !tankSoaks)
-            {
-                DamageEffect.Land(ctx, spec, target, $"{ctx.Hits.Count}/{min} players in stack");
-                continue;
-            }
-            var required = tankSoaks ? MathF.Max(spec.RequiredMitigation, understackedTankMitigation!.Value) : spec.RequiredMitigation;
-            DamageEffect.Hit(ctx, spec, target, required);
+            var target = ctx.Hits[i];
+            var (hit, reason) = split.Assign(ctx, i, target);
+            var hitSpec = hit?.Spec ?? spec;
+            var hitSeverity = hit?.Severity ?? severity;
+            var cause = DamageCheck.LethalCause(target, hitSpec, hitSeverity, ctx.Party);
+            ctx.ShowDamage(target, hitSeverity.FlyTextAmount(kills: cause != null), hitSpec.Icon);
+            if (cause != null) ctx.Kill(target, Explain(reason, cause));
         }
     }
+
+    // `cause` "" kills with no explanation of its own.
+    private static string? Explain(string? reason, string cause)
+        => cause.Length == 0 ? reason : reason is null ? cause : $"{reason}; {cause}";
 }
 
 internal sealed class ApplyStatusEffect(ushort statusId, float duration) : IEnemyActionEffect
@@ -136,6 +110,31 @@ internal sealed class ApplyRuinEffect(RuinSpec ruin, ushort statusId, int times,
             else
                 target.AddStatus(statusId, duration);
         }
+    }
+}
+
+internal sealed class ApplyStatusOrOverloadEffect(ushort statusId, int maxStacks, float duration) : IEnemyActionEffect
+{
+    public void Apply(EnemyActionContext ctx)
+    {
+        foreach (var target in ctx.Hits)
+        {
+            if (ctx.IsKilled(target) || !target.IsAlive()) continue;
+            if (target.FindStatus(statusId) is { } status && status.Stacks >= maxStacks)
+                ctx.Kill(target, $"already at {maxStacks} {StatusLookup.Name(statusId)}");
+            else
+                target.AddStatus(statusId, duration);
+        }
+    }
+}
+
+internal sealed class FollowUpEffect(EnemyAction followUp, Func<EnemyActionContext, bool> when) : IEnemyActionEffect
+{
+    public void Apply(EnemyActionContext ctx)
+    {
+        if (!when(ctx)) return;
+        var caster = ctx.Caster;
+        ctx.AfterResolve(() => caster.Cast(followUp));
     }
 }
 

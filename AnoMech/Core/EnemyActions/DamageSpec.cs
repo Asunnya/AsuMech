@@ -7,17 +7,11 @@ namespace AnoMech.Core.EnemyActions;
 // RequiredMitigation 1 = lethal short of an invuln.
 public readonly record struct Vulnerability(ushort StatusId, float RequiredMitigation = 1f, int MinStacks = 1);
 
+// What a hit is made of, and so which vulnerabilities it cares about. How big the hit is lives in its
+// Severity, per cast.
 public sealed record DamageSpec(params DamageType[] Types)
 {
     public IReadOnlyList<Vulnerability> Vulnerabilities { get; init; } = [];
-    public float RequiredMitigation { get; init; }
-    public float LethalWithin { get; init; }
-    // Flytext only, never compared to HP. Null shows the default for the hit's type; a hit that
-    // kills always shows 120,000.
-    public uint? FlyText { get; init; }
-
-    public uint FlyTextAmount(bool kills)
-        => kills ? 120_000u : FlyText ?? (Has(DamageType.TankBuster) ? 80_000u : 40_000u);
 
     public bool Has(DamageType type) => Types.Contains(type);
 

@@ -87,13 +87,13 @@ public class DamageSolver
             {
                 deadTargets.Add(target);
                 if (killTargets)
-                    target.Die($"Died to {ActionLookup.Name(actionId)} ({targets.Count}/{stackMinTargets} players in stack)");
+                    target.Die(actionId, $"{targets.Count}/{stackMinTargets} players in stack");
             }
             else if (DistanceXZ(target.Position, placement.Position) is var distance && distance < lethalWithin)
             {
                 deadTargets.Add(target);
                 if (killTargets)
-                    target.Die($"Died to {ActionLookup.Name(actionId)} ({distance:F0}y from it, lethal inside {lethalWithin:F0}y)");
+                    target.Die(actionId, $"{distance:F0}y from it, lethal inside {lethalWithin:F0}y");
             }
             else if (CheckLethal(actionId, target, wildCharge ? damageTypeWildCharge : damageTypeBase, killTargets, needed))
             {
@@ -154,13 +154,13 @@ public class DamageSolver
         var kind = damageTypes.Contains(DamageType.Magic) ? DamageKind.Magic : DamageKind.Physical;
         string? cause;
         if (damageTypes.Contains(DamageType.Lethal)) cause = "";
-        else if (vulnMitigation >= 1f) cause = " (had vuln up debuff)";
-        else if (damageTypes.Contains(DamageType.TankBuster) && !IsTank(target)) cause = " (tank buster)";
+        else if (vulnMitigation >= 1f) cause = "had vuln up debuff";
+        else if (damageTypes.Contains(DamageType.TankBuster) && !IsTank(target)) cause = "tank buster";
         else if (Survives(target, MathF.Max(requiredMitigation, vulnMitigation ?? 0f), kind)) cause = null;
-        else cause = vulnMitigation != null ? " (not enough mitigation for a hit with vuln up)" : " (not enough mitigation)";
+        else cause = vulnMitigation != null ? "not enough mitigation for a hit with vuln up" : "not enough mitigation";
 
         if (cause == null) return false;
-        if (killTarget) target.Die($"Died to {ActionLookup.Name(actionId)}{cause}");
+        if (killTarget) target.Die(actionId, cause == "" ? null : cause);
         return true;
     }
 
@@ -226,7 +226,7 @@ public class DamageSolver
         if (target.Proxy is { Exists: true } chara)
             chara.ShowFlyText((uint)MathF.Round(fractionOfMaxHp * chara.MaxHealth), name);
         if (!lethal) return;
-        target.Die($"Died to {name} ({context})");
+        target.Die(actionId, context);
     }
 
     public void SetStatuses(DamageType type, params ushort[] statuses)
