@@ -186,13 +186,15 @@ internal sealed unsafe class EnmityHud : IEnmityHud, IDisposable
             var entityId = (int)e.EntityId;
             if (firstEntityId == 0) firstEntityId = entityId;
 
+            // Unnamed actions are the game's invisible casts: the native target
+            // cast bar skips them, so the enemy list must too.
             var castPercent = -1;
             var castName = string.Empty;
-            if (e.IsCasting)
+            if (e.IsCasting && e.CastActionId != 0 && actionSheet.TryGetRow(e.CastActionId, out var action))
             {
-                castPercent = (int)Math.Clamp(e.CastProgress * 100f, 0f, 100f);
-                if (e.CastActionId != 0 && actionSheet.TryGetRow(e.CastActionId, out var action))
-                    castName = action.Name.ExtractText() ?? string.Empty;
+                castName = action.Name.ExtractText() ?? string.Empty;
+                if (castName.Length > 0)
+                    castPercent = (int)Math.Clamp(e.CastProgress * 100f, 0f, 100f);
             }
 
             ref var enemy = ref enemyArr->Enemies[i];

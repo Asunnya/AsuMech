@@ -114,8 +114,9 @@ public class UltimatePredationScenarioTests
             .TeleportAt(22.3f, to: new(8, 8))
             .ShouldKill(ActionId.WickedTornado, RegenHealer);
 
-    [TestCase(12f, 0f)]
-    [TestCase(0f, -12f)]
+    // Inside Wicked Tornado's 7y safe hole, each in one lane.
+    [TestCase(-8f, -1f)]
+    [TestCase(-1f, -8f)]
     public void DiesToCrimsonCycloneAwaken(float x, float z)
         => Predation(RegenHealer)
             .TeleportAt(22.3f, to: new(x, z))

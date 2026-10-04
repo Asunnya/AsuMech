@@ -256,7 +256,6 @@ public class UltimatePredationScenario : IMultiplayerReplayable
 
         world.Events.Add(64.38f, () => ultima?.Cast(Actions.ViscousAetheroplasmUltima, mt));
 
-        world.Events.Add(65.34f, () => mt!.AddStatus(1532, 10));
 
         world.Events.Add(69, () =>
         {
