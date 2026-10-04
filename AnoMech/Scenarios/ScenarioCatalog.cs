@@ -27,6 +27,7 @@ using AnoMech.Scenarios.Umad.P5Flood;
 using AnoMech.Scenarios.Uwu.P1Garuda;
 using AnoMech.Scenarios.Uwu.P2Ifrit;
 using AnoMech.Scenarios.Uwu.P3Titan;
+using AnoMech.Scenarios.Uwu.PrimalRoulette;
 using AnoMech.Scenarios.Uwu.UltimateAnnihilation;
 using AnoMech.Scenarios.Uwu.UltimatePredation;
 using AnoMech.Scenarios.Uwu.UltimateSuppression;
@@ -58,6 +59,7 @@ public static class ScenarioCatalog
         new UltimatePredationScenario(),
         new UltimateAnnihilationScenario(),
         new UltimateSuppressionScenario(),
+        new PrimalRouletteScenario(),
         new UcobP5ExaflaresScenario(),
         new DsrP1KnightsScenario(),
         new DsrP2ThordanScenario(),

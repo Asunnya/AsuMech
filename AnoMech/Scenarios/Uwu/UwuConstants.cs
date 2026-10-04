@@ -49,6 +49,7 @@ public class UwuConstants
         public const uint InfernalNail = 8731;
         public const uint UltimaWeapon = 8734;
         public const uint Aetheroplasm = 8735;
+        public const uint Ultimaplasm = 8736;
         public const uint Dummy = 9020;
     }
 
@@ -68,6 +69,7 @@ public class UwuConstants
         public const uint GraniteGaol = 1804;
         public const uint UltimaWeapon = 2137;
         public const uint Aetheroplasm = 2138;
+        public const uint Ultimaplasm = 2324;
     }
 
     public class ActionId
@@ -135,6 +137,12 @@ public class UwuConstants
         public const uint AetherochemicalLaserRight = 11141;
         public const uint AetherochemicalLaserLeft = 11142;
         public const uint TankPurge = 11143;
+        public const uint AethericBoom = 11144;
+        public const uint UltimaplasmBurst = 11145;
+        public const uint FusionBurst = 11146;
+        public const uint Ultima = 11147;
+        public const uint UltimaAfterRoulette = 11148;
+        public const uint ViscousAetheroplasmRoulette = 11151;
         public const uint EarthenFury = 11152;
         public const uint MistralSong = 11150;
         public const uint Tumult = 11288;
@@ -170,6 +178,7 @@ public class UwuConstants
         public const ushort AetheriallyCharged = 1528;
         public const ushort Woken = 1529;
         public const ushort SearingWind = 1578;
+        public const ushort ViscousAetheroplasm = 1532;
     }
 
     public class TetherId
