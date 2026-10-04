@@ -35,8 +35,14 @@ public static class EnemyActionEffects
     public static IEnemyActionEffect FollowUp(EnemyAction followUp, Func<EnemyActionContext, bool> when)
         => new FollowUpEffect(followUp, when);
 
-    // Away from the caster, by a Knockback sheet row. Survivors only.
-    public static IEnemyActionEffect Knockback(uint knockbackId) => new KnockbackEffect(knockbackId);
+    // Away from the caster, by a Knockback sheet row. Survivors only. `knockbackDelay` is from
+    // resolve; null = TimingSpec.DamageDelay.
+    public static IEnemyActionEffect Knockback(uint knockbackId, float? knockbackDelay = null)
+        => new KnockbackEffect(knockbackId, knockbackDelay);
+
+    // Away from the caster, for an action with no known Knockback row. Survivors only.
+    public static IEnemyActionEffect Knockback(float distance, float speed, float? knockbackDelay = null)
+        => new KnockbackEffect(null, knockbackDelay, distance, speed);
 
     // `effect` applied to the cast's target alone, when the area caught it.
     public static IEnemyActionEffect OnTarget(IEnemyActionEffect effect) => new FilteredEffect(effect, castTarget: true);
@@ -138,16 +144,16 @@ internal sealed class FollowUpEffect(EnemyAction followUp, Func<EnemyActionConte
     }
 }
 
-internal sealed class KnockbackEffect(uint knockbackId) : IEnemyActionEffect
+internal sealed class KnockbackEffect(uint? knockbackId, float? knockbackDelay, float fixedDistance = 0f, float fixedSpeed = 0f) : IEnemyActionEffect
 {
     public void Apply(EnemyActionContext ctx)
     {
-        if (!KnockbackLookup.TryGet(knockbackId, out var distance, out var speed)) return;
+        var (distance, speed) = (fixedDistance, fixedSpeed);
+        if (knockbackId is { } id && !KnockbackLookup.TryGet(id, out distance, out speed)) return;
         foreach (var target in ctx.Hits)
         {
-            if (ctx.IsKilled(target) || !target.IsAlive() || target is not ISimPartyMember member) continue;
-            member.Knockback(ctx.Caster.Position, distance, speed);
-            ctx.ShowDamage(target, 0, FlyTextIcon.Unique);
+            if (ctx.IsKilled(target) || !target.IsAlive() || target is not ISimPartyMember) continue;
+            ctx.Knockback(target, ctx.Caster.Position, distance, speed, knockbackDelay);
         }
     }
 }

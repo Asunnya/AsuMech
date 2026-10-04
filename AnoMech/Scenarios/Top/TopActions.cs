@@ -64,7 +64,6 @@ public static class TopActions
             OnTarget(Damage(Physical)),
             OnTarget(ApplyRuin(ComeRuin, 2, 6.96f)),
         ],
-        Timing = new() { ResolveOffset = 0.4f },
     };
 
     public static readonly EnemyAction PilePitch = new(ActionId.PilePitch)
@@ -75,7 +74,6 @@ public static class TopActions
     public static readonly EnemyAction Discharger = new(ActionId.Discharger)
     {
         Effects = [Knockback(KnockbackId.Discharger)],
-        Timing = new() { ResolveOffset = 0.5f },
     };
 
     public static readonly EnemyAction OptimizedFireIII = new(ActionId.OptimizedFireIII)
@@ -167,13 +165,11 @@ public static class TopActions
     public static readonly EnemyAction DeltaExplosion = new(ActionId.DeltaExplosion)
     {
         Effects = [Damage(Magic, Lethal)],
-        Timing = new() { ResolveOffset = 0.4f },
     };
 
     public static readonly EnemyAction DeltaUnmitigatedExplosion = new(ActionId.DeltaUnmitigatedExplosion)
     {
         Effects = [Damage(Magic, Lethal)],
-        Timing = new() { ResolveOffset = 0.4f },
     };
 
     public static readonly EnemyAction SwivelCannonLeft = SwivelCannon(ActionId.SwivelCannonL, MathF.PI / 2);

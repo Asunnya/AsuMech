@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using AnoMech.Core.Game;
+using AnoMech.Core.Game.Party;
 using static AnoMech.Scenarios.Uwu.UwuConstants;
 
 namespace AnoMech.Scenarios.Uwu.UltimatePredation;
@@ -13,6 +14,13 @@ public class UltimatePredationState
     public Placement IfritPlacement { get; init; }
     public Placement TitanPlacement { get; init; }
     public UltimatePredationScenarioObjects ScenarioObjects { get; } = new();
+
+    public Vector3[] BoulderPositions { get; } = [];
+    public PartyRole InfernalFettersDps { get; }
+    // Null rolls at the bait's own time.
+    public PartyRole? UltimaLandslideBait { get; }
+    public PartyRole? TitanLandslideBait { get; }
+    public IReadOnlyList<PartyRole>? FeatherRainTargets { get; }
 
     public readonly Rng Rng = Rng.Detached;
 
@@ -32,10 +40,19 @@ public class UltimatePredationState
         Rng = rng;
         var centerDodge = overrides.CenterDodge ?? false;
 
-        (GarudaPlacement, var garudaIntercardinal) = GetPlacement(Geometry.GarudaPlacements);
-        (UltimaPlacement, var ultimaIntercardinal) = GetPlacement(Geometry.UltimaPlacements, centerDodge ? [garudaIntercardinal] : null);
-        (IfritPlacement, _) = GetPlacement(Geometry.IfritPlacements, [ultimaIntercardinal]);
-        TitanPlacement = GetTitanPlacement(Geometry.TitanPlacements, centerDodge);
+        (GarudaPlacement, var garudaIntercardinal) = GetPlacement(Geometry.GarudaPlacements, pinned: overrides.Garuda);
+        (UltimaPlacement, var ultimaIntercardinal) = GetPlacement(Geometry.UltimaPlacements, centerDodge ? [garudaIntercardinal] : null, overrides.Ultima);
+        (IfritPlacement, _) = GetPlacement(Geometry.IfritPlacements, [ultimaIntercardinal], overrides.Ifrit);
+        TitanPlacement = GetTitanPlacement(Geometry.TitanPlacements, centerDodge, overrides);
+
+        var boulders = Geometry.TitanBoulderPositions.ToArray();
+        var boulderStart = overrides.BoulderStart ?? Rng.NextInt(boulders.Length);
+        BoulderPositions = [.. boulders.Skip(boulderStart), .. boulders.Take(boulderStart)];
+
+        InfernalFettersDps = overrides.InfernalFettersDps ?? Rng.NextDpsRole();
+        UltimaLandslideBait = overrides.UltimaLandslideBait;
+        TitanLandslideBait = overrides.TitanLandslideBait;
+        FeatherRainTargets = overrides.FeatherRainTargets;
 
 #if DEBUG
         Plugin.Log.Debug("[UltimatePredationState]\n" +
@@ -61,8 +78,11 @@ public class UltimatePredationState
             UltimaPlacement = ultimaPlacement,
         };
 
-    private (Placement Placement, DirectionEnum Intercardinal) GetPlacement(IDictionary<DirectionEnum, Placement> possiblePlacements, List<DirectionEnum>? ignoreDirections = null)
+    private (Placement Placement, DirectionEnum Intercardinal) GetPlacement(IDictionary<DirectionEnum, Placement> possiblePlacements, List<DirectionEnum>? ignoreDirections = null, DirectionEnum? pinned = null)
     {
+        if (pinned is { } direction)
+            return (possiblePlacements[direction], direction);
+
         IDictionary<DirectionEnum, Placement> dict;
 
         if (ignoreDirections == null)
@@ -79,15 +99,15 @@ public class UltimatePredationState
         return (dict[key], key);
     }
 
-    private Placement GetTitanPlacement(IDictionary<DirectionEnum, Placement> possiblePlacements, bool centerDodge)
+    private Placement GetTitanPlacement(IDictionary<DirectionEnum, Placement> possiblePlacements, bool centerDodge, UltimatePredationStateOverrides overrides)
     {
         const float Offset = 3;
 
         if (!centerDodge)
         {
-            (var placement, _) = GetPlacement(possiblePlacements);
+            (var placement, _) = GetPlacement(possiblePlacements, pinned: overrides.Titan);
 
-            var distance = Rng.NextBool() ? Offset : -Offset;
+            var distance = (overrides.TitanOffsetRight ?? Rng.NextBool()) ? Offset : -Offset;
             return placement.MoveRight(distance);
         }
         else
@@ -112,7 +132,7 @@ public class UltimatePredationState
                     .ToList();
             }
 
-            (var cardinal, _) = GetPlacement(possiblePlacements, ignore);
+            (var cardinal, _) = GetPlacement(possiblePlacements, ignore, overrides.Titan);
 
             var offsets = new Placement[]
             {

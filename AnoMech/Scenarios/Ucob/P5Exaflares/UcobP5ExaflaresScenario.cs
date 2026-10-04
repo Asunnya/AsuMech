@@ -1,6 +1,4 @@
-using AnoMech.Core.EnemyActions;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using AnoMech.Core.Game;
@@ -9,6 +7,7 @@ using AnoMech.Core.Game.Party;
 using AnoMech.Core.SimObjects;
 using AnoMech.Multiplayer;
 using static AnoMech.Scenarios.Ucob.UcobConstants;
+using Actions = AnoMech.Scenarios.Ucob.UcobActions;
 
 namespace AnoMech.Scenarios.Ucob.P5Exaflares;
 
@@ -20,9 +19,8 @@ namespace AnoMech.Scenarios.Ucob.P5Exaflares;
 // Each lane's first eruption is the release of its own arrow-omen cast (ExaflareFirst), so the
 // telegraph and hit 1 share one helper and cannot drift apart; the five follow-ups are instant
 // ExaflareRest casts from a helper spawned at each step. The flame itself is spawned by hand
-// (VfxPath.ExaflareEruption) because these actions carry no VFX the action effect could play. A hit snapshots who is standing in it
-// and holds the kill one application delay later, so the KO lands on the visible bloom rather
-// than on the invisible snapshot instant. Lingering flame is decorative: only the snapshot kills.
+// (VfxPath.ExaflareEruption) because these actions carry no VFX the action effect could play.
+// Lingering flame is decorative: only the snapshot kills.
 public sealed class UcobP5ExaflaresScenario : IMultiplayerReplayable
 {
     public string Name => "Exaflares";
@@ -36,9 +34,6 @@ public sealed class UcobP5ExaflaresScenario : IMultiplayerReplayable
     public object SettingsOverrides => settingsWindow.Overrides;
     private readonly UcobP5ExaflaresSettingsWindow settingsWindow = new();
 
-    // Snapshot -> kill application delay: sets only the instant a caught player dies, so the KO
-    // reads off the bloom instead of the snapshot. Same hold the UMAD exaflares use.
-    private const float KillDelay = 0.6f;
     // Keep an eruption's helper alive this long so its flame isn't cut mid-animation.
     private const float HitVfxSeconds = 3f;
     private const float DespawnAfterLastHit = 4f;
@@ -48,14 +43,12 @@ public sealed class UcobP5ExaflaresScenario : IMultiplayerReplayable
     // Polled by the multiplayer host; null until Run has rolled the pattern.
     public UcobP5ExaflaresState? LastState { get; private set; }
     private SimWorld world = null!;
-    private DamageSolver damage = null!;
     private SimEnemy? bahamut;
     private readonly List<SimEnemy> helpers = new();
 
     public void Run(SimWorld worldParam, int? selectedAi)
     {
         world = worldParam;
-        damage = new DamageSolver(worldParam.Party);
         helpers.Clear();
 
         state = new UcobP5ExaflaresState(world.Rng, settingsWindow.Overrides);
@@ -92,31 +85,19 @@ public sealed class UcobP5ExaflaresScenario : IMultiplayerReplayable
         world.Events.Add(line.TelegraphAt, () =>
         {
             head = SpawnHelper(line.Start, line.Rotation);
-            head?.Cast(ActionId.ExaflareFirst, castSeconds: UcobP5ExaflaresState.TelegraphSeconds);
+            head?.Cast(Actions.ExaflareFirst);
         });
 
         for (var i = 0; i < line.Hits.Count; i++)
         {
             var hit = line.Hits[i];
             var isFirst = i == 0;
-            var actionId = isFirst ? ActionId.ExaflareFirst : ActionId.ExaflareRest;
             SimEnemy? source = null;
-            IReadOnlyList<SimCharacter> caught = [];
             world.Events.Add(hit.Time, () =>
             {
-                source = head;
-                if (!isFirst)
-                {
-                    source = SpawnHelper(hit.Position, line.Rotation);
-                    source?.Cast(actionId, castSeconds: 0f, animationLock: 0f);
-                }
+                source = isFirst ? head : SpawnHelper(hit.Position, line.Rotation);
                 source?.AddVfx(VfxPath.ExaflareEruption, persistent: false);
-                caught = damage.Resolve(source, actionId, [DamageType.Lethal], [], killTargets: false);
-            });
-            world.Events.Add(hit.Time + KillDelay, () =>
-            {
-                foreach (var c in caught)
-                    damage.ApplyDamage(c, 1f, actionId, "exaflare snapshot", lethal: true);
+                if (!isFirst) source?.Cast(Actions.ExaflareRest);
             });
             world.Events.Add(hit.Time + HitVfxSeconds, () => source?.Despawn());
         }

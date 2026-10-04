@@ -17,7 +17,8 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimWorld world)
     public void Start(EnemyAction action, SimCharacter? target, Vector3? location)
     {
         var id = action.ActionId;
-        var castTime = action.Cast.CastTime ?? Natives.Data.Action(id)?.CastSeconds ?? 0f;
+        var sheetCastTime = Natives.Data.Action(id)?.CastSeconds ?? 0f;
+        var castTime = MathF.Max(0f, sheetCastTime - CastSpec.ReleaseLead);
         GameObjectId? castTarget = location is null ? (target ?? caster).GameObjectId : null;
         DiagnosticLog.Info(
             $"[EnemyAction] Cast: {ActionLookup.Name(id)} ({id}) by {caster.DisplayName} from ({caster.Position.X:F1},{caster.Position.Z:F1}) castSeconds={castTime:F2}.");
@@ -26,9 +27,9 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimWorld world)
             caster.NativeCast(id, ActionType.Action, action.Cast.OmenDelay, castTime, interruptible: false,
                 rotation: caster.Rotation + action.Area.Rotation, position: location, targetId: castTarget);
 
-        Schedule(castTime + action.Timing.VfxOffset, () => Release(action, target, location, castTarget));
+        Schedule(sheetCastTime, () => Release(action, target, location, castTarget));
         if (action.Effects.Count > 0)
-            Schedule(castTime + action.Timing.ResolveOffset, () => Resolve(action, target, location));
+            Schedule(castTime + action.Timing.ResolveSnapshotOffset, () => Resolve(action, target, location));
     }
 
     // Faces a target first: the packet carries the caster's rotation. A ground location doesn't turn
@@ -74,8 +75,17 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimWorld world)
         var name = ActionLookup.Name(action.ActionId);
         foreach (var (who, amount, icon) in ctx.DamageShown)
             Schedule(action.Timing.DamageDelay, () => ShowFlyText(who, amount, icon, name));
+        foreach (var (who, from, distance, speed, delay) in ctx.Knockbacks)
+        {
+            var showFlyText = ctx.DamageShown.All(d => d.Target != who);
+            Schedule(delay ?? action.Timing.DamageDelay, () =>
+            {
+                if (who.IsAlive() && who is ISimPartyMember member) member.Knockback(from, distance, speed);
+                if (showFlyText) ShowFlyText(who, 0, FlyTextIcon.Unique, name);
+            });
+        }
         foreach (var (who, explanation) in ctx.Killed)
-            Schedule(action.Timing.DeathDelay, () => who.Die(action.ActionId, Explain(action.DeathExplanation, explanation)));
+            Schedule(action.Timing.DamageDelay, () => who.Die(action.ActionId, Explain(action.DeathExplanation, explanation)));
         foreach (var run in ctx.AfterResolveActions)
             run();
     }

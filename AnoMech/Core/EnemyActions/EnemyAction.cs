@@ -18,10 +18,12 @@ public sealed record EnemyAction(uint ActionId)
     public string? DeathExplanation { get; init; }
 }
 
+// The bar runs ReleaseLead short of the Action sheet's Cast100ms, the action effect lands at the
+// sheet's full cast time; a sheet-instant action has no bar and releases at once.
 public sealed record CastSpec
 {
-    // Null reads Cast100ms from the Action sheet; 0 is an instant action with no cast bar.
-    public float? CastTime { get; init; }
+    public const float ReleaseLead = 0.3f;
+
     public float AnimationLock { get; init; } = 0.6f;
     public float OmenDelay { get; init; }
     public byte Variation { get; init; }
@@ -46,10 +48,10 @@ public sealed record AreaSpec
 // bar itself runs in real time, so under an EventTimeScale other than 1 they drift from it.
 public sealed record TimingSpec
 {
-    public float VfxOffset { get; init; }
     // Who is hit, statuses, and who dies are all decided here.
-    public float ResolveOffset { get; init; }
-    // From resolve: when damage flytext shows, and when a character the hit kills actually dies.
-    public float DamageDelay { get; init; }
-    public float DeathDelay { get; init; }
+    // This is quite hard to measure so leave default unless there is good reason to change
+    public float ResolveSnapshotOffset { get; init; }
+    // From resolve: when damage lands (flytext, knockback without its own delay) and a character the hit kills dies.
+    // The default is a placeholder; set each action's own once it's measured from replay data
+    public float DamageDelay { get; init; } = 1f;
 }
