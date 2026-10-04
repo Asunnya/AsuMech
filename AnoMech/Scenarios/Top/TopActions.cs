@@ -68,6 +68,29 @@ public static class TopActions
         Effects = [Damage(Magic), ApplyStatus(StatusId.MagicVulnerabilityUp, 4.96f)],
     };
 
+    public static readonly EnemyAction DiffuseWaveCannon = new(ActionId.OmegaDiffuseWaveCannonAOE)
+    {
+        Area = new() { Size = MathF.PI / 3f },
+        Effects = [Damage(Lethal)],
+    };
+
+    // -- Omega-specific --
+    public static readonly EnemyAction RunMiOmegaVersion = new(ActionId.RunMiOmegaVersion)
+    {
+        Effects = [Damage(Magic)],
+    };
+
+    public static readonly EnemyAction Blaster = new(ActionId.BlasterAoe)
+    {
+        Effects =
+        [
+            Damage(Magic),
+            ApplyRuin(ComeRuin, 2, 10.96f),
+            ApplyStatus(StatusId.MagicVulnerabilityUp, 4.96f),
+            ApplyStatus(StatusId.HPPenalty, 3f),
+        ],
+    };
+
     // -- Towers --
     public static readonly EnemyAction StorageViolationSolo = StorageViolation(ActionId.StorageViolationSolo);
     public static readonly EnemyAction StorageViolationPair = StorageViolation(ActionId.StorageViolationPair);

@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using static AnoMech.Scenarios.Top.TopConstants;
+using Actions = AnoMech.Scenarios.Top.TopActions;
 
 namespace AnoMech.Scenarios.Top.P5Omega;
 
@@ -142,7 +143,7 @@ public sealed class TopP5OmegaScenario : IMultiplayerReplayable
     {
         SimEnemy? omega_M_4000A63C = null;
         world.Events.Add(0, () => omega_M_4000A63C = world.SpawnEnemy(new EnemySpawnConfig(InitialModeAttributeFlags: 0x10, BNpcBaseId: BNpcBaseId.OmegaFDynamis, NameId: BNpcNameId.OmegaFDynamis, Level: 90, Targetable: true, EnemyList: EnemyListMode.Always, IsVisible: true, Placement: new Placement(new Vector3(-000f, -0.000f, 0.000f), MathF.PI))));
-        world.Events.Add(1.15f, () => omega_M_4000A63C?.Cast(ActionId.RunMiOmegaVersion, targetLocation: new Vector3(-0.008f, -0.015f, -0.008f), castSeconds: 4.700f, targetId: omega_M_4000A63C?.GameObjectId));
+        world.Events.Add(1.15f, () => omega_M_4000A63C?.Cast(Actions.RunMiOmegaVersion));
         var target = party.Get(PartyRole.MainTank) ?? party.Get(party.PlayerRole);
         world.Events.Add(6f, () => omega_M_4000A63C?.Follow(target));
         world.Events.Add(6.81f, () => omega_M_4000A63C?.Cast(ActionId.Unknown7c02, castSeconds: 0f, targetId: target?.GameObjectId));
@@ -214,26 +215,10 @@ public sealed class TopP5OmegaScenario : IMultiplayerReplayable
             {
                 var tether = i == 0 ? tether1 : tether2;
                 if (tether?.A == null) return;
-                omega_4000A40C_3?.Cast(ActionId.BlasterAoe, castSeconds: 0f, targetId: tether.A.GameObjectId);
-                ResolveBlaster(tether.A);
+                if (tether.A.IsAlive()) omega_4000A40C_3?.Cast(Actions.Blaster, tether.A);
                 tether.Despawn();
             });
         }
-    }
-
-    private void ResolveBlaster(SimCharacter tetherA)
-    {
-        if (!tetherA.IsAlive() || tetherA is not ISimPartyMember member) return;
-        var lethal = topUtils.IsDamageLethal(tetherA, ruin: true);
-        Plugin.Log.Info($"Hit: {member.Role} by Blaster ({(lethal ? "lethal" : "non-lethal")})");
-        if (lethal)
-        {
-            tetherA.Die("Blaster");
-            return;
-        }
-        tetherA.AddStatus(StatusId.MagicVulnerabilityUp, 4.960f);
-        tetherA.AddStatus(StatusId.TwiceComeRuin, 10.960f);
-        tetherA.AddStatus(StatusId.HPPenalty, 3.000f);
     }
 
     private void Run_Omega_4000A72F(bool solo)
@@ -265,23 +250,10 @@ public sealed class TopP5OmegaScenario : IMultiplayerReplayable
             var orientation = orientations[i];
             SimEnemy? omega_4000A40B_1 = null;
             world.Events.Add(23.56f + offset, () => omega_4000A40B_1 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.OmegaHelper, NameId: BNpcNameId.OmegaFinal, Level: 1, Targetable: false, EnemyList: EnemyListMode.Never, IsVisible: false, Placement: new Placement(new Vector3(0.000f, -0.000f, 0.000f), orientation))));
-            world.Events.Add(23.58f + offset, () => omega_4000A40B_1?.Cast(ActionId.OmegaDiffuseWaveCannonAOE, castSeconds: 0.700f));
-            world.Events.Add(24.28f + offset, () => ResolveDiffuseWaveCannon(omega_4000A40B_1));
+            world.Events.Add(23.58f + offset, () => omega_4000A40B_1?.Cast(Actions.DiffuseWaveCannon));
         }
     }
 
-    private void ResolveDiffuseWaveCannon(SimEnemy? omega4000A40B1)
-    {
-        if (omega4000A40B1 is not { IsActive: true } unit) return;
-        // 120° cone (60° half-angle) per the OmegaDiffuseWaveCannonAOE comment in
-        // TopConstants. The Action sheet doesn't carry cone width, so override.
-        foreach (var hit in party.Find.InsideActionAoe(ActionId.OmegaDiffuseWaveCannonAOE, unit.Placement(), size: MathF.PI / 3f))
-        {
-            Plugin.Log.Info($"Hit: {(hit as ISimPartyMember)?.Role} by Diffuse Wave Cannon ");
-            hit.Die("Diffuse Wave Cannon");
-        }
-    }
-    
     private void Run_Omega_4000A409_1()
     {
         SimEnemy? omega_4000A409_1 = null;
@@ -290,31 +262,13 @@ public sealed class TopP5OmegaScenario : IMultiplayerReplayable
         world.Events.Add(27.67f, () => omega_4000A40A_1 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.OmegaHelper, NameId: BNpcNameId.OmegaFinal, Level: 1, Targetable: false, EnemyList: EnemyListMode.Never, IsVisible: false, Placement: new Placement(new Vector3(0.000f, -0.000f, 0.000f), 3.140f))));
         world.Events.Add(41.74f, () =>
         {
+            // Both picked before the first circle lands, so a death can't change the second pick.
             var targets = party.Find.OnSideN(world.Rng, new Placement(new(0, 0, 0), MathF.PI), state.MonitorSide.Mul, 2);
             if (targets.Count > 0)
-                omega_4000A409_1?.Cast(ActionId.OversampledWaveCannonAoe, castSeconds: 0f, targetId: targets[0].GameObjectId);
+                omega_4000A409_1?.Cast(Actions.OversampledWaveCannon, targets[0]);
             if (targets.Count > 1)
-                omega_4000A40A_1?.Cast(ActionId.OversampledWaveCannonAoe, castSeconds: 0f, targetId: targets[1].GameObjectId);
-            ResolveMonitors(targets);
+                omega_4000A40A_1?.Cast(Actions.OversampledWaveCannon, targets[1]);
         });
-        
-    }
-    
-    private void ResolveMonitors(IReadOnlyList<SimCharacter> targets)
-    {
-        foreach (var target in targets)
-        {
-            Plugin.Log.Info($"Hit: {(target as ISimPartyMember)?.Role} by Monitor");
-            if (topUtils.IsDamageLethal(target, ruin: true))
-            {
-                target.Die("Oversampled Wave Cannon");
-            }
-            else
-            { 
-                target.AddStatus(StatusId.MagicVulnerabilityUp, 4.960f);
-                target.AddStatus(StatusId.TwiceComeRuin, 6.960f);
-            }
-        }
     }
 
 

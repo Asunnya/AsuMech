@@ -175,6 +175,8 @@ public record TopUtils(SimWorld World)
             }
             if (soaker.FindStatus(StatusId.QuickeningDynamis) is { Stacks: >= 3})
             {
+                Plugin.Log.Info($"Hit: {(soaker as ISimPartyMember)?.Role} by Hello World at 3 Quickening Dynamis (lethal) → raidwide fail");
+                soaker.Die(actionId, "already at 3 Quickening Dynamis");
                 utils.HelloWorldFail(pos);
                 return;
             }

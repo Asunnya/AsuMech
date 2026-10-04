@@ -27,6 +27,15 @@ public sealed class TopP5OmegaStateOverrides
     public PerRoleSetting<HelloWorldTypeOption> HelloWorldType { get; set; } = new();
     public PerRoleSetting<bool> ExtraDynamis { get; set; } = new();
 
+    // Headless runs pin the rest of the roll. Internal, so settings sync and the summary skip them.
+    internal Direction? FirstAttackDirection { get; set; }
+    // FirstAttackDirection turned 90° either way.
+    internal Direction? SecondAttackDirection { get; set; }
+    internal IReadOnlyList<PartyRole>? MonitorTargets { get; set; }
+    internal IReadOnlyList<PartyRole>? HelloWorld1JumpOrder { get; set; }
+    internal IReadOnlyList<PartyRole>? BlasterTethers { get; set; }
+    internal IReadOnlyList<PartyRole>? HelloWorld2 { get; set; }
+
     // Order and type together pick out which of the four Hello World slots a seat may take;
     // None keeps it out. Two seats wanting the same slot: the earlier one takes it.
     public (Dictionary<PartyRole, int[]> Slots, Dictionary<PartyRole, bool> Membership) ResolveHelloWorld(PartyRole localPlayerRole)
