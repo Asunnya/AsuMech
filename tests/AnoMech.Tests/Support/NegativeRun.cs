@@ -55,9 +55,10 @@ internal sealed class NegativeRun<TScenario>(PartyRole role, int strat) where TS
         return this;
     }
 
-    // The run starts at the first ShouldKill; each call judges the next group of deaths, in order.
-    // Deaths no call judges are consequences (a stack one short, a tether partner left alone), not
-    // what the test broke. Matched on the action the death names, so only Die(actionId, ...) counts.
+    // The run starts at the first ShouldKill; each call judges the next group of deaths. Groups go in
+    // frame order, but within one frame the calls can come in any order. Deaths no call judges are
+    // consequences (a stack one short, a tether partner left alone), not what the test broke.
+    // Matched on the action the death names, so only Die(actionId, ...) counts.
     public NegativeRun<TScenario> ShouldKill(uint actionId, params PartyRole[] roles)
         => Judge(() => $"{string.Join(", ", roles)} to die to {NameOf(actionId)}", actionId, roles, roles);
 
@@ -70,7 +71,7 @@ internal sealed class NegativeRun<TScenario>(PartyRole role, int strat) where TS
 
     private ScenarioRun? run;
     private int runSeed;
-    private int judgedDeaths;
+    private readonly HashSet<int> judged = [];
 
     // `expected` is lazy: names resolve only once the run has installed the game data.
     private NegativeRun<TScenario> Judge(Func<string> expected, uint actionId, PartyRole[] allowed, PartyRole[] mustDie)
@@ -80,10 +81,10 @@ internal sealed class NegativeRun<TScenario>(PartyRole role, int strat) where TS
             runSeed = seed ?? Random.Shared.Next();
             run = ScenarioRun.Execute(typeof(TScenario), strat, runSeed, options);
         }
-        var message = (judgedDeaths == 0 ? "expected " : "then expected ") + expected();
-        if (GroupMismatch(run, judgedDeaths, message, actionId, allowed, mustDie, out var count) is not { } problem)
+        var message = (judged.Count == 0 ? "expected " : "then expected ") + expected();
+        if (GroupMismatch(run, judged, message, actionId, allowed, mustDie, out var group) is not { } problem)
         {
-            judgedDeaths += count;
+            judged.UnionWith(group);
             return this;
         }
 
@@ -93,25 +94,27 @@ internal sealed class NegativeRun<TScenario>(PartyRole role, int strat) where TS
         return this;
     }
 
-    // A group is the deaths from `start` on, in one frame, to the expected action. A raidwide they
-    // set off (a tether partner gone, a Hello World holder down) can land in that same frame, so this
-    // goes by order rather than by time alone.
+    // A group is the unjudged deaths to the expected action in the frame of the first unjudged death.
+    // A raidwide they set off (a tether partner gone, a Hello World holder down) can land in that
+    // same frame; it stays unjudged.
     private static string? GroupMismatch(
-        ScenarioRun run, int start, string expected, uint actionId, PartyRole[] allowed, PartyRole[] mustDie, out int count)
+        ScenarioRun run, IReadOnlySet<int> judged, string expected, uint actionId, PartyRole[] allowed, PartyRole[] mustDie,
+        out List<int> group)
     {
-        count = 0;
+        group = [];
         if (run.Failure is not null) return $"{expected}, but the run failed.";
-        if (run.Deaths.Count <= start) return $"{expected}, but nobody {(start == 0 ? "" : "else ")}died.";
-        var time = run.Deaths[start].Time;
-        var group = run.Deaths.Skip(start)
-                       .TakeWhile(d => d.Time <= time + ScenarioRun.FrameSeconds / 2 && d.ActionId == actionId)
-                       .ToList();
-        if (group.Count == 0) return $"{expected}, but {Describe([run.Deaths[start]])} first.";
-        var wrong = group.Where(d => !allowed.Contains(d.Role)).ToList();
+        var unjudged = Enumerable.Range(0, run.Deaths.Count).Where(i => !judged.Contains(i)).ToList();
+        if (unjudged.Count == 0) return $"{expected}, but nobody {(judged.Count == 0 ? "" : "else ")}died.";
+        var first = run.Deaths[unjudged[0]];
+        group = unjudged.Where(i => run.Deaths[i].Time <= first.Time + ScenarioRun.FrameSeconds / 2
+                                    && run.Deaths[i].ActionId == actionId)
+                        .ToList();
+        var deaths = group.Select(i => run.Deaths[i]).ToList();
+        if (deaths.Count == 0) return $"{expected}, but {Describe([first])} first.";
+        var wrong = deaths.Where(d => !allowed.Contains(d.Role)).ToList();
         if (wrong.Count > 0) return $"{expected}, but {Describe(wrong)}.";
-        var survived = mustDie.Where(r => group.All(d => d.Role != r)).ToList();
+        var survived = mustDie.Where(r => deaths.All(d => d.Role != r)).ToList();
         if (survived.Count > 0) return $"{expected}, but {string.Join(", ", survived)} did not die with them.";
-        count = group.Count;
         return null;
     }
 

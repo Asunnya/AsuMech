@@ -28,7 +28,8 @@ public sealed record CastSpec
 }
 
 // Shape defaults to the Action sheet (see CharacterFind.InsideActionAoe), centred on the cast
-// target when there is one, otherwise on the caster.
+// target when there is one, otherwise on the caster. A cone or line cast on a target runs from the
+// caster towards it instead.
 public sealed record AreaSpec
 {
     // The dimension the sheet lacks; meaning depends on CastType (see InsideActionAoe).

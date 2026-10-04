@@ -116,8 +116,10 @@ public static class TopConstants
         public const uint OmegaDiffuseWaveCannonAOE = 31609;            // Helper->self, 1.0s cast, range 100 120-degree cone
 
         // -- Storage Violation --
-        public const uint StorageViolationFail = 31492;            // Omega canonical / Sigma variant
-        public const uint StorageViolation = 31493;            // Sigma canonical / Omega variant
+        public const uint StorageViolationSolo = 31492;
+        public const uint StorageViolationPair = 31493;
+        // Unfilled-tower raidwide. UNVERIFIED: picked from the Action sheet, never seen cast.
+        public const uint StorageViolationObliteration = 31494;
 
         // -- Run :() versions --
         public const uint RunMiDeltaVersion = 31624;

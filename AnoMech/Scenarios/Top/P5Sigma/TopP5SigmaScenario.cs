@@ -9,6 +9,7 @@ using AnoMech.Core.Map;
 using AnoMech.Core.SimObjects;
 using AnoMech.Multiplayer;
 using static AnoMech.Scenarios.Top.TopConstants;
+using Actions = AnoMech.Scenarios.Top.TopActions;
 
 namespace AnoMech.Scenarios.Top.P5Sigma;
 
@@ -106,7 +107,7 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
         world.Events.Add(0f, () => omega_M_4000A63C = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.OmegaMDynamis, NameId: BNpcNameId.OmegaMDynamis, Level: 90, Targetable: true, EnemyList: EnemyListMode.Always, IsVisible: true, Placement: new Placement(new Vector3(0.000f, 0.000f, 5.000f), MathF.PI), InitialModeAttributeFlags: 0x32)));
         world.Events.Add(0.1f, () => omega_M_4000A63C?.AddStatus(StatusId.OmegaM));
         world.Events.Add(2.46f, () => omega_M_4000A63C?.Cast(ActionId.Teleport7b42, castSeconds: 0f, targetLocation: Vector3.Zero));
-        world.Events.Add(3.75f, () => omega_M_4000A63C?.Cast(ActionId.RunMiSigmaVersion, castSeconds: 4.700f));
+        world.Events.Add(3.75f, () => omega_M_4000A63C?.Cast(Actions.RunMiSigmaVersion));
         world.Events.Add(11.82f, () => omega_M_4000A63C?.SetTargetable(false));
         world.Events.Add(11.87f, () => omega_M_4000A63C?.PlayActionTimeline(TimelineId.WarpOut));
         world.Events.Add(13f, () => omega_M_4000A63C?.SetPosition(state.NewNorthA.Apply(new Placement(new(0f, 0f, -20f), 0f))));
@@ -124,8 +125,8 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
         world.Events.Add(36.47f, () => omega_M_4000A63C?.Cast(ActionId.Unknown7b20, castSeconds: 0f, targetId: omega_M_4000A63C?.GameObjectId));
         world.Events.Add(37.13f, () => omega_M_4000A63C?.SetModelState(0x0B));
         world.Events.Add(38.56f, () => omega_M_4000A63C?.Cast(ActionId.Teleport7b43, castSeconds: 0f, targetLocation: Vector3.Zero));
-        world.Events.Add(39.68f, () => omega_M_4000A63C?.Cast(ActionId.Discharger));
-        world.Events.Add(40.18f, () => party.Knockback(new Vector3(0, 0, 0), KnockbackId.Discharger));
+        world.Events.Add(38.56f, () => omega_M_4000A63C?.SetPosition(Vector3.Zero));
+        world.Events.Add(39.68f, () => omega_M_4000A63C?.Cast(Actions.Discharger));
         world.Events.Add(42.79f, () => omega_M_4000A63C?.PlayActionTimeline(TimelineId.WarpOut));
         world.Events.Add(44.33f, () => omega_M_4000A63C?.SetVisible(false));
         world.Events.Add(45.88f, () => omega_M_4000A63C?.SetModeAttributeFlags(state.OmegaFAttack.AttributeFlags));
@@ -187,32 +188,16 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
             world.Events.Add(11.91f, () => unit?.SetVisible(true));
             world.Events.Add(12.53f, () => tether = world.TetherFarestPlayer(unit, TetherId.AutoTarget)
                                                          .SetAutoFaceTarget(true));
-            world.Events.Add(30.93f, () => unit?.Cast(ActionId.HyperPulseSigma, castSeconds: 0f, targetId: tether?.B?.GameObjectId));
-            world.Events.Add(30.93f, () => ResolveHyperpulse(tether));
+            world.Events.Add(30.93f, () => unit?.Cast(Actions.HyperPulseSigma, tether?.B));
             world.Events.Add(30.96f, () => tether?.Despawn());
             world.Events.Add(32.98f, () => unit?.PlayActionTimeline(TimelineId.WarpOut));
             world.Events.Add(45.88f, () => unit?.SetPosition(state.NewNorthB.Apply(new Placement(new Vector3(14.14f * offset, 0.000f, 14.14f), MathF.PI))));
             world.Events.Add(45.97f, () => unit?.PlayActionTimeline(TimelineId.Spawn));
             world.Events.Add(46.59f, () => tether = world.TetherFarestPlayer(unit, TetherId.AutoTarget)
                   .SetAutoFaceTarget(true));
-            world.Events.Add(68.00f, () => unit?.Cast(ActionId.HyperPulseSigma, castSeconds: 0f, targetId: tether?.B?.GameObjectId));
-            world.Events.Add(68.00f, () => ResolveHyperpulse(tether));
+            world.Events.Add(68.00f, () => unit?.Cast(Actions.HyperPulseSigma, tether?.B));
             world.Events.Add(68.20f, () => tether?.Despawn());
             world.Events.Add(70.05f, () => unit?.PlayActionTimeline(TimelineId.WarpOut));
-        }
-    }
-
-    private void ResolveHyperpulse(SimTether? tether)
-    {
-        if (tether?.A is not { } caster) return;
-        foreach (var hit in party.Find.InsideActionAoe(ActionId.HyperPulseSigma, caster.Placement()))
-        {
-            var lethal = topUtils.IsDamageLethal(hit, ruin: false);
-            Plugin.Log.Info($"Hit: {(hit as ISimPartyMember)?.Role} by Hyper Pulse ({(lethal ? "lethal" : "non-lethal")})");
-            if (lethal)
-                hit.Die(ActionId.HyperPulseSigma, "had vuln up debuff");
-            else
-                hit.AddStatus(StatusId.MagicVulnerabilityUp, 4.96f);
         }
     }
 
@@ -239,67 +224,22 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
             var solverId = i % 2;
             
             world.Events.Add(1f, () => omega_4000A408 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.OmegaHelper, NameId: BNpcNameId.OmegaBeetle, Level: 1, Targetable: false, EnemyList: EnemyListMode.Never, IsVisible: true, Placement: new Placement(new Vector3(0.000f, 0.000f, 0.000f), -0.000f))));
-            world.Events.Add(31.15f, () => {
-                 omega_4000A408?.Face(target!.Position);
-                 omega_4000A408?.Cast(ActionId.WaveCannonAoe, castSeconds: 0f, targetLocation: target?.Position, targetId: target?.GameObjectId);
-                 ResolveWaveCannon(omega_4000A408);
-                 target?.AddStatus(StatusId.MagicVulnerabilityUp, 1.960f);
-            });
+            world.Events.Add(31.15f, () => omega_4000A408?.Cast(Actions.WaveCannon, target));
             world.Events.Add(43.60f, () => omega_4000A408?.SetPosition(towerLocation ?? default));
             world.Events.Add(43.69f, () =>
             {
                 if (towerLocation != null)
                 {
                     var inTower = party.Find.InsideCircle(towerLocation.Value, Geometry.TowerRadius);
-                    foreach (var player in inTower)
-                    {
-                        omega_4000A408?.Cast(ActionId.StorageViolation, castSeconds: 0f, targetId: player.GameObjectId);
-                        ResolveStorageViolation(player);
-                        player.AddStatus(StatusId.TwiceComeRuin, 10.960f, stacks: 1);
-                    }
+                    omega_4000A408?.Cast(tower?.MinPlayers == 1 ? Actions.StorageViolationSolo : Actions.StorageViolationPair);
                     if (inTower.Count < tower?.MinPlayers)
-                    {
-                        ResolveFailedTower(omega_4000A408);
-                    }
+                        omega_4000A408?.Cast(Actions.StorageViolationObliteration);
                 }
             });
         
             world.Events.Add(67.7f + helloWorldOffset, () => solvers[solverId].SetPosition(omega_4000A408));
             world.Events.Add(67.9f + helloWorldOffset, () => solvers[solverId].CastSpell(omega_4000A408));
         }
-    }
-
-    private void ResolveWaveCannon(SimEnemy? caster)
-    {
-        if (caster is not { IsActive: true } unit) return;
-        foreach (var hit in party.Find.InsideActionAoe(ActionId.WaveCannonAoe, unit.Placement()))
-        {
-            var lethal = topUtils.IsDamageLethal(hit, ruin: false);
-            Plugin.Log.Info($"Hit: {(hit as ISimPartyMember)?.Role} by Wave Cannon ({(lethal ? "lethal" : "non-lethal")})");
-            if (lethal)
-                hit.Die(ActionId.WaveCannonAoe, "had vuln up debuff");
-            else
-                hit.AddStatus(StatusId.MagicVulnerabilityUp, 4.96f);
-        }
-    }
-
-    private void ResolveStorageViolation(SimCharacter player)
-    {
-        if (!player.IsAlive()) return;
-        player.RemoveStatus(StatusId.Looper);
-        var lethal = topUtils.IsDamageLethal(player, ruin: true);
-        Plugin.Log.Info($"Hit: {(player as ISimPartyMember)?.Role} by Storage Violation ({(lethal ? "lethal" : "non-lethal")})");
-        if (lethal)
-        {
-            player.Die(ActionId.StorageViolation, "had vuln up or Twice-come Ruin");
-        }
-    }
-
-    private void ResolveFailedTower(SimEnemy? omega4000A408)
-    {
-        Plugin.Log.Info("Hit: ALL PARTY by Storage Violation — tower unfilled (lethal raidwide)");
-        omega4000A408?.Cast(ActionId.StorageViolationFail);
-        party.WipeAllPlayers(ActionId.StorageViolationFail, "tower unfilled");
     }
 
     private void Run_EventObj_1EB83C_4000A6E7()
@@ -339,26 +279,14 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
         world.Events.Add(45.97f, () => rear_Power_Unit_4000A641?.PlayActionTimeline(TimelineId.Spawn));
         world.Events.Add(46.00f, () => rear_Power_Unit_4000A641?.SetVisible(true));
         world.Events.Add(47.88f, () => rear_Power_Unit_4000A641?.AttachLockonVfx(state.SpinnerRotation.LockonId, persistent: false));
-        world.Events.Add(54.97f, () => rear_Power_Unit_4000A641?.Cast(ActionId.RearLasersCharging, targetLocation: state.NewNorthB.Apply(new Vector3(0f, 0f, -25f)), castSeconds: 2.700f, targetId: rear_Power_Unit_4000A641?.GameObjectId));
-        world.Events.Add(57.7f, () => ResolveRearLasers(rear_Power_Unit_4000A641));
+        world.Events.Add(54.97f, () => rear_Power_Unit_4000A641?.Cast(Actions.RearLasersCharging, state.NewNorthB.Apply(new Vector3(0f, 0f, -25f))));
         for (int i = 0; i < 13; i++)
         {
-            var rotation = state.SpinnerRotation.Mul * (i + 1) * MathF.PI / 20;
-            world.Events.Add(58.54f + i * 0.58f, () => rear_Power_Unit_4000A641?.SetPosition(state.NewNorthB.Apply(new Placement(new Vector3(0.000f, 0.000f, 0.000f), rotation))));
-            world.Events.Add(58.59f + i * 0.58f, () => rear_Power_Unit_4000A641?.Cast(ActionId.RearLasersShoot, castSeconds: 0f));
-            world.Events.Add(58.60f + i * 0.58f, () => ResolveRearLasers(rear_Power_Unit_4000A641));
+            var placement = state.NewNorthB.Apply(new Placement(new Vector3(0.000f, 0.000f, 0.000f), state.SpinnerRotation.Mul * (i + 1) * MathF.PI / 20));
+            world.Events.Add(58.54f + i * 0.58f, () => rear_Power_Unit_4000A641?.SetPosition(placement));
+            world.Events.Add(58.59f + i * 0.58f, () => rear_Power_Unit_4000A641?.Cast(Actions.RearLasersShoot, placement.MoveForward(-25f).Position));
         }
         world.Events.Add(66.13f, () => rear_Power_Unit_4000A641?.PlayActionTimeline(TimelineId.WarpOut));
-    }
-
-    private void ResolveRearLasers(SimEnemy? rearPowerUnit4000A641)
-    {
-        if (rearPowerUnit4000A641 is not { IsActive: true } unit) return;
-        foreach (var hit in party.Find.InsideActionAoe(ActionId.RearLasersShoot, unit.Placement()))
-        {
-            Plugin.Log.Info($"Hit: {(hit as ISimPartyMember)?.Role} by Rear Lasers (lethal)");
-            hit.Die(ActionId.RearLasersShoot);
-        }
     }
 
     private void Run_Omega_F_4000A40B_2()

@@ -18,7 +18,7 @@ namespace AnoMech.Tests;
 //   31.15 Wave Cannon cones from the centre at M1 N, C E, OT SE, M2 S, SH SW, R W, all 12.5 out.
 //   40.18 Discharger knocks everyone 13 out from the centre, into their towers.
 //   43.69 towers: M1+SH (-15.7,6.5), R+MT (15.7,6.5), RH (-6.5,-15.7), OT (6.5,-15.7), C (-6.5,15.7), M2 (6.5,15.7).
-//   57.7  Rear Lasers fire south from the centre, then sweep clockwise towards the west.
+//   58.0  Rear Lasers fire north-south through the centre, then sweep clockwise.
 //   60.82 Optimized Blizzard III from Omega F at (0,-10), facing south.
 //   67.9  Near World on OT (-10,0) -> M2 (-19.5,0) -> R (-18.9,5); Distant on SH (0,10) -> M1 (0,-19.5) -> C (0,19.5).
 //   68.0  arms at (-14.14,14.14) and (14.14,14.14) pulse MT (13.5,-14.2) and RH (-13.5,-14.2) through the centre.
@@ -125,7 +125,7 @@ public class TopP5SigmaScenarioTests
     public void SoloTowerUnfilledWipes()
         => Sigma(OffTank)
             .TeleportAt(42f, to: new(0, -8))
-            .ShouldKill(ActionId.StorageViolationFail, PerRole.All);
+            .ShouldKill(ActionId.StorageViolationObliteration, PerRole.All);
 
     // 23.7 from C, so the tether stays clean and MT is left alone in the pair tower.
     [TestCase(false)]
@@ -135,7 +135,7 @@ public class TopP5SigmaScenarioTests
         var north = towerNorthFlip ? Direction.S : Direction.N;
         Sigma(PhysRangedDps, o => o.TowerNorthFlip = towerNorthFlip)
             .TeleportAt(42f, to: Rotated(north, new(5, -5)))
-            .ShouldKill(ActionId.StorageViolationFail, PerRole.All);
+            .ShouldKill(ActionId.StorageViolationObliteration, PerRole.All);
     }
 
     // Still in its tower, but 26.6 from SH: both soak carrying Vulnerability Up.
@@ -143,22 +143,27 @@ public class TopP5SigmaScenarioTests
     public void TowerSoakedWithTetherTooLongKillsBoth()
         => Sigma(RegenHealer)
             .TeleportAt(42f, to: new(-4.8f, -17.8f))
-            .ShouldKill(ActionId.StorageViolation, RegenHealer, ShieldHealer);
+            .ShouldKill(ActionId.StorageViolationSolo, RegenHealer)
+            .ShouldKill(ActionId.StorageViolationPair, ShieldHealer);
 
-    [Test]
-    public void DiesToFirstRearLaser()
+    // The beam runs out both sides of the unit, so the spot mirrored through the centre dies too.
+    [TestCase(false)]
+    [TestCase(true)]
+    public void DiesToFirstRearLaser(bool behind)
         => Sigma(CasterDps)
-            .TeleportAt(57f, to: new(0, 10))
-            .ShouldKill(ActionId.RearLasersShoot, CasterDps);
+            .TeleportAt(57f, to: new Vector2(0, 10) * (behind ? -1 : 1))
+            .ShouldKill(ActionId.RearLasersCharging, CasterDps);
 
     // West of south for the clockwise sweep, east for the counter-clockwise one.
-    [TestCase(true)]
-    [TestCase(false)]
-    public void DiesToRearLaserSweep(bool clockwise)
+    [TestCase(true, false)]
+    [TestCase(true, true)]
+    [TestCase(false, false)]
+    [TestCase(false, true)]
+    public void DiesToRearLaserSweep(bool clockwise, bool behind)
     {
         var rotation = clockwise ? Rotation.Clockwise : Rotation.CounterClockwise;
         Sigma(CasterDps, o => o.SpinnerRotation = rotation)
-            .TeleportAt(58f, to: new(15 * rotation.Mul, 5))
+            .TeleportAt(58f, to: new Vector2(15 * rotation.Mul, 5) * (behind ? -1 : 1))
             .ShouldKill(ActionId.RearLasersShoot, CasterDps);
     }
 

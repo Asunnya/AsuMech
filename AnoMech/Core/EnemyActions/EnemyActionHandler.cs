@@ -30,14 +30,15 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimWorld world)
         Schedule(castTime + action.Timing.ResolveOffset, () => Resolve(action, target, location));
     }
 
-    // Faces the aim point first: the packet carries the caster's rotation. Some actions animate
-    // only when delivered to a target, but one outside CharacterManager null-derefs ApplyAll.
+    // Faces a target first: the packet carries the caster's rotation. A ground location doesn't turn
+    // the caster, since the game aims some lines from behind it. Some actions animate only when
+    // delivered to a target, but one outside CharacterManager null-derefs ApplyAll.
     private void Release(EnemyAction action, SimCharacter? target, Vector3? location, GameObjectId? castTarget)
     {
         var id = action.ActionId;
         if (target == caster) target = null;
         var aim = location ?? target?.Position;
-        caster.Face(aim);
+        caster.Face(target?.Position);
         GameObjectId? deliverTo = target is not null && Natives.BattleCharas.IsInCharacterManager(target.GameObjectId.ObjectId)
             ? target.GameObjectId
             : null;
@@ -49,8 +50,10 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimWorld world)
     private void Resolve(EnemyAction action, SimCharacter? target, Vector3? location)
     {
         var party = world.Party;
-        var origin = target?.Placement()
-                     ?? (location is { } at ? new Placement(at, caster.Rotation) : caster.Placement());
+        var origin = target is not null && target != caster && IsDirectional(action.ActionId)
+            ? caster.Placement().Face(target.Position)
+            : target?.Placement()
+              ?? (location is { } at ? new Placement(at, caster.Rotation) : caster.Placement());
         var ctx = new EnemyActionContext(action, caster, target, origin, party);
 
         var query = new AoeQuery(action.ActionId, origin, action.Area.Rotation, action.Area.Size);
@@ -73,6 +76,10 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimWorld world)
         foreach (var (who, explanation) in ctx.Killed)
             Schedule(action.Timing.DeathDelay, () => who.Die(action.ActionId, Explain(action.DeathExplanation, explanation)));
     }
+
+    // Cones and lines (InsideActionAoe's CastTypes 3, 4, 8, 12, 13).
+    private static bool IsDirectional(uint actionId)
+        => Natives.Data.Action(actionId)?.CastType is 3 or 4 or 8 or 12 or 13;
 
     private static string? Explain(string? action, string? hit)
         => action is null ? hit : hit is null ? action : $"{action}; {hit}";

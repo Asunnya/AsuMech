@@ -12,6 +12,8 @@ public static class TopActions
         .VulnerableTo(StatusId.VulnerabilityUp)
         .VulnerableTo(StatusId.MagicVulnerabilityUpMini, minStacks: 2);
 
+    private static readonly DamageSpec Lethal = new(DamageType.Magic, DamageType.Lethal);
+
     private static readonly DamageSpec Physical = new();
 
     private static readonly RuinSpec ComeRuin = new((2, StatusId.TwiceComeRuin), (3, StatusId.TriceComeRuin));
@@ -20,14 +22,14 @@ public static class TopActions
     public static readonly EnemyAction EfficientBladework = new(ActionId.EfficientBladework)
     {
         Cast = new() { OmenDelay = Duration.OmegaAttackOmenDelay },
-        Effects = [Damage(DamageType.Lethal)],
+        Effects = [Damage(Lethal)],
     };
 
     public static readonly EnemyAction BeyondDefense = new(ActionId.BeyondDefenseAOE)
     {
         Effects =
         [
-            OnOthers(Damage(DamageType.Lethal)),
+            OnOthers(Damage(Lethal)),
             OnTarget(Damage(Physical)),
             OnTarget(ApplyRuin(ComeRuin, 2, 6.96f)),
         ],
@@ -61,15 +63,45 @@ public static class TopActions
         ],
     };
 
+    public static readonly EnemyAction WaveCannon = new(ActionId.WaveCannonAoe)
+    {
+        Effects = [Damage(Magic), ApplyStatus(StatusId.MagicVulnerabilityUp, 4.96f)],
+    };
+
+    // -- Towers --
+    public static readonly EnemyAction StorageViolationSolo = StorageViolation(ActionId.StorageViolationSolo);
+    public static readonly EnemyAction StorageViolationPair = StorageViolation(ActionId.StorageViolationPair);
+
+    private static EnemyAction StorageViolation(uint actionId) => new(actionId)
+    {
+        Effects =
+        [
+            Damage(Magic),
+            ApplyRuin(ComeRuin, 2, 10.96f),
+            RemoveStatus(StatusId.Looper),
+        ],
+    };
+
+    public static readonly EnemyAction StorageViolationObliteration = new(ActionId.StorageViolationObliteration)
+    {
+        Effects = [Damage(Lethal)],
+        DeathExplanation = "tower unfilled",
+    };
+
     // -- Hyper Pulse --
+    public static readonly EnemyAction HyperPulseSigma = new(ActionId.HyperPulseSigma)
+    {
+        Effects = [Damage(Magic), ApplyStatus(StatusId.MagicVulnerabilityUp, 4.96f)],
+    };
+
     public static readonly EnemyAction HyperPulseCharging = new(ActionId.HyperPulseDeltaCharging)
     {
-        Effects = [Damage(DamageType.Lethal)],
+        Effects = [Damage(Lethal)],
     };
 
     public static readonly EnemyAction HyperPulseShoot = new(ActionId.HyperPulseDeltaShoot)
     {
-        Effects = [Damage(DamageType.Lethal)],
+        Effects = [Damage(Lethal)],
     };
 
     // -- Delta-specific --
@@ -80,13 +112,13 @@ public static class TopActions
 
     public static readonly EnemyAction DeltaExplosion = new(ActionId.DeltaExplosion)
     {
-        Effects = [Damage(DamageType.Lethal)],
+        Effects = [Damage(Lethal)],
         Timing = new() { ResolveOffset = 0.4f },
     };
 
     public static readonly EnemyAction DeltaUnmitigatedExplosion = new(ActionId.DeltaUnmitigatedExplosion)
     {
-        Effects = [Damage(DamageType.Lethal)],
+        Effects = [Damage(Lethal)],
         Timing = new() { ResolveOffset = 0.4f },
     };
 
@@ -97,7 +129,7 @@ public static class TopActions
     {
         Cast = new() { OmenDelay = 8.5f },
         Area = new() { Size = Geometry.SwivelCannonHalfAngle, Rotation = rotation },
-        Effects = [Damage(DamageType.Lethal)],
+        Effects = [Damage(Lethal)],
     };
 
     public static readonly EnemyAction HwTetherBreak = new(ActionId.HwTetherBreak)
@@ -112,7 +144,23 @@ public static class TopActions
 
     public static readonly EnemyAction HwTetherFail = new(ActionId.HwTetherFail)
     {
-        Effects = [Damage(DamageType.Lethal)],
+        Effects = [Damage(Lethal)],
+    };
+
+    // -- Sigma-specific --
+    public static readonly EnemyAction RunMiSigmaVersion = new(ActionId.RunMiSigmaVersion)
+    {
+        Effects = [Damage(Magic)],
+    };
+
+    public static readonly EnemyAction RearLasersCharging = new(ActionId.RearLasersCharging)
+    {
+        Effects = [Damage(Lethal)],
+    };
+
+    public static readonly EnemyAction RearLasersShoot = new(ActionId.RearLasersShoot)
+    {
+        Effects = [Damage(Lethal)],
     };
 
     // -- P2 Party Synergy --
