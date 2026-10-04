@@ -170,6 +170,7 @@ public class UwuConstants
         public const ushort AetheriallyCharged = 1528;
         public const ushort Woken = 1529;
         public const ushort SearingWind = 1578;
+        public const ushort Sludge = 287;
     }
 
     public class TetherId
@@ -183,6 +184,7 @@ public class UwuConstants
     {
         public const uint Arena = 2007457;
         public const uint ArenaLayoutId = 7538913;
+        public const uint Sludge = 0x1EA988;
     }
 
     public class LockonId

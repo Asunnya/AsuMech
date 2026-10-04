@@ -73,7 +73,8 @@ public sealed class UwuP3TitanAi : IScenarioAi<UwuP3TitanState>
         ai.Move(50.75f, () => PartyTo(new Vector2(9.5f, -10.2f), withGaolTargets: false), jitter: 0f);
         ai.Move(50.8f, () => MainTankTo(new Vector2(-11f, 0f)));
         ai.Move(53.05f, () => MainTankTo(new Vector2(-8f, -6f * state.SafeSide)));
-        ai.Move(57.0f, () => MainTankTo(new Vector2(8f, 0f)), jitter: 0f);
+        ai.Move(57.0f, () => MainTankTo(new Vector2(12.5f, 0f)), jitter: 0f);
+        ai.Move(66.6f, () => MainTankTo(new Vector2(8f, 0f)), jitter: 0f);
         ai.Move(57.8f, () => PartyTo(TitansLeftSide, withGaolTargets: true), jitter: 0f);
 
         ai.Move(70.3f, () => PartyTo(TitansRightSide, withGaolTargets: true), jitter: 0f);

@@ -51,6 +51,16 @@ public sealed class UwuP3TitanScenario : IScenario
     private const float UpheavalDamage = 0.26f;
     private const float LandslideDamage = 0.76f;
     private const float PrisonerFreedAfter = 1.1f;
+    private const float SludgeSpawnsAfter = 0.85f;
+    private const float SludgeBitesAfter = 1.6f;
+    private const float SludgeShowsAfter = 4.27f;
+    private const float SludgeFadesAfter = 8.96f;
+    private const float SludgeLasts = 9.05f;
+    private const float SludgeRadius = 5f;
+    private const float SludgeTickSeconds = 3f;
+    // UNVERIFIED: nobody ever stayed for a second tick; dying on it is what makes the puddle matter.
+    private const int SludgeLethalTick = 2;
+    private const float SludgeHazardStep = 0.5f;
     private const float TankBusterHalfAngle = MathF.PI / 4f;
     private const uint HealerGaolMaxHp = 1_300_000;
     private const float HealerGaolDrainFrom = 99.5f;
@@ -75,6 +85,16 @@ public sealed class UwuP3TitanScenario : IScenario
     private readonly SimEnemy?[] lateBombs = new SimEnemy?[4];
     private readonly Dictionary<SimEnemy, PartyRole> gaols = [];
     private readonly List<(SimEnemy? Caster, float Rotation)> landslideCasters = [];
+    private readonly List<SludgePuddle> sludges = [];
+    private readonly Dictionary<SimCharacter, (SludgePuddle Puddle, float Since, int Ticks)> wading = [];
+
+    private sealed class SludgePuddle(SimEventObject? model, Vector3 at, float bitesFrom, float until)
+    {
+        public SimEventObject? Model { get; } = model;
+        public Vector3 At { get; } = at;
+        public float BitesFrom { get; } = bitesFrom;
+        public float Until { get; } = until;
+    }
 
     public void Run(SimWorld worldParam, int? selectedAi)
     {
@@ -92,6 +112,8 @@ public sealed class UwuP3TitanScenario : IScenario
         helpers.Clear();
         gaols.Clear();
         landslideCasters.Clear();
+        sludges.Clear();
+        wading.Clear();
         Array.Clear(bombs);
         Array.Clear(lateBombs);
 
@@ -239,6 +261,7 @@ public sealed class UwuP3TitanScenario : IScenario
     public void Tick(float delta, float elapsed)
     {
         DrainHealerGaol(world.Events.Elapsed);
+        WadeThroughSludge(world.Events.Elapsed);
         if (titan == null) return;
         state.TitanPosition = titan.Position;
         if (turningTo is { } goal) TurnToward(goal, delta);
@@ -538,6 +561,53 @@ public sealed class UwuP3TitanScenario : IScenario
         }
         world.Events.Add(PrisonerFreedAfter, () => Free(role));
         world.Events.Add(GaolDespawnsAfterBreaking, gaol.Despawn);
+        if (!explode) return;
+        var spot = gaol.Position;
+        world.Events.Add(SludgeSpawnsAfter, () => SpawnSludge(spot));
+    }
+
+    // A gaol that bursts in the chain leaves a puddle that keeps Sludge on whoever stands in it.
+    private void SpawnSludge(Vector3 at)
+    {
+        var now = world.Events.Elapsed;
+        var model = world.SpawnEventObject(new EventObjectSpawnConfig { EObjId = EObjId.Sludge, Placement = new Placement(at, 0f) });
+        var puddle = new SludgePuddle(model, at, now + SludgeBitesAfter, now + SludgeLasts);
+        sludges.Add(puddle);
+        for (var t = puddle.BitesFrom; t <= puddle.Until; t += SludgeHazardStep)
+            state.Hazards.Add(new Hazard(Flat(at), 0f, SludgeRadius, t, false));
+        world.Events.Add(SludgeShowsAfter, () => model?.SetState(1));
+        world.Events.Add(SludgeFadesAfter, () => model?.FadeOut());
+        world.Events.Add(SludgeLasts, () =>
+        {
+            model?.Despawn();
+            sludges.Remove(puddle);
+        });
+    }
+
+    private void WadeThroughSludge(float now)
+    {
+        if (sludges.Count == 0 && wading.Count == 0) return;
+        foreach (var member in party.ActiveMembers().ToList())
+        {
+            var puddle = member.IsAlive()
+                ? sludges.FirstOrDefault(p => now >= p.BitesFrom && now < p.Until && Vector2.Distance(Flat(member.Position), Flat(p.At)) <= SludgeRadius)
+                : null;
+            if (puddle == null)
+            {
+                if (wading.Remove(member)) member.RemoveStatus(StatusId.Sludge);
+                continue;
+            }
+            if (!wading.TryGetValue(member, out var wade))
+            {
+                member.AddStatus(StatusId.Sludge, 9999f);
+                wading[member] = (puddle, now, 0);
+                continue;
+            }
+            if (now - wade.Since < SludgeTickSeconds * (wade.Ticks + 1)) continue;
+            var ticks = wade.Ticks + 1;
+            wading[member] = (wade.Puddle, wade.Since, ticks);
+            if (ticks >= SludgeLethalTick) member.Die("Died to Sludge (stayed in a broken gaol's puddle)");
+        }
     }
 
     private void Free(PartyRole role)
