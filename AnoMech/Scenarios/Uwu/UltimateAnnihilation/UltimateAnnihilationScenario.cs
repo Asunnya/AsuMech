@@ -38,6 +38,8 @@ public sealed class UltimateAnnihilationScenario : IScenario
     private const float SuperCycloneDamage = 0.03f;
     private const float InfernoHowlDamage = 0.1f;
     private const float SearingWindDamage = 0.42f;
+    // UNVERIFIED: everyone was shielded or anti-knockback, so how far it throws was never seen.
+    private const float VulcanBurstDamage = 0.15f;
 
     private const int WeightOfTheLandFirstDummies = 0;
     private const int WeightOfTheLandSecondDummies = 4;
@@ -48,13 +50,18 @@ public sealed class UltimateAnnihilationScenario : IScenario
     private const int SearingWindDummy = 14;
     private const int SuperCycloneDummy = 15;
     private const int CrimsonCycloneAwakenDummies = 16;
-    private const int DummyCount = 18;
+    private const int RadiantPlumeDummies = 18;
+    private const int DummyCount = 22;
 
     private static readonly Vector3 OrbSpawn = new(2f, 0f, -4f);
     private static readonly Placement UltimaNorth = new(new Vector3(0f, 0f, -10f), 0f);
     private static readonly Placement GarudaSouth = new(new Vector3(0f, 0f, 19.5f), MathF.PI);
     private static readonly Placement IfritSouthEast = new(new Vector3(13.7f, 0f, 13.7f), float.DegreesToRadians(-135f));
     private static readonly Placement TitanSouthWest = new(new Vector3(-13.7f, 0f, 13.7f), float.DegreesToRadians(135f));
+    private static readonly Vector3[] RadiantPlumeSpots =
+    [
+        new(0f, 0f, 7f), new(7f, 0f, 0f), new(-7f, 0f, 0f), new(0f, 0f, -7f),
+    ];
     private static readonly Placement[] CrimsonCycloneAwakenFrom =
     [
         new(new Vector3(0f, 0f, 19.3747f), MathF.PI),
@@ -185,8 +192,23 @@ public sealed class UltimateAnnihilationScenario : IScenario
         world.Events.Add(57.84f, SnapshotHomingLasers);
         world.Events.Add(58.12f, PlayHomingLasers);
         world.Events.Add(58.40f, ResolveHomingLasers);
-        world.Events.Add(60.30f, () => CastSelf(ultima, ActionId.UltimateSuppression, 2.7f));
-        world.Events.Add(63.27f, () => PlayEffect(ultima, ActionId.UltimateSuppression, 4.5f));
+        if (!state.UltimaAboveHalf)
+        {
+            world.Events.Add(60.30f, () => CastSelf(ultima, ActionId.UltimateSuppression, 2.7f));
+            world.Events.Add(63.27f, () => PlayEffect(ultima, ActionId.UltimateSuppression, 4.5f));
+            return;
+        }
+        world.Events.Add(63.30f, CastEyeOfTheStorm);
+        world.Events.Add(65.34f, CastRadiantPlumes);
+        world.Events.Add(66.28f, ResolveEyeOfTheStorm);
+        world.Events.Add(68.50f, () => PlayEffect(ultima, ActionId.RadiantPlumeUltima, 1.1f));
+        world.Events.Add(69.04f, ResolveRadiantPlumes);
+        world.Events.Add(71.67f, DiffractiveLaser);
+        world.Events.Add(74.83f, CastEyeOfTheStorm);
+        world.Events.Add(75.76f, () => Raidwide(ultima, ActionId.VulcanBurstUltima, VulcanBurstDamage, 1.1f));
+        world.Events.Add(77.81f, ResolveEyeOfTheStorm);
+        world.Events.Add(80.22f, () => CastSelf(ultima, ActionId.UltimateSuppression, 2.7f));
+        world.Events.Add(83.19f, () => PlayEffect(ultima, ActionId.UltimateSuppression, 4.5f));
     }
 
     public void Tick(float delta, float elapsed)
@@ -437,6 +459,38 @@ public sealed class UltimateAnnihilationScenario : IScenario
         state.UnpoppedOrbs--;
         PlayEffect(orb.Enemy, ActionId.Aetheroplasm, 1.1f);
         party.WipeAllPlayers("Died to Aetheroplasm (an orb was never popped)");
+    }
+
+    private void CastRadiantPlumes()
+    {
+        CastSelf(ultima, ActionId.RadiantPlumeUltima, 2.9f);
+        for (var i = 0; i < RadiantPlumeSpots.Length; i++)
+        {
+            var at = RadiantPlumeSpots[i];
+            var caster = Dummy(RadiantPlumeDummies + i);
+            caster?.SetPosition(new Placement(at, MathF.PI));
+            caster?.NativeCast(ActionId.RadiantPlumePuddle, ActionType.Action, 0f, 3.7f, false, rotation: MathF.PI, position: at);
+        }
+    }
+
+    private void ResolveRadiantPlumes()
+    {
+        for (var i = 0; i < RadiantPlumeSpots.Length; i++)
+        {
+            var caster = Dummy(RadiantPlumeDummies + i);
+            PlayEffect(caster, ActionId.RadiantPlumePuddle, 0.1f, at: RadiantPlumeSpots[i]);
+            damage.Resolve(caster, ActionId.RadiantPlumePuddle, [DamageType.Lethal], []);
+        }
+    }
+
+    // No cast bar: a cleave on the main tank that only the tanks may stand in.
+    private void DiffractiveLaser()
+    {
+        if (ultima == null || Get(PartyRole.MainTank) is not { } mainTank || !mainTank.IsAlive()) return;
+        ultima.Face(mainTank);
+        PlayEffect(ultima, ActionId.DiffractiveLaser, 1.1f, target: mainTank.GameObjectId);
+        var hits = party.Find.InsideActionAoe(ActionId.DiffractiveLaser, ultima.Placement(), extraRange: ultima.HitboxRadius);
+        UwuUtils.KillSnapshot(damage, hits.Where(hit => !IsTank(hit)), ActionId.DiffractiveLaser, "stood in the tank cleave");
     }
 
     private void CastHomingLasers()

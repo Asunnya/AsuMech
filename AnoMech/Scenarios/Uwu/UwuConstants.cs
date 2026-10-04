@@ -125,6 +125,7 @@ public class UwuConstants
         public const uint UltimatePredation = 11126;
         public const uint ViscousAetheroplasmUltima = 11129;
         public const uint ViscousAetheroplasmEffect = 11130;
+        public const uint DiffractiveLaser = 11128;
         public const uint HomingLasers = 11131;
         public const uint CeruleumVent = 11132;
         public const uint RadiantPlumeUltima = 11133;
@@ -155,6 +156,7 @@ public class UwuConstants
         public const uint UltimateAnnihilation = 11596;
         public const uint UltimateSuppression = 11597;
         public const uint GeocrushLanding = 11517;
+        public const uint VulcanBurstUltima = 11508;
     }
 
     public class ActionTimelineId

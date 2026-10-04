@@ -39,6 +39,8 @@ public class UltimateAnnihilationAi : IScenarioAi<UltimateAnnihilationState>
     private static readonly Vector2 NorthWestStack = new(-6.5f, -7.5f);
     private static readonly Vector2 InwardOfNorthWestStack = new(-4.5f, -4f);
     private static readonly Vector2 HealersWest = new(-11f, 3f);
+    private static readonly Vector2 OutOfTheRadiantPlumes = new(-10.5f, -10.5f);
+    private static readonly Vector2 WestOfTheDiffractiveLaser = new(-7.5f, -3.5f);
     private static readonly Vector2 MainTankOrb = new(1.6f, -3.4f);
     private static readonly Vector2 OffTankOrb = new(2.6f, -4.4f);
 
@@ -84,6 +86,9 @@ public class UltimateAnnihilationAi : IScenarioAi<UltimateAnnihilationState>
         ai.Move(43.4f, () => OutOfThePuddles(43.4f));
         ai.Move(46f, () => Plan(Group(NorthWestStack, new(0f, -7.7f), new(7.3f, -3.7f), searingWind: new(0.5f, 11f))));
         ai.Move(54.6f, () => Plan(Only(state.SearingWindTarget, NorthWestStack)));
+        if (!state.UltimaAboveHalf) return;
+        ai.Move(66.4f, () => Plan(Group(OutOfTheRadiantPlumes, new(0f, -16f), new(10.5f, -10.5f))));
+        ai.Move(69.4f, () => Plan(Group(WestOfTheDiffractiveLaser, new(0.5f, -8.3f), new(6.5f, -4.5f))));
     }
 
     private IAiMove AheadOfFeatherRain(float now, float landsAt, Vector2?[] spots)

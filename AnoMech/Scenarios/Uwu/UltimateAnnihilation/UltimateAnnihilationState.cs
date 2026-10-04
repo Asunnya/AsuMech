@@ -19,6 +19,9 @@ public class UltimateAnnihilationState
     public PartyRole FirstMesohighTaker => PartyRole.PhysRangedDps;
     public PartyRole SecondMesohighTaker => SearingWindTarget;
 
+    // Below 50% Ultima goes straight into Suppression; above it, another Radiant Plume round comes first.
+    public bool UltimaAboveHalf { get; }
+
     public SimTether? Mesohigh;
 
     public UltimateAnnihilationState(Rng rng, SimParty party, UltimateAnnihilationStateOverrides overrides)
@@ -29,5 +32,6 @@ public class UltimateAnnihilationState
 
         SearingWindTarget = overrides.SearingWindOnPlayer && playerIsHealer ? playerRole : Rng.NextHealerRole();
         FlamingCrushTarget = overrides.FlamingCrushOnPlayer && playerRole.IsDps() ? playerRole : Rng.NextDpsRole();
+        UltimaAboveHalf = !overrides.UltimaPushedBelowHalf;
     }
 }
