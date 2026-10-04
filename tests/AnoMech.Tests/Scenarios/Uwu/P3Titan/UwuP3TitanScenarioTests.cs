@@ -45,4 +45,17 @@ public class UwuP3TitanScenarioTests
         Assert.That(facings.Max() - facings.Min(), Is.LessThan(1e-3f));
         Assert.That(facings[0], Is.EqualTo(towardTheCentre).Within(1e-3f));
     }
+
+    [Test]
+    public void APrisonerWhoStaysOnTheGaolSpotDiesToSludge()
+    {
+        var run = ScenarioRun.Execute(typeof(UwuP3TitanScenario), 0, 4321, new ScenarioRunOptions
+        {
+            PlayerRole = MeleeDpsB,
+            WriteArtifactsOnFailure = false,
+            Overrides = o => ((UwuP3TitanStateOverrides)o).PlayerAlwaysInFirstGaols = true,
+            Takeover = new PlayerTakeover(52f, null),
+        });
+        Assert.That(run.Deaths.Select(d => (d.Role, d.Cause)), Does.Contain((MeleeDpsB, "Died to Sludge (stayed in a broken gaol's puddle)")));
+    }
 }
