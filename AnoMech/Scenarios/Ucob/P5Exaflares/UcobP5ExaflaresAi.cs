@@ -49,7 +49,7 @@ public sealed class UcobP5ExaflaresAi : IScenarioAi<UcobP5ExaflaresState>
         for (var i = 0; i < decisions; i++)
         {
             var at = UcobP5ExaflaresState.FirstTelegraphAt + i * DecisionInterval;
-            state.Timeline.Add(at, () => PlaceBotsOnSafeLanes(at));
+            world.Events.Add(at, () => PlaceBotsOnSafeLanes(at));
         }
     }
 
