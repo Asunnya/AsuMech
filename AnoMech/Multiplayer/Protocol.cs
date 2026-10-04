@@ -101,11 +101,10 @@ public sealed record LobbyStateMessage(
     string? ScenarioSettingsJson = null,
     RunClockState? Clock = null) : MpMessage, IHostOnlyMessage;
 
-// The host's run clocks when the message left: its event clock, and its Ai's own clock when the
-// scenario runs one (IMultiplayerReplayable.ReplayClockSeconds). A peer starts its run from them
-// instead of from zero, which would leave it behind by the host's load time plus the travel time.
-// FrameSeconds is the host's average frame, part of the lead the peer takes on top.
-public sealed record RunClockState(float EventClock, float? ReplayClock, float FrameSeconds);
+// The host's event clock when the message left. A peer starts its run from it instead of from
+// zero, which would leave it behind by the host's load time plus the travel time. FrameSeconds is
+// the host's average frame, part of the lead the peer takes on top.
+public sealed record RunClockState(float EventClock, float FrameSeconds);
 
 public sealed record ClaimRoleMessage(Guid PeerId, PartyRole Role) : MpMessage;
 public sealed record ReleaseRoleMessage(Guid PeerId) : MpMessage;

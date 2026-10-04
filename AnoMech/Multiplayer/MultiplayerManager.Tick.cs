@@ -238,7 +238,7 @@ public sealed partial class MultiplayerManager
             if (debugShadowStateGeneric != null && deltaSeconds > 0f
                 && TryResolveScenario() is IMultiplayerReplayable replayable)
                 replayable.TickReplay(debugShadowStateGeneric, deltaSeconds);
-            SyncClocksToHost();
+            SyncClockToHost();
             SendSelfPose();
         }
     }

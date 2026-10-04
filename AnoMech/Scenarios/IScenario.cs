@@ -53,11 +53,4 @@ public interface IScenario
     // Deterministic instance-progress replay (native DirectorUpdate/AddEffect calls) with no
     // host-only dependency, so Game.RunScenarioInternal schedules it for a peer too.
     void RunInstanceEvents(SimWorld world) { }
-    // Whether the scenario has reached its own natural end, for Game's mechanic-streak
-    // tracking. Default covers scenarios whose whole timeline lives on world.Events (the
-    // common case: nothing to override). A scenario that schedules its mechanic on a private
-    // EventScheduler instead (e.g. one kept immune to EventTimeScale for real-time precision)
-    // must override this to check that queue instead, since world.Events would otherwise
-    // look permanently empty from the first tick.
-    bool IsFinished(SimWorld world) => world.Events.IsEmpty;
 }

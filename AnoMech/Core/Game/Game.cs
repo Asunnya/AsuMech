@@ -64,12 +64,12 @@ public sealed class Game : IDisposable
 
     // Consecutive successful completions of whatever scenario is currently active. Reset by
     // Kill on any real (non-godmode) death and by RunScenarioInternal when a different
-    // scenario starts. Incremented automatically once IScenario.IsFinished reports true and
-    // stays true for MechanicResultSettleSeconds (see UpdateMechanicResult): no per-scenario
+    // scenario starts. Incremented automatically once Events runs dry and
+    // stays empty for MechanicResultSettleSeconds (see UpdateMechanicResult): no per-scenario
     // reporting needed. In-memory only: does not survive a plugin reload.
     public int MechanicStreak { get; private set; }
 
-    // How long IsFinished has to stay true before it counts as "reached the end cleanly".
+    // How long Events has to stay empty before it counts as "reached the end cleanly".
     // Covers a death whose failure check trails a few frames behind the scenario's own
     // last scheduled action (rather than firing in the exact same frame, which the Tick
     // call order below already handles on its own).
@@ -86,12 +86,8 @@ public sealed class Game : IDisposable
     private const float MistakeMarkCooldownSeconds = 1f;
     private float? lastMistakeElapsed;
 
-    // Set by Kill on any real death, scoped to the current run (cleared by ResetInternal).
-    // IsFinished can go true on a queue that Kill's own freeze-timer event never touches
-    // (e.g. a scenario with a private EventScheduler immune to EventTimeScale): there's no
-    // structural guarantee that queue and the freeze timer interleave correctly the way two
-    // entries on the same Events queue would, so this flag is the actual source of truth for
-    // "did this run fail", independent of any queue or timing race.
+    // Set by Kill on any real death, scoped to the current run (cleared by ResetInternal): the
+    // source of truth for "did this run fail", since a queue running dry says nothing about deaths.
     private bool deathOccurredThisRun;
 
     private IScenario? activeScenario;
@@ -397,16 +393,12 @@ public sealed class Game : IDisposable
 #endif
     }
 
-    // Infers a clean run from IScenario.IsFinished going true and staying true, rather than
-    // needing each scenario to report its own completion. deathOccurredThisRun (set by Kill,
-    // independent of whichever queue IsFinished watches) is the actual gate against a failed
-    // run being mistaken for a clean one: a queue running dry is not by itself proof nothing
-    // died, since Kill's own freeze-timer event lives on Events specifically and a scenario's
-    // IsFinished override may watch a different queue entirely.
+    // Infers a clean run from Events running dry and staying empty, rather than needing each
+    // scenario to report its own completion; deathOccurredThisRun gates out a failed run.
     private void UpdateMechanicResult(float deltaSeconds)
     {
         if (mechanicResultReported) return;
-        if (activeScenario is null || !activeScenario.IsFinished(World))
+        if (activeScenario is null || !Events.IsEmpty)
         {
             scenarioFinishedElapsed = null;
             return;

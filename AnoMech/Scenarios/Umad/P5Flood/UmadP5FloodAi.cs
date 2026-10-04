@@ -33,7 +33,7 @@ public sealed class UmadP5FloodAi : IScenarioAi<UmadP5FloodState>
 
     public void Run(UmadP5FloodState state, SimWorld world)
     {
-        state.Timeline.Add(ConvergeAt, () => MoveToQuadrant(world, QuadrantAt(state, 0)));
+        world.Events.Add(ConvergeAt, () => MoveToQuadrant(world, QuadrantAt(state, 0)));
 
         for (var tick = 1; tick < UmadP5FloodScenario.TickCount; tick++)
         {
@@ -43,7 +43,7 @@ public sealed class UmadP5FloodAi : IScenarioAi<UmadP5FloodState>
             var previousResolve = UmadP5FloodScenario.FirstTelegraphAt
                 + (tick - 1) * UmadP5FloodScenario.TelegraphStagger
                 + UmadP5FloodScenario.ResolveDelayAfterTelegraph;
-            state.Timeline.Add(previousResolve + DepartAfterResolve, () => MoveToQuadrant(world, quadrant));
+            world.Events.Add(previousResolve + DepartAfterResolve, () => MoveToQuadrant(world, quadrant));
         }
     }
 

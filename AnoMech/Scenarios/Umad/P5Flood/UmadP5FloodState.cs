@@ -34,15 +34,11 @@ public sealed class UmadP5FloodState
         PartyRole.MeleeDpsA, PartyRole.MeleeDpsB, PartyRole.PhysRangedDps, PartyRole.CasterDps,
     ];
 
-    // The scenario's own unscaled clock; bots schedule on it, not the EventTimeScale-scaled AiManager.
-    public EventScheduler Timeline { get; }
-
     private readonly Rng rng = Rng.Detached;
 
-    public UmadP5FloodState(Rng rng, UmadP5FloodStateOverrides overrides, EventScheduler timeline)
+    public UmadP5FloodState(Rng rng, UmadP5FloodStateOverrides overrides)
     {
         this.rng = rng;
-        Timeline = timeline;
         NeSwReversed = Resolve(overrides.LineNeSw);
         NwSeReversed = Resolve(overrides.LineNwSe);
         // Which diagonal leads is an even coin flip.
@@ -52,11 +48,9 @@ public sealed class UmadP5FloodState
         RotationClockwise = overrides.RotationClockwise ?? DeriveRotationClockwise(NeSwFirst, NeSwReversed, NwSeReversed);
     }
 
-    // A peer's shadow of the host's roll (see IMultiplayerReplayable): nothing rolled, and the
-    // timeline is the peer's own, ticked by TickReplay.
-    private UmadP5FloodState(bool neSwReversed, bool nwSeReversed, bool neSwFirst, int startQuadrant, bool rotationClockwise, EventScheduler timeline)
+    // A peer's shadow of the host's roll (see IMultiplayerReplayable): nothing rolled.
+    private UmadP5FloodState(bool neSwReversed, bool nwSeReversed, bool neSwFirst, int startQuadrant, bool rotationClockwise)
     {
-        Timeline = timeline;
         NeSwReversed = neSwReversed;
         NwSeReversed = nwSeReversed;
         NeSwFirst = neSwFirst;
@@ -64,9 +58,9 @@ public sealed class UmadP5FloodState
         RotationClockwise = rotationClockwise;
     }
 
-    public static UmadP5FloodState? FromNetworkReplay(bool neSwReversed, bool nwSeReversed, bool neSwFirst, int startQuadrant, bool rotationClockwise, EventScheduler timeline)
+    public static UmadP5FloodState? FromNetworkReplay(bool neSwReversed, bool nwSeReversed, bool neSwFirst, int startQuadrant, bool rotationClockwise)
         => startQuadrant is >= 0 and <= 3
-            ? new(neSwReversed, nwSeReversed, neSwFirst, startQuadrant, rotationClockwise, timeline)
+            ? new(neSwReversed, nwSeReversed, neSwFirst, startQuadrant, rotationClockwise)
             : null;
 
     // 0=N, 1=E, 2=S, 3=W.

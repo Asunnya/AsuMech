@@ -21,9 +21,6 @@ namespace AnoMech.Scenarios.Umad.P5Exaflares;
 // Rolling hits are animation-based (no per-tile marker, just the ExaflareOmen lane arrow): each
 // eruption snapshots position as it goes off and holds the kill one application delay later.
 // Lingering fire is safe - only the snapshot instant kills.
-//
-// The timeline runs on a scenario-local scheduler (`timeline`) ticked with the unscaled frame
-// delta, so it ignores the Speed buttons.
 public sealed class UmadP5ExaflaresScenario : IMultiplayerReplayable
 {
     public string Name => "Exaflares";
@@ -51,8 +48,6 @@ public sealed class UmadP5ExaflaresScenario : IMultiplayerReplayable
     // and applied one delay later at ApplySpreadKill. Duplicates are intentional: a member caught
     // by two spreads (its own + an overlap) appears twice, and two coverings are lethal.
     private readonly List<SimCharacter> spreadHits = new();
-
-    private readonly EventScheduler timeline = new();
 
     // Exaflare timing. AoE radii come from the Action sheet's EffectRange (circles), not set here.
     private const float ExaflareFirstHitDelay = 4.582f; // first rolling hit, after the line launch
@@ -84,20 +79,16 @@ public sealed class UmadP5ExaflaresScenario : IMultiplayerReplayable
     {
         world = worldParam;
         party = worldParam.Party;
-        state = new UmadP5ExaflaresState(world.Rng, settingsWindow.Overrides, timeline);
+        state = new UmadP5ExaflaresState(world.Rng, settingsWindow.Overrides);
         LastState = state;
         damage = new DamageSolver(party); // ApplyDamage deals % of max HP; godmode drop/heal handled in Game.Kill
         spreadHelpers.Clear();
 
-        // Re-arm the scenario clock for this run (the scenario object is reused).
-        timeline.Clear();
-
-        // Bots schedule on the scenario `timeline` (after Clear, so their adds are absolute).
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<UmadP5ExaflaresState>)AiStrats[idx]).Run(state, world);
 
-        timeline.Add(0f, SpawnKefka);
-        timeline.Add(3.0f, () => kefka?.Cast(ActionId.ChaosEnd1));
+        world.Events.Add(0f, SpawnKefka);
+        world.Events.Add(3.0f, () => kefka?.Cast(ActionId.ChaosEnd1));
 
         // Rolling exaflares: left/right pairs every 2.5s, columns from the chosen order.
         LaunchExaflareLine(3.0f,  state.LeftOrder[0],  isLeft: true);
@@ -113,21 +104,15 @@ public sealed class UmadP5ExaflaresScenario : IMultiplayerReplayable
         LaunchExaflareLine(15.5f, state.RightOrder[4], isLeft: false);
         LaunchExaflareLine(15.5f, state.RightOrder[5], isLeft: false);
 
-        timeline.Add(19.2f, () => kefka?.Cast(ActionId.ChaosEnd2, castSeconds: 4.70f)); // 4.70s cast; ends at 23.90
-        timeline.Add(25.09f, ResolveSpread);   // spread VFX + snapshot, cast-end + 1.19s
-        timeline.Add(25.71f, ApplySpreadKill); // held kill on the hit, snapshot + 0.624s
-        timeline.Add(30.0f, DespawnAll);
+        world.Events.Add(19.2f, () => kefka?.Cast(ActionId.ChaosEnd2, castSeconds: 4.70f)); // 4.70s cast; ends at 23.90
+        world.Events.Add(25.09f, ResolveSpread);   // spread VFX + snapshot, cast-end + 1.19s
+        world.Events.Add(25.71f, ApplySpreadKill); // held kill on the hit, snapshot + 0.624s
+        world.Events.Add(30.0f, DespawnAll);
     }
-
-    // The whole mechanic lives on the private `timeline`, not world.Events (see the class
-    // header comment), so Game's default IsFinished (world.Events.IsEmpty) would read true
-    // from the first tick. Watch the real queue instead.
-    public bool IsFinished(SimWorld world) => timeline.IsEmpty;
 
     public void Tick(float delta, float elapsed)
     {
-        timeline.Tick(delta);
-        state?.SpreadTick?.Invoke(delta); // bot spread relaxation, also 1x (no-op in solo)
+        state?.SpreadTick?.Invoke(delta); // bot spread relaxation (no-op in solo)
     }
 
     private void SpawnKefka()
@@ -143,7 +128,7 @@ public sealed class UmadP5ExaflaresScenario : IMultiplayerReplayable
     }
 
     // One rolling line of fire. `lineIdx` 1-6 faces the source; `isLeft` = top-left wall. The arrow
-    // telegraph appears at launch; the source eruption and rolling hits fire on `timeline`, evenly spaced.
+    // telegraph appears at launch; the source eruption and rolling hits follow, evenly spaced.
     private void LaunchExaflareLine(float startT, int lineIdx, bool isLeft)
     {
         var initPos = isLeft
@@ -154,23 +139,24 @@ public sealed class UmadP5ExaflaresScenario : IMultiplayerReplayable
 
         // Lane telegraph (arrow): visual only. Despawn it just before completion so it doesn't fire
         // its own eruption - the source is spawned separately below so it lines up with the rolling hits.
-        timeline.Add(startT, () =>
+        SimEnemy? arrow = null;
+        world.Events.Add(startT, () =>
         {
-            var arrow = SpawnHelper(initPos, heading);
+            arrow = SpawnHelper(initPos, heading);
             arrow?.Cast(ActionId.ExaflareOmen, castSeconds: OmenCastTime);
-            timeline.Add(OmenCastTime - ArrowReleaseSuppressLead, () => arrow?.Despawn());
         });
+        world.Events.Add(startT + OmenCastTime - ArrowReleaseSuppressLead, () => arrow?.Despawn());
 
         // Source eruption (origin tile): fires ExaflareSourceLead before the first hit. Visual only
         // (origin is off-arena). Ignites just after the arrow clears.
         var tEruptSource = startT + ExaflareFirstHitDelay - ExaflareSourceLead;
         SimEnemy? source = null;
-        timeline.Add(tEruptSource, () =>
+        world.Events.Add(tEruptSource, () =>
         {
             source = SpawnHelper(initPos, heading);
             source?.Cast(ActionId.ExaflareHit, castSeconds: 0f, animationLock: 0f);
-            timeline.Add(ExaflareVfxDuration, () => source?.Despawn());
         });
+        world.Events.Add(tEruptSource + ExaflareVfxDuration, () => source?.Despawn());
 
         // Rolling hits (one helper per tile). At tErupt the eruption fires its VFX and snapshots
         // position; the held kill lands at tBloom, one application delay later.
@@ -184,16 +170,16 @@ public sealed class UmadP5ExaflaresScenario : IMultiplayerReplayable
             IReadOnlyList<SimCharacter> caught = [];
 
             // Fire the VFX and snapshot together; the kill is held. Despawn after the full eruption.
-            timeline.Add(tErupt, () =>
+            world.Events.Add(tErupt, () =>
             {
                 hit = SpawnHelper(pos, heading);
                 hit?.Cast(ActionId.ExaflareHit, castSeconds: 0f, animationLock: 0f);
                 caught = damage.Resolve(hit, ActionId.ExaflareHit, [DamageType.Lethal], [],
                     killTargets: false); // snapshot only
-                timeline.Add(ExaflareVfxDuration, () => hit?.Despawn());
             });
+            world.Events.Add(tErupt + ExaflareVfxDuration, () => hit?.Despawn());
 
-            timeline.Add(tBloom, () => // apply the held damage on the bloom: rolling hit is a 100% one-shot
+            world.Events.Add(tBloom, () => // apply the held damage on the bloom: rolling hit is a 100% one-shot
             {
                 foreach (var c in caught)
                     damage.ApplyDamage(c, 1f, ActionId.ExaflareHit, "exaflare snapshot", lethal: true);
@@ -263,26 +249,15 @@ public sealed class UmadP5ExaflaresScenario : IMultiplayerReplayable
     public object? StartReplay(MpMessage message, int aiIndex, PartyRole myRole, SimWorld replayWorld)
     {
         if (message is not P5AiReplayStateMessage msg) return null;
-        // A fresh, peer-owned EventScheduler that UmadP5ExaflaresAi schedules its dodges onto --
-        // TickReplay below ticks it every frame, mirroring this scenario's own Tick, which
-        // never runs on a peer.
-        var shadowState = UmadP5ExaflaresState.FromNetworkReplay(msg.LeftOrder, msg.RightOrder, new EventScheduler());
+        var shadowState = UmadP5ExaflaresState.FromNetworkReplay(msg.LeftOrder, msg.RightOrder);
         ((IScenarioAi<UmadP5ExaflaresState>)AiStrats[aiIndex]).Run(shadowState, replayWorld);
         return shadowState;
     }
 
+    // A peer never runs this scenario's Tick, so the spread relaxation is driven from here.
     public void TickReplay(object shadowStateObj, float deltaSeconds)
     {
-        if (shadowStateObj is not UmadP5ExaflaresState shadowState) return;
-        shadowState.Timeline.Tick(deltaSeconds);
-        shadowState.SpreadTick?.Invoke(deltaSeconds);
-    }
-
-    public float? ReplayClockSeconds => timeline.Elapsed + Plugin.GameInstance.SecondsSinceTick;
-
-    public void AdvanceReplayClockTo(object shadowStateObj, float seconds)
-    {
         if (shadowStateObj is UmadP5ExaflaresState shadowState)
-            shadowState.Timeline.Advance(seconds - shadowState.Timeline.Elapsed);
+            shadowState.SpreadTick?.Invoke(deltaSeconds);
     }
 }

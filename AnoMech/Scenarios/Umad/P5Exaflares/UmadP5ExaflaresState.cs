@@ -11,42 +11,27 @@ public sealed class UmadP5ExaflaresState
     public IReadOnlyList<int> LeftOrder { get; }
     public IReadOnlyList<int> RightOrder { get; }
 
-    // Handoff to the bot strat. `Timeline` is the scenario's unscaled clock (bots schedule dodges on
-    // it, not the EventTimeScale-scaled AiManager, so they stay frame-locked). `SpreadTick` is the
-    // per-frame relaxation step the strat registers; the scenario's Tick drives it. Both unused in solo.
-    public EventScheduler Timeline { get; }
+    // The per-frame relaxation step the bot strat registers; the scenario's Tick (TickReplay on a
+    // peer) drives it. Unused in solo.
     public Action<float>? SpreadTick { get; set; }
 
     private readonly Rng rng = Rng.Detached;
 
-    public UmadP5ExaflaresState(Rng rng, UmadP5ExaflaresStateOverrides overrides, EventScheduler timeline)
+    public UmadP5ExaflaresState(Rng rng, UmadP5ExaflaresStateOverrides overrides)
     {
         this.rng = rng;
-        Timeline = timeline;
         LeftOrder = Resolve(overrides.LeftOrder);
         RightOrder = Resolve(overrides.RightOrder);
     }
 
-    // Network-replay constructor: reconstructs the full state (LeftOrder/RightOrder
-    // are its entire meaningful surface) from values the host already rolled and
-    // broadcast, instead of drawing fresh RNG. Used exclusively by a peer's local
-    // "debug: bot controls my character" mode (see MultiplayerManager) so its AI
-    // choreography matches what a host-side bot would actually do. Unlike the
-    // other Umad scenarios' replay factories, `timeline` here is NOT the host's --
-    // it must be a fresh EventScheduler the caller drives itself every frame (see
-    // MultiplayerManager.Tick's P5-specific branch), since UmadP5ExaflaresAi
-    // schedules its dodges onto it directly and nothing else would ever advance
-    // one on a peer (a peer never runs IScenario.Tick, which is what drives the
-    // real scenario's own timeline -- see UmadP5ExaflaresScenario.Tick).
-    private UmadP5ExaflaresState(IReadOnlyList<int> leftOrder, IReadOnlyList<int> rightOrder, EventScheduler timeline)
+    private UmadP5ExaflaresState(IReadOnlyList<int> leftOrder, IReadOnlyList<int> rightOrder)
     {
-        Timeline = timeline;
         LeftOrder = leftOrder;
         RightOrder = rightOrder;
     }
 
-    public static UmadP5ExaflaresState FromNetworkReplay(IReadOnlyList<int> leftOrder, IReadOnlyList<int> rightOrder, EventScheduler timeline)
-        => new(leftOrder, rightOrder, timeline);
+    public static UmadP5ExaflaresState FromNetworkReplay(IReadOnlyList<int> leftOrder, IReadOnlyList<int> rightOrder)
+        => new(leftOrder, rightOrder);
 
     private IReadOnlyList<int> Resolve(ExaFlareOrder order)
     {

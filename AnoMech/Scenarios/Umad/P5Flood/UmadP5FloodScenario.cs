@@ -54,9 +54,6 @@ public sealed class UmadP5FloodScenario : IMultiplayerReplayable
     // Each tick's lane anchors and rotation, for PlaceWaveCarriers.
     private readonly (Vector3 A, Vector3 B, float Rotation)[] tickLanes = new (Vector3, Vector3, float)[TickCount];
 
-    // Ticked with the unscaled frame delta, so it ignores EventTimeScale.
-    private readonly EventScheduler timeline = new();
-
     // Relative to the FloodCast cast start.
     private const float FloodCastStart = 0.3f;
     // The cast packets carry 4.7s and 1.2s bars; the resolves land 5.02s and 1.47s after the cast start.
@@ -138,13 +135,12 @@ public sealed class UmadP5FloodScenario : IMultiplayerReplayable
     {
         world = worldParam;
         party = worldParam.Party;
-        state = new UmadP5FloodState(world.Rng, settingsWindow.Overrides, timeline);
+        state = new UmadP5FloodState(world.Rng, settingsWindow.Overrides);
         LastState = state;
         damage = new DamageSolver(party);
         chaoticFloodCaster = null;
         for (var i = 0; i < TickCount; i++) tickHelpers[i] = null;
 
-        timeline.Clear();
         DiagnosticLog.Info($"[UmadP5Flood] Wave carrier mode: {settingsWindow.Overrides.CarrierMode}.");
 
         if (selectedAi is { } idx && idx < AiStrats.Count)
@@ -153,8 +149,8 @@ public sealed class UmadP5FloodScenario : IMultiplayerReplayable
         // Render-side ground truth for the run. Opt-in: it hooks a destructor the whole client
         // shares, so a practice run shouldn't be carrying it. Off again in DespawnAll.
         if (settingsWindow.Overrides.VfxRenderLog) Natives.VfxSpawnLog.Enable();
-        timeline.Add(0f, SpawnKefka);
-        timeline.Add(FloodCastStart, () => kefka?.Cast(ActionId.FloodCast, castSeconds: FloodCastBar, fireDelay: FloodCastFireDelay, animationLock: FloodCastAnimationLock));
+        world.Events.Add(0f, SpawnKefka);
+        world.Events.Add(FloodCastStart, () => kefka?.Cast(ActionId.FloodCast, castSeconds: FloodCastBar, fireDelay: FloodCastFireDelay, animationLock: FloodCastAnimationLock));
 
         var neSw = MarchPairs(NeSwMarch, state.NeSwReversed);
         var nwSe = MarchPairs(NwSeMarch, state.NwSeReversed);
@@ -186,14 +182,14 @@ public sealed class UmadP5FloodScenario : IMultiplayerReplayable
             var tResolve = tTelegraph + ResolveDelayAfterTelegraph;
             var (a, b, rotation) = ticks[tick];
             var tickIndex = tick; // for loop's own `tick` is one shared variable -- copy per iteration
-            timeline.Add(tTelegraph, () => TelegraphTick(tickIndex, a, b, rotation));
-            timeline.Add(tResolve - CarrierTeleportLeadBeforeWaves, () => PlaceWaveCarriers(tickIndex));
-            timeline.Add(tResolve - StackLeadBeforeWaves, ResolveChaoticFlood);
-            timeline.Add(tResolve, () => ResolveWaves(tickIndex));
+            world.Events.Add(tTelegraph, () => TelegraphTick(tickIndex, a, b, rotation));
+            world.Events.Add(tResolve - CarrierTeleportLeadBeforeWaves, () => PlaceWaveCarriers(tickIndex));
+            world.Events.Add(tResolve - StackLeadBeforeWaves, ResolveChaoticFlood);
+            world.Events.Add(tResolve, () => ResolveWaves(tickIndex));
         }
 
         var lastResolve = FirstTelegraphAt + (TickCount - 1) * TelegraphStagger + ResolveDelayAfterTelegraph;
-        timeline.Add(lastResolve + DespawnBuffer, DespawnAll);
+        world.Events.Add(lastResolve + DespawnBuffer, DespawnAll);
     }
 
     // Host and peer alike: a peer's wave carriers replay the same gimmick timelines.
@@ -202,13 +198,8 @@ public sealed class UmadP5FloodScenario : IMultiplayerReplayable
         if (settingsWindow.Overrides.PreloadWaveTimelines) Natives.TimelinePreload.Preload(WaveTimelines, "UmadP5Flood");
     }
 
-    // The mechanic runs on the private `timeline`, so the default (world.Events.IsEmpty)
-    // would read finished from the first tick.
-    public bool IsFinished(SimWorld world) => timeline.IsEmpty;
-
     public void Tick(float delta, float elapsed)
     {
-        timeline.Tick(delta);
         TickAnchorWatch();
     }
 
@@ -217,28 +208,13 @@ public sealed class UmadP5FloodScenario : IMultiplayerReplayable
             ? new UmadP5FloodAiReplayStateMessage(s.NeSwReversed, s.NwSeReversed, s.NeSwFirst, s.StartQuadrant, s.RotationClockwise)
             : null;
 
-    // The shadow state's timeline is peer-owned and driven by TickReplay, as for Exaflares.
     public object? StartReplay(MpMessage message, int aiIndex, PartyRole myRole, SimWorld replayWorld)
     {
         if (message is not UmadP5FloodAiReplayStateMessage msg || aiIndex < 0 || aiIndex >= AiStrats.Count) return null;
-        var shadowState = UmadP5FloodState.FromNetworkReplay(msg.NeSwReversed, msg.NwSeReversed, msg.NeSwFirst, msg.StartQuadrant, msg.RotationClockwise, new EventScheduler());
+        var shadowState = UmadP5FloodState.FromNetworkReplay(msg.NeSwReversed, msg.NwSeReversed, msg.NeSwFirst, msg.StartQuadrant, msg.RotationClockwise);
         if (shadowState == null) return null;
         ((IScenarioAi<UmadP5FloodState>)AiStrats[aiIndex]).Run(shadowState, replayWorld);
         return shadowState;
-    }
-
-    public void TickReplay(object shadowStateObj, float deltaSeconds)
-    {
-        if (shadowStateObj is not UmadP5FloodState shadowState) return;
-        shadowState.Timeline.Tick(deltaSeconds);
-    }
-
-    public float? ReplayClockSeconds => timeline.Elapsed + Plugin.GameInstance.SecondsSinceTick;
-
-    public void AdvanceReplayClockTo(object shadowStateObj, float seconds)
-    {
-        if (shadowStateObj is UmadP5FloodState shadowState)
-            shadowState.Timeline.Advance(seconds - shadowState.Timeline.Elapsed);
     }
 
     // pair1 = points[0]&points[2] (cross-paired outer/inner), pair2 = points[1]&points[3].
@@ -418,11 +394,11 @@ public sealed class UmadP5FloodScenario : IMultiplayerReplayable
         {
             case FloodWaveDelivery.EffectHoldLoop:
                 carrier.HoldTimelineLoop(WaveTimelineId);
-                timeline.Add(WaveHoldSeconds, () => carrier.ReleaseTimelineHold(WaveTimelineId));
+                world.Events.Add(WaveHoldSeconds, () => carrier.ReleaseTimelineHold(WaveTimelineId));
                 break;
             case FloodWaveDelivery.EffectHoldBase:
                 carrier.HoldTimelineBase(WaveTimelineId);
-                timeline.Add(WaveHoldSeconds, () => carrier.ReleaseTimelineHold(WaveTimelineId));
+                world.Events.Add(WaveHoldSeconds, () => carrier.ReleaseTimelineHold(WaveTimelineId));
                 break;
         }
         if (settingsWindow.Overrides.WaveAnimLock) HoldAnimLock(carrier);
@@ -476,7 +452,7 @@ public sealed class UmadP5FloodScenario : IMultiplayerReplayable
     private void HoldAnimLock(SimEnemy carrier)
     {
         carrier.SetMode(CharacterModes.AnimLock);
-        timeline.Add(WaveTimelineSeconds, () => carrier.SetMode(CharacterModes.Normal));
+        world.Events.Add(WaveTimelineSeconds, () => carrier.SetMode(CharacterModes.Normal));
     }
 
     private void DespawnAll()
