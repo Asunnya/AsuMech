@@ -25,7 +25,7 @@ namespace AnoMech.Tests;
 //   37.92  Mesohigh resolves on whoever holds Garuda's (-13.7,-13.7) tether; MT intercepts it from
 //          (-4,-7).
 //   38.78  Flaming Crush on M1 needs 6 of the 7 others but MT; the stack is at (6.7,0).
-//   41.20  Featherlance, 8y round each plume, now pulled back to the diagonals at radius 20.6.
+//   40.88  Featherlance, 8y round each plume, now pulled back to the diagonals at radius 20.5.
 public class UltimateSuppressionScenarioTests
 {
     private static readonly PartyRole[] FeatherRainTargets = [MainTank, OffTank, MeleeDpsA, PhysRangedDps, CasterDps];
@@ -169,7 +169,7 @@ public class UltimateSuppressionScenarioTests
     [Test]
     public void DiesToFeatherlance()
         => Suppression(MeleeDpsB)
-            .TeleportAt(41f, to: new(10, 10))
+            .TeleportAt(40.7f, to: new(10, 10))
             .ShouldKill(ActionId.Featherlance, MeleeDpsB);
 
     // M2 and C both out leaves five in the stack.

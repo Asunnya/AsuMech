@@ -120,7 +120,7 @@ public class TopP5DeltaScenarioTests
     [Test]
     public void DiesNextToBeyondDefenseTarget()
         => Delta(RegenHealer)
-            .TeleportAt(35.4f, to: new(0, -3))
+            .TeleportAt(35.2f, to: new(0, -3))
             .ShouldKill(ActionId.BeyondDefenseAOE, RegenHealer);
 
     // Beyond Defense moved to RH so MT can stay with OT: beside it from the fists on, then in the stack.
@@ -184,12 +184,14 @@ public class TopP5DeltaScenarioTests
             .ShouldKill(ActionId.HelloWorldFail, AllBut(MainTank));
 
     // Faces north at x = -7, so only M1 and M2 are on its monitor's side; M2 is also Omega's.
+    // Away from the stack, SH leaves Pile Pitch to OT and RH, who die before M2's tether wipes.
     [Test]
     public void PlayerMonitorOnOmegaMonitorTargetKillsThem()
         => Delta(ShieldHealer)
             .TeleportAt(40.45f, to: new(-7, -1), facing: FacingNorth)
             .ShouldKill(ActionId.OversampledWaveCannonAoe, MeleeDpsB)
-            .ShouldKill(ActionId.HwTetherFail, AllBut(MeleeDpsB));
+            .ShouldKill(ActionId.PilePitch, OffTank, RegenHealer)
+            .ShouldKill(ActionId.HwTetherFail, AllBut(MeleeDpsB, OffTank, RegenHealer));
 
     // Turned around, the monitor picks two of OT, RH, MT and Omega's targets at random. Every pick
     // kills: Omega's targets are hit twice, MT still has Twice Come Ruin, and OT and RH share a spot,
@@ -201,13 +203,13 @@ public class TopP5DeltaScenarioTests
             .ShouldKillSomeone(ActionId.OversampledWaveCannonAoe);
 
     // Monitor targets still have Magic Vulnerability Up, the Pile Pitch stack Twice Come Ruin; MT's
-    // from Beyond Defense has run out, but OT's Near World takes them anyway.
+    // from Beyond Defense has run out, but the tether the dead leave unbroken takes them anyway.
     [Test]
     public void BreakingFirstGreenTetherEarlyKillsTheVulnerable()
         => Delta(MeleeDpsA)
             .TeleportAt(44f, to: new(-10, 4))
             .ShouldKill(ActionId.HwTetherBreak, AllBut(MainTank))
-            .ShouldKill(ActionId.HelloWorldFail, MainTank);
+            .ShouldKill(ActionId.HwTetherFail, MainTank);
 
     // The safe side's sign is eye x cannon side; mirrored by the eye east to west as well.
     [TestCase(true, true)]
