@@ -146,7 +146,7 @@ public sealed partial class MultiplayerManager
             enemies.Add(new EnemyState(
                 netId, enemy.BNpcBaseId, cfg.NameId, cfg.Level, enemy.Targetable, enemy.EnemyListMode,
                 cfg.ModelCharaId, cfg.Scale, cfg.HitboxRadius, cfg.InitialModeAttributeFlags, enemy.Visible, modelState,
-                enemy.ActiveStatuses.Select(s => new EnemyStatusState(s.StatusId, s.Stacks, s.RemainingTime, s.Instance)).ToList(),
+                enemy.ActiveStatuses.Where(s => !SimOnlyStatus.Is(s.StatusId)).Select(s => new EnemyStatusState(s.StatusId, s.Stacks, s.RemainingTime, s.Instance)).ToList(),
                 enemy.AnimationTimelineId, enemy.AnimationTimelineSeq, newLockonVfxIds,
                 enemy.AnimationState?.Arg2, enemy.AnimationState?.Arg3, enemy.AnimationStateSeq,
                 enemy.Position.X, enemy.Position.Y, enemy.Position.Z, enemy.Rotation,
@@ -279,7 +279,7 @@ public sealed partial class MultiplayerManager
                 if (newLockonVfxIds.Count > 0)
                     DiagnosticLog.Info($"[Multiplayer] Host: role {role} NewLockonVfxIds -> [{string.Join(",", newLockonVfxIds)}].");
                 newVfx = DrainVfx(member, $"role {role}");
-                statuses = member.ActiveStatuses.Select(s => new EnemyStatusState(s.StatusId, s.Stacks, s.RemainingTime, s.Instance)).ToList();
+                statuses = member.ActiveStatuses.Where(s => !SimOnlyStatus.Is(s.StatusId)).Select(s => new EnemyStatusState(s.StatusId, s.Stacks, s.RemainingTime, s.Instance)).ToList();
                 var bc = member.BattleCharaPtr();
                 if (bc != null)
                 {

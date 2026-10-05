@@ -14,13 +14,17 @@ internal static class DamageCheck
     // Null when the hit is survivable, otherwise why it kills ("" when it simply does).
     public static string? LethalCause(SimCharacter target, DamageSpec spec, Severity severity, SimParty party)
     {
-        if (severity.Kind == SeverityKind.Lethal) return "";
+        if (spec.Protections.Any(id => target.FindStatus(id) != null)) return null;
+        if (severity.Kind == SeverityKind.Lethal) return MissingProtection(spec) ?? "";
         var vulnMitigation = VulnRequiredMitigation(target, spec);
         if (vulnMitigation >= 1f) return "had vuln up debuff";
         if (severity.Kind == SeverityKind.TankBuster && !IsTank(target)) return "tank buster";
         if (Survives(target, party, MathF.Max(severity.MinMitigation, vulnMitigation ?? 0f), spec.Kind)) return null;
         return vulnMitigation != null ? "not enough mitigation for a hit with vuln up" : "not enough mitigation";
     }
+
+    private static string? MissingProtection(DamageSpec spec)
+        => spec.Protections.Count > 0 ? $"no {StatusLookup.Name(spec.Protections[0])}" : null;
 
     public static bool IsTank(SimCharacter target) => target is ISimPartyMember { Role: PartyRole.OffTank or PartyRole.MainTank };
 

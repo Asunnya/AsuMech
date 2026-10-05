@@ -43,6 +43,14 @@ internal sealed class NegativeRun<TScenario>(PartyRole role, int strat) where TS
     // The bot stays on its AI, which moves it on at its next step.
     public NegativeRun<TScenario> MoveBotAt(float time, PartyRole bot, Vector2 to) => Add(new Takeover(time, to, Bot: bot));
 
+    // State the strat can't reach on its own (extra stacks, a debuff), set on the frame the clock passes `time`.
+    public NegativeRun<TScenario> At(float time, Action<ScenarioProbe> setUp)
+    {
+        var previous = options.Probe;
+        options = options with { Probe = p => { previous?.Invoke(p); if (p.Crossed(time)) setUp(p); } };
+        return this;
+    }
+
     private NegativeRun<TScenario> Add(Takeover takeover)
     {
         options = options with { Takeovers = options.Takeovers.Append(takeover).OrderBy(t => t.At).ToList() };

@@ -49,6 +49,20 @@ public static class EnemyActionEffects
 
     // `effect` applied to everyone hit but the cast's target.
     public static IEnemyActionEffect OnOthers(IEnemyActionEffect effect) => new FilteredEffect(effect, castTarget: false);
+
+    // `effect` applied to the `count` hit nearest the origin (the front of a wild charge).
+    public static IEnemyActionEffect OnFront(int count, IEnemyActionEffect effect) => new FrontEffect(effect, count);
+}
+
+internal sealed class FrontEffect(IEnemyActionEffect effect, int count) : IEnemyActionEffect
+{
+    public void Apply(EnemyActionContext ctx)
+    {
+        var hits = ctx.Hits;
+        ctx.Hits = hits.Take(count).ToList();
+        try { effect.Apply(ctx); }
+        finally { ctx.Hits = hits; }
+    }
 }
 
 internal sealed class FilteredEffect(IEnemyActionEffect effect, bool castTarget) : IEnemyActionEffect

@@ -13,6 +13,9 @@ public sealed record DamageSpec(params DamageType[] Types)
 {
     public IReadOnlyList<Vulnerability> Vulnerabilities { get; init; } = [];
 
+    // Carrying any of these, the hit can't kill: it outranks Severity and every vulnerability.
+    public IReadOnlyList<ushort> Protections { get; init; } = [];
+
     public bool Has(DamageType type) => Types.Contains(type);
 
     public DamageKind Kind => Has(DamageType.Magic) ? DamageKind.Magic : DamageKind.Physical;
@@ -22,6 +25,8 @@ public sealed record DamageSpec(params DamageType[] Types)
     public DamageSpec VulnerableTo(ushort statusId, float requiredMitigation = 1f, int minStacks = 1)
         => this with { Vulnerabilities = [.. Vulnerabilities, new Vulnerability(statusId, requiredMitigation, minStacks)] };
 
+    public DamageSpec ProtectedBy(ushort statusId) => this with { Protections = [.. Protections, statusId] };
+
     public static implicit operator DamageSpec(DamageType type) => new(type);
 }
 
@@ -29,4 +34,6 @@ public static class DamageTypeExtensions
 {
     public static DamageSpec VulnerableTo(this DamageType type, ushort statusId, float requiredMitigation = 1f, int minStacks = 1)
         => new DamageSpec(type).VulnerableTo(statusId, requiredMitigation, minStacks);
+
+    public static DamageSpec ProtectedBy(this DamageType type, ushort statusId) => new DamageSpec(type).ProtectedBy(statusId);
 }

@@ -72,10 +72,15 @@ public sealed class SimEnemy : SimNpc
     private readonly SimCast cast;
     private readonly EnemyActionHandler actions;
 
+    // The server's own ceiling: bosses turn at most ~145° per ~0.3s movement tick.
+    private const float BossTurnSpeed = MathF.PI * 8f / 3f;
+
+    protected override float? TurnSpeed => BossTurnSpeed;
+
     // Peer-only smoothing for ApplyNetworkPosition, same model as SimNetworkPuppet: the
     // catch-up speed is a floor once the real snapshot interval is known, anything beyond
     // NetworkSnapThreshold (a scripted teleport, a lag spike) snaps, extrapolation only feeds
-    // the visual glide, and rotation is stepped as well.
+    // the visual glide, and rotation turns at BossTurnSpeed like the host's.
     private const float NetworkCatchUpSpeed = 20f;
     private const float NetworkSnapThreshold = 15f;
     private const ushort NetworkRunTimelineId = 22; // mirrors Game.Movement.RunTimelineId
@@ -87,8 +92,6 @@ public sealed class SimEnemy : SimNpc
 
     private const float MaxNetworkExtrapolationSeconds = 1f;
     private Vector3 networkVelocity;
-
-    private const float NetworkAngularCatchUpSpeed = MathF.PI * 20f;
 
     private Vector3? networkTargetPosition;
     private float networkTargetRotation;
@@ -130,17 +133,17 @@ public sealed class SimEnemy : SimNpc
         var dist = delta.Length();
         var remainingWindow = MathF.Max(estimatedNetworkUpdateInterval - timeSinceLastNetworkUpdate, MinNetworkPacingWindowSeconds);
         var step = MathF.Max(dist / remainingWindow, NetworkCatchUpSpeed) * deltaSeconds;
-        var nextRotation = MathUtil.StepRotation(Rotation, networkTargetRotation, NetworkAngularCatchUpSpeed * deltaSeconds);
         if (dist > NetworkSnapThreshold)
         {
             // Logged: position otherwise rides silently in every snapshot.
             DiagnosticLog.Info($"[SimEnemy.TickNetworkPosition] {DisplayName} (BNpcBase {BNpcBaseId}) snapped {dist:F1}y (> {NetworkSnapThreshold}y threshold): {basePos} -> {target}.");
-            SetPosition(new Placement(target, nextRotation));
+            SetPosition(new Placement(target, networkTargetRotation));
         }
-        else if (dist <= step)
-            SetPosition(new Placement(target, nextRotation));
         else
-            SetPosition(new Placement(basePos + delta / dist * step, nextRotation));
+        {
+            SetPosition(dist <= step ? target : basePos + delta / dist * step);
+            TurnTo(networkTargetRotation);
+        }
 
         if (networkMoving && !networkInterpAnimActive)
         {
@@ -634,13 +637,13 @@ public sealed class SimEnemy : SimNpc
         return cast.Start(actionId, targetLocation, castSeconds, targetId, omenDelay, omenRotate, animationVariation, animationLock, fireDelay);
     }
 
-    public void Cast(EnemyAction action) => actions.Start(action, null, null);
+    public EnemyActionCast Cast(EnemyAction action, byte animationVariation = 0) => actions.Start(action, null, null, animationVariation);
 
     // A null target casts on the caster.
-    public void Cast(EnemyAction action, SimCharacter? target) => actions.Start(action, target, null);
+    public EnemyActionCast Cast(EnemyAction action, SimCharacter? target, byte animationVariation = 0) => actions.Start(action, target, null, animationVariation);
 
     // Scenario-local ground target, fixed at the call.
-    public void Cast(EnemyAction action, Vector3 location) => actions.Start(action, null, location);
+    public EnemyActionCast Cast(EnemyAction action, Vector3 location, byte animationVariation = 0) => actions.Start(action, null, location, animationVariation);
 
     public void NativeCast(uint actionId, ActionType actionType, float omenDelay, float castTime, bool interruptible, float? rotation = null, Vector3? position = null, GameObjectId? targetId = null, GameObjectId? ballistaId = null)
     {

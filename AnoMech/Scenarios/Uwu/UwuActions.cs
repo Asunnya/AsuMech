@@ -48,6 +48,13 @@ public static class UwuActions
     };
 
     // -- Ultima --
+    public static readonly EnemyAction UltimaAttack = new(ActionId.UltimaAttack)
+    {
+        Cast = new() { AnimationLock = 0.1f },
+        Effects = [Damage(Physical)],
+        Timing = new() { DamageDelay = 1.16f },
+    };
+
     public static readonly EnemyAction UltimatePredation = Visual(ActionId.UltimatePredation, 4.5f);
     public static readonly EnemyAction PostUltimatePredation1 = Visual(ActionId.PostUltimatePredation1, 2.1f);
     public static readonly EnemyAction PostUltimatePredation2 = Visual(ActionId.PostUltimatePredation2, 2.1f);
@@ -59,16 +66,18 @@ public static class UwuActions
     public static readonly EnemyAction ViscousAetheroplasmUltima = new(ActionId.ViscousAetheroplasmUltima) 
     {
        Cast = new() { AnimationLock = 2.1f },
-       // Tank buster is fake here, but that's one way to make sure only tanks get this
-       Effects = [Damage(Magic, TankBuster), ApplyStatus(1532, 10)], 
+       Effects = [Damage(Magic), ApplyStatus(1532, 10)], 
        Timing = new() { DamageDelay = 1.1f },
     };
     
     public static readonly EnemyAction ViscousAetheroplasm = new(ActionId.ViscousAetheroplasmEffect)
     {
         Cast = new() { AnimationLock = 1.1f },
-        // Tank buster is fake here, but that's a way to make sure only tank gets hit
-        Effects = [Damage(Magic, TankBuster)],
+        Effects = [
+            // TODO: replace understacked: TankBuster to requires invuln
+            Damage(Magic.VulnerableTo(StatusId.ViscousVuln), split: Distribution.Stack(8, understacked: TankBuster)),
+            ApplyStatus(StatusId.ViscousVuln, 1f),
+        ],
         Timing = new() { DamageDelay = 0.6f },
     };
         
@@ -91,6 +100,39 @@ public static class UwuActions
         Cast = new() { AnimationLock = 2.1f },
         Effects = [Damage(Magic, TankBuster)],
         Timing = new() { DamageDelay = 2.6f },
+    };
+
+    public static readonly EnemyAction UltimateSuppression = Visual(ActionId.UltimateSuppression, 4.5f);
+    // Visual only: the LightPillarCircle helpers deal the damage.
+    public static readonly EnemyAction LightPillarUltima = Visual(ActionId.LightPillarUltima, 2.1f);
+    // TODO: real tank-purge damage
+    public static readonly EnemyAction TankPurge = Raidwide(ActionId.TankPurge, 2.1f, 0.8f);
+
+    public static readonly EnemyAction LightPillarCircle = new(ActionId.LightPillarCircle)
+    {
+        Cast = new() { AnimationLock = 0.1f },
+        Area = SparesGaoled,
+        Effects = [Damage(Magic, Lethal)],
+        Timing = new() { DamageDelay = 0.9f }, // TODO: verify with replay
+    };
+
+    public static readonly EnemyAction AetherochemicalLaserCenter = AetherochemicalLaser(ActionId.AetherochemicalLaserCenter, 0f);
+    public static readonly EnemyAction AetherochemicalLaserRight = AetherochemicalLaser(ActionId.AetherochemicalLaserRight, -45f);
+    public static readonly EnemyAction AetherochemicalLaserLeft = AetherochemicalLaser(ActionId.AetherochemicalLaserLeft, 45f);
+
+    public static EnemyAction AetherochemicalLaserById(uint actionId) => actionId switch
+    {
+        ActionId.AetherochemicalLaserRight => AetherochemicalLaserRight,
+        ActionId.AetherochemicalLaserLeft => AetherochemicalLaserLeft,
+        _ => AetherochemicalLaserCenter,
+    };
+
+    private static EnemyAction AetherochemicalLaser(uint actionId, float rotationDegrees) => new(actionId)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Area = SparesGaoled with { Rotation = float.DegreesToRadians(rotationDegrees) },
+        Effects = [Damage(Magic, Lethal)],
+        Timing = new() { DamageDelay = 0.8f }, // TODO: verify with replay
     };
 
     // -- Garuda --
@@ -119,6 +161,77 @@ public static class UwuActions
 
     public static readonly EnemyAction MistralShriek = Raidwide(ActionId.MistralShriek, 2.3f, damage: 0.90f);
 
+    public static readonly EnemyAction MistralSong = new(ActionId.MistralSong)
+    {
+        Cast = new() { AnimationLock = 1.8f },
+        Area = SparesGaoled,
+        Effects = [Damage(Magic, Lethal)],
+        Timing = new() { DamageDelay = 0.6f }, // TODO: verify with replay
+    };
+    public static readonly EnemyAction MistralSongSuparnaChirada = new(ActionId.MistralSongSuparnaChirada)
+    {
+        Cast = new() { AnimationLock = 2.1f },
+        Area = new() { CastType = 3 },
+        Effects = [
+            Damage(Magic, split: Distribution.WildCharge(front: 1, frontHit: new Hit(Magic.VulnerableTo(StatusId.MistralSongVuln), TankBuster))),
+            OnFront(1, ApplyStatus(StatusId.MistralSongVuln, 1f)),
+        ],
+        Timing = new() { DamageDelay = 0.4f },
+    };
+    public static readonly EnemyAction GreatWhirlwind = new(ActionId.GreatWhirlwind)
+    {
+        Cast = new() { AnimationLock = 2.1f },
+        Area = SparesGaoled,
+        Effects = [Damage(Magic, Lethal)],
+        Timing = new() { DamageDelay = 0.6f }, // TODO: verify with replay
+    };
+    public static readonly EnemyAction Mesohigh = new(ActionId.Mesohigh)
+    {
+        Cast = new() { AnimationLock = 2.1f },
+        Effects = [
+            Damage(Magic.ProtectedBy(StatusId.ThermalLow), Lethal),
+        ],
+        Timing = new() { DamageDelay = 0.83f }, // TODO: verify with replay
+    };
+
+    // Thermal Low popped by Mesohigh, sized by its stacks.
+    public static EnemyAction SuperCyclone(int thermalLowStacks) => thermalLowStacks switch
+    {
+        1 => SuperCyclone1,
+        2 => SuperCyclone2,
+        _ => SuperCyclone3,
+    };
+
+    private static readonly EnemyAction SuperCyclone1 = new(ActionId.SuperCyclone1)
+    {
+        Effects = [Damage(Magic)],
+        Timing = new() { DamageDelay = 0.5f },
+    };
+
+    // A second one inside the vuln's 2s kills.
+    private static readonly EnemyAction SuperCyclone2 = new(ActionId.SuperCyclone2)
+    {
+        Effects = [
+            Damage(Magic.VulnerableTo(StatusId.SuperCycloneVuln)),
+            ApplyStatus(StatusId.SuperCycloneVuln, 2f),
+        ],
+        Timing = new() { DamageDelay = 0.5f }, 
+    };
+
+    private static readonly EnemyAction SuperCyclone3 = new(ActionId.SuperCyclone3)
+    {
+        Effects = [Damage(Magic, Lethal)],
+        Timing = new() { DamageDelay = 0.5f }, 
+    };
+
+    public static readonly EnemyAction Featherlance = new(ActionId.Featherlance)
+    {
+        Cast = new() { AnimationLock = 2.1f },
+        Area = SparesGaoled,
+        Effects = [Damage(Magic, Lethal)],
+        Timing = new() { DamageDelay = 0.5f }, // TODO: verify with replay
+    };
+
     // -- Ifrit --
     public static readonly EnemyAction CrimsonCyclone = new(ActionId.CrimsonCyclone)
     {
@@ -138,10 +251,21 @@ public static class UwuActions
     public static readonly EnemyAction EruptionIfrit = Visual(ActionId.EruptionIfrit, 2.4f);
     public static readonly EnemyAction InfernalFetters = Visual(ActionId.InfernalFetters, 0.6f);
 
+    public static readonly EnemyAction FlamingCrush = new(ActionId.FlamingCrush)
+    {
+        Cast = new() { AnimationLock = 2.1f },
+        Effects = [
+            Damage(Magic, split: Distribution.Stack(6)), 
+            ApplyStatus(StatusId.AccursedFlame, 3f)
+        ],
+        Timing = new() { DamageDelay = 0.73f }, // TODO: verify with replay
+    };
+
     // -- Titan --
     // Visual only: the LandslideLine helpers deal the knockback.
     public static readonly EnemyAction LandslideTitan = Visual(ActionId.LandslideTitan, 4.1f);
     public static readonly EnemyAction BoulderTitan = Visual(ActionId.BoulderTitan, 2.1f);
+    public static readonly EnemyAction RockThrow = Visual(ActionId.RockThrow, 2.1f);
     public static readonly EnemyAction Tumult = Raidwide(ActionId.Tumult, 1.1f, damage: 0.9f);
 
     public static readonly EnemyAction Bury = new(ActionId.Bury)

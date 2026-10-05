@@ -26,7 +26,6 @@ public sealed record CastSpec
 
     public float AnimationLock { get; init; } = 0.6f;
     public float OmenDelay { get; init; }
-    public byte Variation { get; init; }
 }
 
 // Shape defaults to the Action sheet (see CharacterFind.InsideActionAoe), centred on the cast
@@ -36,6 +35,9 @@ public sealed record AreaSpec
 {
     // The dimension the sheet lacks; meaning depends on CastType (see InsideActionAoe).
     public float? Size { get; init; }
+
+    // Replaces the sheet's CastType, for an action whose sheet shape is custom (CastType 6).
+    public byte? CastType { get; init; }
 
     // Turns the omen and the area from the caster's facing, in radians.
     public float Rotation { get; init; }

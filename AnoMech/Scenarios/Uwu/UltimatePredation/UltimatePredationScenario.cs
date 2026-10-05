@@ -226,15 +226,27 @@ public class UltimatePredationScenario : IMultiplayerReplayable
 
         world.Events.Add(27.70f, () => ultima?.PlayActionTimeline(ActionTimelineId.WarpEnd));
 
+        world.Events.Add(29.67f, () => ultima?.Cast(Actions.UltimaAttack, mt, animationVariation: 0));
+
         world.Events.Add(29.77f, () =>
         {
             ultima?.SetTargetable(true);
             ultima?.SetTarget(mt);
         });
 
+        world.Events.Add(32.70f, () => ultima?.Cast(Actions.UltimaAttack, mt, animationVariation: 2));
+
         world.Events.Add(32.92f, () => ultima?.Cast(Actions.PostUltimatePredation2));
 
+        world.Events.Add(37.73f, () => ultima?.Cast(Actions.UltimaAttack, mt, animationVariation: 2));
+
+        world.Events.Add(40.75f, () => ultima?.Cast(Actions.UltimaAttack, mt, animationVariation: 0));
+
+        world.Events.Add(43.80f, () => ultima?.Cast(Actions.UltimaAttack, mt, animationVariation: 0));
+
         world.Events.Add(43.94f, () => ultima?.Cast(Actions.PostUltimatePredation3));
+
+        world.Events.Add(48.83f, () => ultima?.Cast(Actions.UltimaAttack, mt, animationVariation: 1));
 
         world.Events.Add(49.05f, () => ultima?.Cast(Actions.RadiantPlumeUltima));
 
@@ -252,10 +264,15 @@ public class UltimatePredationScenario : IMultiplayerReplayable
 
         utils.LandslideLines(() => ultima, [() => dummies[5], () => dummies[6], () => dummies[7]], 55.09f, LandslideType.Ultima);
 
+        world.Events.Add(58.33f, () => ultima?.Cast(Actions.UltimaAttack, mt, animationVariation: 0));
+
         world.Events.Add(60.37f, () => ultima?.Cast(Actions.PostUltimatePredation1));
 
-        world.Events.Add(64.38f, () => ultima?.Cast(Actions.ViscousAetheroplasmUltima, mt));
+        world.Events.Add(63.37f, () => ultima?.Cast(Actions.UltimaAttack, mt, animationVariation: 2));
 
+        world.Events.Add(64.38f, () => state.ViscousAetheroplasmUltima = ultima?.Cast(Actions.ViscousAetheroplasmUltima, mt));
+
+        world.Events.Add(66.40f, () => ultima?.Cast(Actions.UltimaAttack, mt, animationVariation: 2));
 
         world.Events.Add(69, () =>
         {
@@ -265,11 +282,18 @@ public class UltimatePredationScenario : IMultiplayerReplayable
             ultima?.SetTarget(ot);
         });
 
+        world.Events.Add(69.48f, () => ultima?.Cast(Actions.UltimaAttack, ot, animationVariation: 0));
+
+        world.Events.Add(72.47f, () => ultima?.Cast(Actions.UltimaAttack, ot, animationVariation: 0));
+
         world.Events.Add(73.64f, () => ultima?.Cast(Actions.HomingLasers, mt));
 
-        // Viscous Aetheroplasm is handled by dummies[7]
-        // TODO: Should do an invuln check
-        world.Events.Add(75.57f, () => dummies[7]?.Cast(Actions.ViscousAetheroplasm, mt));
+        world.Events.Add(75.57f, () =>
+        {
+            var targets = (state.ViscousAetheroplasmUltima?.Hits ?? []).Select(h => h.Who).Where(w => w.IsAlive());
+            foreach (var (who, dummy) in targets.Zip(dummies.Reverse()))
+                dummy?.Cast(Actions.ViscousAetheroplasm, who);
+        });
 
         world.Events.Add(77.34f, () =>
         {
@@ -279,7 +303,13 @@ public class UltimatePredationScenario : IMultiplayerReplayable
             ultima?.SetTarget(mt);
         });
 
-        world.Events.Add(80.97f, () => ultima?.Cast(Actions.UltimateAnnihilation));
+        world.Events.Add(78.55f, () => ultima?.Cast(Actions.UltimaAttack, mt, animationVariation: 2));
+
+        world.Events.Add(80.97f, () =>
+        {
+            ultima?.Follow();
+            ultima?.Cast(Actions.UltimateAnnihilation);
+        });
 
         world.Events.Add(88.41f, () =>
         {

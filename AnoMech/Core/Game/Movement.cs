@@ -243,7 +243,7 @@ internal class Movement(SimCharacter parent)
             var t = Math.Clamp(easeElapsed / duration, 0f, 1f);
             var eased = easeOut ? 1f - (1f - t) * (1f - t) * (1f - t) : t * t * (3f - 2f * t);
             var next = Vector3.Lerp(easeStart, dest, eased);
-            parent.SetPosition(new Placement(next, parent.Rotation));
+            parent.SetPosition(next);
             if (t >= 1f) Stop();
             return;
         }
@@ -264,7 +264,8 @@ internal class Movement(SimCharacter parent)
         if (distSq <= step * step || step <= 0f)
         {
             var rot = finalRotation ?? (faceTravel && distSq > 1e-6f ? MathF.Atan2(dx, dz) : parent.Rotation);
-            parent.SetPosition(new Placement(new Vector3(dest2.X, dest.Y, dest2.Y), rot));
+            parent.SetPosition(new Vector3(dest2.X, dest.Y, dest2.Y));
+            parent.TurnTo(rot);
             finalRotation = null;
             Stop();
         }
@@ -276,7 +277,8 @@ internal class Movement(SimCharacter parent)
             // empty, nothing blocks, or this is forced movement.
             var heading = avoid ? Obstacles.Steer(new Vector2(cur.X, cur.Z), desired, dist, ref steerSide) : desired;
             var next = new Vector3(cur.X + heading.X * step, cur.Y, cur.Z + heading.Y * step);
-            parent.SetPosition(new Placement(next, faceTravel ? MathF.Atan2(heading.X, heading.Y) : parent.Rotation));
+            parent.SetPosition(next);
+            if (faceTravel) parent.TurnTo(MathF.Atan2(heading.X, heading.Y));
         }
     }
 
@@ -358,7 +360,7 @@ internal class Movement(SimCharacter parent)
         var dx = target.X - parent.Position.X;
         var dz = target.Z - parent.Position.Z;
         if (dx * dx + dz * dz < 1e-6f) return;
-        parent.SetRotation(MathF.Atan2(dx, dz));
+        parent.TurnTo(MathF.Atan2(dx, dz));
     }
 }
 

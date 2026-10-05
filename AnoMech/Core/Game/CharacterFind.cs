@@ -226,18 +226,19 @@ public sealed class CharacterFind<T> where T : IPositioned
     // 3, 13 (cones) -> halfAngleRad default PI/6
     // 8 (charge) -> charge length default 100
     // 10 (donut) -> inner safe radius default 0
-    public IReadOnlyList<T> InsideActionAoe(uint actionId, Placement target, float omenRotate = 0f, float? size = null)
+    // castType replaces the sheet's, for an action whose sheet shape is custom (e.g. CastType 6).
+    public IReadOnlyList<T> InsideActionAoe(uint actionId, Placement target, float omenRotate = 0f, float? size = null, byte? castType = null)
     {
         if (Natives.Data.Action(actionId) is not { } action)
         {
             Plugin.Log.Warning($"InsideActionAoe: action {actionId} not found");
             return Array.Empty<T>();
         }
-        AoeQuery.RaiseEvaluated(new AoeQuery(actionId, target, omenRotate, size));
+        AoeQuery.RaiseEvaluated(new AoeQuery(actionId, target, omenRotate, size, castType));
         var range = (float)action.EffectRange;
         var halfWidth = action.XAxisModifier > 0 ? action.XAxisModifier * 0.5f : range;
         var forward = new Placement(target.Position, target.Rotation + omenRotate);
-        var hits = action.CastType switch
+        var hits = (castType ?? action.CastType) switch
         {
             2 or 5 or 6 // Probably different targeting: ground / caster / target. Doesn't matter for us
                   => InsideCircle(target.Position, range),
@@ -252,7 +253,7 @@ public sealed class CharacterFind<T> where T : IPositioned
             11  // +
                   => InsideCross(forward, halfWidth, range),
             _ =>
-                LogUnknownCastType(actionId, action.CastType),
+                LogUnknownCastType(actionId, castType ?? action.CastType),
         };
         return SortByDistanceTo(hits, target.Position);
     }
@@ -314,15 +315,16 @@ public sealed class CharacterFind<T> where T : IPositioned
 // exactly one place (Run), so any parameter it grows is carried to both callers
 // automatically — the debug picture can't drift from the resolved AOE.
 public readonly struct AoeQuery(uint actionId, Placement source,
-    float omenRotate = 0f, float? size = null)
+    float omenRotate = 0f, float? size = null, byte? castType = null)
 {
     public uint ActionId { get; } = actionId;
     public Placement Source { get; } = source;
     public float OmenRotate { get; } = omenRotate;
     public float? Size { get; } = size;
+    public byte? CastType { get; } = castType;
 
     public IReadOnlyList<T> Run<T>(CharacterFind<T> find) where T : IPositioned =>
-        find.InsideActionAoe(ActionId, Source, OmenRotate, Size);
+        find.InsideActionAoe(ActionId, Source, OmenRotate, Size, CastType);
 
     // Every InsideActionAoe check, for the headless test harness's death reports.
     public static event Action<AoeQuery>? Evaluated;
@@ -342,7 +344,7 @@ public readonly struct AoeQuery(uint actionId, Placement source,
         var fwd = dx * MathF.Sin(rotation) + dz * MathF.Cos(rotation);
         var side = dx * MathF.Cos(rotation) - dz * MathF.Sin(rotation);
         var dist = MathF.Sqrt(dx * dx + dz * dz);
-        return action.CastType switch
+        return (CastType ?? action.CastType) switch
         {
             2 or 5 or 6 => dist - range,
             3 or 13 => ConeDistance(fwd, side, dist, Size ?? MathF.PI / 6f, range),

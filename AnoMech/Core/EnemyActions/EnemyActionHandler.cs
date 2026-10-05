@@ -14,8 +14,9 @@ namespace AnoMech.Core.EnemyActions;
 internal sealed class EnemyActionHandler(SimEnemy caster, SimWorld world)
 {
     // `target` and `location` are exclusive; neither = centred on the caster.
-    public void Start(EnemyAction action, SimCharacter? target, Vector3? location)
+    public EnemyActionCast Start(EnemyAction action, SimCharacter? target, Vector3? location, byte animationVariation)
     {
+        var handle = new EnemyActionCast();
         var id = action.ActionId;
         var sheetCastTime = Natives.Data.Action(id)?.CastSeconds ?? 0f;
         var castTime = MathF.Max(0f, sheetCastTime - CastSpec.ReleaseLead);
@@ -27,15 +28,16 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimWorld world)
             caster.NativeCast(id, ActionType.Action, action.Cast.OmenDelay, castTime, interruptible: false,
                 rotation: caster.Rotation + action.Area.Rotation, position: location, targetId: castTarget);
 
-        Schedule(sheetCastTime, () => Release(action, target, location, castTarget));
+        Schedule(sheetCastTime, () => Release(action, target, location, castTarget, animationVariation));
         if (action.Effects.Count > 0)
-            Schedule(castTime + action.Timing.ResolveSnapshotOffset, () => Resolve(action, target, location));
+            Schedule(castTime + action.Timing.ResolveSnapshotOffset, () => Resolve(action, target, location, handle));
+        return handle;
     }
 
     // Faces a target first: the packet carries the caster's rotation. A ground location doesn't turn
     // the caster, since the game aims some lines from behind it. Some actions animate only when
     // delivered to a target, but one outside CharacterManager null-derefs ApplyAll.
-    private void Release(EnemyAction action, SimCharacter? target, Vector3? location, GameObjectId? castTarget)
+    private void Release(EnemyAction action, SimCharacter? target, Vector3? location, GameObjectId? castTarget, byte animationVariation)
     {
         var id = action.ActionId;
         if (target == caster) target = null;
@@ -45,26 +47,27 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimWorld world)
             ? target.GameObjectId
             : null;
         caster.NativeActionEffect(
-            id, action.Cast.AnimationLock, (ushort)id, action.Cast.Variation, ActionType.Action, 0,
+            id, action.Cast.AnimationLock, (ushort)id, animationVariation, ActionType.Action, 0,
             position: aim ?? caster.Position, animationTargetId: castTarget, actionTargetId: deliverTo);
     }
 
-    private void Resolve(EnemyAction action, SimCharacter? target, Vector3? location)
+    private void Resolve(EnemyAction action, SimCharacter? target, Vector3? location, EnemyActionCast handle)
     {
         var party = world.Party;
-        var origin = target is not null && target != caster && IsDirectional(action.ActionId)
+        var origin = target is not null && target != caster && IsDirectional(action)
             ? caster.Placement().Face(target.Position)
             : target?.Placement()
               ?? (location is { } at ? new Placement(at, caster.Rotation) : caster.Placement());
         var ctx = new EnemyActionContext(action, caster, target, origin, party);
 
-        var query = new AoeQuery(action.ActionId, origin, action.Area.Rotation, action.Area.Size);
+        var query = new AoeQuery(action.ActionId, origin, action.Area.Rotation, action.Area.Size, action.Area.CastType);
 #if DEBUG
         AnoMech.Windows.DamageDebugWindow.Instance?.Record(query);
 #endif
         var hits = query.Run(party.Find);
         if (action.Area.AdjustTargets is { } adjust) hits = adjust(ctx, hits);
         ctx.Hits = hits;
+        handle.Resolved(origin, hits.Select(h => (h, h.Position)).ToList());
         DiagnosticLog.Info(
             $"[EnemyAction] Resolve: {ActionLookup.Name(action.ActionId)} at ({origin.Position.X:F1},{origin.Position.Z:F1}) rot={origin.Rotation:F3} -- {hits.Count} target(s): "
             + string.Join(", ", hits.Select(t => (t as ISimPartyMember)?.Role.ToString() ?? "?")));
@@ -91,8 +94,8 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimWorld world)
     }
 
     // Cones and lines (InsideActionAoe's CastTypes 3, 4, 8, 12, 13).
-    private static bool IsDirectional(uint actionId)
-        => Natives.Data.Action(actionId)?.CastType is 3 or 4 or 8 or 12 or 13;
+    private static bool IsDirectional(EnemyAction action)
+        => (action.Area.CastType ?? Natives.Data.Action(action.ActionId)?.CastType) is 3 or 4 or 8 or 12 or 13;
 
     private static string? Explain(string? action, string? hit)
         => action is null ? hit : hit is null ? action : $"{action}; {hit}";

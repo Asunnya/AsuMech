@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using AnoMech.Core.EnemyActions;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Party;
 using static AnoMech.Scenarios.Uwu.UwuConstants;
@@ -34,6 +35,8 @@ public class UltimatePredationState
     public Placement? ResolvedSafeCardinal;
     public Placement? ResolvedSafeFirstSet;
     public Placement? ResolvedSafeSecondSet;
+
+    public EnemyActionCast? ViscousAetheroplasmUltima;
 
     public UltimatePredationState(Rng rng, UltimatePredationStateOverrides overrides)
     {

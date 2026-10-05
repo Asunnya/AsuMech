@@ -11,6 +11,7 @@ using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using static AnoMech.Scenarios.Uwu.UwuConstants;
 using AnoMech.Core.Native.Interfaces;
+using Actions = AnoMech.Scenarios.Uwu.UwuActions;
 
 namespace AnoMech.Scenarios.Uwu.UltimateSuppression;
 
@@ -46,11 +47,12 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
 
     private SimEnemy?[] dummies = new SimEnemy?[13];
 
-    private bool razorPlumesDamage = false;
     // Seconds into each plume movement; null while it isn't running.
     private float? razorPlumesRotate;
     private float? razorPlumesBack;
     private Dictionary<SimEnemy, Placement> razorPlumes = new();
+    private bool razorPlumesDamage;
+    private readonly HashSet<SimEnemy> razorPlumesFired = [];
 
     // The arena reveal is fixed-time and independent of this run's randomization, so it belongs
     // here: a peer never runs Run and would stay in the void.
@@ -74,6 +76,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
         LastState = state;
 
         razorPlumesDamage = false;
+        razorPlumesFired.Clear();
         razorPlumesRotate = null;
         razorPlumesBack = null;
         DespawnRazorPlumes();
@@ -118,15 +121,24 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
 
         if (razorPlumesDamage)
         {
-            foreach (var (razorPlume, placement) in razorPlumes)
+            foreach (var (razorPlume, _) in razorPlumes)
             {
-                // TODO: Eyeballed Radius
-                foreach (var character in party.Find.InsideCircle(razorPlume.Position, 2))
-                {
-                    character.Die(ActionId.Featherlance, "touched a Razor Plume");
-                }
+                if (party.ActiveMembers().Any(m => Touches(razorPlume, m)))
+                    FireFeatherlance(razorPlume);
             }
         }
+    }
+
+    private static bool Touches(SimCharacter a, SimCharacter b)
+    {
+        var reach = a.HitboxRadius + b.HitboxRadius;
+        return a.Placement().DistanceSq(b.Position) <= reach * reach;
+    }
+
+    private void FireFeatherlance(SimEnemy razorPlume)
+    {
+        if (razorPlumesFired.Add(razorPlume))
+            razorPlume.Cast(Actions.Featherlance);
     }
 
     private void Init()
@@ -271,13 +283,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
 
     private void Ultima()
     {
-        var getUltima = () => ultima;
-
-        // ActionId.UltimateSuppression is Animation Only
-        utils.Cast(getUltima,
-            2.50f, new() { ActionId = ActionId.UltimateSuppression, ActionType = ActionType.Action, OmenDelay = 0f, CastTime = 2.7f, Interruptible = false },
-            5.47f, new() { ActionId = ActionId.UltimateSuppression, AnimationLock = 4.5f, SpellId = (ushort)ActionId.UltimateSuppression, AnimationVariaton = 0, ActionType = ActionType.Action, Flags = 0 },
-            new() { CastTarget = getUltima, ActionEffectAnimationTarget = getUltima });
+        world.Events.Add(2.50f, () => ultima?.Cast(Actions.UltimateSuppression));
 
         world.Events.Add(10.13f, () =>
         {
@@ -293,39 +299,29 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
 
         world.Events.Add(12.37f, () => ultima?.PlayActionTimeline(ActionTimelineId.WarpEnd));
 
-        // ActionId.LightPillarUltima is Animation Only. Actual AOEs are handled in the LightPillar calls
-        utils.Cast(getUltima,
-            20.55f, new() { ActionId = ActionId.LightPillarUltima, ActionType = ActionType.Action, OmenDelay = 0f, CastTime = 1.7f, Interruptible = false },
-            22.57f, new() { ActionId = ActionId.LightPillarUltima, AnimationLock = 2.1f, SpellId = (ushort)ActionId.LightPillarUltima, AnimationVariaton = 0, ActionType = ActionType.Action, Flags = 0 },
-            new() { CastTarget = getUltima, ActionEffectAnimationTarget = getUltima });
+        world.Events.Add(20.55f, () => ultima?.Cast(Actions.LightPillarUltima));
 
-        AetherochemicalLaser(() => ultima, 0, 24.70f, 27.55f);
+        AetherochemicalLaser(0, 24.70f);
 
-        LightPillar(() => dummies[5], 24.70f, 25.64f, true);
-        LightPillar(() => dummies[4], 25.64f, 26.60f);
-        LightPillar(() => dummies[10], 26.60f, 27.55f);
-        LightPillar(() => dummies[9], 27.55f, 28.71f);
+        LightPillar(() => dummies[5], 24.70f, true);
+        LightPillar(() => dummies[4], 25.64f);
+        LightPillar(() => dummies[10], 26.60f);
+        LightPillar(() => dummies[9], 27.55f);
 
-        AetherochemicalLaser(() => ultima, 1, 28.71f, 31.60f);
+        AetherochemicalLaser(1, 28.71f);
 
-        LightPillar(() => dummies[10], 28.71f, 29.68f);
-        LightPillar(() => dummies[12], 29.68f, 30.65f);
+        LightPillar(() => dummies[10], 28.71f);
+        LightPillar(() => dummies[12], 29.68f);
 
-        AetherochemicalLaser(() => ultima, 2, 32.84f, 35.78f);
+        AetherochemicalLaser(2, 32.84f);
 
-        // ActionId.TankPurge is Animation Only (TODO for more fleshed out damage logic?)
-        utils.Cast(getUltima,
-            40.03f, new() { ActionId = ActionId.TankPurge, ActionType = ActionType.Action, OmenDelay = 0f, CastTime = 3.7f, Interruptible = false },
-            43.88f, new() { ActionId = ActionId.TankPurge, AnimationLock = 2.1f, SpellId = (ushort)ActionId.TankPurge, AnimationVariaton = 0, ActionType = ActionType.Action, Flags = 0 },
-            new() { CastTarget = getUltima, ActionEffectAnimationTarget = getUltima });
+        world.Events.Add(40.03f, () => ultima?.Cast(Actions.TankPurge));
 
         world.Events.Add(46.10f, () => ultima?.PlayActionTimeline(ActionTimelineId.WarpStart));
     }
 
     private void Garuda()
     {
-        var getGaruda = () => garuda;
-
         world.Events.Add(12.15f, () =>
         {
             garuda?.SetPosition(
@@ -387,56 +383,20 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
             razorPlumesDamage = true;
         });
 
-        IReadOnlyList<SimCharacter> chiradaMistralSnapshot = null!;
-        IReadOnlyList<SimCharacter> suparnaMistralSnapshot = null!;
-
         world.Events.Add(20.55f, () =>
         {
-            chirada?.Face(state.PlayerMistralSongs[0]);
-            suparna?.Face(state.PlayerMistralSongs[1]);
-
-            chirada?.NativeActionEffect(
-                ActionId.MistralSongSuparnaChirada,
-                2.1f,
-                (ushort)ActionId.MistralSongSuparnaChirada,
-                0,
-                ActionType.Action,
-                0,
-                animationTargetId: chirada.GameObjectId
-                );
-
-            suparna?.NativeActionEffect(
-                ActionId.MistralSongSuparnaChirada,
-                2.1f,
-                (ushort)ActionId.MistralSongSuparnaChirada,
-                0,
-                ActionType.Action,
-                0,
-                animationTargetId: suparna.GameObjectId
-                );
-
-            // ActionId.MistralSongSuparnaChirada has a CastType of 6, which gets treated as a circle, so we manually check it as a Cone (Garuda's Mistral Song IS a Cone)
-            // EffectRange is 40.
-            chiradaMistralSnapshot = party.Find.InsideCone(chirada!.Placement(), MathF.PI / 6f, 40).OrderBy(x => Vector3.DistanceSquared(chirada!.Position, x.Position)).ToList();
-            suparnaMistralSnapshot = party.Find.InsideCone(suparna!.Placement(), MathF.PI / 6f, 40).OrderBy(x => Vector3.DistanceSquared(suparna!.Position, x.Position)).ToList();
+            state.ChiradaMistralSong = chirada?.Cast(Actions.MistralSongSuparnaChirada, state.PlayerMistralSongs[0]);
+            state.SuparnaMistralSong = suparna?.Cast(Actions.MistralSongSuparnaChirada, state.PlayerMistralSongs[1]);
         });
 
-        var chiradaMistralHit = Vector3.Zero;
-        var suparnaMistralHit = Vector3.Zero;
-
-        world.Events.Add(20.81f, () =>
-        {
-            chiradaMistralHit = ResolveMistralSong(chiradaMistralSnapshot);
-            suparnaMistralHit = ResolveMistralSong(suparnaMistralSnapshot);
-        });
-
-        world.Events.Add(20.82f, () =>
+        world.Events.Add(20.60f, () =>
         {
             garuda?.Face(state.GarudaFacing is { } role ? party.Get(role) : party.GetRandom(world.Rng));
+            garuda?.Cast(Actions.MistralSong);
             razorPlumesRotate = 0f;
         });
 
-        world.Events.Add(20.82f + Duration.RazorPlumeRotation, () =>
+        world.Events.Add(20.60f + Duration.RazorPlumeRotation, () =>
         {
             razorPlumesRotate = null;
 
@@ -448,13 +408,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
             razorPlumesBack = 0f;
         });
 
-        world.Events.Add(20.82f + Duration.RazorPlumeRotation + Duration.RazorPlumeBack, () => razorPlumesBack = null);
-
-        // ActionId.MistralSong is Animation Only (TODO: does this actually do damage outside the cone?)
-        utils.Cast(getGaruda,
-            20.82f, new() { ActionId = ActionId.MistralSong, ActionType = ActionType.Action, OmenDelay = 0f, CastTime = 1.7f, Interruptible = false },
-            22.82f, new() { ActionId = ActionId.MistralSong, AnimationLock = 1.8f, SpellId = (ushort)ActionId.MistralSong, AnimationVariaton = 0, ActionType = ActionType.Action, Flags = 0 },
-            new() { CastTarget = getGaruda, ActionEffectActionTarget = getGaruda });
+        world.Events.Add(20.60f + Duration.RazorPlumeRotation + Duration.RazorPlumeBack, () => razorPlumesBack = null);
 
         world.Events.Add(22.57f, () =>
         {
@@ -464,8 +418,11 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
 
         utils.FeatherRain([() => dummies[6], () => dummies[7], () => dummies[8], () => dummies[9], () => dummies[10]], 22.57f, 24.11f, state.FeatherRainTargets);
 
-        GreatWhirlwind(() => dummies[11], () => chiradaMistralHit, 23.81f, 26.60f);
-        GreatWhirlwind(() => dummies[12], () => suparnaMistralHit, 23.81f, 26.60f);
+        world.Events.Add(23.57f, () =>
+        {
+            if (state.ChiradaMistralSong?.Hits is [var chiradaHit, ..]) dummies[11]?.Cast(Actions.GreatWhirlwind, chiradaHit.At);
+            if (state.SuparnaMistralSong?.Hits is [var suparnaHit, ..]) dummies[12]?.Cast(Actions.GreatWhirlwind, suparnaHit.At);
+        });
 
         world.Events.Add(24.70f, () => garuda?.PlayActionTimeline(ActionTimelineId.WarpStart2));
 
@@ -475,65 +432,36 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
 
         world.Events.Add(32.84f, () => state.MesohighTether = world.Tether(garuda, End.Passable(), TetherId.Mesohigh));
 
-        SimCharacter? tetherTarget = null;
-        var tetherHadThermalLow = false;
-
         world.Events.Add(37.92f, () =>
         {
             state.MesohighTether!.Resolved = true;
-            tetherTarget = state.MesohighTether.B;
-
-            garuda?.NativeActionEffect(
-                ActionId.Mesohigh,
-                2.1f,
-                (ushort)ActionId.Mesohigh,
-                0,
-                ActionType.Action,
-                0,
-                animationTargetId: tetherTarget!.GameObjectId
-                );
-
-            tetherHadThermalLow = tetherTarget!.HasStatus(StatusId.ThermalLow);
-            tetherTarget.RemoveStatus(StatusId.ThermalLow);
+            var holder = state.MesohighTether.B;
+            garuda?.Cast(Actions.Mesohigh, holder);
             state.MesohighTether.Despawn();
-        });
 
-        // TODO: I don't know if Mesohigh does any damage aside from the tether
-        world.Events.Add(38.75f, () =>
-        {
-            if (!tetherHadThermalLow)
+            // After the cast: Mesohigh checks Thermal Low as it resolves, inside Cast().
+            if (holder?.FindStatus(StatusId.ThermalLow) is { Stacks: var thermalLowStacks and > 0 })
             {
-                tetherTarget!.Die(ActionId.Mesohigh);
+                holder.RemoveStatus(StatusId.ThermalLow);
+                state.MesohighThermalLowStacks = thermalLowStacks;
             }
         });
 
-        List<IReadOnlyList<SimCharacter>> featherLanceSnapshot = new();
-        world.Events.Add(41.20f, () =>
+        world.Events.Add(38.99f, () =>
         {
-            garuda?.PlayActionTimeline(ActionTimelineId.WarpStart2);
+            if (state.MesohighThermalLowStacks > 0)
+                garuda?.Cast(Actions.SuperCyclone(state.MesohighThermalLowStacks));
+        });
 
+        world.Events.Add(40.88f, () =>
+        {
             foreach (var (razorPlume, _) in razorPlumes)
-            {
-                razorPlume?.NativeActionEffect(
-                    ActionId.Featherlance,
-                    2.1f,
-                    (ushort)ActionId.Featherlance,
-                    0,
-                    ActionType.Action,
-                    0,
-                    animationTargetId: razorPlume.GameObjectId
-                    );
-
-                featherLanceSnapshot.Add(party.Find.InsideActionAoe(ActionId.Featherlance, razorPlume!.Placement()));
-            }
+                FireFeatherlance(razorPlume);
         });
+
+        world.Events.Add(41.20f, () => garuda?.PlayActionTimeline(ActionTimelineId.WarpStart2));
 
         utils.FeatherRain([() => dummies[8], () => dummies[9], () => dummies[10], () => dummies[11], () => dummies[12]], 41.20f, 42.47f, state.FeatherRainTargets);
-
-        world.Events.Add(41.70f, () =>
-        {
-            utils.ResolveSnapshot(featherLanceSnapshot.SelectMany(x => x).ToList(), ActionId.Featherlance);
-        });
 
         world.Events.Add(42.97f, () =>
         {
@@ -559,8 +487,6 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
 
     private void Ifrit()
     {
-        var getIfrit = () => ifrit;
-
         world.Events.Add(12.15f, () => ifrit?.SetPosition(
              new Placement(
                  new Vector3(13.7f, 0f, 13.7f),
@@ -573,11 +499,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
             ifrit?.PlayActionTimeline(ActionTimelineId.WarpEnd);
         });
 
-        // ActionId.EruptionIfrit is Animation Only
-        utils.Cast(getIfrit,
-            14.50f, new() { ActionId = ActionId.EruptionIfrit, ActionType = ActionType.Action, OmenDelay = 0f, CastTime = 2.2f, Interruptible = false },
-            17.00f, new() { ActionId = ActionId.EruptionIfrit, AnimationLock = 2.4f, SpellId = (ushort)ActionId.EruptionIfrit, AnimationVariaton = 0, ActionType = ActionType.Action, Flags = 0 },
-            new() { CastTarget = getIfrit, ActionEffectActionTarget = getIfrit });
+        world.Events.Add(14.50f, () => ifrit?.Cast(Actions.EruptionIfrit));
 
         utils.EruptionPuddle(() => dummies[10], () => state.PlayerEruptions[0], 14.50f);
         utils.EruptionPuddle(() => dummies[11], () => state.PlayerEruptions[1], 14.50f);
@@ -599,38 +521,9 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
 
         world.Events.Add(33.60f, () => Lockon(state.PlayerFlamingCrush, LockonId.FlamingCrush));
 
-        IReadOnlyList<SimCharacter> flamingCrushSnapshot = null!;
         world.Events.Add(38.78f, () =>
         {
-            ifrit?.NativeActionEffect(
-                ActionId.FlamingCrush,
-                2.1f,
-                (ushort)ActionId.FlamingCrush,
-                0,
-                ActionType.Action,
-                0,
-                animationTargetId: state.PlayerFlamingCrush!.GameObjectId
-                );
-
-            foreach (var character in party.AllMembers())
-            {
-                character.AddStatusParam(StatusId.AccursedFlame, 0, 3);
-            }
-
-            flamingCrushSnapshot = party.Find.InsideActionAoe(ActionId.FlamingCrush, state.PlayerFlamingCrush!.Placement());
-        });
-
-        world.Events.Add(39.51f, () =>
-        {
-            var count = flamingCrushSnapshot.Count;
-
-            if (count != 7)
-            {
-                foreach (var character in flamingCrushSnapshot)
-                {
-                    character.Die(ActionId.FlamingCrush, $"{count}/7 players in stack");
-                }
-            }
+            ifrit?.Cast(Actions.FlamingCrush, state.PlayerFlamingCrush);
         });
 
         world.Events.Add(41.00f, () => ifrit?.PlayActionTimeline(ActionTimelineId.WarpStart));
@@ -638,8 +531,6 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
 
     private void Titan()
     {
-        var getTitan = () => titan;
-
         world.Events.Add(12.15f, () => titan?.SetPosition(
              new Placement(
                  new Vector3(-13.7f, 0f, 13.7f),
@@ -652,15 +543,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
             titan?.PlayActionTimeline(ActionTimelineId.WarpEnd);
         });
 
-        world.Events.Add(16.50f, () => titan?.NativeActionEffect(
-            ActionId.RockThrow,
-            2.1f,
-            (ushort)ActionId.RockThrow,
-            0,
-            ActionType.Action,
-            0,
-            animationTargetId: state.PlayerGaol!.GameObjectId
-            ));
+        world.Events.Add(16.50f, () => titan?.Cast(Actions.RockThrow, state.PlayerGaol));
 
         world.Events.Add(18.65f, () => titan?.PlayActionTimeline(ActionTimelineId.WarpStart));
 
@@ -733,13 +616,8 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
         {
             var bait = state.LandslideBait is { } role ? party.Get(role) : party.GetRandom(world.Rng);
             titan?.Face(bait);
+            titan?.Cast(Actions.LandslideTitan);
         });
-
-        // ActionId.LandslideTitan is Animation Only. Actual Landslides are handled at utils.LandslideLines calls
-        utils.Cast(getTitan,
-            32.84f, new() { ActionId = ActionId.LandslideTitan, ActionType = ActionType.Action, OmenDelay = 0f, CastTime = 1.9000001f, Interruptible = false },
-            35.07f, new() { ActionId = ActionId.LandslideTitan, AnimationLock = 4.1f, SpellId = (ushort)ActionId.LandslideTitan, AnimationVariaton = 0, ActionType = ActionType.Action, Flags = 0 },
-            new() { CastTarget = getTitan, ActionEffectActionTarget = getTitan });
 
         utils.LandslideLines(() => titan, [() => dummies[8], () => dummies[9], () => dummies[10], () => dummies[11], () => dummies[12]], 32.84f, LandslideType.Normal);
 
@@ -752,101 +630,27 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
         world.Events.Add(41.20f, () => titan?.PlayActionTimeline(ActionTimelineId.WarpStart));
     }
 
-    private void LightPillar(Func<SimEnemy?> getDummy, float castOffset, float effectOffset, bool direct = false)
+    private void LightPillar(Func<SimEnemy?> getDummy, float castOffset, bool direct = false)
     {
         const float Distance = 3f;
         const float DistanceSquared = Distance * Distance;
 
-        var position = Vector3.Zero;
-
-        var castInfo = new UwuUtilsRecords
-        {
-            ActionId = ActionId.LightPillarCircle,
-            ActionType = ActionType.Action,
-            OmenDelay = 0f,
-            CastTime = 0.7f,
-            Interruptible = false
-        };
-
-        var actionEffectInfo = new ActionEffectInfo
-        {
-            ActionId = ActionId.LightPillarCircle,
-            AnimationLock = 0.1f,
-            SpellId = (ushort)ActionId.LightPillarCircle,
-            AnimationVariaton = 0,
-            ActionType = ActionType.Action,
-            Flags = 0
-        };
-
-        var dynamicInfo = new DynamicInfo
-        {
-            CastPosition = () => state.LightPillarPlacement.Position,
-            ActionEffectPosition = () => state.LightPillarPlacement.Position
-        };
-
         world.Events.Add(castOffset, () =>
         {
             var playerPosition = state.PlayerLightPillar!.Position;
+            var lightPillarPlacement = state.LightPillarPlacement;
 
-            if (direct)
-            {
-                position = playerPosition;
-                state.LightPillarPlacement = new(position, 0);
-            }
-            else
-            {
-                var lightPillarPlacement = state.LightPillarPlacement;
-                if (Vector3.DistanceSquared(lightPillarPlacement.Position, playerPosition) < DistanceSquared)
-                {
-                    position = playerPosition;
-                }
-                else
-                {
-                    var rotated = lightPillarPlacement.Face(playerPosition);
-                    position = rotated.MoveForward(Distance).Position;
-                }
-                state.LightPillarPlacement = new(position, 0);
-            }
+            var position = direct || Vector3.DistanceSquared(lightPillarPlacement.Position, playerPosition) < DistanceSquared
+                ? playerPosition
+                : lightPillarPlacement.Face(playerPosition).MoveForward(Distance).Position;
+            state.LightPillarPlacement = new(position, 0);
+
+            getDummy()?.Cast(Actions.LightPillarCircle, position);
         });
-
-        utils.Cast(getDummy, castOffset, castInfo, effectOffset, actionEffectInfo, dynamicInfo, 0.66f, snapshot => utils.ResolveSnapshot(snapshot, castInfo.ActionId));
     }
 
-    private void AetherochemicalLaser(Func<SimEnemy?> getEnemy, int index, float castOffset, float effectOffset)
-    {
-        var laserAction = state.AetherochemicalLasers[index];
-
-        var castInfo = new UwuUtilsRecords
-        {
-            ActionId = laserAction,
-            ActionType = ActionType.Action,
-            CastTime = 2.7f
-        };
-
-        var actionEffectInfo = new ActionEffectInfo
-        {
-            ActionId = laserAction,
-            AnimationLock = 1.1f,
-            SpellId = (ushort)laserAction,
-            ActionType = ActionType.Action
-        };
-
-        var rotationOffset = laserAction switch
-        {
-            ActionId.AetherochemicalLaserRight => -45,
-            ActionId.AetherochemicalLaserLeft => 45,
-            _ => 0
-        };
-
-        var dynamicInfo = new DynamicInfo
-        {
-            CastRotation = () => getEnemy()!.Rotation + float.DegreesToRadians(rotationOffset),
-            CastTarget = getEnemy,
-            ActionEffectAnimationTarget = getEnemy
-        };
-
-        utils.Cast(getEnemy, castOffset, castInfo, effectOffset, actionEffectInfo, dynamicInfo, 0.66f, snapshot => utils.ResolveSnapshot(snapshot, laserAction));
-    }
+    private void AetherochemicalLaser(int index, float castOffset)
+        => world.Events.Add(castOffset, () => ultima?.Cast(Actions.AetherochemicalLaserById(state.AetherochemicalLasers[index])));
 
     private SimEnemy? RazorPlume(Placement placement)
     {
@@ -877,14 +681,6 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
         }
     }
 
-    private void GreatWhirlwind(Func<SimEnemy?> getDummy, Func<Vector3> getPosition, float castOffset, float effectOffset)
-    {
-        utils.Cast(getDummy,
-            castOffset, new() { ActionId = ActionId.GreatWhirlwind, ActionType = ActionType.Action, OmenDelay = 0f, CastTime = 2.7f, Interruptible = false },
-            effectOffset, new() { ActionId = ActionId.GreatWhirlwind, AnimationLock = 2.1f, SpellId = (ushort)ActionId.GreatWhirlwind, AnimationVariaton = 0, ActionType = ActionType.Action, Flags = 0 },
-            new() { CastPosition = getPosition, ActionEffectPosition = getPosition });
-    }
-
     private void SetStun(bool value)
     {
         Natives.PlayerInput.SetStatusAffliction(value);
@@ -893,19 +689,6 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
     private void Lockon(SimCharacter? target, uint lockonId)
     {
         target!.ActorControl(34, lockonId, target.GameObjectId.ObjectId);
-    }
-
-    private Vector3 ResolveMistralSong(IReadOnlyList<SimCharacter> snapshot)
-    {
-        var closest = snapshot[0];
-        var partyMember = (ISimPartyMember)closest;
-
-        if (partyMember != state.PlayerGaol && !partyMember.Role.IsTank())
-        {
-            closest.Die(ActionId.MistralSongSuparnaChirada);
-        }
-
-        return closest.Position;
     }
 
     public MpMessage? BuildReplayStateMessage()

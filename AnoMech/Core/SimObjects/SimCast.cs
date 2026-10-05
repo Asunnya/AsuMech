@@ -332,7 +332,8 @@ public sealed class SimCast : ISimObject
         var dx = loc.X - chara.Position.X;
         var dz = loc.Z - chara.Position.Z;
         if (dx * dx + dz * dz < 1e-6f) return;
-        chara.Rotation = MathUtil.NormalizeRotation(MathF.Atan2(dx, dz));
+        // The release packet carries the facing and the client snaps to it, cutting short any turn.
+        parent.SetRotation(MathF.Atan2(dx, dz));
     }
 
     // Mimics the server's ActionEffect packet so the game plays the action's release

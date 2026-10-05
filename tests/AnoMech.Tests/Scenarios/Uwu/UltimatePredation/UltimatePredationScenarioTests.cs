@@ -171,6 +171,19 @@ public class UltimatePredationScenarioTests
             .TeleportAt(75.4f, to: new(5, -7.5f))
             .ShouldKill(ActionId.ViscousAetheroplasmEffect, RegenHealer);
 
+    // Everyone takes Ultima's initial hit with MT at (5,-12), so each gets an explosion at 75.57; stacked
+    // on MT's (5,-7.5) all eight survive the first full stack and its vuln kills them on the next.
+    [Test]
+    public void PartySharingInitialViscousAetheroplasmDiesToSecondExplosion()
+        => AllBut(RegenHealer)
+            .Aggregate(
+                Predation(RegenHealer)
+                    .TeleportAt(64.2f, to: new(5, -12))
+                    .TeleportAt(73.6f, to: new(-5, -7.5f))
+                    .TeleportAt(75.3f, to: new(5, -7.5f)),
+                (run, bot) => run.MoveBotAt(64.2f, bot, new(5, -12)).MoveBotAt(75.3f, bot, new(5, -7.5f)))
+            .ShouldKill(ActionId.ViscousAetheroplasmEffect, PerRole.All);
+
     // Back out before MT's Feather Rain lands on the spot.
     [Test]
     public void NonTankInHomingLasersDies()
