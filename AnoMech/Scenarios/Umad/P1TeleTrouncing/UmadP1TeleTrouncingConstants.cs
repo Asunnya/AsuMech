@@ -25,6 +25,9 @@ public static class UmadP1TeleTrouncingConstants
         public const uint IndulgentWill = 0xBAB5U;
         public const uint IdyllicWill = 0xBAB6U;
 
+        // A Confused player's swing on whoever they catch: the plain "attack" every job auto-attacks with.
+        public const uint ConfusedAttack = 7U;
+
         // BossMod's "Unk1BossP1" (Kefka self-cast, 3.0s, nothing to react to); modeled so Kefka
         // isn't idle while the real boss is casting.
         public const uint Unk1BossP1 = 0xC554U;
@@ -57,15 +60,6 @@ public static class UmadP1TeleTrouncingConstants
     {
         public const byte Normal = 0;
         public const byte Unk1 = 4;
-    }
-
-    // Every 5.0s sheet cast shows a 4.7s bar, every 3.0s one a 2.7s bar, and the effect lands
-    // 0.29s after the bar fills.
-    public static class CastBar
-    {
-        public const float Long = 4.7f;
-        public const float Short = 2.7f;
-        public const float FireDelay = 0.29f;
     }
 
     // ActionEffect header animation locks from the replay.

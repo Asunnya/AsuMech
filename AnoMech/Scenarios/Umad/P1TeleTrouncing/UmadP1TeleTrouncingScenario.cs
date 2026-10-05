@@ -18,8 +18,7 @@ using Constants = UmadP1TeleTrouncingConstants;
 using AnoMech.Core.Native.Interfaces;
 
 // Dancing Mad P1 from Kefka's Tele-trouncing cast to the boss going untargetable: arrows,
-// Confused/Sleep, Confetti-3, then Mystery Magic's three overlapping resolves. Cast bars are the
-// 4.7s/2.7s the real packets carry, with the release 0.29s after the bar fills.
+// Confused/Sleep, Confetti-3, then Mystery Magic's three overlapping resolves.
 //
 // Multiplayer: the host resolves everything against each peer's reported pose; the forced
 // movement the mechanic applies to a peer (the confused chase, an arrow's snap and push) reaches
@@ -55,7 +54,6 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
     // The colossus at the arena centre, already standing when Tele-trouncing starts; its real
     // state history is replayed at scenario start.
     private SimEventObject? gravenStatue;
-    private DamageSolver damage = null!;
     private readonly List<SimEventObject> activeArrows = [];
     // Every teleporter must be used by a Confused player; otherwise Kefka answers after Mystery
     // Magic with the lethal Light of Judgment.
@@ -67,7 +65,6 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
     // the engine refuses falls back to the plain KefkaHelper (no action VFX). Nothing is spawned
     // at cast time: a packet spawn is pending for a few frames.
     private readonly SimEnemy?[] helpers = new SimEnemy?[8];
-    private readonly List<SimCharacter> fireSpreadHits = [];
     private readonly UmadP1TeleTrouncingSettingsWindow settingsWindow = new();
 
     // Gimmick rows the helpers' hit VFX ride on. Double-trouble Trap's and the arrow bursts' are
@@ -152,7 +149,6 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         party = world.Party;
         state = new UmadP1TeleTrouncingState(world.Rng, settingsWindow.Overrides);
         LastState = state;
-        damage = new DamageSolver(party);
         hazeHoldApplied = true;   // what MapController.TryLoad just applied from the phase
 
         // Game.Scenarios reuses one instance across runs; a stopped run's arrow wrappers still
@@ -170,8 +166,6 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         arrowsSoakedByConfused = 0;
         arrowSoakFailures.Clear();
         DespawnHelpers();
-        thunderReals.Clear();
-        fireSpreadHits.Clear();
         // The props' SharedGroups outlive the EObj actor, so park each back in the hidden state
         // or a mid-scenario Reset leaves a statue standing until the zone reloads.
         DespawnProp(ref gazeStatueNormal);
@@ -296,15 +290,12 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         world.Events.Add(StatueCollapseAt, () => Beat(gravenStatue, EObjAnimStatueCollapse));
 
         // [1.59s] Tele-trouncing cast start; resolves at 6.58s.
-        world.Events.Add(1.59f, () => kefka?.Cast(
-            Constants.ActionId.TeleTrouncing, castSeconds: Constants.CastBar.Long, fireDelay: Constants.CastBar.FireDelay,
-            animationLock: Constants.AnimationLock.TeleTrouncing, targetId: kefka?.GameObjectId));
+        world.Events.Add(1.59f, () => kefka?.Cast(UmadActions.TeleTrouncing));
 
         // Auto-attacks on the main tank at their real beats: none through the Confused window
         // and Mystery Magic.
         foreach (var at in new[] { 0.83f, 8.90f, 11.93f, 19.01f, 44.48f, 48.62f, 51.65f })
-            world.Events.Add(at, () => kefka?.Cast(UmadConstants.ActionId.AutoAttack1, castSeconds: 0f,
-                targetId: party.Get(PartyRole.MainTank)?.GameObjectId, animationLock: Constants.AnimationLock.AutoAttack));
+            world.Events.Add(at, () => kefka?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
 
         // [7.34s] Every role gets its 2 debuffs (the EffectResult lands 0.76s after the resolve).
         world.Events.Add(7.34f, ApplyDebuffs);
@@ -318,18 +309,14 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         world.Events.Add(18.32f, SpawnArrowObjects);
 
         // [15.67s] Graven Image (2.7s bar, resolves 18.66s); the tethers appear as it lands.
-        world.Events.Add(15.67f, () => kefka?.Cast(
-            Constants.ActionId.GravenImage, castSeconds: Constants.CastBar.Short, fireDelay: Constants.CastBar.FireDelay,
-            animationLock: Constants.AnimationLock.GravenImage, targetId: kefka?.GameObjectId));
+        world.Events.Add(15.67f, () => kefka?.Cast(UmadActions.GravenImage));
 
         // [19.41s] Tethers land, one role category to each statue.
         world.Events.Add(19.41f, TetherStatues);
 
         // [20.80s] Unnamed 2.7s cast: its resolve sets Kefka's model state to 4 until Unk2BossP1
         // resolves.
-        world.Events.Add(20.80f, () => kefka?.Cast(
-            Constants.ActionId.Unk1BossP1, castSeconds: Constants.CastBar.Short, fireDelay: Constants.CastBar.FireDelay,
-            animationLock: Constants.AnimationLock.Unk1, targetId: kefka?.GameObjectId));
+        world.Events.Add(20.80f, () => kefka?.Cast(UmadActions.Unk1BossP1));
         world.Events.Add(23.78f, () => kefka?.SetModelState(Constants.KefkaModelState.Unk1));
 
         // [22.78s] Confetti-3's stack hit, the one beat that drifts pull to pull (timed off the
@@ -353,10 +340,10 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         // teleport action; he stays at centre, only the animation plays.
         world.Events.Add(32.78f, () =>
         {
-            kefka?.Cast(Constants.ActionId.Unk2BossP1, castSeconds: 0f, animationLock: Constants.AnimationLock.Unk2, targetId: kefka?.GameObjectId);
+            kefka?.Cast(UmadActions.Unk2BossP1);
             kefka?.SetModelState(Constants.KefkaModelState.Normal);
         });
-        world.Events.Add(34.87f, () => kefka?.Cast(Constants.ActionId.TeleportP1, castSeconds: 0f, animationLock: Constants.AnimationLock.Teleport));
+        world.Events.Add(34.87f, () => kefka?.Cast(UmadActions.TeleportP1));
 
         // Every arrow is a steer-around obstacle from its spawn (SpawnArrowObjects) so the Ai's
         // Confetti/Tether moves path around them; cleared as Confused starts, since the chase's
@@ -364,9 +351,7 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         world.Events.Add(ConfusedChaseStart, () => world.Obstacles.Clear());
 
         // [36.41s] Mystery Magic (4.7s bar), resolves 41.40s with the thunder lines.
-        world.Events.Add(36.41f, () => kefka?.Cast(
-            Constants.ActionId.MysteryMagic, castSeconds: Constants.CastBar.Long, fireDelay: Constants.CastBar.FireDelay,
-            animationLock: Constants.AnimationLock.MysteryMagic, targetId: kefka?.GameObjectId));
+        world.Events.Add(36.41f, () => kefka?.Cast(UmadActions.MysteryMagic));
 
         // Mystery Magic's three resolves land in a ~1s window (thunder 41.40s, gaze 41.49s, fire
         // 42.19s); the boss goes untargetable ~10s later.
@@ -385,7 +370,6 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         // lethal) and the safe slots cast 0xBAA0 (a harmless telegraph). Hits 4.99s after the
         // cast start.
         world.Events.Add(36.41f, SpawnThunderLines);
-        world.Events.Add(41.40f, ResolveThunderLines);
 
         // Statue gaze: the gazing prop plays the wind-up 4.8s before Mystery Magic's cast start
         // and the resolve 5.08s after it (BossMod's FutureTime(9.9f)).
@@ -742,7 +726,7 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         foreach (var role in state.Debuffs.Keys)
         {
             if (party.Get(role) is { } member && member.IsAlive())
-                member.Die("Not all arrows were soaked by confused players");
+                member.Die(UmadConstants.ActionId.LightOfJudgment_Enrage, "not all arrows were soaked by confused players");
         }
         kefka?.SetTargetable(false);
         kefka?.SetVisible(false);
@@ -822,7 +806,7 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
 
                 // Nothing intercepted this player: they reach and hit whoever's nearest.
                 member.PlayActionTimeline(AutoAttackTimelineId);
-                nearest.Die($"Caught by {role} (confused) during Tele-trouncing");
+                nearest.Die(Constants.ActionId.ConfusedAttack, $"caught by {role} while Confused");
                 meleeDwellTimer.Remove(role);
                 confusedWaitTimer[role] = ConfusedWaitDuration;
                 continue;
@@ -923,8 +907,7 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
             if (Helper(helperIndex++) is { } caster)
             {
                 caster.SetPosition(placement);
-                caster.Cast(Constants.ActionId.TeleTrouncingArrowSpawn, castSeconds: 0f, targetId: member.GameObjectId,
-                    animationLock: Constants.AnimationLock.Helper);
+                caster.Cast(UmadActions.TeleTrouncingArrowSpawn, member);
             }
         }
     }
@@ -961,9 +944,6 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         pendingArrowPlacements.Clear();
     }
 
-    // The real BAA7 target list is exactly "everyone but the 2 holders".
-    private const float ConfettiKnockbackRadius = 6f;
-
     private void ResolveConfettiKnockback()
     {
         // The "before" half for checking a post-knockback landing against a live arrow.
@@ -974,59 +954,22 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         DiagnosticLog.Info(
             $"[UmadP1TeleTrouncing] Confetti-3 knockback resolving -- support stack={state.ConfettiStackSupport}, dps stack={state.ConfettiStackDps}, positions: {string.Join(", ", positions)}.");
 
-        // The holder is never flung by their own knockback (explicit exclude). Cast before
-        // party.Knockback: the real ability resolves as one packet, and the movement plays out
-        // over 0.7s, so casting after put the hit-react a frame into the slide. FindWithinRadius
-        // duplicates the radius check so the affected list is known first.
-        ResolveConfettiStack(state.ConfettiStackSupport, 4);
-        ResolveConfettiStack(state.ConfettiStackDps, 5);
+        // The second stack's hit sees the first's vuln, so standing in both is lethal.
+        CastConfettiStack(state.ConfettiStackSupport, 4);
+        CastConfettiStack(state.ConfettiStackDps, 5);
     }
 
-    // BossMod models this as a stack of exactly 4: short a body, everyone who stacked dies
-    // except the holder (user's call). Exactly 4 is the only case that resolves as the knockback.
-    private const int ConfettiStackRequiredCount = 4;
-
-    private void ResolveConfettiStack(PartyRole holderRole, int helperIndex)
+    // The real BAA7 comes from a helper teleported onto the holder. The trap-spring burst is
+    // attached to the holder so it renders at body height, not flat on the floor.
+    private void CastConfettiStack(PartyRole holderRole, int helperIndex)
     {
         if (party.Get(holderRole) is not { } holder) return;
-        var others = FindWithinRadius(holder.Position, ConfettiKnockbackRadius, holder);
-
-        // The real BAA7 comes from a helper teleported onto the holder, with only the per-target
-        // hit reaction. The trap-spring burst is attached to the holder so it renders at body
-        // height, not flat on the floor.
-        var caster = Helper(helperIndex);
-        caster?.SetPosition(new Placement(holder.Position, 0f));
-        foreach (var m in others)
+        if (Helper(helperIndex) is { } caster)
         {
-            caster?.Cast(Constants.ActionId.DoubleTroubleTrapStack, castSeconds: 0f, targetId: m.GameObjectId,
-                animationLock: Constants.AnimationLock.Helper);
-            m.AddStatus(UmadConstants.StatusId.MagicVulnerabilityUp, Constants.MagicVulnerabilityUpSeconds);
+            caster.SetPosition(new Placement(holder.Position, 0f));
+            caster.Cast(UmadActions.DoubleTroubleTrapStack, holder);
         }
         holder.AddVfx(Constants.VfxPath.DoubleTroubleTrapStackHit, persistent: false);
-
-        if (others.Count + 1 != ConfettiStackRequiredCount)
-        {
-            DiagnosticLog.Info(
-                $"[UmadP1TeleTrouncing] Confetti stack on {holderRole} enumerated {others.Count + 1}, not {ConfettiStackRequiredCount} -- failed stack, killing everyone but the holder.");
-            foreach (var m in others) m.Die($"Failed Confetti stack ({others.Count + 1}/{ConfettiStackRequiredCount}) on {holderRole} during Tele-trouncing");
-            return;
-        }
-
-        party.Knockback(holder.Position, Constants.KnockbackId.DoubleTroubleTrapStack, ConfettiKnockbackRadius, exclude: holder);
-    }
-
-    private List<SimCharacter> FindWithinRadius(Vector3 source, float radius, SimCharacter? exclude)
-    {
-        var radiusSq = radius * radius;
-        var found = new List<SimCharacter>();
-        foreach (var role in state.Debuffs.Keys)
-        {
-            if (party.Get(role) is not { } member || ReferenceEquals(member, exclude)) continue;
-            var dx = member.Position.X - source.X;
-            var dz = member.Position.Z - source.Z;
-            if (dx * dx + dz * dz <= radiusSq) found.Add(member);
-        }
-        return found;
     }
 
     // The real Graven Image: the captured NpcSpawn packet through the engine's own handler,
@@ -1116,14 +1059,12 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
             var confused = UmadP1TeleTrouncingState.IsDps(role) == state.DpsGetsConfused;
             var anchor = confused ? confusedStatue : sleepStatue;
             var member = party.Get(role);
+            // The member hosts the tether: a character holds one tether per slot, so four
+            // tethers sourced on one statue would overwrite each other.
             if (anchor != null && member != null)
-                world.Tether(anchor, member, Constants.TetherId.GravenImage, duration: 8.99f);
+                world.Tether(member, anchor, Constants.TetherId.GravenImage, duration: 8.99f);
         }
     }
-
-    // Idyllic Will is a spread (BossMod's UniformStackSpread(0, 5)): each sleeper's 5y circle
-    // kills anyone else caught in it, usually a force-marched Confused player.
-    private const float IdyllicWillSpreadRadius = 5f;
 
     // Both gaze props play tether-fire 0.06s before the two Wills land.
     private void PlayStatueTetherFire()
@@ -1133,56 +1074,41 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
     }
 
     // The Confused/Sleep statuses come 0.63s later, when the real EffectResult applies them.
+    // Every Idyllic Will goes first, so its vuln makes Indulgent Will lethal to a Confused player
+    // caught in a sleeper's circle.
     private void ResolveGravenWills()
     {
-        var confusedStatuePlayed = false;
-        var sleepStatuePlayed = false;
-        var sleepTargets = new List<SimCharacter>();
+        CastGravenWills(confused: false);
+        CastGravenWills(confused: true);
+    }
+
+    // Cast before AddVfx: the real ability resolves as one packet, so the hit-react lands with the
+    // vfx. Caster-side vfx on the statue once, target-side on every hit player.
+    private void CastGravenWills(bool confused)
+    {
+        var statue = confused ? confusedStatue : sleepStatue;
+        var statuePlayed = false;
         foreach (var role in state.Debuffs.Keys)
         {
-            var confused = UmadP1TeleTrouncingState.IsDps(role) == state.DpsGetsConfused;
+            if ((UmadP1TeleTrouncingState.IsDps(role) == state.DpsGetsConfused) != confused) continue;
             var member = party.Get(role);
+            if (member != null) statue?.Cast(confused ? UmadActions.IndulgentWill : UmadActions.IdyllicWill, member);
 
-            // Cast before AddVfx: the real ability resolves as one packet, so the hit-react lands
-            // with the vfx. The Cast exists for the per-target animation.
-            if (confused && member != null) confusedStatue?.Cast(Constants.ActionId.IndulgentWill, castSeconds: 0f, targetId: member.GameObjectId, animationLock: Constants.AnimationLock.Helper);
-            if (!confused && member != null) sleepStatue?.Cast(Constants.ActionId.IdyllicWill, castSeconds: 0f, targetId: member.GameObjectId, animationLock: Constants.AnimationLock.Helper);
-
-            // Caster-side on the statue once, target-side on every hit player.
-            if (confused)
+            if (!statuePlayed)
             {
-                if (!confusedStatuePlayed)
+                statuePlayed = true;
+                if (confused)
                 {
-                    confusedStatuePlayed = true;
-                    confusedStatue?.AddVfx(Constants.VfxPath.IndulgentWillCasterShoot, persistent: false);
-                    confusedStatue?.AddVfx(Constants.VfxPath.IndulgentWillCasterBurst, persistent: false);
+                    statue?.AddVfx(Constants.VfxPath.IndulgentWillCasterShoot, persistent: false);
+                    statue?.AddVfx(Constants.VfxPath.IndulgentWillCasterBurst, persistent: false);
                 }
-                member?.AddVfx(Constants.VfxPath.IndulgentWillTarget, persistent: false);
-            }
-            else
-            {
-                if (!sleepStatuePlayed)
+                else
                 {
-                    sleepStatuePlayed = true;
-                    sleepStatue?.AddVfx(Constants.VfxPath.IdyllicWillCaster, persistent: false);
+                    statue?.AddVfx(Constants.VfxPath.IdyllicWillCaster, persistent: false);
                 }
-                member?.AddVfx(Constants.VfxPath.IdyllicWillTarget, persistent: false);
-                // Idyllic Will's hit carries the 0.96s Magic Vulnerability Up (Indulgent's doesn't).
-                member?.AddStatus(UmadConstants.StatusId.MagicVulnerabilityUp, Constants.MagicVulnerabilityUpSeconds);
-                if (member is { } m && m.IsAlive()) sleepTargets.Add(m);
             }
+            member?.AddVfx(confused ? Constants.VfxPath.IndulgentWillTarget : Constants.VfxPath.IdyllicWillTarget, persistent: false);
         }
-
-        // Two clipping players are each in the other's circle, so both die.
-        var killed = new HashSet<SimCharacter>();
-        foreach (var sleeper in sleepTargets)
-            foreach (var caught in FindWithinRadius(sleeper.Position, IdyllicWillSpreadRadius, sleeper))
-                if (caught.IsAlive() && killed.Add(caught))
-                    caught.Die($"Clipped {(sleeper as ISimPartyMember)?.Role.ToString() ?? "a sleeper"}'s Idyllic Will spread during Tele-trouncing");
-        if (killed.Count > 0)
-            DiagnosticLog.Info(
-                $"[UmadP1TeleTrouncing] Idyllic Will spread: {killed.Count} player(s) clipped and died -- "
-                + string.Join(", ", killed.Select(c => (c as ISimPartyMember)?.Role.ToString() ?? "?")));
     }
 
     // 6.00s each, at the real EffectResult time: the chase and the sleep pose start with the
@@ -1243,9 +1169,6 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         new(new Vector3(3.54f, 0f, -24.75f), -MathF.PI / 4f),
     ];
 
-    // The real lines spawned this run, for ResolveThunderLines.
-    private readonly List<(SimEnemy Helper, uint ActionId)> thunderReals = [];
-
     // What the players see: a lie flips the icon vs the real outcome. Shown-stack marks only the
     // 2 targets, shown-spread everyone.
     private void AttachFireMarkers()
@@ -1270,10 +1193,9 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
     // identically to a real line (user's call: the only distinguisher is Kefka's thunder orb).
     private void SpawnThunderLines()
     {
-        thunderReals.Clear();
         // A truthful set is 2x Real1 and nothing else; a lying set switches the reals to Real2
         // and adds Fake at the other slots.
-        var realId = state.ThunderIsLie ? Constants.ActionId.ThrummingThunderReal2 : Constants.ActionId.ThrummingThunderReal1;
+        var realLine = state.ThunderIsLie ? UmadActions.ThrummingThunderReal2 : UmadActions.ThrummingThunderReal1;
         var lines = 0;
         for (var i = 0; i < ThunderAnchors.Length; i++)
         {
@@ -1283,19 +1205,11 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
             if (Helper(i) is not { } helper) continue;
             helper.SetPosition(placement);
             lines++;
-            var actionId = real ? realId : Constants.ActionId.ThrummingThunderFake;
-            helper.Cast(actionId, castSeconds: Constants.CastBar.Long, fireDelay: Constants.CastBar.FireDelay, animationLock: Constants.AnimationLock.Helper);
-            if (real) thunderReals.Add((helper, actionId));
+            helper.Cast(real ? realLine : UmadActions.ThrummingThunderFake);
         }
         DiagnosticLog.Info(
             $"[UmadP1TeleTrouncing] Thunder lines: offset={state.ThunderRealOffset} orient={state.ThunderOrientation:F0} lie={state.ThunderIsLie} "
-            + $"-> {lines} telegraph(s), {thunderReals.Count} real.");
-    }
-
-    private void ResolveThunderLines()
-    {
-        foreach (var (helper, actionId) in thunderReals)
-            damage.Resolve(helper, actionId, [DamageType.Lethal], []);
+            + $"-> {lines} telegraph(s).");
     }
 
     // The doppel that casts and carries the marker, and the real prop that plays the statue
@@ -1326,13 +1240,10 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
     {
         Beat(GazingProp, EObjAnimGazeResolve);
 
+        // The statue stands over its gaze source, so the gaze is cast from where it stands.
         var statue = GazingStatue;
-        var source = state.GazeInverted ? GazeSourceInverted : GazeSourceNormal;
-        statue?.Cast(state.GazeInverted ? Constants.ActionId.AveMaria : Constants.ActionId.IndolentWill,
-            castSeconds: 0f, targetId: statue.GameObjectId);
+        statue?.Cast(state.GazeInverted ? UmadActions.AveMaria : UmadActions.IndolentWill);
         statue?.AddVfx(state.GazeInverted ? Constants.VfxPath.AveMariaHit : Constants.VfxPath.IndolentWillHit, persistent: false);
-        var killed = damage.ResolveGaze(IPositioned.From(source), lookAway: !state.GazeInverted);
-        DiagnosticLog.Info($"[UmadP1TeleTrouncing] Gaze resolved (lookAway={!state.GazeInverted}) -- {killed.Count} died.");
     }
 
     private void ResolveFire()
@@ -1341,10 +1252,8 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         else ResolveFireSpread();
     }
 
-    // A 5y circle on every player: a clean spread hurts nobody, two coverings is lethal.
     private void ResolveFireSpread()
     {
-        fireSpreadHits.Clear();
         var helperIndex = 0;
         foreach (var role in state.Debuffs.Keys)
         {
@@ -1352,24 +1261,11 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
             if (member == null || !member.IsAlive()) continue;
             if (Helper(helperIndex++) is not { } helper) continue;
             helper.SetPosition(new Placement(member.Position, 0f));
-            helper.Cast(Constants.ActionId.FlagrantFireSpread, castSeconds: 0f, targetId: member.GameObjectId, animationLock: Constants.AnimationLock.Helper);
-            fireSpreadHits.AddRange(damage.Resolve(helper, Constants.ActionId.FlagrantFireSpread,
-                [DamageType.Lethal], [], killTargets: false));
+            helper.Cast(UmadActions.FlagrantFireSpread, member);
         }
-        foreach (var grp in fireSpreadHits.GroupBy(c => c))
-        {
-            var count = grp.Count();
-            grp.Key.AddStatus(UmadConstants.StatusId.MagicVulnerabilityUp, Constants.MagicVulnerabilityUpSeconds);
-            for (var i = 0; i < count; i++)
-                damage.ApplyDamage(grp.Key, 0.6f, Constants.ActionId.FlagrantFireSpread, "fire spread",
-                    lethal: count >= 2 && i == count - 1);
-        }
-        fireSpreadHits.Clear();
         DiagnosticLog.Info("[UmadP1TeleTrouncing] Flagrant Fire III: SPREAD resolved.");
     }
 
-    // Two stack points, each needing 4 bodies; short a body and everyone in it dies, a full
-    // stack is survivable.
     private void ResolveFireStack()
     {
         ResolveOneFireStack(state.FireStackSupport, 2);
@@ -1382,16 +1278,13 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
     {
         if (party.Get(holderRole) is not { } holder || !holder.IsAlive()) return;
         // Helper->players: a helper on the holder so the VFX lands at the stack point.
-        var caster = Helper(helperIndex);
-        caster?.SetPosition(new Placement(holder.Position, 0f));
-        caster?.Cast(Constants.ActionId.FlagrantFireStack, castSeconds: 0f, targetId: holder.GameObjectId, animationLock: Constants.AnimationLock.Helper);
-        damage.Resolve(holder, Constants.ActionId.FlagrantFireStack, [DamageType.Magic],
-            [(UmadConstants.StatusId.MagicVulnerabilityUp, Constants.MagicVulnerabilityUpSeconds)], stackMinTargets: 4);
+        if (Helper(helperIndex) is not { } caster) return;
+        caster.SetPosition(new Placement(holder.Position, 0f));
+        caster.Cast(UmadActions.FlagrantFireStack, holder);
     }
 
     private void EndP1()
     {
-        thunderReals.Clear();
         // A failed set keeps Kefka up for the deaths; ResolveArrowSoakPunishment hides him.
         if (!ArrowSoakFailed)
         {

@@ -451,7 +451,7 @@ public sealed class UmadP4KefkaSaysScenario : IMultiplayerReplayable
             {
                 world.Events.Add(80.39f, () => neo_Exdeath_400040E9_5?.SetPosition(state.Wave1.Get(shriekTargetId)!.Position));
                 world.Events.Add(80.49f, () => neo_Exdeath_400040E9_5?.Cast(ActionId.DeathShriek));
-                world.Events.Add(80.49f, () => damage.ResolveGaze(state.Wave1.Get(shriekTargetId), lookAway: state.Wave1True));
+                world.Events.Add(80.49f, () => damage.ResolveGaze(state.Wave1.Get(shriekTargetId), ActionId.DeathShriek, lookAway: state.Wave1True));
             }
             
             world.Events.Add(96.39f, () => neo_Exdeath_400040E9_5?.SetPosition(state.ElemRoles[1].Get(targetId)!.Position));
@@ -462,7 +462,7 @@ public sealed class UmadP4KefkaSaysScenario : IMultiplayerReplayable
             {
                 world.Events.Add(104.29f, () => neo_Exdeath_400040E9_5?.SetPosition(state.Wave2.Get(shriekTargetId)!.Position));
                 world.Events.Add(104.39f, () => neo_Exdeath_400040E9_5?.Cast(ActionId.DeathShriek));
-                world.Events.Add(104.39f, () => damage.ResolveGaze(state.Wave2.Get(shriekTargetId), lookAway: state.Wave2True));
+                world.Events.Add(104.39f, () => damage.ResolveGaze(state.Wave2.Get(shriekTargetId), ActionId.DeathShriek, lookAway: state.Wave2True));
             }
         }
     }

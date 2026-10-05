@@ -44,6 +44,10 @@ public static class EnemyActionEffects
     public static IEnemyActionEffect Knockback(float distance, float speed, float? knockbackDelay = null)
         => new KnockbackEffect(null, knockbackDelay, distance, speed);
 
+    // Kills by facing alone: with `lookAway`, whoever has the origin in their front 90° arc; without,
+    // whoever has it in their back 90° arc.
+    public static IEnemyActionEffect Gaze(bool lookAway) => new GazeEffect(lookAway);
+
     // `effect` applied to the cast's target alone, when the area caught it.
     public static IEnemyActionEffect OnTarget(IEnemyActionEffect effect) => new FilteredEffect(effect, castTarget: true);
 
@@ -144,6 +148,27 @@ internal sealed class ApplyStatusOrOverloadEffect(ushort statusId, int maxStacks
                 ctx.Kill(target, $"already at {maxStacks} {StatusLookup.Name(statusId)}");
             else
                 target.AddStatus(statusId, duration);
+        }
+    }
+}
+
+// Facing as CharacterFind.InsideCone reads it: forward = (sin, cos) of the character's rotation.
+internal sealed class GazeEffect(bool lookAway) : IEnemyActionEffect
+{
+    private const float CosHalfArc = 0.70710677f;
+
+    public void Apply(EnemyActionContext ctx)
+    {
+        var from = ctx.Origin.Position;
+        foreach (var target in ctx.Hits)
+        {
+            var dx = from.X - target.Position.X;
+            var dz = from.Z - target.Position.Z;
+            var distance = MathF.Sqrt(dx * dx + dz * dz);
+            if (distance < 0.01f) continue;
+            var cos = (dx * MathF.Sin(target.Rotation) + dz * MathF.Cos(target.Rotation)) / distance;
+            if (lookAway ? cos >= CosHalfArc : cos <= -CosHalfArc)
+                ctx.Kill(target, lookAway ? "looked at the gaze" : "faced away from the gaze");
         }
     }
 }

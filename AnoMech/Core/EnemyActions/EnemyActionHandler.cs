@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using AnoMech.Core.Game;
@@ -60,11 +61,9 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimWorld world)
               ?? (location is { } at ? new Placement(at, caster.Rotation) : caster.Placement());
         var ctx = new EnemyActionContext(action, caster, target, origin, party);
 
-        var query = new AoeQuery(action.ActionId, origin, action.Area.Rotation, action.Area.Size, action.Area.CastType);
-#if DEBUG
-        AnoMech.Windows.DamageDebugWindow.Instance?.Record(query);
-#endif
-        var hits = query.Run(party.Find);
+        var hits = IsSingleTarget(action)
+            ? party.ActiveMembers().Where(m => ReferenceEquals(m, target)).ToList()
+            : AreaHits(action, origin, party);
         if (action.Area.AdjustTargets is { } adjust) hits = adjust(ctx, hits);
         ctx.Hits = hits;
         handle.Resolved(origin, hits.Select(h => (h, h.Position)).ToList());
@@ -92,6 +91,19 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimWorld world)
         foreach (var run in ctx.AfterResolveActions)
             run();
     }
+
+    private static IReadOnlyList<SimCharacter> AreaHits(EnemyAction action, Placement origin, SimParty party)
+    {
+        var query = new AoeQuery(action.ActionId, origin, action.Area.Rotation, action.Area.Size, action.Area.CastType);
+#if DEBUG
+        AnoMech.Windows.DamageDebugWindow.Instance?.Record(query);
+#endif
+        return query.Run(party.Find);
+    }
+
+    // CastType 1: no area, only the cast target is hit.
+    private static bool IsSingleTarget(EnemyAction action)
+        => (action.Area.CastType ?? Natives.Data.Action(action.ActionId)?.CastType) is 1;
 
     // Cones and lines (InsideActionAoe's CastTypes 3, 4, 8, 12, 13).
     private static bool IsDirectional(EnemyAction action)

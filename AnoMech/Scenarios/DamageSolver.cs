@@ -121,7 +121,7 @@ public class DamageSolver
     // anyone "not looking" (target inside the back 90° arc) dies. The target itself is
     // always skipped. Facing uses each member's own rotation (forward = (sin, cos)),
     // matching CharacterFind.InsideCone. Returns the members that were killed.
-    public IReadOnlyList<SimCharacter> ResolveGaze(IPositioned? target, bool lookAway)
+    public IReadOnlyList<SimCharacter> ResolveGaze(IPositioned? target, uint actionId, bool lookAway)
     {
         if (target == null) return [];
         const float cosHalf = 0.70710677f; // cos(45°) — front/back arcs are 90° wide
@@ -139,9 +139,7 @@ public class DamageSolver
             var notLooking = cos <= -cosHalf;    // target within back 90° arc
             if (lookAway ? looking : notLooking)
             {
-                member.Die(lookAway
-                    ? "Died to gaze (looked at the target)"
-                    : "Died to gaze (faced away from the target)");
+                member.Die(actionId, lookAway ? "looked at the target" : "faced away from the target");
                 killed.Add(member);
             }
         }
