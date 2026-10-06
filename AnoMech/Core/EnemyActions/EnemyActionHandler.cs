@@ -64,6 +64,8 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimWorld world)
         var hits = IsSingleTarget(action)
             ? party.ActiveMembers().Where(m => ReferenceEquals(m, target)).ToList()
             : AreaHits(action, origin, party);
+        if (action.Area.ExcludeCaster)
+            hits = hits.Where(h => DistanceXZ(h.Position, caster.Position) >= 0.01f).ToList();
         if (action.Area.AdjustTargets is { } adjust) hits = adjust(ctx, hits);
         ctx.Hits = hits;
         handle.Resolved(origin, hits.Select(h => (h, h.Position)).ToList());
@@ -100,6 +102,9 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimWorld world)
 #endif
         return query.Run(party.Find);
     }
+
+    private static float DistanceXZ(Vector3 a, Vector3 b)
+        => MathF.Sqrt((a.X - b.X) * (a.X - b.X) + (a.Z - b.Z) * (a.Z - b.Z));
 
     // CastType 1: no area, only the cast target is hit.
     private static bool IsSingleTarget(EnemyAction action)

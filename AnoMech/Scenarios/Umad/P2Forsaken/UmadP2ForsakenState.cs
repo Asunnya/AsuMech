@@ -30,15 +30,18 @@ public sealed class UmadP2ForsakenState
     public Direction NewNorth { get; }
 
     public int Rotation { get; }
+
+    public bool ReassignLockonsInRoleOrder { get; }
     
     public Dictionary<PartyRole, uint> Lockons = [];
 
     public UmadP2ForsakenState(Rng rng, SimParty party, UmadP2ForsakenStateOverrides overrides)
     {
         this.rng = rng;
-        EndAttacks = [overrides.FirstEndAttack ?? NextEnd(), NextEnd(), NextEnd(), NextEnd()];
+        EndAttacks = overrides.EndAttacks.Select(e => e ?? NextEnd()).ToArray();
         NewNorth = overrides.NewNorth ?? rng.NextDirection();
-        Rotation = rng.NextSign();
+        Rotation = overrides.Rotation ?? rng.NextSign();
+        ReassignLockonsInRoleOrder = overrides.ReassignLockonsInRoleOrder;
 
         var supportLockon = overrides.SupportLockon ?? rng.NextObj(LockonId.ForsakenChariot, LockonId.ForsakenCone);
         var dpsLockon = supportLockon == LockonId.ForsakenChariot ? LockonId.ForsakenCone : LockonId.ForsakenChariot;

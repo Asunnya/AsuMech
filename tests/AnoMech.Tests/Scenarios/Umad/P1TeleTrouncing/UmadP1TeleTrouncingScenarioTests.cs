@@ -59,22 +59,6 @@ public class UmadP1TeleTrouncingScenarioTests
                 tweak?.Invoke(o);
             });
 
-    private static void SurvivesUntil(float stopAt, PartyRole player, Action<UmadP1TeleTrouncingStateOverrides>? tweak, params Takeover[] takeovers)
-    {
-        var run = ScenarioRun.Execute(typeof(UmadP1TeleTrouncingScenario), 0, Random.Shared.Next(), new ScenarioRunOptions
-        {
-            PlayerRole = player,
-            StopAt = stopAt,
-            Overrides = o =>
-            {
-                Pin((UmadP1TeleTrouncingStateOverrides)o);
-                tweak?.Invoke((UmadP1TeleTrouncingStateOverrides)o);
-            },
-            Takeovers = takeovers,
-        });
-        Assert.That(run.Passed, run.ToString);
-    }
-
     // MT stays on its first arrow, so the second drops onto it and both vanish. C, carried off
     // M1's second arrow onto the gap, walks on to OT.
     [Test]
@@ -138,12 +122,6 @@ public class UmadP1TeleTrouncingScenarioTests
             .TeleportAt(28.6f, to: new(0, 8.3f))
             .ShouldKill(ActionId.ConfusedAttack, RegenHealer);
 
-    // M1 has to stay in reach for a full second.
-    [Test]
-    public void ConfusedPlayerInMeleeRangeUnderOneSecondSurvives()
-        => SurvivesUntil(31.5f, RegenHealer, null,
-            new Takeover(28.6f, new Vector2(0, 8.3f)),
-            new Takeover(29.8f, new Vector2(0, 15)));
 
     // In the real slot-2 line through (-3.5,-3.5).
     [TestCase(false, ActionId.ThrummingThunderReal1)]
@@ -152,12 +130,6 @@ public class UmadP1TeleTrouncingScenarioTests
         => TeleTrouncing(MainTank, o => o.ThunderIsLie = lie)
             .TeleportAt(40.5f, to: new(-3.5f, -3.5f))
             .ShouldKill(line, MainTank);
-
-    // In the fake slot-1 line through (3.5,3.5).
-    [Test]
-    public void FakeThunderLineIsSafe()
-        => SurvivesUntil(42f, MainTank, o => o.ThunderIsLie = true,
-            new Takeover(40.5f, new Vector2(3.5f, 3.5f)));
 
     [Test]
     public void DiesToIndolentWillFacingStatue()

@@ -1,3 +1,4 @@
+using System;
 using AnoMech.Core.EnemyActions;
 using static AnoMech.Core.EnemyActions.Distribution;
 using static AnoMech.Core.EnemyActions.EnemyActionEffects;
@@ -94,6 +95,95 @@ public static class UmadActions
         Cast = new() { AnimationLock = P1.AnimationLock.Helper },
         Effects = [Damage(Magic, split: Stack(4)), MagicVulnerabilityUp],
         Timing = new() { DamageDelay = 0.71f },
+    };
+
+    // -- P2 Forsaken --
+    private static readonly IEnemyActionEffect ForsakenMagicVulnerabilityUp =
+        ApplyStatus(UmadConstants.StatusId.MagicVulnerabilityUp, 1.96f);
+
+    public static readonly EnemyAction Forsaken = new(UmadConstants.ActionId.Forsaken)
+    {
+        Cast = new() { AnimationLock = 3.1f },
+        Effects = [Damage(Magic)],
+        Timing = new() { DamageDelay = 1.61f },
+    };
+
+    // Whatever Spells' Trouble is left by now makes it lethal.
+    public static readonly EnemyAction LightOfJudgment = new(UmadConstants.ActionId.LightOfJudgment)
+    {
+        Cast = new() { AnimationLock = 3.1f },
+        Effects = [Damage(Magic.VulnerableTo(UmadConstants.StatusId.SpellsTrouble))],
+        Timing = new() { DamageDelay = 0.8f },
+    };
+
+    private static readonly EnemyAction TheRiverOfLight = new(UmadConstants.ActionId.TheRiverOfLight)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [Damage(Magic, Lethal)],
+        DeathExplanation = "a tower not taken by exactly two",
+    };
+
+    // Takes exactly two; any other count sets off the River of Light.
+    public static readonly EnemyAction ThePathOfLight = new(UmadConstants.ActionId.ThePathOfLight)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [FollowUp(TheRiverOfLight, ctx => ctx.Hits.Count != 2)],
+        Timing = new() { DamageDelay = 0.64f },
+    };
+
+    public static readonly EnemyAction Spelldriver = new(UmadConstants.ActionId.Spelldriver)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [Damage(Magic, split: Stack(3)), ForsakenMagicVulnerabilityUp],
+        Timing = new() { DamageDelay = 0.62f },
+    };
+
+    public static readonly EnemyAction Spellscatter = new(UmadConstants.ActionId.Spellscatter)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [Damage(Magic), ForsakenMagicVulnerabilityUp],
+        Timing = new() { DamageDelay = 0.62f },
+    };
+
+    // Cast from its holder's spot; the holder stands at the apex and is never hit by it.
+    public static readonly EnemyAction Spellwave = new(UmadConstants.ActionId.Spellwave)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Area = new() { Size = MathF.PI / 4, ExcludeCaster = true },
+        Effects = [Damage(Magic), ForsakenMagicVulnerabilityUp],
+        Timing = new() { DamageDelay = 0.62f },
+    };
+
+    public sealed record EndActions(EnemyAction CastBar, EnemyAction KefkaHit, EnemyAction CloneHit, EnemyAction AllThingsEnding);
+
+    // Future's End cleaves the half facing the player as the cast starts, Past's End the other half.
+    public static readonly EndActions FuturesEnd = new(
+        Visual(UmadConstants.ActionId.FutureSEnd, 0.2f),
+        EndHit(UmadConstants.ActionId.FutureSEnd_Resolve),
+        EndHit(UmadConstants.ActionId.FutureSEnd_CloneResolve),
+        AllThingsEnding(UmadConstants.ActionId.AllThingsEnding_Future, 0f));
+
+    public static readonly EndActions PastsEnd = new(
+        Visual(UmadConstants.ActionId.PastSEnd, 0.2f),
+        EndHit(UmadConstants.ActionId.PastSEnd_Resolve),
+        EndHit(UmadConstants.ActionId.PastSEnd_CloneResolve),
+        AllThingsEnding(UmadConstants.ActionId.AllThingsEnding_Past, MathF.PI));
+
+    private static EnemyAction EndHit(uint actionId) => new(actionId)
+    {
+        Cast = new() { AnimationLock = 6f },
+        Effects = [Damage(Magic), ForsakenMagicVulnerabilityUp],
+        Timing = new() { DamageDelay = 0.75f },
+    };
+
+    // Snapshots as the ability lands, not at bar end: from bar end there is no time left to reach
+    // the tower that follows. UNVERIFIED in game.
+    private static EnemyAction AllThingsEnding(uint actionId, float rotation) => new(actionId)
+    {
+        Cast = new() { AnimationLock = 3f },
+        Area = new() { Size = UmadConstants.Geometry.AllThingsEndHalfCone, Rotation = rotation },
+        Effects = [Damage(Magic, Lethal)],
+        Timing = new() { ResolveSnapshotOffset = CastSpec.ReleaseLead },
     };
 
     private static EnemyAction Visual(uint actionId, float animationLock) => new(actionId)

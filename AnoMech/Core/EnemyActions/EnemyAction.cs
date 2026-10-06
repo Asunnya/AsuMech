@@ -42,6 +42,9 @@ public sealed record AreaSpec
     // Turns the omen and the area from the caster's facing, in radians.
     public float Rotation { get; init; }
 
+    // Spares anyone standing on the caster's spot: a helper placed on the player who baits it.
+    public bool ExcludeCaster { get; init; }
+
     // Runs before any effect, so it also decides who counts toward a stack.
     public Func<EnemyActionContext, IReadOnlyList<SimCharacter>, IReadOnlyList<SimCharacter>>? AdjustTargets { get; init; }
 }
