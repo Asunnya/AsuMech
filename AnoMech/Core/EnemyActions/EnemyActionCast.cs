@@ -15,10 +15,15 @@ public sealed class EnemyActionCast
     // Nearest to Origin first, each where it stood at resolve.
     public IReadOnlyList<(SimCharacter Who, Vector3 At)> Hits { get; private set; } = [];
 
+    // Decided at resolve; they die TimingSpec.DamageDelay later.
+    public IReadOnlyCollection<SimCharacter> Kills { get; private set; } = [];
+
     internal void Resolved(Placement origin, IReadOnlyList<(SimCharacter Who, Vector3 At)> hits)
     {
         IsResolved = true;
         Origin = origin;
         Hits = hits;
     }
+
+    internal void Killed(IReadOnlyCollection<SimCharacter> kills) => Kills = kills;
 }

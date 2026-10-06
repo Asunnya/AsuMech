@@ -75,6 +75,7 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimWorld world)
 
         foreach (var effect in action.Effects)
             effect.Apply(ctx);
+        handle.Killed(ctx.Killed.Keys.ToList());
 
         var name = ActionLookup.Name(action.ActionId);
         foreach (var (who, amount, icon) in ctx.DamageShown)

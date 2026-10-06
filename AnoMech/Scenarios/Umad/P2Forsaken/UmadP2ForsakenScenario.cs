@@ -159,8 +159,8 @@ public sealed class UmadP2ForsakenScenario : IMultiplayerReplayable
     
     private void RunKefkaEndAttack(SimEnemy? kefka_40004FD3, int index, float start)
     {
-        var end = EndActions(state.EndAttacks[index]);
-        world.Events.Add(start, () => kefka_40004FD3?.Cast(state.EndAttacks[index].CastBarAction, 0.2f));
+        var end = state.EndAttacks[index];
+        world.Events.Add(start, () => kefka_40004FD3?.Cast(end.CastBarAction, 0.2f));
         world.Events.Add(start + 6.7f, () =>
         {
             if (kefka_40004FD3 == null) return;
@@ -170,9 +170,6 @@ public sealed class UmadP2ForsakenScenario : IMultiplayerReplayable
         world.Events.Add(start + 12.8f, () => kefka_40004FD3?.Face(party.Player));
         world.Events.Add(start + 12.9f, () => kefka_40004FD3?.Cast(end.AllThingsEnding));
     }
-
-    private static UmadActions.EndActions EndActions(EndAttack end)
-        => end == EndAttack.PastsEnd ? UmadActions.PastsEnd : UmadActions.FuturesEnd;
 
     private void RunTower(SimEnemy? enemy1, SimEnemy? enemy2, float start, int index)
     {
@@ -272,7 +269,7 @@ public sealed class UmadP2ForsakenScenario : IMultiplayerReplayable
     // TODO: verify in simulator
     private void RunCloneEndAttack(SimEnemy? enemy, float start, int number, int index)
     {
-        var end = EndActions(state.EndAttacks[number]);
+        var end = state.EndAttacks[number];
         world.Events.Add(start - 0.5f, () => enemy?.SetPosition(new Vector3(0, 0, 0)));
         world.Events.Add(start - 0.2f, () => enemy?.SetVisible(true));
         world.Events.Add(start, () =>

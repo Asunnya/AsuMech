@@ -1,5 +1,6 @@
 using System;
 using AnoMech.Core.EnemyActions;
+using AnoMech.Core.SimObjects;
 using static AnoMech.Core.EnemyActions.Distribution;
 using static AnoMech.Core.EnemyActions.EnemyActionEffects;
 using static AnoMech.Core.EnemyActions.Severity;
@@ -9,10 +10,13 @@ namespace AnoMech.Scenarios.Umad;
 
 public static class UmadActions
 {
-    private static readonly DamageSpec Magic = DamageType.Magic.VulnerableTo(UmadConstants.StatusId.MagicVulnerabilityUp);
+    internal static readonly DamageSpec Magic = DamageType.Magic.VulnerableTo(UmadConstants.StatusId.MagicVulnerabilityUp);
 
     private static readonly IEnemyActionEffect MagicVulnerabilityUp =
         ApplyStatus(UmadConstants.StatusId.MagicVulnerabilityUp, P1.MagicVulnerabilityUpSeconds);
+
+    internal static readonly IEnemyActionEffect LongMagicVulnerabilityUp =
+        ApplyStatus(UmadConstants.StatusId.MagicVulnerabilityUp, 1.96f);
 
     public static readonly EnemyAction AutoAttack = new(UmadConstants.ActionId.AutoAttack1)
     {
@@ -89,8 +93,6 @@ public static class UmadActions
     };
 
     // -- P2 Forsaken --
-    private static readonly IEnemyActionEffect ForsakenMagicVulnerabilityUp =
-        ApplyStatus(UmadConstants.StatusId.MagicVulnerabilityUp, 1.96f);
 
     public static readonly EnemyAction Forsaken = new(UmadConstants.ActionId.Forsaken)
     {
@@ -125,14 +127,14 @@ public static class UmadActions
     public static readonly EnemyAction Spelldriver = new(UmadConstants.ActionId.Spelldriver)
     {
         Cast = new() { AnimationLock = 1.1f },
-        Effects = [Damage(Magic, split: Stack(3)), ForsakenMagicVulnerabilityUp],
+        Effects = [Damage(Magic, split: Stack(3)), LongMagicVulnerabilityUp],
         Timing = new() { DamageDelay = 0.62f },
     };
 
     public static readonly EnemyAction Spellscatter = new(UmadConstants.ActionId.Spellscatter)
     {
         Cast = new() { AnimationLock = 1.1f },
-        Effects = [Damage(Magic), ForsakenMagicVulnerabilityUp],
+        Effects = [Damage(Magic), LongMagicVulnerabilityUp],
         Timing = new() { DamageDelay = 0.62f },
     };
 
@@ -141,37 +143,168 @@ public static class UmadActions
     {
         Cast = new() { AnimationLock = 1.1f },
         Area = new() { Size = MathF.PI / 4, ExcludeCaster = true },
-        Effects = [Damage(Magic), ForsakenMagicVulnerabilityUp],
+        Effects = [Damage(Magic), LongMagicVulnerabilityUp],
         Timing = new() { DamageDelay = 0.62f },
     };
 
-    public sealed record EndActions(EnemyAction KefkaHit, EnemyAction CloneHit, EnemyAction AllThingsEnding);
+    // -- P3 Black Hole --
 
-    // Future's End cleaves the half facing the player as the cast starts, Past's End the other half.
-    public static readonly EndActions FuturesEnd = new(
-        EndHit(UmadConstants.ActionId.FutureSEnd_Resolve),
-        EndHit(UmadConstants.ActionId.FutureSEnd_CloneResolve),
-        AllThingsEnding(UmadConstants.ActionId.AllThingsEnding_Future, 0f));
-
-    public static readonly EndActions PastsEnd = new(
-        EndHit(UmadConstants.ActionId.PastSEnd_Resolve),
-        EndHit(UmadConstants.ActionId.PastSEnd_CloneResolve),
-        AllThingsEnding(UmadConstants.ActionId.AllThingsEnding_Past, MathF.PI));
-
-    private static EnemyAction EndHit(uint actionId) => new(actionId)
+    public static readonly EnemyAction ExdeathAutoAttack = new(UmadConstants.ActionId.AutoAttack2)
     {
-        Cast = new() { AnimationLock = 6f },
-        Effects = [Damage(Magic), ForsakenMagicVulnerabilityUp],
-        Timing = new() { DamageDelay = 0.75f },
+        Cast = new() { AnimationLock = P1.AnimationLock.AutoAttack },
+        Effects = [Damage(DamageType.Physical)],
+        Timing = new() { DamageDelay = 0.8f },
     };
 
-    // Snapshots as the ability lands, not at bar end: from bar end there is no time left to reach
-    // the tower that follows. UNVERIFIED in game.
-    private static EnemyAction AllThingsEnding(uint actionId, float rotation) => new(actionId)
+    public static readonly EnemyAction SlapHappySlap = new(UmadConstants.ActionId.SlapHappy_Slap)
     {
-        Cast = new() { AnimationLock = 3f },
-        Area = new() { Size = UmadConstants.Geometry.AllThingsEndHalfCone, Rotation = rotation },
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [Damage(DamageType.Physical, Lethal)],
+    };
+
+    public static readonly EnemyAction SlapHappyFinalSlap = new(UmadConstants.ActionId.SlapHappy_FinalSlap)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [Damage(DamageType.Physical, Lethal)],
+    };
+
+    // Half-angle estimated from the animation.
+    private const float SlapConeHalfAngle = MathF.PI / 6;
+
+    public static readonly EnemyAction ShockwaveCone = new(UmadConstants.ActionId.ShockwaveCone)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Area = new() { Size = SlapConeHalfAngle },
+        Effects = [Damage(Magic), LongMagicVulnerabilityUp],
+        Timing = new() { DamageDelay = 0.65f },
+    };
+
+    public static readonly EnemyAction ShockingImpact = new(UmadConstants.ActionId.ShockingImpact)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Area = new() { Size = SlapConeHalfAngle },
+        Effects = [Damage(Magic, split: Stack(8)), LongMagicVulnerabilityUp],
+        Timing = new() { DamageDelay = 0.62f },
+    };
+
+    public static readonly EnemyAction DamningEdict = new(UmadConstants.ActionId.DamningEdict)
+    {
+        Cast = new() { AnimationLock = 3.1f, OmenDelay = 4f },
         Effects = [Damage(Magic, Lethal)],
-        Timing = new() { ResolveSnapshotOffset = CastSpec.ReleaseLead },
     };
+
+    public static readonly EnemyAction LookUponMeAndDespair = new(UmadConstants.ActionId.LookUponMeAndDespair_Omen)
+    {
+        Cast = new() { AnimationLock = 1.1f, OmenDelay = 4f },
+        Effects = [Damage(Magic, Lethal)],
+        Timing = new() { DamageDelay = 0.1f },
+    };
+
+    // 929,000 unmitigated against a 325,047 tank is 65%; eased while only self mitigation counts.
+    // The Lightning Resistance Down it leaves outlasts the 3s to the set's second hit, so one tank
+    // takes both only behind an invuln.
+    public static readonly EnemyAction ThunderIII = new(UmadConstants.ActionId.ThunderIII_Resolve)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects =
+        [
+            Damage(Magic.VulnerableTo(UmadConstants.StatusId.LightningResistanceDownII), TankBuster.MinMit(0.60f)),
+            ApplyStatus(UmadConstants.StatusId.LightningResistanceDownII, 3.96f),
+        ],
+        Timing = new() { DamageDelay = 0.22f },
+    };
+
+    public static readonly EnemyAction ImplosionShockwave = new(UmadConstants.ActionId.Shockwave)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Area = new() { Size = MathF.PI / 4 },
+        Effects = [Damage(Magic, Lethal)],
+    };
+
+    public static readonly EnemyAction BlizzardIII = new(UmadConstants.ActionId.BlizzardIII)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [Damage(Magic, Lethal)],
+    };
+
+    public static readonly EnemyAction KnockDown = new(UmadConstants.ActionId.KnockDown)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [Damage(Magic, split: Stack(4)), LongMagicVulnerabilityUp],
+        Timing = new() { DamageDelay = 0.48f },
+    };
+
+    private static readonly EnemyAction UnmitigatedImpact = new(UmadConstants.ActionId.UnmitigatedImpact)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [Damage(Magic, Lethal)],
+        DeathExplanation = "a tower nobody took",
+    };
+
+    public static readonly EnemyAction StompAMole = new(UmadConstants.ActionId.StompAMole)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects =
+        [
+            Damage(Magic, split: Stack(2)),
+            ApplyStatus(UmadConstants.StatusId.MagicVulnerabilityUp, 3f),
+            FollowUp(UnmitigatedImpact, ctx => ctx.Hits.Count == 0),
+        ],
+        Timing = new() { DamageDelay = 0.17f },
+    };
+
+    // Cast on the Accretion holder it cleanses, who takes no damage; a crust's cleanse has no target.
+    // Anyone still carrying the last one's Earth Resistance Down dies.
+    public static readonly EnemyAction EarthquakeCleanse = new(UmadConstants.ActionId.Earthquake_Cleanse)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects =
+        [
+            OnOthers(Damage(DamageType.Earth.VulnerableTo(UmadConstants.StatusId.EarthResistanceDownII))),
+            OnOthers(ApplyStatus(UmadConstants.StatusId.EarthResistanceDownII, 1.96f)),
+            OnTarget(RemoveStatus(UmadConstants.StatusId.Accretion)),
+        ],
+        Timing = new() { DamageDelay = 0.64f },
+    };
+
+    // Each hit climbs Unbecoming -> Meanest Existence; one more spends the Primordial Crust, and a hit
+    // past that kills.
+    public static readonly EnemyAction Nothingness = new(UmadConstants.ActionId.Nothingness)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [new NothingnessEffect()],
+        Timing = new() { DamageDelay = 0.5f },
+    };
+
+    private sealed class NothingnessEffect : IEnemyActionEffect
+    {
+        public void Apply(EnemyActionContext ctx)
+        {
+            foreach (var target in ctx.Hits)
+            {
+                if (ctx.IsKilled(target) || !target.IsAlive()) continue;
+                if (target.HasStatus(UmadConstants.StatusId.MeanestExistence))
+                {
+                    if (!target.HasStatus(UmadConstants.StatusId.PrimordialCrust))
+                    {
+                        ctx.Kill(target, "hit with Meanest Existence and no Primordial Crust");
+                        continue;
+                    }
+                    target.RemoveStatus(UmadConstants.StatusId.PrimordialCrust);
+                    target.RemoveStatus(UmadConstants.StatusId.FirstInLine);
+                    target.RemoveStatus(UmadConstants.StatusId.SecondInLine);
+                    target.RemoveStatus(UmadConstants.StatusId.ThirdInLine);
+                }
+                else if (target.HasStatus(UmadConstants.StatusId.Unbecoming))
+                {
+                    target.RemoveStatus(UmadConstants.StatusId.Unbecoming);
+                    target.AddStatus(UmadConstants.StatusId.MeanestExistence);
+                }
+                else
+                {
+                    target.AddStatus(UmadConstants.StatusId.Unbecoming);
+                }
+            }
+        }
+    }
 }

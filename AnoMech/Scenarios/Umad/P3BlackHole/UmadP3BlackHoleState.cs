@@ -54,17 +54,19 @@ public sealed class UmadP3BlackHoleState
         ThunderSet1 = overrides.ThunderSet1;
         ThunderSet2 = overrides.ThunderSet2;
 
-        StackTargets = new RoleList(party, rng.Shuffle(rng.NextSupportRole(), rng.NextDpsRole()));
-        EdictTargets = new RoleList(party, [rng.NextRole(), rng.NextRole()]);
-        ImplosionAttack = rng.NextObj(ActionId.LatitudinalImplosion, ActionId.LongitudinalImplosion);
-        SlapAttacks = [overrides.FirstSlap ?? NextSlap(), NextSlap(), NextSlap()];
-        KefkaPosition = Enumerable.Range(0, 5).Select(_ => rng.NextDirection()).ToList();
+        StackTargets = new RoleList(party, overrides.StackTargets ?? rng.Shuffle(rng.NextSupportRole(), rng.NextDpsRole()));
+        EdictTargets = new RoleList(party, [overrides.EdictTarget ?? rng.NextRole(), rng.NextRole()]);
+        ImplosionAttack = overrides.ImplosionAttack ?? rng.NextObj(ActionId.LatitudinalImplosion, ActionId.LongitudinalImplosion);
+        SlapAttacks = Enumerable.Range(0, 3).Select(i => overrides.SlapAttacks[i] ?? NextSlap()).ToList();
+        KefkaPosition = Enumerable.Range(0, 5).Select(i => overrides.KefkaPositions[i] ?? rng.NextDirection()).ToList();
         ConeTargets = Enumerable.Range(0, 3)
-                                .Select(i => NextConeTargets(party, SlapAttacks[i], i == 0 && slapAllOnSubject))
+                                .Select(i => overrides.ConeTargets[i] is { } forced
+                                                 ? new RoleList(party, forced)
+                                                 : NextConeTargets(party, SlapAttacks[i], i == 0 && slapAllOnSubject))
                                 .ToList();
-        BlackHoleDirections = Enumerable.Range(0, 4).Select(_ => rng.NextCardinal()).ToList();
-        MiniBlackHoleInitialAngle = rng.NextInt(2);
-        MiniBlackHoleChirality = rng.NextSign();
+        BlackHoleDirections = Enumerable.Range(0, 4).Select(i => overrides.BlackHoleDirections[i] ?? rng.NextCardinal()).ToList();
+        MiniBlackHoleInitialAngle = overrides.MiniBlackHoleInitialAngle ?? rng.NextInt(2);
+        MiniBlackHoleChirality = overrides.MiniBlackHoleChirality ?? rng.NextSign();
     }
 
     // Network replay: only the fields UmadP3BlackHoleAi reads; the rest are placeholders the
@@ -114,6 +116,9 @@ public sealed class UmadP3BlackHoleState
     // satisfies everyone.
     private RoleList BuildRoles(SimParty party, UmadP3BlackHoleStateOverrides overrides)
     {
+        if (overrides.SeatLinesInRoleOrder)
+            return new RoleList(party, PerRole.All);
+
         var requests = overrides.Requests(party.PlayerRole);
 
         var swapFirst = rng.NextBool();
