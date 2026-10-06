@@ -43,6 +43,23 @@ public readonly record struct Placement(Vector3 Position, float Rotation)
         return this with { Rotation = MathF.Atan2(dx, dz) };
     }
 
+    // `point` within 45° of the facing (the front 90° arc). False when it coincides with Position.
+    public bool IsLookingAt(Vector3 point) => FacingCos(point) >= CosHalfArc;
+
+    // `point` within 45° of straight behind (the back 90° arc). False when it coincides with Position.
+    public bool IsLookingAwayFrom(Vector3 point) => FacingCos(point) <= -CosHalfArc;
+
+    private const float CosHalfArc = 0.70710677f;
+
+    // NaN on top of Position, so both arc tests fail.
+    private float FacingCos(Vector3 point)
+    {
+        var dx = point.X - Position.X;
+        var dz = point.Z - Position.Z;
+        var distance = MathF.Sqrt(dx * dx + dz * dz);
+        return distance < 0.01f ? float.NaN : (dx * MathF.Sin(Rotation) + dz * MathF.Cos(Rotation)) / distance;
+    }
+
     // Squared distance to `other` in the XZ plane (height ignored), matching the
     // horizontal convention of Face / MoveForward. Squared so callers can compare
     // against a threshold without the sqrt.

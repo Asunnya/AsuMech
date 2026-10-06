@@ -5,6 +5,7 @@ using static AnoMech.Core.EnemyActions.Distribution;
 using static AnoMech.Core.EnemyActions.EnemyActionEffects;
 using static AnoMech.Core.EnemyActions.Severity;
 using P1 = AnoMech.Scenarios.Umad.P1TeleTrouncing.UmadP1TeleTrouncingConstants;
+using P3 = AnoMech.Scenarios.Umad.P3LimitCut.UmadP3LimitCutConstants;
 
 namespace AnoMech.Scenarios.Umad;
 
@@ -274,6 +275,69 @@ public static class UmadActions
         Cast = new() { AnimationLock = 1.1f },
         Effects = [new NothingnessEffect()],
         Timing = new() { DamageDelay = 0.5f },
+    };
+
+    // -- P3 Limit Cut --
+
+    // Aimed at the farthest player at cast start; the one real hit inside 20y was 312k at 17y.
+    public static readonly EnemyAction UmbraSmash = new(P3.ActionId.UmbraSmash)
+    {
+        Cast = new() { AnimationLock = P3.AnimationLock.UmbraSmash },
+        Effects = [Damage(DamageType.Physical, split: Falloff(20f))],
+        Timing = new() { DamageDelay = 1.78f },
+    };
+
+    // Spends everyone's wind. Facing it right is the 10y push; facing it wrong is 40y straight off
+    // the arena, an environment kill (Stray Gusts was never cast). No wind left: the plain 20y.
+    public static readonly EnemyAction VacuumWave = new(P3.ActionId.VacuumWave)
+    {
+        Cast = new() { AnimationLock = P3.AnimationLock.VacuumWave },
+        Effects =
+        [
+            Knockback(VacuumWavePush, P3.Timing.KnockbackSpeed, knockbackDelay: 0.78f),
+            RemoveStatus(P3.StatusId.Headwind),
+            RemoveStatus(P3.StatusId.Tailwind),
+        ],
+        Timing = new() { DamageDelay = 0.84f },
+    };
+
+    private static float? VacuumWavePush(EnemyActionContext ctx, SimCharacter target)
+    {
+        var headwind = target.HasStatus(P3.StatusId.Headwind);
+        if (!headwind && !target.HasStatus(P3.StatusId.Tailwind)) return 20f;
+        var facing = target.Placement();
+        var from = ctx.Caster.Position;
+        return (headwind ? facing.IsLookingAwayFrom(from) : facing.IsLookingAt(from)) ? 10f : 40f;
+    }
+
+    // Each clone's appearance, ~27k on a non-tank.
+    public static readonly EnemyAction UltimaBlaster = new(P3.ActionId.UltimaBlaster)
+    {
+        Cast = new() { AnimationLock = P3.AnimationLock.CloneAppear },
+        Effects = [Damage(Magic)],
+        Timing = new() { DamageDelay = 0.38f },
+    };
+
+    // Aimed at its number wherever they stand. Falls off from 20x max HP at the clone: an
+    // unmitigated non-tank dies inside ~35y. A second hit inside the vuln landed at x9-10.
+    public static readonly EnemyAction UltimaBlasterCharge = new(P3.ActionId.UltimaBlasterCharge)
+    {
+        Cast = new() { AnimationLock = P3.AnimationLock.CloneCharge },
+        Effects = [Damage(Magic, split: Falloff(35f)), ApplyStatus(UmadConstants.StatusId.MagicVulnerabilityUp, 2.96f)],
+        Timing = new() { DamageDelay = 0.36f },
+    };
+
+    // A two-person stack only a tank on cooldowns survives alone, each leaving a vuln the next one
+    // lands on; the tank LB3's 80% lives through either.
+    public static readonly EnemyAction Cyclone = new(UmadConstants.ActionId.Cyclone)
+    {
+        Cast = new() { AnimationLock = P3.AnimationLock.Cyclone },
+        Effects =
+        [
+            Damage(DamageType.Wind.VulnerableTo(P3.StatusId.WindResistanceDownII, 0.80f), split: Stack(2, understacked: TankBuster.MinMit(0.80f))),
+            ApplyStatus(P3.StatusId.WindResistanceDownII, 0.96f),
+        ],
+        Timing = new() { DamageDelay = 0.63f },
     };
 
     private sealed class NothingnessEffect : IEnemyActionEffect

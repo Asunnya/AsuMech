@@ -39,12 +39,11 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
     private SimWorld world = null!;
     private SimParty party = null!;
     private UmadP3LimitCutState state = null!;
-    private DamageSolver damage = null!;
     private readonly SimEnemy?[] cycloneHelpers = new SimEnemy?[8];
     private SimEnemy? thunderHelper;
     private SimEventObject? windCrystal;
     private Vector3 umbraImpact;
-    private readonly List<SimCharacter> cycloneTargets = [];
+    private EnemyActionCast? vacuumWave;
     private readonly SimCharacter?[] chargeTargets = new SimCharacter?[8];
 
     public UmadP3LimitCutState? LastState { get; private set; }
@@ -55,11 +54,7 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
         party = world.Party;
         state = new UmadP3LimitCutState(world.Rng, party, settingsWindow.Overrides);
         LastState = state;
-        damage = new DamageSolver(party);
-        damage.SetStatuses(DamageType.Lightning, UmadConstants.StatusId.LightningResistanceDownII);
-        damage.SetStatuses(DamageType.Magic, UmadConstants.StatusId.MagicVulnerabilityUp);
-        damage.SetMitigableStatuses(DamageType.Wind, Constants.Damage.CycloneVulnMitigation, Constants.StatusId.WindResistanceDownII);
-        cycloneTargets.Clear();
+        vacuumWave = null;
         Array.Clear(chargeTargets);
         DiagnosticLog.Info(
             $"[UmadP3LimitCut] Roll: clones start {Constants.Geometry.SpotName(state.StartSpot)} going {(state.Clockwise ? "clockwise" : "counter-clockwise")}, "
@@ -81,11 +76,12 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
             state.Objects.Exdeath?.Follow(party.Get(PartyRole.OffTank));
         });
         foreach (var at in Constants.Timing.ChaosAutoAfterUmbra)
-            world.Events.Add(u + at, () => state.Objects.Chaos?.Cast(UmadConstants.ActionId.AutoAttack1, castSeconds: 0f, targetId: party.Get(PartyRole.MainTank)?.GameObjectId, animationLock: Constants.AnimationLock.AutoAttack));
+            world.Events.Add(u + at, () => state.Objects.Chaos?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
         foreach (var at in Constants.Timing.ExdeathAutoAfterUmbra)
-            world.Events.Add(u + at, () => state.Objects.Exdeath?.Cast(UmadConstants.ActionId.AutoAttack2, castSeconds: 0f, targetId: party.Get(PartyRole.OffTank)?.GameObjectId, animationLock: Constants.AnimationLock.AutoAttack));
-        // Kefka's second trance beat. The real packet refreshes the aura in place; AddStatusParam
-        // adds a slot, so drop the first or Kefka wears two auras at once.
+            world.Events.Add(u + at, () => state.Objects.Exdeath?.Cast(UmadActions.ExdeathAutoAttack, party.Get(PartyRole.OffTank)));
+        // Kefka's second trance beat, instant although the sheet gives it a 3s cast. The real
+        // packet refreshes the aura in place; AddStatusParam adds a slot, so drop the first or
+        // Kefka wears two auras at once.
         world.Events.Add(6.75f, () =>
         {
             state.Objects.Kefka?.Cast(Constants.ActionId.RingOfFire, castSeconds: 0f, animationLock: Constants.AnimationLock.RingOfFire);
@@ -98,28 +94,22 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
         world.Events.Add(u - 0.2f, () => state.Objects.Chaos?.Follow());
         world.Events.Add(u, StartUmbraSmash);
         world.Events.Add(Constants.Timing.VacuumCastAt - 0.2f, () => state.Objects.Exdeath?.Follow());
-        world.Events.Add(Constants.Timing.VacuumCastAt, () => state.Objects.Exdeath?.Cast(
-            Constants.ActionId.VacuumWave, castSeconds: Constants.Timing.VacuumShownCast,
-            fireDelay: Constants.Timing.VacuumResolveAfterUmbra - (Constants.Timing.VacuumCastAt - u) - Constants.Timing.VacuumShownCast,
-            animationLock: Constants.AnimationLock.VacuumWave));
-        world.Events.Add(u + Constants.Timing.VacuumResolveAfterUmbra + Constants.Timing.VacuumApplyDelay + 8 * Constants.Timing.VacuumApplyStagger + 0.3f,
-            () => state.Objects.Exdeath?.Follow(party.Get(PartyRole.OffTank)));
+        world.Events.Add(Constants.Timing.VacuumCastAt, () => vacuumWave = state.Objects.Exdeath?.Cast(UmadActions.VacuumWave));
+        world.Events.Add(17.56f, () => state.Objects.Exdeath?.Follow(party.Get(PartyRole.OffTank)));
         for (var k = 0; k < 8; k++)
         {
             var clone = k;
             world.Events.Add(u + Constants.Timing.PlacementAfterUmbra[k], () => PlaceClone(clone));
             world.Events.Add(u + Constants.Timing.AppearAfterUmbra[k], () => CloneAppear(clone));
         }
-        world.Events.Add(u + Constants.Timing.UmbraResolveAfterCast, ResolveUmbraSmash);
         world.Events.Add(u + Constants.Timing.TankLimitBreakAfterUmbra, BotTankLimitBreak);
         world.Events.Add(u + Constants.Timing.ChaosLandsAfterCast, ChaosLands);
-        world.Events.Add(u + Constants.Timing.VacuumResolveAfterUmbra, ResolveVacuumWave);
         world.Events.Add(u + Constants.Timing.IconsAfterUmbra, AttachNumbers);
         world.Events.Add(u + Constants.Timing.CyclonesAfterUmbra, ResolveCyclones);
         world.Events.Add(u + Constants.Timing.AetherlinkAfterUmbra, () =>
         {
-            state.Objects.Chaos?.Cast(UmadConstants.ActionId.Aetherlink_Chaos, castSeconds: 0f, animationLock: Constants.AnimationLock.Aetherlink);
-            state.Objects.Exdeath?.Cast(UmadConstants.ActionId.Aetherlink_Exdeath, castSeconds: 0f, animationLock: Constants.AnimationLock.Aetherlink);
+            state.Objects.Chaos?.Cast(UmadConstants.ActionId.Aetherlink_Chaos, Constants.AnimationLock.Aetherlink);
+            state.Objects.Exdeath?.Cast(UmadConstants.ActionId.Aetherlink_Exdeath, Constants.AnimationLock.Aetherlink);
         });
         for (var k = 0; k < 8; k++)
         {
@@ -128,12 +118,9 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
             world.Events.Add(u + Constants.Timing.ChargeAfterUmbra[k], () => ResolveCharge(clone));
         }
         world.Events.Add(u + Constants.Timing.ThunderCastAfterUmbra - 0.2f, () => state.Objects.Exdeath?.Follow());
-        world.Events.Add(u + Constants.Timing.ThunderCastAfterUmbra, () => state.Objects.Exdeath?.Cast(
-            UmadConstants.ActionId.ThunderIII_Cast, castSeconds: Constants.Timing.ThunderShownCast,
-            fireDelay: Constants.Timing.ThunderHit1AfterUmbra - Constants.Timing.ThunderCastAfterUmbra - Constants.Timing.ThunderShownCast,
-            animationLock: Constants.AnimationLock.ThunderCast));
-        world.Events.Add(u + Constants.Timing.ThunderHit1AfterUmbra, () => ResolveThunder(1));
-        world.Events.Add(u + Constants.Timing.ThunderHit2AfterUmbra, () => ResolveThunder(2));
+        world.Events.Add(u + Constants.Timing.ThunderCastAfterUmbra, () => state.Objects.Exdeath?.Cast(UmadConstants.ActionId.ThunderIII_Cast, Constants.AnimationLock.ThunderCast));
+        world.Events.Add(u + Constants.Timing.ThunderHit1AfterUmbra, ResolveThunder);
+        world.Events.Add(u + Constants.Timing.ThunderHit2AfterUmbra, ResolveThunder);
         world.Events.Add(u + Constants.Timing.ThunderHit2AfterUmbra + 0.5f, () => state.Objects.Exdeath?.Follow(party.Get(PartyRole.OffTank)));
         world.Events.Add(u + Constants.Timing.DecisiveBattleCastAfterUmbra - 0.2f, () =>
         {
@@ -142,9 +129,8 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
         });
         world.Events.Add(u + Constants.Timing.DecisiveBattleCastAfterUmbra, () =>
         {
-            var fire = Constants.Timing.DecisiveBattleResolveAfterUmbra - Constants.Timing.DecisiveBattleCastAfterUmbra - Constants.Timing.DecisiveBattleShownCast;
-            state.Objects.Chaos?.Cast(Constants.ActionId.DecisiveBattleChaos, castSeconds: Constants.Timing.DecisiveBattleShownCast, fireDelay: fire, animationLock: Constants.AnimationLock.DecisiveBattle);
-            state.Objects.Exdeath?.Cast(Constants.ActionId.DecisiveBattleExdeath, castSeconds: Constants.Timing.DecisiveBattleShownCast, fireDelay: fire, animationLock: Constants.AnimationLock.DecisiveBattle);
+            state.Objects.Chaos?.Cast(Constants.ActionId.DecisiveBattleChaos, Constants.AnimationLock.DecisiveBattle);
+            state.Objects.Exdeath?.Cast(Constants.ActionId.DecisiveBattleExdeath, Constants.AnimationLock.DecisiveBattle);
         });
         world.Events.Add(u + Constants.Timing.DecisiveBattleResolveAfterUmbra, ResolveDecisiveBattle);
         world.Events.Add(u + Constants.Timing.DecisiveBattleResolveAfterUmbra + 0.2f, () =>
@@ -260,16 +246,11 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
         });
     }
 
-    // Black Hole's rules: whoever is closest to Exdeath, a tank buster, the second hit lethal
-    // short of an invuln while Lightning Resistance Down II is still up.
-    private void ResolveThunder(int hitNumber)
+    // Black Hole's buster, on whoever is closest to Exdeath.
+    private void ResolveThunder()
     {
         if (state.Objects.Exdeath is not { } exdeath) return;
-        var target = party.Find.Closest(exdeath.Position);
-        thunderHelper?.Cast(UmadConstants.ActionId.ThunderIII_Resolve, castSeconds: 0f, targetId: target?.GameObjectId, animationLock: Constants.AnimationLock.ThunderHit);
-        damage.Resolve(target, UmadConstants.ActionId.ThunderIII_Resolve, [DamageType.TankBuster, DamageType.Magic, DamageType.Lightning],
-            [(UmadConstants.StatusId.LightningResistanceDownII, Constants.Damage.LightningResistanceDownSeconds)],
-            requiredMitigation: Constants.Damage.ThunderIIIRequiredMitigation);
+        thunderHelper?.Cast(UmadActions.ThunderIII, party.Find.Closest(exdeath.Position));
     }
 
     private void ResolveDecisiveBattle()
@@ -282,24 +263,14 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
                     ? UmadConstants.StatusId.EpicHero : UmadConstants.StatusId.FatedHero);
     }
 
-    // A survivable hit, shown after the member's own active mitigation, so the LB3 at 13.6s makes
-    // the appearance raidwides read as the real 80%-cut numbers.
-    private void Hit(SimCharacter member, float fraction, uint actionId, string context)
-        => damage.ApplyDamage(member, fraction * (1f - damage.EffectiveMitigation(member)), actionId, context, lethal: false);
-
     private void StartUmbraSmash()
     {
         if (state.Objects.Chaos is not { } chaos) return;
         var bait = party.Find.Farest(chaos.Position);
         umbraImpact = bait?.Position ?? chaos.Position;
         DiagnosticLog.Info($"[UmadP3LimitCut] Umbra Smash: bait {(bait as ISimPartyMember)?.Role.ToString() ?? "none"} at ({umbraImpact.X:F1},{umbraImpact.Z:F1}), {Vector3.Distance(umbraImpact, chaos.Position):F1}y from Chaos.");
-        chaos.Cast(Constants.ActionId.UmbraSmash, targetLocation: umbraImpact, castSeconds: Constants.Timing.UmbraShownCast,
-            fireDelay: Constants.Timing.UmbraResolveAfterCast - Constants.Timing.UmbraShownCast, animationLock: Constants.AnimationLock.UmbraSmash);
+        chaos.Cast(UmadActions.UmbraSmash, umbraImpact);
     }
-
-    private void ResolveUmbraSmash()
-        => damage.Resolve(IPositioned.From(umbraImpact), Constants.ActionId.UmbraSmash, [], [],
-            lethalWithin: Constants.Geometry.UmbraLethalRadius);
 
     // Skipped by default when the human is a tank, so the press is theirs to make.
     private void BotTankLimitBreak()
@@ -316,53 +287,6 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
         chaos.Follow(party.Get(PartyRole.MainTank));
     }
 
-    // The server applies the pushes 0.80s after the wave, one player every 0.045s.
-    private void ResolveVacuumWave()
-    {
-        if (state.Objects.Exdeath is not { } exdeath) return;
-        var source = exdeath.Position;
-        cycloneTargets.Clear();
-        var members = party.ActiveMembers().Where(m => m.IsAlive()).ToList();
-        for (var i = 0; i < members.Count; i++)
-        {
-            var member = members[i];
-            world.Events.Add(Constants.Timing.VacuumApplyDelay + i * Constants.Timing.VacuumApplyStagger, () => PushByWind(member, source));
-        }
-    }
-
-    // Headwind faces away from Exdeath, Tailwind toward him. Within 45 deg of that is the 10y
-    // push; anything else is 40y straight off the arena (the two real players who faced wrong
-    // died as environment kills; Stray Gusts was never cast). No wind left: the plain 20y.
-    private void PushByWind(SimCharacter member, Vector3 source)
-    {
-        if (member is not ISimPartyMember pm || !member.IsAlive()) return;
-        var hasHeadwind = member.HasStatus(Constants.StatusId.Headwind);
-        var hasTailwind = member.HasStatus(Constants.StatusId.Tailwind);
-        var distance = 20f;
-        var offDegrees = 0f;
-        if (hasHeadwind || hasTailwind)
-        {
-            cycloneTargets.Add(member);
-            member.RemoveStatus(hasHeadwind ? Constants.StatusId.Headwind : Constants.StatusId.Tailwind);
-            var away = MathF.Atan2(member.Position.X - source.X, member.Position.Z - source.Z);
-            var facingAway = MathF.Cos(member.Rotation - away);
-            var towardSafe = hasHeadwind ? facingAway : -facingAway;
-            offDegrees = MathF.Acos(Math.Clamp(towardSafe, -1f, 1f)) * (180f / MathF.PI);
-            distance = towardSafe > Constants.Geometry.CorrectFacingCos ? 10f : 40f;
-        }
-        DiagnosticLog.Info($"[UmadP3LimitCut] Vacuum Wave: {pm.Role} {(hasHeadwind ? "Headwind" : hasTailwind ? "Tailwind" : "no wind")} facing {offDegrees:F0} deg off -> {distance:F0}y.");
-        pm.Knockback(source, distance, Constants.Timing.KnockbackSpeed);
-        if (distance < 40f) return;
-        // Dead where the push crosses the arena edge, before the boundary fence names it a fall.
-        var p = new Vector2(member.Position.X, member.Position.Z);
-        var along = Vector2.Normalize(p - new Vector2(source.X, source.Z));
-        var pu = Vector2.Dot(p, along);
-        var toEdge = -pu + MathF.Sqrt(MathF.Max(0f, pu * pu - p.LengthSquared() + Constants.Geometry.ArenaRadius * Constants.Geometry.ArenaRadius));
-        var wind = hasHeadwind ? "Headwind faces away from Exdeath" : "Tailwind faces toward Exdeath";
-        world.Events.Add(MathF.Max(0f, toEdge / Constants.Timing.KnockbackSpeed - 0.05f),
-            () => member.Die($"Died to Vacuum Wave (faced {offDegrees:F0} deg off, {wind}: pushed 40y off the arena)"));
-    }
-
     private void PlaceClone(int k)
     {
         if (state.Objects.Clones[k] is not { } clone) return;
@@ -375,9 +299,7 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
     private void CloneAppear(int k)
     {
         if (state.Objects.Clones[k] is not { } clone) return;
-        clone.Cast(Constants.ActionId.UltimaBlaster, castSeconds: 0f, animationLock: Constants.AnimationLock.CloneAppear);
-        foreach (var member in party.ActiveMembers().ToList())
-            Hit(member, Constants.Damage.CloneAppear, Constants.ActionId.UltimaBlaster, "raidwide");
+        clone.Cast(UmadActions.UltimaBlaster);
     }
 
     private void AttachNumbers()
@@ -390,19 +312,14 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
         }
     }
 
-    // One Cyclone per player that carried a wind into the knockback: a two-person stack that
-    // only a tank on cooldowns survives alone, each leaving a vuln the next one lands on.
+    // One Cyclone per player the Vacuum Wave reached: everyone carries a wind into it.
     private void ResolveCyclones()
     {
         windCrystal?.FadeOut();
-        var centres = cycloneTargets.Where(t => t.IsAlive()).ToList();
+        if (vacuumWave is null) return;
+        var centres = vacuumWave.Hits.Select(h => h.Who).Where(t => t.IsAlive()).ToList();
         for (var i = 0; i < centres.Count; i++)
-        {
-            cycloneHelpers[i % cycloneHelpers.Length]?.Cast(UmadConstants.ActionId.Cyclone, castSeconds: 0f, targetId: centres[i].GameObjectId, animationLock: Constants.AnimationLock.Cyclone);
-            damage.Resolve(centres[i], UmadConstants.ActionId.Cyclone, [DamageType.Wind],
-                [(Constants.StatusId.WindResistanceDownII, Constants.Damage.WindResistanceDownSeconds)],
-                stackMinTargets: 2, understackedTankMitigation: Constants.Damage.CycloneSoloTankMitigation);
-        }
+            cycloneHelpers[i % cycloneHelpers.Length]?.Cast(UmadActions.Cyclone, centres[i]);
     }
 
     // A dead number's clone still charges someone; none of the 8 real retargets fit a rule
@@ -426,15 +343,11 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
     }
 
     // Aimed at the target wherever they stand, so a misplaced number drags the rect across
-    // whoever is between; a second hit inside Magic Vulnerability Up is a death at any distance.
+    // whoever is between.
     private void ResolveCharge(int k)
     {
         if (state.Objects.Clones[k] is not { } clone) return;
         var target = chargeTargets[k] is { } t && t.IsAlive() ? t : ChargeTarget(k);
-        if (target != null) clone.Face(target.Position);
-        clone.Cast(Constants.ActionId.UltimaBlasterCharge, castSeconds: 0f, animationLock: Constants.AnimationLock.CloneCharge);
-        damage.Resolve(clone, Constants.ActionId.UltimaBlasterCharge, [DamageType.Magic],
-            [(UmadConstants.StatusId.MagicVulnerabilityUp, Constants.Damage.MagicVulnerabilityUpSeconds)],
-            lethalWithin: Constants.Damage.ChargeLethalRange);
+        if (target != null) clone.Cast(UmadActions.UltimaBlasterCharge, target);
     }
 }

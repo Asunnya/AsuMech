@@ -38,11 +38,16 @@ public static class EnemyActionEffects
     // Away from the caster, by a Knockback sheet row. Survivors only. `knockbackDelay` is from
     // resolve; null = TimingSpec.DamageDelay.
     public static IEnemyActionEffect Knockback(uint knockbackId, float? knockbackDelay = null)
-        => new KnockbackEffect(knockbackId, knockbackDelay);
+        => new KnockbackEffect((_, _) => KnockbackLookup.TryGet(knockbackId, out var distance, out var speed) ? (distance, speed) : null, knockbackDelay);
 
     // Away from the caster, for an action with no known Knockback row. Survivors only.
     public static IEnemyActionEffect Knockback(float distance, float speed, float? knockbackDelay = null)
-        => new KnockbackEffect(null, knockbackDelay, distance, speed);
+        => new KnockbackEffect((_, _) => (distance, speed), knockbackDelay);
+
+    // Away from the caster, as far as `distance` says for each target (read at resolve; null = not
+    // pushed). Survivors only.
+    public static IEnemyActionEffect Knockback(Func<EnemyActionContext, SimCharacter, float?> distance, float speed, float? knockbackDelay = null)
+        => new KnockbackEffect((ctx, target) => distance(ctx, target) is { } d ? (d, speed) : null, knockbackDelay);
 
     // Kills by facing alone: with `lookAway`, whoever has the origin in their front 90° arc; without,
     // whoever has it in their back 90° arc.
@@ -152,22 +157,15 @@ internal sealed class ApplyStatusOrOverloadEffect(ushort statusId, int maxStacks
     }
 }
 
-// Facing as CharacterFind.InsideCone reads it: forward = (sin, cos) of the character's rotation.
 internal sealed class GazeEffect(bool lookAway) : IEnemyActionEffect
 {
-    private const float CosHalfArc = 0.70710677f;
-
     public void Apply(EnemyActionContext ctx)
     {
         var from = ctx.Origin.Position;
         foreach (var target in ctx.Hits)
         {
-            var dx = from.X - target.Position.X;
-            var dz = from.Z - target.Position.Z;
-            var distance = MathF.Sqrt(dx * dx + dz * dz);
-            if (distance < 0.01f) continue;
-            var cos = (dx * MathF.Sin(target.Rotation) + dz * MathF.Cos(target.Rotation)) / distance;
-            if (lookAway ? cos >= CosHalfArc : cos <= -CosHalfArc)
+            var facing = target.Placement();
+            if (lookAway ? facing.IsLookingAt(from) : facing.IsLookingAwayFrom(from))
                 ctx.Kill(target, lookAway ? "looked at the gaze" : "faced away from the gaze");
         }
     }
@@ -183,16 +181,15 @@ internal sealed class FollowUpEffect(EnemyAction followUp, Func<EnemyActionConte
     }
 }
 
-internal sealed class KnockbackEffect(uint? knockbackId, float? knockbackDelay, float fixedDistance = 0f, float fixedSpeed = 0f) : IEnemyActionEffect
+internal sealed class KnockbackEffect(Func<EnemyActionContext, SimCharacter, (float Distance, float Speed)?> push, float? knockbackDelay) : IEnemyActionEffect
 {
     public void Apply(EnemyActionContext ctx)
     {
-        var (distance, speed) = (fixedDistance, fixedSpeed);
-        if (knockbackId is { } id && !KnockbackLookup.TryGet(id, out distance, out speed)) return;
         foreach (var target in ctx.Hits)
         {
             if (ctx.IsKilled(target) || !target.IsAlive() || target is not ISimPartyMember) continue;
-            ctx.Knockback(target, ctx.Caster.Position, distance, speed, knockbackDelay);
+            if (push(ctx, target) is { } p)
+                ctx.Knockback(target, ctx.Caster.Position, p.Distance, p.Speed, knockbackDelay);
         }
     }
 }

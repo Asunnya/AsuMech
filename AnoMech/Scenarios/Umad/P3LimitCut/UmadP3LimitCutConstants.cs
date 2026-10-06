@@ -36,9 +36,7 @@ public static class UmadP3LimitCutConstants
         public const float CloneCharge = 1.8f;
         public const float Cyclone = 1.1f;
         public const float ThunderCast = 3.1f;
-        public const float ThunderHit = 1.1f;
         public const float DecisiveBattle = 3.1f;
-        public const float AutoAttack = 0.1f;   // 18 of 22 autos in the window; the rest 0.29-3.17
         public const float Aetherlink = 3.1f;
         public const float RingOfFire = 0.6f;
     }
@@ -94,11 +92,6 @@ public static class UmadP3LimitCutConstants
         // within 2.3y of one another.
         public const float CycloneStackRadius = 4.3f;
         public const float BaitRadius = 17.7f;
-        // BossMod's ProximityAOEs(UmbraSmash, 20); the one real hit inside it was 312k at 17y.
-        public const float UmbraLethalRadius = 20f;
-        // Within 45 deg of the wind's direction is the 10y push (BossMod's cone; real players sat
-        // 2.5 deg off at the median).
-        public const float CorrectFacingCos = 0.7071f;
 
         // Spot index 0..7 -> heading (0 = S, 2 = E, 4 = N, 6 = W; FFXIV's atan2(dx, dz)).
         public static float SpotHeading(int spot) => spot * (MathF.PI / 4f);
@@ -108,26 +101,6 @@ public static class UmadP3LimitCutConstants
         private static readonly string[] SpotNames = ["S", "SE", "E", "NE", "N", "NW", "W", "SW"];
     }
 
-    // Shown hits are fractions of max HP (a non-tank's 216k in the logs, ~30% party mitigation baked in).
-    public static class Damage
-    {
-        public const float CloneAppear = 0.13f;
-        // A second cyclone lands on the first's Wind Resistance Down II; the tank LB3's 80% is enough to live through it.
-        public const float CycloneVulnMitigation = 0.80f;
-        public const float CycloneSoloTankMitigation = 0.80f;
-        // The charge falls off with distance from 20x max HP at the clone; an unmitigated
-        // non-tank dies inside ~35y.
-        public const float ChargeLethalRange = 35f;
-        // A second hit inside it landed at x9-10 in all seven real cases.
-        public const float MagicVulnerabilityUpSeconds = 2.96f;
-        // Black Hole's buster: two hits 3.0s apart on whoever is closest to Exdeath, 929k raw
-        // each against a 325k tank, the second unsurvivable short of an invuln while Lightning
-        // Resistance Down II is still up.
-        public const float ThunderIIIRequiredMitigation = 0.60f;
-        public const float LightningResistanceDownSeconds = 3.96f;
-        public const float WindResistanceDownSeconds = 0.96f;
-    }
-
     // The real track starts 116.67s before the Umbra Smash cast.
     public const float BgmSecondsAtStart = 108.67f;
 
@@ -135,15 +108,8 @@ public static class UmadP3LimitCutConstants
     public static class Timing
     {
         public const float UmbraCastAt = 8.0f;
-        public const float UmbraShownCast = 4.7f;
-        public const float UmbraResolveAfterCast = 4.99f;
         public const float ChaosLandsAfterCast = 6.55f;
         public const float VacuumCastAt = UmbraCastAt + 0.128f;
-        public const float VacuumShownCast = 7.7f;
-        public const float VacuumResolveAfterUmbra = 8.10f;
-        // The pushes land 0.80s after the wave fires, one player every 0.045s.
-        public const float VacuumApplyDelay = 0.80f;
-        public const float VacuumApplyStagger = 0.045f;
         public const float IconsAfterUmbra = 10.83f;
         public const float CyclonesAfterUmbra = 11.967f;
         public const float AetherlinkAfterUmbra = 13.379f;
@@ -157,12 +123,10 @@ public static class UmadP3LimitCutConstants
         public static readonly float[] ChargeAfterUmbra = [22.953f, 23.175f, 23.398f, 23.621f, 23.845f, 24.068f, 24.291f, 24.515f];
         // Cast 1.0s after the last charge, 4.7s bar, hits 5.08s and 8.11s after the cast start.
         public const float ThunderCastAfterUmbra = 25.49f;
-        public const float ThunderShownCast = 4.7f;
         public const float ThunderHit1AfterUmbra = 30.57f;
         public const float ThunderHit2AfterUmbra = 33.60f;
         // Both bosses, 2.7s bars, sides re-applied 2.99s after the cast start.
         public const float DecisiveBattleCastAfterUmbra = 35.50f;
-        public const float DecisiveBattleShownCast = 2.7f;
         public const float DecisiveBattleResolveAfterUmbra = 38.49f;
         // Kefka's reappearance beat; his "Max" cast, the next mechanic, follows 2.1s later.
         public const float KefkaReappearAfterUmbra = 42.581f;

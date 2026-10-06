@@ -115,29 +115,18 @@ public class DamageSolver
     private static float DistanceXZ(System.Numerics.Vector3 a, System.Numerics.Vector3 b)
         => MathF.Sqrt((a.X - b.X) * (a.X - b.X) + (a.Z - b.Z) * (a.Z - b.Z));
 
-    // Gaze resolver. Each member lives or dies by which way it faces the `target`.
-    // lookAway == true: safe play is to face away, so anyone "looking" (target inside
-    // the front 90° arc) dies. lookAway == false: safe play is to face the target, so
-    // anyone "not looking" (target inside the back 90° arc) dies. The target itself is
-    // always skipped. Facing uses each member's own rotation (forward = (sin, cos)),
-    // matching CharacterFind.InsideCone. Returns the members that were killed.
+    // Gaze resolver. lookAway == true: anyone looking at the `target` dies; false: anyone
+    // looking away from it. The target itself is always skipped. Returns the members that
+    // were killed.
     public IReadOnlyList<SimCharacter> ResolveGaze(IPositioned? target, uint actionId, bool lookAway)
     {
         if (target == null) return [];
-        const float cosHalf = 0.70710677f; // cos(45°) — front/back arcs are 90° wide
         var killed = new List<SimCharacter>();
         foreach (var member in party.ActiveMembers().ToList())
         {
             if (ReferenceEquals(member, target)) continue;
-            var dx = target.Position.X - member.Position.X;
-            var dz = target.Position.Z - member.Position.Z;
-            var distSq = dx * dx + dz * dz;
-            if (distSq < 0.0001f) continue; // on top of the target — facing undefined
-            var dist = MathF.Sqrt(distSq);
-            var cos = (dx * MathF.Sin(member.Rotation) + dz * MathF.Cos(member.Rotation)) / dist;
-            var looking = cos >= cosHalf;        // target within front 90° arc
-            var notLooking = cos <= -cosHalf;    // target within back 90° arc
-            if (lookAway ? looking : notLooking)
+            var facing = member.Placement();
+            if (lookAway ? facing.IsLookingAt(target.Position) : facing.IsLookingAwayFrom(target.Position))
             {
                 member.Die(actionId, lookAway ? "looked at the target" : "faced away from the target");
                 killed.Add(member);
