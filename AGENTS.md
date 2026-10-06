@@ -94,9 +94,10 @@ stricter: no comments, intent carried entirely by descriptive method names.
   for every strat, and never branch on which strat is selected. The one allowed exception is a
   simplification that depends on the strat, e.g. skipping something the selected strat makes
   irrelevant.
-- **Timeline.** Every `world.Events.Add` uses an absolute time literal from scenario start, kept in
-  ascending order. No offset arithmetic and no scheduling from inside handlers. State that flows
-  between events lives on the `*State` object.
+- **Timeline.** Prefer `world.Events.Add` with an absolute time literal from scenario start, kept in
+  ascending order, so the scenario reads as the fight's timeline. Avoid offset arithmetic and
+  scheduling from inside handlers by default; exceptions are fine where they make the scenario
+  simpler 
 - **Boss attacks** are `EnemyAction`s. Take cast times and AoE shapes from the Action sheet rather
   than hardcoding them. Use literal coordinates for spawns and moves unless a position really
   changes from run to run.

@@ -12,11 +12,11 @@ namespace AnoMech.Tests;
 // Cone with the stacks on MT and M1, Future Past Future Past, and each tower's new lockons dealt
 // in role order. MT RH M1 R soak towers 0 1 2 7, OT SH M2 C towers 3 to 6.
 //
-//   22.66  Tower 0 at (-5.7,-5.7) RH M1 and (5.7,-5.7) MT R; 23.17 RH's chariot at (-5.4,-8.5),
+//   22.66  Tower 0 at (-5.7,-5.7) RH M1 and (5.7,-5.7) MT R; 23.26 RH's chariot at (-5.4,-8.5),
 //          M1's stack at (-5.4,-2.4) with M2 C, MT's at (4.8,-4.8) with OT R, R's cone onto SH.
 //   32.31  Future's End on the closest, MT (-1.8,-5.0); 32.35 the clones on RH (5.0,1.8),
 //          OT (-1.0,5.9), M2 (-5.9,1.0).
-//   32.67  Tower 1 at (0,-8) MT R and (8,0) RH M1; 33.17 MT's cone onto C, RH's onto SH,
+//   32.67  Tower 1 at (0,-8) MT R and (8,0) RH M1; 33.27 MT's cone onto C, RH's onto SH,
 //          R's chariot at (2.1,-11.0), M1's at (11.0,-2.1).
 //   38.41  All Things Ending turns to the player, who baits Future's End at (-11,0) and Past's End
 //          at (9.7,0); each later End's bait turns another quarter clockwise. The cones land 5s on.
@@ -117,12 +117,13 @@ public class UmadP2ForsakenScenarioTests
             .TeleportAt(32f, to: new(-6.2f, -3.6f))
             .ShouldKill(ActionId.FutureSEnd_CloneResolve, ShieldHealer);
 
-    // MT takes Future's End, soaks tower 1, then steps into R's chariot.
+    // MT takes Future's End, soaks tower 1, then steps into R's chariot. MT's cone now has R
+    // closest, so R takes it on top of its own chariot.
     [Test]
     public void EndTargetWalkingIntoChariotDies()
         => Forsaken(MainTank)
             .TeleportAt(32.8f, to: new(1, -8))
-            .ShouldKill(ActionId.Spellscatter, MainTank);
+            .ShouldKill(ActionId.Spellscatter, MainTank, PhysRangedDps);
 
     [Test]
     public void TwoEndTargetsStackedKillEachOther()

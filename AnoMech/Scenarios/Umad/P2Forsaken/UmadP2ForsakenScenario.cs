@@ -160,7 +160,7 @@ public sealed class UmadP2ForsakenScenario : IMultiplayerReplayable
     private void RunKefkaEndAttack(SimEnemy? kefka_40004FD3, int index, float start)
     {
         var end = EndActions(state.EndAttacks[index]);
-        world.Events.Add(start, () => kefka_40004FD3?.Cast(end.CastBar));
+        world.Events.Add(start, () => kefka_40004FD3?.Cast(state.EndAttacks[index].CastBarAction, 0.2f));
         world.Events.Add(start + 6.7f, () =>
         {
             if (kefka_40004FD3 == null) return;

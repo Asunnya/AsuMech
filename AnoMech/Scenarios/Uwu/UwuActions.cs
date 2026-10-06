@@ -55,14 +55,6 @@ public static class UwuActions
         Timing = new() { DamageDelay = 1.16f },
     };
 
-    public static readonly EnemyAction UltimatePredation = Visual(ActionId.UltimatePredation, 4.5f);
-    public static readonly EnemyAction PostUltimatePredation1 = Visual(ActionId.PostUltimatePredation1, 2.1f);
-    public static readonly EnemyAction PostUltimatePredation2 = Visual(ActionId.PostUltimatePredation2, 2.1f);
-    public static readonly EnemyAction PostUltimatePredation3 = Visual(ActionId.PostUltimatePredation3, 2.1f);
-    public static readonly EnemyAction RadiantPlumeUltima = Visual(ActionId.RadiantPlumeUltima, 2.1f);
-    public static readonly EnemyAction LandslideUltima = Visual(ActionId.LandslideUltima, 2.1f);
-    public static readonly EnemyAction UltimateAnnihilation = Visual(ActionId.UltimateAnnihilation, 4.5f);
-
     public static readonly EnemyAction ViscousAetheroplasmUltima = new(ActionId.ViscousAetheroplasmUltima) 
     {
        Cast = new() { AnimationLock = 2.1f },
@@ -102,9 +94,6 @@ public static class UwuActions
         Timing = new() { DamageDelay = 2.6f },
     };
 
-    public static readonly EnemyAction UltimateSuppression = Visual(ActionId.UltimateSuppression, 4.5f);
-    // Visual only: the LightPillarCircle helpers deal the damage.
-    public static readonly EnemyAction LightPillarUltima = Visual(ActionId.LightPillarUltima, 2.1f);
     // TODO: real tank-purge damage
     public static readonly EnemyAction TankPurge = Raidwide(ActionId.TankPurge, 2.1f, 0.8f);
 
@@ -248,9 +237,6 @@ public static class UwuActions
         DeathExplanation = "Awaken",
     };
 
-    public static readonly EnemyAction EruptionIfrit = Visual(ActionId.EruptionIfrit, 2.4f);
-    public static readonly EnemyAction InfernalFetters = Visual(ActionId.InfernalFetters, 0.6f);
-
     public static readonly EnemyAction FlamingCrush = new(ActionId.FlamingCrush)
     {
         Cast = new() { AnimationLock = 2.1f },
@@ -262,10 +248,6 @@ public static class UwuActions
     };
 
     // -- Titan --
-    // Visual only: the LandslideLine helpers deal the knockback.
-    public static readonly EnemyAction LandslideTitan = Visual(ActionId.LandslideTitan, 4.1f);
-    public static readonly EnemyAction BoulderTitan = Visual(ActionId.BoulderTitan, 2.1f);
-    public static readonly EnemyAction RockThrow = Visual(ActionId.RockThrow, 2.1f);
     public static readonly EnemyAction Tumult = Raidwide(ActionId.Tumult, 1.1f, damage: 0.9f);
 
     public static readonly EnemyAction Bury = new(ActionId.Bury)
@@ -279,11 +261,6 @@ public static class UwuActions
         Cast = new() { AnimationLock = 2.1f },
         Effects = [Damage(Magic, Lethal)],
         Timing = new() { DamageDelay = 0.46f }, // TODO: verify with replay
-    };
-
-    private static EnemyAction Visual(uint actionId, float animationLock) => new(actionId)
-    {
-        Cast = new() { AnimationLock = animationLock },
     };
 
     // Survivable by everyone.

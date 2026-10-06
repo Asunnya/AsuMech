@@ -22,14 +22,6 @@ public static class UmadActions
     };
 
     // -- P1 Tele-trouncing --
-    public static readonly EnemyAction TeleTrouncing = Visual(P1.ActionId.TeleTrouncing, P1.AnimationLock.TeleTrouncing);
-    public static readonly EnemyAction GravenImage = Visual(P1.ActionId.GravenImage, P1.AnimationLock.GravenImage);
-    public static readonly EnemyAction Unk1BossP1 = Visual(P1.ActionId.Unk1BossP1, P1.AnimationLock.Unk1);
-    public static readonly EnemyAction Unk2BossP1 = Visual(P1.ActionId.Unk2BossP1, P1.AnimationLock.Unk2);
-    public static readonly EnemyAction TeleportP1 = Visual(P1.ActionId.TeleportP1, P1.AnimationLock.Teleport);
-    public static readonly EnemyAction MysteryMagic = Visual(P1.ActionId.MysteryMagic, P1.AnimationLock.MysteryMagic);
-
-    public static readonly EnemyAction TeleTrouncingArrowSpawn = Visual(P1.ActionId.TeleTrouncingArrowSpawn, P1.AnimationLock.Helper);
 
     // Cast on the holder, who counts toward the stack but is neither pushed nor given the vuln.
     public static readonly EnemyAction DoubleTroubleTrapStack = new(P1.ActionId.DoubleTroubleTrapStack)
@@ -63,7 +55,6 @@ public static class UmadActions
     // Truth: 2x Real1. Lie: Real2 (no telegraph) at the real slots, Fake at the other two.
     public static readonly EnemyAction ThrummingThunderReal1 = ThrummingThunder(P1.ActionId.ThrummingThunderReal1);
     public static readonly EnemyAction ThrummingThunderReal2 = ThrummingThunder(P1.ActionId.ThrummingThunderReal2);
-    public static readonly EnemyAction ThrummingThunderFake = Visual(P1.ActionId.ThrummingThunderFake, P1.AnimationLock.Helper);
 
     private static EnemyAction ThrummingThunder(uint actionId) => new(actionId)
     {
@@ -154,17 +145,15 @@ public static class UmadActions
         Timing = new() { DamageDelay = 0.62f },
     };
 
-    public sealed record EndActions(EnemyAction CastBar, EnemyAction KefkaHit, EnemyAction CloneHit, EnemyAction AllThingsEnding);
+    public sealed record EndActions(EnemyAction KefkaHit, EnemyAction CloneHit, EnemyAction AllThingsEnding);
 
     // Future's End cleaves the half facing the player as the cast starts, Past's End the other half.
     public static readonly EndActions FuturesEnd = new(
-        Visual(UmadConstants.ActionId.FutureSEnd, 0.2f),
         EndHit(UmadConstants.ActionId.FutureSEnd_Resolve),
         EndHit(UmadConstants.ActionId.FutureSEnd_CloneResolve),
         AllThingsEnding(UmadConstants.ActionId.AllThingsEnding_Future, 0f));
 
     public static readonly EndActions PastsEnd = new(
-        Visual(UmadConstants.ActionId.PastSEnd, 0.2f),
         EndHit(UmadConstants.ActionId.PastSEnd_Resolve),
         EndHit(UmadConstants.ActionId.PastSEnd_CloneResolve),
         AllThingsEnding(UmadConstants.ActionId.AllThingsEnding_Past, MathF.PI));
@@ -184,10 +173,5 @@ public static class UmadActions
         Area = new() { Size = UmadConstants.Geometry.AllThingsEndHalfCone, Rotation = rotation },
         Effects = [Damage(Magic, Lethal)],
         Timing = new() { ResolveSnapshotOffset = CastSpec.ReleaseLead },
-    };
-
-    private static EnemyAction Visual(uint actionId, float animationLock) => new(actionId)
-    {
-        Cast = new() { AnimationLock = animationLock },
     };
 }

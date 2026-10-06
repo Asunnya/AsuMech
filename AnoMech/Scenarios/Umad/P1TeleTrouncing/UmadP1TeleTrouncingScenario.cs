@@ -290,7 +290,7 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         world.Events.Add(StatueCollapseAt, () => Beat(gravenStatue, EObjAnimStatueCollapse));
 
         // [1.59s] Tele-trouncing cast start; resolves at 6.58s.
-        world.Events.Add(1.59f, () => kefka?.Cast(UmadActions.TeleTrouncing));
+        world.Events.Add(1.59f, () => kefka?.Cast(Constants.ActionId.TeleTrouncing, Constants.AnimationLock.TeleTrouncing));
 
         // Auto-attacks on the main tank at their real beats: none through the Confused window
         // and Mystery Magic.
@@ -309,14 +309,14 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         world.Events.Add(18.32f, SpawnArrowObjects);
 
         // [15.67s] Graven Image (2.7s bar, resolves 18.66s); the tethers appear as it lands.
-        world.Events.Add(15.67f, () => kefka?.Cast(UmadActions.GravenImage));
+        world.Events.Add(15.67f, () => kefka?.Cast(Constants.ActionId.GravenImage, Constants.AnimationLock.GravenImage));
 
         // [19.41s] Tethers land, one role category to each statue.
         world.Events.Add(19.41f, TetherStatues);
 
         // [20.80s] Unnamed 2.7s cast: its resolve sets Kefka's model state to 4 until Unk2BossP1
         // resolves.
-        world.Events.Add(20.80f, () => kefka?.Cast(UmadActions.Unk1BossP1));
+        world.Events.Add(20.80f, () => kefka?.Cast(Constants.ActionId.Unk1BossP1, Constants.AnimationLock.Unk1));
         world.Events.Add(23.78f, () => kefka?.SetModelState(Constants.KefkaModelState.Unk1));
 
         // [22.78s] Confetti-3's stack hit, the one beat that drifts pull to pull (timed off the
@@ -340,10 +340,10 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         // teleport action; he stays at centre, only the animation plays.
         world.Events.Add(32.78f, () =>
         {
-            kefka?.Cast(UmadActions.Unk2BossP1);
+            kefka?.Cast(Constants.ActionId.Unk2BossP1, Constants.AnimationLock.Unk2);
             kefka?.SetModelState(Constants.KefkaModelState.Normal);
         });
-        world.Events.Add(34.87f, () => kefka?.Cast(UmadActions.TeleportP1));
+        world.Events.Add(34.87f, () => kefka?.Cast(Constants.ActionId.TeleportP1, Constants.AnimationLock.Teleport));
 
         // Every arrow is a steer-around obstacle from its spawn (SpawnArrowObjects) so the Ai's
         // Confetti/Tether moves path around them; cleared as Confused starts, since the chase's
@@ -351,7 +351,7 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         world.Events.Add(ConfusedChaseStart, () => world.Obstacles.Clear());
 
         // [36.41s] Mystery Magic (4.7s bar), resolves 41.40s with the thunder lines.
-        world.Events.Add(36.41f, () => kefka?.Cast(UmadActions.MysteryMagic));
+        world.Events.Add(36.41f, () => kefka?.Cast(Constants.ActionId.MysteryMagic, Constants.AnimationLock.MysteryMagic));
 
         // Mystery Magic's three resolves land in a ~1s window (thunder 41.40s, gaze 41.49s, fire
         // 42.19s); the boss goes untargetable ~10s later.
@@ -907,7 +907,7 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
             if (Helper(helperIndex++) is { } caster)
             {
                 caster.SetPosition(placement);
-                caster.Cast(UmadActions.TeleTrouncingArrowSpawn, member);
+                caster.Cast(Constants.ActionId.TeleTrouncingArrowSpawn, Constants.AnimationLock.Helper, member);
             }
         }
     }
@@ -1205,7 +1205,8 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
             if (Helper(i) is not { } helper) continue;
             helper.SetPosition(placement);
             lines++;
-            helper.Cast(real ? realLine : UmadActions.ThrummingThunderFake);
+            if (real) helper.Cast(realLine);
+            else helper.Cast(Constants.ActionId.ThrummingThunderFake, Constants.AnimationLock.Helper);
         }
         DiagnosticLog.Info(
             $"[UmadP1TeleTrouncing] Thunder lines: offset={state.ThunderRealOffset} orient={state.ThunderOrientation:F0} lie={state.ThunderIsLie} "

@@ -283,7 +283,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
 
     private void Ultima()
     {
-        world.Events.Add(2.50f, () => ultima?.Cast(Actions.UltimateSuppression));
+        world.Events.Add(2.50f, () => ultima?.Cast(ActionId.UltimateSuppression, 4.5f));
 
         world.Events.Add(10.13f, () =>
         {
@@ -299,7 +299,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
 
         world.Events.Add(12.37f, () => ultima?.PlayActionTimeline(ActionTimelineId.WarpEnd));
 
-        world.Events.Add(20.55f, () => ultima?.Cast(Actions.LightPillarUltima));
+        world.Events.Add(20.55f, () => ultima?.Cast(ActionId.LightPillarUltima, 2.1f));
 
         AetherochemicalLaser(0, 24.70f);
 
@@ -499,7 +499,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
             ifrit?.PlayActionTimeline(ActionTimelineId.WarpEnd);
         });
 
-        world.Events.Add(14.50f, () => ifrit?.Cast(Actions.EruptionIfrit));
+        world.Events.Add(14.50f, () => ifrit?.Cast(ActionId.EruptionIfrit, 2.4f));
 
         utils.EruptionPuddle(() => dummies[10], () => state.PlayerEruptions[0], 14.50f);
         utils.EruptionPuddle(() => dummies[11], () => state.PlayerEruptions[1], 14.50f);
@@ -543,7 +543,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
             titan?.PlayActionTimeline(ActionTimelineId.WarpEnd);
         });
 
-        world.Events.Add(16.50f, () => titan?.Cast(Actions.RockThrow, state.PlayerGaol));
+        world.Events.Add(16.50f, () => titan?.Cast(ActionId.RockThrow, 2.1f, state.PlayerGaol));
 
         world.Events.Add(18.65f, () => titan?.PlayActionTimeline(ActionTimelineId.WarpStart));
 
@@ -616,7 +616,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
         {
             var bait = state.LandslideBait is { } role ? party.Get(role) : party.GetRandom(world.Rng);
             titan?.Face(bait);
-            titan?.Cast(Actions.LandslideTitan);
+            titan?.Cast(ActionId.LandslideTitan, 4.1f);
         });
 
         utils.LandslideLines(() => titan, [() => dummies[8], () => dummies[9], () => dummies[10], () => dummies[11], () => dummies[12]], 32.84f, LandslideType.Normal);

@@ -645,6 +645,10 @@ public sealed class SimEnemy : SimNpc
     // Scenario-local ground target, fixed at the call.
     public EnemyActionCast Cast(EnemyAction action, Vector3 location, byte animationVariation = 0) => actions.Start(action, null, location, animationVariation);
 
+    // An action with no mechanics of its own: just its bar and animation.
+    public EnemyActionCast Cast(uint actionId, float animationLock, SimCharacter? target = null, byte animationVariation = 0) =>
+        actions.Start(new EnemyAction(actionId) { Cast = new() { AnimationLock = animationLock } }, target, null, animationVariation);
+
     public void NativeCast(uint actionId, ActionType actionType, float omenDelay, float castTime, bool interruptible, float? rotation = null, Vector3? position = null, GameObjectId? targetId = null, GameObjectId? ballistaId = null)
     {
         cast.NativeCast(actionId, actionType, omenDelay, castTime, interruptible, rotation, position, targetId, ballistaId);
