@@ -1,3 +1,4 @@
+using AnoMech.Core.Game.Party;
 using AnoMech.Core.SimObjects;
 
 namespace AnoMech.Scenarios.Umad.P1TeleTrouncing;
@@ -17,6 +18,16 @@ public sealed class UmadP1TeleTrouncingStateOverrides
     public CarryMode ArrowCarry { get; set; } = CarryMode.Native;
     // true = DPS gets the "different" arrow pairs; false = supports do.
     public bool? DpsGetsDifferent { get; set; }
+    public bool? DpsGetsConfused { get; set; }
+    // The matching category's directions, in PartyRole order.
+    public TelePortentDirection[]? MatchingDirections { get; set; }
+    // The different category's roles in cycle order: Up+Right, Right+Down, Down+Left, Left+Up.
+    public PartyRole[]? DifferentCycleRoles { get; set; }
+    // Per DifferentCycleRoles slot: true = its second direction expires at 7s.
+    public bool[]? DifferentPolarity { get; set; }
+
+    public PartyRole? ConfettiStackSupport { get; set; }
+    public PartyRole? ConfettiStackDps { get; set; }
 
     // true = AveMaria (look toward the NW statue); false = IndolentWill (look away from the NE one).
     public bool? GazeInverted { get; set; }
@@ -25,6 +36,8 @@ public sealed class UmadP1TeleTrouncingStateOverrides
     public bool? FireIsStack { get; set; }
     // Lie: the shown stack/spread icon is the opposite of the real outcome.
     public bool? FireIsLie { get; set; }
+    public PartyRole? FireStackSupport { get; set; }
+    public PartyRole? FireStackDps { get; set; }
 
     // Lie: 2 fake line telegraphs also appear (4 total).
     public bool? ThunderIsLie { get; set; }

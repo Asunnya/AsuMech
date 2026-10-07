@@ -2,10 +2,10 @@ using AnoMech.Core.Native.Interfaces;
 
 namespace AnoMech.Tests;
 
-// The module off, as when the user hasn't enabled it.
+// Off by default, as when the user hasn't enabled the module.
 internal sealed class FakeUserActions : IUserActions
 {
-    public bool Enabled => false;
+    public bool Enabled { get; set; }
     public void OnSessionStart() { }
     public void OnScenarioStart() { }
     public void OnSessionEnd() { }

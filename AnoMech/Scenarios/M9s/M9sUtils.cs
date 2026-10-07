@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.SimObjects;
+using AnoMech.Scenarios.Legacy;
 using static AnoMech.Scenarios.M9s.M9sConstants;
 
 namespace AnoMech.Scenarios.M9s;
@@ -67,7 +68,7 @@ public sealed class M9sHardcore(SimParty party, DamageSolver damage, M9sSatisfie
             if (party.Get(role) is not { } target || !target.IsAlive()) continue;
             targets.Add(target);
             target.AttachLockonVfx(LockonId.Tankbuster, persistent: false);
-            spawnHelper(from)?.Cast(actionId, castSeconds: 4.7f, targetId: target.GameObjectId);
+            spawnHelper(from)?.LegacyCast(actionId, castSeconds: 4.7f, target: target);
         }
     }
 

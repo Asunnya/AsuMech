@@ -6,6 +6,7 @@ using AnoMech.Core.Game;
 using AnoMech.Core.Game.Ai;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.SimObjects;
+using AnoMech.Scenarios.Legacy;
 
 namespace AnoMech.Scenarios.Dsr.P1Knights;
 
@@ -47,7 +48,7 @@ public sealed class DsrP1KnightsAi : IScenarioAi<DsrP1KnightsState>
         ai.Move(48.6f, () => AiMove.Create(TanksNorthPartySouth()).NaturalOrder());
         ai.Move(50.9f, () => AiMove.Create(GroupOppositeAdelphel()).NaturalOrder());
         ai.Move(59.2f, () => AiMove.Create(GroupInSafeQuadrantMainTankPastThem()).NaturalOrder());
-        ai.UseInvuln(63.8f, PartyRole.MainTank);
+        world.Events.Add(63.8f, InvulnTheMainTankForExecution);
         ai.Move(66.0f, () => AiMove.Create(TanksNorthPartySouth()).NaturalOrder());
 
         ai.Move(77.2f, () => AiMove.Create(ChainStartsAroundGrinnaux()).NaturalOrder(), jitter: 0f);
@@ -66,6 +67,12 @@ public sealed class DsrP1KnightsAi : IScenarioAi<DsrP1KnightsState>
             ai.Move(bait + 5.7f, () => AiMove.Create(PairReturnsBehindCharibert(roles)).NaturalOrder(), jitter: 0.1f);
         }
         ai.Move(149.0f, () => AiMove.Create(MainTankNorthForThordan()).NaturalOrder());
+    }
+
+    private void InvulnTheMainTankForExecution()
+    {
+        if (world.Party.Get(PartyRole.MainTank) is { } tank && tank.IsAlive() && world.Party.IsBotDriven(tank))
+            DamageSolver.GiveBotInvuln(tank, 10f);
     }
 
     private void OffTankWalksThroughShieldBashTether()

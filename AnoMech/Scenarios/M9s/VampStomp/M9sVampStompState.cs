@@ -1,4 +1,5 @@
 using AnoMech.Core.Game.Party;
+using AnoMech.Scenarios.Legacy;
 
 namespace AnoMech.Scenarios.M9s.VampStomp;
 

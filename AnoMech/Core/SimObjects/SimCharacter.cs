@@ -44,11 +44,12 @@ public abstract class SimCharacter(Coordinates coordinates) : ISimObject, IPosit
         if (Proxy is { Exists: true } native)
         {
             position = Coordinates.ToLocal(native.Position);
-            Rotation = native.Rotation;
+            if (turnTarget is null) Rotation = native.Rotation;
         }
         statusList.Update(deltaSeconds);
         vfx.Update(deltaSeconds);
         Movement.Tick(deltaSeconds);
+        TickTurn(deltaSeconds);
         TickCarry(deltaSeconds);
     }
 
@@ -112,8 +113,41 @@ public abstract class SimCharacter(Coordinates coordinates) : ISimObject, IPosit
     public void SetRotation(float rotation)
     {
         if (Proxy is not { Exists: true } obj) return;
+        turnTarget = null;
         obj.SetRotation(MathUtil.NormalizeRotation(rotation));
         Rotation = rotation; // early update, will be updated on next tick anyway
+    }
+
+    // Radians per second the model turns at under TurnTo; null turns instantly.
+    protected virtual float? TurnSpeed => null;
+
+    private float? turnTarget;
+
+    // Rotation (what mechanics read) takes the new facing at once; only the model turns
+    // gradually, so a scenario that faces and fires in the same tick still aims where it faced.
+    public void TurnTo(float rotation)
+    {
+        if (TurnSpeed is null)
+        {
+            SetRotation(rotation);
+            return;
+        }
+        if (Proxy is not { Exists: true }) return;
+        Rotation = rotation;
+        turnTarget = MathUtil.NormalizeRotation(rotation);
+    }
+
+    private void TickTurn(float deltaSeconds)
+    {
+        if (turnTarget is not { } target || TurnSpeed is not { } speed) return;
+        if (Proxy is not { Exists: true } obj)
+        {
+            turnTarget = null;
+            return;
+        }
+        var next = MathUtil.StepRotation(obj.Rotation, target, speed * deltaSeconds);
+        obj.SetRotation(next);
+        if (next == target) turnTarget = null;
     }
 
     public void SetPosition(Placement placement)
@@ -317,6 +351,21 @@ public abstract class SimCharacter(Coordinates coordinates) : ISimObject, IPosit
 
     public IReadOnlyList<SimStatus> ActiveStatuses => statusList.Where(s => s.IsActive).ToList();
 
+    // The client enforces the Status sheet's Lock* flags from the server's statuses; sim statuses
+    // never reach that path, so the sheet is read here.
+    public bool MovementLocked => AnyActiveStatusRow(row => row.LockMovement || row.LockControl);
+    public bool ActionsLocked => AnyActiveStatusRow(row => row.LockActions || row.LockControl);
+
+    private bool AnyActiveStatusRow(Func<StatusRow, bool> predicate)
+    {
+        foreach (var status in statusList)
+        {
+            if (status.IsActive && Natives.Data.Status(status.StatusId) is { } row && predicate(row))
+                return true;
+        }
+        return false;
+    }
+
 
     // -------------------------
     // Other Subsystem
@@ -351,6 +400,8 @@ public abstract class SimCharacter(Coordinates coordinates) : ISimObject, IPosit
     }
 
     internal void ResetActionTimelineNative() => Proxy?.ResetActionTimeline();
+
+    public virtual void SetTargetable(bool targetable) => Proxy?.SetTargetable(targetable);
 
     // The server's ActorControl packet for this character, through the client's own dispatcher.
     public void ActorControl(uint category, uint arg1 = 0, uint arg2 = 0, uint arg3 = 0, uint arg4 = 0, uint arg5 = 0, uint arg6 = 0, uint arg7 = 0, uint arg8 = 0)

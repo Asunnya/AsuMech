@@ -35,8 +35,8 @@ public sealed class TopP5OmegaState
     public TopP5OmegaState(Rng rng, SimParty party, TopP5OmegaStateOverrides overrides)
     {
         this.rng = rng;
-        var firstAttackDirection = rng.NextIntercardinal();
-        var secondAttackDirection = firstAttackDirection.Rotate(rng.NextSign() * 2);
+        var firstAttackDirection = overrides.FirstAttackDirection ?? rng.NextIntercardinal();
+        var secondAttackDirection = overrides.SecondAttackDirection ?? firstAttackDirection.Rotate(rng.NextSign() * 2);
         AttackDirections = [firstAttackDirection, firstAttackDirection.Flip(), secondAttackDirection, secondAttackDirection.Flip()];
         var (helloSlots, helloMembership) = overrides.ResolveHelloWorld(party.PlayerRole);
         HelloWorldTargets = new RoleListBuilder
@@ -50,7 +50,7 @@ public sealed class TopP5OmegaState
             Size = 4,
             Membership = overrides.ResolveExtraDynamis(party.PlayerRole),
         }.Build(rng, party);
-        MonitorTargets = new RoleList(party, ResolveMonitorTargets());
+        MonitorTargets = new RoleList(party, overrides.MonitorTargets ?? ResolveMonitorTargets());
         BettleSpawnDirection = overrides.BettleSpawnDirection ?? rng.NextCardinal();
         MonitorSide = overrides.MonitorSide ?? rng.NextObj(MonitorSide.Left, MonitorSide.Right);
         FirstWaveCannonFront = overrides.FirstWaveCannonFront ?? rng.NextBool();
@@ -67,9 +67,14 @@ public sealed class TopP5OmegaState
             if (overrides is { SecondFAttack: not null, SecondMAttack: not null }) break;
         }
         OmegaAttacks = [firstFAttack, firstMAttack, secondFAttack, secondMAttack];
-        HelloWorld1JumpOrder = new RoleList(party, Enum.GetValues<PartyRole>())
-            .Random(rng, 4, MonitorTargets[0], MonitorTargets[1], HelloWorldTargets[0], HelloWorldTargets[1]);
-        BlasterTetherTargets = RoleList.Random(rng, party, 2);
+        HelloWorld1JumpOrder = overrides.HelloWorld1JumpOrder is { } pinnedJumpOrder
+            ? new RoleList(party, pinnedJumpOrder)
+            : new RoleList(party, Enum.GetValues<PartyRole>())
+                .Random(rng, 4, MonitorTargets[0], MonitorTargets[1], HelloWorldTargets[0], HelloWorldTargets[1]);
+        BlasterTetherTargets = overrides.BlasterTethers is { } pinnedBlasterTethers
+            ? new RoleList(party, pinnedBlasterTethers)
+            : RoleList.Random(rng, party, 2);
+        HelloWorld2 = overrides.HelloWorld2?.ToArray();
     }
 
     private OmegaAttack RandomFAttack() => rng.NextObj(OmegaAttack.Legs, OmegaAttack.Staff);

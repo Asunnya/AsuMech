@@ -60,44 +60,44 @@ public sealed class UmadP4KefkaSaysSettingsWindow
 #if DEBUG
     private void DrawFirstBlizzard()
     {
-        var v = Overrides.FirstBlizzardReal;
+        var v = Overrides.BlizzardReal[0];
         SettingsGrid.Row("1st Blizzard:");
-        if (ImGui.RadioButton("Auto##firstblizz", v == null))  Overrides.FirstBlizzardReal = null;
+        if (ImGui.RadioButton("Auto##firstblizz", v == null))  Overrides.BlizzardReal[0] = null;
         ImGui.SameLine();
-        if (ImGui.RadioButton("Real##firstblizz", v == true))  Overrides.FirstBlizzardReal = true;
+        if (ImGui.RadioButton("Real##firstblizz", v == true))  Overrides.BlizzardReal[0] = true;
         ImGui.SameLine();
-        if (ImGui.RadioButton("Fake##firstblizz", v == false)) Overrides.FirstBlizzardReal = false;
+        if (ImGui.RadioButton("Fake##firstblizz", v == false)) Overrides.BlizzardReal[0] = false;
     }
 
     private void DrawFirstLightning()
     {
-        var v = Overrides.FirstLightningReal;
+        var v = Overrides.LightningReal[0];
         SettingsGrid.Row("1st Lightning:");
-        if (ImGui.RadioButton("Auto##firstlight", v == null))  Overrides.FirstLightningReal = null;
+        if (ImGui.RadioButton("Auto##firstlight", v == null))  Overrides.LightningReal[0] = null;
         ImGui.SameLine();
-        if (ImGui.RadioButton("Real##firstlight", v == true))  Overrides.FirstLightningReal = true;
+        if (ImGui.RadioButton("Real##firstlight", v == true))  Overrides.LightningReal[0] = true;
         ImGui.SameLine();
-        if (ImGui.RadioButton("Fake##firstlight", v == false)) Overrides.FirstLightningReal = false;
+        if (ImGui.RadioButton("Fake##firstlight", v == false)) Overrides.LightningReal[0] = false;
     }
 
     private void DrawFirstBlizzardOffset()
     {
-        var v = Overrides.FirstBlizzardOffset;
+        var v = Overrides.BlizzardOffset[0];
         SettingsGrid.Row("1st Blizz Offset:");
-        if (ImGui.RadioButton("Auto##firstoffset", v == null)) Overrides.FirstBlizzardOffset = null;
+        if (ImGui.RadioButton("Auto##firstoffset", v == null)) Overrides.BlizzardOffset[0] = null;
         ImGui.SameLine();
-        if (ImGui.RadioButton("0##firstoffset", v == 0))       Overrides.FirstBlizzardOffset = 0;
+        if (ImGui.RadioButton("0##firstoffset", v == 0))       Overrides.BlizzardOffset[0] = 0;
         ImGui.SameLine();
-        if (ImGui.RadioButton("1##firstoffset", v == 1))       Overrides.FirstBlizzardOffset = 1;
+        if (ImGui.RadioButton("1##firstoffset", v == 1))       Overrides.BlizzardOffset[0] = 1;
     }
 #endif
 
     private void ResetAll()
     {
 #if DEBUG
-        Overrides.FirstBlizzardReal = null;
-        Overrides.FirstLightningReal = null;
-        Overrides.FirstBlizzardOffset = null;
+        Overrides.BlizzardReal[0] = null;
+        Overrides.LightningReal[0] = null;
+        Overrides.BlizzardOffset[0] = null;
 #endif
         Overrides.ExdeathCast1Real = null;
         Overrides.ExdeathCast2 = ExdeathCast2Mode.Auto;

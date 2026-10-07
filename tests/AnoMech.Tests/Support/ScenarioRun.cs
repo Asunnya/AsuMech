@@ -1,12 +1,14 @@
 using System.Numerics;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Party;
+using AnoMech.Core.Native.Interfaces;
 using AnoMech.Core.SimObjects;
 using AnoMech.Scenarios;
 
 namespace AnoMech.Tests;
 
-internal sealed record Death(PartyRole Role, string Cause, float Time, string Snapshot);
+// ActionId is null for a death through the obsolete Die(string).
+internal sealed record Death(PartyRole Role, string Cause, uint? ActionId, float Time, string Snapshot);
 
 internal sealed record ScenarioRunOptions
 {
@@ -29,12 +31,18 @@ internal sealed record ScenarioRunOptions
     // settings go in their seats, not in Mine.
     public Action<object>? Overrides { get; init; }
 
-    public PlayerTakeover? Takeover { get; init; }
+    // In time order.
+    public IReadOnlyList<Takeover> Takeovers { get; init; } = [];
+
+    // Hits check a human player's mitigation only with the UserActions module on.
+    public bool UserActionsEnabled { get; init; }
 }
 
-// From `At` on the player stops following the AI, as a human who froze there would; knockbacks and
-// forced moves still apply. `TeleportTo` (scenario-local XZ) is where they are put at that moment.
-internal sealed record PlayerTakeover(float At, Vector2? TeleportTo);
+// From the first player takeover on, the player stops following the AI, as a human who froze there
+// would; knockbacks and forced moves still apply. A bot (`Bot` set) is only put somewhere: its AI
+// moves it on at its next step. `TeleportTo` is scenario-local XZ; `Facing` uses Placement's
+// convention (0 = +Z).
+internal sealed record Takeover(float At, Vector2? TeleportTo, float? Facing = null, PartyRole? Bot = null);
 
 // One headless scenario run: every seat (the player's included) on the strat's AI, on a fresh
 // fake game, ticked at a fixed rate until it ends.
@@ -52,14 +60,16 @@ internal sealed record ScenarioRun(
     {
         options ??= new ScenarioRunOptions();
         var fake = FakeGame.Install();
+        fake.UserActions.Enabled = options.UserActionsEnabled;
         Game? game = null;
         var log = TraceLog.Create(() => game?.World.Events.Elapsed ?? 0f);
         var role = options.PlayerRole ?? (PartyRole)new Rng(seed).Fork("player-seat").Next(8);
-        // A real player's job always fits their seat; job-keyed actions (tank invulns) read it.
+        // A real player's job always fits their seat; job-keyed actions read it.
         fake.BattleCharas.Player.ClassJob = PartyPresets.Standard[(int)role].ClassJob;
         var deaths = new List<Death>();
         var aoeChecks = new List<AoeCheck>();
         var elapsed = 0f;
+        var nextTakeover = 0;
         string? failure = null;
         IScenario? scenario = null;
 
@@ -90,10 +100,10 @@ internal sealed record ScenarioRun(
         try
         {
             scenario = game.Scenarios.Single(s => s.GetType() == scenarioType);
-            game.PartyMemberKilled += (r, cause) =>
+            game.PartyMemberKilled += (r, cause, actionId) =>
             {
                 var snapshot = WorldSnapshot.Describe(game.World, RecentAoeChecks(), game.World.Party.Get(r), includeHidden: true);
-                deaths.Add(new Death(r, cause, game.World.Events.Elapsed, snapshot));
+                deaths.Add(new Death(r, cause, actionId, game.World.Events.Elapsed, snapshot));
             };
             if (options.Overrides is { } setOverrides)
                 setOverrides(scenario.SettingsOverrides
@@ -112,8 +122,8 @@ internal sealed record ScenarioRun(
                 }
                 if (options.StopAt is { } stopAt && game.World.Events.Elapsed >= stopAt)
                     break;
-                if (options.Takeover is { } takeover && DebugBotControl.Enabled && game.World.Events.Elapsed >= takeover.At)
-                    TakeOverPlayer(game.World, takeover, log);
+                while (nextTakeover < options.Takeovers.Count && game.World.Events.Elapsed >= options.Takeovers[nextTakeover].At)
+                    TakeOver(game.World, options.Takeovers[nextTakeover++], log);
                 fake.Frame(FrameSeconds, game.Tick);
                 elapsed += FrameSeconds;
                 if (options.Probe is { } probeAction)
@@ -149,14 +159,19 @@ internal sealed record ScenarioRun(
         return new ScenarioRun(scenarioType, strat, seed, role, endTime, deaths, failure, log.Warnings, artifacts);
     }
 
-    private static void TakeOverPlayer(SimWorld world, PlayerTakeover takeover, TraceLog log)
+    private static void TakeOver(SimWorld world, Takeover takeover, TraceLog log)
     {
-        DebugBotControl.Enabled = false;
-        if (world.Party.Player is not { } player) return;
-        player.StopMoving();
+        if (takeover.Bot is null) DebugBotControl.Enabled = false;
+        var role = takeover.Bot ?? world.Party.PlayerRole;
+        if (world.Party.Get(role) is not { } member) return;
+        member.StopMoving();
         if (takeover.TeleportTo is { } to)
-            player.SetPosition(new Vector3(to.X, 0f, to.Y));
-        log.Add("TEST", $"player {world.Party.PlayerRole} taken over{(takeover.TeleportTo is { } p ? $", teleported to ({p.X:F1},{p.Y:F1})" : "")}");
+            member.SetPosition(new Vector3(to.X, 0f, to.Y));
+        if (takeover.Facing is { } facing)
+            member.SetRotation(facing);
+        log.Add("TEST", $"{(takeover.Bot is null ? "player" : "bot")} {role} taken over"
+                        + (takeover.TeleportTo is { } p ? $", teleported to ({p.X:F1},{p.Y:F1})" : "")
+                        + (takeover.Facing is { } f ? $", facing {f:F2}" : ""));
     }
 
     public string ReplayTestCase => $"[TestCase(typeof(global::{ScenarioType.FullName}), {Strat}, {Seed})]";
@@ -193,6 +208,9 @@ internal sealed class ScenarioProbe(Game game, TraceLog log, Func<IEnumerable<Ao
 
     // True on the one frame the scenario clock passes `time`.
     public bool Crossed(float time) => previousTime < time && Time >= time;
+
+    // The player keeps walking from now on, as far as stillness mechanics can tell.
+    public void HoldMovementInput() => ((FakeLocalPlayerInput)Natives.PlayerInput).MovementInputActive = true;
 
     public void Log(string message) => log.Add("PROBE", message);
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Numerics;
 using AnoMech.Core.Game;
 using AnoMech.Core.SimObjects;
+using AnoMech.Scenarios.Legacy;
 using static AnoMech.Scenarios.M9s.M9sConstants;
 
 namespace AnoMech.Scenarios.M9s;
@@ -117,12 +118,12 @@ public sealed class M9sBatStomp(SimWorld world, DamageSolver damage, M9sSatisfie
     public void CastVampStomp()
     {
         stompHelper = spawnHelper(Vector3.Zero);
-        stompHelper?.Cast(ActionId.VampStomp, castSeconds: 4.7f);
+        stompHelper?.LegacyCast(ActionId.VampStomp, castSeconds: 4.7f);
     }
 
     public void ResolveVampStomp() => satisfied.AddFor(damage.Resolve(stompHelper, ActionId.VampStomp, [DamageType.Lethal], []));
 
-    public void CastBatRing() => stompHelper?.Cast(ActionId.BatRing, castSeconds: 0f, animationLock: 0f);
+    public void CastBatRing() => stompHelper?.LegacyCast(ActionId.BatRing, castSeconds: 0f, animationLock: 0f);
 
     public void SpawnBats()
     {
@@ -160,7 +161,7 @@ public sealed class M9sBatStomp(SimWorld world, DamageSolver damage, M9sSatisfie
     public void CastBlastBeat(int ringIndex)
     {
         foreach (var (bat, ring, _) in bats)
-            if (ring == pattern.Rings[ringIndex]) bat.Cast(ActionId.BlastBeatBat, castSeconds: 0.7f);
+            if (ring == pattern.Rings[ringIndex]) bat.LegacyCast(ActionId.BlastBeatBat, castSeconds: 0.7f);
     }
 
     public void ResolveBlastBeat(int ringIndex)
@@ -203,7 +204,7 @@ public sealed class M9sBatStomp(SimWorld world, DamageSolver damage, M9sSatisfie
             if (new Vector2(member.Position.X, member.Position.Z).Length() > radius) continue;
 
             member.RemoveStatus(StatusId.CurseOfTheBombpyre);
-            spawnHelper(Vector3.Zero)?.Cast(ActionId.BlastBeatSpread, castSeconds: 0f, targetId: member.GameObjectId, animationLock: 0f);
+            spawnHelper(Vector3.Zero)?.LegacyCast(ActionId.BlastBeatSpread, castSeconds: 0f, target: member, animationLock: 0f);
             var hit = damage.Resolve(member, ActionId.BlastBeatSpread, [DamageType.Magic],
                 [(StatusId.MagicVulnerabilityUp, 1.96f)]);
             satisfied.AddFor(hit, except: member);

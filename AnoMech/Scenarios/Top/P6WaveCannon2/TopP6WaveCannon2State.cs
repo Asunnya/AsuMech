@@ -18,8 +18,10 @@ public sealed class TopP6WaveCannon2State
     public TopP6WaveCannon2State(Rng rng, SimParty party, TopP6WaveCannon2StateOverrides overrides)
     {
         this.rng = rng;
-        ProteanOrder = RoleList.Random(rng, party);
-        WildChargeTarget = rng.NextRole();
+        ProteanOrder = overrides.ProteanOrder is { } pinnedProteanOrder
+            ? new RoleList(party, pinnedProteanOrder)
+            : RoleList.Random(rng, party);
+        WildChargeTarget = overrides.WildChargeTarget ?? rng.NextRole();
         InFirst = overrides.InFirst ?? rng.NextBool();
     }
 

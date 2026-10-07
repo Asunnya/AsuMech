@@ -9,6 +9,7 @@ using AnoMech.Core.Game.Party;
 using AnoMech.Core.SimObjects;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
+using AnoMech.Scenarios.Legacy;
 using static AnoMech.Scenarios.Dsr.DsrConstants;
 
 namespace AnoMech.Scenarios.Dsr.P2Thordan;
@@ -537,7 +538,7 @@ public sealed class DsrP2ThordanScenario : IScenario
         PlayEffect(heavyImpactCaster, HeavyImpactWaves[wave], 1.1f, at: centre);
         var inner = wave * HeavyImpactRingWidth;
         foreach (var hit in party.Find.InsideRing(centre, inner, inner + HeavyImpactRingWidth).ToList())
-            hit.Die("Died to Heavy Impact (stood in the expanding ring)");
+            hit.Die(ActionId.HeavyImpact, "stood in the expanding ring");
     }
 
     // Everyone is hit; anyone also caught in another player's circle takes a second, lethal hit.
@@ -550,7 +551,7 @@ public sealed class DsrP2ThordanScenario : IScenario
         {
             if (members.Any(other => other != member && FlatDistance(other.Position, member.Position) < LightningStormRadius))
             {
-                member.Die("Died to Lightning Storm (overlapped another player's circle)");
+                member.Die(ActionId.LightningStormHit, "overlapped another player's circle");
                 continue;
             }
             damage.ApplyDamage(member, LightningStormDamage, ActionId.LightningStormHit, "spread", lethal: false);
@@ -646,7 +647,7 @@ public sealed class DsrP2ThordanScenario : IScenario
         if (!unsoaked) return;
         PlayEffect(hermenost, ActionId.EternalConviction, 2.1f);
         foreach (var member in AliveMembers().ToList())
-            member.Die("Died to Eternal Conviction (a tower was left unsoaked)");
+            member.Die(ActionId.EternalConviction, "a tower was left unsoaked");
     }
 
     private void TetherShieldBashes()
@@ -684,7 +685,7 @@ public sealed class DsrP2ThordanScenario : IScenario
                 hit.AddStatus(StatusId.DownForTheCount, 5.96f);
             holder.AddStatus(StatusId.DownForTheCount, 5.96f);
             if (holder is not ISimPartyMember { Role: PartyRole.MainTank or PartyRole.OffTank })
-                holder.Die("Died to Holy Shield Bash (only a tank survives the tether)");
+                holder.Die(ActionId.HolyShieldBash, "only a tank survives the tether");
             shieldBashTooShort[i] = length < MinShieldBashTetherLength;
             var landing = holder.Position - new Vector3(MathF.Sin(rotation), 0f, MathF.Cos(rotation)) * ShieldBashLandShort;
             knight.SetPosition(new Placement(landing, rotation));
@@ -701,7 +702,7 @@ public sealed class DsrP2ThordanScenario : IScenario
             if (actionId != ActionId.HolyBladedance) continue;
             var cone = new Placement(knight.Position, RotationTowards(knight.Position, holder.Position));
             foreach (var caught in party.Find.InsideCone(cone, BladedanceHalfAngle, BladedanceRange).Where(m => m != holder && m.IsAlive()).ToList())
-                caught.Die("Died to Holy Bladedance (stood in the tank's cleave)");
+                caught.Die(ActionId.HolyBladedance, "stood in the tank's cleave");
             damage.ApplyDamage(holder, HolyBladedanceDamage, actionId,
                 $"tether shorter than {MinShieldBashTetherLength:F0}y, cross the tethers to Thordan", lethal: shieldBashTooShort[i]);
         }
@@ -735,7 +736,7 @@ public sealed class DsrP2ThordanScenario : IScenario
         {
             if (count > 1)
             {
-                hit.Die("Died to Skyward Leap (hit by two defamations)");
+                hit.Die(ActionId.SkywardLeap, "hit by two defamations");
                 continue;
             }
             damage.ApplyDamage(hit, SkywardLeapDamage, ActionId.SkywardLeap, "defamation", lethal: false);
@@ -899,7 +900,7 @@ public sealed class DsrP2ThordanScenario : IScenario
         PlayEffect(knight, ActionId.SanctityShiningBlade, 1.0f, rotation, at: to);
         world.Events.Add(ShiningBladeLandDelay, () => knight.SetPosition(new Placement(to, rotation)));
         foreach (var hit in party.Find.InsideRect(new Placement(from, rotation), ShiningBladeHalfWidth, FlatDistance(from, to)).ToList())
-            hit.Die("Died to Shining Blade (stood in a knight's charge)");
+            hit.Die(ActionId.SanctityShiningBlade, "stood in a knight's charge");
     }
 
     private void DropBrightsphere(Vector3 at, float flareDelay)
@@ -912,7 +913,7 @@ public sealed class DsrP2ThordanScenario : IScenario
         {
             PlayEffect(orb, ActionId.BrightFlare, 1.1f, at: at);
             foreach (var hit in party.Find.InsideCircle(at, BrightFlareRadius).ToList())
-                hit.Die("Died to Bright Flare (too close to a Brightsphere)");
+                hit.Die(ActionId.BrightFlare, "too close to a Brightsphere");
             world.Events.Add(EffectCarrierLinger, () => orb?.Despawn());
         });
     }
@@ -964,7 +965,7 @@ public sealed class DsrP2ThordanScenario : IScenario
         if (!unsoaked) return;
         PlayEffect(hermenost, ActionId.EternalConviction, 2.1f);
         foreach (var member in AliveMembers().ToList())
-            member.Die("Died to Eternal Conviction (a tower was left unsoaked)");
+            member.Die(ActionId.EternalConviction, "a tower was left unsoaked");
     }
 
     private void MarkMeteorTargets()
@@ -1001,7 +1002,7 @@ public sealed class DsrP2ThordanScenario : IScenario
                 ? party.Find.InsideRing(at, HeavensStakeDonutInner, 30f)
                 : party.Find.InsideCircle(at, HeavensStakeCircleRadius);
             foreach (var hit in hits.ToList())
-                hit.Die("Died to Heavens' Stake (stood in the fire)");
+                hit.Die(donut ? ActionId.HeavensStakeDonut : ActionId.HeavensStakeCircle, "stood in the fire");
         }
         heavensStakes.Clear();
     }
@@ -1057,7 +1058,7 @@ public sealed class DsrP2ThordanScenario : IScenario
             if (circles == 0) continue;
             if (circles > 1)
             {
-                member.Die("Died to Hiemal Storm (caught in two ice circles)");
+                member.Die(ActionId.HiemalStormHit, "caught in two ice circles");
                 continue;
             }
             damage.ApplyDamage(member, HiemalStormDamage, ActionId.HiemalStormHit, "ice", lethal: false);
@@ -1087,7 +1088,7 @@ public sealed class DsrP2ThordanScenario : IScenario
             {
                 PlayEffect(comet, ActionId.HolyImpact, 2.1f, at: at);
                 foreach (var member in AliveMembers().ToList())
-                    member.Die("Died to Holy Impact (meteors dropped too close together)");
+                    member.Die(ActionId.HolyImpact, "meteors dropped too close together");
             });
         }
     }

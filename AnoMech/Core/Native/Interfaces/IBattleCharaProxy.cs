@@ -120,7 +120,7 @@ public interface IBattleCharaProxy
     ushort GetTetherId(byte slot);
     void ClearTether(byte slot);
 
-    void ShowFlyText(uint amount, string label);
+    void ShowFlyText(uint amount, string label, uint damageTypeIcon = 0);
 
     // The server's forced carry, which the client animates itself.
     void CarryTo(Vector3 destination, float rotation, bool selfTarget);

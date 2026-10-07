@@ -1,6 +1,6 @@
+using AnoMech.Core.EnemyActions;
 using AnoMech.Core.Game;
 using AnoMech.Core.Native.Interfaces;
-using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using System;
@@ -64,16 +64,22 @@ public record struct EnemySpawnConfig(
     // within frames. With IsVisible=false the built model is hidden the moment it appears.
     bool PacketSpawnEnableDraw = false);
 
-public sealed class SimEnemy : SimNpc
+public sealed partial class SimEnemy : SimNpc
 {
-    // Cast bar, action-effect release, omen telegraph, and animation lock live in
-    // SimCast. SimEnemy just converts target coords to world space and reads IsBusy.
+    // The cast packets and the animation lock live in SimCast; EnemyActionHandler decides when
+    // they go out and what the action does.
     private readonly SimCast cast;
+    private readonly EnemyActionHandler actions;
+
+    // The server's own ceiling: bosses turn at most ~145° per ~0.3s movement tick.
+    private const float BossTurnSpeed = MathF.PI * 8f / 3f;
+
+    protected override float? TurnSpeed => BossTurnSpeed;
 
     // Peer-only smoothing for ApplyNetworkPosition, same model as SimNetworkPuppet: the
     // catch-up speed is a floor once the real snapshot interval is known, anything beyond
     // NetworkSnapThreshold (a scripted teleport, a lag spike) snaps, extrapolation only feeds
-    // the visual glide, and rotation is stepped as well.
+    // the visual glide, and rotation turns at BossTurnSpeed like the host's.
     private const float NetworkCatchUpSpeed = 20f;
     private const float NetworkSnapThreshold = 15f;
     private const ushort NetworkRunTimelineId = 22; // mirrors Game.Movement.RunTimelineId
@@ -85,8 +91,6 @@ public sealed class SimEnemy : SimNpc
 
     private const float MaxNetworkExtrapolationSeconds = 1f;
     private Vector3 networkVelocity;
-
-    private const float NetworkAngularCatchUpSpeed = MathF.PI * 20f;
 
     private Vector3? networkTargetPosition;
     private float networkTargetRotation;
@@ -128,17 +132,17 @@ public sealed class SimEnemy : SimNpc
         var dist = delta.Length();
         var remainingWindow = MathF.Max(estimatedNetworkUpdateInterval - timeSinceLastNetworkUpdate, MinNetworkPacingWindowSeconds);
         var step = MathF.Max(dist / remainingWindow, NetworkCatchUpSpeed) * deltaSeconds;
-        var nextRotation = MathUtil.StepRotation(Rotation, networkTargetRotation, NetworkAngularCatchUpSpeed * deltaSeconds);
         if (dist > NetworkSnapThreshold)
         {
             // Logged: position otherwise rides silently in every snapshot.
             DiagnosticLog.Info($"[SimEnemy.TickNetworkPosition] {DisplayName} (BNpcBase {BNpcBaseId}) snapped {dist:F1}y (> {NetworkSnapThreshold}y threshold): {basePos} -> {target}.");
-            SetPosition(new Placement(target, nextRotation));
+            SetPosition(new Placement(target, networkTargetRotation));
         }
-        else if (dist <= step)
-            SetPosition(new Placement(target, nextRotation));
         else
-            SetPosition(new Placement(basePos + delta / dist * step, nextRotation));
+        {
+            SetPosition(dist <= step ? target : basePos + delta / dist * step);
+            TurnTo(networkTargetRotation);
+        }
 
         if (networkMoving && !networkInterpAnimActive)
         {
@@ -205,36 +209,25 @@ public sealed class SimEnemy : SimNpc
     };
 
     public bool IsCasting => cast.IsCasting;
-    public int CastSeq => cast.CastSeq;
     public uint CastActionId => cast.ActionId;
     public float CastProgress => cast.Progress;
     public Vector3? CastTargetLocation => cast.TargetLocation;
-    public GameObjectId? CastTargetId => cast.TargetId;
     public float CastTotalSeconds => cast.Total;
-    public float CastOmenDelay => cast.OmenDelay;
-    public float CastOmenRotate => cast.OmenRotate;
-    public int LastInstantCastSeq => cast.LastInstantCastSeq;
-    public uint LastInstantCastActionId => cast.LastInstantCastActionId;
-    public Vector3? LastInstantCastTargetLocation => cast.LastInstantCastTargetLocation;
-    public GameObjectId? LastInstantCastTargetId => cast.LastInstantCastTargetId;
-    public GameObjectId? LastInstantCastActionTargetId => cast.LastInstantCastActionTargetId;
-    public bool LastInstantCastIsNativeEffect => cast.LastInstantCastIsNativeEffect;
-    public float LastInstantCastAnimationLock => cast.LastInstantCastAnimationLock;
-    public string? LastInstantCastRawPacket => cast.LastInstantCastRawPacket;
 
-    public void NoteRawActionEffect(uint actionId, string captureName, float animationLock)
-        => cast.NoteRawActionEffect(actionId, captureName, animationLock);
+    // The cast packets as sent, for multiplayer to sample on the host and replay on a peer.
+    internal SimCast Casting => cast;
 
     // The last SetVisible value; IsEngineVisible lags behind the async model load.
     public bool Visible => desiredVisible;
 
-    internal SimEnemy(IBattleCharaProxy proxy, uint bNpcBaseId, string displayName, EnemyListMode enemyListMode, Coordinates coordinates, bool packetSpawned = false) : base(proxy, coordinates, pendingDraw: !packetSpawned)
+    internal SimEnemy(IBattleCharaProxy proxy, uint bNpcBaseId, string displayName, EnemyListMode enemyListMode, SimWorld world, bool packetSpawned = false) : base(proxy, world.Coordinates, pendingDraw: !packetSpawned)
     {
         BNpcBaseId = bNpcBaseId;
         DisplayName = displayName;
         EnemyListMode = enemyListMode;
         this.packetSpawned = packetSpawned;
-        cast = new SimCast(this, coordinates);
+        cast = new SimCast(this, world.Coordinates);
+        actions = new EnemyActionHandler(this, cast, world);
     }
 
     // Created by the engine's own NpcSpawn handler (SpawnFromPacket); the engine owns its draw
@@ -263,7 +256,7 @@ public sealed class SimEnemy : SimNpc
         if (config.NpcSpawnTemplate is not null) return SpawnFromPacket(config, world);
 
         if (Natives.BattleCharas.SpawnBattleNpc(config, world.Coordinates.ToGlobal(config.Placement)) is not { } chara) return null;
-        var enemy = new SimEnemy(chara, config.BNpcBaseId, chara.Name, config.EnemyList, world.Coordinates)
+        var enemy = new SimEnemy(chara, config.BNpcBaseId, chara.Name, config.EnemyList, world)
         {
             SpawnConfig = config,
         };
@@ -281,7 +274,7 @@ public sealed class SimEnemy : SimNpc
         if (Natives.BattleCharas.SpawnBattleNpcFromPacket(config, world.Coordinates.ToGlobal(config.Placement), out var entityId) is not { } chara)
             return null;
         var displayName = Natives.Data.BNpcName(config.NameId) ?? $"BNpc {config.BNpcBaseId:X}";
-        var enemy = new SimEnemy(chara, config.BNpcBaseId, displayName, config.EnemyList, world.Coordinates, packetSpawned: true)
+        var enemy = new SimEnemy(chara, config.BNpcBaseId, displayName, config.EnemyList, world, packetSpawned: true)
         {
             SpawnConfig = config,
             packetEntityId = entityId,
@@ -345,10 +338,10 @@ public sealed class SimEnemy : SimNpc
     /// If <see langword="true"/>, then the Nameplate will be visible, and able to target them using the Enemy List.
     /// If <see langword="false"/>, then the Nameplate will not be visible, and not able to target them using the Enemy List.
     /// </param>
-    public void SetTargetable(bool targetable)
+    public override void SetTargetable(bool targetable)
     {
         desiredTargetable = targetable;
-        Proxy?.SetTargetable(targetable);
+        base.SetTargetable(targetable);
     }
 
     /// <summary>
@@ -634,27 +627,15 @@ public sealed class SimEnemy : SimNpc
     // False during the async model-load window where DrawObject is still null.
     private bool IsEngineVisible() => Proxy?.IsDrawObjectVisible ?? false;
 
-    // Engine doesn't expose post-action animation-lock duration via EXD — the
-    // real value only ships in the server's ActionEffect packet. 0.6s is a
-    // reasonable approximation for most boss abilities; if a scenario needs
-    // tighter timing we can derive per-action values from captured ACT logs.
-    public bool Cast(uint actionId, Vector3? targetLocation = null, float? castSeconds = null, GameObjectId? targetId = null, float omenDelay = 0f, float omenRotate = 0f, byte animationVariation = 0, float animationLock = 0.6f, float? fireDelay = null)
-    {
-        Core.DiagnosticLog.Info(
-            $"[SimEnemy] Cast: {Core.ActionLookup.Name(actionId)} ({actionId}) from ({Position.X:F1},{Position.Z:F1}) rot={Rotation:F3} castSeconds={castSeconds?.ToString("F2") ?? "default"}.");
-        // targetLocation stays scenario-local; SimCast lifts to world at native boundaries.
-        return cast.Start(actionId, targetLocation, castSeconds, targetId, omenDelay, omenRotate, animationVariation, animationLock, fireDelay);
-    }
+    // An action with no mechanics of its own: just its bar and animation.
+    public EnemyActionCast Cast(uint actionId, CastTarget target = default, float animationLock = 0.6f, byte animationVariation = 0) =>
+        actions.Start(new EnemyAction(actionId) { Cast = new() { AnimationLock = animationLock } }, target, animationVariation);
 
-    public void NativeCast(uint actionId, ActionType actionType, float omenDelay, float castTime, bool interruptible, float? rotation = null, Vector3? position = null, GameObjectId? targetId = null, GameObjectId? ballistaId = null)
-    {
-        cast.NativeCast(actionId, actionType, omenDelay, castTime, interruptible, rotation, position, targetId, ballistaId);
-    }
+    public EnemyActionCast Cast(EnemyAction action, CastTarget target = default, byte animationVariation = 0) =>
+        actions.Start(action, target, animationVariation);
 
-    public void NativeActionEffect(uint actionId, float animationLock, ushort spellId, byte animationVariaton, ActionType actionType, byte flags, float? rotation = null, Vector3? position = null, GameObjectId? animationTargetId = null, GameObjectId? actionTargetId = null, GameObjectId? ballistaId = null)
-    {
-        cast.NativeActionEffect(actionId, animationLock, spellId, animationVariaton, actionType, flags, rotation, position, animationTargetId, actionTargetId, ballistaId);
-    }
+    // Interrupts the cast still on its bar: neither its effect nor its mechanics go out.
+    public void CancelCast() => actions.CancelCast();
 
     public override bool AnimationLock => cast.IsBusy;
 

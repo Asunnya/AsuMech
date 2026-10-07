@@ -28,14 +28,6 @@ internal static unsafe class Statuses
     // row by id); ids reach this from the network.
     public static bool Exists(ushort statusId) => statusId != 0 && Sheet.HasRow(statusId);
 
-    // Control-taking rows are never fed through the engine's gain path on the local player;
-    // any control loss the sim wants is SimPlayer.SyncInputLock's, which every Despawn clears.
-    public static bool LocksControl(ushort statusId) =>
-        Sheet.TryGetRow(statusId, out var row) && (row.LockMovement || row.LockActions || row.LockControl || row.Transfiguration);
-
-    private static bool IsLocalPlayer(Character* chara) =>
-        Plugin.ObjectTable.LocalPlayer is { Address: var address } && address == (nint)chara;
-
     public static void Apply(Character* chara, ushort statusId, float duration, ushort param = 0, GameObjectId sourceObject = default)
     {
         if (chara == null || !Exists(statusId)) return;
@@ -103,7 +95,6 @@ internal static unsafe class Statuses
         }
 
         Apply(chara, statusId, 0f, param, sourceObject);
-        if (IsLocalPlayer(chara) && LocksControl(statusId)) return;
         StatusManagerPointers.OnGainStatus(&bc->StatusManager, statusId, 0f, param, 0, 0);
     }
 

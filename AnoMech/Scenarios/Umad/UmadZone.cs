@@ -52,7 +52,7 @@ public sealed class UmadZone : IZone
     public IReadOnlyList<WaymarkLayout> WaymarkPresets => Waymarks;
     public IReadOnlyList<Vector3> ColliderRemovalPoints => [new(0f, 0f, -10f)];
 
-    public void Run(SimWorld world) { }
+    public void Run(SimWorld world) => world.EnforceArenaBoundary(UmadConstants.Geometry.ArenaRadius, "Fell off the arena");
 
     // Replay-derived RSV/RSF data the server would deliver in a real duty; peers need it too, or
     // their BgParts point at unseeded paths and render black. Idempotent.

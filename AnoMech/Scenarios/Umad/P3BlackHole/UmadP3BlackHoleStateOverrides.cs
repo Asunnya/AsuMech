@@ -27,20 +27,22 @@ public static class ThunderIIIPlanning
         ThunderIIIAssignment.ShareOtFirst  => (PartyRole.OffTank, PartyRole.MainTank),
         _                                   => throw new System.ArgumentOutOfRangeException(nameof(plan), plan, null),
     };
-
-    // Only the InvulnsBoth plans need a scripted invuln; a Share relies on mitigation.
-    public static PartyRole? InvulnRole(ThunderIIIAssignment plan) => plan switch
-    {
-        ThunderIIIAssignment.MtInvulnsBoth => PartyRole.MainTank,
-        ThunderIIIAssignment.OtInvulnsBoth => PartyRole.OffTank,
-        _                                    => null,
-    };
 }
 
 public sealed class UmadP3BlackHoleStateOverrides
 {
     // --- Fight-wide: one roll the whole sim shares -------------------------------------
-    public uint? FirstSlap { get; set; }            // null = random; else ActionId.SlapHappy_Left / .SlapHappy_Right (debug-only UI)
+    // null = random. Only SlapAttacks[0] has (debug-only) UI; the rest are pinned by tests.
+    public uint?[] SlapAttacks { get; } = new uint?[3];               // ActionId.SlapHappy_Left / .SlapHappy_Right
+    public Direction?[] KefkaPositions { get; } = new Direction?[5];
+    public PartyRole[]?[] ConeTargets { get; } = new PartyRole[]?[3]; // one role for a Left slap, three for a Right
+    public uint? ImplosionAttack { get; set; }                        // ActionId.LatitudinalImplosion / .LongitudinalImplosion
+    public Direction?[] BlackHoleDirections { get; } = new Direction?[4];
+    public int? MiniBlackHoleInitialAngle { get; set; }               // 0 / 1
+    public int? MiniBlackHoleChirality { get; set; }                  // -1 / +1
+    public PartyRole[]? StackTargets { get; set; }                    // in stack order
+    public PartyRole? EdictTarget { get; set; }
+    public bool SeatLinesInRoleOrder { get; set; }                    // false = roll; true = slot i holds PartyRole i, overriding the per-seat requests
 
     // Defaults: MT solo-tanks Set 1 behind an invuln, Set 2 is shared MT-first.
     public ThunderIIIAssignment ThunderSet1 { get; set; } = ThunderIIIAssignment.MtInvulnsBoth;

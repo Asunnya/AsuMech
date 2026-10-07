@@ -101,11 +101,10 @@ public sealed record LobbyStateMessage(
     string? ScenarioSettingsJson = null,
     RunClockState? Clock = null) : MpMessage, IHostOnlyMessage;
 
-// The host's run clocks when the message left: its event clock, and its Ai's own clock when the
-// scenario runs one (IMultiplayerReplayable.ReplayClockSeconds). A peer starts its run from them
-// instead of from zero, which would leave it behind by the host's load time plus the travel time.
-// FrameSeconds is the host's average frame, part of the lead the peer takes on top.
-public sealed record RunClockState(float EventClock, float? ReplayClock, float FrameSeconds);
+// The host's event clock when the message left. A peer starts its run from it instead of from
+// zero, which would leave it behind by the host's load time plus the travel time. FrameSeconds is
+// the host's average frame, part of the lead the peer takes on top.
+public sealed record RunClockState(float EventClock, float FrameSeconds);
 
 public sealed record ClaimRoleMessage(Guid PeerId, PartyRole Role) : MpMessage;
 public sealed record ReleaseRoleMessage(Guid PeerId) : MpMessage;
@@ -131,7 +130,7 @@ public sealed record SelfPoseMessage(Guid PeerId, float X, float Y, float Z, flo
 
 // One SimEnemy as the host has it. NetId is a host-assigned per-run id. Cast* fields mirror
 // SimCast rather than a sheet, which wouldn't match a scenario's synthetic helper actions. The
-// Seq counters are the edge triggers: an instant cast never sets IsCasting. Targets resolve by
+// Seq counters are the edge triggers: an effect never sets IsCasting. Targets resolve by
 // NetId/role since a GameObjectId means nothing across clients.
 public sealed record EnemyStatusState(ushort StatusId, ushort Stacks, float RemainingTime, int Instance = 0);
 
@@ -151,10 +150,9 @@ public sealed record ActorEngineState(
 
 // NpcSpawnTemplate names a UmadRealPackets capture (resolved by name on receipt): a
 // packet-spawned carrier's real, model-less look is what its action VFX attach to.
-// LastInstantCastIsNativeEffect: the host fired a bare NativeActionEffect; a peer replays it
-// with the same animation target, action target, position and lock instead of a Cast().
-// LastInstantCastRawPacket instead names a captured resolve the receiver replays from its own
-// copy of the bytes. PersistentVfx is a reconciled set, unlike the one-shot NewVfx.
+// Cast* and Effect* are the host's last ActorCast and ActionEffect packets, which a peer replays
+// field for field; CancelSeq its interrupts. PersistentVfx is a reconciled set, unlike the
+// one-shot NewVfx.
 public sealed record EnemyState(
     int NetId, uint BNpcBaseId, uint NameId, byte Level, bool Targetable,
     EnemyListMode EnemyList, uint ModelCharaId, float Scale, float HitboxRadius,
@@ -162,17 +160,17 @@ public sealed record EnemyState(
     IReadOnlyList<EnemyStatusState> Statuses, ushort? AnimationTimelineId, int AnimationTimelineSeq, IReadOnlyList<uint> NewLockonVfxIds,
     int? AnimationStateArg2, int? AnimationStateArg3, int AnimationStateSeq,
     float X, float Y, float Z, float Rotation,
-    bool IsCasting, int CastSeq, uint CastActionId, float CastSeconds, float CastOmenDelay, float CastOmenRotate,
+    bool IsCasting, int CastSeq, uint CastActionId, float CastSeconds, float CastOmenDelay, float CastRotation,
     float? CastTargetX, float? CastTargetY, float? CastTargetZ,
     int? CastTargetEnemyNetId, PartyRole? CastTargetRole,
-    int LastInstantCastSeq, uint LastInstantCastActionId,
-    float? LastInstantCastTargetX, float? LastInstantCastTargetY, float? LastInstantCastTargetZ,
-    int? LastInstantCastTargetEnemyNetId, PartyRole? LastInstantCastTargetRole,
+    int CancelSeq,
+    int EffectSeq, uint EffectActionId, float EffectAnimationLock, byte EffectAnimationVariation, float EffectRotation,
+    float? EffectX, float? EffectY, float? EffectZ,
+    int? EffectAnimationTargetEnemyNetId, PartyRole? EffectAnimationTargetRole,
+    int? EffectActionTargetEnemyNetId, PartyRole? EffectActionTargetRole,
     string? NpcSpawnTemplate = null, bool PacketSpawnEnableDraw = false,
-    bool LastInstantCastIsNativeEffect = false, float LastInstantCastAnimationLock = 0.6f,
-    int? LastInstantCastActionTargetEnemyNetId = null, PartyRole? LastInstantCastActionTargetRole = null,
     IReadOnlyList<AttachedVfxState>? NewVfx = null,
-    string? LastInstantCastRawPacket = null, ActorEngineState? Engine = null,
+    ActorEngineState? Engine = null,
     IReadOnlyList<string>? PersistentVfx = null);
 
 // Each end resolves to a live enemy (by NetId) or a party role.

@@ -81,41 +81,4 @@ internal static class UmadRealPackets
             if (ReferenceEquals(bytes, template)) return name;
         return null;
     }
-
-    // Opcodes are reassigned every client build, so a raw replay is only valid on this version.
-    public const string CapturedGameVersion = "2026.09.01.0000.0000";
-
-    // The 8-target action-effect packet (632 bytes).
-    public const ushort ActionEffect8Opcode = 0x03C8;
-
-    // A captured resolve that Core.Native.Implementations.RawActionEffect replays on one actor.
-    public sealed record RawActionEffectCapture(byte[] Body, ushort Opcode, string GameVersion);
-
-    // One real FloodAOE (49769) resolve: animation target = the caster, lock 1.1, no targets,
-    // and the trailing target position is the zero point, not the caster's position. Every wave
-    // of every pull decodes identically apart from ids, counter and rotation sign.
-    public static readonly byte[] FloodAoeEffect8 = Convert.FromHexString(
-        ""
-        + "798700400000000069c200000b880000cdcc8c3f000000e00000ff9f69c2000100000000000000000000000000000000"
-        + "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-        + "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-        + "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-        + "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-        + "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-        + "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-        + "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-        + "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-        + "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-        + "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-        + "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-        + "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-        + "ff7fff7fff7f0000");
-
-    // The captures by name, the form a raw delivery travels to peers in
-    // (EnemyState.LastInstantCastRawPacket): the bytes replayed are always the receiver's own.
-    public static readonly IReadOnlyDictionary<string, RawActionEffectCapture> RawActionEffects =
-        new Dictionary<string, RawActionEffectCapture>(StringComparer.Ordinal)
-        {
-            [nameof(FloodAoeEffect8)] = new(FloodAoeEffect8, ActionEffect8Opcode, CapturedGameVersion),
-        };
 }

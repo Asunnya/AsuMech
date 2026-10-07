@@ -4,7 +4,8 @@ using Dalamud.Bindings.ImGui;
 
 namespace AnoMech.Scenarios.Umad.P5Celestriad;
 
-// Fight-wide rolls (which element doubles when, each Catastrophic Choice's variant) in Draw;
+// Fight-wide rolls (which element doubles when, the sector layout, which towers light, each
+// Catastrophic Choice's variant) in Draw;
 // the per-seat debuff in DrawPerPlayer.
 public sealed class UmadP5CelestriadSettingsWindow
 {
@@ -15,7 +16,8 @@ public sealed class UmadP5CelestriadSettingsWindow
 
     private static readonly string[] DebuffLabels = ["Random", "Fire", "Ice", "Lightning", "Free (no debuff)"];
     private static readonly string[] VariantLabels = ["Random", "Aero (green)", "Earth (brown)"];
-    private static readonly string[] DoubleOrderLabels =
+    private static readonly string[] LitTowerLabels = ["Random", "Middle single, outer pair"];
+    private static readonly string[] OrderLabels =
     [
         "Random",
         "Fire, Ice, Lightning", "Fire, Lightning, Ice",
@@ -39,10 +41,16 @@ public sealed class UmadP5CelestriadSettingsWindow
             if (solo) DrawDebuff();
 
             SettingsGrid.Row("Doubled element:");
-            var order = Overrides.DoubleOrder is { } o ? (int)o + 1 : 0;
+            DrawOrder("##celdoubleorder", Overrides.DoubleOrder, v => Overrides.DoubleOrder = v);
+
+            SettingsGrid.Row("Sectors from NE:");
+            DrawOrder("##celsectororder", Overrides.SectorOrder, v => Overrides.SectorOrder = v);
+
+            SettingsGrid.Row("Lit towers:");
+            var lit = Overrides.FixedLitTowers ? 1 : 0;
             SettingsGrid.ItemWidth(200);
-            if (ImGui.Combo("##celdoubleorder", ref order, DoubleOrderLabels, DoubleOrderLabels.Length))
-                Overrides.DoubleOrder = order == 0 ? null : (CelestriadDoubleOrder)(order - 1);
+            if (ImGui.Combo("##cellit", ref lit, LitTowerLabels, LitTowerLabels.Length))
+                Overrides.FixedLitTowers = lit == 1;
 
             SettingsGrid.Row("Set 1 variant:");
             DrawVariant("##celset1", Overrides.Set1, v => Overrides.Set1 = v);
@@ -76,6 +84,14 @@ public sealed class UmadP5CelestriadSettingsWindow
             Overrides.Debuff.Set(editingSeat, debuff == 0 ? null : (CelestriadDebuff)(debuff - 1));
     }
 
+    private static void DrawOrder(string id, CelestriadElementOrder? current, Action<CelestriadElementOrder?> set)
+    {
+        var index = current is { } o ? (int)o + 1 : 0;
+        SettingsGrid.ItemWidth(200);
+        if (ImGui.Combo(id, ref index, OrderLabels, OrderLabels.Length))
+            set(index == 0 ? null : (CelestriadElementOrder)(index - 1));
+    }
+
     private static void DrawVariant(string id, CatastrophicVariantOverride current, Action<CatastrophicVariantOverride> set)
     {
         var index = (int)current;
@@ -87,6 +103,8 @@ public sealed class UmadP5CelestriadSettingsWindow
     private void ResetAll()
     {
         Overrides.DoubleOrder = null;
+        Overrides.SectorOrder = null;
+        Overrides.FixedLitTowers = false;
         Overrides.Set1 = CatastrophicVariantOverride.Random;
         Overrides.Set3 = CatastrophicVariantOverride.Random;
     }

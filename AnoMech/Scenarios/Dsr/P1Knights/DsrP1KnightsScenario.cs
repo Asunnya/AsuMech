@@ -10,6 +10,7 @@ using AnoMech.Core.Game.Party;
 using AnoMech.Core.SimObjects;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
+using AnoMech.Scenarios.Legacy;
 using static AnoMech.Scenarios.Dsr.DsrConstants;
 
 namespace AnoMech.Scenarios.Dsr.P1Knights;
@@ -25,6 +26,7 @@ public sealed class DsrP1KnightsScenario : IScenario
     public IReadOnlyList<IScenarioAi> AiStrats => [new DsrP1KnightsAi()];
 
     private const float HoliestOfHolyDamage = 0.55f;
+    private const float InvulnSeconds = 10f;
     private const float HeavensblazeDamage = 0.5f;
     private const float SlashDamage = 0.45f;
     private const float SlashVulnSeconds = 3.96f;
@@ -305,8 +307,8 @@ public sealed class DsrP1KnightsScenario : IScenario
         if (adelphel == null || state.ShieldBashTether?.B is not { } holder) return;
         PlayEffect(adelphel, ActionId.HolyShieldBash, 2.1f, RotationTowards(adelphel.Position, holder.Position), holder.GameObjectId);
         holder.AddStatus(StatusId.DownForTheCount, 5.96f);
-        if (holder is ISimPartyMember { Role: PartyRole.MainTank or PartyRole.OffTank } tank && party.IsBotDriven(holder))
-            tank.UseInvuln();
+        if (holder is ISimPartyMember { Role: PartyRole.MainTank or PartyRole.OffTank } && party.IsBotDriven(holder))
+            DamageSolver.GiveBotInvuln(holder, InvulnSeconds);
         state.ShieldBashTether.Despawn();
     }
 

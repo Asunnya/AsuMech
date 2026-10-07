@@ -40,7 +40,7 @@ public sealed partial class MultiplayerManager : IDisposable
     private readonly Dictionary<SimEnemy, Dictionary<(ushort Id, int Ordinal), ushort>> hostEnemyLastLoggedStatuses = new();
     private readonly Dictionary<SimEnemy, int> hostEnemyLastLoggedAnimationTimeline = new();
     private readonly Dictionary<SimEnemy, int> hostEnemyLastLoggedAnimationState = new();
-    private readonly Dictionary<SimEnemy, int> hostEnemyLastLoggedInstantCastSeq = new();
+    private readonly Dictionary<SimEnemy, int> hostEnemyLastLoggedEffectSeq = new();
     private readonly Dictionary<PartyRole, Dictionary<(ushort Id, int Ordinal), ushort>> hostRoleLastLoggedStatuses = new();
     private readonly Dictionary<PartyRole, int> hostRoleLastLoggedAnimationTimeline = new();
 
@@ -56,8 +56,9 @@ public sealed partial class MultiplayerManager : IDisposable
     private readonly Dictionary<int, Dictionary<(ushort Id, int Ordinal), ushort>> peerEnemyLastLoggedStatuses = new();
     private readonly Dictionary<int, int> peerEnemyAnimationTimeline = new();
     private readonly Dictionary<int, int> peerEnemyAnimationState = new();
-    private readonly Dictionary<int, int> peerEnemyLastInstantCastSeq = new();
+    private readonly Dictionary<int, int> peerEnemyLastEffectSeq = new();
     private readonly Dictionary<int, int> peerEnemyLastCastSeq = new();
+    private readonly Dictionary<int, int> peerEnemyLastCancelSeq = new();
     // NetIds whose real-packet spawn the engine dropped locally; recreated as plain doppels.
     private readonly HashSet<int> peerEnemyTemplateFailed = new();
     private readonly Dictionary<int, ushort> peerEventObjectState = new();
@@ -85,12 +86,11 @@ public sealed partial class MultiplayerManager : IDisposable
     private bool peerEntryQueued;
     // An EndMessage that arrived while the entry was queued: acted on once it completes.
     private bool? endAfterPeerEntry;
-    // The host's clocks from the message that started this run, and when it arrived; applied by
-    // SyncClocksToHost once the entry completes (event clock) and the replay exists (Ai clock).
+    // The host's clock from the message that started this run, and when it arrived; applied by
+    // SyncClockToHost once the entry completes.
     private RunClockState? hostClockAtStart;
     private long hostClockReceivedAt;
     private bool eventClockSynced;
-    private bool replayClockSynced;
     // Smoothed frame time, sent in RunClockState; load hitches are left out.
     private float averageFrameSeconds = 1f / 60f;
     private const float MaxFrameSampleSeconds = 0.1f;
@@ -369,7 +369,7 @@ public sealed partial class MultiplayerManager : IDisposable
         hostEnemyLastLoggedStatuses.Clear();
         hostEnemyLastLoggedAnimationTimeline.Clear();
         hostEnemyLastLoggedAnimationState.Clear();
-        hostEnemyLastLoggedInstantCastSeq.Clear();
+        hostEnemyLastLoggedEffectSeq.Clear();
         hostRoleLastLoggedStatuses.Clear();
         hostRoleLastLoggedAnimationTimeline.Clear();
         hostTetherNetIds.Clear();
@@ -379,8 +379,9 @@ public sealed partial class MultiplayerManager : IDisposable
         peerEnemyLastLoggedStatuses.Clear();
         peerEnemyAnimationTimeline.Clear();
         peerEnemyAnimationState.Clear();
-        peerEnemyLastInstantCastSeq.Clear();
+        peerEnemyLastEffectSeq.Clear();
         peerEnemyLastCastSeq.Clear();
+        peerEnemyLastCancelSeq.Clear();
         peerEnemyTemplateFailed.Clear();
         peerRoleLastLoggedStatuses.Clear();
         peerRoleAnimationTimelineSeq.Clear();
@@ -766,8 +767,8 @@ public sealed partial class MultiplayerManager : IDisposable
     // out the idle clock.
     private RunClockState? HostRunClock()
     {
-        if (!IsHost || !running || Plugin.GameInstance.ActiveScenario is not { } active) return null;
-        return new RunClockState(Plugin.GameInstance.EventClockNow, (active as IMultiplayerReplayable)?.ReplayClockSeconds, averageFrameSeconds);
+        if (!IsHost || !running || Plugin.GameInstance.ActiveScenario is null) return null;
+        return new RunClockState(Plugin.GameInstance.EventClockNow, averageFrameSeconds);
     }
 
     // ---- Starting the scenario ---------------------------------------------
@@ -954,7 +955,7 @@ public sealed partial class MultiplayerManager : IDisposable
         hostEnemyLastLoggedStatuses.Clear();
         hostEnemyLastLoggedAnimationTimeline.Clear();
         hostEnemyLastLoggedAnimationState.Clear();
-        hostEnemyLastLoggedInstantCastSeq.Clear();
+        hostEnemyLastLoggedEffectSeq.Clear();
         hostRoleLastLoggedStatuses.Clear();
         hostRoleLastLoggedAnimationTimeline.Clear();
         hostTetherNetIds.Clear();
@@ -1042,8 +1043,9 @@ public sealed partial class MultiplayerManager : IDisposable
         peerEnemyLastLoggedStatuses.Clear();
         peerEnemyAnimationTimeline.Clear();
         peerEnemyAnimationState.Clear();
-        peerEnemyLastInstantCastSeq.Clear();
+        peerEnemyLastEffectSeq.Clear();
         peerEnemyLastCastSeq.Clear();
+        peerEnemyLastCancelSeq.Clear();
         peerEnemyTemplateFailed.Clear();
         peerRoleLastLoggedStatuses.Clear();
         peerRoleAnimationTimelineSeq.Clear();
@@ -1066,7 +1068,6 @@ public sealed partial class MultiplayerManager : IDisposable
         hostClockAtStart = clock;
         hostClockReceivedAt = Stopwatch.GetTimestamp();
         eventClockSynced = false;
-        replayClockSynced = false;
         StopDebugBotReplay();
         running = true;
         Plugin.GameInstance.RunScenarioAsPeer(scenario, myRole, Session.SelectedWaymark, networkRoles, ClaimedRoleSeats(), OnPeerStartResolved);
@@ -1104,10 +1105,10 @@ public sealed partial class MultiplayerManager : IDisposable
     // about a host frame since the host applies poses after that frame's hit checks), so the host
     // judges our character in step with its own bots. Compared at this frame's event tick, the
     // instant Events.Elapsed describes.
-    private void SyncClocksToHost()
+    private void SyncClockToHost()
     {
-        if (hostClockAtStart is not { } clock) return;
-        if (eventClockSynced && (replayClockSynced || debugShadowStateGeneric == null)) return;
+        if (hostClockAtStart is not { } clock || eventClockSynced) return;
+        eventClockSynced = true;
         var game = Plugin.GameInstance;
         var eventAtStart = NetGuard.Clamp(clock.EventClock, 0f, 3600f);
         var oneWay = NetGuard.Clamp(peerStatuses.GetValueOrDefault(MyPeerId)?.LatencyMs ?? 0f, 0f, 4000f) / 2000f;
@@ -1116,21 +1117,9 @@ public sealed partial class MultiplayerManager : IDisposable
         var target = eventAtStart + oneWay + poseLead
             + (float)Stopwatch.GetElapsedTime(hostClockReceivedAt, game.LastEventTick).TotalSeconds;
 
-        if (!eventClockSynced)
-        {
-            eventClockSynced = true;
-            var advance = target - game.Events.Elapsed;
-            game.Events.Advance(advance);
-            DiagnosticLog.Info($"[Multiplayer] Peer: run clock {(advance > 0f ? $"moved up {advance * 1000f:F0} ms" : "left as is")}: the host's time plus a {poseLead * 1000f:F0} ms lead (Start sent {eventAtStart:F3}s into the host's run, {oneWay * 1000f:F0} ms one-way, {hostFrame * 1000f:F1} ms host frame).");
-        }
-
-        if (replayClockSynced || debugShadowStateGeneric == null) return;
-        replayClockSynced = true;
-        if (clock.ReplayClock is not { } replayAtStart
-            || TryResolveScenario() is not IMultiplayerReplayable replayable) return;
-        var replayTarget = target - (eventAtStart - NetGuard.Clamp(replayAtStart, 0f, 3600f));
-        replayable.AdvanceReplayClockTo(debugShadowStateGeneric, replayTarget);
-        DiagnosticLog.Info($"[Multiplayer] Peer: replay clock brought up to {replayTarget:F3}s, the host's plus the same lead (never moved back).");
+        var advance = target - game.Events.Elapsed;
+        game.Events.Advance(advance);
+        DiagnosticLog.Info($"[Multiplayer] Peer: run clock {(advance > 0f ? $"moved up {advance * 1000f:F0} ms" : "left as is")}: the host's time plus a {poseLead * 1000f:F0} ms lead (Start sent {eventAtStart:F3}s into the host's run, {oneWay * 1000f:F0} ms one-way, {hostFrame * 1000f:F1} ms host frame).");
     }
 
     // Names for the puppets: every role claimed by someone else, the host's included from a

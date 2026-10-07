@@ -83,7 +83,7 @@ public class SimNpc : SimCharacter
     // which has to play it too; SimEnemy inherits it but drives its own richer cast instead.
     private SimCast? actionCast;
 
-    // Sampled for peers, same edge trigger as SimCast.LastInstantCastSeq.
+    // Sampled for peers, same edge trigger as SimCast.EffectSeq.
     public uint PlayedActionId { get; private set; }
     public float PlayedActionAnimationLock { get; private set; }
     public int PlayedActionSeq { get; private set; }

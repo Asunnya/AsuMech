@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using AnoMech.Core.Game;
+using AnoMech.Scenarios.Legacy;
 
 namespace AnoMech.Scenarios.M9s.Final;
 

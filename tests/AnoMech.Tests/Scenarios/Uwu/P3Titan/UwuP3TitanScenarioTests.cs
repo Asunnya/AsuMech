@@ -32,7 +32,7 @@ public class UwuP3TitanScenarioTests
         {
             PlayerRole = MainTank,
             WriteArtifactsOnFailure = false,
-            Takeover = new PlayerTakeover(39f, new Vector2(7f, 2f)),
+            Takeovers = [new Takeover(39f, new Vector2(7f, 2f))],
             Probe = probe =>
             {
                 if (probe.Time < 40.1f || probe.Time > 48.3f) return;
@@ -54,7 +54,7 @@ public class UwuP3TitanScenarioTests
             PlayerRole = MeleeDpsB,
             WriteArtifactsOnFailure = false,
             Overrides = o => ((UwuP3TitanStateOverrides)o).PlayerAlwaysInFirstGaols = true,
-            Takeover = new PlayerTakeover(52f, null),
+            Takeovers = [new Takeover(52f, null)],
         });
         Assert.That(run.Deaths.Select(d => (d.Role, d.Cause)), Does.Contain((MeleeDpsB, "Died to Sludge (stayed in a broken gaol's puddle)")));
     }

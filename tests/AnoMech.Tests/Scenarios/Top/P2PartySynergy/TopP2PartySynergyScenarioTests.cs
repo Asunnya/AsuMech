@@ -48,7 +48,7 @@ public class TopP2PartySynergyScenarioTests
     public void DiesToLegs()
         => Healer(PlaystationSymbol.Cross, GlitchType.Mid, f: OmegaAttack.Legs, m: OmegaAttack.Sword)
             .TeleportAt(12f, to: new(8, -5))
-            .ShouldKill(ActionId.SuperliminalSteel, RegenHealer);
+            .ShouldKill(ActionId.SuperliminalSteelOmenR, RegenHealer);
 
     [Test]
     public void DiesToStaff()
@@ -104,7 +104,7 @@ public class TopP2PartySynergyScenarioTests
     public void DiesKnockedBackIntoWall()
         => Healer(PlaystationSymbol.Circle, GlitchType.Mid)
             .TeleportAt(27f, to: new(-8, 0))
-            .ShouldKill(ArenaWall, RegenHealer);
+            .ShouldKill(TheEnvironment, RegenHealer);
 
     // Leaves after Efficient Bladework, so only Spotlight is left to resolve.
     [Test]
@@ -126,10 +126,10 @@ public class TopP2PartySynergyScenarioTests
             .TeleportAt(33.1f, to: new(-18.9f, -3.9f))
             .ShouldKill(ActionId.Spotlight, RegenHealer, OffTank);
 
-    // The four Omega-M clones stand on the diagonals, 13y out.
+    // The four Omega-M clones stand on the diagonals, 13y out; the NW one's reaches into the west stack.
     [Test]
     public void DiesToSwordDuringStack()
         => Healer(PlaystationSymbol.Circle, GlitchType.Mid)
-            .TeleportAt(31f, to: new(-9, -9))
+            .TeleportAt(31f, to: new(-13, -3))
             .ShouldKill(ActionId.EfficientBladework, RegenHealer);
 }

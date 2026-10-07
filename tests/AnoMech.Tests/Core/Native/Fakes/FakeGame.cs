@@ -10,6 +10,7 @@ internal sealed class FakeGame
     public FakeFramework Framework { get; } = FakeFramework.Create();
     public FakeZoneSession Zone { get; }
     public FakeMapEffects MapEffects { get; } = new();
+    public FakeUserActions UserActions { get; } = new();
 
     private FakeGame() => Zone = new FakeZoneSession(BattleCharas.Player);
 
@@ -22,10 +23,9 @@ internal sealed class FakeGame
         Natives.EventObjects = game.EventObjects;
         Natives.HiddenObjects = new FakeHiddenObjects();
         Natives.PlayerInput = new FakeLocalPlayerInput();
-        Natives.UserActions = new FakeUserActions();
+        Natives.UserActions = game.UserActions;
         Natives.Vfx = new FakeVfxFunctions();
         Natives.TimelinePreload = new FakeActionTimelinePreload();
-        Natives.RawActionEffect = new FakeRawActionEffect();
         Natives.Zone = game.Zone;
         Natives.MapEffects = game.MapEffects;
         Natives.Layout = new FakeLayoutFunctions();

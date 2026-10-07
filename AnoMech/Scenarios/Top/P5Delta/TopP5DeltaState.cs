@@ -66,8 +66,6 @@ public sealed class TopP5DeltaState
     public PartyRole? BeyondDefenseTarget { get; set; }
     public PartyRole NearWorldRole { get; set; }
     public PartyRole FarWorldRole { get; set; }
-    public bool PunchExplosionUnmitigated { get; set; }
-    public List<Vector3>? PunchTargets { get; set; }
 
     public int BeyondDefenseIndex()
     {
@@ -87,6 +85,7 @@ public sealed class TopP5DeltaState
         var beyond = Requests(overrides.BeyondDefence, playerRole);
 
         SeatTethers(rng, roles, tethers, monitors, hellos, beyond);
+        if (overrides.TetherOrder is { } order) roles = order.ToArray();
         TetherOrder = roles;
 
         // Wanting Near or Far is a claim on that one slot; No refuses both.
@@ -102,18 +101,21 @@ public sealed class TopP5DeltaState
 
         EyeSpawn = overrides.EyeSpawn ?? (rng.Next(2) == 0 ? NorthSouth.North : NorthSouth.South);
         FistRotations = ShuffleInPlace(new[] { 1, 1, 1, -1, -1, -1 }, rng);
-        ArmHandedness = ShuffleSides(rng);
+        var arms = ShuffleSides(rng);
+        ArmHandedness = overrides.ArmHandedness ?? arms;
 
         var colors = new uint[8];
         var first = ShuffleInPlace(new[] { BNpcBaseId.RocketPunchYellow, BNpcBaseId.RocketPunchYellow, BNpcBaseId.RocketPunchBlue, BNpcBaseId.RocketPunchBlue }, rng);
         var second = ShuffleInPlace(new[] { BNpcBaseId.RocketPunchYellow, BNpcBaseId.RocketPunchYellow, BNpcBaseId.RocketPunchBlue, BNpcBaseId.RocketPunchBlue }, rng);
         Array.Copy(first, 0, colors, 0, 4);
         Array.Copy(second, 0, colors, 4, 4);
-        FistColors = colors;
+        FistColors = overrides.FistColors ?? colors;
 
         SwivelCannonSide = overrides.SwivelCannonSide ?? RandomSide(rng);
-        OmegaMonitorSide = RandomSide(rng);
-        PlayerMonitorSide = RandomSide(rng);
+        var omegaMonitor = RandomSide(rng);
+        var playerMonitor = RandomSide(rng);
+        OmegaMonitorSide = overrides.OmegaMonitorSide ?? omegaMonitor;
+        PlayerMonitorSide = overrides.PlayerMonitorSide ?? playerMonitor;
 
         PlayerMonitorIndex = PickCloseSlot(rng, roles, monitors);
 
@@ -206,8 +208,7 @@ public sealed class TopP5DeltaState
     // starts null -- not knowable at run start, set later via TopP5DeltaBeyondDefenseUpdateMessage
     // (same pattern as Umad P2 Forsaken's P2LockonsUpdateMessage). Side/NorthSouth are carried
     // as bools (two named static instances each, no delegate). FistRotations/
-    // NearWorldTetherIndex/Beyond Defence requests/PunchExplosionUnmitigated/PunchTargets are
-    // harmless placeholders -- only the scenario's own host-only resolution reads them.
+    // NearWorldTetherIndex/Beyond Defence requests are harmless placeholders -- only the scenario's own host-only resolution reads them.
     private TopP5DeltaState(
         PartyRole[] tetherOrder, uint[] fistColors, int playerMonitorIndex,
         bool playerMonitorSideIsLeft, bool omegaMonitorSideIsLeft, bool eyeSpawnIsNorth,

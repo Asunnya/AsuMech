@@ -1,3 +1,4 @@
+// The fork scenarios (DSR, M9S and its UWU phases) still resolve damage here; upstream moved to EnemyActions.
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using AnoMech.Core.Native.Interfaces;
 using AnoMech.Core.SimObjects;
 using AnoMech.Core.UserActions;
 
-namespace AnoMech.Scenarios;
+namespace AnoMech.Scenarios.Legacy;
 
 public class DamageSolver
 {
@@ -86,13 +87,13 @@ public class DamageSolver
             {
                 deadTargets.Add(target);
                 if (killTargets)
-                    target.Die($"Died to {ActionLookup.Name(actionId)} ({targets.Count}/{stackMinTargets} players in stack)");
+                    Kill(target, actionId, $"{targets.Count}/{stackMinTargets} players in stack");
             }
             else if (DistanceXZ(target.Position, placement.Position) is var distance && distance < lethalWithin)
             {
                 deadTargets.Add(target);
                 if (killTargets)
-                    target.Die($"Died to {ActionLookup.Name(actionId)} ({distance:F0}y from it, lethal inside {lethalWithin:F0}y)");
+                    Kill(target, actionId, $"{distance:F0}y from it, lethal inside {lethalWithin:F0}y");
             }
             else if (CheckLethal(actionId, target, wildCharge ? damageTypeWildCharge : damageTypeBase, killTargets, needed))
             {
@@ -138,7 +139,7 @@ public class DamageSolver
             var notLooking = cos <= -cosHalf;    // target within back 90° arc
             if (lookAway ? looking : notLooking)
             {
-                member.Die(lookAway
+                Kill(member, lookAway
                     ? "Died to gaze (looked at the target)"
                     : "Died to gaze (faced away from the target)");
                 killed.Add(member);
@@ -159,7 +160,49 @@ public class DamageSolver
         else cause = vulnMitigation != null ? " (not enough mitigation for a hit with vuln up)" : " (not enough mitigation)";
 
         if (cause == null) return false;
-        if (killTarget) target.Die($"Died to {ActionLookup.Name(actionId)}{cause}");
+        if (killTarget) Kill(target, actionId, cause.Length == 0 ? null : cause.Trim()[1..^1]);
+        return true;
+    }
+
+    // A tank invuln swallows the hit; upstream's EnemyActions count it as mitigation instead.
+    private static void Kill(SimCharacter target, uint actionId, string? explanation)
+    {
+        if (SurvivesOnInvuln(target, explanation)) return;
+        target.Die(actionId, explanation);
+    }
+
+    private static void Kill(SimCharacter target, string cause)
+    {
+        if (SurvivesOnInvuln(target, cause)) return;
+#pragma warning disable CS0618
+        target.Die(cause);
+#pragma warning restore CS0618
+    }
+
+    private static bool SurvivesOnInvuln(SimCharacter target, string? cause)
+    {
+        if (!IsInvulnerable(target)) return false;
+        DiagnosticLog.Info($"[DamageSolver] {(target as ISimPartyMember)?.Role} survived on an invuln: {cause}");
+        return true;
+    }
+
+    public static bool IsInvulnerable(SimCharacter target)
+        => target.ActiveStatusSnapshot.Any(s => Mitigation.ByStatusId.TryGetValue(s.StatusId, out var m) && m.Damage >= 1f);
+
+    private static readonly Dictionary<uint, ushort> InvulnStatusByJob = new()
+    {
+        [19] = 82,   // Hallowed Ground
+        [21] = 409,  // Holmgang
+        [32] = 810,  // Living Dead
+        [37] = 1836, // Superbolide
+    };
+
+    // Bots (and a debug bot in the player's seat) don't press buttons, so their invuln is just its status.
+    // False for a non-tank job.
+    public static bool GiveBotInvuln(SimCharacter tank, float seconds)
+    {
+        if (!InvulnStatusByJob.TryGetValue(tank.Proxy?.ClassJob ?? 0, out var status)) return false;
+        tank.AddStatus(status, seconds);
         return true;
     }
 
@@ -225,7 +268,7 @@ public class DamageSolver
         if (target.Proxy is { Exists: true } chara)
             chara.ShowFlyText((uint)MathF.Round(fractionOfMaxHp * chara.MaxHealth), name);
         if (!lethal) return;
-        target.Die($"Died to {name} ({context})");
+        Kill(target, actionId, context);
     }
 
     public void SetStatuses(DamageType type, params ushort[] statuses)

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using AnoMech.Core.Game;
+using AnoMech.Scenarios.Legacy;
 using static AnoMech.Scenarios.M9s.M9sConstants;
 
 namespace AnoMech.Scenarios.M9s.Coffinmaker;

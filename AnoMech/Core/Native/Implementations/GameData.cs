@@ -63,6 +63,11 @@ internal sealed class GameData : IGameData
             ? new ModelSkeletonRow(skeletonId, row.Radius)
             : null;
 
+    public StatusRow? Status(ushort statusId)
+        => Plugin.DataManager.GetExcelSheet<LuminaStatus>().TryGetRow(statusId, out var row)
+            ? new StatusRow(statusId, row.LockMovement, row.LockActions, row.LockControl)
+            : null;
+
     public string? StatusName(ushort statusId)
         => Plugin.DataManager.GetExcelSheet<LuminaStatus>().TryGetRow(statusId, out var row) ? NonEmpty(row.Name.ExtractText()) : null;
 

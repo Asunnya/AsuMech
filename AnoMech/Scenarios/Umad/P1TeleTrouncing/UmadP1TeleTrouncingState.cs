@@ -105,34 +105,34 @@ public sealed class UmadP1TeleTrouncingState
     {
         this.rng = rng;
         DpsGetsDifferent = overrides.DpsGetsDifferent ?? rng.NextBool();
-        DpsGetsConfused = rng.NextBool();
-        ConfettiStackSupport = rng.NextSupportRole();
-        ConfettiStackDps = rng.NextDpsRole();
+        DpsGetsConfused = overrides.DpsGetsConfused ?? rng.NextBool();
+        ConfettiStackSupport = overrides.ConfettiStackSupport ?? rng.NextSupportRole();
+        ConfettiStackDps = overrides.ConfettiStackDps ?? rng.NextDpsRole();
 
         // Independent of DpsGetsConfused: BossMod's P1StatueGaze keys purely off which prop plays
         // the wind-up.
         GazeInverted = overrides.GazeInverted ?? rng.NextBool();
         FireIsStack = overrides.FireIsStack ?? rng.NextBool();
         FireIsLie = overrides.FireIsLie ?? rng.NextBool();
-        FireStackSupport = rng.NextSupportRole();
-        FireStackDps = rng.NextDpsRole();
+        FireStackSupport = overrides.FireStackSupport ?? rng.NextSupportRole();
+        FireStackDps = overrides.FireStackDps ?? rng.NextDpsRole();
         ThunderRealOffset = overrides.ThunderRealOffset ?? rng.NextInt(2);
         ThunderOrientationFlipped = overrides.ThunderOrientationFlipped ?? rng.NextBool();
         ThunderIsLie = overrides.ThunderIsLie ?? rng.NextBool();
         var matchingRoles = DpsGetsDifferent ? SupportRoles : DpsRoles;
         var differentRoles = DpsGetsDifferent ? DpsRoles : SupportRoles;
 
-        var matchingDirections = rng.Shuffle(AllDirections);
+        var matchingDirections = overrides.MatchingDirections ?? rng.Shuffle(AllDirections);
         var debuffs = new Dictionary<PartyRole, (TelePortentDirection, TelePortentDirection)>();
         for (var i = 0; i < 4; i++)
             debuffs[matchingRoles[i]] = (matchingDirections[i], matchingDirections[i]);
 
-        var cycleRoles = rng.Shuffle(differentRoles);
+        var cycleRoles = overrides.DifferentCycleRoles ?? rng.Shuffle(differentRoles);
         var polarity = new Dictionary<PartyRole, bool>();
         for (var i = 0; i < 4; i++)
         {
             debuffs[cycleRoles[i]] = (AdjacentCycle[i], AdjacentCycle[(i + 1) % 4]);
-            polarity[cycleRoles[i]] = rng.NextBool();
+            polarity[cycleRoles[i]] = overrides.DifferentPolarity?[i] ?? rng.NextBool();
         }
 
         Debuffs = debuffs;

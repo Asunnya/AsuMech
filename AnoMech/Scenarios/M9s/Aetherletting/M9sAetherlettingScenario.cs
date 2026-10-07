@@ -6,6 +6,7 @@ using AnoMech.Core.Game.Ai;
 using AnoMech.Core.Game.Geometry;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.SimObjects;
+using AnoMech.Scenarios.Legacy;
 using static AnoMech.Scenarios.M9s.M9sConstants;
 
 namespace AnoMech.Scenarios.M9s.Aetherletting;
@@ -51,13 +52,13 @@ public sealed class M9sAetherlettingScenario : IScenario
 
         world.Events.Add(0f, SpawnVamp);
         world.Events.Add(0f, () => world.EnforceArenaBoundary(new SquareArena(Geometry.ArenaHalfWidth), "Walked off the arena"));
-        world.Events.Add(6.75f, () => vamp?.Cast(ActionId.CrowdKillCast, castSeconds: 0.2f));
+        world.Events.Add(6.75f, () => vamp?.LegacyCast(ActionId.CrowdKillCast, castSeconds: 0.2f));
         world.Events.Add(12.86f, () => M9sUtils.Raidwide(world.Party, damage, ActionId.CrowdKill, 0.51f));
         world.Events.Add(12.86f, () => state.Satisfied.Add(1));
         world.Events.Add(13.13f, () => state.Satisfied.Add(1));
         world.Events.Add(13.44f, () => state.Satisfied.Add(1));
         world.Events.Add(13.75f, () => state.Satisfied.Add(1));
-        world.Events.Add(25.51f, () => vamp?.Cast(ActionId.FinaleFataleCast, castSeconds: 4.7f));
+        world.Events.Add(25.51f, () => vamp?.LegacyCast(ActionId.FinaleFataleCast, castSeconds: 4.7f));
         world.Events.Add(31.51f, () => M9sUtils.Raidwide(world.Party, damage, ActionId.FinaleFatale, 0.30f));
         world.Events.Add(31.58f, () => world.Map.AddEffect(0x00020001, 0x10));
         world.Events.Add(31.58f, () => world.EnforceArenaBoundary(Geometry.RingArenaRadius, "Walked into the death wall"));
@@ -65,7 +66,7 @@ public sealed class M9sAetherlettingScenario : IScenario
         world.Events.Add(32.52f, CastPulpingPulses);
         world.Events.Add(36.49f, ResolvePulpingPulses);
 
-        world.Events.Add(37.64f, () => vamp?.Cast(ActionId.AetherlettingCast, castSeconds: 12f));
+        world.Events.Add(37.64f, () => vamp?.LegacyCast(ActionId.AetherlettingCast, castSeconds: 12f));
         world.Events.Add(41.66f, () => CastCones(0));
         world.Events.Add(43.67f, () => CastCones(1));
         world.Events.Add(45.68f, () => CastCones(2));
@@ -126,7 +127,7 @@ public sealed class M9sAetherlettingScenario : IScenario
         foreach (var at in state.PulpingPulses)
             if (SpawnHelper(new Placement(at, 0f)) is { } pulse)
             {
-                pulse.Cast(ActionId.PulpingPulse, castSeconds: 3.7f);
+                pulse.LegacyCast(ActionId.PulpingPulse, castSeconds: 3.7f);
                 pulses.Add(pulse);
             }
     }
@@ -146,7 +147,7 @@ public sealed class M9sAetherlettingScenario : IScenario
             SpawnHelper(new Placement(Vector3.Zero, M9sAetherlettingState.RotationFacing(bearing + 180f))),
         ];
         foreach (var cone in cones[pair])
-            cone?.Cast(ActionId.AetherlettingCone, castSeconds: 8.7f);
+            cone?.LegacyCast(ActionId.AetherlettingCone, castSeconds: 8.7f);
     }
 
     private void ResolveCones(int pair)
@@ -161,7 +162,7 @@ public sealed class M9sAetherlettingScenario : IScenario
         {
             if (world.Party.Get(role) is not { } target || !target.IsAlive()) continue;
             target.AttachLockonVfx(LockonId.Aetherletting, persistent: false);
-            SpawnHelper(new Placement(Vector3.Zero, 0f))?.Cast(ActionId.AetherlettingSpread, castSeconds: 4.7f, targetId: target.GameObjectId);
+            SpawnHelper(new Placement(Vector3.Zero, 0f))?.LegacyCast(ActionId.AetherlettingSpread, castSeconds: 4.7f, target: target);
         }
     }
 
@@ -186,7 +187,7 @@ public sealed class M9sAetherlettingScenario : IScenario
             if (state.Puddles[(int)roles[i]] is not { } at) continue;
             var rotation = state.IsDiagonalCross(roles[i]) ? CrossDiagonal : 0f;
             crosses[pair][i] = SpawnHelper(new Placement(at, rotation));
-            crosses[pair][i]?.Cast(ActionId.AetherlettingCross, castSeconds: 13.7f);
+            crosses[pair][i]?.LegacyCast(ActionId.AetherlettingCross, castSeconds: 13.7f);
         }
     }
 

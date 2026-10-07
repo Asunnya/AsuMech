@@ -172,7 +172,7 @@ internal sealed class FakeBattleChara(FakeBattleCharas owner, int slot) : IBattl
 
     public void ClearTether(byte slot) => SetTether(slot, 0, default, 0);
 
-    public void ShowFlyText(uint amount, string label) { }
+    public void ShowFlyText(uint amount, string label, uint damageTypeIcon = 0) { }
 
     public void CarryTo(Vector3 destination, float rotation, bool selfTarget) => Actor?.StartCarry(destination, rotation);
 

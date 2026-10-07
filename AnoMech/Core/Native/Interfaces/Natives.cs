@@ -14,7 +14,6 @@ public static class Natives
 
     public static IVfxFunctions Vfx { get; internal set; } = null!;
     public static IActionTimelinePreload TimelinePreload { get; internal set; } = null!;
-    public static IRawActionEffect RawActionEffect { get; internal set; } = null!;
 
     public static IZoneSession Zone { get; internal set; } = null!;
     public static IMapEffects MapEffects { get; internal set; } = null!;

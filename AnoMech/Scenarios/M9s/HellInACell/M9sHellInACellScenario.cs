@@ -7,6 +7,7 @@ using AnoMech.Core.Game.Ai;
 using AnoMech.Core.Game.Geometry;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.SimObjects;
+using AnoMech.Scenarios.Legacy;
 using static AnoMech.Scenarios.M9s.M9sConstants;
 
 namespace AnoMech.Scenarios.M9s.HellInACell;
@@ -63,7 +64,7 @@ public sealed class M9sHellInACellScenario : IScenario
 
         world.Events.Add(0f, SpawnVamp);
         world.Events.Add(0f, () => world.EnforceArenaBoundary(new SquareArena(Geometry.ArenaHalfWidth), "Walked off the arena"));
-        world.Events.Add(2.72f, () => vamp?.Cast(ActionId.FinaleFataleCast2, castSeconds: 4.7f));
+        world.Events.Add(2.72f, () => vamp?.LegacyCast(ActionId.FinaleFataleCast2, castSeconds: 4.7f));
         world.Events.Add(8.72f, () => M9sUtils.Raidwide(world.Party, damage, ActionId.FinaleFatale, 0.30f));
         world.Events.Add(8.81f, () => world.Map.AddEffect(0x00020001, 0x10));
         world.Events.Add(8.81f, () => world.EnforceArenaBoundary(Geometry.RingArenaRadius, "Walked into the death wall"));
@@ -131,7 +132,7 @@ public sealed class M9sHellInACellScenario : IScenario
         foreach (var at in state.PulpingPulses[wave])
             if (SpawnHelper(new Placement(at, 0f)) is { } pulse)
             {
-                pulse.Cast(ActionId.PulpingPulse, castSeconds: 3.7f);
+                pulse.LegacyCast(ActionId.PulpingPulse, castSeconds: 3.7f);
                 pulses.Add(pulse);
             }
     }
@@ -144,12 +145,12 @@ public sealed class M9sHellInACellScenario : IScenario
 
     private void CastTowers(int set)
     {
-        vamp?.Cast(ActionId.HellInACell, castSeconds: 3.5f);
+        vamp?.LegacyCast(ActionId.HellInACell, castSeconds: 3.5f);
         towers[set].Clear();
         foreach (var (_, at) in state.TowerAssignments(set))
             if (SpawnHelper(new Placement(at, 0f)) is { } tower)
             {
-                tower.Cast(ActionId.BloodyBondageSolo, castSeconds: 4.7f);
+                tower.LegacyCast(ActionId.BloodyBondageSolo, castSeconds: 4.7f);
                 towers[set].Add(tower);
             }
     }
@@ -248,7 +249,7 @@ public sealed class M9sHellInACellScenario : IScenario
     private void CastUltrasonic(int set, int step)
     {
         var kind = state.UltrasonicOrder[set][step];
-        vamp?.Cast(kind == UltrasonicKind.Spread ? ActionId.UltrasonicSpreadCast : ActionId.UltrasonicAmpCast, castSeconds: 4.7f);
+        vamp?.LegacyCast(kind == UltrasonicKind.Spread ? ActionId.UltrasonicSpreadCast : ActionId.UltrasonicAmpCast, castSeconds: 4.7f);
     }
 
     // Only the group not caged this set is targeted. Sharing a cone is the point (the DPS pair on
@@ -282,7 +283,7 @@ public sealed class M9sHellInACellScenario : IScenario
     {
         var from = vamp?.Position ?? Vector3.Zero;
         var cone = SpawnHelper(new Placement(from, M9sHellInACellState.RotationFacing(from, target.Position)));
-        cone?.Cast(actionId, castSeconds: 0f, targetId: target.GameObjectId, animationLock: 0f);
+        cone?.LegacyCast(actionId, castSeconds: 0f, target: target, animationLock: 0f);
         damage.Resolve(cone, actionId, types, statuses, stackMinTargets: stackMin, size: halfAngle);
     }
 

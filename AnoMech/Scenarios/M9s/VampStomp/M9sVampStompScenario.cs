@@ -6,6 +6,7 @@ using AnoMech.Core.Game.Ai;
 using AnoMech.Core.Game.Geometry;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.SimObjects;
+using AnoMech.Scenarios.Legacy;
 using static AnoMech.Scenarios.M9s.M9sConstants;
 
 namespace AnoMech.Scenarios.M9s.VampStomp;
@@ -52,16 +53,16 @@ public sealed class M9sVampStompScenario : IScenario
         world.Events.Add(0f, SpawnVamp);
         world.Events.Add(0f, () => world.EnforceArenaBoundary(new SquareArena(Geometry.ArenaHalfWidth), "Walked off the arena"));
         world.Events.Add(0.08f, () => vamp?.MoveTo(new Vector3(0f, 0f, -0.5f), 7.5f));
-        world.Events.Add(5f, () => vamp?.Cast(ActionId.KillerVoice, castSeconds: 4.7f));
+        world.Events.Add(5f, () => vamp?.LegacyCast(ActionId.KillerVoice, castSeconds: 4.7f));
         world.Events.Add(9.96f, () => M9sUtils.Raidwide(party, damage, ActionId.KillerVoice, 0.45f));
 
-        world.Events.Add(15.14f, () => vamp?.Cast(ActionId.HardcoreCast, castSeconds: 2.7f));
+        world.Events.Add(15.14f, () => vamp?.LegacyCast(ActionId.HardcoreCast, castSeconds: 2.7f));
         world.Events.Add(15.14f, () => hardcore.Cast(vamp?.Position ?? Vector3.Zero));
         world.Events.Add(20.10f, hardcore.Resolve);
 
         world.Events.Add(25.24f, stomp.ApplyCurses);
         world.Events.Add(25.24f, stomp.SpawnBats);
-        world.Events.Add(25.33f, () => vamp?.Cast(ActionId.VampStompCast, targetLocation: Vector3.Zero, castSeconds: 3.8f));
+        world.Events.Add(25.33f, () => vamp?.LegacyCast(ActionId.VampStompCast, targetLocation: Vector3.Zero, castSeconds: 3.8f));
         world.Events.Add(25.33f, stomp.CastVampStomp);
         world.Events.Add(30.29f, stomp.ResolveVampStomp);
         world.Events.Add(30.47f, () => vamp?.SetPosition(new Placement(Vector3.Zero, MathF.PI)));
@@ -82,7 +83,7 @@ public sealed class M9sVampStompScenario : IScenario
         stomp.ScheduleCurseRing();
 
         world.Events.Add(41.37f, MarkBrutalRain);
-        world.Events.Add(41.46f, () => vamp?.Cast(ActionId.BrutalRainCast, castSeconds: 3.5f));
+        world.Events.Add(41.46f, () => vamp?.LegacyCast(ActionId.BrutalRainCast, castSeconds: 3.5f));
         world.Events.Add(46.47f, () => ResolveBrutalRain(0));
         world.Events.Add(47.53f, () => ResolveBrutalRain(1));
         world.Events.Add(48.61f, () => ResolveBrutalRain(2));
@@ -133,7 +134,7 @@ public sealed class M9sVampStompScenario : IScenario
     private void ResolveBrutalRain(int hit)
     {
         if (hit >= brutalRainHits || BrutalRainTarget() is not { } target) return;
-        SpawnHelper(Vector3.Zero)?.Cast(ActionId.BrutalRainHit, castSeconds: 0f, targetId: target.GameObjectId, animationLock: 0f);
+        SpawnHelper(Vector3.Zero)?.LegacyCast(ActionId.BrutalRainHit, castSeconds: 0f, target: target, animationLock: 0f);
         damage.Resolve(target, ActionId.BrutalRainHit, [], [], stackMinTargets: 4);
     }
 

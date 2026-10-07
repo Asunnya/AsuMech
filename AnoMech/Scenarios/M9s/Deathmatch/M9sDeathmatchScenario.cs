@@ -6,6 +6,7 @@ using AnoMech.Core.Game;
 using AnoMech.Core.Game.Ai;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.SimObjects;
+using AnoMech.Scenarios.Legacy;
 using static AnoMech.Scenarios.M9s.M9sConstants;
 
 namespace AnoMech.Scenarios.M9s.Deathmatch;
@@ -102,7 +103,7 @@ public sealed class M9sDeathmatchScenario : IScenario
         world.Events.Add(46.50f, DespawnBats);
 
         world.Events.Add(47.42f, MarkBrutalRain);
-        world.Events.Add(47.51f, () => vamp?.Cast(ActionId.BrutalRainCast, castSeconds: 3.5f));
+        world.Events.Add(47.51f, () => vamp?.LegacyCast(ActionId.BrutalRainCast, castSeconds: 3.5f));
         world.Events.Add(52.55f, () => ResolveBrutalRain(0));
         world.Events.Add(53.62f, () => ResolveBrutalRain(1));
         world.Events.Add(54.69f, () => ResolveBrutalRain(2));
@@ -141,11 +142,11 @@ public sealed class M9sDeathmatchScenario : IScenario
 
     private void CastTowers()
     {
-        vamp?.Cast(ActionId.UndeadDeathmatch, castSeconds: 3.5f);
+        vamp?.LegacyCast(ActionId.UndeadDeathmatch, castSeconds: 3.5f);
         for (var group = 0; group < 2; group++)
             if (SpawnHelper(new Placement(state.TowerPosition(group), 0f)) is { } tower)
             {
-                tower.Cast(ActionId.BloodyBondageParty, castSeconds: 4.7f);
+                tower.LegacyCast(ActionId.BloodyBondageParty, castSeconds: 4.7f);
                 towers.Add(tower);
             }
     }
@@ -206,7 +207,7 @@ public sealed class M9sDeathmatchScenario : IScenario
 
     private void CastScratch(int cycle)
     {
-        vamp?.Cast(ActionId.SanguineScratchCast, castSeconds: 2f);
+        vamp?.LegacyCast(ActionId.SanguineScratchCast, castSeconds: 2f);
         scratch.CastFirstWave(Vector3.Zero, state.Cycles[cycle].FirstConeOffset);
     }
 
@@ -222,7 +223,7 @@ public sealed class M9sDeathmatchScenario : IScenario
     private void CastBatShapes(int cycle)
     {
         for (var group = 0; group < 2; group++)
-            bats[group]?.Cast(BatActionId(group, cycle), castSeconds: 0.7f);
+            bats[group]?.LegacyCast(BatActionId(group, cycle), castSeconds: 0.7f);
     }
 
     private void ResolveBatShapes(int cycle)
@@ -275,7 +276,7 @@ public sealed class M9sDeathmatchScenario : IScenario
 
     private void ExplodeLeash(SimCharacter member, float length)
     {
-        SpawnHelper(new Placement(Vector3.Zero, 0f))?.Cast(ActionId.LeashExplosion, castSeconds: 0f, targetId: member.GameObjectId, animationLock: 0f);
+        SpawnHelper(new Placement(Vector3.Zero, 0f))?.LegacyCast(ActionId.LeashExplosion, castSeconds: 0f, target: member, animationLock: 0f);
         var fraction = LeashDamageAtSlack * length / M9sDeathmatchState.LeashSlack;
         damage.ApplyDamage(member, MathF.Min(fraction, 1f), ActionId.LeashExplosion, $"leash stretched to {length:0}y", lethal: fraction >= 1f);
         member.AddStatus(StatusId.DamageDown, DamageDownSeconds);
@@ -302,7 +303,7 @@ public sealed class M9sDeathmatchScenario : IScenario
     private void ResolveBrutalRain(int hit)
     {
         if (hit >= brutalRainHits || BrutalRainTarget() is not { } target) return;
-        SpawnHelper(new Placement(Vector3.Zero, 0f))?.Cast(ActionId.BrutalRainHit, castSeconds: 0f, targetId: target.GameObjectId, animationLock: 0f);
+        SpawnHelper(new Placement(Vector3.Zero, 0f))?.LegacyCast(ActionId.BrutalRainHit, castSeconds: 0f, target: target, animationLock: 0f);
         damage.Resolve(target, ActionId.BrutalRainHit, [], [], stackMinTargets: 4);
     }
 

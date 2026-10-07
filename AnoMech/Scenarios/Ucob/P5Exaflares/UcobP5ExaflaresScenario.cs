@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using AnoMech.Core.Game;
@@ -8,6 +7,7 @@ using AnoMech.Core.Game.Party;
 using AnoMech.Core.SimObjects;
 using AnoMech.Multiplayer;
 using static AnoMech.Scenarios.Ucob.UcobConstants;
+using Actions = AnoMech.Scenarios.Ucob.UcobActions;
 
 namespace AnoMech.Scenarios.Ucob.P5Exaflares;
 
@@ -19,13 +19,8 @@ namespace AnoMech.Scenarios.Ucob.P5Exaflares;
 // Each lane's first eruption is the release of its own arrow-omen cast (ExaflareFirst), so the
 // telegraph and hit 1 share one helper and cannot drift apart; the five follow-ups are instant
 // ExaflareRest casts from a helper spawned at each step. The flame itself is spawned by hand
-// (VfxPath.ExaflareEruption) because these actions carry no VFX the action effect could play. A hit snapshots who is standing in it
-// and holds the kill one application delay later, so the KO lands on the visible bloom rather
-// than on the invisible snapshot instant. Lingering flame is decorative: only the snapshot kills.
-//
-// The timeline runs on a scenario-local scheduler (`timeline`) ticked with the unscaled frame
-// delta, so the arrow cast bars (real time) and the rolling hits stay locked together and ignore
-// the Speed buttons.
+// (VfxPath.ExaflareEruption) because these actions carry no VFX the action effect could play.
+// Lingering flame is decorative: only the snapshot kills.
 public sealed class UcobP5ExaflaresScenario : IMultiplayerReplayable
 {
     public string Name => "Exaflares";
@@ -36,54 +31,37 @@ public sealed class UcobP5ExaflaresScenario : IMultiplayerReplayable
     public IReadOnlyList<IScenarioAi> AiStrats => [new UcobP5ExaflaresAi()];
 
     public void DrawSettings() => settingsWindow.Draw();
+    public object SettingsOverrides => settingsWindow.Overrides;
     private readonly UcobP5ExaflaresSettingsWindow settingsWindow = new();
 
-    // Snapshot -> kill application delay: sets only the instant a caught player dies, so the KO
-    // reads off the bloom instead of the snapshot. Same hold the UMAD exaflares use.
-    private const float KillDelay = 0.6f;
     // Keep an eruption's helper alive this long so its flame isn't cut mid-animation.
     private const float HitVfxSeconds = 3f;
     private const float DespawnAfterLastHit = 4f;
-
-    private readonly EventScheduler timeline = new();
 
     private UcobP5ExaflaresState state = null!;
 
     // Polled by the multiplayer host; null until Run has rolled the pattern.
     public UcobP5ExaflaresState? LastState { get; private set; }
     private SimWorld world = null!;
-    private DamageSolver damage = null!;
     private SimEnemy? bahamut;
     private readonly List<SimEnemy> helpers = new();
 
     public void Run(SimWorld worldParam, int? selectedAi)
     {
         world = worldParam;
-        damage = new DamageSolver(worldParam.Party);
         helpers.Clear();
 
-        // Re-arm the scenario clock for this run (the scenario object is reused).
-        timeline.Clear();
-
-        state = new UcobP5ExaflaresState(world.Rng, settingsWindow.Overrides, timeline);
+        state = new UcobP5ExaflaresState(world.Rng, settingsWindow.Overrides);
         LastState = state;
 
-        // Bots schedule on the scenario `timeline` (after Clear, so their adds are absolute).
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<UcobP5ExaflaresState>)AiStrats[idx]).Run(state, world);
 
-        timeline.Add(0f, SpawnBahamut);
-        timeline.Add(UcobP5ExaflaresState.BossCastAt,
-            () => bahamut?.Cast(ActionId.Exaflare, castSeconds: UcobP5ExaflaresState.BossCastSeconds));
+        world.Events.Add(0f, SpawnBahamut);
+        world.Events.Add(UcobP5ExaflaresState.BossCastAt,
+            () => bahamut?.Cast(ActionId.Exaflare));
         foreach (var line in state.Lines) LaunchLine(line);
-        timeline.Add(state.LastHitAt + DespawnAfterLastHit, DespawnAll);
-    }
-
-    public bool IsFinished(SimWorld world) => timeline.IsEmpty;
-
-    public void Tick(float delta, float elapsed)
-    {
-        timeline.Tick(delta);
+        world.Events.Add(state.LastHitAt + DespawnAfterLastHit, DespawnAll);
     }
 
     private void SpawnBahamut()
@@ -104,36 +82,24 @@ public sealed class UcobP5ExaflaresScenario : IMultiplayerReplayable
     private void LaunchLine(ExaflareLine line)
     {
         SimEnemy? head = null;
-        timeline.Add(line.TelegraphAt, () =>
+        world.Events.Add(line.TelegraphAt, () =>
         {
             head = SpawnHelper(line.Start, line.Rotation);
-            head?.Cast(ActionId.ExaflareFirst, castSeconds: UcobP5ExaflaresState.TelegraphSeconds);
-            timeline.Add(UcobP5ExaflaresState.TelegraphSeconds + HitVfxSeconds, () => head?.Despawn());
+            head?.Cast(Actions.ExaflareFirst);
         });
 
         for (var i = 0; i < line.Hits.Count; i++)
         {
             var hit = line.Hits[i];
             var isFirst = i == 0;
-            timeline.Add(hit.Time, () =>
+            SimEnemy? source = null;
+            world.Events.Add(hit.Time, () =>
             {
-                var actionId = isFirst ? ActionId.ExaflareFirst : ActionId.ExaflareRest;
-                SimEnemy? source = head;
-                if (!isFirst)
-                {
-                    source = SpawnHelper(hit.Position, line.Rotation);
-                    source?.Cast(actionId, castSeconds: 0f, animationLock: 0f);
-                    timeline.Add(HitVfxSeconds, () => source?.Despawn());
-                }
+                source = isFirst ? head : SpawnHelper(hit.Position, line.Rotation);
                 source?.AddVfx(VfxPath.ExaflareEruption, persistent: false);
-
-                var caught = damage.Resolve(source, actionId, [DamageType.Lethal], [], killTargets: false);
-                timeline.Add(KillDelay, () =>
-                {
-                    foreach (var c in caught)
-                        damage.ApplyDamage(c, 1f, actionId, "exaflare snapshot", lethal: true);
-                });
+                if (!isFirst) source?.Cast(Actions.ExaflareRest);
             });
+            world.Events.Add(hit.Time + HitVfxSeconds, () => source?.Despawn());
         }
     }
 
@@ -168,25 +134,9 @@ public sealed class UcobP5ExaflaresScenario : IMultiplayerReplayable
     public object? StartReplay(MpMessage message, int aiIndex, PartyRole myRole, SimWorld replayWorld)
     {
         if (message is not UcobP5ExaflaresAiReplayStateMessage msg || aiIndex < 0 || aiIndex >= AiStrats.Count) return null;
-        // A peer's own scheduler: the Ai schedules its dodges onto it and TickReplay is the only
-        // thing advancing it.
-        var shadowState = UcobP5ExaflaresState.FromNetworkReplay(msg.DirectionRadians, msg.LaneOrder, new EventScheduler());
+        var shadowState = UcobP5ExaflaresState.FromNetworkReplay(msg.DirectionRadians, msg.LaneOrder);
         if (shadowState == null) return null;
         ((IScenarioAi<UcobP5ExaflaresState>)AiStrats[aiIndex]).Run(shadowState, replayWorld);
         return shadowState;
-    }
-
-    public void TickReplay(object shadowStateObj, float deltaSeconds)
-    {
-        if (shadowStateObj is not UcobP5ExaflaresState shadowState) return;
-        shadowState.Timeline.Tick(deltaSeconds);
-    }
-
-    public float? ReplayClockSeconds => timeline.Elapsed + Plugin.GameInstance.SecondsSinceTick;
-
-    public void AdvanceReplayClockTo(object shadowStateObj, float seconds)
-    {
-        if (shadowStateObj is UcobP5ExaflaresState shadowState)
-            shadowState.Timeline.Advance(seconds - shadowState.Timeline.Elapsed);
     }
 }

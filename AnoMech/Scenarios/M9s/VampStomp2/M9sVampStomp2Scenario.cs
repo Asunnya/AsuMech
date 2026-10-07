@@ -5,6 +5,7 @@ using AnoMech.Core.Game;
 using AnoMech.Core.Game.Ai;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.SimObjects;
+using AnoMech.Scenarios.Legacy;
 using static AnoMech.Scenarios.M9s.M9sConstants;
 
 namespace AnoMech.Scenarios.M9s.VampStomp2;
@@ -56,7 +57,7 @@ public sealed class M9sVampStomp2Scenario : IScenario
         world.Events.Add(0.1f, () => world.Map.AddEffect(0x00020001, 0x10));
         world.Events.Add(0.1f, () => world.EnforceArenaBoundary(Geometry.RingArenaRadius, "Walked into the death wall"));
 
-        world.Events.Add(15.18f, () => vamp?.Cast(ActionId.HardcoreCast, castSeconds: 2.7f));
+        world.Events.Add(15.18f, () => vamp?.LegacyCast(ActionId.HardcoreCast, castSeconds: 2.7f));
         world.Events.Add(15.18f, () => hardcore.Cast(vamp?.Position ?? Vector3.Zero));
         world.Events.Add(20.14f, hardcore.Resolve);
 
@@ -65,7 +66,7 @@ public sealed class M9sVampStomp2Scenario : IScenario
 
         world.Events.Add(25.24f, stomp.ApplyCurses);
         world.Events.Add(25.24f, stomp.SpawnBats);
-        world.Events.Add(25.33f, () => vamp?.Cast(ActionId.VampStompCast, targetLocation: Vector3.Zero, castSeconds: 3.8f));
+        world.Events.Add(25.33f, () => vamp?.LegacyCast(ActionId.VampStompCast, targetLocation: Vector3.Zero, castSeconds: 3.8f));
         world.Events.Add(25.33f, stomp.CastVampStomp);
         world.Events.Add(30.29f, stomp.ResolveVampStomp);
         world.Events.Add(30.47f, () => vamp?.SetPosition(new Placement(Vector3.Zero, MathF.PI)));
@@ -90,7 +91,7 @@ public sealed class M9sVampStomp2Scenario : IScenario
         world.Events.Add(49.53f, () => ResolveCleave(longCleave, M9sHalfMoon.LongId(state.HalfMoon, state.HalfMoonIsMore)));
 
         world.Events.Add(51.59f, MarkBrutalRain);
-        world.Events.Add(51.68f, () => vamp?.Cast(ActionId.BrutalRainCast, castSeconds: 3.5f));
+        world.Events.Add(51.68f, () => vamp?.LegacyCast(ActionId.BrutalRainCast, castSeconds: 3.5f));
         world.Events.Add(56.73f, () => ResolveBrutalRain(0));
         world.Events.Add(57.80f, () => ResolveBrutalRain(1));
         world.Events.Add(58.87f, () => ResolveBrutalRain(2));
@@ -98,7 +99,7 @@ public sealed class M9sVampStomp2Scenario : IScenario
         world.Events.Add(61.00f, () => ResolveBrutalRain(4));
         world.Events.Add(62.07f, () => ResolveBrutalRain(5));
 
-        world.Events.Add(64.81f, () => vamp?.Cast(ActionId.InsatiableThirstCast, castSeconds: 2.5f));
+        world.Events.Add(64.81f, () => vamp?.LegacyCast(ActionId.InsatiableThirstCast, castSeconds: 2.5f));
         world.Events.Add(70.60f, () => M9sUtils.Raidwide(world.Party, damage, ActionId.InsatiableThirst, 0.35f));
         world.Events.Add(70.83f, () => world.Map.AddEffect(0x00080004, 0x10));
         world.Events.Add(72f, DespawnAll);
@@ -138,7 +139,7 @@ public sealed class M9sVampStomp2Scenario : IScenario
         foreach (var at in state.PulpingPulses)
             if (SpawnHelper(at) is { } pulse)
             {
-                pulse.Cast(ActionId.PulpingPulse, castSeconds: 3.7f);
+                pulse.LegacyCast(ActionId.PulpingPulse, castSeconds: 3.7f);
                 pulses.Add(pulse);
             }
     }
@@ -157,11 +158,11 @@ public sealed class M9sVampStomp2Scenario : IScenario
         vamp?.StopMoving();
         vamp?.SetPosition(boss);
         var more = state.HalfMoonIsMore = state.Satisfied.IsMore;
-        vamp?.Cast(M9sHalfMoon.BossCastId(state.HalfMoon, more), castSeconds: 4f);
+        vamp?.LegacyCast(M9sHalfMoon.BossCastId(state.HalfMoon, more), castSeconds: 4f);
         shortCleave = SpawnHelper(M9sHalfMoon.CleaveOrigin(boss, state.HalfMoonShortRotation, more));
-        shortCleave?.Cast(M9sHalfMoon.ShortId(state.HalfMoon, more), castSeconds: 4.7f);
+        shortCleave?.LegacyCast(M9sHalfMoon.ShortId(state.HalfMoon, more), castSeconds: 4.7f);
         longCleave = SpawnHelper(M9sHalfMoon.CleaveOrigin(boss, state.HalfMoonLongRotation, more));
-        longCleave?.Cast(M9sHalfMoon.LongId(state.HalfMoon, more), castSeconds: 7.7f, omenDelay: 4.7f);
+        longCleave?.LegacyCast(M9sHalfMoon.LongId(state.HalfMoon, more), castSeconds: 7.7f, omenDelay: 4.7f);
     }
 
     private void ResolveCleave(SimEnemy? cleave, uint actionId) =>
@@ -180,7 +181,7 @@ public sealed class M9sVampStomp2Scenario : IScenario
     private void ResolveBrutalRain(int hit)
     {
         if (hit >= brutalRainHits || BrutalRainTarget() is not { } target) return;
-        SpawnHelper(Vector3.Zero)?.Cast(ActionId.BrutalRainHit, castSeconds: 0f, targetId: target.GameObjectId, animationLock: 0f);
+        SpawnHelper(Vector3.Zero)?.LegacyCast(ActionId.BrutalRainHit, castSeconds: 0f, target: target, animationLock: 0f);
         damage.Resolve(target, ActionId.BrutalRainHit, [], [], stackMinTargets: 4);
     }
 

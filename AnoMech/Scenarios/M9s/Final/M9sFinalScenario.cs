@@ -4,6 +4,7 @@ using System.Numerics;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Ai;
 using AnoMech.Core.SimObjects;
+using AnoMech.Scenarios.Legacy;
 using static AnoMech.Scenarios.M9s.M9sConstants;
 
 namespace AnoMech.Scenarios.M9s.Final;
@@ -64,7 +65,7 @@ public sealed class M9sFinalScenario : IScenario
 
         world.Events.Add(6.66f, stomp.ApplyCurses);
         world.Events.Add(6.66f, stomp.SpawnBats);
-        world.Events.Add(6.75f, () => vamp?.Cast(ActionId.VampStompCast, targetLocation: Vector3.Zero, castSeconds: 3.8f));
+        world.Events.Add(6.75f, () => vamp?.LegacyCast(ActionId.VampStompCast, targetLocation: Vector3.Zero, castSeconds: 3.8f));
         world.Events.Add(6.75f, stomp.CastVampStomp);
         world.Events.Add(11.71f, stomp.ResolveVampStomp);
         world.Events.Add(11.89f, () => vamp?.SetPosition(new Placement(Vector3.Zero, MathF.PI)));
@@ -87,7 +88,7 @@ public sealed class M9sFinalScenario : IScenario
         world.Events.Add(27.94f, () => ResolveCleave(shortCleave, M9sHalfMoon.ShortId(state.HalfMoon, halfMoonIsMore)));
         world.Events.Add(30.92f, () => ResolveCleave(longCleave, M9sHalfMoon.LongId(state.HalfMoon, halfMoonIsMore)));
 
-        world.Events.Add(33.05f, () => vamp?.Cast(ActionId.HardcoreCast, castSeconds: 2.7f));
+        world.Events.Add(33.05f, () => vamp?.LegacyCast(ActionId.HardcoreCast, castSeconds: 2.7f));
         world.Events.Add(33.05f, () => hardcore.Cast(vamp?.Position ?? Vector3.Zero));
         world.Events.Add(38.01f, hardcore.Resolve);
 
@@ -95,7 +96,7 @@ public sealed class M9sFinalScenario : IScenario
         world.Events.Add(43.06f, ResolvePulpingPulses);
 
         world.Events.Add(45.00f, () => vamp?.MoveTo(Vector3.Zero, 6f, MathF.PI));
-        world.Events.Add(47.37f, () => vamp?.Cast(ActionId.SanguineScratchCast, castSeconds: 2f));
+        world.Events.Add(47.37f, () => vamp?.LegacyCast(ActionId.SanguineScratchCast, castSeconds: 2f));
         world.Events.Add(47.37f, () => scratch.CastFirstWave(Vector3.Zero, state.ScratchFirstOffset));
         world.Events.Add(50.36f, () => scratch.ResolveWave(Vector3.Zero, state.ScratchFirstOffset, 0));
         world.Events.Add(52.78f, () => scratch.ResolveWave(Vector3.Zero, state.ScratchFirstOffset, 1));
@@ -103,14 +104,14 @@ public sealed class M9sFinalScenario : IScenario
         world.Events.Add(57.56f, () => scratch.ResolveWave(Vector3.Zero, state.ScratchFirstOffset, 3));
         world.Events.Add(59.98f, () => scratch.ResolveWave(Vector3.Zero, state.ScratchFirstOffset, 4));
 
-        world.Events.Add(64.70f, () => vamp?.Cast(ActionId.InsatiableThirstCast, castSeconds: 2.5f));
+        world.Events.Add(64.70f, () => vamp?.LegacyCast(ActionId.InsatiableThirstCast, castSeconds: 2.5f));
         world.Events.Add(70.49f, () => M9sUtils.Raidwide(world.Party, damage, ActionId.InsatiableThirst, 0.35f));
         world.Events.Add(70.72f, () => world.Map.AddEffect(0x00080004, 0x10));
 
-        world.Events.Add(79.10f, () => vamp?.Cast(ActionId.CrowdKillCast, castSeconds: 0.2f));
+        world.Events.Add(79.10f, () => vamp?.LegacyCast(ActionId.CrowdKillCast, castSeconds: 0.2f));
         world.Events.Add(81.00f, KillBossUnlessEnrage);
         world.Events.Add(85.20f, CrowdKillIfEnrage);
-        world.Events.Add(93.75f, () => { if (state.Enrage) vamp?.Cast(ActionId.FinaleFataleEnrageCast, castSeconds: 9.7f); });
+        world.Events.Add(93.75f, () => { if (state.Enrage) vamp?.LegacyCast(ActionId.FinaleFataleEnrageCast, castSeconds: 9.7f); });
         world.Events.Add(104.55f, () => { if (state.Enrage) world.Party.WipeAllPlayers("Final Finale Fatale (enrage)"); });
         world.Events.Add(106f, DespawnAll);
     }
@@ -152,11 +153,11 @@ public sealed class M9sFinalScenario : IScenario
         vamp?.StopMoving();
         vamp?.SetPosition(boss);
         var more = halfMoonIsMore = state.Satisfied.IsMore;
-        vamp?.Cast(M9sHalfMoon.BossCastId(state.HalfMoon, more), castSeconds: 4f);
+        vamp?.LegacyCast(M9sHalfMoon.BossCastId(state.HalfMoon, more), castSeconds: 4f);
         shortCleave = SpawnHelper(M9sHalfMoon.CleaveOrigin(boss, state.HalfMoonShortRotation, more));
-        shortCleave?.Cast(M9sHalfMoon.ShortId(state.HalfMoon, more), castSeconds: 4.7f);
+        shortCleave?.LegacyCast(M9sHalfMoon.ShortId(state.HalfMoon, more), castSeconds: 4.7f);
         longCleave = SpawnHelper(M9sHalfMoon.CleaveOrigin(boss, state.HalfMoonLongRotation, more));
-        longCleave?.Cast(M9sHalfMoon.LongId(state.HalfMoon, more), castSeconds: 7.7f, omenDelay: 4.7f);
+        longCleave?.LegacyCast(M9sHalfMoon.LongId(state.HalfMoon, more), castSeconds: 7.7f, omenDelay: 4.7f);
     }
 
     private void ResolveCleave(SimEnemy? cleave, uint actionId) =>
@@ -167,7 +168,7 @@ public sealed class M9sFinalScenario : IScenario
         foreach (var at in M9sFinalState.PulpingPulses)
             if (SpawnHelper(at) is { } pulse)
             {
-                pulse.Cast(ActionId.PulpingPulse, castSeconds: 3.7f);
+                pulse.LegacyCast(ActionId.PulpingPulse, castSeconds: 3.7f);
                 pulses.Add(pulse);
             }
     }

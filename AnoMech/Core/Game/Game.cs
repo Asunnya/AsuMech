@@ -64,12 +64,12 @@ public sealed class Game : IDisposable
 
     // Consecutive successful completions of whatever scenario is currently active. Reset by
     // Kill on any real (non-godmode) death and by RunScenarioInternal when a different
-    // scenario starts. Incremented automatically once IScenario.IsFinished reports true and
-    // stays true for MechanicResultSettleSeconds (see UpdateMechanicResult): no per-scenario
+    // scenario starts. Incremented automatically once Events runs dry and
+    // stays empty for MechanicResultSettleSeconds (see UpdateMechanicResult): no per-scenario
     // reporting needed. In-memory only: does not survive a plugin reload.
     public int MechanicStreak { get; private set; }
 
-    // How long IsFinished has to stay true before it counts as "reached the end cleanly".
+    // How long Events has to stay empty before it counts as "reached the end cleanly".
     // Covers a death whose failure check trails a few frames behind the scenario's own
     // last scheduled action (rather than firing in the exact same frame, which the Tick
     // call order below already handles on its own).
@@ -86,12 +86,8 @@ public sealed class Game : IDisposable
     private const float MistakeMarkCooldownSeconds = 1f;
     private float? lastMistakeElapsed;
 
-    // Set by Kill on any real death, scoped to the current run (cleared by ResetInternal).
-    // IsFinished can go true on a queue that Kill's own freeze-timer event never touches
-    // (e.g. a scenario with a private EventScheduler immune to EventTimeScale): there's no
-    // structural guarantee that queue and the freeze timer interleave correctly the way two
-    // entries on the same Events queue would, so this flag is the actual source of truth for
-    // "did this run fail", independent of any queue or timing race.
+    // Set by Kill on any real death, scoped to the current run (cleared by ResetInternal): the
+    // source of truth for "did this run fail", since a queue running dry says nothing about deaths.
     private bool deathOccurredThisRun;
 
     private IScenario? activeScenario;
@@ -229,8 +225,9 @@ public sealed class Game : IDisposable
     }
 
     // Raised when Kill actually takes a slot down; the host broadcasts RoleKilled from it. A
-    // peer's own Kill calls are reactions to a received RoleKilled, so nothing echoes.
-    public event Action<PartyRole, string>? PartyMemberKilled;
+    // peer's own Kill calls are reactions to a received RoleKilled, so nothing echoes. The action
+    // id is null for a death that names none (the obsolete Die(string)).
+    public event Action<PartyRole, string, uint?>? PartyMemberKilled;
 
     // The selected preset, or [0] as the default.
     private static IReadOnlyList<Waymark> ResolveWaymarks(IZone zone, int selectedWaymark)
@@ -333,7 +330,7 @@ public sealed class Game : IDisposable
                 throw;
             }
         }
-        // Both host and peer: RunInstanceEvents carries no RNG/AI/DamageSolver dependency.
+        // Both host and peer: RunInstanceEvents carries no RNG/AI/damage-check dependency.
         scenario.RunInstanceEvents(World);
         // Entering the zone always starts at spawn; a restart only recenters the player
         // if they're standing outside the arena ring (otherwise they keep their position).
@@ -396,16 +393,12 @@ public sealed class Game : IDisposable
 #endif
     }
 
-    // Infers a clean run from IScenario.IsFinished going true and staying true, rather than
-    // needing each scenario to report its own completion. deathOccurredThisRun (set by Kill,
-    // independent of whichever queue IsFinished watches) is the actual gate against a failed
-    // run being mistaken for a clean one: a queue running dry is not by itself proof nothing
-    // died, since Kill's own freeze-timer event lives on Events specifically and a scenario's
-    // IsFinished override may watch a different queue entirely.
+    // Infers a clean run from Events running dry and staying empty, rather than needing each
+    // scenario to report its own completion; deathOccurredThisRun gates out a failed run.
     private void UpdateMechanicResult(float deltaSeconds)
     {
         if (mechanicResultReported) return;
-        if (activeScenario is null || !activeScenario.IsFinished(World))
+        if (activeScenario is null || !Events.IsEmpty)
         {
             scenarioFinishedElapsed = null;
             return;
@@ -435,20 +428,13 @@ public sealed class Game : IDisposable
     // on the first non-godmode death.
     //
     // Returns true only when the member actually went down (OnKilled ran):
-    // false when it was already dead, invulnerable (UseInvuln), or godmode
-    // swallowed it. Callers that run extra on-death logic should gate on this
-    // so an invuln'd/godmode'd "death" doesn't trigger gameplay consequences.
-    public bool Kill(ISimPartyMember target, string cause)
+    // false when it was already dead or godmode swallowed it. Callers that run
+    // extra on-death logic should gate on this so a godmode'd "death" doesn't
+    // trigger gameplay consequences.
+    public bool Kill(ISimPartyMember target, string cause, uint? actionId = null)
     {
         if (target == null) return false;
         if (target.Dead) return false;
-        // ActiveStatusSnapshot, not the native StatusManager: AddStatus writes through our list.
-        if (target is SimCharacter sc && sc.ActiveStatusSnapshot.Any(s => AnoMech.Core.UserActions.Mitigation.IsInvuln(s.StatusId)))
-        {
-            Plugin.Log.Info($"[Invuln] {DescribeName(target)} survived: {cause}");
-            AnoMech.Core.DiagnosticLog.Info($"[Game] Kill: {target.Role} survived via Invuln -- {cause}");
-            return false;
-        }
 
         AnoMech.Core.DiagnosticLog.Warn(
             $"[Game] Kill: {target.Role} died at ({(target as IPositioned)?.Position.X:F1},{(target as IPositioned)?.Position.Z:F1}) -- {cause}");
@@ -478,7 +464,7 @@ public sealed class Game : IDisposable
             return false;
         }
         target.OnKilled();
-        PartyMemberKilled?.Invoke(target.Role, cause);
+        PartyMemberKilled?.Invoke(target.Role, cause, actionId);
         MechanicStreak = 0;
         deathOccurredThisRun = true;
         AutoRestart = false;

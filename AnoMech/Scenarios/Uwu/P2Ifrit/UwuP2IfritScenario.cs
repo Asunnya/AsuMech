@@ -7,6 +7,7 @@ using AnoMech.Core.Game.Ai;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.SimObjects;
 using FFXIVClientStructs.FFXIV.Client.Game;
+using AnoMech.Scenarios.Legacy;
 using static AnoMech.Scenarios.Uwu.UwuConstants;
 using static AnoMech.Scenarios.Uwu.UwuUtils;
 using static AnoMech.Scenarios.Uwu.P2Ifrit.UwuP2IfritState;

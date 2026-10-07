@@ -25,8 +25,10 @@ public class UltimateSuppressionAi : IScenarioAi<UltimateSuppressionState>
         ai.Move(15f, Eruptions1);
         ai.Move(18.3f, Eruptions2);
         ai.Move(18.8f, Eruptions3);
+        ai.Move(19.3f, TanksInterceptOwnSistersMistralSong);
         ai.Move(21f, Eruptions4);
         ai.Move(23.25f, FeatherRain1);
+        ai.Move(23.6f, MainTankFollowsGaol);
         ai.Move(25.25f, FeatherRain2);
         ai.Move(27.05f, () => AiMove.Single(((ISimPartyMember)state.PlayerLightPillar!).Role, new(6, -5)));
         ai.Move(29.3f, () => AiMove.Single(((ISimPartyMember)state.PlayerLightPillar!).Role, new(6.25f, 0)));
@@ -115,10 +117,20 @@ public class UltimateSuppressionAi : IScenarioAi<UltimateSuppressionState>
             ]);
     }
 
+    private IAiMove TanksInterceptOwnSistersMistralSong()
+    {
+        return AiMove.Create(
+            new(-3.5f, 8.7f), // MT, Chirada
+            new(-7.4f, 5f) // OT, Suparna
+            ).NaturalOrder();
+    }
+
     private IAiMove Eruptions4()
     {
         return AiMove.Create(
-            null, null, null, null, null,
+            null, // MT
+            new(-6, 8), // OT, out of Garuda's Mistral Song
+            null, null, null,
             new(12, -2), new(12, -2), // Eruption
             null
             )
@@ -140,7 +152,7 @@ public class UltimateSuppressionAi : IScenarioAi<UltimateSuppressionState>
         var gaolPos = new Vector2(gaol.Position.X, gaol.Position.Z);
 
         return AiMove.Create(
-            gaolPos,  // MT
+            null,  // MT
             gaolPos, // OT
             new(-12, -2), // Light Pillar
             gaolPos, // Mistral Song
@@ -159,6 +171,12 @@ public class UltimateSuppressionAi : IScenarioAi<UltimateSuppressionState>
                 ((ISimPartyMember)state.PlayerEruptions[1]!).Role,
                 ((ISimPartyMember)gaol).Role,
             ]);
+    }
+
+    private IAiMove MainTankFollowsGaol()
+    {
+        var gaol = state.PlayerGaol!;
+        return AiMove.Single(PartyRole.MainTank, new(gaol.Position.X, gaol.Position.Z));
     }
 
     private IAiMove FeatherRain2()

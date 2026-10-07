@@ -38,7 +38,6 @@ public sealed class UcobP5ExaflaresState
     public const int PairCount = 3;
     public const float PairInterval = 3f;
     public const float BossCastAt = 3f;
-    public const float BossCastSeconds = 3.7f;
     public const float FirstTelegraphAt = BossCastAt + 2.01f;
 
     // Perpendicular offsets of the six lanes, in firing-agnostic order.
@@ -56,28 +55,21 @@ public sealed class UcobP5ExaflaresState
     public IReadOnlyList<ExaflareHit> Hits { get; }
     public float LastHitAt { get; }
 
-    // The scenario's unscaled clock. Bots schedule their dodges on it rather than on the
-    // EventTimeScale-driven AiManager, so they stay locked to the fire.
-    public EventScheduler Timeline { get; }
-
     private readonly Rng rng;
 
-    public UcobP5ExaflaresState(Rng rng, UcobP5ExaflaresStateOverrides overrides, EventScheduler timeline)
-        : this(rng, null, null, overrides, timeline) { }
+    public UcobP5ExaflaresState(Rng rng, UcobP5ExaflaresStateOverrides overrides)
+        : this(rng, null, null, overrides) { }
 
-    // `timeline` must be a fresh scheduler the caller ticks itself: a peer never runs the
-    // scenario's own Tick, which is what drives the real one.
-    public static UcobP5ExaflaresState? FromNetworkReplay(float directionRadians, IReadOnlyList<float> laneOrder, EventScheduler timeline)
+    public static UcobP5ExaflaresState? FromNetworkReplay(float directionRadians, IReadOnlyList<float> laneOrder)
     {
         if (laneOrder.Count != LaneOffsets.Count) return null;
         if (!float.IsFinite(directionRadians) || laneOrder.Any(o => !LaneOffsets.Contains(o))) return null;
-        return new UcobP5ExaflaresState(Rng.Detached, new Direction(directionRadians), laneOrder, null, timeline);
+        return new UcobP5ExaflaresState(Rng.Detached, new Direction(directionRadians), laneOrder, null);
     }
 
-    private UcobP5ExaflaresState(Rng rng, Direction? direction, IReadOnlyList<float>? laneOrder, UcobP5ExaflaresStateOverrides? overrides, EventScheduler timeline)
+    private UcobP5ExaflaresState(Rng rng, Direction? direction, IReadOnlyList<float>? laneOrder, UcobP5ExaflaresStateOverrides? overrides)
     {
         this.rng = rng;
-        Timeline = timeline;
         Direction = direction ?? overrides!.Direction ?? rng.NextDirection();
 
         var theta = Direction.RadiansFromNorth;
@@ -88,7 +80,7 @@ public sealed class UcobP5ExaflaresState
         // Placement rotation faces +Z at 0, so a compass bearing is its mirror.
         var rotation = MathF.PI - theta;
 
-        var order = laneOrder ?? rng.Shuffle(LaneOffsets.ToArray()).ToList();
+        var order = laneOrder ?? overrides?.LaneOrder ?? rng.Shuffle(LaneOffsets.ToArray()).ToList();
         LaneOrder = order;
         var lines = new List<ExaflareLine>(LaneOffsets.Count);
         var hits = new List<ExaflareHit>(LaneOffsets.Count * HitsPerLine);

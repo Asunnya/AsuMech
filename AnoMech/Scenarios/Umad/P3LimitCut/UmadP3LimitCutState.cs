@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using AnoMech.Core;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.SimObjects;
 using AnoMech.Scenarios.Umad.P3BlackHole;
-using static AnoMech.Scenarios.Umad.P3LimitCut.UmadP3LimitCutConstants;
 
 namespace AnoMech.Scenarios.Umad.P3LimitCut;
 
@@ -45,7 +45,14 @@ public sealed class UmadP3LimitCutState
     // Opposite its clone's charge spot (the charge falls off with distance; straight across is
     // 38y), half a step along the charge walk so as not to stand where the clone four numbers
     // later charges from (every clean pull: -23 deg CW, +22 deg CCW).
-    public float SafeHeading(int k) => Geometry.SpotHeading(ChargeSpot(k)) + MathF.PI - PlacementStep * (MathF.PI / 8f);
+    public float SafeHeading(int k) => SpotHeading(ChargeSpot(k)) + MathF.PI - PlacementStep * (MathF.PI / 8f);
+
+    // The cardinals and intercardinals at 20y. Spot 0..7 -> heading 0 = S, 2 = E, 4 = N, 6 = W.
+    public static float SpotHeading(int spot) => spot * (MathF.PI / 4f);
+    public static Vector3 SpotPosition(int spot) => OnCircle(SpotHeading(spot), 20f);
+    public static string SpotName(int spot) => SpotNames[Mod8(spot)];
+    public static Vector3 OnCircle(float heading, float radius) => new(MathF.Sin(heading) * radius, 0f, MathF.Cos(heading) * radius);
+    private static readonly string[] SpotNames = ["S", "SE", "E", "NE", "N", "NW", "W", "SW"];
 
     public int NumberOf(PartyRole role)
     {

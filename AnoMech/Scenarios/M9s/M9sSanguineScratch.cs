@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using AnoMech.Core.Game;
 using AnoMech.Core.SimObjects;
+using AnoMech.Scenarios.Legacy;
 using static AnoMech.Scenarios.M9s.M9sConstants;
 
 namespace AnoMech.Scenarios.M9s;
@@ -40,7 +41,7 @@ public sealed class M9sSanguineScratch(DamageSolver damage, M9sSatisfied satisfi
         for (var i = 0; i < ConeCount; i++)
             if (spawnHelper(new Placement(boss, RotationFacing(ConeCentre(firstOffset, 0, i)))) is { } cone)
             {
-                cone.Cast(ActionId.SanguineScratchFirst, castSeconds: 2.7f);
+                cone.LegacyCast(ActionId.SanguineScratchFirst, castSeconds: 2.7f);
                 firstWave.Add(cone);
             }
     }
@@ -55,7 +56,7 @@ public sealed class M9sSanguineScratch(DamageSolver damage, M9sSatisfied satisfi
         for (var i = 0; i < ConeCount; i++)
         {
             var cone = spawnHelper(new Placement(boss, RotationFacing(ConeCentre(firstOffset, wave, i))));
-            cone?.Cast(ActionId.SanguineScratchRepeat, castSeconds: 0f, animationLock: 0f);
+            cone?.LegacyCast(ActionId.SanguineScratchRepeat, castSeconds: 0f, animationLock: 0f);
             Hit(cone, ActionId.SanguineScratchRepeat);
         }
     }

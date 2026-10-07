@@ -5,6 +5,7 @@ using AnoMech.Core.Game;
 using AnoMech.Core.Game.Ai;
 using AnoMech.Core.Game.Geometry;
 using AnoMech.Core.SimObjects;
+using AnoMech.Scenarios.Legacy;
 using static AnoMech.Scenarios.M9s.M9sConstants;
 
 namespace AnoMech.Scenarios.M9s.Coffinmaker;
@@ -54,7 +55,7 @@ public sealed class M9sCoffinmakerScenario : IScenario
 
         world.Events.Add(0f, SpawnVamp);
         world.Events.Add(0f, () => world.EnforceArenaBoundary(new SquareArena(Geometry.ArenaHalfWidth), "Walked off the arena"));
-        world.Events.Add(0.82f, () => vamp?.Cast(ActionId.SadisticScreechCast, castSeconds: 4.7f));
+        world.Events.Add(0.82f, () => vamp?.LegacyCast(ActionId.SadisticScreechCast, castSeconds: 4.7f));
         world.Events.Add(0.82f, () => MapEffect(0x00020001, 0x0F));
         world.Events.Add(1.11f, SpawnSaw);
         world.Events.Add(6.63f, () => MapEffect(0x00020001, 0x00, 0x09, 0x0A, 0x0B, 0x0C));
@@ -109,7 +110,7 @@ public sealed class M9sCoffinmakerScenario : IScenario
         world.Events.Add(60.00f, () => KillSawIf(SawKill.Fast));
         world.Events.Add(62.30f, () => KillSawIf(SawKill.Average));
         world.Events.Add(70.80f, () => KillSawIf(SawKill.Slow));
-        world.Events.Add(78.37f, () => vamp?.Cast(ActionId.SadisticScreechCast, castSeconds: 4.7f));
+        world.Events.Add(78.37f, () => vamp?.LegacyCast(ActionId.SadisticScreechCast, castSeconds: 4.7f));
         world.Events.Add(83.87f, () => M9sUtils.Raidwide(world.Party, damage, ActionId.SadisticScreech, 0.40f));
         world.Events.Add(84.21f, () => MapEffect(0x00080004, 0x00, 0x11));
         world.Events.Add(84.21f, () => corridorActive = false);
@@ -168,9 +169,9 @@ public sealed class M9sCoffinmakerScenario : IScenario
 
     private void CastDeadWake(float northEdge)
     {
-        saw?.Cast(ActionId.DeadWakeCast, castSeconds: 4.2f);
+        saw?.LegacyCast(ActionId.DeadWakeCast, castSeconds: 4.2f);
         deadWake = SpawnHelper(new Placement(new Vector3(0f, 0f, northEdge), 0f));
-        deadWake?.Cast(ActionId.DeadWake, castSeconds: 4.7f);
+        deadWake?.LegacyCast(ActionId.DeadWake, castSeconds: 4.7f);
     }
 
     private void ResolveDeadWake() => state.Satisfied.AddFor(damage.Resolve(deadWake, ActionId.DeadWake, [DamageType.Lethal], []));
@@ -195,15 +196,15 @@ public sealed class M9sCoffinmakerScenario : IScenario
         // The run to the wall can still be finishing; pin the boss to the cleave's origin as it goes up.
         vamp?.StopMoving();
         vamp?.SetPosition(cycle.Boss);
-        vamp?.Cast(M9sHalfMoon.BossCastId(cycle.Order, more), castSeconds: 4f);
+        vamp?.LegacyCast(M9sHalfMoon.BossCastId(cycle.Order, more), castSeconds: 4f);
         shortCleave = SpawnHelper(M9sHalfMoon.CleaveOrigin(cycle.Boss, cycle.ShortRotation, more));
-        shortCleave?.Cast(M9sHalfMoon.ShortId(cycle.Order, more), castSeconds: 4.7f);
+        shortCleave?.LegacyCast(M9sHalfMoon.ShortId(cycle.Order, more), castSeconds: 4.7f);
         longCleave = SpawnHelper(M9sHalfMoon.CleaveOrigin(cycle.Boss, cycle.LongRotation, more));
         // The second cleave's telegraph appears as the first resolves, as it does in game.
-        longCleave?.Cast(M9sHalfMoon.LongId(cycle.Order, more), castSeconds: 7.7f, omenDelay: 4.7f);
+        longCleave?.LegacyCast(M9sHalfMoon.LongId(cycle.Order, more), castSeconds: 7.7f, omenDelay: 4.7f);
 
         if (!sawAlive) return;
-        saw?.Cast(ActionId.CoffinfillerCast, castSeconds: 4.7f);
+        saw?.LegacyCast(ActionId.CoffinfillerCast, castSeconds: 4.7f);
         CastWave(cycle, cycle.FirstWave, firstWave);
     }
 
@@ -221,7 +222,7 @@ public sealed class M9sCoffinmakerScenario : IScenario
             world.Map.DirectorUpdate(SawGlowCommand, SawIndex(x), SawGlowLength(cycle.FillerActionId), 0x01);
             var origin = new Vector3(x, 0f, cycle.FillerStartZ);
             if (SpawnHelper(new Placement(origin, 0f)) is not { } filler) continue;
-            filler.Cast(cycle.FillerActionId, castSeconds: 4.7f);
+            filler.LegacyCast(cycle.FillerActionId, castSeconds: 4.7f);
             world.SpawnActionOmen(cycle.FillerActionId, origin, 0f, 4.7f);
             wave.Add(filler);
         }

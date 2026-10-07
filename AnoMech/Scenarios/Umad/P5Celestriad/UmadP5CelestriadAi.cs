@@ -4,7 +4,6 @@ using System.Numerics;
 using AnoMech.Core.Game.Ai;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.SimObjects;
-using static AnoMech.Scenarios.Umad.P5Celestriad.UmadP5CelestriadConstants;
 
 namespace AnoMech.Scenarios.Umad.P5Celestriad;
 
@@ -14,8 +13,8 @@ namespace AnoMech.Scenarios.Umad.P5Celestriad;
 // clockwise through this run's element sectors to that set's matching tower, splitting the
 // pair 1y either side of the tower's tangent so
 // both fit inside the soak radius. On Catastrophic Choice sets (0 and 2), bots first stack in
-// the tower's centre, then after ChoiceReadDelay step to the safe half: Aero (green) -> away
-// from the boss, Earth (brown) -> toward the boss. This is simulated recognition time, not a
+// the tower's centre, then after ChoiceReadDelay step to the safe half: Aero (green) -> toward
+// the boss, Earth (brown) -> away from the boss. This is simulated recognition time, not a
 // read of the ground VFX (which only flashes at resolution, see
 // UmadP5CelestriadScenario.SpawnChoiceOmen): bots already know their side from state directly.
 public sealed class UmadP5CelestriadAi : IScenarioAi<UmadP5CelestriadState>
@@ -25,27 +24,19 @@ public sealed class UmadP5CelestriadAi : IScenarioAi<UmadP5CelestriadState>
     private const float MoveSpeed = 6f;
     private const float PairOffset = 1f;
     private const float HalfOffset = 2f;
-    // Wait until a tower is actually lit before sending anyone toward it. Moving early means a
-    // bot is already standing on the spot when it activates, which reads as the tower spawning
-    // under a player instead of on open ground.
-    private const float MoveDelay = 1.5f;
-    // How long after Catastrophic Choice's cast starts bots reposition to their safe half.
-    private const float ChoiceReadDelay = 2f;
 
     public void Run(UmadP5CelestriadState state, SimWorld world)
     {
-        for (var set = 0; set < 3; set++)
-        {
-            var s = set;
-            world.Events.Add(CelestriadTiming.TowerStart[s] + MoveDelay, () => PlaceSet(world, state, s, half: 0f));
-            if (CelestriadTiming.CcAt[s] is { } cc)
-                world.Events.Add(cc + ChoiceReadDelay, () => PlaceSet(world, state, s, HalfFor(state, s)));
-        }
+        world.Events.Add(7.6f, () => PlaceSet(world, state, 0, half: 0f));
+        world.Events.Add(12.18f, () => PlaceSet(world, state, 0, HalfFor(state, 0)));
+        world.Events.Add(15.9f, () => PlaceSet(world, state, 1, half: 0f));
+        world.Events.Add(22.1f, () => PlaceSet(world, state, 2, half: 0f));
+        world.Events.Add(24.34f, () => PlaceSet(world, state, 2, HalfFor(state, 2)));
     }
 
     private static float HalfFor(UmadP5CelestriadState state, int set) =>
         state.AeroVariant[set] is { } choice
-            ? (choice == CatastrophicChoice.Aero ? -1f : 1f)
+            ? (choice == CatastrophicChoice.Aero ? 1f : -1f)
             : 0f;
 
     private static void PlaceSet(SimWorld world, UmadP5CelestriadState state, int set, float half)

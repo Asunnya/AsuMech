@@ -16,11 +16,7 @@ internal static class MathUtil
     }
 
     // Steps `current` toward `target` by at most `maxDelta` radians, going the
-    // shorter way around the circle. Used by SimEnemy/SimNetworkPuppet's
-    // network-position smoothing to interpolate rotation the same way they
-    // already interpolate position, instead of writing the target rotation raw
-    // every tick (see NetworkAngularCatchUpSpeed's doc comment on SimEnemy for
-    // why that read as "laggy" turning to a peer).
+    // shorter way around the circle.
     public static float StepRotation(float current, float target, float maxDelta)
     {
         var delta = NormalizeRotation(target - current);

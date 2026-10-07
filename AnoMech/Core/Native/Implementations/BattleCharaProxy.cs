@@ -510,13 +510,13 @@ internal sealed unsafe class BattleCharaProxy : IBattleCharaProxy
 
     public void ClearTether(byte slot) => SetTether(slot, 0, default, 0);
 
-    public void ShowFlyText(uint amount, string label)
+    public void ShowFlyText(uint amount, string label, uint damageTypeIcon = 0)
     {
         var obj = Ptr;
         if (obj == null) return;
         // val1 is the number, text1 the label: putting the number in both prints it twice.
         Plugin.FlyText.AddFlyText(FlyTextKind.Damage, ((GameObject*)obj)->ObjectIndex, amount, 0,
-            new SeString(new TextPayload(label)), new SeString(), DamageColorAbgr, 0, 0);
+            new SeString(new TextPayload(label)), new SeString(), DamageColorAbgr, 0, damageTypeIcon);
     }
 
     public void CarryTo(Vector3 destination, float rotation, bool selfTarget)

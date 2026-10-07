@@ -25,11 +25,6 @@ public sealed unsafe class LocalPlayerInputHooks : ILocalPlayerInput, IDisposabl
 {
     public bool DisableAllActions { get; set; }
     public bool ZeroMovement { get; set; }
-    // A knockback slide freezes translation but not turning; Sleep, Confuse and KO freeze
-    // rotation too. LockedRotation is re-stamped every frame from the ActionManager::Update
-    // hook, after camera-follow rotation.
-    public bool ZeroRotation { get; set; }
-    public float? LockedRotation { get; set; }
 
     // Raised after the local player successfully executes a real action (the
     // auto-attack-cancel general action is filtered out). The UserActions module
@@ -54,13 +49,6 @@ public sealed unsafe class LocalPlayerInputHooks : ILocalPlayerInput, IDisposabl
         var used = actionUsedSincePoll;
         actionUsedSincePoll = false;
         return used;
-    }
-
-    public void SetStatusAffliction(bool afflicted)
-    {
-        var condition = FFXIVClientStructs.FFXIV.Client.Game.Conditions.Instance();
-        condition->SufferingStatusAffliction = afflicted;
-        condition->SufferingStatusAffliction2 = afflicted;
     }
 
     // Debug aid for pinning down a real action id; DebugMenu shows these.
@@ -189,7 +177,6 @@ public sealed unsafe class LocalPlayerInputHooks : ILocalPlayerInput, IDisposabl
         rmiWalkHook.Original(self, sumLeft, sumForward, sumTurnLeft, haveBackwardOrStrafe, a6, bAdditiveUnk);
         // self is a MoveControllerSubMemberForMine*; the sums are its move vector.
         MovementInputActive = *sumLeft != 0 || *sumForward != 0;
-        if (ZeroRotation) *sumTurnLeft = 0;
         if (!ZeroMovement) return;
         *sumLeft = 0;
         *sumForward = 0;
@@ -216,14 +203,6 @@ public sealed unsafe class LocalPlayerInputHooks : ILocalPlayerInput, IDisposabl
     {
         updateHook.Original(self);
         ScanAndLogActiveStatuses();
-        // A missed clear must not pin rotation outside an instance.
-        if (LockedRotation is { } lockedRot)
-        {
-            if (Plugin.GameInstance is { } g && g.World.Map.IsInInstance && Plugin.ObjectTable.LocalPlayer is { } lp)
-                ((FFXIVClientStructs.FFXIV.Client.Game.Object.GameObject*)lp.Address)->SetRotation(lockedRot);
-            else
-                LockedRotation = null;
-        }
         if (!DisableAllActions) return;
         var autosOn = UIState.Instance()->WeaponState.AutoAttackState.IsAutoAttacking;
         if (autosOn) self->UseAction(ActionType.GeneralAction, 1);

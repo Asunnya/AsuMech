@@ -122,7 +122,7 @@ public sealed partial class MultiplayerManager
                     e.InitialModeAttributeFlags,
                     NpcSpawnTemplate: template, PacketSpawnEnableDraw: enableDraw);
                 DiagnosticLog.Info($"[Multiplayer] Peer: first snapshot of enemy NetId {e.NetId} -- BNpcBase {e.BNpcBaseId}, pos ({e.X:F2},{e.Y:F2},{e.Z:F2}), rot {e.Rotation:F2}, visible {e.Visible}"
-                    + $", cast {e.CastActionId}/seq {e.CastSeq}, instant {e.LastInstantCastActionId}/seq {e.LastInstantCastSeq}"
+                    + $", cast {e.CastActionId}/seq {e.CastSeq}, effect {e.EffectActionId}/seq {e.EffectSeq}"
                     + $"{(template != null ? $", template {e.NpcSpawnTemplate}" : "")} -- spawning local doppel.");
                 enemy = world.SpawnEnemy(config);
                 if (enemy == null)
@@ -166,58 +166,43 @@ public sealed partial class MultiplayerManager
                 peerEnemyLastLoggedStatuses[e.NetId] = lastStatuses = new Dictionary<(ushort Id, int Ordinal), ushort>();
             LogStatusChanges($"Peer: enemy NetId {e.NetId} (BNpcBase {e.BNpcBaseId})",
                 enemyStatuses.Select(s => (s.StatusId, s.Stacks, s.RemainingTime)).ToList(), lastStatuses);
-            // Replayed through the real SimCast pipeline so the cast bar and omen match. Keyed
-            // on CastSeq (see EnemyState); seq 0 is the never-cast default.
+            // The host's cast packets, replayed field for field: a peer runs no EnemyAction, so the
+            // release arrives as its own effect. Each is keyed on its seq (see EnemyState); seq 0
+            // is the never-sent default. An interrupt seen on arrival belongs to a cast long gone.
+            var casting = enemy.Casting;
+            var cancelKnown = peerEnemyLastCancelSeq.TryGetValue(e.NetId, out var lastCancelSeq);
+            peerEnemyLastCancelSeq[e.NetId] = e.CancelSeq;
+            if (cancelKnown && lastCancelSeq != e.CancelSeq)
+                casting.Cancel();
             if (e.CastSeq > 0
                 && (!peerEnemyLastCastSeq.TryGetValue(e.NetId, out var lastCastSeq) || lastCastSeq != e.CastSeq))
             {
                 peerEnemyLastCastSeq[e.NetId] = e.CastSeq;
-                // Snap first: Cast() reads Position/Rotation directly, and ApplyNetworkPosition
-                // above only set an interpolation target.
+                // Snap first: ApplyNetworkPosition above only set an interpolation target.
                 enemy.SetPosition(placement);
                 var targetLocation = NetGuard.TryPosition(e.CastTargetX, e.CastTargetY, e.CastTargetZ);
                 var targetId = ResolvePeerEnd(world, e.CastTargetEnemyNetId, e.CastTargetRole)?.GameObjectId;
                 if (SimAssets.Allow(SimAssetKind.Action, e.CastActionId, $"enemy NetId {e.NetId} cast"))
-                    enemy.Cast(e.CastActionId, targetLocation: targetLocation,
-                        castSeconds: NetGuard.Clamp(e.CastSeconds, 0f, 600f),
-                        omenDelay: NetGuard.Clamp(e.CastOmenDelay, 0f, 60f),
-                        omenRotate: NetGuard.Clamp(e.CastOmenRotate, -MathF.Tau, MathF.Tau), targetId: targetId);
+                    casting.NativeCast(e.CastActionId, ActionType.Action,
+                        NetGuard.Clamp(e.CastOmenDelay, 0f, 60f), NetGuard.Clamp(e.CastSeconds, 0f, 600f), interruptible: false,
+                        rotation: NetGuard.Rotation(e.CastRotation), position: targetLocation, targetId: targetId);
             }
-            var instantKnown = peerEnemyLastInstantCastSeq.TryGetValue(e.NetId, out var lastInstantSeq);
+            var effectKnown = peerEnemyLastEffectSeq.TryGetValue(e.NetId, out var lastEffectSeq);
             // NetIds are never reused, so a recorded seq here means state outlived its enemy.
-            if (freshlySpawned && instantKnown)
-                DiagnosticLog.Warn($"[Multiplayer] Peer: enemy NetId {e.NetId} arrived with a stale instant-cast seq {lastInstantSeq} already recorded -- its action {e.LastInstantCastActionId} will be dropped.");
-            if (e.LastInstantCastSeq > 0 && (!instantKnown || lastInstantSeq != e.LastInstantCastSeq))
+            if (freshlySpawned && effectKnown)
+                DiagnosticLog.Warn($"[Multiplayer] Peer: enemy NetId {e.NetId} arrived with a stale effect seq {lastEffectSeq} already recorded -- its action {e.EffectActionId} will be dropped.");
+            if (e.EffectSeq > 0 && (!effectKnown || lastEffectSeq != e.EffectSeq))
             {
-                DiagnosticLog.Info($"[Multiplayer] Peer: enemy NetId {e.NetId} (BNpcBase {e.BNpcBaseId}) instant cast -> action {e.LastInstantCastActionId} "
-                    + $"(seq {e.LastInstantCastSeq}, native={e.LastInstantCastIsNativeEffect}, raw='{NetGuard.Clean(e.LastInstantCastRawPacket)}').");
-                peerEnemyLastInstantCastSeq[e.NetId] = e.LastInstantCastSeq;
+                DiagnosticLog.Info($"[Multiplayer] Peer: enemy NetId {e.NetId} (BNpcBase {e.BNpcBaseId}) effect -> action {e.EffectActionId} (seq {e.EffectSeq}).");
+                peerEnemyLastEffectSeq[e.NetId] = e.EffectSeq;
                 enemy.SetPosition(placement); // same snap as above
-                var instantTargetLocation = NetGuard.TryPosition(e.LastInstantCastTargetX, e.LastInstantCastTargetY, e.LastInstantCastTargetZ);
-                var instantTargetId = ResolvePeerEnd(world, e.LastInstantCastTargetEnemyNetId, e.LastInstantCastTargetRole)?.GameObjectId;
-                var instantLock = NetGuard.Clamp(e.LastInstantCastAnimationLock, 0f, 60f, 0.6f);
-                if (SimAssets.Allow(SimAssetKind.Action, e.LastInstantCastActionId, $"enemy NetId {e.NetId} instant cast"))
-                {
-                    // A raw delivery replays our own copy of the capture, patched onto the local
-                    // carrier; a version or actor mismatch falls through to the native effect.
-                    var rawName = NetGuard.Clean(e.LastInstantCastRawPacket);
-                    var rawDelivered = rawName.Length > 0
-                        && UmadRealPackets.RawActionEffects.TryGetValue(rawName, out var capture)
-                        && Natives.RawActionEffect.TryInject(enemy.EntityId, enemy.Rotation, capture.Body, capture.Opcode, capture.GameVersion,
-                            $"{rawName} replay, enemy NetId {e.NetId}, carrier {enemy.DisplayName} at {enemy.Position}");
-                    if (rawDelivered)
-                        DiagnosticLog.Info($"[Multiplayer] Peer: enemy NetId {e.NetId} delivered {rawName} as a raw packet.");
-                    else if (e.LastInstantCastIsNativeEffect)
-                    {
-                        // Field for field, as the host fired it: a Cast() would re-face the caster
-                        // at the target position (world zero for Flood's waves) and use its own lock.
-                        var instantActionTargetId = ResolvePeerEnd(world, e.LastInstantCastActionTargetEnemyNetId, e.LastInstantCastActionTargetRole)?.GameObjectId;
-                        enemy.NativeActionEffect(e.LastInstantCastActionId, instantLock, (ushort)e.LastInstantCastActionId, 0, ActionType.Action, 0,
-                            position: instantTargetLocation, animationTargetId: instantTargetId, actionTargetId: instantActionTargetId);
-                    }
-                    else
-                        enemy.Cast(e.LastInstantCastActionId, targetLocation: instantTargetLocation, castSeconds: 0f, targetId: instantTargetId, animationLock: instantLock);
-                }
+                if (SimAssets.Allow(SimAssetKind.Action, e.EffectActionId, $"enemy NetId {e.NetId} effect"))
+                    casting.NativeActionEffect(e.EffectActionId, NetGuard.Clamp(e.EffectAnimationLock, 0f, 60f, 0.6f),
+                        (ushort)e.EffectActionId, e.EffectAnimationVariation, ActionType.Action, 0,
+                        rotation: NetGuard.Rotation(e.EffectRotation),
+                        position: NetGuard.TryPosition(e.EffectX, e.EffectY, e.EffectZ),
+                        animationTargetId: ResolvePeerEnd(world, e.EffectAnimationTargetEnemyNetId, e.EffectAnimationTargetRole)?.GameObjectId,
+                        actionTargetId: ResolvePeerEnd(world, e.EffectActionTargetEnemyNetId, e.EffectActionTargetRole)?.GameObjectId);
             }
             ApplyNewVfx(enemy, e.NewVfx, $"enemy NetId {e.NetId}");
             ReconcilePersistentVfx(enemy, e.PersistentVfx, $"enemy NetId {e.NetId}");
@@ -460,8 +445,9 @@ public sealed partial class MultiplayerManager
         peerEnemyLastLoggedStatuses.Remove(netId);
         peerEnemyAnimationTimeline.Remove(netId);
         peerEnemyAnimationState.Remove(netId);
-        peerEnemyLastInstantCastSeq.Remove(netId);
+        peerEnemyLastEffectSeq.Remove(netId);
         peerEnemyLastCastSeq.Remove(netId);
+        peerEnemyLastCancelSeq.Remove(netId);
         peerEnemyEngineSeqs.Remove(netId);
         peerEnemyModelHidden.Remove(netId);
     }

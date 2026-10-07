@@ -29,7 +29,7 @@ public sealed class UmadP3BlackHoleSettingsWindow
         if (ImGui.Button("Auto"))
         {
 #if DEBUG
-            Overrides.FirstSlap = null;
+            Overrides.SlapAttacks[0] = null;
 #endif
             if (solo) ResetMine();
         }
@@ -95,13 +95,13 @@ public sealed class UmadP3BlackHoleSettingsWindow
 #if DEBUG
     private void DrawFirstSlap()
     {
-        var v = Overrides.FirstSlap;
+        var v = Overrides.SlapAttacks[0];
         SettingsGrid.Row("1st Slap:");
-        if (ImGui.RadioButton("Auto##firstslap",  v == null))                     Overrides.FirstSlap = null;
+        if (ImGui.RadioButton("Auto##firstslap",  v == null))                     Overrides.SlapAttacks[0] = null;
         ImGui.SameLine();
-        if (ImGui.RadioButton("Left##firstslap",  v == ActionId.SlapHappy_Left))  Overrides.FirstSlap = ActionId.SlapHappy_Left;
+        if (ImGui.RadioButton("Left##firstslap",  v == ActionId.SlapHappy_Left))  Overrides.SlapAttacks[0] = ActionId.SlapHappy_Left;
         ImGui.SameLine();
-        if (ImGui.RadioButton("Right##firstslap", v == ActionId.SlapHappy_Right)) Overrides.FirstSlap = ActionId.SlapHappy_Right;
+        if (ImGui.RadioButton("Right##firstslap", v == ActionId.SlapHappy_Right)) Overrides.SlapAttacks[0] = ActionId.SlapHappy_Right;
     }
 
     private void DrawFirstSlapTarget()

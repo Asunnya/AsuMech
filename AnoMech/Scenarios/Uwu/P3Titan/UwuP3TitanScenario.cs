@@ -10,6 +10,7 @@ using AnoMech.Core.SimObjects;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using FFXIVClientStructs.FFXIV.Client.Network;
+using AnoMech.Scenarios.Legacy;
 using static AnoMech.Scenarios.Uwu.UwuConstants;
 using static AnoMech.Scenarios.Uwu.UwuUtils;
 using static AnoMech.Scenarios.Uwu.P3Titan.UwuP3TitanState;
@@ -606,7 +607,7 @@ public sealed class UwuP3TitanScenario : IScenario
             if (now - wade.Since < SludgeTickSeconds * (wade.Ticks + 1)) continue;
             var ticks = wade.Ticks + 1;
             wading[member] = (wade.Puddle, wade.Since, ticks);
-            if (ticks >= SludgeLethalTick) member.Die("Died to Sludge (stayed in a broken gaol's puddle)");
+            if (ticks >= SludgeLethalTick) member.Die(SimCharacterDeathExtensions.Environment, "Died to Sludge (stayed in a broken gaol's puddle)");
         }
     }
 

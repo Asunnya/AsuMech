@@ -12,6 +12,7 @@ using AnoMech.Core.SimObjects;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using LuminaAction = Lumina.Excel.Sheets.Action;
+using AnoMech.Scenarios.Legacy;
 using static AnoMech.Scenarios.M9s.M9sConstants;
 
 namespace AnoMech.Scenarios.M9s.Flails;
@@ -81,7 +82,7 @@ public sealed class M9sFlailsScenario : IScenario
 
         world.Events.Add(0f, SpawnVamp);
         world.Events.Add(0f, () => world.EnforceArenaBoundary(new SquareArena(Geometry.ArenaHalfWidth), "Walked off the arena"));
-        world.Events.Add(6.06f, () => vamp?.Cast(ActionId.SadisticScreechCast, castSeconds: 4.7f));
+        world.Events.Add(6.06f, () => vamp?.LegacyCast(ActionId.SadisticScreechCast, castSeconds: 4.7f));
         world.Events.Add(6.06f, () => MapEffect(0x00020001, 0x0F));
         world.Events.Add(11.88f, () => MapEffect(0x00020001, 0x00, 0x0D, 0x0E));
         world.Events.Add(11.88f, () => MapEffect(0x00080004, 0x0F));
@@ -103,7 +104,7 @@ public sealed class M9sFlailsScenario : IScenario
         world.Events.Add(25.23f, () => DoornailCellEffect(0, 0x00200010));
         world.Events.Add(25.23f, () => SpawnDoornail(0));
         world.Events.Add(28.26f, () => AnimatePuddle(0, 0x10, 0x20));
-        world.Events.Add(28.27f, () => vamp?.Cast(ActionId.KillerVoice, castSeconds: 4.7f));
+        world.Events.Add(28.27f, () => vamp?.LegacyCast(ActionId.KillerVoice, castSeconds: 4.7f));
         world.Events.Add(28.62f, () => MapEffect(0x04000800, 0x0D, 0x0E));
         world.Events.Add(29.65f, () => MapEffect(0x01000020, 0x0D, 0x0E));
         world.Events.Add(33.27f, () => M9sUtils.Raidwide(world.Party, damage, ActionId.KillerVoice, 0.45f));
@@ -122,7 +123,7 @@ public sealed class M9sFlailsScenario : IScenario
         world.Events.Add(43.35f, () => SpawnDoornail(1));
         world.Events.Add(43.39f, () => SpawnPuddle(1));
         world.Events.Add(46.38f, () => AnimatePuddle(1, 0x10, 0x20));
-        world.Events.Add(46.44f, () => vamp?.Cast(ActionId.KillerVoice, castSeconds: 4.7f));
+        world.Events.Add(46.44f, () => vamp?.LegacyCast(ActionId.KillerVoice, castSeconds: 4.7f));
         world.Events.Add(51.43f, () => M9sUtils.Raidwide(world.Party, damage, ActionId.KillerVoice, 0.45f));
         world.Events.Add(53.58f, () => CastRound(2));
         world.Events.Add(55.89f, () => MapEffect(0x04000800, 0x0D, 0x0E));
@@ -144,7 +145,7 @@ public sealed class M9sFlailsScenario : IScenario
         world.Events.Add(75.91f, () => KillFlails(2));
         world.Events.Add(75.91f, () => FlailCellEffect(2, 0x00080004));
         world.Events.Add(78.61f, () => WipeIfDoornailSurvived(2));
-        world.Events.Add(78.61f, () => vamp?.Cast(ActionId.SadisticScreechCast, castSeconds: 4.7f));
+        world.Events.Add(78.61f, () => vamp?.LegacyCast(ActionId.SadisticScreechCast, castSeconds: 4.7f));
         world.Events.Add(84.34f, () => MapEffect(0x00080004, 0x00));
         world.Events.Add(84.10f, () => DespawnSaws(big: true));
         world.Events.Add(84.34f, () => MapEffect(0x00100004, 0x0D, 0x0E));
@@ -152,7 +153,7 @@ public sealed class M9sFlailsScenario : IScenario
         world.Events.Add(86.00f, () => DespawnSaws(big: false));
         world.Events.Add(84.34f, () => world.Map.DirectorUpdate(M9sUtils.CorridorDirectorCommand, 0x01));
         world.Events.Add(84.50f, () => M9sUtils.Raidwide(world.Party, damage, ActionId.SadisticScreech, 0.40f));
-        world.Events.Add(92.95f, () => vamp?.Cast(ActionId.CrowdKillCast, castSeconds: 0.2f));
+        world.Events.Add(92.95f, () => vamp?.LegacyCast(ActionId.CrowdKillCast, castSeconds: 0.2f));
         world.Events.Add(99.07f, () => M9sUtils.Raidwide(world.Party, damage, ActionId.CrowdKill, 0.51f));
         world.Events.Add(99.07f, () => state.Satisfied.Add(1));
         world.Events.Add(99.33f, () => state.Satisfied.Add(1));
@@ -274,7 +275,7 @@ public sealed class M9sFlailsScenario : IScenario
         if (!saws.TryGetValue(hit.Lane, out var saw) || saw == null) return;
         saw.SetPosition(new Placement(hit.Position, hit.Rotation));
         var actionId = hit.IsBig ? ActionId.GravegrazerBig : ActionId.GravegrazerSmall;
-        saw.Cast(actionId, castSeconds: 0f, animationLock: 0f);
+        saw.LegacyCast(actionId, castSeconds: 0f, animationLock: 0f);
         state.Satisfied.AddFor(damage.Resolve(saw, actionId, [DamageType.Lethal], []));
 
         if (next == null || next.At <= hit.At) return;
@@ -285,9 +286,9 @@ public sealed class M9sFlailsScenario : IScenario
     private void CastRound(int round)
     {
         var r = state.Rounds[round];
-        SpawnHelper(r.NorthTower)?.Cast(ActionId.Plummet, castSeconds: 6.7f);
-        SpawnHelper(r.SouthTower)?.Cast(ActionId.Plummet, castSeconds: 6.7f);
-        SpawnHelper(r.Doornail)?.Cast(ActionId.Electrocution, castSeconds: 6.7f);
+        SpawnHelper(r.NorthTower)?.LegacyCast(ActionId.Plummet, castSeconds: 6.7f);
+        SpawnHelper(r.SouthTower)?.LegacyCast(ActionId.Plummet, castSeconds: 6.7f);
+        SpawnHelper(r.Doornail)?.LegacyCast(ActionId.Electrocution, castSeconds: 6.7f);
     }
 
     // An untanked tower wipes; non-tanks inside die.
@@ -322,7 +323,7 @@ public sealed class M9sFlailsScenario : IScenario
 
     private void CastBarbedBurst(int round)
     {
-        foreach (var flail in flails[round]) flail.Cast(ActionId.BarbedBurst, castSeconds: 15.7f);
+        foreach (var flail in flails[round]) flail.LegacyCast(ActionId.BarbedBurst, castSeconds: 15.7f);
     }
 
     private void KillFlails(int round)

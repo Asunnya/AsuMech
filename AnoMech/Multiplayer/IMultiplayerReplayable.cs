@@ -30,16 +30,9 @@ public interface IMultiplayerReplayable : IScenario
     // yet when StartReplay ran.
     void RefreshLiveHandles(object shadowState, IReadOnlyDictionary<int, SimEnemy> peerEnemies) { }
 
-    // Optional, peer-only, every frame: for an Ai scheduling onto its own EventScheduler rather
-    // than world.Events, which already ticks for peers.
+    // Optional, peer-only, every frame: per-frame Ai work the scenario's own Tick drives on the
+    // host, since a peer never runs that Tick.
     void TickReplay(object shadowState, float deltaSeconds) { }
-
-    // Optional, host-only, alongside TickReplay: the host's own clock for that Ai, sent at Start.
-    float? ReplayClockSeconds => null;
-
-    // Optional, peer-only, alongside TickReplay: moves the shadow state's clock forward to
-    // `seconds` (see MultiplayerManager.SyncClocksToHost); what falls due fires on the next TickReplay.
-    void AdvanceReplayClockTo(object shadowState, float seconds) { }
 
     // Optional, peer-only, every snapshot, after `obstacles` was cleared: a bot-driven peer's
     // steering obstacles, rebuilt from the replicated world since the scenario's own Obstacles

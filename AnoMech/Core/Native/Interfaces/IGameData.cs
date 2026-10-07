@@ -10,6 +10,7 @@ public interface IGameData
     ModelCharaRow? ModelChara(uint modelCharaId);
     NpcEquipRow? NpcEquip(uint npcEquipId);
     ModelSkeletonRow? ModelSkeleton(uint skeletonId);
+    StatusRow? Status(ushort statusId);
 
     // Null for a missing row or an empty name.
     string? StatusName(ushort statusId);

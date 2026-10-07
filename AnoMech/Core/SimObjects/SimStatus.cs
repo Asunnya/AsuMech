@@ -6,6 +6,7 @@ namespace AnoMech.Core.SimObjects;
 public sealed class SimStatus : ISimObject
 {
     private readonly SimCharacter target;
+    private readonly bool native;
     private float duration;
     private float elapsed;
 
@@ -31,7 +32,8 @@ public sealed class SimStatus : ISimObject
         SourceObject = sourceObject;
         IsActive = true;
         Stacks = stacks;
-        target.Proxy?.AddStatusInit(statusId, stacks, sourceObject);
+        native = !SimOnlyStatus.Is(statusId);
+        if (native) target.Proxy?.AddStatusInit(statusId, stacks, sourceObject);
     }
 
     public void Reapply(float duration, int stacks)
@@ -59,13 +61,13 @@ public sealed class SimStatus : ISimObject
             return;
         }
 
-        target.Proxy?.ApplyStatus(StatusId, duration - elapsed, Stacks, SourceObject);
+        if (native) target.Proxy?.ApplyStatus(StatusId, duration - elapsed, Stacks, SourceObject);
     }
 
     public void Despawn()
     {
         if (!IsActive) return;
-        target.Proxy?.RemoveStatus(StatusId, SourceObject);
+        if (native) target.Proxy?.RemoveStatus(StatusId, SourceObject);
         IsActive = false;
     }
 }
