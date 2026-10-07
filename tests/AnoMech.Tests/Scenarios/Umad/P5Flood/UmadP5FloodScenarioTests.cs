@@ -8,9 +8,12 @@ namespace AnoMech.Tests;
 
 // Pinned: NE-SW leads, both lines march Forward, the stack always on RH. Every lane is 40 x 10,
 // running from its wall anchor at +-45 deg; the party clumps at r=4 off a cardinal, MT at the
-// quadrant centre + (0,1.2), and only rotates after tick 1.
+// quadrant centre + (0,1.2), and only rotates after tick 1. Each tick's stack picks its targets
+// 0.12s before the waves and kills ~0.5s later, the waves 1s later: tests pull the player out of
+// the stack between the two, or the stack kills the rest first.
 //
 //   0.8    Party converges South.
+//   6.33   Tick 0's stack takes its targets; ticks 1-3 at 7.35, 8.37, 9.39.
 //   6.45   Tick 0, NE-SW from (-10.6,-17.7) and (-24.7,-3.5): hits N and E.
 //   7.47   Tick 1, NW-SE from (10.6,-17.7) and (24.7,-3.5): hits N and W.
 //   7.57   Party rotates counter-clockwise to East.
@@ -38,14 +41,14 @@ public class UmadP5FloodScenarioTests
             });
 
     // 8y down the lane from its wall anchor, or 30y (past the centre).
-    [TestCase(6.25f, -4.9f, -12f)]
-    [TestCase(6.25f, 10.6f, 3.5f)]
-    [TestCase(7.27f, 4.9f, -12f)]
-    [TestCase(7.27f, -10.6f, 3.5f)]
-    [TestCase(8.29f, -12f, -4.9f)]
-    [TestCase(8.29f, 3.5f, 10.6f)]
-    [TestCase(9.31f, 12f, -4.9f)]
-    [TestCase(9.31f, -3.5f, 10.6f)]
+    [TestCase(6.40f, -4.9f, -12f)]
+    [TestCase(6.40f, 10.6f, 3.5f)]
+    [TestCase(7.42f, 4.9f, -12f)]
+    [TestCase(7.42f, -10.6f, 3.5f)]
+    [TestCase(8.44f, -12f, -4.9f)]
+    [TestCase(8.44f, 3.5f, 10.6f)]
+    [TestCase(9.46f, 12f, -4.9f)]
+    [TestCase(9.46f, -3.5f, 10.6f)]
     public void StandingInWaveLaneDies(float at, float x, float z)
         => Flood(MainTank)
             .TeleportAt(at, to: new(x, z))
@@ -62,13 +65,14 @@ public class UmadP5FloodScenarioTests
                 o.LineNeSw = neSwReversed ? FloodDirection.Reversed : FloodDirection.Forward;
                 o.LineNwSe = nwSeReversed ? FloodDirection.Reversed : FloodDirection.Forward;
             })
-            .TeleportAt(6.25f, to: new(x, z))
+            .TeleportAt(6.40f, to: new(x, z))
             .ShouldKill(ActionId.FloodAOE, MainTank);
 
+    // Back to its South clump spot, after rotating East with the stack.
     [Test]
     public void NotRotatingAfterSecondWaveDies()
         => Flood(MainTank)
-            .FreezeAt(7.52f)
+            .TeleportAt(8.44f, to: new(0f, 5.2f))
             .ShouldKill(ActionId.FloodAOE, MainTank);
 
     // NE-SW leading rotates the party East, NW-SE leading West; the player goes the other way.
@@ -76,7 +80,7 @@ public class UmadP5FloodScenarioTests
     [TestCase(false, 4f)]
     public void RotatingTheWrongWayDies(bool neSwFirst, float x)
         => Flood(MainTank, o => o.NeSwFirst = neSwFirst)
-            .TeleportAt(8.29f, to: new(x, 0))
+            .TeleportAt(8.44f, to: new(x, 0))
             .ShouldKill(ActionId.FloodAOE, MainTank);
 
     // West, 9y from the stack and clear of tick 0's lanes.
