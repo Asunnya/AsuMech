@@ -470,6 +470,22 @@ public static class UmadActions
         Effects = [Damage(Magic, Lethal)],
     };
 
+    // -- P5 Exaflares --
+
+    public static readonly EnemyAction ExaflareHit = new(UmadConstants.ActionId.ExaflareHit)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [Damage(Magic, Lethal)],
+        Timing = new() { DamageDelay = 0.62f },
+    };
+
+    public static readonly EnemyAction ExaflareSpread = new(UmadConstants.ActionId.ExaflareSpread)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [Damage(Magic), LongMagicVulnerabilityUp],
+        Timing = new() { DamageDelay = 0.57f },
+    };
+
     // -- P5 Flood --
 
     public static readonly EnemyAction FloodWave = new(UmadConstants.ActionId.FloodAOE)
