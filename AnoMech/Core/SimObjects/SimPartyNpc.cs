@@ -41,15 +41,6 @@ public sealed class SimPartyNpc : SimNpc, ISimPartyMember
         return true;
     }
 
-    // False for a non-tank job.
-    public bool UseInvuln()
-    {
-        if (ActionsLocked) return false;
-        if (Mitigation.InvulnActionId(ClassJob) is not { } actionId) return false;
-        UseAction(actionId);
-        return true;
-    }
-
     public void UseSprint(float duration)
     {
         if (!ActionsLocked) SprintHandler.Apply(this, duration);

@@ -310,7 +310,7 @@ public sealed class CharacterFind<T> where T : IPositioned
 }
 
 // A pre-bound InsideActionAoe call, replayable against any CharacterFind<T>.
-// DamageSolver.Resolve runs it against the live party; the DEBUG damage window
+// EnemyActionHandler runs it against the live party; the DEBUG damage window
 // replays the SAME query against its virtual grid. InsideActionAoe is invoked from
 // exactly one place (Run), so any parameter it grows is carried to both callers
 // automatically — the debug picture can't drift from the resolved AOE.

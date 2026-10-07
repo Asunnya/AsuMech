@@ -54,12 +54,8 @@ public interface ISimPartyMember : ISimObject, IPositioned
     // SimNetworkPuppet hands it to the owning peer.
     void CarryTo(Vector3 destination, CarryMode mode = CarryMode.Native);
 
-    // Casts this member's tank invuln, whose status Game.Kill honours by swallowing the death.
-    // A no-op returning false for humans (the local player and network puppets press their own);
-    // only bots cast, including a debug bot in the local player's seat.
-    bool UseInvuln() => false;
-
-    // Same split as UseInvuln: a no-op for humans, who press their own Sprint.
+    // A no-op for humans, who press their own Sprint; only bots cast, including a debug bot in the
+    // local player's seat.
     void UseSprint(float duration) { }
 }
 
@@ -87,7 +83,7 @@ public static class SimCharacterDeathExtensions
     {
         // Returns true only when the member actually went down (see Game.Kill):
         // false on a non-party character, an already-dead member, or one that
-        // survived via UseInvuln/godmode. Gate extra on-death logic on this.
+        // survived via godmode. Gate extra on-death logic on this.
         // The message is the action's name, with `explanation` after it in parentheses.
         public bool Die(uint actionId, string? explanation = null)
         {

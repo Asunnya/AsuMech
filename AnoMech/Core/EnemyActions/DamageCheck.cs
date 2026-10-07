@@ -7,8 +7,6 @@ using AnoMech.Core.UserActions;
 
 namespace AnoMech.Core.EnemyActions;
 
-// The DamageSolver death rules, with vulnerabilities read from the DamageSpec instead of a
-// per-scenario registry.
 internal static class DamageCheck
 {
     // Null when the hit is survivable, otherwise why it kills ("" when it simply does).
@@ -16,11 +14,11 @@ internal static class DamageCheck
     {
         if (spec.Protections.Any(id => target.FindStatus(id) != null)) return null;
         if (severity.Kind == SeverityKind.Lethal) return MissingProtection(spec) ?? "";
-        var vulnMitigation = VulnRequiredMitigation(target, spec);
-        if (vulnMitigation >= 1f) return "had vuln up debuff";
+        var vuln = CarriedVulnerability(target, spec);
+        if (vuln is { RequiredMitigation: null }) return "had vuln up debuff";
         if (severity.Kind == SeverityKind.TankBuster && !IsTank(target)) return "tank buster";
-        if (Survives(target, party, MathF.Max(severity.MinMitigation, vulnMitigation ?? 0f), spec.Kind)) return null;
-        return vulnMitigation != null ? "not enough mitigation for a hit with vuln up" : "not enough mitigation";
+        if (Survives(target, party, MathF.Max(severity.MinMitigation, vuln?.RequiredMitigation ?? 0f), spec.Kind)) return null;
+        return vuln != null ? "not enough mitigation for a hit with vuln up" : "not enough mitigation";
     }
 
     private static string? MissingProtection(DamageSpec spec)
@@ -28,13 +26,13 @@ internal static class DamageCheck
 
     public static bool IsTank(SimCharacter target) => target is ISimPartyMember { Role: PartyRole.OffTank or PartyRole.MainTank };
 
-    private static float? VulnRequiredMitigation(SimCharacter target, DamageSpec spec)
+    private static Vulnerability? CarriedVulnerability(SimCharacter target, DamageSpec spec)
     {
         foreach (var vuln in spec.Vulnerabilities)
         {
             if (target.FindStatus(vuln.StatusId) is not { } status || status.Stacks < vuln.MinStacks) continue;
-            DiagnosticLog.Info($"[EnemyAction] {(target as ISimPartyMember)?.Role} is hit carrying vuln up {vuln.StatusId}: needs {vuln.RequiredMitigation:P0} mitigation.");
-            return vuln.RequiredMitigation;
+            DiagnosticLog.Info($"[EnemyAction] {(target as ISimPartyMember)?.Role} is hit carrying vuln up {vuln.StatusId}: needs {(vuln.RequiredMitigation is { } required ? $"{required:P0} mitigation" : "nothing, always lethal")}.");
+            return vuln;
         }
         return null;
     }

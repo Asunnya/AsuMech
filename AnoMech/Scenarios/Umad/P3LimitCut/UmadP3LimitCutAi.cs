@@ -30,7 +30,6 @@ public sealed class UmadP3LimitCutAi : IScenarioAi<UmadP3LimitCutState>
         ai.Move(20.6f, ChargeSpots, arrivalTime: 30.2f);
         ai.Move(32.7f, ClearForThunder, arrivalTime: 37.5f);
         world.Events.Add(33.6f, FirstTankOntoExdeath);
-        world.Events.Add(37.5f, InvulnPlannedTank);
         ai.Move(38.9f, SwapThunderTanks, arrivalTime: 41.2f);
         ScheduleThunderClearance(36.5f, 38.9f, 42.2f);
         ai.Move(47.0f, StackAtBosses);
@@ -52,13 +51,6 @@ public sealed class UmadP3LimitCutAi : IScenarioAi<UmadP3LimitCutState>
     {
         if (state.Objects.Exdeath is not { } exdeath) return;
         if (world.Party.Get(ThunderRoles.First) is { } first && first.IsAlive()) first.Follow(exdeath);
-    }
-
-    private void InvulnPlannedTank()
-    {
-        if (ThunderIIIPlanning.InvulnRole(state.ThunderPlan) is not { } role) return;
-        if (world.Party.Get(role) is ISimPartyMember tank && ((SimCharacter)tank).IsAlive())
-            tank.UseInvuln();
     }
 
     private IAiMove SwapThunderTanks()

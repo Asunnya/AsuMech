@@ -17,15 +17,15 @@ using AnoMech.Scenarios.Top;
 
 namespace AnoMech.Windows;
 
-// DEBUG-only visual debugger for DamageSolver.Resolve. Renders a top-down map of
-// the arena; every Resolve re-runs the SAME CharacterFind.InsideActionAoe query
+// DEBUG-only visual debugger for EnemyActionHandler's AoE queries. Renders a top-down map of
+// the arena; every query re-runs the SAME CharacterFind.InsideActionAoe query
 // against a fixed grid of virtual points (instead of party members) and records
 // the covered cells as one hit instance. Each instance lives FadeSeconds on its
 // OWN timer (re-hitting a cell adds a new instance, it does not refresh an old
 // one), and a cell's brightness reflects how many of its instances are still
 // alive. The user can freeze the image (no paint, no fade).
 //
-// DamageSolver.Resolve reaches us through the static Instance (set in the ctor,
+// EnemyActionHandler reaches us through the static Instance (set in the ctor,
 // constructed only in DEBUG builds from Plugin). The grid and pixel buffers are
 // built lazily on first open so a never-opened window costs nothing.
 internal sealed class DamageDebugWindow : Window, IDisposable
@@ -76,7 +76,7 @@ internal sealed class DamageDebugWindow : Window, IDisposable
         if (Instance == this) Instance = null;
     }
 
-    // Called from DamageSolver.Resolve with the SAME AoeQuery that drives the real
+    // Called from EnemyActionHandler with the SAME AoeQuery that drives the real
     // party query, so the picture matches the resolved AOE exactly (it's literally
     // re-run against the grid). Runs on the framework thread; `events` is read back in
     // Draw on the same (main) thread.

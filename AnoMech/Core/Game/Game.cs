@@ -330,7 +330,7 @@ public sealed class Game : IDisposable
                 throw;
             }
         }
-        // Both host and peer: RunInstanceEvents carries no RNG/AI/DamageSolver dependency.
+        // Both host and peer: RunInstanceEvents carries no RNG/AI/damage-check dependency.
         scenario.RunInstanceEvents(World);
         // Entering the zone always starts at spawn; a restart only recenters the player
         // if they're standing outside the arena ring (otherwise they keep their position).
@@ -428,20 +428,13 @@ public sealed class Game : IDisposable
     // on the first non-godmode death.
     //
     // Returns true only when the member actually went down (OnKilled ran):
-    // false when it was already dead, invulnerable (UseInvuln), or godmode
-    // swallowed it. Callers that run extra on-death logic should gate on this
-    // so an invuln'd/godmode'd "death" doesn't trigger gameplay consequences.
+    // false when it was already dead or godmode swallowed it. Callers that run
+    // extra on-death logic should gate on this so a godmode'd "death" doesn't
+    // trigger gameplay consequences.
     public bool Kill(ISimPartyMember target, string cause, uint? actionId = null)
     {
         if (target == null) return false;
         if (target.Dead) return false;
-        // ActiveStatusSnapshot, not the native StatusManager: AddStatus writes through our list.
-        if (target is SimCharacter sc && sc.ActiveStatusSnapshot.Any(s => AnoMech.Core.UserActions.Mitigation.IsInvuln(s.StatusId)))
-        {
-            Plugin.Log.Info($"[Invuln] {DescribeName(target)} survived: {cause}");
-            AnoMech.Core.DiagnosticLog.Info($"[Game] Kill: {target.Role} survived via Invuln -- {cause}");
-            return false;
-        }
 
         AnoMech.Core.DiagnosticLog.Warn(
             $"[Game] Kill: {target.Role} died at ({(target as IPositioned)?.Position.X:F1},{(target as IPositioned)?.Position.Z:F1}) -- {cause}");

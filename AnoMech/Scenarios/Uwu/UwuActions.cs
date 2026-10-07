@@ -65,8 +65,7 @@ public static class UwuActions
     {
         Cast = new() { AnimationLock = 1.1f },
         Effects = [
-            // TODO: replace understacked: TankBuster to requires invuln
-            Damage(Magic.VulnerableTo(StatusId.ViscousVuln), split: Distribution.Stack(8, understacked: TankBuster)),
+            Damage(Magic.VulnerableTo(StatusId.ViscousVuln), split: Distribution.Stack(8, understacked: TankBuster.MinMit(1f))),
             ApplyStatus(StatusId.ViscousVuln, 1f),
         ],
         Timing = new() { DamageDelay = 0.6f },

@@ -100,10 +100,11 @@ public class UmadP3BlackHoleScenarioTests
             .ShouldKill(ActionId.ThunderIII_Resolve, CasterDps);
 
     // MT, still carrying the first hit's Lightning Resistance Down, stays on Exdeath instead of
-    // handing the second hit to OT.
+    // handing the second hit to OT, with no invuln up.
     [Test]
     public void TankNotSwappingTakesSecondThunder()
         => BlackHole(MainTank)
+            .WithMitigationChecks()
             .TeleportAt(84.4f, to: new(-6.5f, 5.4f))
             .ShouldKill(ActionId.ThunderIII_Resolve, MainTank);
 

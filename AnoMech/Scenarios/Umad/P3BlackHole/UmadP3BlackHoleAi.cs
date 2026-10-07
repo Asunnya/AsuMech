@@ -59,9 +59,6 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
         world.Events.Add(32.4f, () => GrabTether(tetherIndex: 1, playerIndex: 0));
         world.Events.Add(34.4f, () => PullTether(playerIndex: 4));
         world.Events.Add(34.4f, () => PullTether(playerIndex: 0));
-        // Null (a Share plan) means no invuln -- mitigation handles it instead.
-        if (ThunderIIIPlanning.InvulnRole(state.ThunderSet1) is { } set1InvulnRole)
-            ai.UseInvuln(38f, set1InvulnRole);
         // Follow self-sustains, so no AiMove. Right after the 39.33 Nothingness: MT's pull spot can
         // be ~19y from Exdeath, too far to run before the 42.63 hit.
         world.Events.Add(39.4f, ResolveFirstThunder);
@@ -88,9 +85,6 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
         world.Events.Add(71f, () => ReturnToMiddle(playerIndex: 0));
         ai.Move(73.1f, DodgeEdictAndLookUpon);
         ai.Move(80f, StackCentre);
-        // Only an InvulnsBoth plan grants a scripted invuln; a Share relies on mitigation.
-        if (ThunderIIIPlanning.InvulnRole(state.ThunderSet2) is { } set2InvulnRole)
-            ai.UseInvuln(79f, set2InvulnRole);
         world.Events.Add(82f, ResolveSecondThunder);
         ai.Move(84.5f, SwapSecondThunderTanks);
         // Same as Set 1; the swap lands at 84.9f.

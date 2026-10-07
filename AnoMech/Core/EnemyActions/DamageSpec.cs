@@ -4,8 +4,8 @@ using AnoMech.Core.UserActions;
 
 namespace AnoMech.Core.EnemyActions;
 
-// RequiredMitigation 1 = lethal short of an invuln.
-public readonly record struct Vulnerability(ushort StatusId, float RequiredMitigation = 1f, int MinStacks = 1);
+// RequiredMitigation null = always lethal, bots and mitigation-off included; 1 = lethal short of an invuln.
+public readonly record struct Vulnerability(ushort StatusId, float? RequiredMitigation = null, int MinStacks = 1);
 
 // What a hit is made of, and so which vulnerabilities it cares about. How big the hit is lives in its
 // Severity, per cast.
@@ -29,7 +29,7 @@ public sealed record DamageSpec(params DamageType[] Types)
         _ => FlyTextIcon.Physical,
     };
 
-    public DamageSpec VulnerableTo(ushort statusId, float requiredMitigation = 1f, int minStacks = 1)
+    public DamageSpec VulnerableTo(ushort statusId, float? requiredMitigation = null, int minStacks = 1)
         => this with { Vulnerabilities = [.. Vulnerabilities, new Vulnerability(statusId, requiredMitigation, minStacks)] };
 
     public DamageSpec ProtectedBy(ushort statusId) => this with { Protections = [.. Protections, statusId] };
@@ -39,7 +39,7 @@ public sealed record DamageSpec(params DamageType[] Types)
 
 public static class DamageTypeExtensions
 {
-    public static DamageSpec VulnerableTo(this DamageType type, ushort statusId, float requiredMitigation = 1f, int minStacks = 1)
+    public static DamageSpec VulnerableTo(this DamageType type, ushort statusId, float? requiredMitigation = null, int minStacks = 1)
         => new DamageSpec(type).VulnerableTo(statusId, requiredMitigation, minStacks);
 
     public static DamageSpec ProtectedBy(this DamageType type, ushort statusId) => new DamageSpec(type).ProtectedBy(statusId);

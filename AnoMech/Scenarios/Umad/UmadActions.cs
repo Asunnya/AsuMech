@@ -197,7 +197,7 @@ public static class UmadActions
         Cast = new() { AnimationLock = 1.1f },
         Effects =
         [
-            Damage(Magic.VulnerableTo(UmadConstants.StatusId.LightningResistanceDownII), TankBuster.MinMit(0.60f)),
+            Damage(Magic.VulnerableTo(UmadConstants.StatusId.LightningResistanceDownII, 1f), TankBuster.MinMit(0.60f)),
             ApplyStatus(UmadConstants.StatusId.LightningResistanceDownII, 3.96f),
         ],
         Timing = new() { DamageDelay = 0.22f },

@@ -27,14 +27,6 @@ public static class ThunderIIIPlanning
         ThunderIIIAssignment.ShareOtFirst  => (PartyRole.OffTank, PartyRole.MainTank),
         _                                   => throw new System.ArgumentOutOfRangeException(nameof(plan), plan, null),
     };
-
-    // Only the InvulnsBoth plans need a scripted invuln; a Share relies on mitigation.
-    public static PartyRole? InvulnRole(ThunderIIIAssignment plan) => plan switch
-    {
-        ThunderIIIAssignment.MtInvulnsBoth => PartyRole.MainTank,
-        ThunderIIIAssignment.OtInvulnsBoth => PartyRole.OffTank,
-        _                                    => null,
-    };
 }
 
 public sealed class UmadP3BlackHoleStateOverrides

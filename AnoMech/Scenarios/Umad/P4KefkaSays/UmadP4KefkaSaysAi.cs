@@ -378,7 +378,7 @@ public sealed class UmadP4KefkaSaysAi(UmadP4KefkaSaysAi.GazeLayout gazeLayout) :
     //
     // Mirrors the hazard geometry the scenario resolves against (see
     // UmadP4KefkaSaysScenario.Run_Kefka_400040E5_1 / Run_Kefka_400040E6_1 and the
-    // shapes in CharacterFind), so "safe here" matches "DamageSolver won't hit me".
+    // shapes in CharacterFind), so "safe here" matches "the hit won't land on me".
 
     // Blizzard: 4 cones, apex at arena centre, facing the 4 inter-cardinals, 45°
     // half-angle. The two with (i + BlizzardOffset) even are real.

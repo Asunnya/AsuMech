@@ -69,9 +69,6 @@ public sealed class AiManager
         return slack >= 0f ? (false, slack) : (true, 0f);
     }
 
-    public void UseInvuln(float time, PartyRole role, [CallerFilePath] string file = "", [CallerLineNumber] int line = 0)
-        => world.Events.Add(time, () => (world.Party.Get(role) as ISimPartyMember)?.UseInvuln(), file, line);
-
     public void Automarker(float time, Func<Dictionary<PartyRole, Sign>> mapping, [CallerFilePath] string file = "", [CallerLineNumber] int line = 0)
     {
         world.Events.Add(time, () =>

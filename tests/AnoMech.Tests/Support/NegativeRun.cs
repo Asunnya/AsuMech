@@ -34,6 +34,13 @@ internal sealed class NegativeRun<TScenario>(PartyRole role, int strat) where TS
         return this;
     }
 
+    // Once taken off the AI, the player then needs the mitigation a hit asks for (an invuln for 100%).
+    public NegativeRun<TScenario> WithMitigationChecks()
+    {
+        options = options with { UserActionsEnabled = true };
+        return this;
+    }
+
     // The first player step takes the player off the AI for good; later ones move them again.
     public NegativeRun<TScenario> TeleportAt(float time, Vector2 to, float? facing = null)
         => Add(new Takeover(time, to, facing));

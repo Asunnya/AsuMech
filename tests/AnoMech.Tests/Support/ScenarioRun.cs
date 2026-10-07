@@ -33,6 +33,9 @@ internal sealed record ScenarioRunOptions
 
     // In time order.
     public IReadOnlyList<Takeover> Takeovers { get; init; } = [];
+
+    // Hits check a human player's mitigation only with the UserActions module on.
+    public bool UserActionsEnabled { get; init; }
 }
 
 // From the first player takeover on, the player stops following the AI, as a human who froze there
@@ -57,10 +60,11 @@ internal sealed record ScenarioRun(
     {
         options ??= new ScenarioRunOptions();
         var fake = FakeGame.Install();
+        fake.UserActions.Enabled = options.UserActionsEnabled;
         Game? game = null;
         var log = TraceLog.Create(() => game?.World.Events.Elapsed ?? 0f);
         var role = options.PlayerRole ?? (PartyRole)new Rng(seed).Fork("player-seat").Next(8);
-        // A real player's job always fits their seat; job-keyed actions (tank invulns) read it.
+        // A real player's job always fits their seat; job-keyed actions read it.
         fake.BattleCharas.Player.ClassJob = PartyPresets.Standard[(int)role].ClassJob;
         var deaths = new List<Death>();
         var aoeChecks = new List<AoeCheck>();
