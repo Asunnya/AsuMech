@@ -12,30 +12,22 @@ using static AnoMech.Scenarios.Umad.P5Celestriad.UmadP5CelestriadConstants;
 namespace AnoMech.Scenarios.Umad.P5Celestriad;
 
 // Stable element identities. Physical sector order is rolled separately for each run.
-public sealed record CelestriadElement(
-    uint TowerSoakedActionId,
-    uint TowerFailedActionId,
-    DamageType DamageType,
-    ushort VulnUpStatusId,
-    uint TowerEObjId)
+public sealed record CelestriadElement(EnemyAction Tower, ushort VulnUpStatusId, uint TowerEObjId)
 {
     public static readonly CelestriadElement Fire =
-        new(CelestriadActionId.FireIII, CelestriadActionId.StardustFireIII,
-            DamageType.Fire, CelestriadStatusId.FireResistanceDownII, CelestriadTowerEObjId.Fire);
+        new(UmadActions.CelestriadFireTower, CelestriadStatusId.FireResistanceDownII, CelestriadTowerEObjId.Fire);
     public static readonly CelestriadElement Lightning =
-        new(CelestriadActionId.ThunderIII, CelestriadActionId.StardustThunderIII,
-            DamageType.Lightning, UmadConstants.StatusId.LightningResistanceDownII, CelestriadTowerEObjId.Lightning);
+        new(UmadActions.CelestriadLightningTower, UmadConstants.StatusId.LightningResistanceDownII, CelestriadTowerEObjId.Lightning);
     public static readonly CelestriadElement Ice =
-        new(CelestriadActionId.BlizzardIII, CelestriadActionId.StardustBlizzardIII,
-            DamageType.Ice, CelestriadStatusId.IceResistanceDownII, CelestriadTowerEObjId.Ice);
+        new(UmadActions.CelestriadIceTower, CelestriadStatusId.IceResistanceDownII, CelestriadTowerEObjId.Ice);
 }
 
-public sealed record CatastrophicChoice(uint CastActionId, uint ResolveActionId)
+public sealed record CatastrophicChoice(uint CastActionId, EnemyAction Resolution)
 {
     public static readonly CatastrophicChoice Aero =
-        new(CelestriadActionId.CatastrophicChoiceAero, CelestriadActionId.CatastrophicChoiceAeroResolution);
+        new(CelestriadActionId.CatastrophicChoiceAero, UmadActions.CatastrophicChoiceAero);
     public static readonly CatastrophicChoice Earth =
-        new(CelestriadActionId.CatastrophicChoiceEarth, CelestriadActionId.CatastrophicChoiceEarthResolution);
+        new(CelestriadActionId.CatastrophicChoiceEarth, UmadActions.CatastrophicChoiceEarth);
 }
 
 // One of the 9 fixed towers, spawned once for the whole mechanic; position never changes.
@@ -91,20 +83,15 @@ public sealed class UmadP5CelestriadState
         this.rng = rng;
         // Each element doubles exactly once across the 3 sets: a shuffled permutation
         // guarantees that instead of leaving it to independent per-set coin flips.
-        DoubleElement = overrides.DoubleOrder switch
-        {
-            CelestriadDoubleOrder.FireIceLightning => [CelestriadElement.Fire, CelestriadElement.Ice, CelestriadElement.Lightning],
-            CelestriadDoubleOrder.FireLightningIce => [CelestriadElement.Fire, CelestriadElement.Lightning, CelestriadElement.Ice],
-            CelestriadDoubleOrder.IceFireLightning => [CelestriadElement.Ice, CelestriadElement.Fire, CelestriadElement.Lightning],
-            CelestriadDoubleOrder.IceLightningFire => [CelestriadElement.Ice, CelestriadElement.Lightning, CelestriadElement.Fire],
-            CelestriadDoubleOrder.LightningFireIce => [CelestriadElement.Lightning, CelestriadElement.Fire, CelestriadElement.Ice],
-            CelestriadDoubleOrder.LightningIceFire => [CelestriadElement.Lightning, CelestriadElement.Ice, CelestriadElement.Fire],
-            _ => rng.Shuffle(CelestriadElement.Fire, CelestriadElement.Ice, CelestriadElement.Lightning),
-        };
+        DoubleElement = overrides.DoubleOrder is { } doubleOrder
+            ? Order(doubleOrder)
+            : rng.Shuffle(CelestriadElement.Fire, CelestriadElement.Ice, CelestriadElement.Lightning);
 
         PlayerDebuffElement = AssignDebuffs(party, overrides);
 
-        TowerElementOrder = rng.Shuffle(CelestriadElement.Fire, CelestriadElement.Lightning, CelestriadElement.Ice);
+        TowerElementOrder = overrides.SectorOrder is { } sectorOrder
+            ? Order(sectorOrder)
+            : rng.Shuffle(CelestriadElement.Fire, CelestriadElement.Lightning, CelestriadElement.Ice);
         AllTowers = BuildAllTowers();
 
         var setActive = new List<IReadOnlyList<int>>(3);
@@ -118,7 +105,9 @@ public sealed class UmadP5CelestriadState
                 // Which sub-towers light up is random; sorted ascending so a doubled element's
                 // pair always lists in a stable, deterministic clockwise order for whoever reads
                 // "first" vs "second" out of it (the AI, when deciding who goes where).
-                var subs = rng.Shuffle(0, 1, 2).Take(isDouble ? 2 : 1).OrderBy(s => s).ToArray();
+                int[] subs = overrides.FixedLitTowers
+                    ? isDouble ? [0, 2] : [1]
+                    : rng.Shuffle(0, 1, 2).Take(isDouble ? 2 : 1).OrderBy(s => s).ToArray();
                 var elementStart = Array.IndexOf(Elements, element) * 3;
                 active.AddRange(subs.Select(s => elementStart + s));
             }
@@ -225,6 +214,16 @@ public sealed class UmadP5CelestriadState
         }
         return assigned;
     }
+
+    private static IReadOnlyList<CelestriadElement> Order(CelestriadElementOrder order) => order switch
+    {
+        CelestriadElementOrder.FireIceLightning => [CelestriadElement.Fire, CelestriadElement.Ice, CelestriadElement.Lightning],
+        CelestriadElementOrder.FireLightningIce => [CelestriadElement.Fire, CelestriadElement.Lightning, CelestriadElement.Ice],
+        CelestriadElementOrder.IceFireLightning => [CelestriadElement.Ice, CelestriadElement.Fire, CelestriadElement.Lightning],
+        CelestriadElementOrder.IceLightningFire => [CelestriadElement.Ice, CelestriadElement.Lightning, CelestriadElement.Fire],
+        CelestriadElementOrder.LightningFireIce => [CelestriadElement.Lightning, CelestriadElement.Fire, CelestriadElement.Ice],
+        _ => [CelestriadElement.Lightning, CelestriadElement.Ice, CelestriadElement.Fire],
+    };
 
     private static CelestriadElement? ElementFor(CelestriadDebuff debuff) => debuff switch
     {

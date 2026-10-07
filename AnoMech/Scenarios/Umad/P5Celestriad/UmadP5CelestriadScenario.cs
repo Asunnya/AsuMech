@@ -46,7 +46,6 @@ public sealed class UmadP5CelestriadScenario : IMultiplayerReplayable
     public UmadP5CelestriadState? LastState { get; private set; }
     private SimWorld world = null!;
     private SimParty party = null!;
-    private DamageSolver damage = null!;
     private SimEnemy? kefka;
     private sealed record TowerInstance(
         CelestriadElement Element,
@@ -62,10 +61,6 @@ public sealed class UmadP5CelestriadScenario : IMultiplayerReplayable
         party = worldParam.Party;
         state = new UmadP5CelestriadState(world.Rng, party, settingsWindow.Overrides);
         LastState = state;
-        damage = new DamageSolver(party);
-        damage.SetStatuses(DamageType.Lightning, StatusId.LightningResistanceDownII);
-        damage.SetStatuses(DamageType.Fire, CelestriadStatusId.FireResistanceDownII);
-        damage.SetStatuses(DamageType.Ice, CelestriadStatusId.IceResistanceDownII);
         towerInstances.Clear();
 
         if (selectedAi is { } idx && idx < AiStrats.Count)
@@ -73,7 +68,7 @@ public sealed class UmadP5CelestriadScenario : IMultiplayerReplayable
 
         world.Events.Add(0f, SpawnKefka);
         world.Events.Add(CelestriadTiming.CelestriadCastAt,
-            () => kefka?.Cast(CelestriadActionId.Celestriad, castSeconds: CelestriadTiming.CelestriadCastTime));
+            () => kefka?.Cast(CelestriadActionId.Celestriad, 3.1f));
         world.Events.Add(CelestriadTiming.DebuffApplyAt, ApplyDebuffs);
         world.Events.Add(CelestriadTiming.TowerStart[0], SpawnAllTowers);
 
@@ -119,7 +114,7 @@ public sealed class UmadP5CelestriadScenario : IMultiplayerReplayable
     private void LaunchChoice(int set)
     {
         if (state.AeroVariant[set] is not { } choice || kefka is null) return;
-        kefka.Cast(choice.CastActionId, castSeconds: CelestriadTiming.CatastrophicChoiceCastTime);
+        kefka.Cast(choice.CastActionId, 1.1f);
     }
 
 
@@ -174,28 +169,11 @@ public sealed class UmadP5CelestriadScenario : IMultiplayerReplayable
     private void ResolveSet(int set)
     {
         foreach (var tower in towerInstances)
-        {
-            if (tower.ActiveOverlay is null) continue;
+            if (tower.ActiveOverlay is not null)
+                tower.Marker?.Cast(tower.Element.Tower);
 
-            var soakers = damage.Resolve(tower.Marker,
-                tower.Element.TowerSoakedActionId, [tower.Element.DamageType],
-                [(tower.Element.VulnUpStatusId, CelestriadTiming.DebuffDuration)],
-                stackMinTargets: 2);
-            if (soakers.Count == 0)
-            {
-                damage.Resolve(tower.Marker, tower.Element.TowerFailedActionId, [], [(StatusId.DamageDown, CelestriadTiming.DamageDownDuration)]);
-                tower.Marker?.Cast(tower.Element.TowerFailedActionId);
-            }
-            else
-            {
-                tower.Marker?.Cast(tower.Element.TowerSoakedActionId);
-            }
-        }
-
-        if (state.AeroVariant[set] is { } choice && kefka is not null)
-        {
-            damage.Resolve(kefka, choice.ResolveActionId, [DamageType.Lethal], [], size : 10f);
-        }
+        if (state.AeroVariant[set] is { } choice)
+            kefka?.Cast(choice.Resolution);
     }
 
     private void DespawnAllTowers()

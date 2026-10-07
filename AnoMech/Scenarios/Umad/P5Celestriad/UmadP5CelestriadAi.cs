@@ -14,8 +14,8 @@ namespace AnoMech.Scenarios.Umad.P5Celestriad;
 // clockwise through this run's element sectors to that set's matching tower, splitting the
 // pair 1y either side of the tower's tangent so
 // both fit inside the soak radius. On Catastrophic Choice sets (0 and 2), bots first stack in
-// the tower's centre, then after ChoiceReadDelay step to the safe half: Aero (green) -> away
-// from the boss, Earth (brown) -> toward the boss. This is simulated recognition time, not a
+// the tower's centre, then after ChoiceReadDelay step to the safe half: Aero (green) -> toward
+// the boss, Earth (brown) -> away from the boss. This is simulated recognition time, not a
 // read of the ground VFX (which only flashes at resolution, see
 // UmadP5CelestriadScenario.SpawnChoiceOmen): bots already know their side from state directly.
 public sealed class UmadP5CelestriadAi : IScenarioAi<UmadP5CelestriadState>
@@ -45,7 +45,7 @@ public sealed class UmadP5CelestriadAi : IScenarioAi<UmadP5CelestriadState>
 
     private static float HalfFor(UmadP5CelestriadState state, int set) =>
         state.AeroVariant[set] is { } choice
-            ? (choice == CatastrophicChoice.Aero ? -1f : 1f)
+            ? (choice == CatastrophicChoice.Aero ? 1f : -1f)
             : 0f;
 
     private static void PlaceSet(SimWorld world, UmadP5CelestriadState state, int set, float half)

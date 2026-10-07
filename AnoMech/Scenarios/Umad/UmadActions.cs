@@ -7,6 +7,7 @@ using static AnoMech.Core.EnemyActions.EnemyActionEffects;
 using static AnoMech.Core.EnemyActions.Severity;
 using P1 = AnoMech.Scenarios.Umad.P1TeleTrouncing.UmadP1TeleTrouncingConstants;
 using P3 = AnoMech.Scenarios.Umad.P3LimitCut.UmadP3LimitCutConstants;
+using P5C = AnoMech.Scenarios.Umad.P5Celestriad.UmadP5CelestriadConstants;
 
 namespace AnoMech.Scenarios.Umad;
 
@@ -419,6 +420,54 @@ public static class UmadActions
     {
         Effects = [Damage(DamageType.Unique, Lethal)],
         DeathExplanation = "Allagan Field holder died",
+    };
+
+    // -- P5 Celestriad --
+
+    public static readonly EnemyAction CelestriadFireTower = CelestriadTower(
+        P5C.CelestriadActionId.FireIII, P5C.CelestriadActionId.StardustFireIII,
+        DamageType.Fire, P5C.CelestriadStatusId.FireResistanceDownII);
+
+    public static readonly EnemyAction CelestriadIceTower = CelestriadTower(
+        P5C.CelestriadActionId.BlizzardIII, P5C.CelestriadActionId.StardustBlizzardIII,
+        DamageType.Ice, P5C.CelestriadStatusId.IceResistanceDownII);
+
+    public static readonly EnemyAction CelestriadLightningTower = CelestriadTower(
+        P5C.CelestriadActionId.ThunderIII, P5C.CelestriadActionId.StardustThunderIII,
+        DamageType.Lightning, UmadConstants.StatusId.LightningResistanceDownII);
+
+    private static EnemyAction CelestriadTower(uint actionId, uint stardustId, DamageType element, ushort resistanceDown) => new(actionId)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects =
+        [
+            Damage(new DamageSpec(DamageType.Magic, element).VulnerableTo(resistanceDown), split: Stack(2)),
+            ApplyStatus(resistanceDown, P5C.CelestriadTiming.DebuffDuration),
+            FollowUp(Stardust(stardustId), ctx => ctx.Hits.Count == 0),
+        ],
+    };
+
+    private static EnemyAction Stardust(uint actionId) => new(actionId)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects =
+        [
+            Damage(DamageType.Magic),
+            ApplyStatus(UmadConstants.StatusId.DamageDown, P5C.CelestriadTiming.DamageDownDuration),
+        ],
+    };
+
+    public static readonly EnemyAction CatastrophicChoiceAero = new(P5C.CelestriadActionId.CatastrophicChoiceAeroResolution)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Area = new() { Size = 10f },
+        Effects = [Damage(Magic, Lethal)],
+    };
+
+    public static readonly EnemyAction CatastrophicChoiceEarth = new(P5C.CelestriadActionId.CatastrophicChoiceEarthResolution)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [Damage(Magic, Lethal)],
     };
 
     private sealed class AntilightEffect(ushort lethalWound, ushort cleansedBy, ushort leaves) : IEnemyActionEffect

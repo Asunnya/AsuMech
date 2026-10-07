@@ -9,8 +9,8 @@ public enum CelestriadDebuff { Fire, Ice, Lightning, Free }
 public enum CatastrophicVariantOverride { Random, Aero, Earth }
 
 // Each element doubles exactly once across the three sets, so it is one order rather than three
-// independent picks.
-public enum CelestriadDoubleOrder
+// independent picks. The same orders place the elements' sectors clockwise from north-east.
+public enum CelestriadElementOrder
 {
     FireIceLightning,
     FireLightningIce,
@@ -24,7 +24,10 @@ public enum CelestriadDoubleOrder
 // the field to the roll at scenario start.
 public sealed class UmadP5CelestriadStateOverrides
 {
-    public CelestriadDoubleOrder? DoubleOrder { get; set; } = null;
+    public CelestriadElementOrder? DoubleOrder { get; set; } = null;
+    public CelestriadElementOrder? SectorOrder { get; set; } = null;
+    // Each single element lights its middle tower and the doubled one its outer two.
+    public bool FixedLitTowers { get; set; }
     public CatastrophicVariantOverride Set1 { get; set; } = CatastrophicVariantOverride.Random;
     public CatastrophicVariantOverride Set3 { get; set; } = CatastrophicVariantOverride.Random;
 

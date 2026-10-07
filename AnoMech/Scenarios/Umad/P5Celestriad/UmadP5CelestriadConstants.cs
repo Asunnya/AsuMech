@@ -1,10 +1,9 @@
 namespace AnoMech.Scenarios.Umad.P5Celestriad;
 
-// IDs and tunables for Celestriad. Sourced from Network_30207_20260811.log (pull #16,
-// territory 1363, via tools/parser.py ... 1363 16 <window> -x), the deepest replay-confirmed
-// Celestriad attempt available; ESTIMATE markers below flag values that pull never reached.
+// ESTIMATE marks values never observed in game.
 //
 // Non-obvious structural facts:
+// - Celestriad itself targets only Kefka and deals no damage; it just precedes the towers.
 // - FireIII/BlizzardIII/ThunderIII are single-target casts (Kefka onto a specific player), not
 //   ground telegraphs. Reused here for both the initial debuff (silent, no cast) and the tower
 //   resolve VFX (cast onto an invisible marker at the tower, so it animates).
@@ -18,10 +17,7 @@ namespace AnoMech.Scenarios.Umad.P5Celestriad;
 // - Only two Catastrophic Choice casts happen in total, not one per set: the first governs set
 //   0's resolution, the second governs set 2's; set 1 has none and resolves independently
 //   between them.
-// - Aero (green) is safe away from the boss; Earth (brown) is safe toward the boss.
-//
-// Still unverified: which raw action id (CatastrophicChoiceAero/Earth) is actually the green
-// vs. the brown telegraph.
+// - Aero (green) is safe toward the boss; Earth (brown) is safe away from the boss.
 //
 // Nested types are prefixed Celestriad* (not the usual bare ActionId/StatusId) so this file's
 // `using static` can coexist with UmadConstants': both would otherwise declare a same-named
@@ -31,16 +27,16 @@ public static class UmadP5CelestriadConstants
     public static class CelestriadActionId
     {
         public const uint Celestriad = 0xBB42U;
-        public const uint CatastrophicChoiceAero = 0xC24EU;  // green, safe half is toward centre
-        public const uint CatastrophicChoiceEarth = 0xC24FU; // brown, safe half is away from centre
+        public const uint CatastrophicChoiceAero = 0xC24FU;
+        public const uint CatastrophicChoiceEarth = 0xC24EU;
         public const uint FireIII = 0xBB43U;
         public const uint BlizzardIII = 0xBB44U;
         public const uint ThunderIII = 0xBB45U;
         public const uint StardustFireIII = 0xBB46U;
         public const uint StardustBlizzardIII = 0xBB47U;
         public const uint StardustThunderIII = 0xBB48U;
-        public const uint CatastrophicChoiceEarthResolution = 0xBB4BU; // Tornado, 40-yalm donut
-        public const uint CatastrophicChoiceAeroResolution = 0xBB4AU;  // Quake, 10-yalm circle
+        public const uint CatastrophicChoiceAeroResolution = 0xBB4BU;  // Tornado, donut outside 10y
+        public const uint CatastrophicChoiceEarthResolution = 0xBB4AU; // Quake, 10y circle
     }
 
     // LightningResistanceDownII and DamageDown are already in the shared UmadConstants.StatusId
@@ -72,10 +68,8 @@ public static class UmadP5CelestriadConstants
     public static class CelestriadTiming
     {
         public const float CelestriadCastAt = 1f;
-        public const float CelestriadCastTime = 4.7f;         // confirmed
         public const float DebuffApplyAt = 6.1f;
         public const float DebuffDuration = 20f;               // confirmed
-        public const float CatastrophicChoiceCastTime = 4.0f;  // confirmed
         public const float DamageDownDuration = 30f;           // ESTIMATE
         public const float TowerDespawnBuffer = 3f;             // ESTIMATE, gap after DeactivateAt[2] before the towers vanish
 
@@ -83,7 +77,7 @@ public static class UmadP5CelestriadConstants
         // cast-end + 0.4s) is when all 9 towers first spawn (dormant) and also when set 0's 4
         // activate; TowerStart[1]/[2] activate that set's 4 on the already-spawned towers.
         // CcAt[0]/[2] (confirmed) are each set's single Catastrophic Choice; ResolveAt[0]/[2]
-        // equal CcAt + CatastrophicChoiceCastTime, so the CC1-end to CC2-end window is a
+        // equal CcAt + the 4.0s cast bar, so the CC1-end to CC2-end window is a
         // confirmed fixed 12.16s that has to contain all of set 1. Set 1's own timing splits
         // that budget close to evenly (an estimate, not replay-confirmed).
         public static readonly float[] TowerStart = { 6.1f, 14.4f, 20.6f };
