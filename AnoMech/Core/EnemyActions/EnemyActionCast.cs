@@ -10,6 +10,7 @@ namespace AnoMech.Core.EnemyActions;
 public sealed class EnemyActionCast
 {
     public bool IsResolved { get; private set; }
+    public bool IsCancelled { get; private set; }
     public Placement Origin { get; private set; }
 
     // Nearest to Origin first, each where it stood at resolve.
@@ -17,6 +18,8 @@ public sealed class EnemyActionCast
 
     // Decided at resolve; they die TimingSpec.DamageDelay later.
     public IReadOnlyCollection<SimCharacter> Kills { get; private set; } = [];
+
+    internal void Cancelled() => IsCancelled = true;
 
     internal void Resolved(Placement origin, IReadOnlyList<(SimCharacter Who, Vector3 At)> hits)
     {

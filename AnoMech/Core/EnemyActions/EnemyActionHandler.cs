@@ -14,6 +14,8 @@ namespace AnoMech.Core.EnemyActions;
 // NativeActionEffect, everything mechanical goes on the scenario's EventScheduler.
 internal sealed class EnemyActionHandler(SimEnemy caster, SimWorld world)
 {
+    private (EnemyActionCast Handle, uint ActionId)? casting;
+
     // `target` and `location` are exclusive; neither = centred on the caster.
     public EnemyActionCast Start(EnemyAction action, SimCharacter? target, Vector3? location, byte animationVariation)
     {
@@ -26,13 +28,35 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimWorld world)
             $"[EnemyAction] Cast: {ActionLookup.Name(id)} ({id}) by {caster.DisplayName} from ({caster.Position.X:F1},{caster.Position.Z:F1}) castSeconds={castTime:F2}.");
 
         if (castTime > 0f)
+        {
+            casting = (handle, id);
             caster.NativeCast(id, ActionType.Action, action.Cast.OmenDelay, castTime, interruptible: false,
                 rotation: caster.Rotation + action.Area.Rotation, position: location, targetId: castTarget);
+        }
 
-        Schedule(sheetCastTime, () => Release(action, target, location, castTarget, animationVariation));
+        Schedule(sheetCastTime, () =>
+        {
+            if (handle.IsCancelled) return;
+            if (casting?.Handle == handle) casting = null;
+            Release(action, target, location, castTarget, animationVariation);
+        });
         if (action.Effects.Count > 0)
-            Schedule(castTime + action.Timing.ResolveSnapshotOffset, () => Resolve(action, target, location, handle));
+            Schedule(castTime + action.Timing.ResolveSnapshotOffset, () =>
+            {
+                if (handle.IsCancelled) return;
+                if (casting?.Handle == handle) casting = null;
+                Resolve(action, target, location, handle);
+            });
         return handle;
+    }
+
+    // The interrupt is the ActorControl the server sends for an interrupted enemy cast.
+    public void CancelCast()
+    {
+        if (casting is not { } cast) return;
+        casting = null;
+        cast.Handle.Cancelled();
+        caster.ActorControl(15, 540, 1, cast.ActionId, 1);
     }
 
     // Faces a target first: the packet carries the caster's rotation. A ground location doesn't turn

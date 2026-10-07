@@ -351,10 +351,10 @@ public sealed class SimEnemy : SimNpc
     /// If <see langword="true"/>, then the Nameplate will be visible, and able to target them using the Enemy List.
     /// If <see langword="false"/>, then the Nameplate will not be visible, and not able to target them using the Enemy List.
     /// </param>
-    public void SetTargetable(bool targetable)
+    public override void SetTargetable(bool targetable)
     {
         desiredTargetable = targetable;
-        Proxy?.SetTargetable(targetable);
+        base.SetTargetable(targetable);
     }
 
     /// <summary>
@@ -636,6 +636,9 @@ public sealed class SimEnemy : SimNpc
         // targetLocation stays scenario-local; SimCast lifts to world at native boundaries.
         return cast.Start(actionId, targetLocation, castSeconds, targetId, omenDelay, omenRotate, animationVariation, animationLock, fireDelay);
     }
+
+    // Interrupts the EnemyAction cast still on its bar: neither its effect nor its mechanics go out.
+    public void CancelCast() => actions.CancelCast();
 
     public EnemyActionCast Cast(EnemyAction action, byte animationVariation = 0) => actions.Start(action, null, null, animationVariation);
 

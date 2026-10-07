@@ -549,7 +549,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
 
         world.Events.Add(21.32f, () =>
         {
-            state.PlayerGaol!.ActorControl(54); // Make Untargetable
+            state.PlayerGaol!.SetTargetable(false);
 
             state.PlayerGaol!.AddStatusParam(StatusId.Fetters, 0);
             state.PlayerGaol.StopMoving();
@@ -583,14 +583,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
             graniteGaol!.SetVisibleInEnemyList(true);
             graniteGaol!.SetTargetable(true);
 
-            graniteGaol?.NativeCast(
-                ActionId.GraniteImpact,
-                ActionType.Action,
-                0f,
-                6.7f,
-                false,
-                targetId: graniteGaol.GameObjectId
-                );
+            graniteGaol?.Cast(Actions.GraniteImpact);
         });
 
         world.Events.Add(30.67f, () => titan?.PlayActionTimeline(ActionTimelineId.WarpEnd));
@@ -598,8 +591,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
         // Gaol gets removed as soon as cast ends, to not give that much of an advantage to the player
         world.Events.Add(30.24f, () =>
         {
-            state.PlayerGaol!.ActorControl(54, 1); // Make Targetable
-
+            state.PlayerGaol!.SetTargetable(true);
             state.PlayerGaol!.RemoveStatus(StatusId.Fetters);
 
             if (state.PlayerGaol is SimPlayer player)
@@ -608,7 +600,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
             }
 
             graniteGaol!.Proxy?.SetMode(CharacterModes.Dead);
-            graniteGaol!.ActorControl(15, 540, 1, ActionId.GraniteImpact, 1); // Cast Interrupt
+            graniteGaol!.CancelCast();
             graniteGaol!.ActorControl(14); // Death Animation
         });
 
