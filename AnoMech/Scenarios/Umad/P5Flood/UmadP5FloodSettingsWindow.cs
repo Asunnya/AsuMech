@@ -28,16 +28,6 @@ public sealed class UmadP5FloodSettingsWindow
     private static readonly string[] QuadrantLabels = ["Random", "North", "East", "South", "West"];
     private static readonly string[] RotationLabels = ["Random", "Clockwise", "Counter-clockwise"];
 
-#if DEBUG
-    // Index-aligned with FloodCarrierMode.
-    private static readonly string[] CarrierLabels =
-        ["Chaos, draw hidden", "Chaos, model hidden", "Chaos, visible", "Empty human (480)", "Real packet (9020)"];
-
-    // Index-aligned with FloodWaveDelivery.
-    private static readonly string[] DeliveryLabels =
-        ["Native effect", "Raw packet replay", "Effect + loop hold", "Effect + base hold", "Direct timeline"];
-#endif
-
     public void Draw()
     {
         if (ImGui.Button("Auto"))
@@ -48,13 +38,6 @@ public sealed class UmadP5FloodSettingsWindow
             Overrides.AnchorRole = null;
             Overrides.StartQuadrant = null;
             Overrides.RotationClockwise = null;
-            Overrides.CarrierMode = FloodCarrierMode.RealPacket;
-            Overrides.WaveAnimLock = false;
-            Overrides.WaveDelivery = FloodWaveDelivery.NativeEffect;
-            Overrides.WaveOnKefka = false;
-            Overrides.PreloadWaveTimelines = true;
-            Overrides.WaveForceLoad = false;
-            Overrides.VfxRenderLog = false;
         }
 
         if (SettingsGrid.Begin("##p5flood"))
@@ -87,41 +70,6 @@ public sealed class UmadP5FloodSettingsWindow
             if (ImGui.Combo("##rotationdir", ref rotIdx, RotationLabels, RotationLabels.Length))
                 Overrides.RotationClockwise = rotIdx switch { 1 => true, 2 => false, _ => null };
 
-#if DEBUG
-            SettingsGrid.Row("Wave carrier (debug):");
-            var carrierIdx = (int)Overrides.CarrierMode;
-            SettingsGrid.ItemWidth(160);
-            if (ImGui.Combo("##carriermode", ref carrierIdx, CarrierLabels, CarrierLabels.Length))
-                Overrides.CarrierMode = (FloodCarrierMode)carrierIdx;
-
-            SettingsGrid.Row("Wave delivery (debug):");
-            var deliveryIdx = (int)Overrides.WaveDelivery;
-            SettingsGrid.ItemWidth(160);
-            if (ImGui.Combo("##wavedelivery", ref deliveryIdx, DeliveryLabels, DeliveryLabels.Length))
-                Overrides.WaveDelivery = (FloodWaveDelivery)deliveryIdx;
-
-            SettingsGrid.Row("Wave AnimLock (debug):");
-            var animLock = Overrides.WaveAnimLock;
-            if (ImGui.Checkbox("Hold carrier in AnimLock##waveanimlock", ref animLock)) Overrides.WaveAnimLock = animLock;
-
-            SettingsGrid.Row("Wave on Kefka (debug):");
-            var onKefka = Overrides.WaveOnKefka;
-            if (ImGui.Checkbox("Also fire each wave from Kefka##waveonkefka", ref onKefka)) Overrides.WaveOnKefka = onKefka;
-
-            SettingsGrid.Row("Wave preload (debug):");
-            var preload = Overrides.PreloadWaveTimelines;
-            if (ImGui.Checkbox("Preload wave timelines at start##wavepreload", ref preload)) Overrides.PreloadWaveTimelines = preload;
-
-            SettingsGrid.Row("Wave force-load (debug):");
-            var forceLoad = Overrides.WaveForceLoad;
-            if (ImGui.Checkbox("LoadTimelineResources after each wave##waveforceload", ref forceLoad)) Overrides.WaveForceLoad = forceLoad;
-
-            SettingsGrid.Row("VFX render log (debug):");
-            var vfxLog = Overrides.VfxRenderLog;
-            if (ImGui.Checkbox("Trace every VFX create and destroy##vfxrenderlog", ref vfxLog)) Overrides.VfxRenderLog = vfxLog;
-            if (ImGui.IsItemHovered())
-                ImGui.SetTooltip("Hooks a game destructor that runs for every VFX in the world. Only for investigating what did or didn't render.");
-#endif
 
             SettingsGrid.End();
         }

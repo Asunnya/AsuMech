@@ -470,6 +470,21 @@ public static class UmadActions
         Effects = [Damage(Magic, Lethal)],
     };
 
+    // -- P5 Flood --
+
+    public static readonly EnemyAction FloodWave = new(UmadConstants.ActionId.FloodAOE)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [Damage(Magic, Lethal)],
+    };
+
+    public static readonly EnemyAction ChaoticFlood = new(UmadConstants.ActionId.ChaoticFlood)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [Damage(Magic, split: Stack(8))],
+        Timing = new() { DamageDelay = 0.64f },
+    };
+
     private sealed class AntilightEffect(ushort lethalWound, ushort cleansedBy, ushort leaves) : IEnemyActionEffect
     {
         public void Apply(EnemyActionContext ctx)
