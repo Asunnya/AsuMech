@@ -209,7 +209,7 @@ public class DamageSolver
     public void ApplyDamage(SimCharacter target, float fractionOfMaxHp, uint actionId, string context, bool lethal)
     {
         if (target is not ISimPartyMember) return;
-        var name = ActionLookup.Name(actionId);
+        var name = ActionLookup.FlyTextName(actionId);
         if (target.Proxy is { Exists: true } chara)
             chara.ShowFlyText((uint)MathF.Round(fractionOfMaxHp * chara.MaxHealth), name);
         if (!lethal) return;

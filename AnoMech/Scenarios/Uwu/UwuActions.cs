@@ -191,12 +191,14 @@ public static class UwuActions
 
     private static readonly EnemyAction SuperCyclone1 = new(ActionId.SuperCyclone1)
     {
+        Cast = new() { AnimationLock = 2.1f },
         Effects = [Damage(Magic)],
         Timing = new() { DamageDelay = 0.5f },
     };
 
     private static readonly EnemyAction SuperCyclone2 = new(ActionId.SuperCyclone2)
     {
+        Cast = new() { AnimationLock = 2.1f },
         Effects = [
             Damage(Magic.VulnerableTo(StatusId.SuperCycloneVuln)),
             ApplyStatus(StatusId.SuperCycloneVuln, 2f),
@@ -206,6 +208,7 @@ public static class UwuActions
 
     private static readonly EnemyAction SuperCyclone3 = new(ActionId.SuperCyclone3)
     {
+        Cast = new() { AnimationLock = 2.1f },
         Effects = [Damage(Magic, Lethal)],
         Timing = new() { DamageDelay = 0.5f }, 
     };

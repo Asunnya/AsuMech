@@ -9,4 +9,8 @@ internal static class ActionLookup
     // missing or unnamed — death messages must never go blank.
     public static string Name(uint actionId)
         => Natives.Data.Action(actionId) is { Name: { Length: > 0 } name } ? name : actionId.ToString();
+
+    // The sheet name as-is, blank for an unnamed row (enemy auto-attacks): flytext labels mirror
+    // what the game prints.
+    public static string FlyTextName(uint actionId) => Natives.Data.Action(actionId)?.Name ?? "";
 }

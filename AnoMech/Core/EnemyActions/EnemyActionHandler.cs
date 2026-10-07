@@ -101,7 +101,7 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimCast cast, SimWorld
             effect.Apply(ctx);
         handle.Killed(ctx.Killed.Keys.ToList());
 
-        var name = ActionLookup.Name(action.ActionId);
+        var name = ActionLookup.FlyTextName(action.ActionId);
         foreach (var (who, amount, icon) in ctx.DamageShown)
             Schedule(action.Timing.DamageDelay, () => ShowFlyText(who, amount, icon, name));
         foreach (var (who, from, distance, speed, delay) in ctx.Knockbacks)

@@ -22,7 +22,7 @@ public static class UmadActions
     {
         Cast = new() { AnimationLock = 0.1f },
         Effects = [Damage(DamageType.Physical)],
-        Timing = new() { DamageDelay = 0.8f },
+        Timing = new() { DamageDelay = 0.72f },
     };
 
     // -- P1 Tele-trouncing --
