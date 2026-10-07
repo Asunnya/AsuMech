@@ -4,7 +4,7 @@ using AnoMech.Core.Game.Ai;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.SimObjects;
 using AnoMech.Scenarios.Umad.P3BlackHole;
-using static AnoMech.Scenarios.Umad.P3LimitCut.UmadP3LimitCutConstants;
+using static AnoMech.Scenarios.Umad.P3LimitCut.UmadP3LimitCutState;
 
 namespace AnoMech.Scenarios.Umad.P3LimitCut;
 
@@ -42,9 +42,9 @@ public sealed class UmadP3LimitCutAi : IScenarioAi<UmadP3LimitCutState>
     private IAiMove ClearForThunder()
     {
         var coords = new Vector2?[8];
-        coords[(int)ThunderBystanderTank] = Flat(Geometry.OnCircle(Hold, Geometry.ExdeathHoldRadius));
+        coords[(int)ThunderBystanderTank] = Flat(OnCircle(Hold, 10.6f));
         for (var slot = 2; slot < 8; slot++)
-            coords[slot] = Flat(Geometry.OnCircle(Hold + MathF.PI, 4f) + Geometry.OnCircle(Hold + MathF.PI / 2f, (slot % 3 - 1) * 1.5f) + Geometry.OnCircle(Hold + MathF.PI, slot / 3 * 1.5f));
+            coords[slot] = Flat(OnCircle(Hold + MathF.PI, 4f) + OnCircle(Hold + MathF.PI / 2f, (slot % 3 - 1) * 1.5f) + OnCircle(Hold + MathF.PI, slot / 3 * 1.5f));
         return AiMove.Create(coords).NaturalOrder();
     }
 
@@ -99,7 +99,7 @@ public sealed class UmadP3LimitCutAi : IScenarioAi<UmadP3LimitCutState>
             {
                 var away = firstPos.LengthSquared() > 1e-4f ? Vector2.Normalize(-firstPos) : new Vector2(0f, -1f);
                 var seat = firstPos + RotateVec(away, MathF.PI / 2f) * ThunderClearDistance;
-                var seatClearRadius = Geometry.ArenaRadius - 1f;
+                var seatClearRadius = 19f;
                 if (seat.LengthSquared() > seatClearRadius * seatClearRadius)
                     seat = seat.LengthSquared() > 1e-4f ? Vector2.Normalize(seat) * seatClearRadius : seat;
                 secondMember.MoveTo(new Vector3(seat.X, 0f, seat.Y));
@@ -117,7 +117,7 @@ public sealed class UmadP3LimitCutAi : IScenarioAi<UmadP3LimitCutState>
             if (offset.LengthSquared() >= ThunderClearDistance * ThunderClearDistance) continue;
             var dir = offset.LengthSquared() > 1e-4f ? Vector2.Normalize(offset) : new Vector2(1f, 0f);
             var target = bossPos + dir * ThunderClearDistance;
-            var clearRadius = Geometry.ArenaRadius - 1f;
+            var clearRadius = 19f;
             if (target.LengthSquared() > clearRadius * clearRadius)
                 target = target.LengthSquared() > 1e-4f ? Vector2.Normalize(target) * clearRadius : target;
             member.MoveTo(new Vector3(target.X, 0f, target.Y));
@@ -131,21 +131,21 @@ public sealed class UmadP3LimitCutAi : IScenarioAi<UmadP3LimitCutState>
         return new Vector2(v.X * cos - v.Y * sin, v.X * sin + v.Y * cos);
     }
 
-    private float Hold => Geometry.SpotHeading(state.BossSpot);
+    private float Hold => SpotHeading(state.BossSpot);
 
     private Vector2 Flat(Vector3 v) => new(v.X, v.Z);
 
     private Vector2 StackSpot(int slot)
     {
-        var spread = Geometry.OnCircle(Hold + MathF.PI / 2f, (slot % 4 - 1.5f) * 1.2f) + Geometry.OnCircle(Hold, slot / 4 * 1.4f);
-        return Flat(Geometry.OnCircle(Hold, Geometry.StackRadius) + spread);
+        var spread = OnCircle(Hold + MathF.PI / 2f, (slot % 4 - 1.5f) * 1.2f) + OnCircle(Hold, slot / 4 * 1.4f);
+        return Flat(OnCircle(Hold, 5.5f) + spread);
     }
 
     private IAiMove StackAtBosses()
     {
         var coords = new Vector2?[8];
-        coords[(int)PartyRole.MainTank] = Flat(Geometry.OnCircle(Hold, Geometry.ChaosHoldRadius - 1.5f));
-        coords[(int)PartyRole.OffTank] = Flat(Geometry.OnCircle(Hold, Geometry.ExdeathHoldRadius - 1.5f) + Geometry.OnCircle(Hold + MathF.PI / 2f, 2.5f));
+        coords[(int)PartyRole.MainTank] = Flat(OnCircle(Hold, 7.5f));
+        coords[(int)PartyRole.OffTank] = Flat(OnCircle(Hold, 9.1f) + OnCircle(Hold + MathF.PI / 2f, 2.5f));
         for (var slot = 2; slot < 8; slot++) coords[slot] = StackSpot(slot);
         return AiMove.Create(coords).NaturalOrder();
     }
@@ -163,14 +163,14 @@ public sealed class UmadP3LimitCutAi : IScenarioAi<UmadP3LimitCutState>
         var away = state.Objects.Exdeath is { } exdeath && exdeath.Position.LengthSquared() > 1f
             ? MathF.Atan2(-exdeath.Position.X, -exdeath.Position.Z)
             : Hold + MathF.PI;
-        var centre = Geometry.OnCircle(away, Geometry.CycloneStackRadius);
+        var centre = OnCircle(away, 4.3f);
         var coords = new Vector2?[8];
         for (var slot = 0; slot < 8; slot++)
-            coords[slot] = Flat(centre + Geometry.OnCircle(away + MathF.PI / 2f, slot % 3 - 1f) + Geometry.OnCircle(away, slot / 3));
+            coords[slot] = Flat(centre + OnCircle(away + MathF.PI / 2f, slot % 3 - 1f) + OnCircle(away, slot / 3));
         return AiMove.Create(coords).NaturalOrder();
     }
 
-    private IAiMove BaitOut() => AiMove.Single(state.BaitRole, Flat(Geometry.OnCircle(Hold + MathF.PI, Geometry.BaitRadius)));
+    private IAiMove BaitOut() => AiMove.Single(state.BaitRole, Flat(OnCircle(Hold + MathF.PI, 17.7f)));
 
     private IAiMove BaitBack() => AiMove.Single(state.BaitRole, StackSpot((int)state.BaitRole));
 
@@ -178,7 +178,7 @@ public sealed class UmadP3LimitCutAi : IScenarioAi<UmadP3LimitCutState>
     {
         var coords = new Vector2?[8];
         for (var k = 0; k < 8; k++)
-            coords[(int)state.Numbers[k]] = Flat(Geometry.OnCircle(state.SafeHeading(k), Geometry.ChargeStandRadius));
+            coords[(int)state.Numbers[k]] = Flat(OnCircle(state.SafeHeading(k), 19f));
         return AiMove.Create(coords).NaturalOrder();
     }
 

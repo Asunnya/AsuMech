@@ -9,7 +9,6 @@ using AnoMech.Core.Game.Party;
 using AnoMech.Core.SimObjects;
 using AnoMech.Multiplayer;
 using static AnoMech.Scenarios.Umad.UmadConstants;
-using static AnoMech.Scenarios.Umad.P5Celestriad.UmadP5CelestriadConstants;
 
 namespace AnoMech.Scenarios.Umad.P5Celestriad;
 
@@ -21,9 +20,7 @@ namespace AnoMech.Scenarios.Umad.P5Celestriad;
 // set, so nobody soaks the same element twice. Free players always fill the doubled element's
 // second active tower. Sets 0 and 2 (the 1st and 3rd soaks) each get a single Catastrophic
 // Choice cast while their towers are lit, and that set resolves exactly when the cast completes;
-// set 1 has no Catastrophic Choice and resolves independently in between.
-//
-// See UmadP5CelestriadConstants for what's replay-confirmed vs. still an estimate.
+// set 1 has no Catastrophic Choice and resolves independently in between, on UNVERIFIED timing.
 public sealed class UmadP5CelestriadScenario : IMultiplayerReplayable
 {
     public string Name => "Celestriad";
@@ -67,23 +64,22 @@ public sealed class UmadP5CelestriadScenario : IMultiplayerReplayable
             ((IScenarioAi<UmadP5CelestriadState>)AiStrats[idx]).Run(state, world);
 
         world.Events.Add(0f, SpawnKefka);
-        world.Events.Add(CelestriadTiming.CelestriadCastAt,
-            () => kefka?.Cast(CelestriadActionId.Celestriad, 3.1f));
-        world.Events.Add(CelestriadTiming.DebuffApplyAt, ApplyDebuffs);
-        world.Events.Add(CelestriadTiming.TowerStart[0], SpawnAllTowers);
-
-        for (var set = 0; set < 3; set++)
-        {
-            var s = set;
-            world.Events.Add(CelestriadTiming.TowerStart[s], () => ActivateTowers(s));
-            if (CelestriadTiming.CcAt[s] is { } cc) world.Events.Add(cc, () => LaunchChoice(s));
-            world.Events.Add(CelestriadTiming.ResolveAt[s], () => ResolveSet(s));
-            world.Events.Add(CelestriadTiming.DeactivateAt[s], () => DeactivateTowers(s));
-        }
-
-        var teardownAt = CelestriadTiming.DeactivateAt[2] + CelestriadTiming.TowerDespawnBuffer;
-        world.Events.Add(teardownAt, DespawnAllTowers);
-        world.Events.Add(teardownAt, () => kefka?.Despawn());
+        world.Events.Add(1.0f, () => kefka?.Cast(ActionId.Celestriad, 3.1f));
+        world.Events.Add(6.1f, ApplyDebuffs);
+        world.Events.Add(6.1f, SpawnAllTowers);
+        world.Events.Add(6.1f, () => ActivateTowers(0));
+        world.Events.Add(10.18f, () => LaunchChoice(0));
+        world.Events.Add(14.18f, () => ResolveSet(0));
+        world.Events.Add(14.3f, () => DeactivateTowers(0));
+        world.Events.Add(14.4f, () => ActivateTowers(1));
+        world.Events.Add(20.5f, () => ResolveSet(1));
+        world.Events.Add(20.6f, () => DeactivateTowers(1));
+        world.Events.Add(20.6f, () => ActivateTowers(2));
+        world.Events.Add(22.34f, () => LaunchChoice(2));
+        world.Events.Add(26.34f, () => ResolveSet(2));
+        world.Events.Add(26.44f, () => DeactivateTowers(2));
+        world.Events.Add(29.44f, DespawnAllTowers);
+        world.Events.Add(29.44f, () => kefka?.Despawn());
     }
 
     public void Tick(float delta, float elapsed) { }
@@ -106,7 +102,7 @@ public sealed class UmadP5CelestriadScenario : IMultiplayerReplayable
         foreach (var (role, element) in state.PlayerDebuffElement)
         {
             if (element is not { } e) continue;
-            party.Get(role)?.AddStatus(e.VulnUpStatusId, CelestriadTiming.DebuffDuration);
+            party.Get(role)?.AddStatus(e.VulnUpStatusId, 20f);
         }
     }
 
@@ -114,7 +110,7 @@ public sealed class UmadP5CelestriadScenario : IMultiplayerReplayable
     private void LaunchChoice(int set)
     {
         if (state.AeroVariant[set] is not { } choice || kefka is null) return;
-        kefka.Cast(choice.CastActionId, 1.1f);
+        kefka.Cast(choice.CastActionId, 3.8f);
     }
 
 
@@ -126,7 +122,7 @@ public sealed class UmadP5CelestriadScenario : IMultiplayerReplayable
             {
                 EObjId = tower.Element.TowerEObjId,
                 Placement = new Placement(tower.Position, 0f),
-                TimelineState = CelestriadTowerEObjId.DormantState,
+                TimelineState = EObjState.CelestriadTowerDormant,
             });
             var marker = world.SpawnEnemy(new EnemySpawnConfig(
                 BNpcBaseId: BNpcBaseId.KefkaHelper,
@@ -150,7 +146,7 @@ public sealed class UmadP5CelestriadScenario : IMultiplayerReplayable
             {
                 EObjId = tower.Element.TowerEObjId,
                 Placement = new Placement(tower.Position, 0f),
-                TimelineState = CelestriadTowerEObjId.ActiveState,
+                TimelineState = EObjState.CelestriadTowerActive,
             });
             if (overlay is null) continue;
             towerInstances[towerIndex] = towerInstances[towerIndex] with { ActiveOverlay = overlay };

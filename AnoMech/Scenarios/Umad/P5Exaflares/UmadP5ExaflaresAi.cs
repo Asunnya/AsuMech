@@ -312,6 +312,7 @@ public sealed class UmadP5ExaflaresAi : IScenarioAi<UmadP5ExaflaresState>
             {
                 var step = desired.Length() > 5f ? desired * (5f / desired.Length()) : desired;
                 var t = p + step;
+                if (t.Length() > ArenaMax) t *= ArenaMax / t.Length();
                 bot.MoveTo(new Vector3(t.X, 0f, t.Y), RelaxSpeed);
                 relaxMoving[slot] = true;
             }

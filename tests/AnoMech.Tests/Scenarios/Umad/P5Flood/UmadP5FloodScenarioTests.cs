@@ -101,4 +101,10 @@ public class UmadP5FloodScenarioTests
         => Flood(MainTank)
             .FreezeAt(8.55f)
             .ShouldKill(ActionId.FloodAOE, MainTank);
+
+    [Test]
+    public void DiesWalkingOffArena()
+        => Flood(MainTank)
+            .TeleportAt(3f, to: new(0, 20.5f))
+            .ShouldKill(TheEnvironment, MainTank);
 }

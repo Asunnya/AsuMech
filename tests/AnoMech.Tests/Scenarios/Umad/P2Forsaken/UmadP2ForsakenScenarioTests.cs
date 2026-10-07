@@ -150,4 +150,10 @@ public class UmadP2ForsakenScenarioTests
         => Forsaken(MainTank, o => o.EndAttacks[occurrence] = EndAttack.PastsEnd)
             .TeleportAt(at, to: new(x, y))
             .ShouldKill(ActionId.AllThingsEnding_Past, MainTank);
+
+    [Test]
+    public void DiesWalkingOffArena()
+        => Forsaken(MainTank)
+            .TeleportAt(3f, to: new(0, 20.5f))
+            .ShouldKill(TheEnvironment, MainTank);
 }

@@ -20,11 +20,20 @@ namespace AnoMech.Tests;
 //  20.08   Wave 5 (right, 3/6). Line 3 tiles: (10,-15) (5,-10) (0,-5) (-5,0) (-10,5) (-15,10).
 //  25.09   Spread snapshot (r5 each, two coverings lethal); applied at 25.71.
 //
-// The bots' spread spots vary per seed and stay inside r~19, so spread tests pair the player with a
-// bot outside it. A run pauses 5s after its first death.
+// The bots' spread spots vary per seed, so spread tests park the other six bots across the arena
+// from the pair. A run pauses 5s after its first death.
 public class UmadP5ExaflaresScenarioTests
 {
-    private static readonly Vector2 OutsideArena = new(0f, 27f);
+    private static readonly Vector2 PairSpot = new(0f, 19.5f);
+    private static readonly (PartyRole Bot, Vector2 Spot)[] FarSpots =
+    [
+        (OffTank, new(-12f, -12f)),
+        (RegenHealer, new(12f, -12f)),
+        (ShieldHealer, new(0f, -15f)),
+        (MeleeDpsA, new(-15f, 0f)),
+        (MeleeDpsB, new(15f, 0f)),
+        (PhysRangedDps, new(0f, -5f)),
+    ];
 
     private static NegativeRun<UmadP5ExaflaresScenario> Exaflares(PartyRole player)
         => Negative<UmadP5ExaflaresScenario>(player)
@@ -33,6 +42,16 @@ public class UmadP5ExaflaresScenarioTests
                 o.LeftOrder = ExaFlareOrder.Line14_25_36;
                 o.RightOrder = ExaFlareOrder.Line14_25_36;
             });
+
+    private static NegativeRun<UmadP5ExaflaresScenario> SpreadPairedWithCaster()
+    {
+        var run = Exaflares(MainTank)
+            .MoveBotAt(25.05f, CasterDps, to: PairSpot)
+            .TeleportAt(25.05f, to: PairSpot);
+        foreach (var (bot, spot) in FarSpots)
+            run = run.MoveBotAt(25.05f, bot, spot);
+        return run;
+    }
 
     // Each wave's inner line, third tile.
     [TestCase(8.3f, 0f, -5f)]
@@ -74,16 +93,18 @@ public class UmadP5ExaflaresScenarioTests
 
     [Test]
     public void SpreadOverlapKillsBoth()
-        => Exaflares(MainTank)
-            .MoveBotAt(25.05f, CasterDps, to: OutsideArena)
-            .TeleportAt(25.05f, to: OutsideArena)
+        => SpreadPairedWithCaster()
             .ShouldKill(ActionId.ExaflareSpread, MainTank, CasterDps);
 
     [Test]
     public void SeparatingAfterSpreadSnapshotStillKillsBoth()
-        => Exaflares(MainTank)
-            .MoveBotAt(25.05f, CasterDps, to: OutsideArena)
-            .TeleportAt(25.05f, to: OutsideArena)
-            .TeleportAt(25.3f, to: new(0f, -27f))
+        => SpreadPairedWithCaster()
+            .TeleportAt(25.3f, to: new(-19f, 0f))
             .ShouldKill(ActionId.ExaflareSpread, MainTank, CasterDps);
+
+    [Test]
+    public void DiesWalkingOffArena()
+        => Exaflares(MainTank)
+            .TeleportAt(3f, to: new(0, 20.5f))
+            .ShouldKill(TheEnvironment, MainTank);
 }

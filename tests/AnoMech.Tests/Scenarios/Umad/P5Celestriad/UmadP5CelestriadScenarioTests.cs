@@ -1,8 +1,8 @@
 using AnoMech.Core.Game.Party;
 using AnoMech.Scenarios.Umad.P5Celestriad;
 using static AnoMech.Core.Game.Party.PartyRole;
-using static AnoMech.Scenarios.Umad.P5Celestriad.UmadP5CelestriadConstants;
 using static AnoMech.Tests.NegativeRun;
+using ActionId = AnoMech.Scenarios.Umad.UmadConstants.ActionId;
 
 namespace AnoMech.Tests;
 
@@ -54,13 +54,13 @@ public class UmadP5CelestriadScenarioTests
     public void SoakingOwnDebuffElementDies(float at, float x, float z)
         => Celestriad(MainTank)
             .TeleportAt(at, to: new(x, z))
-            .ShouldKill(CelestriadActionId.FireIII, MainTank);
+            .ShouldKill(ActionId.CelestriadFireIII, MainTank);
 
     // Set 2: MT takes Lightning again, C Fire. Set 3: both take Ice again, on Aero's inner half.
-    [TestCase(MainTank, 20.3f, 0f, 10f, CelestriadActionId.ThunderIII)]
-    [TestCase(CasterDps, 20.3f, 8.7f, -5f, CelestriadActionId.FireIII)]
-    [TestCase(MainTank, 26.2f, -7.4f, -4.3f, CelestriadActionId.BlizzardIII)]
-    [TestCase(CasterDps, 26.2f, -7.4f, -4.3f, CelestriadActionId.BlizzardIII)]
+    [TestCase(MainTank, 20.3f, 0f, 10f, ActionId.CelestriadThunderIII)]
+    [TestCase(CasterDps, 20.3f, 8.7f, -5f, ActionId.CelestriadFireIII)]
+    [TestCase(MainTank, 26.2f, -7.4f, -4.3f, ActionId.CelestriadBlizzardIII)]
+    [TestCase(CasterDps, 26.2f, -7.4f, -4.3f, ActionId.CelestriadBlizzardIII)]
     public void RepeatingLastSetsElementDies(PartyRole player, float at, float x, float z, uint tower)
         => Celestriad(player)
             .TeleportAt(at, to: new(x, z))
@@ -68,9 +68,9 @@ public class UmadP5CelestriadScenarioTests
 
     // MT leaves SH alone, standing between two towers on Earth's safe side in set 1 and at
     // Kefka otherwise.
-    [TestCase(14f, -4.1f, 11.3f, CelestriadActionId.ThunderIII)]
-    [TestCase(20.3f, 0f, 0f, CelestriadActionId.BlizzardIII)]
-    [TestCase(26.2f, 0f, 0f, CelestriadActionId.FireIII)]
+    [TestCase(14f, -4.1f, 11.3f, ActionId.CelestriadThunderIII)]
+    [TestCase(20.3f, 0f, 0f, ActionId.CelestriadBlizzardIII)]
+    [TestCase(26.2f, 0f, 0f, ActionId.CelestriadFireIII)]
     public void LeavingYourTowerKillsPartner(float at, float x, float z, uint tower)
         => Celestriad(MainTank)
             .TeleportAt(at, to: new(x, z))
@@ -89,6 +89,12 @@ public class UmadP5CelestriadScenarioTests
             })
             .TeleportAt(at, to: new(x, z))
             .ShouldKill(variant == CatastrophicVariantOverride.Aero
-                ? CelestriadActionId.CatastrophicChoiceAeroResolution
-                : CelestriadActionId.CatastrophicChoiceEarthResolution, MainTank);
+                ? ActionId.CatastrophicChoiceAero_Resolve
+                : ActionId.CatastrophicChoiceEarth_Resolve, MainTank);
+
+    [Test]
+    public void DiesWalkingOffArena()
+        => Celestriad(MainTank)
+            .TeleportAt(3f, to: new(0, 20.5f))
+            .ShouldKill(TheEnvironment, MainTank);
 }

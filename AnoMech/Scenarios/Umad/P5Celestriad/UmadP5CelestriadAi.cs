@@ -4,7 +4,6 @@ using System.Numerics;
 using AnoMech.Core.Game.Ai;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.SimObjects;
-using static AnoMech.Scenarios.Umad.P5Celestriad.UmadP5CelestriadConstants;
 
 namespace AnoMech.Scenarios.Umad.P5Celestriad;
 
@@ -25,22 +24,14 @@ public sealed class UmadP5CelestriadAi : IScenarioAi<UmadP5CelestriadState>
     private const float MoveSpeed = 6f;
     private const float PairOffset = 1f;
     private const float HalfOffset = 2f;
-    // Wait until a tower is actually lit before sending anyone toward it. Moving early means a
-    // bot is already standing on the spot when it activates, which reads as the tower spawning
-    // under a player instead of on open ground.
-    private const float MoveDelay = 1.5f;
-    // How long after Catastrophic Choice's cast starts bots reposition to their safe half.
-    private const float ChoiceReadDelay = 2f;
 
     public void Run(UmadP5CelestriadState state, SimWorld world)
     {
-        for (var set = 0; set < 3; set++)
-        {
-            var s = set;
-            world.Events.Add(CelestriadTiming.TowerStart[s] + MoveDelay, () => PlaceSet(world, state, s, half: 0f));
-            if (CelestriadTiming.CcAt[s] is { } cc)
-                world.Events.Add(cc + ChoiceReadDelay, () => PlaceSet(world, state, s, HalfFor(state, s)));
-        }
+        world.Events.Add(7.6f, () => PlaceSet(world, state, 0, half: 0f));
+        world.Events.Add(12.18f, () => PlaceSet(world, state, 0, HalfFor(state, 0)));
+        world.Events.Add(15.9f, () => PlaceSet(world, state, 1, half: 0f));
+        world.Events.Add(22.1f, () => PlaceSet(world, state, 2, half: 0f));
+        world.Events.Add(24.34f, () => PlaceSet(world, state, 2, HalfFor(state, 2)));
     }
 
     private static float HalfFor(UmadP5CelestriadState state, int set) =>

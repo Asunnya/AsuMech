@@ -3,7 +3,6 @@ using AnoMech.Scenarios;
 using AnoMech.Scenarios.Umad.P3LimitCut;
 using static AnoMech.Core.Game.Party.PartyRole;
 using static AnoMech.Tests.NegativeRun;
-using static AnoMech.Scenarios.Umad.P3LimitCut.UmadP3LimitCutConstants;
 using Umad = AnoMech.Scenarios.Umad.UmadConstants;
 
 namespace AnoMech.Tests;
@@ -47,13 +46,13 @@ public class UmadP3LimitCutScenarioTests
     public void BaitStayingInStackKillsParty()
         => LimitCut(PhysRangedDps)
             .FreezeAt(4.4f)
-            .ShouldKill(ActionId.UmbraSmash, PerRole.All);
+            .ShouldKill(Umad.ActionId.UmbraSmash, PerRole.All);
 
     [Test]
     public void StandingNearUmbraBaitDies()
         => LimitCut(CasterDps)
             .TeleportAt(12.5f, to: new(-8, 8))
-            .ShouldKill(ActionId.UmbraSmash, CasterDps);
+            .ShouldKill(Umad.ActionId.UmbraSmash, CasterDps);
 
     // West of Exdeath, so the push runs west: Headwind wants west, Tailwind east.
     [TestCase(RegenHealer, FacingEast)]
@@ -79,7 +78,7 @@ public class UmadP3LimitCutScenarioTests
     public void StandingCloseToOwnCloneDies()
         => LimitCut(CasterDps)
             .TeleportAt(32.35f, to: new(0, 0))
-            .ShouldKill(ActionId.UltimaBlasterCharge, CasterDps);
+            .ShouldKill(Umad.ActionId.UltimaBlasterCharge, CasterDps);
 
     // On R's line 36.5y from its clone: both take R's charge with no harm but the vuln, and
     // C's own charge, aimed through R, lands on both vulns.
@@ -87,11 +86,17 @@ public class UmadP3LimitCutScenarioTests
     public void TakingChargeWithVulnDies()
         => LimitCut(CasterDps)
             .TeleportAt(32.2f, to: new(15.8f, -7))
-            .ShouldKill(ActionId.UltimaBlasterCharge, CasterDps, PhysRangedDps);
+            .ShouldKill(Umad.ActionId.UltimaBlasterCharge, CasterDps, PhysRangedDps);
 
     [Test]
     public void NonTankClosestToExdeathTakesThunder()
         => LimitCut(CasterDps)
             .TeleportAt(38.4f, to: new(-14, -4.5f))
             .ShouldKill(Umad.ActionId.ThunderIII_Resolve, CasterDps);
+
+    [Test]
+    public void DiesWalkingOffArena()
+        => LimitCut(MainTank)
+            .TeleportAt(3f, to: new(0, 20.5f))
+            .ShouldKill(TheEnvironment, MainTank);
 }

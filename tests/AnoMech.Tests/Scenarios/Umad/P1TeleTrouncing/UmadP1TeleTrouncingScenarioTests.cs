@@ -6,7 +6,7 @@ using AnoMech.Scenarios.Umad.P1TeleTrouncing;
 using static AnoMech.Core.Game.Party.PartyRole;
 using static AnoMech.Scenarios.Umad.P1TeleTrouncing.TelePortentDirection;
 using static AnoMech.Tests.NegativeRun;
-using ActionId = AnoMech.Scenarios.Umad.P1TeleTrouncing.UmadP1TeleTrouncingConstants.ActionId;
+using ActionId = AnoMech.Scenarios.Umad.UmadConstants.ActionId;
 
 namespace AnoMech.Tests;
 
@@ -78,11 +78,13 @@ public class UmadP1TeleTrouncingScenarioTests
             .TeleportAt(36f, to: new(-18.3f, 0), facing: FacingSouth)
             .ShouldKill(UmadConstants.ActionId.LightOfJudgment_Enrage, PerRole.All);
 
-    // C, Confused too far out, reaches M2's first arrow after it expires.
+    // C, Confused at the edge and pulled back there once mid-chase, reaches M2's first arrow
+    // after it expires.
     [Test]
     public void UnsoakedArrowWipes()
         => TeleTrouncing(CasterDps)
-            .TeleportAt(28.6f, to: new(-24, 0))
+            .TeleportAt(28.6f, to: new(-19.5f, 0))
+            .TeleportAt(30f, to: new(-19.5f, 0))
             .TeleportAt(36f, to: new(-18.3f, 0), facing: FacingSouth)
             .ShouldKill(UmadConstants.ActionId.LightOfJudgment_Enrage, PerRole.All);
 
@@ -124,8 +126,8 @@ public class UmadP1TeleTrouncingScenarioTests
 
 
     // In the real slot-2 line through (-3.5,-3.5).
-    [TestCase(false, ActionId.ThrummingThunderReal1)]
-    [TestCase(true, ActionId.ThrummingThunderReal2)]
+    [TestCase(false, ActionId.ThrummingThunderIII_Real)]
+    [TestCase(true, ActionId.ThrummingThunderIII_FakeAnim)]
     public void DiesToThrummingThunder(bool lie, uint line)
         => TeleTrouncing(MainTank, o => o.ThunderIsLie = lie)
             .TeleportAt(40.5f, to: new(-3.5f, -3.5f))
@@ -165,4 +167,10 @@ public class UmadP1TeleTrouncingScenarioTests
             })
             .TeleportAt(41.6f, to: new(-3, 13))
             .ShouldKill(ActionId.FlagrantFireStack, MainTank, RegenHealer, ShieldHealer);
+
+    [Test]
+    public void DiesWalkingOffArena()
+        => TeleTrouncing(MainTank)
+            .TeleportAt(3f, to: new(0, 20.5f))
+            .ShouldKill(TheEnvironment, MainTank);
 }

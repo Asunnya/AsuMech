@@ -14,7 +14,7 @@ using FFXIVClientStructs.FFXIV.Client.Game.Character;
 
 namespace AnoMech.Scenarios.Umad.P1TeleTrouncing;
 
-using Constants = UmadP1TeleTrouncingConstants;
+using Constants = UmadConstants;
 using AnoMech.Core.Native.Interfaces;
 
 // Dancing Mad P1 from Kefka's Tele-trouncing cast to the boss going untargetable: arrows,
@@ -27,7 +27,7 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
 {
     public string Name => "Tele-trouncing";
     public IPhase Phase => UmadZone.P1;
-    public float BgmSecondsAtStart => Constants.BgmSecondsAtStart;
+    public float BgmSecondsAtStart => 17.73f;
     public bool SupportsSolo => true;
     public bool SupportsMultiplayer => true;
     public IReadOnlyList<IScenarioAi> AiStrats => [new UmadP1TeleTrouncingAi()];
@@ -177,7 +177,7 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         world.Events.Add(0f, () =>
         {
             kefka = world.SpawnEnemy(new EnemySpawnConfig(
-                BNpcBaseId: Constants.BNpcBaseId.Kefka, NameId: Constants.BNpcNameId.Kefka, Level: 100,
+                BNpcBaseId: Constants.BNpcBaseId.KefkaP3, NameId: Constants.BNpcNameId.Kefka, Level: 100,
                 Targetable: true, EnemyList: EnemyListMode.Always, IsVisible: true,
                 Placement: new Placement(Vector3.Zero, -float.Pi)));
             for (var i = 0; i < helpers.Length; i++) helpers[i] = SpawnHelper();
@@ -290,7 +290,7 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         world.Events.Add(StatueCollapseAt, () => Beat(gravenStatue, EObjAnimStatueCollapse));
 
         // [1.59s] Tele-trouncing cast start; resolves at 6.58s.
-        world.Events.Add(1.59f, () => kefka?.Cast(Constants.ActionId.TeleTrouncing, Constants.AnimationLock.TeleTrouncing));
+        world.Events.Add(1.59f, () => kefka?.Cast(Constants.ActionId.TeleTrouncing, 3.1f));
 
         // Auto-attacks on the main tank at their real beats: none through the Confused window
         // and Mystery Magic.
@@ -309,15 +309,15 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         world.Events.Add(18.32f, SpawnArrowObjects);
 
         // [15.67s] Graven Image (2.7s bar, resolves 18.66s); the tethers appear as it lands.
-        world.Events.Add(15.67f, () => kefka?.Cast(Constants.ActionId.GravenImage, Constants.AnimationLock.GravenImage));
+        world.Events.Add(15.67f, () => kefka?.Cast(Constants.ActionId.GravenImage, 2.1f));
 
         // [19.41s] Tethers land, one role category to each statue.
         world.Events.Add(19.41f, TetherStatues);
 
         // [20.80s] Unnamed 2.7s cast: its resolve sets Kefka's model state to 4 until Unk2BossP1
         // resolves.
-        world.Events.Add(20.80f, () => kefka?.Cast(Constants.ActionId.Unk1BossP1, Constants.AnimationLock.Unk1));
-        world.Events.Add(23.78f, () => kefka?.SetModelState(Constants.KefkaModelState.Unk1));
+        world.Events.Add(20.80f, () => kefka?.Cast(Constants.ActionId.KefkaRest, 2.1f));
+        world.Events.Add(23.78f, () => kefka?.SetModelState(4));
 
         // [22.78s] Confetti-3's stack hit, the one beat that drifts pull to pull (timed off the
         // earlier Double-trouble Trap cast). Pushes the ~3 players within 6y of each holder 14y
@@ -340,10 +340,10 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         // teleport action; he stays at centre, only the animation plays.
         world.Events.Add(32.78f, () =>
         {
-            kefka?.Cast(Constants.ActionId.Unk2BossP1, Constants.AnimationLock.Unk2);
-            kefka?.SetModelState(Constants.KefkaModelState.Normal);
+            kefka?.Cast(Constants.ActionId.KefkaUnrest, 2.1f);
+            kefka?.SetModelState(0);
         });
-        world.Events.Add(34.87f, () => kefka?.Cast(Constants.ActionId.TeleportP1, Constants.AnimationLock.Teleport));
+        world.Events.Add(34.87f, () => kefka?.Cast(Constants.ActionId.KefkaPoof, 1.1f));
 
         // Every arrow is a steer-around obstacle from its spawn (SpawnArrowObjects) so the Ai's
         // Confetti/Tether moves path around them; cleared as Confused starts, since the chase's
@@ -351,7 +351,7 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         world.Events.Add(ConfusedChaseStart, () => world.Obstacles.Clear());
 
         // [36.41s] Mystery Magic (4.7s bar), resolves 41.40s with the thunder lines.
-        world.Events.Add(36.41f, () => kefka?.Cast(Constants.ActionId.MysteryMagic, Constants.AnimationLock.MysteryMagic));
+        world.Events.Add(36.41f, () => kefka?.Cast(Constants.ActionId.MysteryMagic, 3.1f));
 
         // Mystery Magic's three resolves land in a ~1s window (thunder 41.40s, gaze 41.49s, fire
         // 42.19s); the boss goes untargetable ~10s later.
@@ -360,8 +360,8 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         // cast start; a lie flips the shown fire icon. The Ai reads state directly.
         world.Events.Add(36.31f, () =>
         {
-            kefka?.AttachLockonVfx(state.FireIsLie ? Constants.LockonId.FireLie : Constants.LockonId.FireTruth, persistent: false);
-            kefka?.AttachLockonVfx(state.ThunderIsLie ? Constants.LockonId.LightningLie : Constants.LockonId.LightningTruth, persistent: false);
+            kefka?.AttachLockonVfx(state.FireIsLie ? Constants.LockonId.FireFalse : Constants.LockonId.FireTrue, persistent: false);
+            kefka?.AttachLockonVfx(state.ThunderIsLie ? Constants.LockonId.LightningFalse : Constants.LockonId.LightningTrue, persistent: false);
             AttachFireMarkers();
         });
 
@@ -907,7 +907,7 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
             if (Helper(helperIndex++) is { } caster)
             {
                 caster.SetPosition(placement);
-                caster.Cast(Constants.ActionId.TeleTrouncingArrowSpawn, Constants.AnimationLock.Helper, member);
+                caster.Cast(Constants.ActionId.TeleTrouncingArrowSpawn, 1.1f, member);
             }
         }
     }
@@ -1206,7 +1206,7 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
             helper.SetPosition(placement);
             lines++;
             if (real) helper.Cast(realLine);
-            else helper.Cast(Constants.ActionId.ThrummingThunderFake, Constants.AnimationLock.Helper);
+            else helper.Cast(Constants.ActionId.ThrummingThunderIII_FakeOmen, 1.1f);
         }
         DiagnosticLog.Info(
             $"[UmadP1TeleTrouncing] Thunder lines: offset={state.ThunderRealOffset} orient={state.ThunderOrientation:F0} lie={state.ThunderIsLie} "

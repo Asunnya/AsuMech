@@ -166,4 +166,10 @@ public class UmadP3BlackHoleScenarioTests
         => BlackHole(MainTank)
             .TeleportAt(152f, to: new(0, -8))
             .ShouldKill(ActionId.KnockDown, OffTank, RegenHealer, ShieldHealer);
+
+    [Test]
+    public void DiesWalkingOffArena()
+        => BlackHole(MainTank)
+            .TeleportAt(3f, to: new(0, 20.5f))
+            .ShouldKill(TheEnvironment, MainTank);
 }

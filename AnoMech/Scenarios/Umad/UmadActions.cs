@@ -5,9 +5,6 @@ using AnoMech.Core.SimObjects;
 using static AnoMech.Core.EnemyActions.Distribution;
 using static AnoMech.Core.EnemyActions.EnemyActionEffects;
 using static AnoMech.Core.EnemyActions.Severity;
-using P1 = AnoMech.Scenarios.Umad.P1TeleTrouncing.UmadP1TeleTrouncingConstants;
-using P3 = AnoMech.Scenarios.Umad.P3LimitCut.UmadP3LimitCutConstants;
-using P5C = AnoMech.Scenarios.Umad.P5Celestriad.UmadP5CelestriadConstants;
 
 namespace AnoMech.Scenarios.Umad;
 
@@ -16,75 +13,76 @@ public static class UmadActions
     internal static readonly DamageSpec Magic = DamageType.Magic.VulnerableTo(UmadConstants.StatusId.MagicVulnerabilityUp);
 
     private static readonly IEnemyActionEffect MagicVulnerabilityUp =
-        ApplyStatus(UmadConstants.StatusId.MagicVulnerabilityUp, P1.MagicVulnerabilityUpSeconds);
+        ApplyStatus(UmadConstants.StatusId.MagicVulnerabilityUp, 0.96f);
 
     internal static readonly IEnemyActionEffect LongMagicVulnerabilityUp =
         ApplyStatus(UmadConstants.StatusId.MagicVulnerabilityUp, 1.96f);
 
     public static readonly EnemyAction AutoAttack = new(UmadConstants.ActionId.AutoAttack1)
     {
-        Cast = new() { AnimationLock = P1.AnimationLock.AutoAttack },
+        Cast = new() { AnimationLock = 0.1f },
         Effects = [Damage(DamageType.Physical)],
         Timing = new() { DamageDelay = 0.8f },
     };
 
     // -- P1 Tele-trouncing --
 
-    public static readonly EnemyAction DoubleTroubleTrapStack = new(P1.ActionId.DoubleTroubleTrapStack)
+    public static readonly EnemyAction DoubleTroubleTrapStack = new(UmadConstants.ActionId.DoubleTroubleTrapStack)
     {
-        Cast = new() { AnimationLock = P1.AnimationLock.Helper },
+        Cast = new() { AnimationLock = 1.1f },
         Effects =
         [
             Damage(Magic, split: Stack(4)),
             OnOthers(MagicVulnerabilityUp),
-            OnOthers(Knockback(P1.KnockbackId.DoubleTroubleTrapStack, knockbackDelay: 0f)),
+            OnOthers(Knockback(UmadConstants.KnockbackId.DoubleTroubleTrapStack, knockbackDelay: 0f)),
         ],
         Timing = new() { DamageDelay = 0.67f },
     };
 
-    public static readonly EnemyAction IndulgentWill = new(P1.ActionId.IndulgentWill)
+    public static readonly EnemyAction IndulgentWill = new(UmadConstants.ActionId.IndulgentWill)
     {
-        Cast = new() { AnimationLock = P1.AnimationLock.Helper },
+        Cast = new() { AnimationLock = 1.1f },
         Effects = [Damage(Magic)],
         Timing = new() { DamageDelay = 0.63f },
     };
 
-    public static readonly EnemyAction IdyllicWill = new(P1.ActionId.IdyllicWill)
+    public static readonly EnemyAction IdyllicWill = new(UmadConstants.ActionId.IdyllicWill)
     {
-        Cast = new() { AnimationLock = P1.AnimationLock.Helper },
+        Cast = new() { AnimationLock = 1.1f },
         Effects = [Damage(Magic), MagicVulnerabilityUp],
         Timing = new() { DamageDelay = 0.63f },
     };
 
-    public static readonly EnemyAction ThrummingThunderReal1 = ThrummingThunder(P1.ActionId.ThrummingThunderReal1);
-    public static readonly EnemyAction ThrummingThunderReal2 = ThrummingThunder(P1.ActionId.ThrummingThunderReal2);
+    public static readonly EnemyAction ThrummingThunderReal1 = ThrummingThunder(UmadConstants.ActionId.ThrummingThunderIII_Real);
+    public static readonly EnemyAction ThrummingThunderReal2 = ThrummingThunder(UmadConstants.ActionId.ThrummingThunderIII_FakeAnim);
 
     private static EnemyAction ThrummingThunder(uint actionId) => new(actionId)
     {
-        Cast = new() { AnimationLock = P1.AnimationLock.Helper },
+        Cast = new() { AnimationLock = 1.1f },
         Effects = [Damage(Magic, Lethal)],
         Timing = new() { DamageDelay = 0.65f },
     };
 
-    public static readonly EnemyAction IndolentWill = StatueGaze(P1.ActionId.IndolentWill, lookAway: true);
-    public static readonly EnemyAction AveMaria = StatueGaze(P1.ActionId.AveMaria, lookAway: false);
+    public static readonly EnemyAction IndolentWill = StatueGaze(UmadConstants.ActionId.IndolentWill, lookAway: true);
+    public static readonly EnemyAction AveMaria = StatueGaze(UmadConstants.ActionId.AveMaria, lookAway: false);
 
     private static EnemyAction StatueGaze(uint actionId, bool lookAway) => new(actionId)
     {
+        Cast = new() { AnimationLock = 1.1f },
         Effects = [Gaze(lookAway)],
-        Timing = new() { DamageDelay = 0.84f },
+        Timing = new() { DamageDelay = 0.71f },
     };
 
-    public static readonly EnemyAction FlagrantFireSpread = new(P1.ActionId.FlagrantFireSpread)
+    public static readonly EnemyAction FlagrantFireSpread = new(UmadConstants.ActionId.FlagrantFireSpread)
     {
-        Cast = new() { AnimationLock = P1.AnimationLock.Helper },
+        Cast = new() { AnimationLock = 1.1f },
         Effects = [Damage(Magic), MagicVulnerabilityUp],
         Timing = new() { DamageDelay = 0.63f },
     };
 
-    public static readonly EnemyAction FlagrantFireStack = new(P1.ActionId.FlagrantFireStack)
+    public static readonly EnemyAction FlagrantFireStack = new(UmadConstants.ActionId.FlagrantFireStack)
     {
-        Cast = new() { AnimationLock = P1.AnimationLock.Helper },
+        Cast = new() { AnimationLock = 1.1f },
         Effects = [Damage(Magic, split: Stack(4)), MagicVulnerabilityUp],
         Timing = new() { DamageDelay = 0.71f },
     };
@@ -145,7 +143,7 @@ public static class UmadActions
 
     public static readonly EnemyAction ExdeathAutoAttack = new(UmadConstants.ActionId.AutoAttack2)
     {
-        Cast = new() { AnimationLock = P1.AnimationLock.AutoAttack },
+        Cast = new() { AnimationLock = 0.1f },
         Effects = [Damage(DamageType.Physical)],
         Timing = new() { DamageDelay = 0.8f },
     };
@@ -265,55 +263,56 @@ public static class UmadActions
 
     // -- P3 Limit Cut --
 
-    public static readonly EnemyAction UmbraSmash = new(P3.ActionId.UmbraSmash)
+    public static readonly EnemyAction UmbraSmash = new(UmadConstants.ActionId.UmbraSmash)
     {
-        Cast = new() { AnimationLock = P3.AnimationLock.UmbraSmash },
+        Cast = new() { AnimationLock = 4.1f },
         Effects = [Damage(DamageType.Physical, split: Falloff(20f))],
         Timing = new() { DamageDelay = 1.78f },
     };
 
-    public static readonly EnemyAction VacuumWave = new(P3.ActionId.VacuumWave)
+    public static readonly EnemyAction VacuumWave = new(UmadConstants.ActionId.VacuumWave)
     {
-        Cast = new() { AnimationLock = P3.AnimationLock.VacuumWave },
+        Cast = new() { AnimationLock = 3.1f },
         Effects =
         [
-            Knockback(VacuumWavePush, P3.Timing.KnockbackSpeed, knockbackDelay: 0.78f),
-            RemoveStatus(P3.StatusId.Headwind),
-            RemoveStatus(P3.StatusId.Tailwind),
+            Knockback(VacuumWavePush, 40f, knockbackDelay: 0.78f),
+            RemoveStatus(UmadConstants.StatusId.Headwind),
+            RemoveStatus(UmadConstants.StatusId.Tailwind),
         ],
         Timing = new() { DamageDelay = 0.84f },
     };
 
     private static float? VacuumWavePush(EnemyActionContext ctx, SimCharacter target)
     {
-        var headwind = target.HasStatus(P3.StatusId.Headwind);
-        if (!headwind && !target.HasStatus(P3.StatusId.Tailwind)) return 20f;
+        var headwind = target.HasStatus(UmadConstants.StatusId.Headwind);
+        if (!headwind && !target.HasStatus(UmadConstants.StatusId.Tailwind)) return 20f;
         var facing = target.Placement();
         var from = ctx.Caster.Position;
         return (headwind ? facing.IsLookingAwayFrom(from) : facing.IsLookingAt(from)) ? 10f : 40f;
     }
 
-    public static readonly EnemyAction UltimaBlaster = new(P3.ActionId.UltimaBlaster)
+    // Shorter than the clone's 1.8s materialise leaves it frozen white and translucent.
+    public static readonly EnemyAction UltimaBlaster = new(UmadConstants.ActionId.UltimaBlaster)
     {
-        Cast = new() { AnimationLock = P3.AnimationLock.CloneAppear },
+        Cast = new() { AnimationLock = 1.8f },
         Effects = [Damage(Magic)],
         Timing = new() { DamageDelay = 0.38f },
     };
 
-    public static readonly EnemyAction UltimaBlasterCharge = new(P3.ActionId.UltimaBlasterCharge)
+    public static readonly EnemyAction UltimaBlasterCharge = new(UmadConstants.ActionId.UltimaBlasterCharge)
     {
-        Cast = new() { AnimationLock = P3.AnimationLock.CloneCharge },
+        Cast = new() { AnimationLock = 1.8f },
         Effects = [Damage(Magic, split: Falloff(35f)), ApplyStatus(UmadConstants.StatusId.MagicVulnerabilityUp, 2.96f)],
         Timing = new() { DamageDelay = 0.36f },
     };
 
     public static readonly EnemyAction Cyclone = new(UmadConstants.ActionId.Cyclone)
     {
-        Cast = new() { AnimationLock = P3.AnimationLock.Cyclone },
+        Cast = new() { AnimationLock = 1.1f },
         Effects =
         [
-            Damage(DamageType.Wind.VulnerableTo(P3.StatusId.WindResistanceDownII, 0.80f), split: Stack(2, understacked: TankBuster.MinMit(0.80f))),
-            ApplyStatus(P3.StatusId.WindResistanceDownII, 0.96f),
+            Damage(DamageType.Wind.VulnerableTo(UmadConstants.StatusId.WindResistanceDownII, 0.80f), split: Stack(2, understacked: TankBuster.MinMit(0.80f))),
+            ApplyStatus(UmadConstants.StatusId.WindResistanceDownII, 0.96f),
         ],
         Timing = new() { DamageDelay = 0.63f },
     };
@@ -425,15 +424,15 @@ public static class UmadActions
     // -- P5 Celestriad --
 
     public static readonly EnemyAction CelestriadFireTower = CelestriadTower(
-        P5C.CelestriadActionId.FireIII, P5C.CelestriadActionId.StardustFireIII,
-        DamageType.Fire, P5C.CelestriadStatusId.FireResistanceDownII);
+        UmadConstants.ActionId.CelestriadFireIII, UmadConstants.ActionId.StardustFireIII,
+        DamageType.Fire, UmadConstants.StatusId.FireResistanceDownII);
 
     public static readonly EnemyAction CelestriadIceTower = CelestriadTower(
-        P5C.CelestriadActionId.BlizzardIII, P5C.CelestriadActionId.StardustBlizzardIII,
-        DamageType.Ice, P5C.CelestriadStatusId.IceResistanceDownII);
+        UmadConstants.ActionId.CelestriadBlizzardIII, UmadConstants.ActionId.StardustBlizzardIII,
+        DamageType.Ice, UmadConstants.StatusId.IceResistanceDownII);
 
     public static readonly EnemyAction CelestriadLightningTower = CelestriadTower(
-        P5C.CelestriadActionId.ThunderIII, P5C.CelestriadActionId.StardustThunderIII,
+        UmadConstants.ActionId.CelestriadThunderIII, UmadConstants.ActionId.StardustThunderIII,
         DamageType.Lightning, UmadConstants.StatusId.LightningResistanceDownII);
 
     private static EnemyAction CelestriadTower(uint actionId, uint stardustId, DamageType element, ushort resistanceDown) => new(actionId)
@@ -442,9 +441,10 @@ public static class UmadActions
         Effects =
         [
             Damage(new DamageSpec(DamageType.Magic, element).VulnerableTo(resistanceDown), split: Stack(2)),
-            ApplyStatus(resistanceDown, P5C.CelestriadTiming.DebuffDuration),
+            ApplyStatus(resistanceDown, 20f),
             FollowUp(Stardust(stardustId), ctx => ctx.Hits.Count == 0),
         ],
+        Timing = new() { DamageDelay = 0.64f },
     };
 
     private static EnemyAction Stardust(uint actionId) => new(actionId)
@@ -453,21 +453,24 @@ public static class UmadActions
         Effects =
         [
             Damage(DamageType.Magic),
-            ApplyStatus(UmadConstants.StatusId.DamageDown, P5C.CelestriadTiming.DamageDownDuration),
+            ApplyStatus(UmadConstants.StatusId.DamageDown, 30f), // UNVERIFIED duration
         ],
+        Timing = new() { DamageDelay = 0.68f },
     };
 
-    public static readonly EnemyAction CatastrophicChoiceAero = new(P5C.CelestriadActionId.CatastrophicChoiceAeroResolution)
+    public static readonly EnemyAction CatastrophicChoiceAero = new(UmadConstants.ActionId.CatastrophicChoiceAero_Resolve)
     {
         Cast = new() { AnimationLock = 1.1f },
         Area = new() { Size = 10f },
         Effects = [Damage(Magic, Lethal)],
+        Timing = new() { DamageDelay = 0.23f },
     };
 
-    public static readonly EnemyAction CatastrophicChoiceEarth = new(P5C.CelestriadActionId.CatastrophicChoiceEarthResolution)
+    public static readonly EnemyAction CatastrophicChoiceEarth = new(UmadConstants.ActionId.CatastrophicChoiceEarth_Resolve)
     {
         Cast = new() { AnimationLock = 1.1f },
         Effects = [Damage(Magic, Lethal)],
+        Timing = new() { DamageDelay = 0.11f },
     };
 
     // -- P5 Exaflares --

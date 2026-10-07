@@ -113,7 +113,7 @@ public sealed class UmadP5ForsakenNull : IScenario
         SimEnemy? kefka_4001DE6B = null;
         world.Events.Add(0f, () => kefka_4001DE6B = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: Constants.BNpcBaseId.Kefka, NameId: Constants.BNpcNameId.Kefka, Level: 100, Targetable: true, EnemyList: EnemyListMode.Always, IsVisible: true, Placement: new Placement(new Vector3(0.000f, 0.000f, 0.000f), 0.000f))));
         
-        world.Events.Add(1.08f, () => kefka_4001DE6B?.Cast(Constants.ActionId.UnknownC652, castSeconds: 0f, targetId: kefka_4001DE6B?.GameObjectId));
+        world.Events.Add(1.08f, () => kefka_4001DE6B?.Cast(Constants.ActionId.UnknownC652, castSeconds: 0f, targetId: kefka_4001DE6B?.GameObjectId, animationLock: 1.1f));
         world.Events.Add(3.21f, () => kefka_4001DE6B?.Cast(Constants.ActionId.Forsaken));
         world.Events.Add(13.20f, () => kefka_4001DE6B?.AddStatus(Constants.StatusId.DirectionalDisregard));
         world.Events.Add(21.39f, () => kefka_4001DE6B?.Cast(Constants.ActionId.Forsaken_BB36));

@@ -7,7 +7,6 @@ using AnoMech.Core;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.SimObjects;
 using static AnoMech.Scenarios.Umad.UmadConstants;
-using static AnoMech.Scenarios.Umad.P5Celestriad.UmadP5CelestriadConstants;
 
 namespace AnoMech.Scenarios.Umad.P5Celestriad;
 
@@ -15,19 +14,19 @@ namespace AnoMech.Scenarios.Umad.P5Celestriad;
 public sealed record CelestriadElement(EnemyAction Tower, ushort VulnUpStatusId, uint TowerEObjId)
 {
     public static readonly CelestriadElement Fire =
-        new(UmadActions.CelestriadFireTower, CelestriadStatusId.FireResistanceDownII, CelestriadTowerEObjId.Fire);
+        new(UmadActions.CelestriadFireTower, StatusId.FireResistanceDownII, EObjId.CelestriadFireTower);
     public static readonly CelestriadElement Lightning =
-        new(UmadActions.CelestriadLightningTower, UmadConstants.StatusId.LightningResistanceDownII, CelestriadTowerEObjId.Lightning);
+        new(UmadActions.CelestriadLightningTower, StatusId.LightningResistanceDownII, EObjId.CelestriadLightningTower);
     public static readonly CelestriadElement Ice =
-        new(UmadActions.CelestriadIceTower, CelestriadStatusId.IceResistanceDownII, CelestriadTowerEObjId.Ice);
+        new(UmadActions.CelestriadIceTower, StatusId.IceResistanceDownII, EObjId.CelestriadIceTower);
 }
 
 public sealed record CatastrophicChoice(uint CastActionId, EnemyAction Resolution)
 {
     public static readonly CatastrophicChoice Aero =
-        new(CelestriadActionId.CatastrophicChoiceAero, UmadActions.CatastrophicChoiceAero);
+        new(ActionId.CatastrophicChoiceAero, UmadActions.CatastrophicChoiceAero);
     public static readonly CatastrophicChoice Earth =
-        new(CelestriadActionId.CatastrophicChoiceEarth, UmadActions.CatastrophicChoiceEarth);
+        new(ActionId.CatastrophicChoiceEarth, UmadActions.CatastrophicChoiceEarth);
 }
 
 // One of the 9 fixed towers, spawned once for the whole mechanic; position never changes.
@@ -250,14 +249,14 @@ public sealed class UmadP5CelestriadState
         _ => null, // set 1 (index 1, the "second" soak) has no Catastrophic Choice
     };
 
-    // 9 towers 40 degrees apart clockwise from north, grouped as 3 contiguous per-element blocks
-    // (not interleaved) starting 20 degrees off north, confirmed against the real EObj spawn
-    // positions (see UmadP5CelestriadConstants). Only the sector's element changes per run;
-    // the nine positions and each element's three contiguous sub-towers stay intact.
+    // 9 towers 10y out, 40 degrees apart clockwise from north, grouped as 3 contiguous
+    // per-element blocks (not interleaved) starting 20 degrees off north. Only the sector's
+    // element changes per run; the nine positions and each element's three contiguous
+    // sub-towers stay intact.
     public Vector3 TowerPosition(CelestriadElement element, int subIndex)
     {
         var ringIndex = TowerElementOrder.ToList().IndexOf(element) * 3 + subIndex;
         var angle = MathF.PI / 9f + ringIndex * (MathF.PI * 2f / 9f);
-        return new Vector3(MathF.Sin(angle) * CelestriadGeometry.RingRadius, 0f, -MathF.Cos(angle) * CelestriadGeometry.RingRadius);
+        return new Vector3(MathF.Sin(angle) * 10f, 0f, -MathF.Cos(angle) * 10f);
     }
 }

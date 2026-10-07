@@ -216,4 +216,10 @@ public class UmadP4KefkaSaysScenarioTests
         => KefkaSays(MainTank, o => o.ExdeathCast1Real = false)
             .FreezeAt(70.9f)
             .ShouldKill(ActionId.DeathBomb, MainTank);
+
+    [Test]
+    public void DiesWalkingOffArena()
+        => KefkaSays(MainTank)
+            .TeleportAt(3f, to: new(0, 20.5f))
+            .ShouldKill(TheEnvironment, MainTank);
 }
