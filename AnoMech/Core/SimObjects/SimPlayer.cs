@@ -62,7 +62,7 @@ public sealed class SimPlayer(Coordinates coordinates) : SimCharacter(coordinate
     // Only a debug bot presses it for you; a human tank presses their own.
     public bool UseInvuln()
     {
-        if (!DebugBotControl.Enabled || Dead) return false;
+        if (!DebugBotControl.Enabled || Dead || ActionsLocked) return false;
         if (Mitigation.InvulnActionId(Proxy.ClassJob) is not { } actionId) return false;
         JobActions.ApplyEffects(this, actionId, (ulong)GameObjectId, Random.Shared);
         return true;
@@ -70,7 +70,7 @@ public sealed class SimPlayer(Coordinates coordinates) : SimCharacter(coordinate
 
     public void UseSprint(float duration)
     {
-        if (DebugBotControl.Enabled && !Dead) SprintHandler.Apply(this, duration);
+        if (DebugBotControl.Enabled && !Dead && !ActionsLocked) SprintHandler.Apply(this, duration);
     }
 
     public void Knockback(Vector3 source, float distance, float speed) => Movement.Knockback(source, distance, speed);
@@ -145,27 +145,10 @@ public sealed class SimPlayer(Coordinates coordinates) : SimCharacter(coordinate
         SyncInputLock();
     }
 
-    // Real FFXIV ids: Confused and Sleep take control away in retail, so the local player is
-    // locked out the way a bot doppel has no input.
-    private const ushort StatusIdConfused = 0x503;
-    private const ushort StatusIdSleep = 0x131E;
-    private const ushort StatusIdBind = 0x9D6;
-
     private void SyncInputLock()
     {
         var hooks = Natives.PlayerInput;
-        var asleep = !Dead && HasStatus(StatusIdSleep);
-        var confused = !Dead && HasStatus(StatusIdConfused);
-        var bound = !Dead && HasStatus(StatusIdBind);
-        var incapacitated = asleep || confused;
-        hooks.ZeroMovement = Dead || Movement.IsMoving || incapacitated || bound;
-        hooks.DisableAllActions = Dead || incapacitated;
-        // A knockback slide still lets you turn, so this isn't folded into ZeroMovement.
-        hooks.ZeroRotation = Dead || incapacitated;
-        // Sleep pins the rotation it landed at; Confused re-pins every tick, since the
-        // scenario's Follow already turned the player toward the ally it walks them into.
-        if (asleep) hooks.LockedRotation ??= Rotation;
-        else if (confused) hooks.LockedRotation = Rotation;
-        else hooks.LockedRotation = null;
+        hooks.ZeroMovement = Dead || Movement.IsMoving || MovementLocked;
+        hooks.DisableAllActions = Dead || ActionsLocked;
     }
 }

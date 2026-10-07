@@ -20,6 +20,7 @@ internal class Movement(SimCharacter parent)
     private bool faceTravel = true;
     private bool avoid = true;
     private int steerSide;
+    private bool moveForced;
     private ushort timelineId;
     private bool timelineBaseOverride;
     private bool animActive;
@@ -32,6 +33,10 @@ internal class Movement(SimCharacter parent)
     private bool easeOut;
 
     protected virtual ObstacleField Obstacles => parent.Obstacles;
+
+    // While a status locks movement only forced moves run (knockbacks, pushes, carries, a forced
+    // Follow); an AI order is dropped, not deferred.
+    protected virtual bool Locked => parent.MovementLocked;
 
     private SimCharacter? followTarget;
     private bool followForced;
@@ -65,6 +70,7 @@ internal class Movement(SimCharacter parent)
             Stop();
             return;
         }
+        if (!forced && Locked) return;
         followTarget = target;
         followForced = forced;
         followCooldown = 0f;
@@ -81,6 +87,7 @@ internal class Movement(SimCharacter parent)
     // is how many yards short of either endpoint to park.
     public void Intercept(SimTether? tether, float margin = 3f)
     {
+        if (Locked) return;
         followTarget = null;
         interceptTether = tether;
         interceptMargin = margin;
@@ -145,8 +152,7 @@ internal class Movement(SimCharacter parent)
     {
         var kbDestination = parent.Placement().Face(source).MoveForward(-distance).Position;
         // Knockback is forced movement: don't steer around or stop short of obstacles.
-        InternalMoveTo(kbDestination, kbSpeed, tl: KnockbackTimelineId, baseOverride: false, faceTravel: false, avoid: false);
-
+        InternalMoveTo(kbDestination, kbSpeed, tl: KnockbackTimelineId, baseOverride: false, faceTravel: false, avoid: false, forced: true);
     }
 
     // Forced movement along a fixed heading (Umad P1's arrows), with Knockback's forced-move
@@ -155,7 +161,7 @@ internal class Movement(SimCharacter parent)
     {
         var dir = new Vector2(MathF.Sin(heading), MathF.Cos(heading));
         var dest = parent.Position + new Vector3(dir.X * distance, 0f, dir.Y * distance);
-        InternalMoveTo(dest, pushSpeed, tl: KnockbackTimelineId, baseOverride: false, faceTravel: false, avoid: false);
+        InternalMoveTo(dest, pushSpeed, tl: KnockbackTimelineId, baseOverride: false, faceTravel: false, avoid: false, forced: true);
     }
 
     // Same forced-move semantics, but smoothstep-eased over durationSeconds: a real arrow push
@@ -167,7 +173,7 @@ internal class Movement(SimCharacter parent)
         var dest = start + new Vector3(dir.X * distance, 0f, dir.Y * distance);
         // Speed is meaningless for an eased move. The ease fields are set after the call, which
         // clears easeDuration.
-        InternalMoveTo(dest, 0f, tl: KnockbackTimelineId, baseOverride: false, faceTravel: false, avoid: false);
+        InternalMoveTo(dest, 0f, tl: KnockbackTimelineId, baseOverride: false, faceTravel: false, avoid: false, forced: true);
         easeStart = start;
         easeDuration = MathF.Max(0.01f, durationSeconds);
         easeElapsed = 0f;
@@ -176,7 +182,7 @@ internal class Movement(SimCharacter parent)
     public void Carry(Vector3 destination, float delaySeconds, float durationSeconds)
     {
         var start = parent.Position;
-        InternalMoveTo(destination, 0f, tl: KnockbackTimelineId, baseOverride: false, faceTravel: false, avoid: false);
+        InternalMoveTo(destination, 0f, tl: KnockbackTimelineId, baseOverride: false, faceTravel: false, avoid: false, forced: true);
         easeStart = start;
         easeDuration = MathF.Max(0.01f, durationSeconds);
         easeElapsed = 0f;
@@ -190,9 +196,10 @@ internal class Movement(SimCharacter parent)
     // (knockback). See StartAnim for why the two need different handling.
     private void InternalMoveTo(
         Vector3 moveDestination, float sp = 6f, float? finalRot = null, ushort tl = RunTimelineId, bool baseOverride = true,
-        bool faceTravel = true, bool avoid = true)
+        bool faceTravel = true, bool avoid = true, bool forced = false)
     {
         if (!parent.IsAlive()) return;   // dead characters don't move
+        if (!forced && Locked) return;
         // An external move supersedes any Intercept/Follow.
         if (!internalReissue)
         {
@@ -201,6 +208,7 @@ internal class Movement(SimCharacter parent)
             steerSide = 0;
         }
         destination = moveDestination;
+        moveForced = forced;
         speed = MathF.Max(0f, sp);
         finalRotation = finalRot;
         this.faceTravel = faceTravel;
@@ -217,6 +225,8 @@ internal class Movement(SimCharacter parent)
 
     public void Tick(float deltaSeconds)
     {
+        if (Locked) DropUnforcedOrders();
+
         if (parent.AnimationLock)
         {
             StopAnim();
@@ -315,9 +325,17 @@ internal class Movement(SimCharacter parent)
         else
         {
             internalReissue = true;
-            InternalMoveTo(followTarget.Position, speed);
+            InternalMoveTo(followTarget.Position, speed, forced: followForced);
             internalReissue = false;
         }
+    }
+
+    // A lock landing mid-move stops what the AI ordered; forced movement carries on.
+    private void DropUnforcedOrders()
+    {
+        if (followTarget != null && !followForced) followTarget = null;
+        interceptTether = null;
+        if (destination != null && !moveForced) Stop();
     }
 
     public void Stop()
@@ -391,6 +409,9 @@ internal sealed class PlayerMovement(SimCharacter parent) : Movement(parent)
 // MoveTo would fight it every frame.
 internal sealed class NetworkPuppetMovement(SimCharacter parent) : Movement(parent)
 {
+    // The owner's own client applies their lock.
+    protected override bool Locked => false;
+
     public override void MoveTo(Vector3 t, float sp = 6f, float? finalRot = null, ushort tl = RunTimelineId, bool baseOverride = true)
     {
         // NO-OP - position comes from the network, not local pathing

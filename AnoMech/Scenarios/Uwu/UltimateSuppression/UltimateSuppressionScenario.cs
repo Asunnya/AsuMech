@@ -553,11 +553,6 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
 
             state.PlayerGaol!.AddStatusParam(StatusId.Fetters, 0);
             state.PlayerGaol.StopMoving();
-
-            if (state.PlayerGaol is SimPlayer player)
-            {
-                SetStun(true);
-            }
         });
 
         SimEnemy? graniteGaol = null;
@@ -593,11 +588,6 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
         {
             state.PlayerGaol!.SetTargetable(true);
             state.PlayerGaol!.RemoveStatus(StatusId.Fetters);
-
-            if (state.PlayerGaol is SimPlayer player)
-            {
-                SetStun(false);
-            }
 
             graniteGaol!.Proxy?.SetMode(CharacterModes.Dead);
             graniteGaol!.CancelCast();
@@ -671,11 +661,6 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
         {
             plume?.Despawn();
         }
-    }
-
-    private void SetStun(bool value)
-    {
-        Natives.PlayerInput.SetStatusAffliction(value);
     }
 
     private void Lockon(SimCharacter? target, uint lockonId)

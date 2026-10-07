@@ -11,12 +11,5 @@ public interface ILocalPlayerInput
     bool PollActionUsed();
 
     bool ZeroMovement { get; set; }
-    bool ZeroRotation { get; set; }
     bool DisableAllActions { get; set; }
-
-    // Facing held while set.
-    float? LockedRotation { get; set; }
-
-    // Conditions.SufferingStatusAffliction(2): the client's stunned state.
-    void SetStatusAffliction(bool afflicted);
 }

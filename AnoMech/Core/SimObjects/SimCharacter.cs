@@ -348,6 +348,21 @@ public abstract class SimCharacter(Coordinates coordinates) : ISimObject, IPosit
 
     public IReadOnlyList<SimStatus> ActiveStatuses => statusList.Where(s => s.IsActive).ToList();
 
+    // The client enforces the Status sheet's Lock* flags from the server's statuses; sim statuses
+    // never reach that path, so the sheet is read here.
+    public bool MovementLocked => AnyActiveStatusRow(row => row.LockMovement || row.LockControl);
+    public bool ActionsLocked => AnyActiveStatusRow(row => row.LockActions || row.LockControl);
+
+    private bool AnyActiveStatusRow(Func<StatusRow, bool> predicate)
+    {
+        foreach (var status in statusList)
+        {
+            if (status.IsActive && Natives.Data.Status(status.StatusId) is { } row && predicate(row))
+                return true;
+        }
+        return false;
+    }
+
 
     // -------------------------
     // Other Subsystem

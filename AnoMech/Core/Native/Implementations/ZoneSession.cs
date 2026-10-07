@@ -514,16 +514,12 @@ public sealed unsafe partial class ZoneSession : IZoneSession, IDisposable
     }
 
     // What the settle and the sim hold on the character: Occupied for the settle, and the
-    // afflictions and untargetable state Suppression leaves. Every lift path releases them, and
+    // untargetable state Suppression leaves. Every lift path releases them, and
     // none may be kept from its lift by a throw here.
     private static void ReleasePlayerConditions()
     {
         var condition = Conditions.Instance();
         condition->Occupied = false;
-
-        // TODO: this is here because of Suppression. Either define it as normal behaviour, or add an OnLeave method on Scenarios
-        condition->SufferingStatusAffliction = false;
-        condition->SufferingStatusAffliction2 = false;
 
         try
         {

@@ -333,8 +333,6 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
 
         // Release the forced chase when Confused's 6.00s runs out (see ReleaseConfusedControl).
         world.Events.Add(ConfusedChaseEnd, ReleaseConfusedControl);
-        // Sleep expires on the same timer; the sleep-pose timeline doesn't self-clear.
-        world.Events.Add(ConfusedChaseEnd, ReleaseSleepPose);
 
         // [32.78s] Unnamed instant: puts Kefka's model state back to 0. [34.87s] Kefka's
         // teleport action; he stays at centre, only the animation plays.
@@ -844,20 +842,6 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         }
     }
 
-    // ActionTimeline row 199 = "status/facial/sleep"; cleared on expiry, since the loop doesn't
-    // self-clear the way the status does.
-    public const ushort SleepPoseTimelineId = 199;
-
-    private void ReleaseSleepPose()
-    {
-        foreach (var role in state.Debuffs.Keys)
-        {
-            if (UmadP1TeleTrouncingState.IsDps(role) == state.DpsGetsConfused) continue;
-            if (party.Get(role) is { } member && member.IsAlive())
-                member.ResetActionTimeline();
-        }
-    }
-
     // Follow(null) first, or TickFollow re-issues the chase under the carry.
     private void UseArrow(PartyRole role, SimCharacter member, SimEventObject arrow)
     {
@@ -1111,22 +1095,16 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         }
     }
 
-    // 6.00s each, at the real EffectResult time: the chase and the sleep pose start with the
-    // status, not the hit.
+    // 6.00s each, at the real EffectResult time: the chase starts with the status, not the hit.
     private void ApplyConfusedAndSleepStatuses()
     {
         foreach (var role in state.Debuffs.Keys)
         {
             var confused = UmadP1TeleTrouncingState.IsDps(role) == state.DpsGetsConfused;
             if (party.Get(role) is not { } member || !member.IsAlive()) continue;
-            member.AddStatus(confused ? Constants.StatusId.Confused : Constants.StatusId.Sleep, 6.000f);
             // No freeze on apply: confused players walk at once, and a freeze pushed the last arrow
             // past its expiry.
-            if (!confused)
-            {
-                // Otherwise a slept doppel stands in its normal idle.
-                member.PlayActionTimeline(SleepPoseTimelineId);
-            }
+            member.AddStatus(confused ? Constants.StatusId.Confused : Constants.StatusId.Sleep, 6.000f);
         }
     }
 

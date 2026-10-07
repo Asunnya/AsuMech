@@ -11,9 +11,5 @@ internal sealed class FakeLocalPlayerInput : ILocalPlayerInput
     public bool PollActionUsed() => false;
 
     public bool ZeroMovement { get; set; }
-    public bool ZeroRotation { get; set; }
     public bool DisableAllActions { get; set; }
-    public float? LockedRotation { get; set; }
-
-    public void SetStatusAffliction(bool afflicted) { }
 }

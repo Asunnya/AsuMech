@@ -9,6 +9,7 @@ public interface IGameData
     BNpcBaseRow? BNpcBase(uint bnpcBaseId);
     ModelCharaRow? ModelChara(uint modelCharaId);
     ModelSkeletonRow? ModelSkeleton(uint skeletonId);
+    StatusRow? Status(ushort statusId);
 
     // Null for a missing row or an empty name.
     string? StatusName(ushort statusId);

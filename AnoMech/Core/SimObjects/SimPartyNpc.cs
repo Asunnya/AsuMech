@@ -33,7 +33,7 @@ public sealed class SimPartyNpc : SimNpc, ISimPartyMember
     // level 1-3. False if KO'd or the job has no limit break at that level.
     internal bool UseLimitBreak(int level)
     {
-        if (!this.IsAlive()) return false;
+        if (!this.IsAlive() || ActionsLocked) return false;
         var actionId = LimitBreakHandler.ActionId(ClassJob, level);
         if (actionId == 0) return false;
         DiagnosticLog.Info($"[SimPartyNpc] {Role} (job {ClassJob}) uses LB{level} {ActionLookup.Name(actionId)}.");
@@ -44,12 +44,16 @@ public sealed class SimPartyNpc : SimNpc, ISimPartyMember
     // False for a non-tank job.
     public bool UseInvuln()
     {
+        if (ActionsLocked) return false;
         if (Mitigation.InvulnActionId(ClassJob) is not { } actionId) return false;
         UseAction(actionId);
         return true;
     }
 
-    public void UseSprint(float duration) => SprintHandler.Apply(this, duration);
+    public void UseSprint(float duration)
+    {
+        if (!ActionsLocked) SprintHandler.Apply(this, duration);
+    }
 
     public void Knockback(Vector3 source, float distance, float speed) => Movement.Knockback(source, distance, speed);
 
