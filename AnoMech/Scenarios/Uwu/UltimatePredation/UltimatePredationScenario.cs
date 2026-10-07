@@ -196,7 +196,7 @@ public class UltimatePredationScenario : IMultiplayerReplayable
 
     private void Ultima()
     {
-        world.Events.Add(2.50f, () => ultima?.Cast(ActionId.UltimatePredation, 4.5f));
+        world.Events.Add(2.50f, () => ultima?.Cast(ActionId.UltimatePredation, animationLock: 4.5f));
 
         world.Events.Add(10.05f, () =>
         {
@@ -236,7 +236,7 @@ public class UltimatePredationScenario : IMultiplayerReplayable
 
         world.Events.Add(32.70f, () => ultima?.Cast(Actions.UltimaAttack, mt, animationVariation: 2));
 
-        world.Events.Add(32.92f, () => ultima?.Cast(ActionId.PostUltimatePredation2, 2.1f));
+        world.Events.Add(32.92f, () => ultima?.Cast(ActionId.PostUltimatePredation2, animationLock: 2.1f));
 
         world.Events.Add(37.73f, () => ultima?.Cast(Actions.UltimaAttack, mt, animationVariation: 2));
 
@@ -244,11 +244,11 @@ public class UltimatePredationScenario : IMultiplayerReplayable
 
         world.Events.Add(43.80f, () => ultima?.Cast(Actions.UltimaAttack, mt, animationVariation: 0));
 
-        world.Events.Add(43.94f, () => ultima?.Cast(ActionId.PostUltimatePredation3, 2.1f));
+        world.Events.Add(43.94f, () => ultima?.Cast(ActionId.PostUltimatePredation3, animationLock: 2.1f));
 
         world.Events.Add(48.83f, () => ultima?.Cast(Actions.UltimaAttack, mt, animationVariation: 1));
 
-        world.Events.Add(49.05f, () => ultima?.Cast(ActionId.RadiantPlumeUltima, 2.1f));
+        world.Events.Add(49.05f, () => ultima?.Cast(ActionId.RadiantPlumeUltima, animationLock: 2.1f));
 
         for (int i = 0; i < Geometry.UltimaRadiantPlumePositions.Length; i++)
         {
@@ -259,14 +259,14 @@ public class UltimatePredationScenario : IMultiplayerReplayable
         {
             var bait = state.UltimaLandslideBait is { } role ? party.Get(role) : party.GetRandom(world.Rng);
             ultima?.Face(bait);
-            ultima?.Cast(ActionId.LandslideUltima, 2.1f);
+            ultima?.Cast(ActionId.LandslideUltima, animationLock: 2.1f);
         });
 
         utils.LandslideLines(() => ultima, [() => dummies[5], () => dummies[6], () => dummies[7]], 55.09f, LandslideType.Ultima);
 
         world.Events.Add(58.33f, () => ultima?.Cast(Actions.UltimaAttack, mt, animationVariation: 0));
 
-        world.Events.Add(60.37f, () => ultima?.Cast(ActionId.PostUltimatePredation1, 2.1f));
+        world.Events.Add(60.37f, () => ultima?.Cast(ActionId.PostUltimatePredation1, animationLock: 2.1f));
 
         world.Events.Add(63.37f, () => ultima?.Cast(Actions.UltimaAttack, mt, animationVariation: 2));
 
@@ -308,7 +308,7 @@ public class UltimatePredationScenario : IMultiplayerReplayable
         world.Events.Add(80.97f, () =>
         {
             ultima?.Follow();
-            ultima?.Cast(ActionId.UltimateAnnihilation, 4.5f);
+            ultima?.Cast(ActionId.UltimateAnnihilation, animationLock: 4.5f);
         });
 
         world.Events.Add(88.41f, () =>
@@ -397,7 +397,7 @@ public class UltimatePredationScenario : IMultiplayerReplayable
 
         world.Events.Add(36.99f, () => ifrit?.PlayActionTimeline(ActionTimelineId.WarpEnd));
 
-        world.Events.Add(39.03f, () => ifrit?.Cast(ActionId.EruptionIfrit, 2.4f));
+        world.Events.Add(39.03f, () => ifrit?.Cast(ActionId.EruptionIfrit, animationLock: 2.4f));
 
         IReadOnlyList<SimCharacter> eruptionBaits = null!;
         world.Events.Add(39.03f, () => eruptionBaits = party.Find.FarestN(ifrit!.Position, 2));
@@ -422,8 +422,8 @@ public class UltimatePredationScenario : IMultiplayerReplayable
         // Infernal Fetters VFX is handled by dummies[11] and dummies[12]
         world.Events.Add(47.19f, () =>
         {
-            dummies[11]?.Cast(ActionId.InfernalFetters, 0.6f, dps);
-            dummies[12]?.Cast(ActionId.InfernalFetters, 0.6f, ot);
+            dummies[11]?.Cast(ActionId.InfernalFetters, dps, 0.6f);
+            dummies[12]?.Cast(ActionId.InfernalFetters, ot, 0.6f);
         });
 
         world.Events.Add(49.05f, () => ifrit?.PlayActionTimeline(ActionTimelineId.WarpStart));
@@ -439,7 +439,7 @@ public class UltimatePredationScenario : IMultiplayerReplayable
             titan?.PlayActionTimeline(ActionTimelineId.WarpEnd);
         });
 
-        world.Events.Add(18.22f, () => titan?.Cast(ActionId.LandslideTitan, 4.1f));
+        world.Events.Add(18.22f, () => titan?.Cast(ActionId.LandslideTitan, animationLock: 4.1f));
 
         utils.LandslideLines(() => titan, [() => dummies[8], () => dummies[9], () => dummies[10], () => dummies[11], () => dummies[12]], 18.22f, LandslideType.Normal);
 
@@ -471,7 +471,7 @@ public class UltimatePredationScenario : IMultiplayerReplayable
 
         world.Events.Add(48.13f, () => titan?.PlayActionTimeline(ActionTimelineId.WarpEnd));
 
-        world.Events.Add(50.28f, () => titan?.Cast(ActionId.BoulderTitan, 2.1f));
+        world.Events.Add(50.28f, () => titan?.Cast(ActionId.BoulderTitan, animationLock: 2.1f));
 
         var boulderPositions = state.BoulderPositions;
 
@@ -486,7 +486,7 @@ public class UltimatePredationScenario : IMultiplayerReplayable
         {
             var bait = state.TitanLandslideBait is { } role ? party.Get(role) : party.GetRandom(world.Rng);
             titan?.Face(bait);
-            titan?.Cast(ActionId.LandslideTitan, 4.1f);
+            titan?.Cast(ActionId.LandslideTitan, animationLock: 4.1f);
         });
 
         utils.LandslideLines(() => titan, [() => dummies[8], () => dummies[9], () => dummies[10], () => dummies[11], () => dummies[12]], 54.45f, LandslideType.Normal);

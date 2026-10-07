@@ -71,7 +71,7 @@ public sealed class UmadP5ExaflaresScenario : IMultiplayerReplayable
             ((IScenarioAi<UmadP5ExaflaresState>)AiStrats[idx]).Run(state, world);
 
         world.Events.Add(0f, SpawnKefka);
-        world.Events.Add(3.0f, () => kefka?.Cast(ActionId.ChaosEnd1, KefkaAnimationLock));
+        world.Events.Add(3.0f, () => kefka?.Cast(ActionId.ChaosEnd1, animationLock: KefkaAnimationLock));
 
         // Rolling exaflares: left/right pairs every 2.5s, columns from the chosen order.
         LaunchExaflareLine(3.0f,  state.LeftOrder[0],  isLeft: true);
@@ -87,7 +87,7 @@ public sealed class UmadP5ExaflaresScenario : IMultiplayerReplayable
         LaunchExaflareLine(15.5f, state.RightOrder[4], isLeft: false);
         LaunchExaflareLine(15.5f, state.RightOrder[5], isLeft: false);
 
-        world.Events.Add(19.2f, () => kefka?.Cast(ActionId.ChaosEnd2, KefkaAnimationLock));
+        world.Events.Add(19.2f, () => kefka?.Cast(ActionId.ChaosEnd2, animationLock: KefkaAnimationLock));
         world.Events.Add(25.09f, ResolveSpread);
     }
 
@@ -124,7 +124,7 @@ public sealed class UmadP5ExaflaresScenario : IMultiplayerReplayable
         world.Events.Add(startT, () =>
         {
             arrow = SpawnHelper(initPos, heading);
-            arrow?.Cast(ActionId.ExaflareOmen, HelperAnimationLock);
+            arrow?.Cast(ActionId.ExaflareOmen, animationLock: HelperAnimationLock);
         });
         world.Events.Add(startT + OmenCastTime - ArrowReleaseSuppressLead, () => arrow?.Despawn());
 
@@ -135,7 +135,7 @@ public sealed class UmadP5ExaflaresScenario : IMultiplayerReplayable
         world.Events.Add(tEruptSource, () =>
         {
             source = SpawnHelper(initPos, heading);
-            source?.Cast(ActionId.ExaflareHit, HelperAnimationLock);
+            source?.Cast(ActionId.ExaflareHit, animationLock: HelperAnimationLock);
         });
         world.Events.Add(tEruptSource + ExaflareVfxDuration, () => source?.Despawn());
 

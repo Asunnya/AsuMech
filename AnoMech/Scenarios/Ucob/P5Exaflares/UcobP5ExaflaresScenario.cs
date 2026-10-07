@@ -59,7 +59,7 @@ public sealed class UcobP5ExaflaresScenario : IMultiplayerReplayable
 
         world.Events.Add(0f, SpawnBahamut);
         world.Events.Add(UcobP5ExaflaresState.BossCastAt,
-            () => bahamut?.Cast(ActionId.Exaflare, castSeconds: UcobP5ExaflaresState.BossCastSeconds));
+            () => bahamut?.Cast(ActionId.Exaflare));
         foreach (var line in state.Lines) LaunchLine(line);
         world.Events.Add(state.LastHitAt + DespawnAfterLastHit, DespawnAll);
     }

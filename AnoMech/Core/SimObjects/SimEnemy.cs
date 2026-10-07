@@ -1,7 +1,6 @@
 using AnoMech.Core.EnemyActions;
 using AnoMech.Core.Game;
 using AnoMech.Core.Native.Interfaces;
-using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using System;
@@ -67,8 +66,8 @@ public record struct EnemySpawnConfig(
 
 public sealed class SimEnemy : SimNpc
 {
-    // Cast bar, action-effect release, omen telegraph, and animation lock live in
-    // SimCast. SimEnemy just converts target coords to world space and reads IsBusy.
+    // The cast packets and the animation lock live in SimCast; EnemyActionHandler decides when
+    // they go out and what the action does.
     private readonly SimCast cast;
     private readonly EnemyActionHandler actions;
 
@@ -210,25 +209,13 @@ public sealed class SimEnemy : SimNpc
     };
 
     public bool IsCasting => cast.IsCasting;
-    public int CastSeq => cast.CastSeq;
     public uint CastActionId => cast.ActionId;
     public float CastProgress => cast.Progress;
     public Vector3? CastTargetLocation => cast.TargetLocation;
-    public GameObjectId? CastTargetId => cast.TargetId;
     public float CastTotalSeconds => cast.Total;
-    public float CastOmenDelay => cast.OmenDelay;
-    public float CastOmenRotate => cast.OmenRotate;
-    public int LastInstantCastSeq => cast.LastInstantCastSeq;
-    public uint LastInstantCastActionId => cast.LastInstantCastActionId;
-    public Vector3? LastInstantCastTargetLocation => cast.LastInstantCastTargetLocation;
-    public GameObjectId? LastInstantCastTargetId => cast.LastInstantCastTargetId;
-    public GameObjectId? LastInstantCastActionTargetId => cast.LastInstantCastActionTargetId;
-    public bool LastInstantCastIsNativeEffect => cast.LastInstantCastIsNativeEffect;
-    public float LastInstantCastAnimationLock => cast.LastInstantCastAnimationLock;
-    public string? LastInstantCastRawPacket => cast.LastInstantCastRawPacket;
 
-    public void NoteRawActionEffect(uint actionId, string captureName, float animationLock)
-        => cast.NoteRawActionEffect(actionId, captureName, animationLock);
+    // The cast packets as sent, for multiplayer to sample on the host and replay on a peer.
+    internal SimCast Casting => cast;
 
     // The last SetVisible value; IsEngineVisible lags behind the async model load.
     public bool Visible => desiredVisible;
@@ -240,7 +227,7 @@ public sealed class SimEnemy : SimNpc
         EnemyListMode = enemyListMode;
         this.packetSpawned = packetSpawned;
         cast = new SimCast(this, world.Coordinates);
-        actions = new EnemyActionHandler(this, world);
+        actions = new EnemyActionHandler(this, cast, world);
     }
 
     // Created by the engine's own NpcSpawn handler (SpawnFromPacket); the engine owns its draw
@@ -625,42 +612,15 @@ public sealed class SimEnemy : SimNpc
     // False during the async model-load window where DrawObject is still null.
     private bool IsEngineVisible() => Proxy?.IsDrawObjectVisible ?? false;
 
-    // Engine doesn't expose post-action animation-lock duration via EXD — the
-    // real value only ships in the server's ActionEffect packet. 0.6s is a
-    // reasonable approximation for most boss abilities; if a scenario needs
-    // tighter timing we can derive per-action values from captured ACT logs.
-    public bool Cast(uint actionId, Vector3? targetLocation = null, float? castSeconds = null, GameObjectId? targetId = null, float omenDelay = 0f, float omenRotate = 0f, byte animationVariation = 0, float animationLock = 0.6f, float? fireDelay = null)
-    {
-        Core.DiagnosticLog.Info(
-            $"[SimEnemy] Cast: {Core.ActionLookup.Name(actionId)} ({actionId}) from ({Position.X:F1},{Position.Z:F1}) rot={Rotation:F3} castSeconds={castSeconds?.ToString("F2") ?? "default"}.");
-        // targetLocation stays scenario-local; SimCast lifts to world at native boundaries.
-        return cast.Start(actionId, targetLocation, castSeconds, targetId, omenDelay, omenRotate, animationVariation, animationLock, fireDelay);
-    }
-
-    // Interrupts the EnemyAction cast still on its bar: neither its effect nor its mechanics go out.
-    public void CancelCast() => actions.CancelCast();
-
-    public EnemyActionCast Cast(EnemyAction action, byte animationVariation = 0) => actions.Start(action, null, null, animationVariation);
-
-    // A null target casts on the caster.
-    public EnemyActionCast Cast(EnemyAction action, SimCharacter? target, byte animationVariation = 0) => actions.Start(action, target, null, animationVariation);
-
-    // Scenario-local ground target, fixed at the call.
-    public EnemyActionCast Cast(EnemyAction action, Vector3 location, byte animationVariation = 0) => actions.Start(action, null, location, animationVariation);
-
     // An action with no mechanics of its own: just its bar and animation.
-    public EnemyActionCast Cast(uint actionId, float animationLock, SimCharacter? target = null, byte animationVariation = 0) =>
-        actions.Start(new EnemyAction(actionId) { Cast = new() { AnimationLock = animationLock } }, target, null, animationVariation);
+    public EnemyActionCast Cast(uint actionId, CastTarget target = default, float animationLock = 0.6f, byte animationVariation = 0) =>
+        actions.Start(new EnemyAction(actionId) { Cast = new() { AnimationLock = animationLock } }, target, animationVariation);
 
-    public void NativeCast(uint actionId, ActionType actionType, float omenDelay, float castTime, bool interruptible, float? rotation = null, Vector3? position = null, GameObjectId? targetId = null, GameObjectId? ballistaId = null)
-    {
-        cast.NativeCast(actionId, actionType, omenDelay, castTime, interruptible, rotation, position, targetId, ballistaId);
-    }
+    public EnemyActionCast Cast(EnemyAction action, CastTarget target = default, byte animationVariation = 0) =>
+        actions.Start(action, target, animationVariation);
 
-    public void NativeActionEffect(uint actionId, float animationLock, ushort spellId, byte animationVariaton, ActionType actionType, byte flags, float? rotation = null, Vector3? position = null, GameObjectId? animationTargetId = null, GameObjectId? actionTargetId = null, GameObjectId? ballistaId = null)
-    {
-        cast.NativeActionEffect(actionId, animationLock, spellId, animationVariaton, actionType, flags, rotation, position, animationTargetId, actionTargetId, ballistaId);
-    }
+    // Interrupts the cast still on its bar: neither its effect nor its mechanics go out.
+    public void CancelCast() => actions.CancelCast();
 
     public override bool AnimationLock => cast.IsBusy;
 

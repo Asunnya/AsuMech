@@ -25,7 +25,6 @@ internal sealed class FakeGame
         Natives.UserActions = new FakeUserActions();
         Natives.Vfx = new FakeVfxFunctions();
         Natives.TimelinePreload = new FakeActionTimelinePreload();
-        Natives.RawActionEffect = new FakeRawActionEffect();
         Natives.Zone = game.Zone;
         Natives.MapEffects = game.MapEffects;
         Natives.Layout = new FakeLayoutFunctions();

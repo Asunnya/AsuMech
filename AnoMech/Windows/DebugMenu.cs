@@ -741,7 +741,7 @@ internal sealed unsafe class DebugMenu
         {
             if ((ulong)enemy.GameObjectId == targetId)
             {
-                enemy.Cast(actionId, targetLocation: player.Position, targetId: player.GameObjectId, animationVariation: animationVariation);
+                enemy.Cast(actionId, player, animationVariation: animationVariation);
                 Plugin.Log.Info($"Cast: action 0x{actionId:X} (anim variation {animationVariation}) on player from '{enemy.DisplayName}'");
                 return;
             }
@@ -762,7 +762,7 @@ internal sealed unsafe class DebugMenu
         {
             if ((ulong)enemy.GameObjectId == targetId)
             {
-                enemy.Cast(actionId, targetLocation: enemy.Position, targetId: enemy.GameObjectId, animationVariation: animationVariation);
+                enemy.Cast(actionId, animationVariation: animationVariation);
                 Plugin.Log.Info($"Cast: action 0x{actionId:X} (anim variation {animationVariation}) on self from '{enemy.DisplayName}'");
                 return;
             }

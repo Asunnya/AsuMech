@@ -178,7 +178,6 @@ public sealed class Plugin : IDalamudPlugin
         Natives.UserActions = UserActions = new UserActions(PlayerInputHooks);
         Natives.Vfx = new VfxFunctions();
         Natives.TimelinePreload = new ActionTimelinePreload();
-        Natives.RawActionEffect = new RawActionEffect();
         Natives.MapEffects = mapEffects = new MapEffects();
         Natives.Zone = zoneSession = new ZoneSession();
         Natives.Layout = new LayoutFunctions();

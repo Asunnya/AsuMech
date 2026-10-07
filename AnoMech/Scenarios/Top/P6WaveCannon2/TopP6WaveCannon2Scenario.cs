@@ -58,9 +58,9 @@ public sealed class TopP6WaveCannon2Scenario : IMultiplayerReplayable
         SimEnemy? alpha_Omega_4000A771 = null;
         world.Events.Add(0f, () => alpha_Omega_4000A771 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.AlphaOmega, NameId: BNpcNameId.AlphaOmega, Level: 90, Targetable: true, EnemyList: EnemyListMode.Always, IsVisible: true, Placement: new Placement(new Vector3(0.000f, -0.000f, 0.000f), -MathF.PI))));
         world.Events.Add(0.5f, () => alpha_Omega_4000A771?.AddStatus(StatusId.CodeMi));
-        world.Events.Add(1.90f, () => alpha_Omega_4000A771?.Cast(ActionId.CosmoArrow, targetLocation: new Vector3(-0.008f, -0.015f, -0.008f), targetId: alpha_Omega_4000A771?.GameObjectId));
+        world.Events.Add(1.90f, () => alpha_Omega_4000A771?.Cast(ActionId.CosmoArrow, new Vector3(-0.008f, -0.015f, -0.008f)));
         if (solo) return;
-        world.Events.Add(16.03f, () => alpha_Omega_4000A771?.Cast(ActionId.WaveCannon_7BA9, targetLocation: new Vector3(-0.008f, -0.015f, -0.008f), targetId: alpha_Omega_4000A771?.GameObjectId));
+        world.Events.Add(16.03f, () => alpha_Omega_4000A771?.Cast(ActionId.WaveCannon_7BA9, new Vector3(-0.008f, -0.015f, -0.008f)));
         world.Events.Add(27.40f, () =>
         {
             if (party.Get(state.WildChargeTarget) is { } target)
@@ -139,7 +139,7 @@ public sealed class TopP6WaveCannon2Scenario : IMultiplayerReplayable
 
     private static void CastCosmoArrow(SimEnemy? helper, bool inhale)
     {
-        if (inhale) helper?.Cast(ActionId.Inhale, targetId: helper.GameObjectId);
+        if (inhale) helper?.Cast(ActionId.Inhale);
         else helper?.Cast(Actions.CosmoArrowOmen);
     }
 

@@ -214,7 +214,7 @@ public sealed class UmadP3BlackHoleScenario : IMultiplayerReplayable
         SimEnemy? chaos_4000414D = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.ChaosP3, NameId: BNpcNameId.Chaos, Level: 100, Targetable: true, EnemyList: EnemyListMode.Always, IsVisible: true, Placement: new Placement(new Vector3(-8.000f, 0.000f, 0.000f), 0.000f)));
         state.ScenarioObjects.Chaos = chaos_4000414D;
         world.Events.Add(0.1f, () => chaos_4000414D?.AddStatus(StatusId.EpicVillain));
-        world.Events.Add(0.98f, () => chaos_4000414D?.Cast(ActionId.Earthquake, 3.1f));
+        world.Events.Add(0.98f, () => chaos_4000414D?.Cast(ActionId.Earthquake, animationLock: 3.1f));
         world.Events.Add(1f, () => chaos_4000414D?.Follow(party.Get(PartyRole.MainTank)));
         world.Events.Add(12.07f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(15.09f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
@@ -223,7 +223,7 @@ public sealed class UmadP3BlackHoleScenario : IMultiplayerReplayable
         world.Events.Add(24.19f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(27.22f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(30.25f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
-        world.Events.Add(32.40f, () => chaos_4000414D?.Cast(ActionId.Aetherlink_Chaos, 3.1f));
+        world.Events.Add(32.40f, () => chaos_4000414D?.Cast(ActionId.Aetherlink_Chaos, animationLock: 3.1f));
         world.Events.Add(33.29f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(36.34f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(39.37f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
@@ -238,22 +238,22 @@ public sealed class UmadP3BlackHoleScenario : IMultiplayerReplayable
         world.Events.Add(86.97f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(90.00f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(93.02f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
-        world.Events.Add(99.18f, () => chaos_4000414D?.Cast(ActionId.Aetherlink_Chaos, 3.1f));
+        world.Events.Add(99.18f, () => chaos_4000414D?.Cast(ActionId.Aetherlink_Chaos, animationLock: 3.1f));
         // The shockwaves keep the facing Chaos casts Implosion with, not wherever it turns after.
         var implosionFrom = new Placement();
         world.Events.Add(113.38f, () =>
         {
             if (chaos_4000414D is null) return;
             implosionFrom = chaos_4000414D.Placement();
-            chaos_4000414D.Cast(state.ImplosionAttack, 6.1f);
+            chaos_4000414D.Cast(state.ImplosionAttack, animationLock: 6.1f);
         });
         world.Events.Add(124.41f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(141.47f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(144.50f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
-        world.Events.Add(147.09f, () => chaos_4000414D?.Cast(ActionId.KnockDown_Cast, 3.1f));
+        world.Events.Add(147.09f, () => chaos_4000414D?.Cast(ActionId.KnockDown_Cast, animationLock: 3.1f));
         world.Events.Add(152.53f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(155.57f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
-        world.Events.Add(157.22f, () => chaos_4000414D?.Cast(ActionId.BigBang_Cast, 3.1f));
+        world.Events.Add(157.22f, () => chaos_4000414D?.Cast(ActionId.BigBang_Cast, animationLock: 3.1f));
         
         for (int i = 0; i < 2; i++)
         {
@@ -286,13 +286,13 @@ public sealed class UmadP3BlackHoleScenario : IMultiplayerReplayable
         world.Events.Add(15.09f, () => exdeath_4000414C?.Cast(UmadActions.ExdeathAutoAttack, party.Get(PartyRole.OffTank)));
         world.Events.Add(18.13f, () => exdeath_4000414C?.Cast(UmadActions.ExdeathAutoAttack, party.Get(PartyRole.OffTank)));
         world.Events.Add(21.16f, () => exdeath_4000414C?.Cast(UmadActions.ExdeathAutoAttack, party.Get(PartyRole.OffTank)));
-        world.Events.Add(22.18f, () => exdeath_4000414C?.Cast(ActionId.BlackHole, 3.1f));
+        world.Events.Add(22.18f, () => exdeath_4000414C?.Cast(ActionId.BlackHole, animationLock: 3.1f));
         world.Events.Add(27.22f, () => exdeath_4000414C?.Cast(UmadActions.ExdeathAutoAttack, party.Get(PartyRole.OffTank)));
         world.Events.Add(30.25f, () => exdeath_4000414C?.Cast(UmadActions.ExdeathAutoAttack, party.Get(PartyRole.OffTank)));
-        world.Events.Add(32.40f, () => exdeath_4000414C?.Cast(ActionId.Aetherlink_Exdeath, 3.1f));
+        world.Events.Add(32.40f, () => exdeath_4000414C?.Cast(ActionId.Aetherlink_Exdeath, animationLock: 3.1f));
         world.Events.Add(33.29f, () => exdeath_4000414C?.Cast(UmadActions.ExdeathAutoAttack, party.Get(PartyRole.OffTank)));
         world.Events.Add(36.34f, () => exdeath_4000414C?.Cast(UmadActions.ExdeathAutoAttack, party.Get(PartyRole.OffTank)));
-        world.Events.Add(37.59f, () => exdeath_4000414C?.Cast(ActionId.ThunderIII_Cast, 3.1f));
+        world.Events.Add(37.59f, () => exdeath_4000414C?.Cast(ActionId.ThunderIII_Cast, animationLock: 3.1f));
         world.Events.Add(44.37f, () => exdeath_4000414C?.Cast(UmadActions.ExdeathAutoAttack, party.Get(PartyRole.OffTank)));
         world.Events.Add(47.41f, () => exdeath_4000414C?.Cast(UmadActions.ExdeathAutoAttack, party.Get(PartyRole.OffTank)));
         world.Events.Add(50.45f, () => exdeath_4000414C?.Cast(UmadActions.ExdeathAutoAttack, party.Get(PartyRole.OffTank)));
@@ -300,19 +300,19 @@ public sealed class UmadP3BlackHoleScenario : IMultiplayerReplayable
         world.Events.Add(56.51f, () => exdeath_4000414C?.Cast(UmadActions.ExdeathAutoAttack, party.Get(PartyRole.OffTank)));
         world.Events.Add(59.54f, () => exdeath_4000414C?.Cast(UmadActions.ExdeathAutoAttack, party.Get(PartyRole.OffTank)));
         world.Events.Add(77.78f, () => exdeath_4000414C?.Cast(UmadActions.ExdeathAutoAttack, party.Get(PartyRole.OffTank)));
-        world.Events.Add(78.85f, () => exdeath_4000414C?.Cast(ActionId.ThunderIII_Cast, 3.1f));
+        world.Events.Add(78.85f, () => exdeath_4000414C?.Cast(ActionId.ThunderIII_Cast, animationLock: 3.1f));
         world.Events.Add(85.85f, () => exdeath_4000414C?.Cast(UmadActions.ExdeathAutoAttack, party.Get(PartyRole.OffTank)));
         world.Events.Add(88.89f, () => exdeath_4000414C?.Cast(UmadActions.ExdeathAutoAttack, party.Get(PartyRole.OffTank)));
         world.Events.Add(91.91f, () => exdeath_4000414C?.Cast(UmadActions.ExdeathAutoAttack, party.Get(PartyRole.OffTank)));
-        world.Events.Add(99.18f, () => exdeath_4000414C?.Cast(ActionId.Aetherlink_Exdeath, 3.1f));
-        world.Events.Add(113.38f, () => exdeath_4000414C?.Cast(ActionId.WhiteHole, 3.1f));
+        world.Events.Add(99.18f, () => exdeath_4000414C?.Cast(ActionId.Aetherlink_Exdeath, animationLock: 3.1f));
+        world.Events.Add(113.38f, () => exdeath_4000414C?.Cast(ActionId.WhiteHole, animationLock: 3.1f));
         world.Events.Add(122.45f, () => exdeath_4000414C?.Cast(UmadActions.ExdeathAutoAttack, party.Get(PartyRole.OffTank)));
         world.Events.Add(125.48f, () => exdeath_4000414C?.Cast(UmadActions.ExdeathAutoAttack, party.Get(PartyRole.OffTank)));
         world.Events.Add(141.51f, () => exdeath_4000414C?.Cast(UmadActions.ExdeathAutoAttack, party.Get(PartyRole.OffTank)));
-        world.Events.Add(143.61f, () => exdeath_4000414C?.Cast(ActionId.BlizzardIII_Cast, 3.1f));
+        world.Events.Add(143.61f, () => exdeath_4000414C?.Cast(ActionId.BlizzardIII_Cast, animationLock: 3.1f));
         world.Events.Add(150.66f, () => exdeath_4000414C?.Cast(UmadActions.ExdeathAutoAttack, party.Get(PartyRole.RegenHealer)));
         world.Events.Add(153.69f, () => exdeath_4000414C?.Cast(UmadActions.ExdeathAutoAttack, party.Get(PartyRole.RegenHealer)));
-        world.Events.Add(156.95f, () => exdeath_4000414C?.Cast(ActionId.BlizzardIII_Raidwide, 4.1f));
+        world.Events.Add(156.95f, () => exdeath_4000414C?.Cast(ActionId.BlizzardIII_Raidwide, animationLock: 4.1f));
         
         RunThunder(1, 42.63f, exdeath_4000414C, thunderHelper);
         RunThunder(2, 83.94f, exdeath_4000414C, thunderHelper);
@@ -322,7 +322,7 @@ public sealed class UmadP3BlackHoleScenario : IMultiplayerReplayable
     {
         SimEnemy? chaos_400040E9_1 = null;
         world.Events.Add(0.75f, () => chaos_400040E9_1 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.KefkaHelper, NameId: BNpcNameId.Chaos, Level: 1, Targetable: false, EnemyList: EnemyListMode.Never, IsVisible: false, Placement: new Placement(new Vector3(0.000f, 0.000f, 0.000f), 0.000f))));
-        world.Events.Add(0.98f, () => chaos_400040E9_1?.Cast(ActionId.Earthquake_Visual, 1.1f));
+        world.Events.Add(0.98f, () => chaos_400040E9_1?.Cast(ActionId.Earthquake_Visual, animationLock: 1.1f));
         world.Events.Add(12.29f, () => chaos_400040E9_1?.SetPosition(new Placement(new Vector3(0.000f, 0.000f, 4.000f), 0.000f)));
         world.Events.Add(12.38f, () => chaos_400040E9_1?.Cast(UmadActions.EarthquakeCleanse, state.Roles.Get(3)));
         world.Events.Add(16.30f, () => chaos_400040E9_1?.Cast(UmadActions.EarthquakeCleanse, state.Roles.Get(7)));
@@ -344,7 +344,7 @@ public sealed class UmadP3BlackHoleScenario : IMultiplayerReplayable
         world.Events.Add(14.39f, () => kefka_40004141?.PlayAnimationTimeline(TimelineId.Spawn));
         // world.Events.Add(14.91f, () => kefka_40004141?.SetVisible(true));
         
-        world.Events.Add(16.39f, () => kefka_40004141?.Cast(state.SlapAttacks[0], 6.1f));
+        world.Events.Add(16.39f, () => kefka_40004141?.Cast(state.SlapAttacks[0], animationLock: 6.1f));
         
         world.Events.Add(42.83f, () => kefka_40004141?.PlayAnimationTimeline(TimelineId.WarpOut));
         // world.Events.Add(44.15f, () => kefka_40004141?.SetVisible(false));
@@ -352,7 +352,7 @@ public sealed class UmadP3BlackHoleScenario : IMultiplayerReplayable
         world.Events.Add(44.83f, () => kefka_40004141?.PlayAnimationTimeline(TimelineId.Spawn));
         // world.Events.Add(46.53f, () => kefka_40004141?.SetVisible(true));
         
-        world.Events.Add(46.83f, () => kefka_40004141?.Cast(state.SlapAttacks[1], 6.1f));
+        world.Events.Add(46.83f, () => kefka_40004141?.Cast(state.SlapAttacks[1], animationLock: 6.1f));
         
         world.Events.Add(70.25f, () => kefka_40004141?.PlayAnimationTimeline(TimelineId.WarpOut));
         // world.Events.Add(71.80f, () => kefka_40004141?.SetVisible(false));
@@ -360,9 +360,9 @@ public sealed class UmadP3BlackHoleScenario : IMultiplayerReplayable
         world.Events.Add(72.25f, () => kefka_40004141?.PlayAnimationTimeline(TimelineId.Spawn));
         // world.Events.Add(73.93f, () => kefka_40004141?.SetVisible(true));
         
-        world.Events.Add(74.25f, () => kefka_40004141?.Cast(ActionId.LookUponMeAndDespair, 3.1f));
+        world.Events.Add(74.25f, () => kefka_40004141?.Cast(ActionId.LookUponMeAndDespair, animationLock: 3.1f));
         world.Events.Add(79.38f, () => kefka_40004141?.SetModelState((byte)0x07));
-        world.Events.Add(81.39f, () => kefka_40004141?.Cast(ActionId.StandUp_ToWall, 4.1f));
+        world.Events.Add(81.39f, () => kefka_40004141?.Cast(ActionId.StandUp_ToWall, animationLock: 4.1f));
         world.Events.Add(82.20f, () => kefka_40004141?.SetModelState((byte)0x05));
         
         world.Events.Add(106.81f, () => kefka_40004141?.PlayAnimationTimeline(TimelineId.WarpOut));
@@ -371,7 +371,7 @@ public sealed class UmadP3BlackHoleScenario : IMultiplayerReplayable
         world.Events.Add(108.81f, () => kefka_40004141?.PlayAnimationTimeline(TimelineId.Spawn));
         // world.Events.Add(114.53f, () => kefka_40004141?.SetVisible(true));
         
-        world.Events.Add(114.81f, () => kefka_40004141?.Cast(state.SlapAttacks[2], 6.1f));
+        world.Events.Add(114.81f, () => kefka_40004141?.Cast(state.SlapAttacks[2], animationLock: 6.1f));
         
         world.Events.Add(128.26f, () => kefka_40004141?.PlayAnimationTimeline(TimelineId.WarpOut));
         // world.Events.Add(129.77f, () => kefka_40004141?.SetVisible(false));
@@ -379,12 +379,12 @@ public sealed class UmadP3BlackHoleScenario : IMultiplayerReplayable
         world.Events.Add(130.26f, () => kefka_40004141?.PlayAnimationTimeline(TimelineId.Spawn));
         // world.Events.Add(132.02f, () => kefka_40004141?.SetVisible(true));
         
-        world.Events.Add(132.26f, () => kefka_40004141?.Cast(ActionId.LookUponMeAndDespair2, 3.1f));
+        world.Events.Add(132.26f, () => kefka_40004141?.Cast(ActionId.LookUponMeAndDespair2, animationLock: 3.1f));
         world.Events.Add(137.40f, () => kefka_40004141?.SetModelState((byte)0x07));
-        world.Events.Add(139.41f, () => kefka_40004141?.Cast(ActionId.StandUp_Levitate, 4.1f));
+        world.Events.Add(139.41f, () => kefka_40004141?.Cast(ActionId.StandUp_Levitate, animationLock: 4.1f));
         world.Events.Add(140.22f, () => kefka_40004141?.SetModelState((byte)0x06));
         
-        world.Events.Add(145.52f, () => kefka_40004141?.Cast(ActionId.StompAMole_Cast, 8.1f));
+        world.Events.Add(145.52f, () => kefka_40004141?.Cast(ActionId.StompAMole_Cast, animationLock: 8.1f));
         world.Events.Add(152.13f, () => kefka_40004141?.SetModelState((byte)0x05));
     }
 

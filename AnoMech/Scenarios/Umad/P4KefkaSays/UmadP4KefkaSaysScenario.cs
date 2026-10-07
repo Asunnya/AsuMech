@@ -194,58 +194,58 @@ public sealed class UmadP4KefkaSaysScenario : IMultiplayerReplayable
         SimEnemy? kefka_40004142 = null;
         world.Events.Add(0f, () => kefka_40004142 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.Kefka, NameId: BNpcNameId.Kefka, Level: 100, Targetable: true, EnemyList: EnemyListMode.Always, IsVisible: true, Placement: new Placement(new Vector3(0.000f, 0.000f, 0.000f), 3.140f))));
         world.Events.Add(1.36f, () => kefka_40004142?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
-        world.Events.Add(1.45f, () => kefka_40004142?.Cast(ActionId.KefkaSays, 3.1f));
+        world.Events.Add(1.45f, () => kefka_40004142?.Cast(ActionId.KefkaSays, animationLock: 3.1f));
         world.Events.Add(9.41f, () => kefka_40004142?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
-        world.Events.Add(9.59f, () => kefka_40004142?.Cast(ActionId.KefkaPoof, 1.1f));
+        world.Events.Add(9.59f, () => kefka_40004142?.Cast(ActionId.KefkaPoof, animationLock: 1.1f));
         world.Events.Add(10.93f, () => kefka_40004142?.AttachLockonVfx(state.Mystery[0].Blizzard.Lockon, persistent: false));
         world.Events.Add(10.93f, () => kefka_40004142?.AttachLockonVfx(state.Mystery[0].Lightning.Lockon, persistent: false));
-        world.Events.Add(11.02f, () => kefka_40004142?.Cast(ActionId.MysteryMagic, 3.1f));
+        world.Events.Add(11.02f, () => kefka_40004142?.Cast(ActionId.MysteryMagic, animationLock: 3.1f));
         world.Events.Add(17.45f, () => kefka_40004142?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(20.49f, () => kefka_40004142?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(23.53f, () => kefka_40004142?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(25.85f, () => kefka_40004142?.AttachLockonVfx(state.Mystery[1].Blizzard.Lockon, persistent: false));
         world.Events.Add(25.85f, () => kefka_40004142?.AttachLockonVfx(state.Mystery[1].Lightning.Lockon, persistent: false));
-        world.Events.Add(25.94f, () => kefka_40004142?.Cast(ActionId.MysteryMagic, 3.1f));
+        world.Events.Add(25.94f, () => kefka_40004142?.Cast(ActionId.MysteryMagic, animationLock: 3.1f));
         world.Events.Add(31.57f, () => kefka_40004142?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(34.61f, () => kefka_40004142?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(37.64f, () => kefka_40004142?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(40.68f, () => kefka_40004142?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(40.99f, () => kefka_40004142?.AttachLockonVfx(state.Mystery[2].Blizzard.Lockon, persistent: false));
         world.Events.Add(40.99f, () => kefka_40004142?.AttachLockonVfx(state.Mystery[2].Lightning.Lockon, persistent: false));
-        world.Events.Add(41.08f, () => kefka_40004142?.Cast(ActionId.MysteryMagic, 3.1f));
+        world.Events.Add(41.08f, () => kefka_40004142?.Cast(ActionId.MysteryMagic, animationLock: 3.1f));
         world.Events.Add(48.76f, () => kefka_40004142?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
         
-        world.Events.Add(49.25f, () => kefka_40004142?.Cast(ActionId.KefkaRest, 2.1f));
+        world.Events.Add(49.25f, () => kefka_40004142?.Cast(ActionId.KefkaRest, animationLock: 2.1f));
         world.Events.Add(53.05f, () => kefka_40004142?.SetModelState((byte)0x04));
-        world.Events.Add(66.10f, () => kefka_40004142?.Cast(ActionId.KefkaUnrest, 2.1f));
+        world.Events.Add(66.10f, () => kefka_40004142?.Cast(ActionId.KefkaUnrest, animationLock: 2.1f));
         world.Events.Add(66.91f, () => kefka_40004142?.SetModelState((byte)0x00));
         
-        world.Events.Add(68.20f, () => kefka_40004142?.Cast(ActionId.ManaCharge, 3.1f));
+        world.Events.Add(68.20f, () => kefka_40004142?.Cast(ActionId.ManaCharge, animationLock: 3.1f));
         world.Events.Add(72.00f, () => kefka_40004142?.AddStatus(StatusId.ManaCharge));
         world.Events.Add(73.20f, () => kefka_40004142?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
         
         world.Events.Add(74.37f, () => kefka_40004142?.AddStatus(StatusId.ThunderCharged));
         world.Events.Add(74.37f, () => kefka_40004142?.AttachLockonVfx(state.Mystery[3].Lightning.Lockon, persistent: false));
-        world.Events.Add(74.45f, () => kefka_40004142?.Cast(ActionId.ThrummingThunderIII_Cast, 3.1f));
+        world.Events.Add(74.45f, () => kefka_40004142?.Cast(ActionId.ThrummingThunderIII_Cast, animationLock: 3.1f));
         world.Events.Add(81.24f, () => kefka_40004142?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(84.28f, () => kefka_40004142?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
-        world.Events.Add(84.60f, () => kefka_40004142?.Cast(ActionId.UltimaUpsurge, 2.7f));
+        world.Events.Add(84.60f, () => kefka_40004142?.Cast(ActionId.UltimaUpsurge, animationLock: 2.7f));
         
         world.Events.Add(92.33f, () => kefka_40004142?.AddStatus(StatusId.BlizzardCharged));
         world.Events.Add(92.33f, () => kefka_40004142?.AttachLockonVfx(state.Mystery[3].Blizzard.Lockon, persistent: false));
-        world.Events.Add(92.41f, () => kefka_40004142?.Cast(ActionId.BlizzardIIIBlowout_Cast, 3.1f));
+        world.Events.Add(92.41f, () => kefka_40004142?.Cast(ActionId.BlizzardIIIBlowout_Cast, animationLock: 3.1f));
         world.Events.Add(98.13f, () => kefka_40004142?.RemoveStatus(StatusId.ManaCharge));
         
         world.Events.Add(100.41f, () => kefka_40004142?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(103.45f, () => kefka_40004142?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(103.54f, () => kefka_40004142?.AttachLockonVfx(state.ManaReleaseBlizzardLockon, persistent: false));
         world.Events.Add(103.54f, () => kefka_40004142?.AttachLockonVfx(state.ManaReleaseLightningLockon, persistent: false));
-        world.Events.Add(103.63f, () => kefka_40004142?.Cast(ActionId.ManaRelease, 3.1f));
+        world.Events.Add(103.63f, () => kefka_40004142?.Cast(ActionId.ManaRelease, animationLock: 3.1f));
         world.Events.Add(113.51f, () => kefka_40004142?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(116.51f, () => kefka_40004142?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(119.54f, () => kefka_40004142?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(119.90f, () => kefka_40004142?.SetTargetable(false));
-        world.Events.Add(120.03f, () => kefka_40004142?.Cast(ActionId.LightOfJudgment_Enrage, 3.1f));
+        world.Events.Add(120.03f, () => kefka_40004142?.Cast(ActionId.LightOfJudgment_Enrage, animationLock: 3.1f));
     }
 
     private void Run_Neo_Exdeath_400041A4()
@@ -257,13 +257,13 @@ public sealed class UmadP4KefkaSaysScenario : IMultiplayerReplayable
         world.Events.Add(6.46f, () => neo_Exdeath_400041A4?.SetVisible(true));
         
         world.Events.Add(11.28f, () => neo_Exdeath_400041A4?.AddStatus(StatusId.KefkaLiesVfx, stacks: state.Wave1TrueVal, overrideStacks: true));
-        world.Events.Add(11.37f, () => neo_Exdeath_400041A4?.Cast(ActionId.GrandCross, 3.0f));
+        world.Events.Add(11.37f, () => neo_Exdeath_400041A4?.Cast(ActionId.GrandCross, animationLock: 3.0f));
         world.Events.Add(21.37f, () => neo_Exdeath_400041A4?.RemoveStatus(StatusId.KefkaLiesVfx));
         world.Events.Add(26.21f, () => neo_Exdeath_400041A4?.AddStatus(StatusId.KefkaLiesVfx, stacks: state.Wave2TrueVal, overrideStacks: true));
-        world.Events.Add(26.30f, () => neo_Exdeath_400041A4?.Cast(ActionId.GrandCross, 3.0f));
+        world.Events.Add(26.30f, () => neo_Exdeath_400041A4?.Cast(ActionId.GrandCross, animationLock: 3.0f));
         world.Events.Add(36.21f, () => neo_Exdeath_400041A4?.RemoveStatus(StatusId.KefkaLiesVfx));
         world.Events.Add(41.17f, () => neo_Exdeath_400041A4?.AddStatus(StatusId.KefkaLiesVfx, stacks: state.Wave3TrueVal, overrideStacks: true));
-        world.Events.Add(41.26f, () => neo_Exdeath_400041A4?.Cast(ActionId.GrandCross, 3.0f));
+        world.Events.Add(41.26f, () => neo_Exdeath_400041A4?.Cast(ActionId.GrandCross, animationLock: 3.0f));
         world.Events.Add(51.26f, () => neo_Exdeath_400041A4?.RemoveStatus(StatusId.KefkaLiesVfx));
         
         world.Events.Add(53.28f, () => neo_Exdeath_400041A4?.PlayAnimationTimeline(TimelineId.WarpOut));
@@ -271,7 +271,7 @@ public sealed class UmadP4KefkaSaysScenario : IMultiplayerReplayable
         world.Events.Add(55.58f, () => neo_Exdeath_400041A4?.PlayAnimationTimeline(TimelineId.NeoExdeathShow));
         
         world.Events.Add(57.30f, () => neo_Exdeath_400041A4?.AddStatus(StatusId.KefkaLiesVfx, stacks: state.Wave4TrueVal, overrideStacks: true));
-        world.Events.Add(57.39f, () => neo_Exdeath_400041A4?.Cast(state.Antilights[0].ResolveFloodAction, 3.1f));
+        world.Events.Add(57.39f, () => neo_Exdeath_400041A4?.Cast(state.Antilights[0].ResolveFloodAction, animationLock: 3.1f));
         world.Events.Add(63.39f, () => neo_Exdeath_400041A4?.RemoveStatus(StatusId.KefkaLiesVfx));
         
         world.Events.Add(65.52f, () => neo_Exdeath_400041A4?.PlayAnimationTimeline(TimelineId.WarpOut));
@@ -287,10 +287,10 @@ public sealed class UmadP4KefkaSaysScenario : IMultiplayerReplayable
         world.Events.Add(6.46f, () => chaos_400041A5?.SetVisible(true));
         
         world.Events.Add(16.42f, () => chaos_400041A5?.AddStatus(StatusId.KefkaLiesVfx, stacks: state.ChaosMysteries[0].StatusValue, overrideStacks: true));
-        world.Events.Add(16.51f, () => chaos_400041A5?.Cast(state.ChaosMysteries[0].Cast.Action, 3.0f));
+        world.Events.Add(16.51f, () => chaos_400041A5?.Cast(state.ChaosMysteries[0].Cast.Action, animationLock: 3.0f));
         world.Events.Add(26.51f, () => chaos_400041A5?.RemoveStatus(StatusId.KefkaLiesVfx));
         world.Events.Add(31.35f, () => chaos_400041A5?.AddStatus(StatusId.KefkaLiesVfx, stacks: state.ChaosMysteries[1].StatusValue, overrideStacks: true));
-        world.Events.Add(31.43f, () => chaos_400041A5?.Cast(state.ChaosMysteries[1].Cast.Action, 3.0f));
+        world.Events.Add(31.43f, () => chaos_400041A5?.Cast(state.ChaosMysteries[1].Cast.Action, animationLock: 3.0f));
         world.Events.Add(41.43f, () => chaos_400041A5?.RemoveStatus(StatusId.KefkaLiesVfx));
         
         world.Events.Add(43.49f, () => chaos_400041A5?.PlayAnimationTimeline(TimelineId.WarpOut));
@@ -324,7 +324,7 @@ public sealed class UmadP4KefkaSaysScenario : IMultiplayerReplayable
                 if (real)
                     world.Events.Add(lightTiming[k], () => kefka_400040E6_1?.Cast(mystery.Lightning.Damage));
                 else if (mystery.Lightning.OmenAction != 0)
-                    world.Events.Add(lightTiming[k], () => kefka_400040E6_1?.Cast(mystery.Lightning.OmenAction, 1.1f));
+                    world.Events.Add(lightTiming[k], () => kefka_400040E6_1?.Cast(mystery.Lightning.OmenAction, animationLock: 1.1f));
             }
         }
     }
@@ -345,7 +345,7 @@ public sealed class UmadP4KefkaSaysScenario : IMultiplayerReplayable
                 if (real)
                     world.Events.Add(blizzTiming[k], () => kefka_400040E6_1?.Cast(mystery.Blizzard.Damage));
                 else if (mystery.Blizzard.OmenAction != 0)
-                    world.Events.Add(blizzTiming[k], () => kefka_400040E6_1?.Cast(mystery.Blizzard.OmenAction, 1.1f));
+                    world.Events.Add(blizzTiming[k], () => kefka_400040E6_1?.Cast(mystery.Blizzard.OmenAction, animationLock: 1.1f));
             }
         }
     }
@@ -355,8 +355,8 @@ public sealed class UmadP4KefkaSaysScenario : IMultiplayerReplayable
         SimEnemy? chaos_400040E3_1 = null;
         world.Events.Add(16.17f, () => chaos_400040E3_1 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.KefkaHelper, NameId: BNpcNameId.Chaos, Level: 1, Targetable: false, EnemyList: EnemyListMode.Never, IsVisible: false, Placement: new Placement(new Vector3(0.000f, 0.000f, 0.000f), 0.000f))));
         world.Events.Add(16.42f, () => chaos_400040E3_1?.SetPosition(new Placement(new Vector3(0.000f, 0.000f, 0.000f), 0.000f)));
-        world.Events.Add(16.51f, () => chaos_400040E3_1?.Cast(state.ChaosMysteries[0].Cast.Visual, 1.1f));
-        world.Events.Add(31.43f, () => chaos_400040E3_1?.Cast(state.ChaosMysteries[1].Cast.Visual, 1.1f));
+        world.Events.Add(16.51f, () => chaos_400040E3_1?.Cast(state.ChaosMysteries[0].Cast.Visual, animationLock: 1.1f));
+        world.Events.Add(31.43f, () => chaos_400040E3_1?.Cast(state.ChaosMysteries[1].Cast.Visual, animationLock: 1.1f));
     }
 
 

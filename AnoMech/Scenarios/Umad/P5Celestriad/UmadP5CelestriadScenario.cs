@@ -64,7 +64,7 @@ public sealed class UmadP5CelestriadScenario : IMultiplayerReplayable
             ((IScenarioAi<UmadP5CelestriadState>)AiStrats[idx]).Run(state, world);
 
         world.Events.Add(0f, SpawnKefka);
-        world.Events.Add(1.0f, () => kefka?.Cast(ActionId.Celestriad, 3.1f));
+        world.Events.Add(1.0f, () => kefka?.Cast(ActionId.Celestriad, animationLock: 3.1f));
         world.Events.Add(6.1f, ApplyDebuffs);
         world.Events.Add(6.1f, SpawnAllTowers);
         world.Events.Add(6.1f, () => ActivateTowers(0));
@@ -110,7 +110,7 @@ public sealed class UmadP5CelestriadScenario : IMultiplayerReplayable
     private void LaunchChoice(int set)
     {
         if (state.AeroVariant[set] is not { } choice || kefka is null) return;
-        kefka.Cast(choice.CastActionId, 3.8f);
+        kefka.Cast(choice.CastActionId, animationLock: 3.8f);
     }
 
 

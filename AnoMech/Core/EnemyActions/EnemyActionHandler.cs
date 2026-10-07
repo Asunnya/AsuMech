@@ -10,18 +10,19 @@ using FFXIVClientStructs.FFXIV.Client.Game.Object;
 
 namespace AnoMech.Core.EnemyActions;
 
-// Runs EnemyActions for one SimEnemy: the visuals go through SimEnemy.NativeCast /
-// NativeActionEffect, everything mechanical goes on the scenario's EventScheduler.
-internal sealed class EnemyActionHandler(SimEnemy caster, SimWorld world)
+// Runs EnemyActions for one SimEnemy: the visuals go out as its SimCast's packets, everything
+// mechanical goes on the scenario's EventScheduler.
+internal sealed class EnemyActionHandler(SimEnemy caster, SimCast cast, SimWorld world)
 {
-    private (EnemyActionCast Handle, uint ActionId)? casting;
+    private EnemyActionCast? casting;
 
-    // `target` and `location` are exclusive; neither = centred on the caster.
-    public EnemyActionCast Start(EnemyAction action, SimCharacter? target, Vector3? location, byte animationVariation)
+    public EnemyActionCast Start(EnemyAction action, CastTarget at, byte animationVariation)
     {
         var handle = new EnemyActionCast();
         var id = action.ActionId;
-        var sheetCastTime = Natives.Data.Action(id)?.CastSeconds ?? 0f;
+        var target = at.Character;
+        var location = at.Location;
+        var sheetCastTime = action.Cast.CastSeconds ?? Natives.Data.Action(id)?.CastSeconds ?? 0f;
         var castTime = MathF.Max(0f, sheetCastTime - CastSpec.ReleaseLead);
         GameObjectId? castTarget = location is null ? (target ?? caster).GameObjectId : null;
         DiagnosticLog.Info(
@@ -29,34 +30,33 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimWorld world)
 
         if (castTime > 0f)
         {
-            casting = (handle, id);
-            caster.NativeCast(id, ActionType.Action, action.Cast.OmenDelay, castTime, interruptible: false,
+            casting = handle;
+            cast.NativeCast(id, ActionType.Action, action.Cast.OmenDelay, castTime, interruptible: false,
                 rotation: caster.Rotation + action.Area.Rotation, position: location, targetId: castTarget);
         }
 
         Schedule(sheetCastTime, () =>
         {
             if (handle.IsCancelled) return;
-            if (casting?.Handle == handle) casting = null;
+            if (casting == handle) casting = null;
             Release(action, target, location, castTarget, animationVariation);
         });
         if (action.Effects.Count > 0)
             Schedule(castTime + action.Timing.ResolveSnapshotOffset, () =>
             {
                 if (handle.IsCancelled) return;
-                if (casting?.Handle == handle) casting = null;
+                if (casting == handle) casting = null;
                 Resolve(action, target, location, handle);
             });
         return handle;
     }
 
-    // The interrupt is the ActorControl the server sends for an interrupted enemy cast.
     public void CancelCast()
     {
-        if (casting is not { } cast) return;
+        if (casting is not { } handle) return;
         casting = null;
-        cast.Handle.Cancelled();
-        caster.ActorControl(15, 540, 1, cast.ActionId, 1);
+        handle.Cancelled();
+        cast.Cancel();
     }
 
     // Faces a target first: the packet carries the caster's rotation. A ground location doesn't turn
@@ -71,7 +71,7 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimWorld world)
         GameObjectId? deliverTo = target is not null && Natives.BattleCharas.IsInCharacterManager(target.GameObjectId.ObjectId)
             ? target.GameObjectId
             : null;
-        caster.NativeActionEffect(
+        cast.NativeActionEffect(
             id, action.Cast.AnimationLock, (ushort)id, animationVariation, ActionType.Action, 0,
             position: aim ?? caster.Position, animationTargetId: castTarget, actionTargetId: deliverTo);
     }

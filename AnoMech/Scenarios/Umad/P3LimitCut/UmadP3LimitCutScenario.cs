@@ -87,12 +87,11 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
             world.Events.Add(at, () => state.Objects.Chaos?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
         foreach (var at in ExdeathAutoAt)
             world.Events.Add(at, () => state.Objects.Exdeath?.Cast(UmadActions.ExdeathAutoAttack, party.Get(PartyRole.OffTank)));
-        // Kefka's second trance beat, instant although the sheet gives it a 3s cast. The real
-        // packet refreshes the aura in place; AddStatusParam adds a slot, so drop the first or
-        // Kefka wears two auras at once.
+        // The real packet refreshes Kefka's trance aura in place; AddStatusParam adds a slot, so
+        // drop the first or Kefka wears two auras at once.
         world.Events.Add(6.75f, () =>
         {
-            state.Objects.Kefka?.Cast(ActionId.RingOfFire, castSeconds: 0f, animationLock: 0.6f);
+            state.Objects.Kefka?.Cast(UmadActions.RingOfFire);
             state.Objects.Kefka?.RemoveStatus(StatusId.KefkaTrance);
             state.Objects.Kefka?.AddStatusParam(StatusId.KefkaTrance, 0x22B);
         });
@@ -116,8 +115,8 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
         world.Events.Add(19.967f, ResolveCyclones);
         world.Events.Add(21.379f, () =>
         {
-            state.Objects.Chaos?.Cast(ActionId.Aetherlink_Chaos, 3.1f);
-            state.Objects.Exdeath?.Cast(ActionId.Aetherlink_Exdeath, 3.1f);
+            state.Objects.Chaos?.Cast(ActionId.Aetherlink_Chaos, animationLock: 3.1f);
+            state.Objects.Exdeath?.Cast(ActionId.Aetherlink_Exdeath, animationLock: 3.1f);
         });
         for (var k = 0; k < 8; k++)
         {
@@ -126,7 +125,7 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
             world.Events.Add(ChargeAt[k], () => ResolveCharge(clone));
         }
         world.Events.Add(33.29f, () => state.Objects.Exdeath?.Follow());
-        world.Events.Add(33.49f, () => state.Objects.Exdeath?.Cast(ActionId.ThunderIII_Cast, 3.1f));
+        world.Events.Add(33.49f, () => state.Objects.Exdeath?.Cast(ActionId.ThunderIII_Cast, animationLock: 3.1f));
         world.Events.Add(38.57f, ResolveThunder);
         world.Events.Add(41.60f, ResolveThunder);
         world.Events.Add(42.10f, () => state.Objects.Exdeath?.Follow(party.Get(PartyRole.OffTank)));
@@ -137,8 +136,8 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
         });
         world.Events.Add(43.50f, () =>
         {
-            state.Objects.Chaos?.Cast(ActionId.DecisiveBattle_Chaos, 3.1f);
-            state.Objects.Exdeath?.Cast(ActionId.DecisiveBattle_Exdeath, 3.1f);
+            state.Objects.Chaos?.Cast(ActionId.DecisiveBattle_Chaos, animationLock: 3.1f);
+            state.Objects.Exdeath?.Cast(ActionId.DecisiveBattle_Exdeath, animationLock: 3.1f);
         });
         world.Events.Add(46.49f, ResolveDecisiveBattle);
         world.Events.Add(46.69f, () =>

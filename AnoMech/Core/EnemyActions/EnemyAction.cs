@@ -26,6 +26,10 @@ public sealed record CastSpec
 
     public float AnimationLock { get; init; } = 0.6f;
     public float OmenDelay { get; init; }
+
+    // Replaces the sheet's Cast100ms. Set it only when the fight casts the action for a different
+    // time than the sheet says; check the sheet first, it is nearly always right.
+    public float? CastSeconds { get; init; }
 }
 
 // Shape defaults to the Action sheet (see CharacterFind.InsideActionAoe), centred on the cast

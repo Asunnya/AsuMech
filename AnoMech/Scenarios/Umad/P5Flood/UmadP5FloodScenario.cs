@@ -120,7 +120,7 @@ public sealed class UmadP5FloodScenario : IMultiplayerReplayable
             ((IScenarioAi<UmadP5FloodState>)AiStrats[idx]).Run(state, world);
 
         world.Events.Add(0f, SpawnKefka);
-        world.Events.Add(FloodCastStart, () => kefka?.Cast(ActionId.FloodCast, FloodCastAnimationLock));
+        world.Events.Add(FloodCastStart, () => kefka?.Cast(ActionId.FloodCast, animationLock: FloodCastAnimationLock));
 
         var neSw = MarchPairs(NeSwMarch, state.NeSwReversed);
         var nwSe = MarchPairs(NwSeMarch, state.NwSeReversed);
@@ -210,8 +210,8 @@ public sealed class UmadP5FloodScenario : IMultiplayerReplayable
         var helpers = tickHelpers[tick] ??= [null, null];
         EnsureCarrier(ref helpers[0], a, rotation);
         EnsureCarrier(ref helpers[1], b, rotation);
-        helpers[0]?.Cast(ActionId.FloodTelegraph, HelperAnimationLock);
-        helpers[1]?.Cast(ActionId.FloodTelegraph, HelperAnimationLock);
+        helpers[0]?.Cast(ActionId.FloodTelegraph, animationLock: HelperAnimationLock);
+        helpers[1]?.Cast(ActionId.FloodTelegraph, animationLock: HelperAnimationLock);
         // The cast alone draws the telegraph (the native ActorCastPacket path spawns the sheet
         // omen); an explicit SpawnOmen on top drew a second one.
     }

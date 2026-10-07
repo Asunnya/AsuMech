@@ -38,7 +38,6 @@ public sealed class UcobP5ExaflaresState
     public const int PairCount = 3;
     public const float PairInterval = 3f;
     public const float BossCastAt = 3f;
-    public const float BossCastSeconds = 3.7f;
     public const float FirstTelegraphAt = BossCastAt + 2.01f;
 
     // Perpendicular offsets of the six lanes, in firing-agnostic order.

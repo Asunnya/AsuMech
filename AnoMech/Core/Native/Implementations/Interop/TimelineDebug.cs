@@ -144,7 +144,7 @@ internal static unsafe class TimelineDebug
         }
         Arm();
         DiagnosticLog.Info($"[TimelineDebug] Action effect {actionId} on test spawn at {enemy.Position} rot={enemy.Rotation:F3} (territory {Plugin.ClientState.TerritoryType}).");
-        enemy.NativeActionEffect(actionId, 1.1f, (ushort)actionId, 0, ActionType.Action, 0,
+        enemy.Casting.NativeActionEffect(actionId, 1.1f, (ushort)actionId, 0, ActionType.Action, 0,
             position: game.World.Coordinates.ToLocal(Vector3.Zero), animationTargetId: enemy.GameObjectId);
         enemy.StartTimelineWatch(4f);
     }

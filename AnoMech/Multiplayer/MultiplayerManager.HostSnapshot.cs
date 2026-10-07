@@ -78,7 +78,7 @@ public sealed partial class MultiplayerManager
             hostEnemyLastLoggedStatuses.Remove(stale);
             hostEnemyLastLoggedAnimationTimeline.Remove(stale);
             hostEnemyLastLoggedAnimationState.Remove(stale);
-            hostEnemyLastLoggedInstantCastSeq.Remove(stale);
+            hostEnemyLastLoggedEffectSeq.Remove(stale);
         }
 
         var enemies = new List<EnemyState>(liveEnemies.Count);
@@ -118,21 +118,22 @@ public sealed partial class MultiplayerManager
                 hostEnemyLastLoggedAnimationState[enemy] = enemy.AnimationStateSeq;
                 DiagnosticLog.Info($"[Multiplayer] Host: enemy NetId {netId} (BNpcBase {enemy.BNpcBaseId}) AnimationState -> ({animState.Arg2},{animState.Arg3}) (seq {enemy.AnimationStateSeq}).");
             }
+            var casting = enemy.Casting;
             // Pairs with the peer's line, so a missing effect narrows to the send or the receive.
-            if (enemy.LastInstantCastSeq > 0
-                && (!hostEnemyLastLoggedInstantCastSeq.TryGetValue(enemy, out var lastInstantLogged) || lastInstantLogged != enemy.LastInstantCastSeq))
+            if (casting.EffectSeq > 0
+                && (!hostEnemyLastLoggedEffectSeq.TryGetValue(enemy, out var lastEffectLogged) || lastEffectLogged != casting.EffectSeq))
             {
-                hostEnemyLastLoggedInstantCastSeq[enemy] = enemy.LastInstantCastSeq;
-                DiagnosticLog.Info($"[Multiplayer] Host: enemy NetId {netId} (BNpcBase {enemy.BNpcBaseId}) instant cast -> action {enemy.LastInstantCastActionId} "
-                    + $"(seq {enemy.LastInstantCastSeq}, native={enemy.LastInstantCastIsNativeEffect}, lock={enemy.LastInstantCastAnimationLock:F2}).");
+                hostEnemyLastLoggedEffectSeq[enemy] = casting.EffectSeq;
+                DiagnosticLog.Info($"[Multiplayer] Host: enemy NetId {netId} (BNpcBase {enemy.BNpcBaseId}) effect -> action {casting.EffectActionId} "
+                    + $"(seq {casting.EffectSeq}, lock={casting.EffectAnimationLock:F2}).");
             }
-            var (castTargetEnemyNetId, castTargetRole) = ResolveTargetId(world, enemy.CastTargetId);
-            var (instantTargetEnemyNetId, instantTargetRole) = ResolveTargetId(world, enemy.LastInstantCastTargetId);
-            var (instantActionTargetEnemyNetId, instantActionTargetRole) = ResolveTargetId(world, enemy.LastInstantCastActionTargetId);
+            var (castTargetEnemyNetId, castTargetRole) = ResolveTargetId(world, casting.TargetId);
+            var (effectAnimationTargetEnemyNetId, effectAnimationTargetRole) = ResolveTargetId(world, casting.EffectAnimationTargetId);
+            var (effectActionTargetEnemyNetId, effectActionTargetRole) = ResolveTargetId(world, casting.EffectActionTargetId);
             var newVfx = DrainVfx(enemy, who);
             SimAssets.WarnIfUnknown(SimAssetKind.BNpcBase, enemy.BNpcBaseId, "enemy BNpcBase");
-            SimAssets.WarnIfUnknown(SimAssetKind.Action, enemy.CastActionId, "enemy cast");
-            SimAssets.WarnIfUnknown(SimAssetKind.Action, enemy.LastInstantCastActionId, "enemy instant cast");
+            SimAssets.WarnIfUnknown(SimAssetKind.Action, casting.ActionId, "enemy cast");
+            SimAssets.WarnIfUnknown(SimAssetKind.Action, casting.EffectActionId, "enemy effect");
             if (enemy.AnimationTimelineId is { } hostTimelineId)
                 SimAssets.WarnIfUnknown(SimAssetKind.Timeline, hostTimelineId, "enemy timeline");
             foreach (var hostLockon in newLockonVfxIds)
@@ -150,16 +151,16 @@ public sealed partial class MultiplayerManager
                 enemy.AnimationTimelineId, enemy.AnimationTimelineSeq, newLockonVfxIds,
                 enemy.AnimationState?.Arg2, enemy.AnimationState?.Arg3, enemy.AnimationStateSeq,
                 enemy.Position.X, enemy.Position.Y, enemy.Position.Z, enemy.Rotation,
-                enemy.IsCasting, enemy.CastSeq, enemy.CastActionId, enemy.CastTotalSeconds, enemy.CastOmenDelay, enemy.CastOmenRotate,
-                enemy.CastTargetLocation?.X, enemy.CastTargetLocation?.Y, enemy.CastTargetLocation?.Z,
+                casting.IsCasting, casting.CastSeq, casting.ActionId, casting.Total, casting.OmenDelay, casting.Rotation,
+                casting.TargetLocation?.X, casting.TargetLocation?.Y, casting.TargetLocation?.Z,
                 castTargetEnemyNetId, castTargetRole,
-                enemy.LastInstantCastSeq, enemy.LastInstantCastActionId,
-                enemy.LastInstantCastTargetLocation?.X, enemy.LastInstantCastTargetLocation?.Y, enemy.LastInstantCastTargetLocation?.Z,
-                instantTargetEnemyNetId, instantTargetRole,
+                casting.CancelSeq,
+                casting.EffectSeq, casting.EffectActionId, casting.EffectAnimationLock, casting.EffectAnimationVariation, casting.EffectRotation,
+                casting.EffectPosition?.X, casting.EffectPosition?.Y, casting.EffectPosition?.Z,
+                effectAnimationTargetEnemyNetId, effectAnimationTargetRole,
+                effectActionTargetEnemyNetId, effectActionTargetRole,
                 UmadRealPackets.NpcSpawnTemplateName(cfg.NpcSpawnTemplate), cfg.PacketSpawnEnableDraw,
-                enemy.LastInstantCastIsNativeEffect, enemy.LastInstantCastAnimationLock,
-                instantActionTargetEnemyNetId, instantActionTargetRole,
-                newVfx, enemy.LastInstantCastRawPacket,
+                newVfx,
                 enemy.HasEngineState
                     ? new ActorEngineState(
                         enemy.ModelHidden, enemy.LastMode?.Mode ?? 0, enemy.LastMode?.Param ?? 0, enemy.ModeSeq,
@@ -326,7 +327,7 @@ public sealed partial class MultiplayerManager
         return (null, null);
     }
 
-    // ResolveEnd for a Cast() target, which SimCast stores as a raw GameObjectId.
+    // ResolveEnd for a cast packet's target, which SimCast stores as a raw GameObjectId.
     private (int? enemyNetId, PartyRole? role) ResolveTargetId(SimWorld world, GameObjectId? targetId)
     {
         if (targetId is not { } id) return (null, null);

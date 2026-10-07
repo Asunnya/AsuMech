@@ -40,7 +40,7 @@ public sealed partial class MultiplayerManager : IDisposable
     private readonly Dictionary<SimEnemy, Dictionary<(ushort Id, int Ordinal), ushort>> hostEnemyLastLoggedStatuses = new();
     private readonly Dictionary<SimEnemy, int> hostEnemyLastLoggedAnimationTimeline = new();
     private readonly Dictionary<SimEnemy, int> hostEnemyLastLoggedAnimationState = new();
-    private readonly Dictionary<SimEnemy, int> hostEnemyLastLoggedInstantCastSeq = new();
+    private readonly Dictionary<SimEnemy, int> hostEnemyLastLoggedEffectSeq = new();
     private readonly Dictionary<PartyRole, Dictionary<(ushort Id, int Ordinal), ushort>> hostRoleLastLoggedStatuses = new();
     private readonly Dictionary<PartyRole, int> hostRoleLastLoggedAnimationTimeline = new();
 
@@ -56,8 +56,9 @@ public sealed partial class MultiplayerManager : IDisposable
     private readonly Dictionary<int, Dictionary<(ushort Id, int Ordinal), ushort>> peerEnemyLastLoggedStatuses = new();
     private readonly Dictionary<int, int> peerEnemyAnimationTimeline = new();
     private readonly Dictionary<int, int> peerEnemyAnimationState = new();
-    private readonly Dictionary<int, int> peerEnemyLastInstantCastSeq = new();
+    private readonly Dictionary<int, int> peerEnemyLastEffectSeq = new();
     private readonly Dictionary<int, int> peerEnemyLastCastSeq = new();
+    private readonly Dictionary<int, int> peerEnemyLastCancelSeq = new();
     // NetIds whose real-packet spawn the engine dropped locally; recreated as plain doppels.
     private readonly HashSet<int> peerEnemyTemplateFailed = new();
     private readonly Dictionary<int, ushort> peerEventObjectState = new();
@@ -368,7 +369,7 @@ public sealed partial class MultiplayerManager : IDisposable
         hostEnemyLastLoggedStatuses.Clear();
         hostEnemyLastLoggedAnimationTimeline.Clear();
         hostEnemyLastLoggedAnimationState.Clear();
-        hostEnemyLastLoggedInstantCastSeq.Clear();
+        hostEnemyLastLoggedEffectSeq.Clear();
         hostRoleLastLoggedStatuses.Clear();
         hostRoleLastLoggedAnimationTimeline.Clear();
         hostTetherNetIds.Clear();
@@ -378,8 +379,9 @@ public sealed partial class MultiplayerManager : IDisposable
         peerEnemyLastLoggedStatuses.Clear();
         peerEnemyAnimationTimeline.Clear();
         peerEnemyAnimationState.Clear();
-        peerEnemyLastInstantCastSeq.Clear();
+        peerEnemyLastEffectSeq.Clear();
         peerEnemyLastCastSeq.Clear();
+        peerEnemyLastCancelSeq.Clear();
         peerEnemyTemplateFailed.Clear();
         peerRoleLastLoggedStatuses.Clear();
         peerRoleAnimationTimelineSeq.Clear();
@@ -953,7 +955,7 @@ public sealed partial class MultiplayerManager : IDisposable
         hostEnemyLastLoggedStatuses.Clear();
         hostEnemyLastLoggedAnimationTimeline.Clear();
         hostEnemyLastLoggedAnimationState.Clear();
-        hostEnemyLastLoggedInstantCastSeq.Clear();
+        hostEnemyLastLoggedEffectSeq.Clear();
         hostRoleLastLoggedStatuses.Clear();
         hostRoleLastLoggedAnimationTimeline.Clear();
         hostTetherNetIds.Clear();
@@ -1041,8 +1043,9 @@ public sealed partial class MultiplayerManager : IDisposable
         peerEnemyLastLoggedStatuses.Clear();
         peerEnemyAnimationTimeline.Clear();
         peerEnemyAnimationState.Clear();
-        peerEnemyLastInstantCastSeq.Clear();
+        peerEnemyLastEffectSeq.Clear();
         peerEnemyLastCastSeq.Clear();
+        peerEnemyLastCancelSeq.Clear();
         peerEnemyTemplateFailed.Clear();
         peerRoleLastLoggedStatuses.Clear();
         peerRoleAnimationTimelineSeq.Clear();
