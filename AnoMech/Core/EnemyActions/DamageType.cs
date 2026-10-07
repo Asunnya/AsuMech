@@ -19,4 +19,5 @@ public enum DamageType
     Black,
     White,
     Physical,
+    Unique,
 }

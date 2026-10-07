@@ -57,20 +57,20 @@ public class TopP5SigmaScenarioTests
     public void DiesWalkingIntoWall()
         => Sigma(RegenHealer)
             .TeleportAt(5f, to: OutsideArena)
-            .ShouldKill(ArenaWall, RegenHealer);
+            .ShouldKill(TheEnvironment, RegenHealer);
 
     [Test]
     public void DyingWithNearWorldWipes()
         => Sigma(OffTank)
             .TeleportAt(12f, to: OutsideArena)
-            .ShouldKill(ArenaWall, OffTank)
+            .ShouldKill(TheEnvironment, OffTank)
             .ShouldKill(ActionId.HelloWorldFail, AllBut(OffTank));
 
     [Test]
     public void DyingWithDistantWorldWipes()
         => Sigma(ShieldHealer)
             .TeleportAt(12f, to: OutsideArena)
-            .ShouldKill(ArenaWall, ShieldHealer)
+            .ShouldKill(TheEnvironment, ShieldHealer)
             .ShouldKill(ActionId.HelloWorldFail, AllBut(ShieldHealer));
 
     // 18.5 from M1, under Mid Glitch's 20: both carry Vulnerability Up into their cones.
@@ -118,7 +118,7 @@ public class TopP5SigmaScenarioTests
     public void KnockedIntoWall()
         => Sigma(PhysRangedDps)
             .TeleportAt(39.6f, to: new(8, 0))
-            .ShouldKill(ArenaWall, PhysRangedDps);
+            .ShouldKill(TheEnvironment, PhysRangedDps);
 
     // 21.4 from MT, so the tether stays clean and only OT's tower is missing.
     [Test]

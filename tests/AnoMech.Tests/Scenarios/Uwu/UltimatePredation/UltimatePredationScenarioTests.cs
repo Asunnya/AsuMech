@@ -72,7 +72,7 @@ public class UltimatePredationScenarioTests
     public void DiesWalkingIntoWall()
         => Predation(RegenHealer)
             .TeleportAt(5f, to: new(0, 20.5f))
-            .ShouldKill(ArenaWall, RegenHealer);
+            .ShouldKill(TheEnvironment, RegenHealer);
 
     // Clear of the Crimson Cyclone band Garuda itself stands in.
     [Test]
@@ -99,7 +99,7 @@ public class UltimatePredationScenarioTests
     public void LandslideKnocksIntoWall()
         => Predation(RegenHealer)
             .TeleportAt(19.5f, to: new(-12, -3))
-            .ShouldKill(ArenaWall, RegenHealer);
+            .ShouldKill(TheEnvironment, RegenHealer);
 
     [Test]
     public void DiesToCeruleumVent()

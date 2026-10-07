@@ -52,7 +52,7 @@ public class UcobP5ExaflaresScenarioTests
     public void DiesWalkingIntoWall()
         => Exaflares(RegenHealer)
             .TeleportAt(5f, to: new(0, 22))
-            .ShouldKill(ArenaWall, RegenHealer);
+            .ShouldKill(TheEnvironment, RegenHealer);
 
     [TestCase(0)]
     [TestCase(1)]

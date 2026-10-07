@@ -1,3 +1,5 @@
+using AnoMech.Core.Game.Party;
+
 namespace AnoMech.Scenarios.Umad.P4KefkaSays;
 
 // Exdeath cast 2's Real/Fake override. Unlike the other casts it can also mirror
@@ -10,9 +12,12 @@ public enum ExdeathCast2Mode { Auto, Real, Fake, OppositeTo1 }
 // See UmadP2ForsakenStateOverrides for the canonical shape.
 public sealed class UmadP4KefkaSaysStateOverrides
 {
-    public bool? FirstBlizzardReal { get; set; }    // null = random; true = Real, false = Fake (debug-only UI)
-    public bool? FirstLightningReal { get; set; }   // null = random; true = Real, false = Fake (debug-only UI)
-    public int?  FirstBlizzardOffset { get; set; }  // null = random; else 0 or 1 (debug-only UI)
+    // Kefka's five Mystery casts, by cast order (only [0] has debug-only UI). null = random.
+    public bool?[] BlizzardReal { get; } = new bool?[5];
+    public bool?[] LightningReal { get; } = new bool?[5];
+    public int?[] BlizzardOffset { get; } = new int?[5];       // 0 or 1
+    public int?[] LightningOffset { get; } = new int?[5];      // 0 or 1
+    public float?[] LightningOrientation { get; } = new float?[5]; // +1 or -1
 
     // Neo Exdeath's four Mystery casts (3x Grand Cross + Flood of Naught), by cast order.
     // null = random; true = Real (boss tells the truth), false = Fake (boss lies).
@@ -25,4 +30,14 @@ public sealed class UmadP4KefkaSaysStateOverrides
     // null = random; true = Real, false = Fake.
     public bool? ChaosCast1Real { get; set; }
     public bool? ChaosCast2Real { get; set; }
+    public bool? InfernoFirst { get; set; }
+
+    // No UI: tests pin these so the AI's coordinates are fixed.
+    public bool? Wave1First { get; set; }
+    public PartyRole[]? Wave1 { get; set; }               // supports in [0..3], dps in [4..7]
+    public bool?[] Wave2Swaps { get; } = new bool?[4];    // swap the pair Wave2[2i], Wave2[2i+1]
+    public PartyRole[]? Wave3 { get; set; }               // supports in [0..3], dps in [4..7]
+    public bool[]? Wounds { get; set; }                   // by Wave3 index; true = White
+    public Direction? NeoExdeathDirection { get; set; }
+    public bool? Antilight0White { get; set; }
 }

@@ -104,7 +104,7 @@ public class TopP2PartySynergyScenarioTests
     public void DiesKnockedBackIntoWall()
         => Healer(PlaystationSymbol.Circle, GlitchType.Mid)
             .TeleportAt(27f, to: new(-8, 0))
-            .ShouldKill(ArenaWall, RegenHealer);
+            .ShouldKill(TheEnvironment, RegenHealer);
 
     // Leaves after Efficient Bladework, so only Spotlight is left to resolve.
     [Test]

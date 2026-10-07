@@ -15,7 +15,7 @@ namespace AnoMech.Tests;
 //         .ShouldKill(ActionId.BeyondStrength, PartyRole.MeleeDpsA);
 internal static class NegativeRun
 {
-    public const uint ArenaWall = SimCharacterDeathExtensions.NoAction;
+    public const uint TheEnvironment = SimCharacterDeathExtensions.Environment;
 
     public static NegativeRun<TScenario> Negative<TScenario>(PartyRole role, int strat = 0) where TScenario : IScenario
         => new(role, strat);
@@ -75,7 +75,7 @@ internal sealed class NegativeRun<TScenario>(PartyRole role, int strat) where TS
         => Judge(() => $"someone to die to {NameOf(actionId)}", actionId, PerRole.All, []);
 
     private static string NameOf(uint actionId)
-        => actionId == NegativeRun.ArenaWall ? "the arena wall" : $"{ActionLookup.Name(actionId)} ({actionId})";
+        => actionId == NegativeRun.TheEnvironment ? "the environment" : $"{ActionLookup.Name(actionId)} ({actionId})";
 
     private ScenarioRun? run;
     private int runSeed;

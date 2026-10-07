@@ -78,8 +78,8 @@ public static class SimCharacterDeathExtensions
     public static bool IsAlive(this SimCharacter? c)
         => c is { IsActive: true } and not ISimPartyMember { Dead: true };
 
-    // A death no action deals (the arena wall): Die's explanation is then the whole message.
-    public const uint NoAction = 0;
+    // A death no action deals (the arena wall, an uncleansed debuff): Die's explanation is then the whole message.
+    public const uint Environment = 0;
 
     // Death is party-member-only. Calling Die on a non-party character is a no-op
     // (logged) — bosses are removed via Despawn, not killed.
@@ -91,7 +91,7 @@ public static class SimCharacterDeathExtensions
         // The message is the action's name, with `explanation` after it in parentheses.
         public bool Die(uint actionId, string? explanation = null)
         {
-            var name = actionId == NoAction ? null : ActionLookup.Name(actionId);
+            var name = actionId == Environment ? null : ActionLookup.Name(actionId);
             var message = name is null ? explanation ?? "" : explanation is null ? name : $"{name} ({explanation})";
             return Kill(c, message, actionId);
         }

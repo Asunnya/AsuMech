@@ -61,13 +61,13 @@ public class UmadP3LimitCutScenarioTests
     public void WrongFacingForWindFallsOff(PartyRole player, float facing)
         => LimitCut(player)
             .TeleportAt(15.5f, to: new(0, -7), facing: facing)
-            .ShouldKill(ArenaWall, player);
+            .ShouldKill(TheEnvironment, player);
 
     [Test]
     public void CorrectFacingAtEdgeFallsOff()
         => LimitCut(CasterDps)
             .TeleportAt(15.5f, to: new(-15, -7), facing: FacingEast)
-            .ShouldKill(ArenaWall, CasterDps);
+            .ShouldKill(TheEnvironment, CasterDps);
 
     [Test]
     public void CycloneAloneDies()

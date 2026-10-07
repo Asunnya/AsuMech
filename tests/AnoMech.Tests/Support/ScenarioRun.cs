@@ -1,6 +1,7 @@
 using System.Numerics;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Party;
+using AnoMech.Core.Native.Interfaces;
 using AnoMech.Core.SimObjects;
 using AnoMech.Scenarios;
 
@@ -203,6 +204,9 @@ internal sealed class ScenarioProbe(Game game, TraceLog log, Func<IEnumerable<Ao
 
     // True on the one frame the scenario clock passes `time`.
     public bool Crossed(float time) => previousTime < time && Time >= time;
+
+    // The player keeps walking from now on, as far as stillness mechanics can tell.
+    public void HoldMovementInput() => ((FakeLocalPlayerInput)Natives.PlayerInput).MovementInputActive = true;
 
     public void Log(string message) => log.Add("PROBE", message);
 

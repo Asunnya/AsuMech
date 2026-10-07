@@ -11,7 +11,6 @@ public static class UwuActions
     private static readonly DamageSpec Magic = DamageType.Magic;
     private static readonly DamageSpec Physical = DamageType.Physical;
 
-    // Don't hit player in gaol
     private static readonly AreaSpec SparesGaoled = new() { AdjustTargets = (_, hits) =>
         hits.Where(h => !h.HasStatus(StatusId.Fetters)).ToList() };
 
@@ -183,7 +182,6 @@ public static class UwuActions
         Timing = new() { DamageDelay = 0.83f }, // TODO: verify with replay
     };
 
-    // Thermal Low popped by Mesohigh, sized by its stacks.
     public static EnemyAction SuperCyclone(int thermalLowStacks) => thermalLowStacks switch
     {
         1 => SuperCyclone1,
@@ -197,7 +195,6 @@ public static class UwuActions
         Timing = new() { DamageDelay = 0.5f },
     };
 
-    // A second one inside the vuln's 2s kills.
     private static readonly EnemyAction SuperCyclone2 = new(ActionId.SuperCyclone2)
     {
         Effects = [
@@ -263,7 +260,6 @@ public static class UwuActions
         Timing = new() { DamageDelay = 0.46f }, // TODO: verify with replay
     };
 
-    // Survivable by everyone.
     private static EnemyAction Raidwide(uint actionId, float animationLock, float damage) => new(actionId)
     {
         Cast = new() { AnimationLock = animationLock },

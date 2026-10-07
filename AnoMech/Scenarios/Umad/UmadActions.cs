@@ -1,4 +1,5 @@
 using System;
+using AnoMech.Core;
 using AnoMech.Core.EnemyActions;
 using AnoMech.Core.SimObjects;
 using static AnoMech.Core.EnemyActions.Distribution;
@@ -28,7 +29,6 @@ public static class UmadActions
 
     // -- P1 Tele-trouncing --
 
-    // Cast on the holder, who counts toward the stack but is neither pushed nor given the vuln.
     public static readonly EnemyAction DoubleTroubleTrapStack = new(P1.ActionId.DoubleTroubleTrapStack)
     {
         Cast = new() { AnimationLock = P1.AnimationLock.Helper },
@@ -48,8 +48,6 @@ public static class UmadActions
         Timing = new() { DamageDelay = 0.63f },
     };
 
-    // A spread on the sleeper it's cast on: lethal only through its vuln, to a sleeper it hits twice
-    // or a Confused player whose Indulgent Will lands after it.
     public static readonly EnemyAction IdyllicWill = new(P1.ActionId.IdyllicWill)
     {
         Cast = new() { AnimationLock = P1.AnimationLock.Helper },
@@ -57,7 +55,6 @@ public static class UmadActions
         Timing = new() { DamageDelay = 0.63f },
     };
 
-    // Truth: 2x Real1. Lie: Real2 (no telegraph) at the real slots, Fake at the other two.
     public static readonly EnemyAction ThrummingThunderReal1 = ThrummingThunder(P1.ActionId.ThrummingThunderReal1);
     public static readonly EnemyAction ThrummingThunderReal2 = ThrummingThunder(P1.ActionId.ThrummingThunderReal2);
 
@@ -68,7 +65,6 @@ public static class UmadActions
         Timing = new() { DamageDelay = 0.65f },
     };
 
-    // Cast by the gazing statue, whose position is the gaze's source.
     public static readonly EnemyAction IndolentWill = StatueGaze(P1.ActionId.IndolentWill, lookAway: true);
     public static readonly EnemyAction AveMaria = StatueGaze(P1.ActionId.AveMaria, lookAway: false);
 
@@ -78,7 +74,6 @@ public static class UmadActions
         Timing = new() { DamageDelay = 0.84f },
     };
 
-    // One per player: a second circle on anyone is lethal through the first's vuln.
     public static readonly EnemyAction FlagrantFireSpread = new(P1.ActionId.FlagrantFireSpread)
     {
         Cast = new() { AnimationLock = P1.AnimationLock.Helper },
@@ -102,7 +97,6 @@ public static class UmadActions
         Timing = new() { DamageDelay = 1.61f },
     };
 
-    // Whatever Spells' Trouble is left by now makes it lethal.
     public static readonly EnemyAction LightOfJudgment = new(UmadConstants.ActionId.LightOfJudgment)
     {
         Cast = new() { AnimationLock = 3.1f },
@@ -117,7 +111,6 @@ public static class UmadActions
         DeathExplanation = "a tower not taken by exactly two",
     };
 
-    // Takes exactly two; any other count sets off the River of Light.
     public static readonly EnemyAction ThePathOfLight = new(UmadConstants.ActionId.ThePathOfLight)
     {
         Cast = new() { AnimationLock = 1.1f },
@@ -139,7 +132,6 @@ public static class UmadActions
         Timing = new() { DamageDelay = 0.62f },
     };
 
-    // Cast from its holder's spot; the holder stands at the apex and is never hit by it.
     public static readonly EnemyAction Spellwave = new(UmadConstants.ActionId.Spellwave)
     {
         Cast = new() { AnimationLock = 1.1f },
@@ -201,9 +193,6 @@ public static class UmadActions
         Timing = new() { DamageDelay = 0.1f },
     };
 
-    // 929,000 unmitigated against a 325,047 tank is 65%; eased while only self mitigation counts.
-    // The Lightning Resistance Down it leaves outlasts the 3s to the set's second hit, so one tank
-    // takes both only behind an invuln.
     public static readonly EnemyAction ThunderIII = new(UmadConstants.ActionId.ThunderIII_Resolve)
     {
         Cast = new() { AnimationLock = 1.1f },
@@ -254,8 +243,6 @@ public static class UmadActions
         Timing = new() { DamageDelay = 0.17f },
     };
 
-    // Cast on the Accretion holder it cleanses, who takes no damage; a crust's cleanse has no target.
-    // Anyone still carrying the last one's Earth Resistance Down dies.
     public static readonly EnemyAction EarthquakeCleanse = new(UmadConstants.ActionId.Earthquake_Cleanse)
     {
         Cast = new() { AnimationLock = 1.1f },
@@ -268,8 +255,6 @@ public static class UmadActions
         Timing = new() { DamageDelay = 0.64f },
     };
 
-    // Each hit climbs Unbecoming -> Meanest Existence; one more spends the Primordial Crust, and a hit
-    // past that kills.
     public static readonly EnemyAction Nothingness = new(UmadConstants.ActionId.Nothingness)
     {
         Cast = new() { AnimationLock = 1.1f },
@@ -279,7 +264,6 @@ public static class UmadActions
 
     // -- P3 Limit Cut --
 
-    // Aimed at the farthest player at cast start; the one real hit inside 20y was 312k at 17y.
     public static readonly EnemyAction UmbraSmash = new(P3.ActionId.UmbraSmash)
     {
         Cast = new() { AnimationLock = P3.AnimationLock.UmbraSmash },
@@ -287,8 +271,6 @@ public static class UmadActions
         Timing = new() { DamageDelay = 1.78f },
     };
 
-    // Spends everyone's wind. Facing it right is the 10y push; facing it wrong is 40y straight off
-    // the arena, an environment kill (Stray Gusts was never cast). No wind left: the plain 20y.
     public static readonly EnemyAction VacuumWave = new(P3.ActionId.VacuumWave)
     {
         Cast = new() { AnimationLock = P3.AnimationLock.VacuumWave },
@@ -310,7 +292,6 @@ public static class UmadActions
         return (headwind ? facing.IsLookingAwayFrom(from) : facing.IsLookingAt(from)) ? 10f : 40f;
     }
 
-    // Each clone's appearance, ~27k on a non-tank.
     public static readonly EnemyAction UltimaBlaster = new(P3.ActionId.UltimaBlaster)
     {
         Cast = new() { AnimationLock = P3.AnimationLock.CloneAppear },
@@ -318,8 +299,6 @@ public static class UmadActions
         Timing = new() { DamageDelay = 0.38f },
     };
 
-    // Aimed at its number wherever they stand. Falls off from 20x max HP at the clone: an
-    // unmitigated non-tank dies inside ~35y. A second hit inside the vuln landed at x9-10.
     public static readonly EnemyAction UltimaBlasterCharge = new(P3.ActionId.UltimaBlasterCharge)
     {
         Cast = new() { AnimationLock = P3.AnimationLock.CloneCharge },
@@ -327,8 +306,6 @@ public static class UmadActions
         Timing = new() { DamageDelay = 0.36f },
     };
 
-    // A two-person stack only a tank on cooldowns survives alone, each leaving a vuln the next one
-    // lands on; the tank LB3's 80% lives through either.
     public static readonly EnemyAction Cyclone = new(UmadConstants.ActionId.Cyclone)
     {
         Cast = new() { AnimationLock = P3.AnimationLock.Cyclone },
@@ -339,6 +316,130 @@ public static class UmadActions
         ],
         Timing = new() { DamageDelay = 0.63f },
     };
+
+    // -- P4 Kefka Says --
+
+    public static readonly EnemyAction BlizzardIIIBlowout = MysteryBlizzard(UmadConstants.ActionId.BlizzardIIIBlowout_Real);
+    public static readonly EnemyAction BlizzardIIIBlowoutLie = MysteryBlizzard(UmadConstants.ActionId.BlizzardIIIBlowout_FakeAnim);
+
+    private static EnemyAction MysteryBlizzard(uint actionId) => new(actionId)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Area = new() { Size = MathF.PI / 4 },
+        Effects = [Damage(Magic, Lethal)],
+        Timing = new() { DamageDelay = 0.6f },
+    };
+
+    public static readonly EnemyAction ThrummingThunderIII = MysteryThunder(UmadConstants.ActionId.ThrummingThunderIII_Real);
+    public static readonly EnemyAction ThrummingThunderIIILie = MysteryThunder(UmadConstants.ActionId.ThrummingThunderIII_FakeAnim);
+
+    private static EnemyAction MysteryThunder(uint actionId) => new(actionId)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [Damage(Magic, Lethal)],
+        Timing = new() { DamageDelay = 0.6f },
+    };
+
+    public static readonly EnemyAction EdgeOfDeath = new(UmadConstants.ActionId.EdgeOfDeath)
+    {
+        Cast = new() { AnimationLock = 2.1f },
+        Effects = [Damage(Magic, Lethal)],
+    };
+
+    public static readonly EnemyAction WhiteAntilight = Antilight(UmadConstants.ActionId.WhiteAntilight, debuffsTrue: true, UmadConstants.StatusId.WhiteWound);
+    public static readonly EnemyAction WhiteAntilightLie = Antilight(UmadConstants.ActionId.WhiteAntilight, debuffsTrue: false, UmadConstants.StatusId.WhiteWound);
+    public static readonly EnemyAction BlackAntilight = Antilight(UmadConstants.ActionId.BlackAntilight, debuffsTrue: true, UmadConstants.StatusId.BlackWound);
+    public static readonly EnemyAction BlackAntilightLie = Antilight(UmadConstants.ActionId.BlackAntilight, debuffsTrue: false, UmadConstants.StatusId.BlackWound);
+
+    private static EnemyAction Antilight(uint actionId, bool debuffsTrue, ushort wound) => new(actionId)
+    {
+        Cast = new() { AnimationLock = 2.1f },
+        Effects =
+        [
+            new AntilightEffect(
+                lethalWound: debuffsTrue ? wound : OtherWound(wound),
+                cleansedBy: debuffsTrue ? UmadConstants.StatusId.BeyondDeath : UmadConstants.StatusId.AllaganField,
+                leaves: wound),
+        ],
+        Timing = new() { DamageDelay = 0.13f },
+    };
+
+    private static ushort OtherWound(ushort wound)
+        => wound == UmadConstants.StatusId.WhiteWound ? UmadConstants.StatusId.BlackWound : UmadConstants.StatusId.WhiteWound;
+
+    public static readonly EnemyAction DeathBoltStack = DeathElement(UmadConstants.ActionId.DeathBolt, stack: true);
+    public static readonly EnemyAction DeathBoltSpread = DeathElement(UmadConstants.ActionId.DeathBolt, stack: false);
+    public static readonly EnemyAction DeathWaveStack = DeathElement(UmadConstants.ActionId.DeathWave, stack: true);
+    public static readonly EnemyAction DeathWaveSpread = DeathElement(UmadConstants.ActionId.DeathWave, stack: false);
+
+    private static EnemyAction DeathElement(uint actionId, bool stack) => new(actionId)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [stack ? Damage(Magic, split: Stack(3)) : Damage(Magic), LongMagicVulnerabilityUp],
+        Timing = new() { DamageDelay = 0.63f },
+    };
+
+    public static readonly EnemyAction DeathShriekLookAway = DeathShriek(lookAway: true);
+    public static readonly EnemyAction DeathShriekLookAt = DeathShriek(lookAway: false);
+
+    private static EnemyAction DeathShriek(bool lookAway) => new(UmadConstants.ActionId.DeathShriek)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [Gaze(lookAway)],
+    };
+
+    public static readonly EnemyAction StrayFlamesChariot = StrayBait(UmadConstants.ActionId.StrayFlames_Chariot);
+    public static readonly EnemyAction StrayFlamesDonut = StrayBait(UmadConstants.ActionId.StrayFlames_Donut);
+    public static readonly EnemyAction StraySprayDonut = StrayBait(UmadConstants.ActionId.StraySpray_Donut);
+    public static readonly EnemyAction StraySprayChariot = StrayBait(UmadConstants.ActionId.StraySpray_Chariot);
+
+    private static EnemyAction StrayBait(uint actionId) => new(actionId)
+    {
+        Cast = new() { AnimationLock = 1.1f, OmenDelay = 4f },
+        Area = new() { Size = 6f },
+        Effects = [Damage(Magic, Lethal)],
+    };
+
+    public static readonly EnemyAction DeathBomb = new(UmadConstants.ActionId.DeathBomb)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [Damage(Magic, Lethal)],
+        Timing = new() { DamageDelay = 0.09f },
+        DeathExplanation = "failed Acceleration Bomb",
+    };
+
+    public static readonly EnemyAction DeathSurge = new(UmadConstants.ActionId.DeathSurge)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [Damage(DamageType.Unique)],
+        Timing = new() { DamageDelay = 0.8f },
+    };
+
+    public static readonly EnemyAction DeathSurgeWipe = DeathSurge with
+    {
+        Effects = [Damage(DamageType.Unique, Lethal)],
+        DeathExplanation = "Allagan Field holder died",
+    };
+
+    private sealed class AntilightEffect(ushort lethalWound, ushort cleansedBy, ushort leaves) : IEnemyActionEffect
+    {
+        public void Apply(EnemyActionContext ctx)
+        {
+            foreach (var target in ctx.Hits)
+            {
+                if (ctx.IsKilled(target) || !target.IsAlive()) continue;
+                var lethal = target.HasStatus(lethalWound);
+                target.RemoveStatus(UmadConstants.StatusId.WhiteWound);
+                target.RemoveStatus(UmadConstants.StatusId.BlackWound);
+                if (!lethal)
+                    target.AddStatus(leaves, 0f);
+                else if (target.HasStatus(cleansedBy))
+                    target.RemoveStatus(cleansedBy);
+                else
+                    ctx.Kill(target, $"carried {StatusLookup.Name(lethalWound)}");
+            }
+        }
+    }
 
     private sealed class NothingnessEffect : IEnemyActionEffect
     {

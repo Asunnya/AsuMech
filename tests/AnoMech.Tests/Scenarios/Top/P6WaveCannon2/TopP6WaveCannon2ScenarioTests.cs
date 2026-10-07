@@ -37,7 +37,7 @@ public class TopP6WaveCannon2ScenarioTests
     public void DiesWalkingIntoWall()
         => WaveCannon2(RegenHealer)
             .TeleportAt(5f, to: new(0, 20.5f))
-            .ShouldKill(ArenaWall, RegenHealer);
+            .ShouldKill(TheEnvironment, RegenHealer);
 
     [TestCase(true)]
     [TestCase(false)]

@@ -7,56 +7,50 @@ using static AnoMech.Scenarios.Umad.UmadConstants;
 
 namespace AnoMech.Scenarios.Umad.P4KefkaSays;
 
-public sealed record KefkaCast(uint DamageAction, uint OmenAction, uint Lockon)
+public sealed record KefkaCast(EnemyAction Damage, uint OmenAction, uint Lockon)
 {
-    public static KefkaCast BlizzardReal = new(ActionId.BlizzardIIIBlowout_Real, 0, LockonId.ColdTrue);
+    public static KefkaCast BlizzardReal = new(UmadActions.BlizzardIIIBlowout, 0, LockonId.ColdTrue);
 
-    public static KefkaCast BlizzardFake = new(ActionId.BlizzardIIIBlowout_FakeAnim,
+    public static KefkaCast BlizzardFake = new(UmadActions.BlizzardIIIBlowoutLie,
                                                ActionId.BlizzardIIIBlowout_FakeOmen, LockonId.ColdFalse);
 
-    public static KefkaCast LightningReal = new(ActionId.ThrummingThunderIII_Real, 0, LockonId.LightningTrue);
+    public static KefkaCast LightningReal = new(UmadActions.ThrummingThunderIII, 0, LockonId.LightningTrue);
 
-    public static KefkaCast LightningFake = new(ActionId.ThrummingThunderIII_FakeAnim,
+    public static KefkaCast LightningFake = new(UmadActions.ThrummingThunderIIILie,
                                                 ActionId.ThrummingThunderIII_FakeOmen, LockonId.LightningFalse);
 }
 
 public sealed record MysteryCast(KefkaCast Blizzard, KefkaCast Lightning, int BlizzardOffset, int LightningOffset, float LightningOrientation);
 
-public sealed record ChaosCast(uint Action, uint Visual, ushort Status, float DurationFirst, float DurationSecond, uint TrueSolution, uint FakeSolution)
+public sealed record ChaosCast(uint Action, uint Visual, ushort Status, float DurationFirst, float DurationSecond, EnemyAction TrueSolution, EnemyAction FakeSolution)
 {
-    public static ChaosCast Inferno = new(ActionId.Inferno, ActionId.Inferno_Visual, StatusId.Entropy, 60, 45, ActionId.StrayFlames_Chariot, ActionId.StrayFlames_Donut);
-    public static ChaosCast Tsunami = new(ActionId.Tsunami, ActionId.Tsunami_Visual, StatusId.DynamicFluid, 84, 69, ActionId.StraySpray_Donut, ActionId.StraySpray_Chariot);
+    public static ChaosCast Inferno = new(ActionId.Inferno, ActionId.Inferno_Visual, StatusId.Entropy, 60, 45, UmadActions.StrayFlamesChariot, UmadActions.StrayFlamesDonut);
+    public static ChaosCast Tsunami = new(ActionId.Tsunami, ActionId.Tsunami_Visual, StatusId.DynamicFluid, 84, 69, UmadActions.StraySprayDonut, UmadActions.StraySprayChariot);
 }
 
 
-public sealed record Antilight(uint Action, DamageType DamageType, ushort Status, uint FloodReal, uint FloodFake)
+public sealed record Antilight(EnemyAction DebuffsTrue, EnemyAction DebuffsLie, uint FloodReal, uint FloodFake)
 {
-   public static Antilight White = new(ActionId.WhiteAntilight, DamageType.White, StatusId.WhiteWound, ActionId.FloodOfNaught_WhiteTrue, ActionId.FloodOfNaught_BlackFake);
-   public static Antilight Black = new(ActionId.BlackAntilight, DamageType.Black, StatusId.BlackWound, ActionId.FloodOfNaught_BlackTrue, ActionId.FloodOfNaught_WhiteFake);
-   
-   
-   public Antilight Flip()
-   {
-       return this == White ?  Black : White;
-   }
+   public static Antilight White = new(UmadActions.WhiteAntilight, UmadActions.WhiteAntilightLie, ActionId.FloodOfNaught_WhiteTrue, ActionId.FloodOfNaught_BlackFake);
+   public static Antilight Black = new(UmadActions.BlackAntilight, UmadActions.BlackAntilightLie, ActionId.FloodOfNaught_BlackTrue, ActionId.FloodOfNaught_WhiteFake);
 }
 
 public sealed record MysteryAntilight(Antilight Antilight, bool DebuffTrue, bool CastTrue)
 {
-    public DamageType ResolvedDamageType => (DebuffTrue ? Antilight : Antilight.Flip()).DamageType;
-    
+    public EnemyAction Action => DebuffTrue ? Antilight.DebuffsTrue : Antilight.DebuffsLie;
+
     public uint ResolveFloodAction => CastTrue ? Antilight.FloodReal : Antilight.FloodFake;
 }
 
 public sealed record ChaosMystery(ChaosCast Cast, bool IsTrue)
 {
     public ushort StatusValue => (ushort)(IsTrue ? 1120 : 1119);
-    public uint Solution => IsTrue ? Cast.TrueSolution : Cast.FakeSolution;
+    public EnemyAction Solution => IsTrue ? Cast.TrueSolution : Cast.FakeSolution;
 
     // Circle (run out of the bait) vs donut (stay inside). Inferno's real solution is
     // the Chariot, Tsunami's is the Donut, so this keys on the resolved shape directly
     // rather than on IsTrue.
-    public bool SolutionIsChariot => Solution == ActionId.StrayFlames_Chariot || Solution == ActionId.StraySpray_Chariot;
+    public bool SolutionIsChariot => Solution == UmadActions.StrayFlamesChariot || Solution == UmadActions.StraySprayChariot;
 }
 
 // Per-run randomized assignments the scenario and AI consume. Filled in the ctor
@@ -114,7 +108,12 @@ public sealed class UmadP4KefkaSaysState
         // apply the per-cast Real/Fake override (or randomize). InfernoMystery / TsunamiMystery
         // point back at the same instances so the later Mana Release resolution
         // (Run_Chaos_400040E2_2, which reads them by element) stays consistent with these casts.
-        var chaosOrder = rng.Shuffle(ChaosCast.Inferno, ChaosCast.Tsunami);
+        var chaosOrder = overrides.InfernoFirst switch
+        {
+            true => [ChaosCast.Inferno, ChaosCast.Tsunami],
+            false => [ChaosCast.Tsunami, ChaosCast.Inferno],
+            _ => rng.Shuffle(ChaosCast.Inferno, ChaosCast.Tsunami),
+        };
         ChaosMysteries =
         [
             new ChaosMystery(chaosOrder[0], overrides.ChaosCast1Real ?? rng.NextBool()),
@@ -123,7 +122,7 @@ public sealed class UmadP4KefkaSaysState
         InfernoMystery = ChaosMysteries.First(m => m.Cast == ChaosCast.Inferno);
         TsunamiMystery = ChaosMysteries.First(m => m.Cast == ChaosCast.Tsunami);
 
-        Wave1First = rng.NextBool();
+        Wave1First = overrides.Wave1First ?? rng.NextBool();
         Wave1True = overrides.ExdeathCast1Real ?? rng.NextBool();
         Wave2True = overrides.ExdeathCast2 switch
         {
@@ -136,30 +135,34 @@ public sealed class UmadP4KefkaSaysState
         Wave4True = overrides.ExdeathCast4Real ?? rng.NextBool();
 
         Mystery = Enumerable.Range(0, 5)
-                            .Select(i => NextMystery(i == 0 ? overrides : null))
-                            .ToList(); 
+                            .Select(i => NextMystery(overrides, i))
+                            .ToList();
 
-        Wave1 = RoleList.RandomRoleStable(rng, party);
-        Wave2 = CalcWave2();
-        Wave3 = RoleList.RandomRoleStable(rng, party);
-        Wounds = Enumerable.Range(0, 8).Select(_ => rng.NextBool()).ToArray();
-        NeoExdeathDirection = rng.NextDirection();
-        
-        Antilights = rng.Shuffle(
-            new MysteryAntilight(Antilight.White, Wave3True, Wave4True),
-            new MysteryAntilight(Antilight.Black, Wave3True, Wave4True)
-        );
+        Wave1 = overrides.Wave1 is { } wave1 ? new RoleList(party, wave1) : RoleList.RandomRoleStable(rng, party);
+        Wave2 = CalcWave2(overrides.Wave2Swaps);
+        Wave3 = overrides.Wave3 is { } wave3 ? new RoleList(party, wave3) : RoleList.RandomRoleStable(rng, party);
+        Wounds = overrides.Wounds ?? Enumerable.Range(0, 8).Select(_ => rng.NextBool()).ToArray();
+        NeoExdeathDirection = overrides.NeoExdeathDirection ?? rng.NextDirection();
+
+        var white = new MysteryAntilight(Antilight.White, Wave3True, Wave4True);
+        var black = new MysteryAntilight(Antilight.Black, Wave3True, Wave4True);
+        Antilights = overrides.Antilight0White switch
+        {
+            true => [white, black],
+            false => [black, white],
+            _ => rng.Shuffle(white, black),
+        };
     }
 
-    private MysteryCast NextMystery(UmadP4KefkaSaysStateOverrides? overrides = null)
+    private MysteryCast NextMystery(UmadP4KefkaSaysStateOverrides overrides, int i)
     {
-        var blizzard = overrides?.FirstBlizzardReal switch
+        var blizzard = overrides.BlizzardReal[i] switch
         {
             true => KefkaCast.BlizzardReal,
             false => KefkaCast.BlizzardFake,
             _ => rng.NextObj(KefkaCast.BlizzardReal, KefkaCast.BlizzardFake),
         };
-        var lightning = overrides?.FirstLightningReal switch
+        var lightning = overrides.LightningReal[i] switch
         {
             true => KefkaCast.LightningReal,
             false => KefkaCast.LightningFake,
@@ -168,17 +171,17 @@ public sealed class UmadP4KefkaSaysState
         return new MysteryCast(
             blizzard,
             lightning,
-            overrides?.FirstBlizzardOffset ?? rng.NextInt(2),
-            rng.NextInt(2),
-            rng.NextSign()
+            overrides.BlizzardOffset[i] ?? rng.NextInt(2),
+            overrides.LightningOffset[i] ?? rng.NextInt(2),
+            overrides.LightningOrientation[i] ?? rng.NextSign()
         );
     }
 
-    private RoleList CalcWave2()
+    private RoleList CalcWave2(bool?[] swaps)
     {
         List<PartyRole> list = [Wave1[2], Wave1[3], Wave1[0], Wave1[1], Wave1[6], Wave1[7], Wave1[4], Wave1[5]];
         for (int i = 0; i < 4; i++)
-            if (rng.NextBool())
+            if (swaps[i] ?? rng.NextBool())
                 (list[2 * i], list[2 * i + 1]) = (list[2 * i + 1], list[2 * i]);
         return new RoleList(Wave1.Party, list);
     }

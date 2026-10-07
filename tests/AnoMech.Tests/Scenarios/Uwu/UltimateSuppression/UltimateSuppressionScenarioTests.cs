@@ -64,7 +64,7 @@ public class UltimateSuppressionScenarioTests
     public void DiesWalkingIntoWall()
         => Suppression(MeleeDpsB)
             .TeleportAt(5f, to: new(0, 20.5f))
-            .ShouldKill(ArenaWall, MeleeDpsB);
+            .ShouldKill(TheEnvironment, MeleeDpsB);
 
     // R's own first Eruption, with C's beside it.
     [Test]
@@ -107,7 +107,7 @@ public class UltimateSuppressionScenarioTests
     public void LandslideKnocksIntoWall()
         => Suppression(MeleeDpsB)
             .TeleportAt(34.5f, to: new(-5.4f, 8.1f))
-            .ShouldKill(ArenaWall, MeleeDpsB);
+            .ShouldKill(TheEnvironment, MeleeDpsB);
 
     // Thrown out between two sweeping plumes.
     [Test]
@@ -115,7 +115,7 @@ public class UltimateSuppressionScenarioTests
         => Suppression(MeleeDpsB)
             .TeleportAt(34.5f, to: new(-5.4f, 8.1f))
             .TeleportAt(34.9f, to: new(-12.6f, 5.8f))
-            .ShouldKill(ArenaWall, MeleeDpsB);
+            .ShouldKill(TheEnvironment, MeleeDpsB);
 
     [Test]
     public void DiesToLightPillar()

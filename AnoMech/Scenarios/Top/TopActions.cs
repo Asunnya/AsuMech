@@ -45,8 +45,6 @@ public static class TopActions
         Cast = new() { OmenDelay = Duration.OmegaAttackOmenDelay },
     };
 
-    // Cast at SuperliminalSteelOmenTargetL/R from SuperliminalSteelOmenPlacement: the rect starts at
-    // the target and runs along the helper's facing, back across the arena.
     public static readonly EnemyAction SuperliminalSteelL = SuperliminalSteelSide(ActionId.SuperliminalSteelOmenL);
     public static readonly EnemyAction SuperliminalSteelR = SuperliminalSteelSide(ActionId.SuperliminalSteelOmenR);
 

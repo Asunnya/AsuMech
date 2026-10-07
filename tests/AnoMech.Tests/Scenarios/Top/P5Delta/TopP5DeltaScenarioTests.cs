@@ -57,20 +57,20 @@ public class TopP5DeltaScenarioTests
     public void DiesWalkingIntoWall()
         => Delta(RegenHealer)
             .TeleportAt(5f, to: OutsideArena)
-            .ShouldKill(ArenaWall, RegenHealer);
+            .ShouldKill(TheEnvironment, RegenHealer);
 
     [Test]
     public void DyingWithNearWorldWipes()
         => Delta(OffTank)
             .TeleportAt(12f, to: OutsideArena)
-            .ShouldKill(ArenaWall, OffTank)
+            .ShouldKill(TheEnvironment, OffTank)
             .ShouldKill(ActionId.HelloWorldFail, AllBut(OffTank));
 
     [Test]
     public void DyingWithDistantWorldWipes()
         => Delta(MainTank)
             .TeleportAt(12f, to: OutsideArena)
-            .ShouldKill(ArenaWall, MainTank)
+            .ShouldKill(TheEnvironment, MainTank)
             .ShouldKill(ActionId.HelloWorldFail, AllBut(MainTank));
 
     // The second break's first hit lands on the Trice Come Ruin and vuln stacks the first one left.

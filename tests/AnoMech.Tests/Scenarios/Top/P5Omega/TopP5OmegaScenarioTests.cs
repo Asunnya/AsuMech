@@ -69,14 +69,14 @@ public class TopP5OmegaScenarioTests
     public void DiesWalkingIntoWall()
         => Omega(RegenHealer)
             .TeleportAt(5f, to: OutsideArena)
-            .ShouldKill(ArenaWall, RegenHealer);
+            .ShouldKill(TheEnvironment, RegenHealer);
 
     [TestCase(OffTank)]
     [TestCase(MeleeDpsA)]
     public void DyingWithNearWorldWipes(PartyRole holder)
         => Omega(holder)
             .TeleportAt(12f, to: OutsideArena)
-            .ShouldKill(ArenaWall, holder)
+            .ShouldKill(TheEnvironment, holder)
             .ShouldKill(ActionId.HelloWorldFail, AllBut(holder));
 
     [TestCase(ShieldHealer)]
@@ -84,7 +84,7 @@ public class TopP5OmegaScenarioTests
     public void DyingWithDistantWorldWipes(PartyRole holder)
         => Omega(holder)
             .TeleportAt(12f, to: OutsideArena)
-            .ShouldKill(ArenaWall, holder)
+            .ShouldKill(TheEnvironment, holder)
             .ShouldKill(ActionId.HelloWorldFail, AllBut(holder));
 
     // Out along F's diagonal, which is one arm of the cross.
