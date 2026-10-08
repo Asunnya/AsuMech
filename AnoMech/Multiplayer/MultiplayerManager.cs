@@ -939,6 +939,7 @@ public sealed partial class MultiplayerManager : IDisposable
         }
         if (IsStartCheckPending) return;
 
+        Natives.Zone.EndSpeedBuffs();
         if (CheckOwnStartReadiness(out var settling) is { } ownReason)
         {
             if (settling != null)
@@ -980,6 +981,7 @@ public sealed partial class MultiplayerManager : IDisposable
     {
         if (startCheckReplyWaited is not { } waited) return;
         waited += deltaSeconds;
+        Natives.Zone.EndSpeedBuffs();
         var reason = CheckOwnStartReadiness(out var settling);
         if (settling != null && waited < StartCheckReplyMaxWaitSeconds)
         {

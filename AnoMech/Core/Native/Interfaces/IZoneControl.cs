@@ -12,6 +12,9 @@ public interface IZoneControl : IDisposable
     // out (null when the refusal is final).
     string? StartBlockedReason(out string? settling);
 
+    // When Sprint, Peloton or Smudge is all a start waits on, ends it as a right-click on the buff would.
+    void EndSpeedBuffs();
+
     bool IsActive { get; }
 
     // Every frame, inside a session or not: the start gate's timers and the session's safety nets.
