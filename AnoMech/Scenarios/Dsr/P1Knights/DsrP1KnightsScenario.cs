@@ -213,6 +213,7 @@ public sealed class DsrP1KnightsScenario : IScenario
         world.Events.Add(151.38f, () => world.EnforceArenaBoundary(Geometry.ThordanArenaRadius, "Touched the death wall"));
         world.Events.Add(151.51f, () => world.Map.DirectorUpdate(ArenaDirector.Layout, 0U, ArenaDirector.ThordanLayout));
         world.Events.Add(151.51f, () => world.Map.DirectorUpdate(ArenaDirector.MapChange, ArenaDirector.ThordanMap));
+        world.Events.Add(151.51f, () => world.Map.SetWeather(DsrZone.Oppression));
         world.Events.Add(159.00f, DespawnAll);
     }
 

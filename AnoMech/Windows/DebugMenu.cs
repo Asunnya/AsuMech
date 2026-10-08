@@ -477,9 +477,8 @@ internal sealed unsafe class DebugMenu
         ImGui.Spacing();
         ImGui.TextUnformatted("Weather lab (sky-tint only -- writes EnvManager.ActiveWeather, never WeatherManager)");
         ImGui.Separator();
-        ImGui.TextWrapped("This zone's own catalog (read live from EnvScene._weatherIds): 2 Fair Skies, "
-            + "77/78/79/89/174/175/176 all \"Dimensional Disruption\". One click each, or type any other id below.");
-        foreach (var id in (ReadOnlySpan<byte>)[2, 77, 78, 79, 89, 174, 175, 176])
+        ImGui.TextWrapped("This zone's own catalog (read live from EnvScene._weatherIds). One click each, or type any other id below.");
+        foreach (var id in AnoMech.Core.Native.Implementations.ZoneSession.ZoneWeatherIds())
         {
             if (ImGui.Button($"{id}##weatherquick")) plugin.Game.World.SetWeather(id);
             ImGui.SameLine();

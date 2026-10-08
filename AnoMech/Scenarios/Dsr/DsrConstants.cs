@@ -240,7 +240,6 @@ public class DsrConstants
     {
         public const uint Layout = 0x80000016;
         public const uint MapChange = 0x8000001F;
-        public const uint CheckpointRestore = 0x80000015;
         public const uint Music = 0x80000004;
         public const uint KnightsLayout = 0x01;
         public const uint PrisonLayout = 0x14;
@@ -248,7 +247,6 @@ public class DsrConstants
         public const uint WardLayout = 0x25;
         public const uint SanctityLayout = 0x2F;
         public const uint UltimateEndLayout = 0x39;
-        public const uint NoMap = 0;
         public const uint KnightsMap = 758;
         public const uint ThordanMap = 765;
         public const uint ThordanMusic = 0x1AF3;

@@ -164,9 +164,6 @@ public sealed class DsrP2ThordanScenario : IScenario
 
         world.Events.Add(0f, () => world.EnforceArenaBoundary(Geometry.ThordanArenaRadius, "Touched the death wall"));
         world.Events.Add(0f, () => world.PlaceWaymarks(NaurWaymarks));
-        // The game's own checkpoint restart: without the map reset and restore, the zone keeps its default knights map.
-        world.Events.Add(0f, () => world.Map.DirectorUpdate(ArenaDirector.MapChange, ArenaDirector.NoMap));
-        world.Events.Add(0f, () => world.Map.DirectorUpdate(ArenaDirector.CheckpointRestore, 1U));
         world.Events.Add(0f, () => world.Map.DirectorUpdate(ArenaDirector.Layout, 0U, ArenaDirector.ThordanLayout));
         world.Events.Add(0f, () => world.Map.DirectorUpdate(ArenaDirector.MapChange, ArenaDirector.ThordanMap));
         world.Events.Add(0f, () => world.Map.DirectorUpdate(ArenaDirector.Music, ArenaDirector.ThordanMusic));

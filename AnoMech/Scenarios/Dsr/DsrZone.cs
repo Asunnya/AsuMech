@@ -8,10 +8,12 @@ namespace AnoMech.Scenarios.Dsr;
 public sealed class DsrZone : IZone
 {
     private const ushort BgmId = 920;
+    private const byte FairSkies = 2;
+    public const byte Oppression = 45;
 
     public static readonly DsrZone Instance = new();
-    public static readonly Phase Knights = new(Instance, "P1", null, BgmId);
-    public static readonly Phase Thordan = new(Instance, "P2", null, BgmId);
+    public static readonly Phase Knights = new(Instance, "P1", FairSkies, BgmId);
+    public static readonly Phase Thordan = new(Instance, "P2", Oppression, BgmId);
 
     public string Name => "Dragonsong's Reprise";
     public uint TerritoryId => 968;
