@@ -65,6 +65,12 @@ public sealed class DsrP2ThordanScenario : IScenario
     private const float HeavensStakeCircleRadius = 7f;
     // UNVERIFIED: no player was ever inside it; only the arena's outer edge is assumed to burn.
     private const float HeavensStakeDonutInner = 20f;
+    private const float BleedPuddleRadius = 6f;
+    private const float BleedSeconds = 60f;
+    private const float BleedDeathDelay = 3f;
+    private const float BleedCheckStep = 0.5f;
+    // UNVERIFIED: the ice puddles stay on the floor but stop applying Frostbite a few seconds in.
+    private const float IcePuddleBleedEnds = 138.6f;
     private const float HolyCometRadius = 20f;
     private const float HolyCometDamage = 0.1f;
     private const float HolyCometMinSpacing = 5f;
@@ -111,6 +117,9 @@ public sealed class DsrP2ThordanScenario : IScenario
     private readonly List<SimEnemy> ultimateEndKnights = [];
     private readonly List<SimEnemy> comets = [];
     private readonly List<(uint EObjId, SimEventObject Puddle)> puddleObjects = [];
+    private readonly List<(uint EObjId, Vector3 At)> bleedPuddles = [];
+    // Flying through a puddle on a knockback doesn't apply its bleed.
+    private float knockbackLandsAt = -1f;
     private readonly List<(SimEnemy Caster, Vector3 At)> heavensStakes = [];
     private readonly List<(Vector3 At, float Radius)> sanctityTowers = [];
     private readonly List<SimEnemy> sanctityTowerCasters = [];
@@ -137,6 +146,8 @@ public sealed class DsrP2ThordanScenario : IScenario
         ultimateEndKnights.Clear();
         comets.Clear();
         puddleObjects.Clear();
+        bleedPuddles.Clear();
+        knockbackLandsAt = -1f;
         heavensStakes.Clear();
         sanctityTowers.Clear();
         sanctityTowerCasters.Clear();
@@ -153,6 +164,9 @@ public sealed class DsrP2ThordanScenario : IScenario
 
         world.Events.Add(0f, () => world.EnforceArenaBoundary(Geometry.ThordanArenaRadius, "Touched the death wall"));
         world.Events.Add(0f, () => world.PlaceWaymarks(NaurWaymarks));
+        // The game's own checkpoint restart: without the map reset and restore, the zone keeps its default knights map.
+        world.Events.Add(0f, () => world.Map.DirectorUpdate(ArenaDirector.MapChange, ArenaDirector.NoMap));
+        world.Events.Add(0f, () => world.Map.DirectorUpdate(ArenaDirector.CheckpointRestore, 1U));
         world.Events.Add(0f, () => world.Map.DirectorUpdate(ArenaDirector.Layout, 0U, ArenaDirector.ThordanLayout));
         world.Events.Add(0f, () => world.Map.DirectorUpdate(ArenaDirector.MapChange, ArenaDirector.ThordanMap));
         world.Events.Add(0f, () => world.Map.DirectorUpdate(ArenaDirector.Music, ArenaDirector.ThordanMusic));
@@ -284,6 +298,8 @@ public sealed class DsrP2ThordanScenario : IScenario
         world.Events.Add(133.69f, () => FadeOut(haumeric));
         world.Events.Add(134.70f, () => SetPuddleState(EObjId.FirePuddle, 1));
         world.Events.Add(135.08f, () => SetPuddleState(EObjId.IcePuddle, 1));
+        ScheduleBleedChecks(EObjId.FirePuddle, StatusId.Burns, ActionId.HeavensStakeCircle, 134.70f, 148.64f);
+        ScheduleBleedChecks(EObjId.IcePuddle, StatusId.Frostbite, ActionId.HiemalStormHit, 135.08f, IcePuddleBleedEnds);
         world.Events.Add(136.41f, () => ResolveSanctityTowers(ActionId.FirstConviction));
         world.Events.Add(136.45f, () => PlayEffect(noudenet, ActionId.HolyComet, 2.1f));
         foreach (var drop in new[] { 136.80f, 138.23f, 139.66f, 141.08f, 142.50f, 143.93f, 145.36f })
@@ -1015,6 +1031,7 @@ public sealed class DsrP2ThordanScenario : IScenario
 
     private void SpawnPuddle(uint eobjId, Vector3 at)
     {
+        bleedPuddles.Add((eobjId, at));
         if (world.SpawnEventObject(new EventObjectSpawnConfig { EObjId = eobjId, Placement = new Placement(at, 0f) }) is { } puddle)
             puddleObjects.Add((eobjId, puddle));
     }
@@ -1025,10 +1042,32 @@ public sealed class DsrP2ThordanScenario : IScenario
             if (id == eobjId) puddle.SetState(puddleState);
     }
 
+    private void ScheduleBleedChecks(uint eobjId, ushort bleed, uint actionId, float from, float to)
+    {
+        for (var t = from; t < to; t += BleedCheckStep)
+            world.Events.Add(t, () => ApplyPuddleBleed(eobjId, bleed, actionId));
+    }
+
+    private void ApplyPuddleBleed(uint eobjId, ushort bleed, uint actionId)
+    {
+        var centres = bleedPuddles.Where(p => p.EObjId == eobjId).Select(p => p.At).ToList();
+        if (world.Events.Elapsed < knockbackLandsAt) return;
+        foreach (var member in AliveMembers().Where(m => !m.HasStatus(bleed)).ToList())
+        {
+            if (!centres.Any(c => FlatDistance(c, member.Position) < BleedPuddleRadius)) continue;
+            member.AddStatus(bleed, BleedSeconds);
+            world.Events.Add(BleedDeathDelay, () =>
+            {
+                if (member.IsAlive() && member.HasStatus(bleed)) member.Die(actionId, "bled out from a lingering puddle");
+            });
+        }
+    }
+
     private void DespawnPuddles()
     {
         foreach (var (_, puddle) in puddleObjects) puddle.Despawn();
         puddleObjects.Clear();
+        bleedPuddles.Clear();
     }
 
     // UNVERIFIED: the bleed for standing in the ice and fire left behind is not modelled.
@@ -1104,6 +1143,7 @@ public sealed class DsrP2ThordanScenario : IScenario
         if (grinnaux == null) return;
         PlayEffect(grinnaux, ActionId.FaithUnmoving, 2.1f);
         if (!KnockbackLookup.TryGet(KnockbackId.FaithUnmoving, out var distance, out var speed)) return;
+        knockbackLandsAt = world.Events.Elapsed + distance / speed;
         foreach (var member in AliveMembers().ToList())
         {
             damage.ApplyDamage(member, FaithUnmovingDamage, ActionId.FaithUnmoving, "knockback", false);

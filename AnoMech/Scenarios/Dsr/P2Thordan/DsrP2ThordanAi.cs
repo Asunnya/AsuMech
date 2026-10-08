@@ -12,13 +12,12 @@ public sealed class DsrP2ThordanAi : IScenarioAi<DsrP2ThordanState>
 {
     public string Name => "NAUR (PF)";
 
-    private const float MercyDodgeDegrees = 60f;
     private const float WardMercyDodgeDegrees = 55f;
     private const float OuterRingDodgeDegrees = 32f;
     private const float HeavyImpactRingWidth = 6f;
     private const float MinSpreadDistanceFromGuerrique = 6.5f;
     private const float TankSpreadRadius = 11.8f;
-    private const float SpreadSpacing = 5.1f;
+    private const float FarHealerRadius = 14.4f;
     private const float DpsSpreadRadius = 19.5f;
     private const float DpsSpreadDegrees = 16f;
     private const float WallRadius = 20f;
@@ -35,6 +34,7 @@ public sealed class DsrP2ThordanAi : IScenarioAi<DsrP2ThordanState>
     private const float MeteorSweepRadius = 19f;
     private const float MeteorSweepDegrees = 130f;
     private const float KnockbackRideRadius = 2.3f;
+    private const float InnerTowerStandRadius = 4.5f;
     private static readonly float[] HolyCometDrops = [136.80f, 138.23f, 139.66f, 141.08f, 142.50f, 143.93f, 145.36f];
     private static readonly Vector2 BroadSwingThordan = new(0f, -9f);
     private const float BroadSwingDodgeDistance = 4f;
@@ -50,9 +50,9 @@ public sealed class DsrP2ThordanAi : IScenarioAi<DsrP2ThordanState>
         world = worldParam;
         var ai = new AiManager(world);
 
-        ai.Move(0.3f, () => AiMove.Create(MainTankNorthPartyStacksSouth(0f)).NaturalOrder());
-        ai.Move(14.0f, () => AiMove.Create(MainTankNorthPartyStacksSouth(MercyDodgeDegrees)).NaturalOrder(), jitter: 0.05f);
-        ai.Move(16.2f, () => AiMove.Create(MainTankNorthPartyStacksSouth(0f)).NaturalOrder());
+        ai.Move(0.3f, () => AiMove.Create(MainTankNorthPartyStacksSouth()).NaturalOrder());
+        ai.Move(14.0f, () => AiMove.Create(SplitEastAndWestOutOfTheMercyCones()).NaturalOrder(), jitter: 0.05f);
+        ai.Move(16.2f, () => AiMove.Create(Only(PartyRole.MainTank, MainTankNorthPartySouth[0])).NaturalOrder());
 
         ai.Move(37.4f, () => AiMove.Create(LightPartiesSpreadOnSafeLine()).NaturalOrder(), jitter: 0f);
         foreach (var role in Enum.GetValues<PartyRole>())
@@ -62,6 +62,7 @@ public sealed class DsrP2ThordanAi : IScenarioAi<DsrP2ThordanState>
             var stepIn = MathF.Max(HeavyImpactWaves[wave - 1] + 0.05f, AfterLightningStorm);
             ai.Move(stepIn, () => AiMove.Create(Only(role, StepIntoFiredRing(role, wave))).NaturalOrder(), jitter: 0f, sprint: true);
         }
+        ai.Move(AfterLightningStorm, () => AiMove.Create(FarHealersMoveUpTowardsTheirTank()).NaturalOrder(), jitter: 0f);
         ai.Move(50.18f, () => AiMove.Create(DodgeWardMercy()).NaturalOrder(), jitter: 0f, sprint: true);
         ai.Move(52.05f, () => AiMove.Create(LeaveOuterRing()).NaturalOrder(), jitter: 0f, sprint: true);
 
@@ -69,8 +70,7 @@ public sealed class DsrP2ThordanAi : IScenarioAi<DsrP2ThordanState>
         ai.Move(56.95f, () => AiMove.Create(TanksStepIntoTheirTethers()).NaturalOrder(), jitter: 0f, sprint: true);
         ai.Move(57.7f, () => AiMove.Create(TanksCrossTethersToThordan()).NaturalOrder(), jitter: 0f, sprint: true);
         ai.Move(62.0f, () => AiMove.Create(SoakTowers()).NaturalOrder(), jitter: 0.1f);
-        ai.Move(67.3f, () => AiMove.Create(MainTankNorthPartyStacksSouth(0f)).NaturalOrder());
-        ai.Move(68.5f, () => AiMove.Create(MainTankNorthPartyStacksSouth(0f)).NaturalOrder());
+        ai.Move(67.3f, () => AiMove.Create(TanksSouthPartyNorthOfThordan()).NaturalOrder());
 
         ai.Move(106.3f, () => AiMove.Create(PlungeGroupsOnTheWall(PlungeGroupOffsetDegrees)).NaturalOrder(), jitter: 0f);
         world.Events.Add(113.9f, FaceAwayFromBothGazes);
@@ -79,12 +79,14 @@ public sealed class DsrP2ThordanAi : IScenarioAi<DsrP2ThordanState>
         ai.Move(120.6f, () => AiMove.Create(MeteorPairsOnCardinals()).NaturalOrder(), jitter: 0f);
         ai.Move(132.4f, () => AiMove.Create(SoakFirstSanctityTowers()).NaturalOrder(), jitter: 0f);
         ai.Move(136.5f, () => AiMove.Create(WaitForSecondSanctityTowers()).NaturalOrder(), jitter: 0f);
+        ai.Move(138.7f, () => AiMove.Create(WalkInPastTheFadedIceToRideTheKnockback()).NaturalOrder(), jitter: 0f);
         for (var step = 1; step < HolyCometDrops.Length; step++)
         {
             var fraction = (float)step / (HolyCometDrops.Length - 1);
             ai.Move(HolyCometDrops[step - 1] + 0.05f, () => AiMove.Create(MeteorsSweepClockwise(fraction)).NaturalOrder(), jitter: 0f, sprint: true);
         }
-        ai.Move(HolyCometDrops[^1] + 0.05f, () => AiMove.Create(MeteorsToSecondTowers()).NaturalOrder(), jitter: 0f);
+        ai.Move(HolyCometDrops[^1] + 0.05f, () => AiMove.Create(MeteorsFollowTheWallToTheOppositeCardinal()).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(148.3f, () => AiMove.Create(MeteorsToSecondTowers()).NaturalOrder(), jitter: 0f);
 
         ai.Move(150.5f, () => AiMove.Create(StackSouthOfUltimateEndThordan()).NaturalOrder());
         ai.Move(177.25f, () => AiMove.Create(StackBehindThordan(0)).NaturalOrder(), jitter: 0f, sprint: true);
@@ -149,19 +151,31 @@ public sealed class DsrP2ThordanAi : IScenarioAi<DsrP2ThordanState>
     }
 
     private Vector2?[] SoakFirstSanctityTowers() =>
-        state.FirstTowerSoaks().OrderBy(kv => kv.Key).Select(kv => (Vector2?)Flat(AtBearing(kv.Value.Bearing, kv.Value.Radius))).ToArray();
+        state.FirstTowerSoaks().OrderBy(kv => kv.Key).Select(kv => (Vector2?)Flat(AtBearing(kv.Value.Bearing, kv.Value.Radius >= DsrP2ThordanState.OuterTowerRadius ? kv.Value.Radius : InnerTowerStandRadius))).ToArray();
 
     private Vector2?[] WaitForSecondSanctityTowers()
     {
         var spots = new Vector2?[8];
+        var soaks = state.FirstTowerSoaks();
+        var cardinals = state.MeteorCardinals();
         foreach (var role in Enum.GetValues<PartyRole>())
         {
             if (state.MeteorTargets.Contains(role)) continue;
-            var bearing = state.SecondTowerBearing(role);
-            spots[(int)role] = state.IsMeteorRole(role)
-                ? Flat(AtBearing(bearing, DsrP2ThordanState.OuterTowerRadius))
-                : Flat(AtBearing(bearing, KnockbackRideRadius));
+            if (state.IsMeteorRole(role))
+                spots[(int)role] = Flat(AtBearing(state.SecondTowerBearing(role), DsrP2ThordanState.OuterTowerRadius));
+            else if (soaks[role].Radius >= DsrP2ThordanState.OuterTowerRadius)
+                spots[(int)role] = Flat(AtBearing(cardinals[role], DsrP2ThordanState.OuterTowerRadius));
+            else
+                spots[(int)role] = Flat(AtBearing(state.SecondTowerBearing(role), KnockbackRideRadius));
         }
+        return spots;
+    }
+
+    private Vector2?[] WalkInPastTheFadedIceToRideTheKnockback()
+    {
+        var spots = new Vector2?[8];
+        foreach (var role in Enum.GetValues<PartyRole>().Where(r => !state.IsMeteorRole(r)))
+            spots[(int)role] = Flat(AtBearing(state.SecondTowerBearing(role), KnockbackRideRadius));
         return spots;
     }
 
@@ -177,6 +191,14 @@ public sealed class DsrP2ThordanAi : IScenarioAi<DsrP2ThordanState>
             var end = cardinal + MeteorSweepDegrees;
             spots[(int)role] = Flat(AtBearing(start + (end - start) * fraction, MeteorSweepRadius));
         }
+        return spots;
+    }
+
+    private Vector2?[] MeteorsFollowTheWallToTheOppositeCardinal()
+    {
+        var spots = new Vector2?[8];
+        foreach (var role in state.MeteorTargets)
+            spots[(int)role] = Flat(AtBearing(state.SecondTowerBearing(role), MeteorSweepRadius));
         return spots;
     }
 
@@ -234,11 +256,37 @@ public sealed class DsrP2ThordanAi : IScenarioAi<DsrP2ThordanState>
         new(1f, 6.9f),
     ];
 
-    private static Vector2?[] MainTankNorthPartyStacksSouth(float swingDegrees)
-    {
-        var swing = Matrix3x2.CreateRotation(swingDegrees * MathF.PI / 180f);
-        return MainTankNorthPartySouth.Select(spot => (Vector2?)Vector2.Transform(spot, swing)).ToArray();
-    }
+    private static Vector2?[] MainTankNorthPartyStacksSouth() => MainTankNorthPartySouth.Select(spot => (Vector2?)spot).ToArray();
+
+    private static readonly (float Bearing, float Radius)[] MercySplitSpots =
+    [
+        (30f, 7f),
+        (124f, 4.4f),
+        (263f, 6.5f),
+        (248f, 6.7f),
+        (107f, 6.1f),
+        (234f, 6.5f),
+        (128f, 7f),
+        (135f, 6.1f),
+    ];
+
+    private static Vector2?[] SplitEastAndWestOutOfTheMercyCones() =>
+        MercySplitSpots.Select(spot => (Vector2?)Flat(AtBearing(spot.Bearing, spot.Radius))).ToArray();
+
+    private static readonly (float Bearing, float Radius)[] TanksSouthPartyNorthSpots =
+    [
+        (179f, 6.1f),
+        (266f, 5.6f),
+        (2f, 8f),
+        (352f, 5.5f),
+        (310f, 5.6f),
+        (334f, 7.3f),
+        (33f, 6.1f),
+        (10f, 5.5f),
+    ];
+
+    private static Vector2?[] TanksSouthPartyNorthOfThordan() =>
+        TanksSouthPartyNorthSpots.Select(spot => (Vector2?)Flat(AtBearing(spot.Bearing, spot.Radius))).ToArray();
 
     private static Vector2?[] Only(PartyRole role, Vector2 spot)
     {
@@ -267,7 +315,6 @@ public sealed class DsrP2ThordanAi : IScenarioAi<DsrP2ThordanState>
         var radius = role switch
         {
             PartyRole.MainTank or PartyRole.OffTank => tankRadius,
-            PartyRole.RegenHealer or PartyRole.ShieldHealer => tankRadius + SpreadSpacing,
             _ => DpsSpreadRadius,
         };
         return Flat(AtBearing(side + SpreadDegreesFromLine(role), radius));
@@ -290,6 +337,14 @@ public sealed class DsrP2ThordanAi : IScenarioAi<DsrP2ThordanState>
     }
 
     private bool StillOutsideLastRing(PartyRole role) => HeavyImpactWave(SpreadSpot(role)) == HeavyImpactWaves.Length - 1;
+
+    private Vector2?[] FarHealersMoveUpTowardsTheirTank()
+    {
+        var spots = new Vector2?[8];
+        foreach (var healer in new[] { PartyRole.RegenHealer, PartyRole.ShieldHealer }.Where(StillOutsideLastRing))
+            spots[(int)healer] = Flat(AtBearing(state.SpreadSideBearing(healer), FarHealerRadius));
+        return spots;
+    }
 
     private Vector2?[] DodgeWardMercy()
     {

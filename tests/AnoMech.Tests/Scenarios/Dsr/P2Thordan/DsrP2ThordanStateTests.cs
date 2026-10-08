@@ -139,6 +139,54 @@ public class DsrP2ThordanStateTests
     }
 
     [Test]
+    public void NorthAndSouthMeteorsTakeTowersStraightAcrossWhenTheyExist()
+    {
+        var state = new DsrP2ThordanState(new Rng(1), new DsrP2ThordanStateOverrides
+        {
+            MeteorTargets = [MainTank, OffTank],
+            FirstTowers = [(330f, 18f), (30f, 18f), (180f, 18f), (150f, 18f), (90f, 18f), (135f, 6f), (270f, 18f), (315f, 6f)],
+        });
+
+        var soaks = state.FirstTowerSoaks();
+
+        Assert.That(soaks[MainTank].Bearing, Is.EqualTo(330f));
+        Assert.That(soaks[OffTank].Bearing, Is.EqualTo(150f));
+        Assert.That(soaks[PhysRangedDps].Bearing, Is.EqualTo(30f));
+        Assert.That(soaks[CasterDps].Bearing, Is.EqualTo(180f));
+    }
+
+    [Test]
+    public void WithoutAnAcrossPairMeteorsKeepTheCardinalTower()
+    {
+        var state = new DsrP2ThordanState(new Rng(1), new DsrP2ThordanStateOverrides
+        {
+            MeteorTargets = [MainTank, OffTank],
+            FirstTowers = [(0f, 18f), (30f, 18f), (180f, 18f), (150f, 18f), (90f, 18f), (135f, 6f), (270f, 18f), (315f, 6f)],
+        });
+
+        var soaks = state.FirstTowerSoaks();
+
+        Assert.That(soaks[MainTank].Bearing, Is.EqualTo(0f));
+        Assert.That(soaks[OffTank].Bearing, Is.EqualTo(180f));
+    }
+
+    [Test]
+    public void NorthAndSouthMeteorTowersAreStraightAcrossWheneverTheRollAllowsIt()
+    {
+        foreach (var state in Rolls(500))
+        {
+            var soaks = state.FirstTowerSoaks();
+            var cardinals = state.MeteorCardinals();
+            var north = state.MeteorTargets.First(r => cardinals[r] == 0f);
+            var south = state.MeteorTargets.First(r => cardinals[r] == 180f);
+            var wall = state.FirstTowers.Where(t => t.Radius == DsrP2ThordanState.OuterTowerRadius).Select(t => t.Bearing).ToList();
+            var possible = wall.Any(n => (n >= 330f || n <= 30f) && wall.Contains(DsrP2ThordanState.Normalize(n + 180f)));
+            var across = DsrP2ThordanState.Normalize(soaks[north].Bearing - soaks[south].Bearing) == 180f;
+            Assert.That(across, Is.EqualTo(possible));
+        }
+    }
+
+    [Test]
     public void SecondTowersCoverEveryCardinalAndIntercardinalWithMeteorRolesOnCardinals()
     {
         foreach (var state in Rolls())

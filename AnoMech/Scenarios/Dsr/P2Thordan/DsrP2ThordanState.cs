@@ -172,22 +172,32 @@ public sealed class DsrP2ThordanState
 
     // The meteor role takes the wall tower (the one on the cardinal first); the other goes out too
     // when the quadrant has two wall towers, else in to the first free middle tower clockwise.
+    // The north and south meteors take towers straight across from each other when they can.
     public IReadOnlyDictionary<PartyRole, (float Bearing, float Radius)> FirstTowerSoaks()
     {
         var cardinals = MeteorCardinals();
         var soaks = new Dictionary<PartyRole, (float, float)>();
         var freeInner = FirstTowers.Where(t => t.Radius < OuterTowerRadius).ToList();
+        var acrossPair = WallTowersNear(0f)
+            .SelectMany(north => WallTowersNear(180f).Where(south => AngleBetween(north.Bearing, south.Bearing) > 179f).Select(south => (north, south)))
+            .Cast<((float Bearing, float Radius) North, (float Bearing, float Radius) South)?>()
+            .FirstOrDefault();
         foreach (var cardinal in new[] { 0f, 90f, 180f, 270f })
         {
             var pair = cardinals.Where(kv => kv.Value == cardinal).Select(kv => kv.Key).ToList();
             var meteorRole = pair.First(IsMeteorRole);
             var other = pair.First(r => r != meteorRole);
-            var outer = FirstTowers.Where(t => t.Radius >= OuterTowerRadius && AngleBetween(t.Bearing, cardinal) <= 30f)
-                .OrderBy(t => AngleBetween(t.Bearing, cardinal)).ThenBy(t => Normalize(t.Bearing - cardinal)).ToList();
-            soaks[meteorRole] = outer[0];
+            var outer = WallTowersNear(cardinal);
+            var meteorTower = (cardinal, acrossPair) switch
+            {
+                (0f, { } across) => across.North,
+                (180f, { } across) => across.South,
+                _ => outer[0],
+            };
+            soaks[meteorRole] = meteorTower;
             if (outer.Count > 1)
             {
-                soaks[other] = outer[1];
+                soaks[other] = outer.First(t => t != meteorTower);
                 continue;
             }
             var inner = freeInner.OrderBy(t => Normalize(t.Bearing - cardinal)).First();
@@ -196,6 +206,11 @@ public sealed class DsrP2ThordanState
         }
         return soaks;
     }
+
+    // Cardinal first, then clockwise.
+    private List<(float Bearing, float Radius)> WallTowersNear(float cardinal) =>
+        FirstTowers.Where(t => t.Radius >= OuterTowerRadius && AngleBetween(t.Bearing, cardinal) <= 30f)
+            .OrderBy(t => AngleBetween(t.Bearing, cardinal)).ThenBy(t => Normalize(t.Bearing - cardinal)).ToList();
 
     // Meteors end on the cardinal opposite their start; the rest of the meteor role keep their
     // cardinal and the other role takes the intercardinal clockwise of theirs.

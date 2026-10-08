@@ -87,5 +87,19 @@ public class DsrP2ThordanScenarioTests
             .TeleportAt(59f, to: new Vector2(0f, 20f))
             .ShouldKill(ActionId.SkywardLeap, RegenHealer, ShieldHealer);
 
+    [Test]
+    public void WalkingIntoAFirePuddleBleedsOut()
+        => Negative<DsrP2ThordanScenario>(CasterDps)
+            .Overrides<DsrP2ThordanStateOverrides>(o => o.MeteorTargets = [MainTank, OffTank])
+            .TeleportAt(140f, to: Flat(AtBearing(45f, 12f)))
+            .ShouldKill(ActionId.HeavensStakeCircle, CasterDps);
+
+    [Test]
+    public void StayingInTheIcePuddleAsItSettlesBleedsOut()
+        => Negative<DsrP2ThordanScenario>(CasterDps)
+            .Overrides<DsrP2ThordanStateOverrides>(o => o.MeteorTargets = [MainTank, OffTank])
+            .TeleportAt(136.6f, to: Flat(AtBearing(180f, 10f)))
+            .ShouldKill(ActionId.HiemalStormHit, CasterDps);
+
     private static Vector2 Flat(Vector3 p) => new(p.X, p.Z);
 }
