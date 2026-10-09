@@ -14,7 +14,7 @@ public sealed class DsrP3NidhoggAi : IScenarioAi<DsrP3NidhoggState>
     public string Name => "NAUR (PF)";
 
     private const float FacingWest = -MathF.PI / 2f;
-    private const float OddDiveRadius = 8f;
+    private const float OddDiveRadius = 6.7f;
     private const float EvenDiveRadius = 10f;
     private const float ThirdsClaimRadius = 10f;
     private const float InsideWheelRadius = 3.5f;
@@ -25,6 +25,7 @@ public sealed class DsrP3NidhoggAi : IScenarioAi<DsrP3NidhoggState>
     private const float FourTowerDodgeRadius = 15f;
     private const float TankBusterOffTankRadius = 9f;
     private const float TetherInterceptShare = 0.5f;
+    private const float MainTankInterceptShare = 0.3f;
     private static readonly Vector2 MainTankSpot = new(0f, -6f);
     private static readonly Vector2 NorthStack = new(0f, -8f);
     private static readonly Vector2 SouthStack = new(0f, 6f);
@@ -76,7 +77,7 @@ public sealed class DsrP3NidhoggAi : IScenarioAi<DsrP3NidhoggState>
         ai.Move(74.3f, () => AiMove.Create(MainTankStepsOutOfDrachenlance()).NaturalOrder(), jitter: 0f, sprint: true);
         ai.Move(77.8f, () => AiMove.Create(SoakFourTowers()).NaturalOrder(), jitter: 0f, sprint: true);
         ai.Move(84.2f, () => AiMove.Create(BaitFourTowerGeirskoguls()).NaturalOrder(), jitter: 0f, sprint: true);
-        ai.Move(86.8f, () => AiMove.Create(DodgeToCardinalsAndInterceptTethers()).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(86.8f, () => AiMove.Create(CollapseEastOrWestAndTanksIntercept()).NaturalOrder(), jitter: 0f, sprint: true);
         ai.Move(89.2f, () => AiMove.Create(TanksApartForSoulTethers()).NaturalOrder(), jitter: 0f, sprint: true);
         ai.Move(91.3f, () => AiMove.Create(MainTankSouthPartyNorth()).NaturalOrder(), sprint: true);
         ai.Move(110.5f, () => AiMove.Create(Stacked(NorthStack)).NaturalOrder(), sprint: true);
@@ -268,14 +269,21 @@ public sealed class DsrP3NidhoggAi : IScenarioAi<DsrP3NidhoggState>
         }
         for (var i = 0; i < FourTowerPairs.Length; i++)
         {
-            var sameSide = i is 0 or 1 ? new[] { 0, 1 } : new[] { 2, 3 };
-            var tower = needed[i] > 0 ? i : sameSide.Where(t => needed[t] > 0).Select(t => (int?)t).FirstOrDefault()
-                ?? Enumerable.Range(0, needed.Length).Where(t => needed[t] > 0).Select(t => (int?)t).FirstOrDefault() ?? i;
+            if (needed[i] <= 0) continue;
+            assigned[FourTowerPairs[i].Partner] = i;
+            needed[i]--;
+        }
+        for (var i = 0; i < FourTowerPairs.Length; i++)
+        {
+            if (assigned.ContainsKey(FourTowerPairs[i].Partner)) continue;
+            var tower = ClockwiseThenCounterThenDiagonal(i).Where(t => needed[t] > 0).Select(t => (int?)t).FirstOrDefault() ?? i;
             assigned[FourTowerPairs[i].Partner] = tower;
             needed[tower]--;
         }
         return assigned;
     }
+
+    private static int[] ClockwiseThenCounterThenDiagonal(int tower) => [(tower + 1) % 4, (tower + 3) % 4, (tower + 2) % 4];
 
     private Vector2?[] SoakFourTowers()
     {
@@ -293,17 +301,32 @@ public sealed class DsrP3NidhoggAi : IScenarioAi<DsrP3NidhoggState>
         return spots;
     }
 
-    private Vector2?[] DodgeToCardinalsAndInterceptTethers()
+    private Vector2?[] CollapseEastOrWestAndTanksIntercept()
+    {
+        var spots = CollapsedEastOrWest();
+        var offTankTether = OffTankTether();
+        var mainTankTether = state.SoulTetherTargets.First(h => h != offTankTether);
+        spots[(int)PartyRole.OffTank] = spots[(int)offTankTether] * TetherInterceptShare;
+        spots[(int)PartyRole.MainTank] = spots[(int)mainTankTether] * MainTankInterceptShare;
+        return spots;
+    }
+
+    private Vector2?[] CollapsedEastOrWest()
     {
         var spots = new Vector2?[8];
         foreach (var (role, tower) in FourTowerAssignments())
-            spots[(int)role] = Flat(AtBearing(DsrP3NidhoggState.TowerBearings[tower] - 45f, FourTowerDodgeRadius)) + Spread(role);
-        var tanks = new[] { PartyRole.MainTank, PartyRole.OffTank };
-        for (var i = 0; i < tanks.Length; i++)
-            if (spots[(int)state.SoulTetherTargets[i]] is { } holder)
-                spots[(int)tanks[i]] = holder * TetherInterceptShare;
+            spots[(int)role] = Flat(AtBearing(IsEastTower(tower) ? 90f : 270f, FourTowerDodgeRadius)) + Spread(role);
         return spots;
     }
+
+    private PartyRole OffTankTether()
+    {
+        var towers = FourTowerAssignments();
+        var offTankSide = IsEastTower(towers[PartyRole.OffTank]);
+        return state.SoulTetherTargets.FirstOrDefault(h => IsEastTower(towers[h]) == offTankSide, state.SoulTetherTargets[0]);
+    }
+
+    private static bool IsEastTower(int tower) => tower <= 1;
 
     private static Vector2?[] TanksApartForSoulTethers()
     {
