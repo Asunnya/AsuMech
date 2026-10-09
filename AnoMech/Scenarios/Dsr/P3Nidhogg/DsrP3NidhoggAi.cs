@@ -78,8 +78,8 @@ public sealed class DsrP3NidhoggAi : IScenarioAi<DsrP3NidhoggState>
         ai.Move(84.2f, () => AiMove.Create(BaitFourTowerGeirskoguls()).NaturalOrder(), jitter: 0f, sprint: true);
         ai.Move(86.8f, () => AiMove.Create(DodgeToCardinalsAndInterceptTethers()).NaturalOrder(), jitter: 0f, sprint: true);
         ai.Move(89.2f, () => AiMove.Create(TanksApartForSoulTethers()).NaturalOrder(), jitter: 0f, sprint: true);
-        ai.Move(91.3f, () => AiMove.Create(MainTankNorthPartySouth()).NaturalOrder(), sprint: true);
-        ai.Move(110.5f, () => AiMove.Create(EveryoneNorthOfTheSouthDrachenlance()).NaturalOrder(), sprint: true);
+        ai.Move(91.3f, () => AiMove.Create(MainTankSouthPartyNorth()).NaturalOrder(), sprint: true);
+        ai.Move(110.5f, () => AiMove.Create(Stacked(NorthStack)).NaturalOrder(), sprint: true);
     }
 
     private static Vector2?[] MainTankStepsOutOfDrachenlance()
@@ -89,10 +89,10 @@ public sealed class DsrP3NidhoggAi : IScenarioAi<DsrP3NidhoggState>
         return spots;
     }
 
-    private static Vector2?[] EveryoneNorthOfTheSouthDrachenlance()
+    private static Vector2?[] MainTankSouthPartyNorth()
     {
         var spots = Stacked(NorthStack);
-        spots[(int)PartyRole.MainTank] = MainTankSpot;
+        spots[(int)PartyRole.MainTank] = -MainTankSpot;
         return spots;
     }
 
