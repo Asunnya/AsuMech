@@ -79,13 +79,20 @@ public sealed class DsrP3NidhoggAi : IScenarioAi<DsrP3NidhoggState>
         ai.Move(86.8f, () => AiMove.Create(DodgeToCardinalsAndInterceptTethers()).NaturalOrder(), jitter: 0f, sprint: true);
         ai.Move(89.2f, () => AiMove.Create(TanksApartForSoulTethers()).NaturalOrder(), jitter: 0f, sprint: true);
         ai.Move(91.3f, () => AiMove.Create(MainTankNorthPartySouth()).NaturalOrder(), sprint: true);
-        ai.Move(112.2f, () => AiMove.Create(MainTankStepsOutOfDrachenlance()).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(110.5f, () => AiMove.Create(EveryoneNorthOfTheSouthDrachenlance()).NaturalOrder(), sprint: true);
     }
 
     private static Vector2?[] MainTankStepsOutOfDrachenlance()
     {
         var spots = new Vector2?[8];
         spots[(int)PartyRole.MainTank] = SouthStack + new Vector2(2f, 0f);
+        return spots;
+    }
+
+    private static Vector2?[] EveryoneNorthOfTheSouthDrachenlance()
+    {
+        var spots = Stacked(NorthStack);
+        spots[(int)PartyRole.MainTank] = MainTankSpot;
         return spots;
     }
 

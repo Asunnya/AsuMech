@@ -140,7 +140,7 @@ public sealed class DsrP3NidhoggScenario : IScenario
         world.Events.Add(91.14f, ResolveGeirskoguls);
         foreach (var auto in new[] { 96.23f, 99.35f, 102.47f, 105.59f, 108.71f })
             world.Events.Add(auto, AutoAttack);
-        world.Events.Add(111.97f, CastDrachenlance);
+        world.Events.Add(111.97f, CastDrachenlanceSouth);
         world.Events.Add(115.53f, ResolveDrachenlance);
         world.Events.Add(116.97f, () => CastSelf(nidhogg, ActionId.RevengeOfTheHorde, 11f));
         world.Events.Add(127.90f, DespawnAll);
@@ -359,6 +359,19 @@ public sealed class DsrP3NidhoggScenario : IScenario
         if (nidhogg == null) return;
         if (party.Get(PartyRole.MainTank) is { } tank && tank.IsAlive())
             nidhogg.SetRotation(RotationTowards(nidhogg.Position, tank.Position));
+        CastDrachenlanceAhead();
+    }
+
+    // The last Drachenlance always points south.
+    private void CastDrachenlanceSouth()
+    {
+        nidhogg?.SetRotation(0f);
+        CastDrachenlanceAhead();
+    }
+
+    private void CastDrachenlanceAhead()
+    {
+        if (nidhogg == null) return;
         CastSelf(nidhogg, ActionId.DrachenlanceWindup, 2.6f);
         world.Events.Add(0.09f, () => nidhogg?.NativeCast(ActionId.Drachenlance, ActionType.Action, 0f, 3.2f, false, rotation: nidhogg.Rotation, position: nidhogg.Position));
     }
