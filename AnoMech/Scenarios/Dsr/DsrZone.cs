@@ -14,6 +14,8 @@ public sealed class DsrZone : IZone
     public static readonly DsrZone Instance = new();
     public static readonly Phase Knights = new(Instance, "P1", FairSkies, BgmId);
     public static readonly Phase Thordan = new(Instance, "P2", Oppression, BgmId);
+    // UNVERIFIED: the weather that gives Nidhogg's arena its look was never checked in-game.
+    public static readonly Phase Nidhogg = new(Instance, "P3", FairSkies, BgmId);
 
     public string Name => "Dragonsong's Reprise";
     public uint TerritoryId => 968;

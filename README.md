@@ -109,7 +109,7 @@ Thanks for contributors:
 * [WorstAquaPlayer](https://github.com/WorstAquaPlayer) - rewriting core & fixing crashes, scenarios for uwu
 * [Wydox](https://github.com/Wydox) - EU strats for Forsaken, UMAD Exaflares, core improvements
 * [RoarkGit](https://github.com/RoarkGit) - UMAD Celestriad, UCOB exas, win streaks
-* [Asunnya](https://github.com/Asunnya) - M9S, UWU P1 Garuda / P2 Ifrit / P3 Titan / Ultimate Annihilation, DSR P1 Knights
+* [Asunnya](https://github.com/Asunnya) - M9S, UWU P1 Garuda / P2 Ifrit / P3 Titan / Ultimate Annihilation, DSR P1 Knights / P2 Thordan / P3 Nidhogg
 
 AnoMech leans heavily on the work of other Dalamud plugins. Huge thanks to their authors!  
 Without them, the following would not be possible:

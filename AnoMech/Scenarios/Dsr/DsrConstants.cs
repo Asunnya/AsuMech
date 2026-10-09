@@ -73,6 +73,8 @@ public class DsrConstants
         public const uint SpearOfTheFury = 11810;
         public const uint Brightsphere = 13070;
         public const uint AetherialTear = 13071;
+        public const uint Nidhogg = 12605;
+        public const uint NidhoggDiver = 12606;
     }
 
     public class BNpcNameId
@@ -96,6 +98,7 @@ public class DsrConstants
         public const uint SpearOfTheFury = 11320;
         public const uint Brightsphere = 4385;
         public const uint AetherialTear = 3293;
+        public const uint Nidhogg = 3458;
     }
 
     public class ActionId
@@ -179,6 +182,29 @@ public class DsrConstants
         public const uint AethericBurst = 0x63C3;
         public const uint KnightsOfTheRound = 0x63ED;
 
+        public const uint FinalChorus = 0x6708;
+        public const uint Geirskogul = 0x670A;
+        public const uint DrachenlanceWindup = 0x670B;
+        public const uint Drachenlance = 0x670C;
+        public const uint DiveFromGrace = 0x670D;
+        public const uint DarkHighJump = 0x670E;
+        public const uint DarkSpineshatterDive = 0x670F;
+        public const uint DarkElusiveJump = 0x6710;
+        public const uint DarkdragonDive = 0x6711;
+        public const uint GnashAndLash = 0x6712;
+        public const uint LashAndGnash = 0x6713;
+        public const uint EyeOfTheTyrant = 0x6714;
+        public const uint GnashingWheel = 0x6715;
+        public const uint LashingWheel = 0x6716;
+        public const uint DarkdragonDiveOne = 0x6717;
+        public const uint DarkdragonDiveTwo = 0x6718;
+        public const uint DarkdragonDiveThree = 0x6719;
+        public const uint DarkdragonDiveFour = 0x671A;
+        public const uint DarkdragonDiveFailed = 0x671B;
+        public const uint SoulTether = 0x671C;
+        public const uint NidhoggAttack = 0x6730;
+        public const uint RevengeOfTheHorde = 0x7436;
+
         public const uint Interject = 7538;
         public const uint HeadGraze = 7551;
         public const uint ArmsLength = 7548;
@@ -206,6 +232,12 @@ public class DsrConstants
         public const ushort Prey = 0x232;
         public const ushort Burns = 0xB81;
         public const ushort Frostbite = 0xB82;
+        public const ushort HighJumpTarget = 0xAC3;
+        public const ushort SpineshatterDiveTarget = 0xAC4;
+        public const ushort ElusiveJumpTarget = 0xAC5;
+        public const ushort FirstInLine = 0xBBC;
+        public const ushort SecondInLine = 0xBBD;
+        public const ushort ThirdInLine = 0xBBE;
     }
 
     public class TetherId
@@ -213,6 +245,7 @@ public class DsrConstants
         public const ushort BurningChains = 0x09;
         public const ushort PlanarPrison = 0x35;
         public const ushort HolyShieldBash = 0x54;
+        public const ushort SoulTether = 0x54;
     }
 
     public class EObjId
@@ -233,6 +266,9 @@ public class DsrConstants
         public const uint Triangle = 0x11A;
         public const uint Square = 0x11B;
         public const uint Cross = 0x11C;
+        public const uint FirstInLine = 0x13F;
+        public const uint SecondInLine = 0x140;
+        public const uint ThirdInLine = 0x141;
     }
 
     // UNVERIFIED: replayed from the log's director traffic at each phase change; whether they
@@ -248,9 +284,13 @@ public class DsrConstants
         public const uint WardLayout = 0x25;
         public const uint SanctityLayout = 0x2F;
         public const uint UltimateEndLayout = 0x39;
+        public const uint NidhoggLayout = 0x48;
         public const uint KnightsMap = 758;
         public const uint ThordanMap = 765;
         public const uint ThordanMusic = 0x1AF3;
+        // MapEffect slot 8, sgbg_r1fz_e0_hreas01 (layer e00_nidhogg), lit as Nidhogg arrives.
+        public const byte NidhoggSlot = 8;
+        public const uint NidhoggSlotOn = 0x00020001;
     }
 
     // MapEffect slots 0-7 are the giant eyes at r40, slot i at bearing 45*i.
