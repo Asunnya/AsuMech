@@ -16,6 +16,7 @@ public sealed class DsrP3NidhoggAi : IScenarioAi<DsrP3NidhoggState>
     private const float FacingWest = -MathF.PI / 2f;
     private const float OddDiveRadius = 8f;
     private const float EvenDiveRadius = 10f;
+    private const float ThirdsClaimRadius = 10f;
     private const float InsideWheelRadius = 3.5f;
     private const float OutsideWheelRadius = 10f;
     private const float TowerEdge = 3.5f;
@@ -49,6 +50,7 @@ public sealed class DsrP3NidhoggAi : IScenarioAi<DsrP3NidhoggState>
 
         ai.Move(0.3f, () => AiMove.Create(MainTankNorthPartySouth()).NaturalOrder());
 
+        ai.Move(23.5f, () => AiMove.Create(ClaimDiveSpotsByNumber()).NaturalOrder(), jitter: 0f);
         ai.Move(30.5f, () => AiMove.Create(DiveSpotsAndNorthStack(1)).NaturalOrder(), jitter: 0f);
         world.Events.Add(36.7f, () => FaceArrowsWest(1));
         ai.Move(37.5f, () => AiMove.Create(WaitOnTowerBearingsForFirstWheel(0, 1)).NaturalOrder(), jitter: 0f, sprint: true);
@@ -91,6 +93,18 @@ public sealed class DsrP3NidhoggAi : IScenarioAi<DsrP3NidhoggState>
     {
         var spots = Enumerable.Range(0, 8).Select(i => (Vector2?)(SouthStack + new Vector2(0.6f * (i % 3 - 1), 0.6f * (i / 3 - 1)))).ToArray();
         spots[(int)PartyRole.MainTank] = MainTankSpot;
+        return spots;
+    }
+
+    private Vector2?[] ClaimDiveSpotsByNumber()
+    {
+        var spots = new Vector2?[8];
+        foreach (var (role, i) in state.Line(1).Select((r, i) => (r, i)))
+            spots[(int)role] = Flat(AtBearing(OddDiveBearings[i], OddDiveRadius));
+        foreach (var (role, i) in state.Line(3).Select((r, i) => (r, i)))
+            spots[(int)role] = Flat(AtBearing(OddDiveBearings[i], ThirdsClaimRadius));
+        foreach (var (role, i) in state.Line(2).Select((r, i) => (r, i)))
+            spots[(int)role] = Flat(AtBearing(EvenDiveBearings[i], EvenDiveRadius));
         return spots;
     }
 

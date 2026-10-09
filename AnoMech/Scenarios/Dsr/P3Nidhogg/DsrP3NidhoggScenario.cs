@@ -131,6 +131,7 @@ public sealed class DsrP3NidhoggScenario : IScenario
 
         world.Events.Add(74.03f, CastDrachenlance);
         world.Events.Add(77.59f, ResolveDrachenlance);
+        world.Events.Add(78.00f, SpawnFourTowerDivers);
         world.Events.Add(79.06f, CastFourTowers);
         world.Events.Add(83.96f, TetherSoulTethers);
         world.Events.Add(84.05f, ResolveFourTowers);
@@ -369,17 +370,22 @@ public sealed class DsrP3NidhoggScenario : IScenario
         damage.Resolve(nidhogg, ActionId.Drachenlance, [DamageType.Lethal], [], size: DrachenlanceHalfAngle);
     }
 
-    private void CastFourTowers()
+    // A diver spawned in the same frame it casts drops the cast, so they arrive a second early.
+    private void SpawnFourTowerDivers()
     {
         fourTowers.Clear();
         for (var i = 0; i < DsrP3NidhoggState.TowerBearings.Length; i++)
         {
             var at = AtBearing(DsrP3NidhoggState.TowerBearings[i], FourTowerRadius);
-            var needed = state.TowerSoakers[i];
             if (SpawnDiver(new Placement(at, RotationTowards(at, Vector3.Zero))) is not { } caster) continue;
-            caster.NativeCast(FourTowerAction(needed), ActionType.Action, 0f, 4.7f, false, position: at);
-            fourTowers.Add((caster, at, needed));
+            fourTowers.Add((caster, at, state.TowerSoakers[i]));
         }
+    }
+
+    private void CastFourTowers()
+    {
+        foreach (var (caster, at, needed) in fourTowers)
+            caster.NativeCast(FourTowerAction(needed), ActionType.Action, 0f, 4.7f, false, position: at);
     }
 
     private static uint FourTowerAction(int needed) => needed switch
