@@ -224,6 +224,7 @@ public sealed class DsrP2ThordanState
     public Vector3 DarkKnightSpot => AtBearing(DarkKnightBearing, DarkKnightRadius);
     public Vector3 SanctityThordanSpot => AtBearing(SanctityThordanBearing, SanctityThordanRadius);
     public Vector3 EyeSpot => AtBearing(EyeBearing, EyeRadius);
+    public byte EyeSlot => (byte)(EyeBearing / 45f);
     public float SanctitySign => SanctityClockwise ? 1f : -1f;
 
     // Each knight charges three times, dropping Brightspheres along the way.

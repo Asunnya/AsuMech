@@ -63,6 +63,7 @@ public static class ScenarioCatalog
         new UcobP5ExaflaresScenario(),
         new DsrP1KnightsScenario(),
         new DsrP2ThordanScenario(),
+        new DsrP2MeteorsScenario(),
         new M9sVampStompScenario(),
         new M9sCoffinmakerScenario(),
         new M9sAetherlettingScenario(),

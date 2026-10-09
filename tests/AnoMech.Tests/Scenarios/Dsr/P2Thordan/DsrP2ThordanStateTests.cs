@@ -229,6 +229,13 @@ public class DsrP2ThordanStateTests
     }
 
     [Test]
+    public void TheEyeLightsTheMapEffectSlotFacingItsBearing()
+    {
+        foreach (var state in Rolls())
+            Assert.That(state.EyeSlot * 45f, Is.EqualTo(state.EyeBearing));
+    }
+
+    [Test]
     public void OverridesPinTheRolls()
     {
         var state = new DsrP2ThordanState(new Rng(7), new DsrP2ThordanStateOverrides

@@ -203,6 +203,7 @@ public class DsrConstants
         public const ushort DamageDown = 0xC5E;
         public const ushort SlashingResistanceDown = 0xC3A;
         public const ushort Hysteria = 0x128;
+        public const ushort Prey = 0x232;
         public const ushort Burns = 0xB81;
         public const ushort Frostbite = 0xB82;
     }
@@ -250,6 +251,14 @@ public class DsrConstants
         public const uint KnightsMap = 758;
         public const uint ThordanMap = 765;
         public const uint ThordanMusic = 0x1AF3;
+    }
+
+    // MapEffect slots 0-7 are the giant eyes at r40, slot i at bearing 45*i.
+    public static class EyeEffect
+    {
+        public const uint Opens = 0x00020001;
+        public const uint Glares = 0x00100001;
+        public const uint Closes = 0x00400020;
     }
 
     // UNVERIFIED as timelines: the log sends them as ActorControl 0x197 on the knights.

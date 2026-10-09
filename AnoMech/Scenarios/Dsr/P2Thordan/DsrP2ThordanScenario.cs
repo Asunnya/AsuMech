@@ -18,8 +18,19 @@ namespace AnoMech.Scenarios.Dsr.P2Thordan;
 // Thordan's HP is not simulated: the run ends as the enrage (never reached in the logs) would fire.
 public sealed class DsrP2ThordanScenario : IScenario
 {
-    public string Name => "Thordan";
+    // The meteors drill: just Sanctity of the Ward's second half, from the knights reappearing to the last towers.
+    private const float MeteorsStart = 119.5f;
+    private const float MeteorsEnd = 150.5f;
+
+    private readonly bool meteorsOnly;
+
+    internal DsrP2ThordanScenario(bool meteorsOnly) => this.meteorsOnly = meteorsOnly;
+
+    public DsrP2ThordanScenario() : this(false) { }
+
+    public string Name => meteorsOnly ? "Meteors" : "Thordan";
     public IPhase Phase => DsrZone.Thordan;
+    public float BgmSecondsAtStart => meteorsOnly ? MeteorsStart : 0f;
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new DsrP2ThordanAi()];
 
@@ -28,6 +39,8 @@ public sealed class DsrP2ThordanScenario : IScenario
 
     private const uint ThordanMaxHp = 7439000;
     private const float ThordanHitboxRadius = 5f;
+    // UNVERIFIED: the charge-style landing lag measured on P1's Shining Blade.
+    private const float ThordanLandDelay = 0.35f;
     private const float AutoAttackDamage = 0.3f;
     private const float AutoAttackHalfAngle = MathF.PI / 4f;
     private const float AutoAttackRange = 10f;
@@ -65,6 +78,7 @@ public sealed class DsrP2ThordanScenario : IScenario
     private const float HeavensStakeCircleRadius = 7f;
     // UNVERIFIED: no player was ever inside it; only the arena's outer edge is assumed to burn.
     private const float HeavensStakeDonutInner = 20f;
+    private const float PreySeconds = 23f;
     private const float BleedPuddleRadius = 6f;
     private const float BleedSeconds = 60f;
     private const float BleedDeathDelay = 3f;
@@ -202,6 +216,7 @@ public sealed class DsrP2ThordanScenario : IScenario
         world.Events.Add(43.66f, () => PlayEffect(guerrique, ActionId.HeavyImpactWindup, 2.1f));
         world.Events.Add(45.07f, () => PlayEffect(thordan, ActionId.LightningStorm, 2.1f));
         world.Events.Add(45.36f, ResolveSpiralThrusts);
+        world.Events.Add(48.83f, () => Hide(ignasse, paulecrain, vellguine));
         world.Events.Add(45.36f, () => ResolveHeavyImpact(0));
         world.Events.Add(45.55f, ResolveLightningStorm);
         world.Events.Add(46.78f, () => guerrique?.FadeOut());
@@ -264,10 +279,13 @@ public sealed class DsrP2ThordanScenario : IScenario
         world.Events.Add(104.88f, () => WarpInPlace(adelphel, janlenoux, zephirin));
         world.Events.Add(105.95f, MarkPlungeTargets);
         world.Events.Add(107.06f, () => thordan?.PlayActionTimeline(TimelineId.WarpEnd));
+        world.Events.Add(104.78f, () => world.Map.AddEffect(EyeEffect.Opens, state.EyeSlot));
         world.Events.Add(109.11f, () => CastSelf(thordan, ActionId.DragonsGaze, 3.7f));
         world.Events.Add(113.08f, () => PlayEffect(thordan, ActionId.DragonsGaze, 2.1f));
         world.Events.Add(114.06f, () => SacredSever(state.FirstPlungeTarget));
+        world.Events.Add(114.19f, () => world.Map.AddEffect(EyeEffect.Glares, state.EyeSlot));
         world.Events.Add(114.23f, ResolveDragonsGaze);
+        world.Events.Add(115.13f, () => world.Map.AddEffect(EyeEffect.Closes, state.EyeSlot));
         world.Events.Add(115.83f, () => SacredSever(state.SecondPlungeTarget));
         world.Events.Add(117.62f, () => SacredSever(state.FirstPlungeTarget));
         world.Events.Add(119.41f, () => SacredSever(state.SecondPlungeTarget));
@@ -334,6 +352,30 @@ public sealed class DsrP2ThordanScenario : IScenario
         world.Events.Add(191.26f, () => ResolveBroadSwing(1, 2));
         world.Events.Add(193.90f, () => CastSelf(thordan, ActionId.AethericBurst, 6f));
         world.Events.Add(199.80f, DespawnAll);
+
+        if (meteorsOnly) StartAtTheMeteors();
+    }
+
+    private void StartAtTheMeteors()
+    {
+        world.Events.Add(MeteorsEnd, DespawnAll);
+        world.Events.KeepWindow(MeteorsStart, MeteorsEnd);
+        world.Events.Add(0f, () => world.EnforceArenaBoundary(Geometry.ThordanArenaRadius, "Touched the death wall"));
+        world.Events.Add(0f, () => world.PlaceWaymarks(NaurWaymarks));
+        world.Events.Add(0f, () => world.Map.DirectorUpdate(ArenaDirector.Layout, 0U, ArenaDirector.SanctityLayout));
+        world.Events.Add(0f, KnightsAlreadyPlacedForTheMeteors);
+    }
+
+    // Where PlaceSanctityKnights leaves them, hidden until they warp in.
+    private void KnightsAlreadyPlacedForTheMeteors()
+    {
+        SpawnThordan();
+        thordan?.SetVisible(false);
+        charibert = SpawnKnight(BNpcBaseId.Charibert, BNpcNameId.Charibert, 0f, 6f, visible: false);
+        noudenet = SpawnKnight(BNpcBaseId.Noudenet, BNpcNameId.Noudenet, 90f, 6f, visible: false);
+        hermenost = SpawnKnight(BNpcBaseId.Hermenost, BNpcNameId.Hermenost, 180f, 6f, visible: false);
+        haumeric = SpawnKnight(BNpcBaseId.Haumeric, BNpcNameId.Haumeric, 270f, 6f, visible: false);
+        grinnaux = SpawnKnight(BNpcBaseId.Grinnaux, BNpcNameId.Grinnaux, 0f, 0f, visible: false);
     }
 
     public void Tick(float delta, float elapsed)
@@ -355,7 +397,7 @@ public sealed class DsrP2ThordanScenario : IScenario
         return helper;
     }
 
-    private SimEnemy? SpawnKnight(uint baseId, uint nameId, float bearing, float radius = KnightRingRadius) =>
+    private SimEnemy? SpawnKnight(uint baseId, uint nameId, float bearing, float radius = KnightRingRadius, bool visible = true) =>
         world.SpawnEnemy(new EnemySpawnConfig(
             BNpcBaseId: baseId,
             NameId: nameId,
@@ -363,6 +405,7 @@ public sealed class DsrP2ThordanScenario : IScenario
             Targetable: false,
             EnemyList: EnemyListMode.Never,
             Placement: FacingCentre(AtBearing(bearing, radius)),
+            IsVisible: visible,
             NpcSpawnTemplate: DsrNpcSpawn.Build(baseId, nameId, 1)));
 
     private void OnPlayerAction(ActionType actionType, uint actionId, ulong targetId)
@@ -372,6 +415,11 @@ public sealed class DsrP2ThordanScenario : IScenario
     }
 
     private static Placement FacingCentre(Vector3 at) => new(at, RotationTowards(at, Vector3.Zero));
+
+    private static void Hide(params SimEnemy?[] knights)
+    {
+        foreach (var knight in knights) knight?.SetVisible(false);
+    }
 
     private static void FadeOut(params SimEnemy?[] knights)
     {
@@ -470,8 +518,14 @@ public sealed class DsrP2ThordanScenario : IScenario
         if (thordan == null) return;
         thordan.SetTarget(null);
         thordan.Follow(null);
-        PlayEffect(thordan, ActionId.ThordanLeap, 1.1f);
-        thordan.SetPosition(new Placement(Vector3.Zero, MathF.PI));
+        ThordanLeaps(new Placement(Vector3.Zero, MathF.PI));
+    }
+
+    // The client animates the leap to the effect's position, so that must be the landing spot.
+    private void ThordanLeaps(Placement to)
+    {
+        PlayEffect(thordan, ActionId.ThordanLeap, 1.1f, to.Rotation, at: to.Position);
+        world.Events.Add(ThordanLandDelay, () => thordan?.SetPosition(to));
     }
 
     private void Raidwide(uint actionId, float fraction)
@@ -589,8 +643,7 @@ public sealed class DsrP2ThordanScenario : IScenario
     private void ThordanLeapsToWall()
     {
         if (thordan == null) return;
-        PlayEffect(thordan, ActionId.ThordanLeap, 1.1f);
-        thordan.SetPosition(FacingCentre(state.ThordanLeapSpot));
+        ThordanLeaps(FacingCentre(state.ThordanLeapSpot));
     }
 
     private void SpawnPuddles()
@@ -728,6 +781,7 @@ public sealed class DsrP2ThordanScenario : IScenario
         {
             if (dashers[i] is not { } knight || party.Get(state.Defamations[i]) is not { } target || !target.IsAlive()) continue;
             knight.SetPosition(FacingCentre(target.Position));
+            knight.SetVisible(true);
         }
     }
 
@@ -984,7 +1038,10 @@ public sealed class DsrP2ThordanScenario : IScenario
     private void MarkMeteorTargets()
     {
         foreach (var role in state.MeteorTargets)
+        {
             party.Get(role)?.AttachLockonVfx(LockonId.MeteorPrey, 12f, persistent: false);
+            party.Get(role)?.AddStatus(StatusId.Prey, PreySeconds);
+        }
     }
 
     private void CastHeavensStake()
