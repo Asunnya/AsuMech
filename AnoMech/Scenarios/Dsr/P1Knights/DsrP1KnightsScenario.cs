@@ -58,6 +58,8 @@ public sealed class DsrP1KnightsScenario : IScenario
     private const float BotInterruptDelay = 1.6f;
     // Despawning an effect's caster cuts its VFX short.
     private const float EffectCarrierLinger = 3f;
+    private const float WarpInDelay = 0.1f;
+    private const int FlameCarrierCount = 12;
     private const float HallowingCastSeconds = 3.7f;
     private const ushort HeavensblazeMinTargets = 4;
     // UNVERIFIED: none of these were measured; picked inside what the strat's spacing allows.
@@ -92,6 +94,7 @@ public sealed class DsrP1KnightsScenario : IScenario
     private SimEventObject? prisonCircle;
     private readonly List<SimEnemy> helpers = [];
     private readonly List<SimEnemy?> slashCasters = [];
+    private readonly Queue<SimEnemy> flameCarriers = [];
     private readonly List<(SimEnemy? Tear, Vector3 At)> portals = [];
     private readonly List<SimTether> burningChains = [];
     private readonly HashSet<SimCharacter> chainBurned = [];
@@ -112,6 +115,7 @@ public sealed class DsrP1KnightsScenario : IScenario
         helpers.Clear();
         portals.Clear();
         burningChains.Clear();
+        flameCarriers.Clear();
         chainBurned.Clear();
         portalsOpen = false;
         shieldBashLocked = false;
@@ -139,7 +143,7 @@ public sealed class DsrP1KnightsScenario : IScenario
         world.Events.Add(6.10f, () => Raidwide(adelphel, ActionId.HoliestOfHoly, HoliestOfHolyDamage));
 
         world.Events.Add(14.17f, TetherShieldBash);
-        world.Events.Add(14.26f, () => CastSelf(grinnaux, ActionId.EmptyDimension, 4.7f));
+        world.Events.Add(14.26f, () => CastWithoutOmen(grinnaux, ActionId.EmptyDimension, 4.7f));
         world.Events.Add(19.25f, () => ResolveDimension(Dimension.Empty));
         world.Events.Add(19.29f, CastHeavensblaze);
         world.Events.Add(19.29f, ResolveHolyShieldBash);
@@ -171,12 +175,13 @@ public sealed class DsrP1KnightsScenario : IScenario
         world.Events.Add(78.02f, () => CastSelf(grinnaux, ActionId.FaithUnmoving, 3.7f));
         world.Events.Add(80.92f, TetherBurningChains);
         world.Events.Add(81.98f, () => ResolveFaithUnmoving(botsResist: false));
+        world.Events.Add(83.50f, SpawnFlameCarriers);
         world.Events.Add(84.04f, ResolveHolyChain);
         world.Events.Add(84.61f, ResolveHeavensflame);
         world.Events.Add(86.22f, StartHoliestHallowing);
 
         world.Events.Add(94.19f, () => CastSelf(adelphel, ActionId.HoliestOfHoly, 3.7f));
-        world.Events.Add(95.21f, () => CastSelf(grinnaux, DimensionAction(state.SecondDimension), 4.7f));
+        world.Events.Add(95.21f, () => CastWithoutOmen(grinnaux, DimensionAction(state.SecondDimension), 4.7f));
         world.Events.Add(98.17f, () => Raidwide(adelphel, ActionId.HoliestOfHoly, HoliestOfHolyDamage));
         world.Events.Add(100.18f, () => ResolveDimension(state.SecondDimension));
 
@@ -256,6 +261,10 @@ public sealed class DsrP1KnightsScenario : IScenario
 
     private static void CastSelf(SimEnemy? caster, uint actionId, float castSeconds) =>
         caster?.NativeCast(actionId, ActionType.Action, 0f, castSeconds, false, targetId: caster.GameObjectId);
+
+    // The game draws no omen for these; an omen delay past the cast end keeps the sheet's omen hidden.
+    private static void CastWithoutOmen(SimEnemy? caster, uint actionId, float castSeconds) =>
+        caster?.NativeCast(actionId, ActionType.Action, castSeconds + 1f, castSeconds, false, targetId: caster.GameObjectId);
 
     // An effect without a position plays at the arena centre, so default it to the caster.
     private static void PlayEffect(SimEnemy? caster, uint actionId, float animationLock, float? rotation = null, GameObjectId? target = null, Vector3? at = null) =>
@@ -360,6 +369,20 @@ public sealed class DsrP1KnightsScenario : IScenario
         foreach (var role in prey)
             party.Get(role)?.AttachLockonVfx(LockonId.HyperdimensionalSlash, 6f, persistent: false);
     }
+
+    // One actor plays one effect at a time, so each chain and flame explosion needs its own carrier.
+    private void SpawnFlameCarriers()
+    {
+        flameCarriers.Clear();
+        for (var i = 0; i < FlameCarrierCount; i++)
+            if (SpawnEnemy(BNpcBaseId.Dummy, BNpcNameId.Charibert, new Placement(Vector3.Zero, 0f), false, true, EnemyListMode.Never) is { } carrier)
+            {
+                helpers.Add(carrier);
+                flameCarriers.Enqueue(carrier);
+            }
+    }
+
+    private SimEnemy? NextFlameCarrier() => flameCarriers.TryDequeue(out var carrier) ? carrier : charibertCaster;
 
     private void SpawnSlashCasters()
     {
@@ -474,10 +497,12 @@ public sealed class DsrP1KnightsScenario : IScenario
         portals.Clear();
     }
 
+    // UNVERIFIED: the warp-in timeline carries the sound players use to find him.
     private void AdelphelLands()
     {
         var landing = state.AdelphelLanding;
         adelphel = SpawnKnight(BNpcBaseId.Adelphel, BNpcNameId.Adelphel, KnightMaxHp, new Placement(landing, RotationTowards(landing, Vector3.Zero)), true, EnemyListMode.Always);
+        world.Events.Add(WarpInDelay, () => adelphel?.PlayActionTimeline(TimelineId.WarpEnd));
     }
 
     private void ResolveFaithUnmoving(bool botsResist)
@@ -653,7 +678,7 @@ public sealed class DsrP1KnightsScenario : IScenario
             foreach (var holder in new[] { chain.A, chain.B })
             {
                 if (holder == null || !holder.IsAlive()) continue;
-                PlayEffect(charibertCaster, ActionId.HolyChain, 1.1f, target: holder.GameObjectId, at: holder.Position);
+                PlayEffect(NextFlameCarrier(), ActionId.HolyChain, 1.1f, target: holder.GameObjectId, at: holder.Position);
                 damage.ApplyDamage(holder, HolyChainDamage, ActionId.HolyChain, "Burning Chains not broken", false);
                 holder.AddStatus(StatusId.DamageDown, DamageDownSeconds);
                 chainBurned.Add(holder);
@@ -669,7 +694,7 @@ public sealed class DsrP1KnightsScenario : IScenario
         var hits = members.ToDictionary(m => m, _ => 0);
         foreach (var source in members)
         {
-            PlayEffect(charibertCaster, ActionId.HeavensflameHit, 1.1f, target: source.GameObjectId, at: source.Position);
+            PlayEffect(NextFlameCarrier(), ActionId.HeavensflameHit, 1.1f, target: source.GameObjectId, at: source.Position);
             foreach (var hit in party.Find.InsideActionAoe(ActionId.HeavensflameHit, new Placement(source.Position, 0f)))
                 if (hits.ContainsKey(hit)) hits[hit]++;
         }
