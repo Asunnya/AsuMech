@@ -38,6 +38,8 @@ public sealed class DsrP2ThordanScenario : IScenario
     public object SettingsOverrides => settingsWindow.Overrides;
     public void DrawSettings() => settingsWindow.Draw();
 
+    // UNVERIFIED: Spiral Thrust and Heavy Impact show their omen only for the end of the 5.7s cast.
+    private const float StrengthOmenDelay = 2.7f;
     private const uint ThordanMaxHp = 7439000;
     private const float ThordanHitboxRadius = 5f;
     // UNVERIFIED: the charge-style landing lag measured on P1's Shining Blade.
@@ -213,7 +215,7 @@ public sealed class DsrP2ThordanScenario : IScenario
         world.Events.Add(37.06f, PlaceDashKnightsAndGuerrique);
         world.Events.Add(39.02f, () => heavyImpactCaster = SpawnHelper(new Placement(state.GuerriqueSpot, 0f), BNpcNameId.Guerrique));
         world.Events.Add(39.38f, () => CastSelf(guerrique, ActionId.HeavyImpactWindup, 4.0f));
-        world.Events.Add(39.38f, () => heavyImpactCaster?.NativeCast(ActionId.HeavyImpact, ActionType.Action, 0f, 5.7f, false, position: state.GuerriqueSpot));
+        world.Events.Add(39.38f, () => heavyImpactCaster?.NativeCast(ActionId.HeavyImpact, ActionType.Action, StrengthOmenDelay, 5.7f, false, position: state.GuerriqueSpot));
         world.Events.Add(39.38f, () => CastSelf(thordan, ActionId.LightningStorm, 5.4f));
         world.Events.Add(39.38f, CastSpiralThrusts);
         world.Events.Add(43.66f, () => PlayEffect(guerrique, ActionId.HeavyImpactWindup, 2.1f));
@@ -583,7 +585,7 @@ public sealed class DsrP2ThordanScenario : IScenario
     private void CastSpiralThrusts()
     {
         foreach (var knight in DashKnights)
-            knight?.NativeCast(ActionId.SpiralThrust, ActionType.Action, 0f, 5.7f, false, rotation: knight.Rotation, targetId: knight.GameObjectId);
+            knight?.NativeCast(ActionId.SpiralThrust, ActionType.Action, StrengthOmenDelay, 5.7f, false, rotation: knight.Rotation, targetId: knight.GameObjectId);
     }
 
     // The knights charge straight through to the far wall.

@@ -152,6 +152,25 @@ public class DsrP2ThordanStateTests
     }
 
     [Test]
+    public void AMiddleTowerGoesToWhoeverIsClosestToItCounterClockwise()
+    {
+        foreach (var state in Rolls(500))
+        {
+            var soaks = state.FirstTowerSoaks();
+            var cardinals = state.MeteorCardinals();
+            var goingIn = AllRoles.Where(r => soaks[r].Radius == DsrP2ThordanState.InnerTowerRadius).ToList();
+            float Clockwise(PartyRole role, float bearing) => DsrP2ThordanState.Normalize(bearing - cardinals[role]);
+            foreach (var g in goingIn)
+                foreach (var h in goingIn.Where(h => h != g))
+                {
+                    var theirs = soaks[h].Bearing;
+                    if (Clockwise(g, theirs) < Clockwise(h, theirs))
+                        Assert.That(Clockwise(g, soaks[g].Bearing), Is.LessThan(Clockwise(g, theirs)), $"{g} skipped {theirs} held by {h}");
+                }
+        }
+    }
+
+    [Test]
     public void NorthAndSouthMeteorsTakeTowersStraightAcrossWhenTheyExist()
     {
         var state = new DsrP2ThordanState(new Rng(1), new DsrP2ThordanStateOverrides

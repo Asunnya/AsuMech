@@ -176,13 +176,16 @@ public sealed class DsrP2ThordanState
     }
 
     // The meteor role takes the wall tower (the one on the cardinal first); the other goes out too
-    // when the quadrant has two wall towers, else in to the first free middle tower clockwise.
+    // when the quadrant has two wall towers, else in to a middle tower. Each middle tower goes to
+    // whoever going in is closest to it counter-clockwise, so the next one clockwise is skipped
+    // when someone nearer has prio on it.
     // The north and south meteors take towers straight across from each other when they can.
     public IReadOnlyDictionary<PartyRole, (float Bearing, float Radius)> FirstTowerSoaks()
     {
         var cardinals = MeteorCardinals();
         var soaks = new Dictionary<PartyRole, (float, float)>();
         var freeInner = FirstTowers.Where(t => t.Radius < OuterTowerRadius).ToList();
+        var goingIn = new List<(PartyRole Role, float Cardinal)>();
         var acrossPair = WallTowersNear(0f)
             .SelectMany(north => WallTowersNear(180f).Where(south => AngleBetween(north.Bearing, south.Bearing) > 179f).Select(south => (north, south)))
             .Cast<((float Bearing, float Radius) North, (float Bearing, float Radius) South)?>()
@@ -205,9 +208,15 @@ public sealed class DsrP2ThordanState
                 soaks[other] = outer.First(t => t != meteorTower);
                 continue;
             }
-            var inner = freeInner.OrderBy(t => Normalize(t.Bearing - cardinal)).First();
-            freeInner.Remove(inner);
-            soaks[other] = inner;
+            goingIn.Add((other, cardinal));
+        }
+        while (goingIn.Count > 0 && freeInner.Count > 0)
+        {
+            var (goer, tower) = goingIn.SelectMany(g => freeInner.Select(t => (g, t)))
+                .MinBy(p => Normalize(p.t.Bearing - p.g.Cardinal));
+            soaks[goer.Role] = tower;
+            goingIn.Remove(goer);
+            freeInner.Remove(tower);
         }
         return soaks;
     }
