@@ -63,7 +63,7 @@ public sealed class DsrP2ThordanState
     public IReadOnlyList<(float Bearing, float Radius)> FirstTowers { get; }
     public IReadOnlyList<bool> BroadSwingRightFirst { get; }
 
-    public DsrP2ThordanState(Rng rng, DsrP2ThordanStateOverrides? overrides = null)
+    public DsrP2ThordanState(Rng rng, DsrP2ThordanStateOverrides? overrides = null, PartyRole player = PartyRole.MainTank)
     {
         overrides ??= new DsrP2ThordanStateOverrides();
         ThordanBearing = Pick(45f * rng.Next(8), overrides.ThordanBearing);
@@ -93,6 +93,11 @@ public sealed class DsrP2ThordanState
         var meteorSupports = rng.NextBool();
         var meteorPool = Enum.GetValues<PartyRole>().Where(r => IsSupport(r) == meteorSupports);
         var meteors = rng.Shuffle(meteorPool).Take(2).OrderBy(r => r).ToList();
+        if (overrides.MeteorOnMe == true)
+        {
+            var partner = rng.Shuffle(Enum.GetValues<PartyRole>().Where(r => r != player && IsSupport(r) == IsSupport(player))).First();
+            meteors = new[] { player, partner }.OrderBy(r => r).ToList();
+        }
         MeteorTargets = overrides.MeteorTargets ?? meteors;
         var towers = RollFirstTowers(rng);
         FirstTowers = overrides.FirstTowers ?? towers;

@@ -35,6 +35,7 @@ public sealed class DsrP2ThordanAi : IScenarioAi<DsrP2ThordanState>
     private const float MeteorSweepDegrees = 130f;
     private const float KnockbackRideRadius = 2.3f;
     private const float InnerTowerStandRadius = 4.5f;
+    private const float OuterSecondTowerStandRadius = 19.5f;
     private static readonly float[] HolyCometDrops = [136.80f, 138.23f, 139.66f, 141.08f, 142.50f, 143.93f, 145.36f];
     private static readonly Vector2 BroadSwingThordan = new(0f, -9f);
     private const float BroadSwingDodgeDistance = 4f;
@@ -174,8 +175,11 @@ public sealed class DsrP2ThordanAi : IScenarioAi<DsrP2ThordanState>
     private Vector2?[] WalkInPastTheFadedIceToRideTheKnockback()
     {
         var spots = new Vector2?[8];
+        var soaks = state.FirstTowerSoaks();
         foreach (var role in Enum.GetValues<PartyRole>().Where(r => !state.IsMeteorRole(r)))
-            spots[(int)role] = Flat(AtBearing(state.SecondTowerBearing(role), KnockbackRideRadius));
+            spots[(int)role] = soaks[role].Radius >= DsrP2ThordanState.OuterTowerRadius
+                ? Flat(AtBearing(state.SecondTowerBearing(role), OuterSecondTowerStandRadius))
+                : Flat(AtBearing(state.SecondTowerBearing(role), KnockbackRideRadius));
         return spots;
     }
 

@@ -16,6 +16,8 @@ public sealed class DsrP2ThordanStateOverrides
     public PartyRole? FirstPlungeTarget { get; set; }
     public PartyRole? SecondPlungeTarget { get; set; }
     public IReadOnlyList<PartyRole>? MeteorTargets { get; set; }
+    // The player always gets a meteor, partnered with a random member of their role.
+    public bool? MeteorOnMe { get; set; }
     public IReadOnlyList<(float Bearing, float Radius)>? FirstTowers { get; set; }
     public IReadOnlyList<bool>? BroadSwingRightFirst { get; set; }
 }

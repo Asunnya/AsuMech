@@ -90,6 +90,19 @@ public class DsrP2ThordanStateTests
                 yield return [group[i], group[j]];
     }
 
+    [Test]
+    public void MeteorOnMeAlwaysMarksThePlayerWithSomeoneOfTheirRole()
+    {
+        foreach (var player in AllRoles)
+            for (var seed = 0; seed < 20; seed++)
+            {
+                var state = new DsrP2ThordanState(new Rng(seed), new DsrP2ThordanStateOverrides { MeteorOnMe = true }, player);
+                Assert.That(state.MeteorTargets, Has.Member(player));
+                Assert.That(state.MeteorTargets.Distinct().Count(), Is.EqualTo(2));
+                Assert.That(state.MeteorTargets.Select(DsrP2ThordanState.IsSupport).Distinct().Count(), Is.EqualTo(1));
+            }
+    }
+
     [TestCaseSource(nameof(MeteorPairs))]
     public void MeteorsEndNorthAndSouthAndEveryPairKeepsASupportAndADps(PartyRole first, PartyRole second)
     {

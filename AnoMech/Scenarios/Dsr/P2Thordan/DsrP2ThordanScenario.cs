@@ -34,8 +34,9 @@ public sealed class DsrP2ThordanScenario : IScenario
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new DsrP2ThordanAi()];
 
-    private readonly DsrP2ThordanStateOverrides overrides = new();
-    public object SettingsOverrides => overrides;
+    private readonly DsrP2ThordanSettingsWindow settingsWindow = new();
+    public object SettingsOverrides => settingsWindow.Overrides;
+    public void DrawSettings() => settingsWindow.Draw();
 
     private const uint ThordanMaxHp = 7439000;
     private const float ThordanHitboxRadius = 5f;
@@ -118,6 +119,7 @@ public sealed class DsrP2ThordanScenario : IScenario
 
     private SimEnemy? thordan;
     private readonly List<SimEnemy> mercyCasters = [];
+    private readonly SimEnemy?[] broadSwingSlashers = new SimEnemy?[3];
     private readonly List<SimEnemy> helpers = [];
     private readonly List<(SimEnemy Caster, Vector3 At)> puddles = [];
     private readonly List<Vector3> towers = [];
@@ -149,9 +151,10 @@ public sealed class DsrP2ThordanScenario : IScenario
         party = world.Party;
         damage = new DamageSolver(party);
         damage.SetMitigableStatuses(DamageType.TankBuster, SlashingDownMitigation, StatusId.SlashingResistanceDown);
-        state = new DsrP2ThordanState(world.Rng, overrides);
+        state = new DsrP2ThordanState(world.Rng, settingsWindow.Overrides, party.PlayerRole);
         mercyCasters.Clear();
         helpers.Clear();
+        Array.Clear(broadSwingSlashers);
         puddles.Clear();
         towers.Clear();
         Array.Clear(shieldBashTethers);
@@ -343,10 +346,12 @@ public sealed class DsrP2ThordanScenario : IScenario
         world.Events.Add(169.01f, DespawnUltimateEndKnights);
         world.Events.Add(173.44f, ThordanStepsIntoTheArena);
         world.Events.Add(177.07f, () => CastBroadSwing(0));
+        world.Events.Add(180.05f, () => FinishBroadSwingCast(0));
         world.Events.Add(180.90f, () => ResolveBroadSwing(0, 0));
         world.Events.Add(181.84f, () => ResolveBroadSwing(0, 1));
         world.Events.Add(182.86f, () => ResolveBroadSwing(0, 2));
         world.Events.Add(185.47f, () => CastBroadSwing(1));
+        world.Events.Add(188.45f, () => FinishBroadSwingCast(1));
         world.Events.Add(189.30f, () => ResolveBroadSwing(1, 0));
         world.Events.Add(190.24f, () => ResolveBroadSwing(1, 1));
         world.Events.Add(191.26f, () => ResolveBroadSwing(1, 2));
@@ -1245,10 +1250,11 @@ public sealed class DsrP2ThordanScenario : IScenario
         ultimateEndKnights.Clear();
     }
 
+    // The effect carries the caster's position, so he must already stand on the new spot or it pulls him back.
     private void ThordanStepsIntoTheArena()
     {
-        PlayEffect(thordan, ActionId.BroadSwingWindup, 2.1f);
         thordan?.SetPosition(new Placement(BroadSwingSpot, 0f));
+        PlayEffect(thordan, ActionId.BroadSwingWindup, 2.1f);
     }
 
     // Thordan turns to a random player before each Broad Swing.
@@ -1259,8 +1265,14 @@ public sealed class DsrP2ThordanScenario : IScenario
         var facing = alive.Count > 0 ? RotationTowards(thordan.Position, alive[world.Rng.Next(alive.Count)].Position) : 0f;
         state.BroadSwingFacing[swing] = facing;
         thordan.SetRotation(facing);
-        CastSelf(thordan, state.BroadSwingRightFirst[swing] ? ActionId.BroadSwingRightFirst : ActionId.BroadSwingLeftFirst, 2.7f);
+        CastSelf(thordan, BroadSwingCast(swing), 2.7f);
+        for (var slash = 0; slash < broadSwingSlashers.Length; slash++)
+            broadSwingSlashers[slash] = SpawnHelper(new Placement(thordan.Position, facing + BroadSwingOffset(state.BroadSwingRightFirst[swing], slash)));
     }
+
+    private uint BroadSwingCast(int swing) => state.BroadSwingRightFirst[swing] ? ActionId.BroadSwingRightFirst : ActionId.BroadSwingLeftFirst;
+
+    private void FinishBroadSwingCast(int swing) => PlayEffect(thordan, BroadSwingCast(swing), 2.1f, state.BroadSwingFacing[swing]);
 
     // Right, left, back (or left, right, back), each a third of the circle.
     public static float BroadSwingOffset(bool rightFirst, int slash) => slash switch
@@ -1274,7 +1286,7 @@ public sealed class DsrP2ThordanScenario : IScenario
     {
         if (thordan == null) return;
         var rotation = state.BroadSwingFacing[swing] + BroadSwingOffset(state.BroadSwingRightFirst[swing], slash);
-        PlayEffect(thordan, ActionId.BroadSwing, 0.6f, rotation);
+        PlayEffect(broadSwingSlashers[slash], ActionId.BroadSwing, 0.6f, rotation);
         foreach (var hit in party.Find.InsideCone(new Placement(thordan.Position, rotation), BroadSwingHalfAngle, BroadSwingRange).Where(m => m.IsAlive()).ToList())
         {
             damage.ApplyDamage(hit, BroadSwingDamage, ActionId.BroadSwing, "Broad Swing", lethal: false);

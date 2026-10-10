@@ -14,6 +14,7 @@ public sealed class DsrP2MeteorsScenario : IScenario
     public IReadOnlyList<IScenarioAi> AiStrats => thordan.AiStrats;
     public float BgmSecondsAtStart => thordan.BgmSecondsAtStart;
     public object SettingsOverrides => thordan.SettingsOverrides;
+    public void DrawSettings() => thordan.DrawSettings();
 
     public void Run(SimWorld world, int? selectedAi) => thordan.Run(world, selectedAi);
     public void Tick(float delta, float elapsed) => thordan.Tick(delta, elapsed);
