@@ -50,7 +50,12 @@ public class DsrP3NidhoggScenarioTests
     [Test]
     public void StandingBesideATankHoldingSoulTetherIsLethal()
         => Negative<DsrP3NidhoggScenario>(RegenHealer)
-            .Overrides<DsrP3NidhoggStateOverrides>(o => o.SoulTetherTargets = [CasterDps, PhysRangedDps])
+            .Overrides<DsrP3NidhoggStateOverrides>(o =>
+            {
+                PinnedDives(o);
+                o.TowerSoakers = [2, 2, 2, 2];
+                o.SoulTetherTargets = [CasterDps, PhysRangedDps];
+            })
             .TeleportAt(90.5f, to: new Vector2(0f, 10f))
             .ShouldKill(ActionId.SoulTether, RegenHealer);
 }
