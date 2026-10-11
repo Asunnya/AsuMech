@@ -481,8 +481,9 @@ Bans and limit changes live in memory only — they reset when the relay restart
 Open the Multiplayer screen (`/anomech mp`, or the **Multiplayer** button in the main
 window while in an inn) and type your relay's address into the **Server** field. Just the address is enough (`relay.example.com`, or
 `203.0.113.5:7890` without TLS) — the plugin tries `wss://` first and falls back to
-`ws://` only if that relay doesn't support it, telling you which one it used. An
-explicit `ws://`/`wss://` also works. Remembered across sessions once set.
+`ws://` if that relay doesn't support it or hasn't answered within 5 seconds, telling
+you which one it used. An explicit `ws://`/`wss://` also works. Remembered across
+sessions once set.
 
 If the relay you typed requires `--token`, a **Password** field appears
 automatically underneath (the plugin asks the relay's plain `/info` endpoint whether

@@ -63,6 +63,7 @@ public sealed partial class MultiplayerManager
             if (!ReferenceEquals(relay, source)) return;
             source.Dispose();
             relay = null;
+            Interlocked.Exchange(ref helloSentMs, 0);
             disconnectedSinceMs ??= Environment.TickCount64;
             if (failure != null)
             {

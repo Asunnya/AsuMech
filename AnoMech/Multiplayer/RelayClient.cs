@@ -165,6 +165,12 @@ public sealed class RelayClient(string peerSecret) : IDisposable
         return null;
     }
 
+    // While a fallback candidate remains, an attempt still unanswered after this is abandoned for
+    // it: a plain relay older than RelayHttp's TLS check holds a wss:// attempt for its 10 s
+    // handshake timeout, and a port that silently drops packets holds it until the OS gives up.
+    // Far above a normal connect, and leaves most of MultiplayerManager's 15 s join deadline.
+    internal TimeSpan FallbackAfter { get; init; } = TimeSpan.FromSeconds(5);
+
     private async Task<string?> ConnectCoreAsync(string relayUrl, string path, string? accessToken)
     {
         var candidates = ResolveCandidateUris(relayUrl, path);
@@ -198,9 +204,12 @@ public sealed class RelayClient(string peerSecret) : IDisposable
             socket.Options.SetRequestHeader("X-AnoMech-Protocol", RelayWire.Version.ToString());
             var uri = candidates[i];
             IsEncrypted = uri.Scheme == "wss";
+            var fallbackLeft = i < candidates.Count - 1;
             try
             {
-                await socket.ConnectAsync(uri, WebSocketHttp, cts.Token).ConfigureAwait(false);
+                using var attempt = CancellationTokenSource.CreateLinkedTokenSource(cts.Token);
+                if (fallbackLeft) attempt.CancelAfter(FallbackAfter);
+                await socket.ConnectAsync(uri, WebSocketHttp, attempt.Token).ConfigureAwait(false);
                 DiagnosticLog.Info($"[RelayClient] Connected to {uri}.");
                 if (i > 0)
                 {
@@ -212,9 +221,12 @@ public sealed class RelayClient(string peerSecret) : IDisposable
             }
             catch (Exception e)
             {
-                lastFailure = e;
-                DiagnosticLog.Info($"[RelayClient] {uri} failed: {e.Message}"
-                    + (i < candidates.Count - 1 ? " -- trying the next candidate." : ""));
+                // Only the fallback cap cancels while this client is still alive.
+                lastFailure = e is OperationCanceledException && !cts.IsCancellationRequested
+                    ? new TimeoutException($"No answer within {FallbackAfter.TotalSeconds:0.#}s.")
+                    : e;
+                DiagnosticLog.Info($"[RelayClient] {uri} failed: {lastFailure.Message}"
+                    + (fallbackLeft ? " -- trying the next candidate." : ""));
             }
         }
         // A relay that answered but refused or never greeted isn't retried on the next

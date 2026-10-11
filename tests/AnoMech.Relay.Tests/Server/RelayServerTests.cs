@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Net.WebSockets;
@@ -60,6 +61,37 @@ public class RelayServerTests
         var oversized = await RawHttp(port, "GET /info HTTP/1.1\r\nX-Pad: " + new string('a', RelayHttp.MaxHeaderBytes) + "\r\n\r\n");
         Assert.That(oversized, Is.Empty.Or.StartWith("HTTP/1.1 400 "), "oversized header block refused");
         Assert.That(await RawHttp(port, "GET /admin/stats HTTP/1.1\r\nHost: x\r\n\r\n"), Does.StartWith("HTTP/1.1 404 "), "admin hidden without an admin token");
+    }
+
+    // A wss:// attempt at the plain port; the timeout it would otherwise wait out is 10 s.
+    [TestCase("\u0016\u0003\u0001\u0000\u002f\u0001\u0000\u0000\u002b\u0003\u0003")]
+    [TestCase("\u0016")]
+    public async Task TlsHandshakeIsTurnedAwayAtOnce(string clientHello)
+    {
+        await using var server = new RelayServer(new RelayOptions { BindAddress = IPAddress.Loopback, Port = 0 }, new QuietLog());
+        server.Start();
+        var elapsed = Stopwatch.StartNew();
+        var response = await RawHttp(server.LocalEndPoint!.Port, clientHello);
+        Assert.Multiple(() =>
+        {
+            Assert.That(elapsed.Elapsed, Is.LessThan(TimeSpan.FromSeconds(2)));
+            Assert.That(response, Is.Empty.Or.StartWith("HTTP/1.1 400 "));
+        });
+    }
+
+    [Test]
+    public async Task SlowPlainRequestKeepsItsHandshakeTime()
+    {
+        await using var server = new RelayServer(new RelayOptions { BindAddress = IPAddress.Loopback, Port = 0 }, new QuietLog());
+        server.Start();
+        using var client = new TcpClient();
+        await client.ConnectAsync(IPAddress.Loopback, server.LocalEndPoint!.Port);
+        var stream = client.GetStream();
+        await stream.WriteAsync(Bytes("GET /info HTTP/1.1\r\nHo"));
+        await Task.Delay(TimeSpan.FromSeconds(1));
+        await stream.WriteAsync(Bytes("st: x\r\n\r\n"));
+        using var reader = new StreamReader(stream, Encoding.UTF8);
+        Assert.That(await reader.ReadToEndAsync().WaitAsync(TimeSpan.FromSeconds(5)), Does.StartWith("HTTP/1.1 200 "));
     }
 
     [Test]

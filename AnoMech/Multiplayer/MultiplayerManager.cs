@@ -100,8 +100,12 @@ public sealed partial class MultiplayerManager : IDisposable
     private const float PingIntervalSeconds = 2f;
     private const long PeerStaleTimeoutMs = 8000;
     // Catches a mistyped/nonexistent code; the relay has no "session not found" at the
-    // transport level.
+    // transport level. Counted from our first Hello: connecting can take longer, e.g. a bare
+    // address dials wss:// before falling back to ws://.
     private const long NoHostFoundTimeoutMs = 4000;
+    // A join still not answered by its host this long after Join gives up, whichever part is
+    // slow: connecting, reconnecting, or the host answering.
+    private const long JoinDeadlineMs = 15000;
     private float pingTimer;
     private readonly Dictionary<Guid, long> peerLastSeenMs = new();
     // When each peer last registered. A leave that arrives right after one crossed the peer's
@@ -118,6 +122,11 @@ public sealed partial class MultiplayerManager : IDisposable
     // lastHostMessageMs is seeded to "now" on join, so it alone can't tell "never heard" from
     // "went silent".
     private bool everHeardFromHost;
+    // When the current connection's Hello left; 0 until it has. Written off the framework thread.
+    private long helloSentMs;
+    private long joinStartedMs;
+    // Whether this join ever got a Hello out to the relay. Written off the framework thread.
+    private volatile bool joinReachedRelay;
 
     // ---- Pre-start readiness check (see StartScenario/FinishStartCheck) -----
     private const float StartCheckTimeoutSeconds = 5f;
@@ -231,7 +240,18 @@ public sealed partial class MultiplayerManager : IDisposable
     // SessionCode is set synchronously on Join; this is what confirms a host is actually there.
     public bool EverHeardFromHost => everHeardFromHost;
     public bool IsHostStale => !IsHost && everHeardFromHost && SecondsSinceHostMessage * 1000f > PeerStaleTimeoutMs;
-    public bool IsSessionNotFound => !IsHost && !everHeardFromHost && SecondsSinceHostMessage * 1000f > NoHostFoundTimeoutMs;
+    public bool IsSessionNotFound
+    {
+        get
+        {
+            var helloSent = Interlocked.Read(ref helloSentMs);
+            return !IsHost && !everHeardFromHost && helloSent != 0 && Environment.TickCount64 - helloSent > NoHostFoundTimeoutMs;
+        }
+    }
+    public bool IsJoinTimedOut => !IsHost && SessionCode != null && !everHeardFromHost && Environment.TickCount64 - joinStartedMs > JoinDeadlineMs;
+    public float JoinElapsedSeconds => (Environment.TickCount64 - joinStartedMs) / 1000f;
+    public static float JoinDeadlineSeconds => JoinDeadlineMs / 1000f;
+    public bool IsWaitingForHost => IsConnected && Interlocked.Read(ref helloSentMs) != 0;
 
     // ---- Session lifecycle ----------------------------------------------
 
@@ -302,6 +322,9 @@ public sealed partial class MultiplayerManager : IDisposable
         // Seeded to now, or the host reads as silent since 1970 until its first broadcast.
         lastHostMessageMs = Environment.TickCount64;
         everHeardFromHost = false;
+        Interlocked.Exchange(ref helloSentMs, 0);
+        joinStartedMs = Environment.TickCount64;
+        joinReachedRelay = false;
 
         DiagnosticLog.Info($"[Multiplayer] Joining session {SessionCode} at {relayUrl} as {MyPeerId} ({DisplayName}), build {PluginBuildInfo.ShortChecksum}.");
         relay = new RelayClient(peerSecret);
@@ -313,9 +336,33 @@ public sealed partial class MultiplayerManager : IDisposable
 
     private async Task ConnectAndHelloAsync(string relayUrl, string code)
     {
-        await relay!.ConnectAsync(relayUrl, code, relayAccessToken);
+        var client = relay!;
+        await client.ConnectAsync(relayUrl, code, relayAccessToken);
+        // A failed connect is reported through Disconnected, and the reconnect loop takes over.
+        if (!client.IsConnected) return;
         DiagnosticLog.Info($"[Multiplayer] Connected to relay, socket ready -- sending Hello.");
-        await relay.SendAsync(new HelloMessage(MyPeerId, DisplayName, PluginBuildInfo.Version, PluginBuildInfo.Checksum, LocalClassJob));
+        await SendHelloAsync(client);
+    }
+
+    // Starts the no-host clock only once the Hello has left on the live connection: a superseded
+    // or dropped one mustn't start it.
+    private async Task SendHelloAsync(RelayClient client)
+    {
+        await client.SendAsync(new HelloMessage(MyPeerId, DisplayName, PluginBuildInfo.Version, PluginBuildInfo.Checksum, LocalClassJob));
+        if (client != relay || !client.IsConnected) return;
+        Interlocked.Exchange(ref helloSentMs, Environment.TickCount64);
+        joinReachedRelay = true;
+    }
+
+    private string JoinTimedOutReason()
+    {
+        var seconds = JoinDeadlineMs / 1000;
+        if (joinReachedRelay)
+            return $"Reached the server, but the host of session {SessionCode} didn't answer within {seconds} seconds. "
+                   + "Check the code, or ask the host whether their session is still up.";
+        var detail = ConnectionError is { } error ? $" ({error})" : "";
+        return $"Couldn't reach the server at {RelayUrl} within {seconds} seconds{detail}. "
+               + "Check the address, and that the server is running and reachable.";
     }
 
     // Disconnected captures the instance so an event from a replaced client can be told apart.
@@ -460,6 +507,7 @@ public sealed partial class MultiplayerManager : IDisposable
                 client.Dispose();
                 DiagnosticLog.Warn($"[Multiplayer] Giving up on session {sessionCode} -- relay says: {rejected.Message}.");
                 var wasHost = IsHost;
+                var wasJoining = !IsHost && !everHeardFromHost;
                 _ = Plugin.Framework.Run(() =>
                 {
                     if (token.IsCancellationRequested) return;
@@ -469,6 +517,13 @@ public sealed partial class MultiplayerManager : IDisposable
                     LeaveSessionInternal(notifyOthers: false);
                     SessionEndReason = rejected.Message == "banned from room"
                         ? "You were banned from the session by the host."
+                        : wasJoining
+                            ? rejected.Message switch
+                            {
+                                "session not found" => $"There's no session {sessionCode} on this server. Check the code, or ask the host for a new one.",
+                                "session full" => $"Session {sessionCode} is full.",
+                                _ => $"The server refused to join session {sessionCode} ({rejected.Message}).",
+                            }
                         : wasHost
                             ? $"The relay lost this session ({rejected.Message}) -- start a new one."
                             : $"The relay lost this session ({rejected.Message}) -- ask the host to start a new one.";
@@ -498,7 +553,7 @@ public sealed partial class MultiplayerManager : IDisposable
         lastHostMessageMs = Environment.TickCount64;
         ConnectionError = null;
         // Re-registering with the host resumes a running scenario the same way a late join does.
-        if (!IsHost) _ = relay.SendAsync(new HelloMessage(MyPeerId, DisplayName, PluginBuildInfo.Version, PluginBuildInfo.Checksum, LocalClassJob));
+        if (!IsHost) _ = SendHelloAsync(relay);
         else foreach (var peerId in pendingRelayUnbans) _ = relay.ModerateAsync("unban", peerId);
         pendingRelayUnbans.Clear();
         LobbyChanged?.Invoke();
