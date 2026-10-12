@@ -9,10 +9,10 @@ namespace AnoMech.Core.Native.Implementations.Interop;
 // are replayed rather than poked into internals.
 internal static unsafe class ActionEffects
 {
-    // Synthetic monotonically-increasing GlobalSequence (server's per-action id). The
-    // local player's own effect correlates by SourceSequence, so this is only for
-    // faithfulness; it just needs to be non-zero and unique per fire.
+    // The server's per-action id, unique and non-zero: an EffectResult finds its ActionEffect by it.
     private static uint globalSequence = 1;
+
+    public static uint NextGlobalSequence() => globalSequence++;
 
     // Replays the combo signal (Type-0x1B: Value = used action, Param0 = 0 starter /
     // 1 continuation) delivered to the caster's target, so the client advances
@@ -36,7 +36,7 @@ internal static unsafe class ActionEffects
         {
             AnimationTargetId = deliverTo,
             ActionId = actionId,
-            GlobalSequence = globalSequence++,
+            GlobalSequence = NextGlobalSequence(),
             AnimationLock = 0f,
             SourceSequence = sourceSequence,
             RotationInt = MathUtil.QuantizeRotation(caster->Rotation),
@@ -68,7 +68,7 @@ internal static unsafe class ActionEffects
         {
             AnimationTargetId = target,
             ActionId = actionId,
-            GlobalSequence = globalSequence++,
+            GlobalSequence = NextGlobalSequence(),
             AnimationLock = 0.1f,
             BallistaEntityId = 0xE0000000,
             SourceSequence = 0,

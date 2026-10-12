@@ -260,6 +260,9 @@ internal sealed unsafe class DebugMenu
         DrawBoolFlag("AutoAttacking", inputHooks.IsAutoAttacking);
 
         ImGui.Spacing();
+        DrawModelDivergence();
+
+        ImGui.Spacing();
         ImGui.TextUnformatted("Manual spawn");
         ImGui.Separator();
         ImGui.SetNextItemWidth(120 * uiScale);
@@ -844,6 +847,29 @@ internal sealed unsafe class DebugMenu
 
         chara.AddStatus((ushort)statusId, duration, stacks, overrideStacks: true);
         Plugin.Log.Info($"Status: applied {statusId} (duration {(duration == 0f ? "default" : duration.ToString(CultureInfo.InvariantCulture))}, stacks {stacks}) on {who}");
+    }
+
+    // How far each model trails the sim's own position (yalms, XZ): the lag of the SetPos/Move
+    // packets that drive it. The local player is the game's own, so it always reads 0.
+    private void DrawModelDivergence()
+    {
+        ImGui.TextUnformatted("Model divergence (live / max)");
+        ImGui.Separator();
+        var world = plugin.Game.World;
+        var any = false;
+        foreach (var chara in world.Party.AllMembers().Concat(world.Children.OfType<SimEnemy>()))
+        {
+            if (!chara.IsActive) continue;
+            any = true;
+            var name = chara switch
+            {
+                ISimPartyMember member => member.Role.ToString(),
+                SimEnemy enemy => $"{enemy.DisplayName}#{enemy.EntityId & 0xFFFF:X4}",
+                _ => chara.GetType().Name,
+            };
+            ImGui.TextUnformatted(FormattableString.Invariant($"{name}: {chara.ModelDivergence:F2} / {chara.MaxModelDivergence:F2}"));
+        }
+        if (!any) ImGui.TextDisabled("(no characters)");
     }
 
     // Null if the target isn't one of ours.

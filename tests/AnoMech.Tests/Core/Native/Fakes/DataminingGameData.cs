@@ -39,7 +39,7 @@ internal sealed class DataminingGameData(FakeRsvFunctions rsv) : IGameData
 
     public KnockbackRow? Knockback(uint knockbackId)
         => Knockbacks.Value.Row(knockbackId) is { } row
-            ? new KnockbackRow(knockbackId, row.Byte("Distance"), row.Byte("Speed"))
+            ? new KnockbackRow(knockbackId, row.Byte("Distance"), row.Byte("Speed"), row.Byte("Direction"))
             : null;
 
     public ClassJobRow? ClassJob(uint classJobId)

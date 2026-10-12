@@ -122,16 +122,13 @@ public sealed class SimWorld : ISimObject, IDisposable
         return tower;
     }
 
-    // Places the scenario's waymark layout (scenario-local offsets). Cleared in Despawn, not a
-    // tracked child.
+    // Places the scenario's waymark layout (scenario-local offsets), replacing any markers already
+    // placed. Cleared in Despawn, not a tracked child.
     public void PlaceWaymarks(IReadOnlyList<Waymark> layout)
     {
-        foreach (var waymark in layout)
-        {
-            if (Natives.Waymarks.Set(waymark.Slot, Coordinates.ToGlobal(waymark.Offset))) continue;
+        var markers = layout.Select(w => (w.Slot, Coordinates.ToGlobal(w.Offset))).ToList();
+        if (!Natives.Waymarks.Place(markers))
             Plugin.Log.Warning("Waymarks: MarkingController unavailable");
-            return;
-        }
     }
 
     // Suppress a native GameObject (by BaseId) for the duration of the scenario.
@@ -185,6 +182,17 @@ public sealed class SimWorld : ISimObject, IDisposable
     public void SpawnActionOmen(uint actionId, Vector3 origin, float rotation, float durationSeconds)
         => children.Add(new SimOmen(Coordinates, actionId, origin, rotation, durationSeconds));
 
+    // A one-shot VFX sheet row at a scenario-local point, e.g. FRU's Return marker (1013) under each
+    // player. Shown on this client only.
+    public void PlaceGroundVfx(uint vfxId, Vector3 position)
+        => Party.Player?.ActorControl.PlaceGroundVfx(vfxId, Coordinates.ToGlobal(position));
+
+    public void Mark(Sign sign, SimCharacter target) => Party.Player?.ActorControl.Mark(sign, target.GameObjectId);
+
+    public void ClearMark(Sign sign) => Party.Player?.ActorControl.ClearMark(sign);
+
+    public void ClearMarks() => Party.Player?.ActorControl.ClearMarks();
+
     // Change the active weather mid-scenario. weatherId is a Weather-sheet row;
     // transition is the fade-in time in seconds. A scenario's default weather
     // (TargetInstance.WeatherId) is re-applied automatically on restart, so any
@@ -210,7 +218,6 @@ public sealed class SimWorld : ISimObject, IDisposable
     {
         Map.Tick();
         Natives.VfxSpawnLog.Tick();
-        Natives.BattleCharas.SweepOrphans();
         children.Update(deltaSeconds);
         enemyList.Tick(children.OfType<SimEnemy>(), deltaSeconds);
         Natives.PartyHud.Refresh(Party);
@@ -218,11 +225,11 @@ public sealed class SimWorld : ISimObject, IDisposable
 
     public void Despawn()
     {
+        ClearMarks();
         children.Despawn();
         Party = SimParty.Empty;
         enemyList.Clear();
         Natives.PartyHud.Clear();
-        Natives.Markings.ClearAll();
         Natives.Waymarks.ClearAll();
         Obstacles.Clear();
         ScenarioOrigin = default;

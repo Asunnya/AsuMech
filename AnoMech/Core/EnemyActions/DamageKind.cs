@@ -14,10 +14,12 @@ public static class DamageKinds
         _ => DamageKind.Unique,
     };
 
-    public static FlyTextIcon Icon(this DamageKind kind) => kind switch
+    // The flytext icon follows it. UNVERIFIED that darkness shows the unique icon; retail also
+    // sends typeless hits as 0.
+    public static byte AttackType(this DamageKind kind) => kind switch
     {
-        DamageKind.Physical => FlyTextIcon.Physical,
-        DamageKind.Magic => FlyTextIcon.Magic,
-        _ => FlyTextIcon.Unique,
+        DamageKind.Physical => 1,
+        DamageKind.Magic => 5,
+        _ => 6,
     };
 }

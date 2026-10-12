@@ -293,9 +293,8 @@ public sealed partial class MultiplayerManager
                     && (!hostRoleLastLoggedAnimationTimeline.TryGetValue(role, out var lastSeq) || lastSeq != member.AnimationTimelineSeq))
                 {
                     hostRoleLastLoggedAnimationTimeline[role] = member.AnimationTimelineSeq;
-                    DiagnosticLog.Info($"[Multiplayer] Host: role {role} AnimationTimelineId -> {roleTimelineId} (loop {member.AnimationTimelineLoopId}, seq {member.AnimationTimelineSeq}).");
-                    if (roleTimelineId != 0) SimAssets.WarnIfUnknown(SimAssetKind.Timeline, roleTimelineId, "role timeline");
-                    SimAssets.WarnIfUnknown(SimAssetKind.Timeline, member.AnimationTimelineLoopId, "role loop timeline");
+                    DiagnosticLog.Info($"[Multiplayer] Host: role {role} AnimationTimelineId -> {roleTimelineId} (seq {member.AnimationTimelineSeq}).");
+                    SimAssets.WarnIfUnknown(SimAssetKind.Timeline, roleTimelineId, "role timeline");
                 }
                 foreach (var lockon in newLockonVfxIds)
                     SimAssets.WarnIfUnknown(SimAssetKind.Lockon, lockon, "role lockon");
@@ -310,7 +309,7 @@ public sealed partial class MultiplayerManager
             roles.Add(new RoleState(role, member != null, dead,
                 member?.Position.X ?? 0f, member?.Position.Y ?? 0f, member?.Position.Z ?? 0f, member?.Rotation ?? 0f,
                 statuses, newLockonVfxIds, currentHp, maxHp,
-                member?.AnimationTimelineId, member?.AnimationTimelineLoopId ?? 0, member?.AnimationTimelineSeq ?? 0, newVfx,
+                member?.AnimationTimelineId, member?.AnimationTimelineSeq ?? 0, newVfx,
                 PersistentVfxForPeers(member, $"role {role}"),
                 (member as SimNpc)?.PlayedActionId ?? 0, (member as SimNpc)?.PlayedActionAnimationLock ?? 0.6f,
                 (member as SimNpc)?.PlayedActionSeq ?? 0));

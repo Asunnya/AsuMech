@@ -172,15 +172,44 @@ public sealed unsafe class LocalPlayerInputHooks : ILocalPlayerInput, IDisposabl
         cancelCastHook.Original(thisPtr);
     }
 
+    private Vector2? steerDirection;
+
+    public void Steer(Vector2? direction, float speed)
+        => steerDirection = direction is { } d && d.LengthSquared() > 0f ? Vector2.Normalize(d) : null;
+
     private void RMIWalkDetour(void* self, float* sumLeft, float* sumForward, float* sumTurnLeft, byte* haveBackwardOrStrafe, byte* a6, byte bAdditiveUnk)
     {
         rmiWalkHook.Original(self, sumLeft, sumForward, sumTurnLeft, haveBackwardOrStrafe, a6, bAdditiveUnk);
         // self is a MoveControllerSubMemberForMine*; the sums are its move vector.
         MovementInputActive = *sumLeft != 0 || *sumForward != 0;
+        // bAdditiveUnk != 0 is the game's second, additive sample; bossmod only steers the first.
+        if (steerDirection is { } dir && bAdditiveUnk == 0 && SteerReference() is { } reference)
+        {
+            var relative = MathF.Atan2(dir.X, dir.Y) - reference;
+            *sumLeft = MathF.Sin(relative);
+            *sumForward = MathF.Cos(relative);
+            *haveBackwardOrStrafe = 0;
+            return;
+        }
         if (!ZeroMovement) return;
         *sumLeft = 0;
         *sumForward = 0;
         *haveBackwardOrStrafe = 0;
+    }
+
+    // The angle the move vector is relative to (bossmod's MovementOverride): the character's
+    // facing in standard mode, the camera's back in legacy mode. Null with no player or camera.
+    private static float? SteerReference()
+    {
+        var player = Plugin.ObjectTable.LocalPlayer;
+        if (player == null) return null;
+        var legacy = Plugin.GameConfig.UiControl.TryGetUInt("MoveMode", out var mode) && mode == 1;
+        if (!legacy) return player.Rotation;
+        var camera = FFXIVClientStructs.FFXIV.Client.Game.Control.CameraManager.Instance()->GetActiveCamera();
+        var render = camera != null ? camera->SceneCamera.RenderCamera : null;
+        if (render == null) return null;
+        var view = render->ViewMatrix;
+        return MathF.Atan2(view.M13, view.M33) + MathF.PI;
     }
 
     private bool CheckStrafeKeybindDetour(IntPtr ptr, KeybindType keybind)
@@ -197,24 +226,18 @@ public sealed unsafe class LocalPlayerInputHooks : ILocalPlayerInput, IDisposabl
         return isInputIdPressedHook.Original(inputData, inputId);
     }
 
-    // Drains queued auto-attacks while DisableAllActions is set so the player
-    // doesn't keep swinging mid-stun; mirrors raid-rewritten's UpdateDetour.
     private void UpdateDetour(ActionManager* self)
     {
         updateHook.Original(self);
         ScanAndLogActiveStatuses();
-        if (!DisableAllActions) return;
-        var autosOn = UIState.Instance()->WeaponState.AutoAttackState.IsAutoAttacking;
-        if (autosOn) self->UseAction(ActionType.GeneralAction, 1);
     }
 
     private bool UseActionDetour(ActionManager* self, ActionType actionType, uint actionId, ulong targetId, uint extraParam, ActionManager.UseActionMode mode, uint comboRouteId, bool* outOptAreaTargeted)
     {
         RecordRecentAction(actionId, actionType);
-        if (DisableAllActions && !IsStopAutosAction(actionType, actionId)) return false;
+        if (DisableAllActions) return false;
         var result = useActionHook.Original(self, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
-        // Ignore the auto-attack-cancel general action that UpdateDetour issues while stunned.
-        if (result && !IsStopAutosAction(actionType, actionId))
+        if (result)
         {
             actionUsedSincePoll = true;
             ActionExecuted?.Invoke(actionType, actionId, targetId);
@@ -224,7 +247,7 @@ public sealed unsafe class LocalPlayerInputHooks : ILocalPlayerInput, IDisposabl
 
     private bool UseActionLocationDetour(ActionManager* self, ActionType actionType, uint actionId, ulong targetId, Vector3* location, uint extraParam, byte a7)
     {
-        if (DisableAllActions && !IsStopAutosAction(actionType, actionId)) return false;
+        if (DisableAllActions) return false;
         var result = useActionLocationHook.Original(self, actionType, actionId, targetId, location, extraParam, a7);
         if (result)
         {
@@ -232,13 +255,5 @@ public sealed unsafe class LocalPlayerInputHooks : ILocalPlayerInput, IDisposabl
             ActionExecuted?.Invoke(actionType, actionId, targetId);
         }
         return result;
-    }
-
-    // Lets the auto-cancel UseAction from UpdateDetour through; everything else
-    // bounces while autos are still firing.
-    private static bool IsStopAutosAction(ActionType actionType, uint actionId)
-    {
-        if (!UIState.Instance()->WeaponState.AutoAttackState.IsAutoAttacking) return false;
-        return actionType == ActionType.GeneralAction && actionId == 1;
     }
 }

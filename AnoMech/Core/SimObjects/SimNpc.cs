@@ -33,6 +33,57 @@ public class SimNpc : SimCharacter
 
     private protected override Movement Movement => field ??= new Movement(this);
 
+    // The engine creates a packet-spawned actor a few frames after the spawn packet, so the
+    // wrapper polls its reserved slot each tick. Failed = nothing arrived within
+    // PacketSpawnTimeoutFrames, or the slot holds somebody else's actor.
+    public bool PacketSpawnPending { get; private set; }
+    public bool PacketSpawnFailed { get; private set; }
+    private const int PacketSpawnTimeoutFrames = 20;
+    protected int PacketSpawnFrames { get; private set; }
+    private uint packetEntityId;
+    private Placement packetSpawnPlacement;
+
+    // Pending counts as alive, or SimWorld's reaper would drop the wrapper before its actor
+    // exists; every consumer of IsActive null-checks the native pointer.
+    public override bool IsActive => PacketSpawnPending || base.IsActive;
+
+    internal void BeginPacketSpawn(uint entityId, Placement placement)
+    {
+        packetEntityId = entityId;
+        packetSpawnPlacement = placement;
+        PacketSpawnPending = true;
+        SeedTransform(placement.Position, placement.Rotation);
+        ProbePacketSpawn();
+    }
+
+    // The sim-side settings a spawn packet doesn't carry go on here.
+    protected virtual void OnPacketSpawned(IBattleCharaProxy chara) { }
+
+    private void ProbePacketSpawn()
+    {
+        if (!PacketSpawnPending || proxy is not { } chara) return;
+        if (!chara.Exists)
+        {
+            if (PacketSpawnFrames < PacketSpawnTimeoutFrames) return;
+            PacketSpawnPending = false;
+            PacketSpawnFailed = true;
+            Natives.BattleCharas.ReleaseSlot(chara.Slot);
+            DiagnosticLog.Warn($"[SimNpc.PacketSpawn] 0x{packetEntityId:X}: nothing arrived at slot {chara.Slot} within {PacketSpawnFrames} frames -- the engine dropped the spawn.");
+            return;
+        }
+        PacketSpawnPending = false;
+        Natives.BattleCharas.ReleaseSlot(chara.Slot);
+        if (chara.EntityId != packetEntityId)
+        {
+            PacketSpawnFailed = true;
+            DiagnosticLog.Warn($"[SimNpc.PacketSpawn] slot {chara.Slot} holds entity 0x{chara.EntityId:X}, not the packet's 0x{packetEntityId:X} -- not ours; treating the spawn as failed.");
+            DetachSlot();
+            return;
+        }
+        if (Position != packetSpawnPlacement.Position || Rotation != packetSpawnPlacement.Rotation) ResendTransform();
+        OnPacketSpawned(chara);
+    }
+
     // pendingDraw=false for an actor the engine's own spawn handler created: it enables the
     // draw itself, as for a real server spawn.
     protected SimNpc(IBattleCharaProxy proxy, Coordinates coordinates, bool pendingDraw = true) : base(coordinates)
@@ -81,12 +132,14 @@ public class SimNpc : SimCharacter
         PlayedActionSeq++;
         actionCast ??= new SimCast(this, Coordinates);
         actionCast.NativeActionEffect(actionId, animationLock, (ushort)actionId, 0, ActionType.Action, 0,
-            animationTargetId: GameObjectId, actionTargetId: GameObjectId);
+            animationTargetId: GameObjectId, targets: [new ActionEffectTarget(GameObjectId)]);
     }
 
     public override void Tick(float deltaSeconds)
     {
         base.Tick(deltaSeconds);
+        PacketSpawnFrames++;
+        ProbePacketSpawn();
 
         if (pendingDraw)
         {
@@ -113,6 +166,7 @@ public class SimNpc : SimCharacter
     public override void Despawn()
     {
         if (proxy == null) return;
+        PacketSpawnPending = false;
         base.Despawn();
         proxy.Despawn();
         proxy = null;

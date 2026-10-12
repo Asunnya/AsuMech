@@ -24,11 +24,15 @@ public sealed class SimParty : ISimObject
 
     private readonly SimCharacter?[] slots = new SimCharacter?[8];
 
-    public SimParty() { Find = new CharacterFind<SimCharacter>(ActiveMembers); }
+    public SimParty()
+    {
+        Find = new CharacterFind<SimCharacter>(ActiveMembers);
+        LimitBreak = new LimitBreakGauge(() => Player?.ActorControl);
+    }
 
     public CharacterFind<SimCharacter> Find { get; }
 
-    public LimitBreakGauge LimitBreak { get; } = new();
+    public LimitBreakGauge LimitBreak { get; }
 
     // The bot in `role` casts its job's limit break at the level the gauge allows, emptying it.
     // False if the slot is not a live bot (humans press their own), no bar is filled, or the job

@@ -11,6 +11,7 @@ internal sealed class FakeGame
     public FakeZoneSession Zone { get; }
     public FakeMapEffects MapEffects { get; } = new();
     public FakeUserActions UserActions { get; } = new();
+    public FakeLocalPlayerInput PlayerInput { get; } = new();
 
     private FakeGame() => Zone = new FakeZoneSession(BattleCharas.Player);
 
@@ -22,7 +23,7 @@ internal sealed class FakeGame
         Natives.BattleCharas = game.BattleCharas;
         Natives.EventObjects = game.EventObjects;
         Natives.HiddenObjects = new FakeHiddenObjects();
-        Natives.PlayerInput = new FakeLocalPlayerInput();
+        Natives.PlayerInput = game.PlayerInput;
         Natives.UserActions = game.UserActions;
         Natives.Vfx = new FakeVfxFunctions();
         Natives.TimelinePreload = new FakeActionTimelinePreload();
@@ -35,7 +36,6 @@ internal sealed class FakeGame
         Natives.PartyHud = new FakePartyHud();
         Natives.HaterList = new FakeHaterList();
         Natives.LimitBreak = new FakeLimitBreakController();
-        Natives.Markings = new FakeMarkings();
         Natives.Waymarks = new FakeWaymarks();
         Natives.Bgm = new FakeBgm();
         Natives.VfxSpawnLog = new FakeVfxSpawnLog();
@@ -49,7 +49,16 @@ internal sealed class FakeGame
     {
         Framework.RunPending();
         update(deltaSeconds);
+        WalkSteeredPlayer(deltaSeconds);
         BattleCharas.Tick(deltaSeconds);
         EventObjects.Tick(deltaSeconds);
+    }
+
+    private void WalkSteeredPlayer(float deltaSeconds)
+    {
+        if (PlayerInput.SteerDirection is not { } dir) return;
+        var step = dir * PlayerInput.SteerSpeed * deltaSeconds;
+        BattleCharas.Player.Position += new System.Numerics.Vector3(step.X, 0f, step.Y);
+        BattleCharas.Player.Rotation = MathF.Atan2(dir.X, dir.Y);
     }
 }

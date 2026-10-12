@@ -14,14 +14,12 @@ public interface IBattleCharas
     // slot stays reserved until ReleaseSlot. Null when a sheet row is missing or no slot is free.
     IBattleCharaProxy? SpawnBattleNpcFromPacket(EnemySpawnConfig config, Placement placement, out uint entityId);
 
-    // A Lalafell party doppel wearing the preset's gear, registered in CharacterManager.
-    IBattleCharaProxy? SpawnDoppel(PartyMemberPreset preset, Placement placement);
+    // A Lalafell party doppel wearing the preset's gear, built by the engine's own PlayerSpawn
+    // handler; arrives and reserves its slot like SpawnBattleNpcFromPacket.
+    IBattleCharaProxy? SpawnDoppel(PartyMemberPreset preset, Placement placement, out uint entityId);
 
     bool IsInCharacterManager(uint entityId);
 
     void ReleaseSlot(int slot);
 
-    // A packet spawn abandoned before its actor arrived: SweepOrphans despawns it once it does.
-    void NoteOrphan(int slot, uint entityId);
-    void SweepOrphans();
 }

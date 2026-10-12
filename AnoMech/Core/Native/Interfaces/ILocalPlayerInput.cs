@@ -12,4 +12,9 @@ public interface ILocalPlayerInput
 
     bool ZeroMovement { get; set; }
     bool DisableAllActions { get; set; }
+
+    // Walks the player along a world XZ direction as if the stick were held, over the keyboard
+    // and ZeroMovement; null lets go. The game moves them at its own speed; `speed` is the run
+    // or sprint speed the sim expects, which a headless client moves them at.
+    void Steer(System.Numerics.Vector2? direction, float speed);
 }

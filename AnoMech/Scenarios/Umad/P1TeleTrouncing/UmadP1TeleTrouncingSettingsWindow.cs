@@ -80,7 +80,6 @@ public sealed class UmadP1TeleTrouncingSettingsWindow
         Overrides.PropsStaticVfxTest = false;
         Overrides.PropsBeatMode = PropBeatMode.ActorControl;
         Overrides.HoldHaze = false;
-        UmadZone.SuppressP1Scenery = false;
     }
 
 #if DEBUG
@@ -89,9 +88,6 @@ public sealed class UmadP1TeleTrouncingSettingsWindow
         SettingsGrid.Row("Zone (debug):");
         var haze = Overrides.HoldHaze;
         if (ImGui.Checkbox("Hold P1 haze##holdhaze", ref haze)) Overrides.HoldHaze = haze;
-        ImGui.SameLine();
-        var scenery = UmadZone.SuppressP1Scenery;
-        if (ImGui.Checkbox("Deactivate scenery SGs##scenerysg", ref scenery)) UmadZone.SuppressP1Scenery = scenery;
     }
 
     private void DrawPropKnobs()

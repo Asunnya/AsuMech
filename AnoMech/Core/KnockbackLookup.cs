@@ -21,4 +21,8 @@ internal static class KnockbackLookup
         speed = row.Speed;
         return true;
     }
+
+    // The client pushes its own player from an ActionEffect's knockback entry for every Direction
+    // but 6 (away from the action's target), which the server sends as the push packet instead.
+    public static bool ClientApplies(uint knockbackId) => Natives.Data.Knockback(knockbackId) is { Direction: <= 5 };
 }

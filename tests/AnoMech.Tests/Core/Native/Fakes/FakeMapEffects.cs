@@ -7,10 +7,6 @@ internal sealed class FakeMapEffects : IMapEffects
     public bool Loaded { get; set; }
 
     public bool Apply(uint packetFlags, byte index) => Loaded;
-    public bool SuppressSlot(byte index) => Loaded;
-    public void KeepSlotSuppressed(byte index) { }
-    public void RestoreSlot(byte index) { }
-    public IReadOnlyCollection<byte> SuppressedSlots => [];
-    public void ForgetSuppressions() { }
+    public bool ApplySnapshot(ReadOnlySpan<ushort> states, bool zoneIn) => Loaded;
     public void LogAllSlots(string label) { }
 }

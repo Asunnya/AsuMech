@@ -19,7 +19,7 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimCast cast, SimWorld
     public EnemyActionCast Start(EnemyAction action, CastTarget at, byte animationVariation)
     {
         var handle = new EnemyActionCast();
-        if (caster.IsDefeated)
+        if (caster.Dead)
         {
             handle.Cancelled();
             return handle;
@@ -40,19 +40,21 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimCast cast, SimWorld
                 rotation: caster.Rotation + action.Cast.Rotation, position: location, targetId: castTarget);
         }
 
-        Schedule(sheetCastTime, () =>
-        {
-            if (handle.IsCancelled) return;
-            if (casting == handle) casting = null;
-            Release(action, target, location, castTarget, animationVariation);
-        });
+        // Resolve goes first: an instant action runs both inline, and the ActionEffect carries the hits.
+        var delivery = new Delivery();
         if (action.Effects.Count > 0)
             Schedule(castTime + action.Timing.ResolveSnapshotOffset, () =>
             {
                 if (handle.IsCancelled) return;
                 if (casting == handle) casting = null;
-                Resolve(action, target, location, handle);
+                Resolve(action, target, location, handle, delivery);
             });
+        Schedule(sheetCastTime, () =>
+        {
+            if (handle.IsCancelled) return;
+            if (casting == handle) casting = null;
+            Release(action, target, location, castTarget, animationVariation, delivery);
+        });
         return handle;
     }
 
@@ -67,21 +69,45 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimCast cast, SimWorld
     // Faces a target first: the packet carries the caster's rotation. A ground location doesn't turn
     // the caster, since the game aims some lines from behind it. Some actions animate only when
     // delivered to a target, but one outside CharacterManager null-derefs ApplyAll.
-    private void Release(EnemyAction action, SimCharacter? target, Vector3? location, GameObjectId? castTarget, byte animationVariation)
+    private void Release(EnemyAction action, SimCharacter? target, Vector3? location, GameObjectId? castTarget, byte animationVariation, Delivery delivery)
     {
         var id = action.ActionId;
         if (target == caster) target = null;
         var aim = location ?? target?.Position;
         caster.Face(target?.Position);
-        GameObjectId? deliverTo = target is not null && Natives.BattleCharas.IsInCharacterManager(target.GameObjectId.ObjectId)
-            ? target.GameObjectId
-            : null;
-        cast.NativeActionEffect(
+        var listed = new List<SimCharacter>();
+        if (target is not null) listed.Add(target);
+        listed.AddRange(delivery.Damage.Select(d => d.Target));
+        listed.AddRange(delivery.Pushes.Select(p => p.Target));
+        var targets = new List<ActionEffectTarget>();
+        var confirmations = new List<(SimCharacter Target, byte Index)>();
+        foreach (var who in listed.Distinct())
+        {
+            if (!Natives.BattleCharas.IsInCharacterManager(who.GameObjectId.ObjectId)) continue;
+            var effects = new List<ActionEffectEntry>();
+            var damage = delivery.Damage.Where(d => d.Target == who).OrderByDescending(d => d.Amount).ToList();
+            var push = delivery.Pushes.Where(p => p.Target == who).ToList();
+            if (damage.Count > 0)
+            {
+                effects.Add(ActionEffectEntry.Damage(damage[0].Amount, damage[0].Kind.AttackType()));
+                confirmations.Add((who, (byte)targets.Count));
+            }
+            // A push that deals nothing still gets a typeless zero hit, and no EffectResult.
+            else if (push.Count > 0)
+                effects.Add(ActionEffectEntry.Damage(0, 0));
+            if (push.Count > 0 && push[0].KnockbackRow is { } row)
+                effects.Add(ActionEffectEntry.Knockback(row));
+            effects.Add(ActionEffectEntry.ActionMarker(id));
+            targets.Add(new ActionEffectTarget(who.GameObjectId, effects));
+        }
+        delivery.Sequence = cast.NativeActionEffect(
             id, action.Cast.AnimationLock, (ushort)id, animationVariation, ActionType.Action, 0,
-            rotation: caster.Rotation + action.Cast.Rotation, position: aim ?? caster.Position, animationTargetId: castTarget, actionTargetId: deliverTo);
+            rotation: caster.Rotation + action.Cast.Rotation, position: aim ?? caster.Position, animationTargetId: castTarget, targets: targets);
+        delivery.Confirmations = confirmations;
+        if (delivery.ImpactDue) ConfirmDamage(delivery);
     }
 
-    private void Resolve(EnemyAction action, SimCharacter? target, Vector3? location, EnemyActionCast handle)
+    private void Resolve(EnemyAction action, SimCharacter? target, Vector3? location, EnemyActionCast handle, Delivery delivery)
     {
         var party = world.Party;
         var origin = target is not null && target != caster && IsDirectional(action)
@@ -108,16 +134,19 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimCast cast, SimWorld
             effect.Apply(ctx);
         handle.Killed(ctx.Killed.Keys.ToList());
 
-        var name = ActionLookup.FlyTextName(action.ActionId);
-        foreach (var (who, amount, icon) in ctx.DamageShown)
-            Schedule(action.Timing.DamageDelay, () => ShowFlyText(who, amount, icon, name));
-        foreach (var (who, from, distance, speed, delay) in ctx.Knockbacks)
+        delivery.Damage = ctx.DamageShown;
+        delivery.Pushes = ctx.Knockbacks.Select(k => (k.Target, k.KnockbackRow)).ToList();
+        // Ahead of the deaths it shares a time with, so the killing hit lands on a living target.
+        if (ctx.DamageShown.Count > 0)
+            Schedule(action.Timing.DamageDelay, () => ConfirmDamage(delivery));
+        foreach (var (who, from, distance, speed, delay, row) in ctx.Knockbacks)
         {
-            var showFlyText = ctx.DamageShown.All(d => d.Target != who);
+            var byClient = who is SimPlayer && row is { } r && KnockbackLookup.ClientApplies(r);
             Schedule(delay ?? action.Timing.DamageDelay, () =>
             {
-                if (who.IsAlive() && who is ISimPartyMember member) member.Knockback(from, distance, speed);
-                if (showFlyText) ShowFlyText(who, 0, FlyTextIcon.Unique, name);
+                if (!who.IsAlive()) return;
+                if (byClient && who is SimPlayer player) player.HoldForClientKnockback(distance / speed);
+                else if (who is ISimPartyMember member) member.Knockback(from, distance, speed);
             });
         }
         foreach (var (who, explanation) in ctx.Killed)
@@ -152,11 +181,25 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimCast cast, SimWorld
     private static string? Explain(string? action, string? hit)
         => action is null ? hit : hit is null ? action : $"{action}; {hit}";
 
-    // The game shows a player only the damage they take, never a party member's.
-    private static void ShowFlyText(SimCharacter who, uint amount, FlyTextIcon icon, string name)
+    // The EffectResult that makes the client apply a target's damage entry, flytext included. An
+    // impact due before the ActionEffect went out waits for it.
+    private static void ConfirmDamage(Delivery delivery)
     {
-        if (who is SimPlayer && who.IsAlive() && who.Proxy is { Exists: true } chara)
-            chara.ShowFlyText(amount, name, (uint)icon);
+        delivery.ImpactDue = delivery.Sequence == 0;
+        if (delivery.ImpactDue) return;
+        foreach (var (who, index) in delivery.Confirmations)
+            if (who.Proxy is { Exists: true } chara)
+                chara.ReceiveEffectResult(delivery.Sequence, index, chara.Health);
+    }
+
+    // Resolve's damage, for the ActionEffect; the ActionEffect's ids, for the EffectResults.
+    private sealed class Delivery
+    {
+        public IReadOnlyList<(SimCharacter Target, uint Amount, DamageKind Kind)> Damage = [];
+        public IReadOnlyList<(SimCharacter Target, uint? KnockbackRow)> Pushes = [];
+        public uint Sequence;
+        public IReadOnlyList<(SimCharacter Target, byte Index)> Confirmations = [];
+        public bool ImpactDue;
     }
 
     // Anything due now runs inline: an instant action resolves inside the Cast() call, so casts

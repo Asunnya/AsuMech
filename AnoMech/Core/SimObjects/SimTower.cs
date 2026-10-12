@@ -43,8 +43,6 @@ public sealed class SimTower : SimEventObject
             return null;
 
         var worldPos = placement.Position;
-        obj.SetPosition(worldPos);
-        obj.SetRotation(MathUtil.NormalizeRotation(config.Placement.Rotation));
 
         var tower = new SimTower(obj, coordinates, config.EObjId, states, stateUnk, radius, party, config.Lifetime, config.LayoutId);
 

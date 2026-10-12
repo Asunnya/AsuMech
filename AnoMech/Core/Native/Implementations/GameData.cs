@@ -32,7 +32,7 @@ internal sealed class GameData : IGameData
 
     public KnockbackRow? Knockback(uint knockbackId)
         => Plugin.DataManager.GetExcelSheet<LuminaKnockback>().TryGetRow(knockbackId, out var row)
-            ? new KnockbackRow(knockbackId, row.Distance, row.Speed)
+            ? new KnockbackRow(knockbackId, row.Distance, row.Speed, row.Direction)
             : null;
 
     public ClassJobRow? ClassJob(uint classJobId)

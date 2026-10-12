@@ -48,9 +48,7 @@ internal sealed class SimArenaBoundary : ISimObject
         foreach (var member in party.ActiveMembers())
         {
             if (!IsOutside(member.Position)) continue;
-            // Read before Die: OnKilled zeroes the HP bar.
-            var health = member.Proxy?.Health ?? 0;
-            if (member.Die(SimCharacterDeathExtensions.Environment, cause)) member.ActorControl.WallDeath(health);
+            member.Die(SimCharacterDeathExtensions.Environment, cause);
         }
     }
 

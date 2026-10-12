@@ -10,13 +10,4 @@ internal sealed unsafe class LimitBreakController : ILimitBreakController
         var lb = NativeLimitBreakController.Instance();
         return lb == null ? null : new LimitBreakBars(lb->BarCount, lb->CurrentUnits, lb->BarUnits);
     }
-
-    public void Write(LimitBreakBars bars)
-    {
-        var lb = NativeLimitBreakController.Instance();
-        if (lb == null) return;
-        lb->BarCount = bars.BarCount;
-        lb->BarUnits = bars.BarUnits;
-        lb->CurrentUnits = bars.CurrentUnits;
-    }
 }

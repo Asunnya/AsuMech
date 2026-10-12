@@ -12,11 +12,10 @@ namespace AnoMech.Core.SimObjects;
 public sealed class SimPartyNpc : SimNpc, ISimPartyMember
 {
     public PartyRole Role { get; set; }
-    public bool Dead { get; private set; }
     public byte ClassJob { get; }
     public string DisplayName { get; }
 
-    internal SimPartyNpc(IBattleCharaProxy proxy, Coordinates coordinates, PartyRole role, byte classJob, string name) : base(proxy, coordinates)
+    internal SimPartyNpc(IBattleCharaProxy proxy, Coordinates coordinates, PartyRole role, byte classJob, string name) : base(proxy, coordinates, pendingDraw: false)
     {
         Role = role;
         ClassJob = classJob;
@@ -60,12 +59,10 @@ public sealed class SimPartyNpc : SimNpc, ISimPartyMember
         base.Despawn();
     }
 
-    public void OnKilled()
+    protected override void OnPacketSpawned(IBattleCharaProxy chara) => ActorControl.ZoneIn();
+
+    public void OnKilled(bool byEnvironment)
     {
-        Dead = true;
-        StopMoving();
-        if (Proxy is not { Exists: true } chara) return;
-        chara.ApplyDeadState();
-        this.PlayKoActionTimeline();
+        GoDown(byEnvironment);
     }
 }

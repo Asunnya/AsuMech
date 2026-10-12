@@ -73,12 +73,12 @@ public sealed class AiManager
     {
         world.Events.Add(time, () =>
         {
-            Natives.Markings.ClearAll();
+            world.ClearMarks();
             var marks = mapping();
             AnoMech.Core.DiagnosticLog.Info($"[AiManager] Automarker@{time:F1}: [{string.Join(", ", marks.Select(kv => $"{kv.Key}={kv.Value}"))}].");
             foreach (var (role, sign) in marks)
                 if (world.Party.Get(role) is { } member && member.IsAlive())
-                    Natives.Markings.Set(sign, member.GameObjectId);
+                    world.Mark(sign, member);
         }, file, line);
     }
 

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Numerics;
 using AnoMech.Core.Native.Implementations.Interop;
 using AnoMech.Core.Native.Interfaces;
 using FFXIVClientStructs.FFXIV.Client.LayoutEngine;
@@ -27,8 +26,6 @@ internal sealed unsafe class LayoutFunctions : ILayoutFunctions
     }
 
     public void ClearSuppressedLayers() => suppressedLayerInstances.Clear();
-
-    public int DisableSpawnAreaColliders(Vector3 center, float radius) => DirectorFunctions.DisableSpawnAreaColliders(center, radius);
 
     public string DescribeActiveLayers() => LayoutQuery.DescribeActiveLayers();
 

@@ -6,7 +6,8 @@ using FFXIVClientStructs.FFXIV.Client.Game.Object;
 namespace AnoMech.Tests;
 
 // Resolves its slot on every call, like the real proxy: an empty slot reads defaults and ignores
-// writes. Animation, statuses, effects and packets have no readback in the sim and do nothing.
+// writes. Animation, statuses, effects and packets have no readback in the sim and do nothing,
+// except what moves the local player.
 internal sealed class FakeBattleChara(FakeBattleCharas owner, int slot) : IBattleCharaProxy
 {
     private const byte TargetableBits = 0x01 | 0x02;
@@ -24,20 +25,13 @@ internal sealed class FakeBattleChara(FakeBattleCharas owner, int slot) : IBattl
 
     public Vector3 Position => Actor?.Position ?? default;
 
-    public float Rotation
-    {
-        get => Actor?.Rotation ?? 0f;
-        set { if (Actor is { } a) a.Rotation = value; }
-    }
+    public float Rotation => Actor?.Rotation ?? 0f;
 
-    public void SetPosition(Vector3 position)
-    {
-        if (Actor is { } a) a.Position = position;
-    }
+    public void SetPos(Vector3 position, float rotation) => Actor?.Teleport(position, rotation);
 
-    public void SetRotation(float rotation)
+    public void Move(Vector3 position, float rotation, ActorMoveFlags flags, float speed)
     {
-        if (Actor is { } a) a.Rotation = rotation;
+        if (slot >= 0) Actor?.StartGlide(position, rotation);
     }
 
     public float HitboxRadius => Actor?.HitboxRadius ?? 0f;
@@ -76,9 +70,6 @@ internal sealed class FakeBattleChara(FakeBattleCharas owner, int slot) : IBattl
 
     // ── Animation ────────────────────────────────────────────────────────────
 
-    public void PlayActionTimeline(ushort timelineId, ushort loopId = 0, ushort? baseOverride = 0) { }
-    public void ResetActionTimeline() { }
-    public void QuiesceActionTimeline() { }
     public void SetBaseOverride(ushort timelineId) { }
     public ushort GetSlotTimeline(uint slot) => 0;
     public void SetSlotTimeline(uint slot, ushort timelineId) { }
@@ -108,9 +99,45 @@ internal sealed class FakeBattleChara(FakeBattleCharas owner, int slot) : IBattl
         a.TotalCastTime = cast.CastTime;
     }
 
-    public void ReceiveActionEffect(ActionEffectData effect) { }
+    private static uint nextSequence;
+
+    // The client pushes its own player from a knockback entry the moment it applies it.
+    public uint ReceiveActionEffect(ActionEffectData effect)
+    {
+        if (Actor is { } caster)
+            foreach (var target in effect.Targets ?? [])
+                if (target.Id == owner.Player.GameObjectId)
+                    foreach (var entry in target.Effects ?? [])
+                        if (entry.Type == KnockbackEffectType && KnockbackHeading(entry.Value, caster, owner.Player) is { } push)
+                            owner.Player.StartPush(push.Heading, push.Row.Distance, push.Row.Distance / push.Row.Speed);
+        return ++nextSequence;
+    }
+
+    private const byte KnockbackEffectType = 0x1F;
+
+    // Directions 1 (sheet angle) and 2 (random) aren't faked; 6 comes as the push packet.
+    private static (float Heading, KnockbackRow Row)? KnockbackHeading(uint knockbackId, FakeCharacter source, FakeCharacter pushed)
+    {
+        if (Natives.Data.Knockback(knockbackId) is not { Speed: > 0f } row) return null;
+        float? heading = row.Direction switch
+        {
+            0 => MathF.Atan2(pushed.Position.X - source.Position.X, pushed.Position.Z - source.Position.Z),
+            3 => source.Rotation,
+            4 => source.Rotation - MathF.PI / 2f,
+            5 => source.Rotation + MathF.PI / 2f,
+            _ => null,
+        };
+        return heading is { } h ? (h, row) : null;
+    }
+
+    public void ReceiveEffectResult(uint globalSequence, byte targetIndex, uint health)
+    {
+        if (Actor is { } a) a.Health = health;
+    }
 
     // Only the categories whose result sim code reads back.
+    public void ActorControlTarget(uint category, GameObjectId target, uint arg1 = 0, uint arg2 = 0, uint arg3 = 0, uint arg4 = 0) { }
+
     public void ActorControl(uint category, uint arg1 = 0, uint arg2 = 0, uint arg3 = 0, uint arg4 = 0, uint arg5 = 0, uint arg6 = 0, uint arg7 = 0, uint arg8 = 0)
     {
         switch (category)
@@ -133,6 +160,9 @@ internal sealed class FakeBattleChara(FakeBattleCharas owner, int slot) : IBattl
                         ? (byte)(t.TargetableStatus | TargetableBits)
                         : (byte)(t.TargetableStatus & ~TargetableBits);
                 break;
+            case 0xE1: // push, p1 = heading, p2 = distance x10000, p3 = duration x10000
+                Actor?.StartPush(arg1 / (float)ushort.MaxValue * MathF.Tau - MathF.PI, arg2 / 10000f, arg3 / 10000f);
+                break;
             case 0xF1: // warp, p1 = x<<16|y, p2 = z<<16|rotation
                 Actor?.StartCarry(
                     new Vector3(Position16(arg1 >> 16), Position16(arg1 & 0xFFFF), Position16(arg2 >> 16)),
@@ -145,33 +175,23 @@ internal sealed class FakeBattleChara(FakeBattleCharas owner, int slot) : IBattl
 
     // ── Combat state ─────────────────────────────────────────────────────────
 
-    public uint Health
-    {
-        get => Actor?.Health ?? 0;
-        set { if (Actor is { } a) a.Health = value; }
-    }
+    public uint Health => Actor?.Health ?? 0;
 
-    public uint MaxHealth
-    {
-        get => Actor?.MaxHealth ?? 0;
-        set { if (Actor is { } a) a.MaxHealth = value; }
-    }
+    public uint MaxHealth => Actor?.MaxHealth ?? 0;
 
-    public void ApplyDeadState()
-    {
-        if (Actor is { } a) a.Health = 0;
-    }
-
-    public void ClearShield() { }
-    public void SetTarget(GameObjectId target) { }
+    public uint Mana => Actor?.Mana ?? 0;
+    public uint MaxMana => Actor?.MaxMana ?? 0;
 
     public byte TargetableStatus => Actor?.TargetableStatus ?? 0;
 
     // ── Statuses ─────────────────────────────────────────────────────────────
 
-    public void AddStatusInit(ushort statusId, ushort param, GameObjectId source = default) { }
-    public void ApplyStatus(ushort statusId, float remainingTime, ushort param, GameObjectId source = default) { }
-    public void RemoveStatus(ushort statusId, GameObjectId source = default) { }
+    public void ReceiveStatusList(IReadOnlyList<StatusSlot> statuses, uint health, uint mana, byte shield)
+    {
+        if (Actor is not { } a) return;
+        a.Health = health;
+        a.Mana = mana;
+    }
 
     // ── Effects ──────────────────────────────────────────────────────────────
 
@@ -179,7 +199,6 @@ internal sealed class FakeBattleChara(FakeBattleCharas owner, int slot) : IBattl
 
     public ushort GetTetherId(byte slot) => Actor is { } a && a.Tethers.TryGetValue(slot, out var id) ? id : (ushort)0;
 
-    public void ShowFlyText(uint amount, string label, uint damageTypeIcon = 0) { }
 
     public void Despawn()
     {

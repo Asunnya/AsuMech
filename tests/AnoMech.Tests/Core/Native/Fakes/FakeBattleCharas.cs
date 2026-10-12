@@ -12,18 +12,16 @@ namespace AnoMech.Tests;
 internal sealed class FakeBattleCharas : IBattleCharas
 {
     private const int SlotCount = 100;
-    private const uint CreatedEntityIdBase = 0xE0000000u;
+    private const uint DoppelEntityIdBase = 0x10FFFE00u;
     private const uint PacketSpawnEntityIdBase = 0x4000FE00u;
     private const uint DoppelMaxHealth = 100_000;
     private const uint EnemyMaxHealth = 1_000_000;
     private const float DoppelHitboxRadius = 0.5f;
     private const uint DemihumanSkeletonIdBase = 10000;
     private const byte IsTargetable = 0x02;
-    private const int OrphanForgetFrames = 300;
 
     private readonly FakeCharacter?[] slots = new FakeCharacter?[SlotCount];
     private readonly HashSet<int> reserved = [];
-    private readonly List<(int Slot, uint EntityId, int Frames)> orphans = [];
 
     public FakeCharacter Player { get; } = new(0x10000001u, "Player") { MaxHealth = 100_000, Health = 100_000, HitboxRadius = 0.5f, HasDrawObject = true, IsDrawObjectVisible = true };
 
@@ -33,7 +31,11 @@ internal sealed class FakeBattleCharas : IBattleCharas
 
     internal FakeCharacter? ActorAt(int slot) => slot < 0 ? Player : slots[slot];
 
-    internal void Free(int slot) => slots[slot] = null;
+    internal void Free(int slot)
+    {
+        slots[slot] = null;
+        reserved.Remove(slot);
+    }
 
     public IBattleCharaProxy? SpawnBattleNpcFromPacket(EnemySpawnConfig config, Placement placement, out uint entityId)
     {
@@ -59,11 +61,13 @@ internal sealed class FakeBattleCharas : IBattleCharas
         return new FakeBattleChara(this, slot);
     }
 
-    public IBattleCharaProxy? SpawnDoppel(PartyMemberPreset preset, Placement placement)
+    public IBattleCharaProxy? SpawnDoppel(PartyMemberPreset preset, Placement placement, out uint entityId)
     {
+        entityId = 0;
         var slot = FindFreeSlot();
         if (slot < 0) return null;
-        slots[slot] = new FakeCharacter(CreatedEntityIdBase + (uint)slot, preset.Name)
+        entityId = DoppelEntityIdBase + (uint)slot;
+        slots[slot] = new FakeCharacter(entityId, preset.Name)
         {
             ClassJob = preset.ClassJob,
             Position = placement.Position,
@@ -80,31 +84,6 @@ internal sealed class FakeBattleCharas : IBattleCharas
         => Player.EntityId == entityId || slots.Any(a => a?.EntityId == entityId);
 
     public void ReleaseSlot(int slot) => reserved.Remove(slot);
-
-    public void NoteOrphan(int slot, uint entityId) => orphans.Add((slot, entityId, 0));
-
-    public void SweepOrphans()
-    {
-        for (var i = orphans.Count - 1; i >= 0; i--)
-        {
-            var (slot, entityId, frames) = orphans[i];
-            if (slots[slot]?.EntityId == entityId)
-            {
-                slots[slot] = null;
-                reserved.Remove(slot);
-                orphans.RemoveAt(i);
-            }
-            else if (frames >= OrphanForgetFrames)
-            {
-                reserved.Remove(slot);
-                orphans.RemoveAt(i);
-            }
-            else
-            {
-                orphans[i] = (slot, entityId, frames + 1);
-            }
-        }
-    }
 
     internal void Tick(float deltaSeconds)
     {

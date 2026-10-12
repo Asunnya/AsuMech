@@ -16,12 +16,15 @@ public sealed class ActorControl
     private const uint CombatCategory = 0x04;
     private const uint DeathAnimationCategory = 0x0E;
     private const uint CancelCastCategory = 0x0F;
+    private const uint GainEffectCategory = 0x14;
+    private const uint LoseEffectCategory = 0x15;
     private const uint HeadMarkerCategory = 0x22;
     private const uint SetTetherCategory = 0x23;
     private const uint CorpseFadeCategory = 0x27;
     private const uint PopInCategory = 0x24;
     private const uint ClearTetherCategory = 0x2F;
     private const uint ModeAttributeFlagsCategory = 0x31;
+    private const uint WipeResetCategory = 0x3C;
     private const uint TargetableCategory = 0x36;
     private const uint AnimationStateCategory = 0x3E;
     private const uint VoiceLineCategory = 0x46;
@@ -30,11 +33,24 @@ public sealed class ActorControl
     private const uint WallDeathCategory = 0x50;
     private const uint ModelStateCategory = 0x3F;
     private const uint GimmickJumpCategory = 0xDC;
+    private const uint ZoneInCategory = 0xC8;
     private const uint SlideCategory = 0xDF;
     private const uint WarpCategory = 0xF1;
     private const uint ActionTimelineCategory = 0x197;
     private const uint FadeOutCategory = 0x25F;
+    private const uint ReviveCategory = 0x5F9;
     private const uint TransformCategory = 0x5FB;
+
+    // ActorControlTarget.
+    private const uint SetTargetCategory = 0x32;
+    private const uint MarkingCategory = 0x1F6;
+
+    // ActorControlSelf: only the local player's client acts on it.
+    private const uint GroundVfxCategory = 0xB7;
+    private const uint PushCategory = 0xE1;
+    private const uint LimitBreakGaugeCategory = 0x1F9;
+
+    private const uint NoTarget = 0xE0000000;
 
     // 1 = ActionType Action.
     private const uint ActionTypeAction = 1;
@@ -80,6 +96,23 @@ public sealed class ActorControl
 
     public void PlayDeathAnimation() => Send(DeathAnimationCategory);
 
+    // Announces a status the status list already carries; the slot itself comes from the list.
+    public void GainEffect(ushort statusId, ushort param) => Send(GainEffectCategory, statusId, param);
+
+    // p4 is 0 or 1 in retail, independent of whether the status expired or was removed early;
+    // what it selects is UNVERIFIED, 0 is the more common value.
+    public void LoseEffect(ushort statusId, ushort param, GameObjectId source)
+        => Send(LoseEffectCategory, statusId, param, source == default ? NoTarget : source.ObjectId);
+
+    // Retail's revive on a wipe reset, all on one tick. 0x3C is seen only there; what it does
+    // on its own is UNVERIFIED.
+    public void Revive()
+    {
+        SetMode(CharacterModes.Normal);
+        Send(WipeResetCategory);
+        Send(ReviveCategory);
+    }
+
     // Retail sends it only for deaths no action dealt (death wall, falling off), never for
     // a mechanic's hit. What the client does with it is UNVERIFIED.
     public void WallDeath(uint health) => Send(WallDeathCategory, health);
@@ -89,6 +122,9 @@ public sealed class ActorControl
     public void PopIn(ushort timelineId = SpecialPopTimeline) => Send(PopInCategory, timelineId != 0 ? 1u : 0u, timelineId);
 
     public void FadeCorpse() => Send(CorpseFadeCategory);
+
+    // Retail follows every other player's spawn with it, ~0.6-1.2s later.
+    public void ZoneIn() => Send(ZoneInCategory);
 
     public void FadeOut()
     {
@@ -121,7 +157,36 @@ public sealed class ActorControl
     public void LimitBreakResolve(uint actionId, bool isUser, uint group)
         => Send(LimitBreakResolveCategory, actionId, isUser ? 0u : 1u, group);
 
+    // ActorControlSelf. p4 is the gain's reason; 0 = passive tick or resync.
+    public void SetLimitBreakGauge(uint bars, uint units, uint unitsPerBar) => Send(LimitBreakGaugeCategory, bars, units, unitsPerBar);
+
     public void SetTargetable(bool targetable) => Send(TargetableCategory, targetable ? 1u : 0u);
+
+    public void SetTarget(GameObjectId target) => proxy()?.ActorControlTarget(SetTargetCategory, target);
+
+    public void ClearTarget() => SetTarget(NoTarget);
+
+    // ActorControlTarget sent to the local player; p2 is whoever placed the marker.
+    public void Mark(Sign sign, GameObjectId target)
+    {
+        if (proxy() is { } chara) chara.ActorControlTarget(MarkingCategory, target, (uint)sign, chara.EntityId);
+    }
+
+    public void ClearMark(Sign sign) => Mark(sign, NoTarget);
+
+    public void ClearMarks()
+    {
+        foreach (var sign in Enum.GetValues<Sign>()) ClearMark(sign);
+    }
+
+    public void PlaceGroundVfx(uint vfxId, Vector3 worldPosition)
+        => Send(GroundVfxCategory, vfxId, MathUtil.QuantizePosition(worldPosition.X), MathUtil.QuantizePosition(worldPosition.Y),
+            MathUtil.QuantizePosition(worldPosition.Z), 0, NoTarget);
+
+    // Knockback on self
+    public void Push(float heading, float distance, float durationSeconds)
+        => Send(PushCategory, MathUtil.QuantizeRotation(heading), (uint)MathF.Round(distance * 10000f),
+            (uint)MathF.Round(durationSeconds * 10000f));
 
     public void PlayActionTimeline(ushort timelineId) => Send(ActionTimelineCategory, timelineId);
 

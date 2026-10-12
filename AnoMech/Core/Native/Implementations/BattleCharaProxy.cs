@@ -1,12 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using AnoMech.Core.Native.Implementations.Interop;
 using AnoMech.Core.Native.Implementations.Pointers;
 using AnoMech.Core.Native.Interfaces;
-using Dalamud.Game.Gui.FlyText;
-using Dalamud.Game.Text.SeStringHandling;
-using Dalamud.Game.Text.SeStringHandling.Payloads;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
@@ -21,9 +19,6 @@ namespace AnoMech.Core.Native.Implementations;
 internal sealed unsafe class BattleCharaProxy : IBattleCharaProxy
 {
     private const uint NoTarget = 0xE0000000;
-
-    // ABGR. Red, matching the game's own physical/unmitigated damage tint.
-    private const uint DamageColorAbgr = 0xFF3030FFu;
 
     public static readonly BattleCharaProxy LocalPlayer = new(-1);
 
@@ -93,25 +88,39 @@ internal sealed unsafe class BattleCharaProxy : IBattleCharaProxy
             var obj = Ptr;
             return obj == null ? 0f : obj->Rotation;
         }
-        set
-        {
-            var obj = Ptr;
-            if (obj != null) obj->Rotation = value;
-        }
     }
 
-    public void SetPosition(Vector3 position)
+    // Type 0 for the local player too. UNVERIFIED there: the server warps its own player with
+    // types 25 and 5, which the client follows with camera and screen handling.
+    public void SetPos(Vector3 position, float rotation)
     {
         var obj = Ptr;
         if (obj == null) return;
-        obj->SetPosition(position.X, position.Y, position.Z);
-        if (obj->DrawObject != null) obj->DrawObject->Object.Position = position;
+        var packet = new ActorSetPosPacket
+        {
+            RotationInt = MathUtil.QuantizeRotation(MathUtil.NormalizeRotation(rotation)),
+            X = position.X,
+            Y = position.Y,
+            Z = position.Z,
+        };
+        PacketDispatcherPointers.HandleActorSetPosPacket(obj->EntityId, &packet);
     }
 
-    public void SetRotation(float rotation)
+    public void Move(Vector3 position, float rotation, ActorMoveFlags flags, float speed)
     {
         var obj = Ptr;
-        if (obj != null) obj->SetRotation(rotation);
+        if (obj == null || Slot < 0) return;
+        var packet = new ActorMovePacket
+        {
+            RotationInt = MathUtil.QuantizeRotation(MathUtil.NormalizeRotation(rotation)),
+            MoveFlags = (byte)flags,
+            // Tenths of a y/s, wrapping past 25.5 the way a knockback's does.
+            Speed = (byte)((int)MathF.Round(speed * 10f) & 0xFF),
+            PositionX = MathUtil.QuantizePosition(position.X),
+            PositionY = MathUtil.QuantizePosition(position.Y),
+            PositionZ = MathUtil.QuantizePosition(position.Z),
+        };
+        PacketDispatcherPointers.HandleActorMovePacket(obj->EntityId, &packet);
     }
 
     public float HitboxRadius
@@ -201,43 +210,6 @@ internal sealed unsafe class BattleCharaProxy : IBattleCharaProxy
     }
 
     // ── Animation ────────────────────────────────────────────────────────────
-
-    public void PlayActionTimeline(ushort timelineId, ushort loopId = 0, ushort? baseOverride = 0)
-    {
-        var obj = Ptr;
-        if (obj == null) return;
-        if (obj->Timeline.TimelineSequencer.Parent == null) return;
-        if (baseOverride is { } value) obj->Timeline.BaseOverride = value;
-        obj->Timeline.PlayActionTimeline(timelineId, loopId);
-    }
-
-    public void ResetActionTimeline()
-    {
-        var obj = Ptr;
-        if (obj == null) return;
-        obj->Timeline.BaseOverride = 0;
-        obj->Timeline.ModelState = 0;
-        obj->Timeline.AnimationState[0] = 0;
-        obj->Timeline.AnimationState[1] = 0;
-        // Sequencer ops need a live skeleton (Parent); guard before touching it.
-        if (obj->Timeline.TimelineSequencer.Parent == null) return;
-        obj->Timeline.TimelineSequencer.SetSlotTimeline(0, 0);
-    }
-
-    // Character::Terminate walks all 14 sequencer slots and crashes on a still-live one (a
-    // mid-cast release animation occupies the UpperBody/Facial/Lips slots).
-    public void QuiesceActionTimeline()
-    {
-        var obj = Ptr;
-        if (obj == null) return;
-        obj->Timeline.BaseOverride = 0;
-        obj->Timeline.ModelState = 0;
-        obj->Timeline.AnimationState[0] = 0;
-        obj->Timeline.AnimationState[1] = 0;
-        if (obj->Timeline.TimelineSequencer.Parent == null) return;
-        for (uint slot = 0; slot < 14; slot++)
-            obj->Timeline.TimelineSequencer.SetSlotTimeline(slot, 0);
-    }
 
     public void SetBaseOverride(ushort timelineId)
     {
@@ -344,17 +316,22 @@ internal sealed unsafe class BattleCharaProxy : IBattleCharaProxy
         PacketDispatcherPointers.HandleActorCastPacket(obj->GetGameObjectId().ObjectId, &packet);
     }
 
-    public void ReceiveActionEffect(ActionEffectData effect)
+    // ActionEffect32 is the largest the server sends.
+    private const int MaxEffectTargets = 32;
+    private const int MaxEffectsPerTarget = 8;
+
+    public uint ReceiveActionEffect(ActionEffectData effect)
     {
         var obj = Ptr;
-        if (obj == null) return;
-        var noTarget = new GameObjectId { ObjectId = NoTarget, Type = 0 };
-        var actionTarget = effect.ActionTarget ?? noTarget;
+        if (obj == null) return 0;
+        var targets = effect.Targets ?? [];
+        var count = Math.Min(targets.Count, MaxEffectTargets);
+        var sequence = ActionEffects.NextGlobalSequence();
         var header = new ActionEffectHandler.Header
         {
-            AnimationTargetId = effect.AnimationTarget ?? noTarget,
+            AnimationTargetId = effect.AnimationTarget ?? new GameObjectId { ObjectId = NoTarget, Type = 0 },
             ActionId = effect.ActionId,
-            GlobalSequence = 0,
+            GlobalSequence = sequence,
             AnimationLock = effect.AnimationLock,
             BallistaEntityId = effect.Ballista?.ObjectId ?? NoTarget,
             SourceSequence = 0,
@@ -363,11 +340,48 @@ internal sealed unsafe class BattleCharaProxy : IBattleCharaProxy
             AnimationVariation = effect.AnimationVariation,
             ActionType = (byte)effect.ActionType,
             Flags = effect.Flags,
-            NumTargets = (byte)(effect.ActionTarget == null ? 0 : 1),
+            NumTargets = (byte)count,
         };
-        var targetEffects = new ActionEffectHandler.TargetEffects();
+        var targetEffects = stackalloc ActionEffectHandler.TargetEffects[Math.Max(count, 1)];
+        var targetIds = stackalloc GameObjectId[Math.Max(count, 1)];
+        targetEffects[0] = default;
+        targetIds[0] = new GameObjectId { ObjectId = NoTarget, Type = 0 };
+        for (var i = 0; i < count; i++)
+        {
+            targetIds[i] = targets[i].Id;
+            targetEffects[i] = default;
+            var entries = targets[i].Effects ?? [];
+            for (var k = 0; k < entries.Count && k < MaxEffectsPerTarget; k++)
+                targetEffects[i].Effects[k] = new ActionEffectHandler.Effect
+                {
+                    Type = entries[k].Type,
+                    Param0 = entries[k].Param0,
+                    Param1 = entries[k].Param1,
+                    Param2 = entries[k].Param2,
+                    Param3 = entries[k].Param3,
+                    Param4 = entries[k].Param4,
+                    Value = entries[k].Value,
+                };
+        }
         var position = effect.Position;
-        ActionEffectHandler.Receive(obj->GetGameObjectId().ObjectId, (Character*)obj, &position, &header, &targetEffects, &actionTarget);
+        ActionEffectHandler.Receive(obj->GetGameObjectId().ObjectId, (Character*)obj, &position, &header, targetEffects, targetIds);
+        return sequence;
+    }
+
+    public void ReceiveEffectResult(uint globalSequence, byte targetIndex, uint health)
+    {
+        var obj = Ptr;
+        if (obj == null) return;
+        var entityId = ((GameObject*)obj)->EntityId;
+        var packet = new EffectResultBasicPacket
+        {
+            Count = 1,
+            GlobalSequence = globalSequence,
+            EntityId = entityId,
+            CurrentHP = health,
+            TargetIndex = targetIndex,
+        };
+        PacketDispatcherPointers.HandleEffectResultBasicPacket(entityId, &packet, 0);
     }
 
     public void ActorControl(uint category, uint arg1 = 0, uint arg2 = 0, uint arg3 = 0, uint arg4 = 0, uint arg5 = 0, uint arg6 = 0, uint arg7 = 0, uint arg8 = 0)
@@ -375,6 +389,13 @@ internal sealed unsafe class BattleCharaProxy : IBattleCharaProxy
         var obj = Ptr;
         if (obj == null) return;
         PacketDispatcher.HandleActorControlPacket(obj->EntityId, category, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, NoTarget, false);
+    }
+
+    public void ActorControlTarget(uint category, GameObjectId target, uint arg1 = 0, uint arg2 = 0, uint arg3 = 0, uint arg4 = 0)
+    {
+        var obj = Ptr;
+        if (obj == null) return;
+        PacketDispatcher.HandleActorControlPacket(obj->EntityId, category, arg1, arg2, arg3, arg4, 0, 0, 0, 0, target, false);
     }
 
     // ── Combat state ─────────────────────────────────────────────────────────
@@ -386,11 +407,6 @@ internal sealed unsafe class BattleCharaProxy : IBattleCharaProxy
             var obj = Ptr;
             return obj == null ? 0u : obj->Health;
         }
-        set
-        {
-            var obj = Ptr;
-            if (obj != null) obj->Health = value;
-        }
     }
 
     public uint MaxHealth
@@ -400,32 +416,24 @@ internal sealed unsafe class BattleCharaProxy : IBattleCharaProxy
             var obj = Ptr;
             return obj == null ? 0u : obj->MaxHealth;
         }
-        set
+    }
+
+    public uint MaxMana
+    {
+        get
         {
             var obj = Ptr;
-            if (obj != null) obj->MaxHealth = value;
+            return obj == null ? 0u : obj->MaxMana;
         }
     }
 
-    public void ApplyDeadState()
+    public uint Mana
     {
-        var obj = Ptr;
-        if (obj == null) return;
-        obj->Health = 0;
-        obj->Mana = 0;
-        obj->Mode = CharacterModes.Dead;
-    }
-
-    public void ClearShield()
-    {
-        var obj = Ptr;
-        if (obj != null) obj->ShieldValue = 0;
-    }
-
-    public void SetTarget(GameObjectId target)
-    {
-        var obj = Ptr;
-        if (obj != null) obj->TargetId = target;
+        get
+        {
+            var obj = Ptr;
+            return obj == null ? 0u : obj->Mana;
+        }
     }
 
     public byte TargetableStatus
@@ -439,14 +447,35 @@ internal sealed unsafe class BattleCharaProxy : IBattleCharaProxy
 
     // ── Statuses ─────────────────────────────────────────────────────────────
 
-    public void AddStatusInit(ushort statusId, ushort param, GameObjectId source = default)
-        => Statuses.AddStatusInit((Character*)Ptr, statusId, param, source);
-
-    public void ApplyStatus(ushort statusId, float remainingTime, ushort param, GameObjectId source = default)
-        => Statuses.Apply((Character*)Ptr, statusId, remainingTime, param, source);
-
-    public void RemoveStatus(ushort statusId, GameObjectId source = default)
-        => Statuses.Remove((Character*)Ptr, statusId, source);
+    // Party members and enemies alike get the Double list retail sends to players; the handler
+    // doesn't care which kind of character it is.
+    public void ReceiveStatusList(IReadOnlyList<StatusSlot> statuses, uint health, uint mana, byte shield)
+    {
+        var obj = Ptr;
+        if (obj == null) return;
+        var packet = new StatusEffectListDoublePacket
+        {
+            ClassJob = obj->ClassJob,
+            Level = obj->Level,
+            Level_2 = obj->Level,
+            CurrentHP = health,
+            MaxHP = obj->MaxHealth,
+            CurrentMP = (ushort)mana,
+            MaxMP = (ushort)obj->MaxMana,
+            DamageShield = shield,
+        };
+        var first = (StatusEffectListStatus*)((byte*)&packet + StatusEffectListDoublePacket.StatusesOffset);
+        var second = (StatusEffectListStatus*)((byte*)&packet + StatusEffectListDoublePacket.ExtraStatusesOffset);
+        for (var i = 0; i < statuses.Count && i < 2 * StatusEffectListDoublePacket.Capacity; i++)
+        {
+            var entry = i < StatusEffectListDoublePacket.Capacity ? &first[i] : &second[i - StatusEffectListDoublePacket.Capacity];
+            entry->StatusId = statuses[i].StatusId;
+            entry->Param = statuses[i].Param;
+            entry->RemainingTime = statuses[i].RemainingTime;
+            entry->SourceEntityId = statuses[i].SourceEntityId;
+        }
+        PacketDispatcherPointers.HandleStatusEffectListDoublePacket(((GameObject*)obj)->EntityId, &packet, 0);
+    }
 
     // ── Effects ──────────────────────────────────────────────────────────────
 
@@ -467,23 +496,12 @@ internal sealed unsafe class BattleCharaProxy : IBattleCharaProxy
         return obj == null ? (ushort)0 : obj->Vfx.Tethers[slot].Id;
     }
 
-    public void ShowFlyText(uint amount, string label, uint damageTypeIcon = 0)
-    {
-        var obj = Ptr;
-        if (obj == null) return;
-        // val1 is the number, text1 the label: putting the number in both prints it twice.
-        Plugin.FlyText.AddFlyText(FlyTextKind.Damage, ((GameObject*)obj)->ObjectIndex, amount, 0,
-            new SeString(new TextPayload(label)), new SeString(), DamageColorAbgr, 0, damageTypeIcon);
-    }
-
+    // Sent even while the slot is still empty: the handler also cancels a spawn still queued for
+    // the slot, so an actor despawned before it arrived never appears.
     public void Despawn()
     {
         if (Slot < 0) return;
-        var obj = Ptr;
-        if (obj == null) return;
-        // DeleteObjectByIndex runs Character::Terminate (see QuiesceActionTimeline).
-        QuiesceActionTimeline();
-        obj->DisableDraw();
+        CharacterManagerHelper.Release(Slot);
         if (CharacterManager.Instance() == null)
         {
             Plugin.Log.Warning("[BattleCharaProxy.Despawn] CharacterManager.Instance() was null.");

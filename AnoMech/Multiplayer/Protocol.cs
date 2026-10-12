@@ -185,7 +185,7 @@ public sealed record RoleState(
     PartyRole Role, bool Filled, bool Dead, float X, float Y, float Z, float Rotation,
     IReadOnlyList<EnemyStatusState> Statuses, IReadOnlyList<uint> NewLockonVfxIds,
     uint CurrentHp, uint MaxHp,
-    ushort? AnimationTimelineId = null, ushort AnimationTimelineLoopId = 0, int AnimationTimelineSeq = 0,
+    ushort? AnimationTimelineId = null, int AnimationTimelineSeq = 0,
     IReadOnlyList<AttachedVfxState>? NewVfx = null, IReadOnlyList<string>? PersistentVfx = null,
     uint PlayedActionId = 0, float PlayedActionAnimationLock = 0.6f, int PlayedActionSeq = 0);
 

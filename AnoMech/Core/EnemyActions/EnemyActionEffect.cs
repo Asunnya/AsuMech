@@ -47,10 +47,10 @@ public static class EnemyActionEffects
     public static IEnemyActionEffect FollowUp(EnemyAction followUp, Func<EnemyActionContext, bool> when)
         => new FollowUpEffect(followUp, when);
 
-    // Away from the caster, by a Knockback sheet row. Survivors only. `knockbackDelay` is from
-    // resolve; null = TimingSpec.DamageDelay.
+    // Away from the caster, by a Knockback sheet row. Survivors only.
+    // `knockbackDelay` is from resolve and used only for bots; null = TimingSpec.DamageDelay.
     public static IEnemyActionEffect Knockback(uint knockbackId, float? knockbackDelay = null)
-        => new KnockbackEffect((_, _) => KnockbackLookup.TryGet(knockbackId, out var distance, out var speed) ? (distance, speed) : null, knockbackDelay);
+        => new KnockbackEffect((_, _) => KnockbackLookup.TryGet(knockbackId, out var distance, out var speed) ? (distance, speed) : null, knockbackDelay, knockbackId);
 
     // Away from the caster, for an action with no known Knockback row. Survivors only.
     public static IEnemyActionEffect Knockback(float distance, float speed, float? knockbackDelay = null)
@@ -114,7 +114,7 @@ internal sealed class DamageEffect(VulnSpec vulns, Severity severity, Distributi
             var (hit, reason) = split.Assign(ctx, i, target);
             var hitSeverity = hit?.Severity ?? severity;
             var cause = DamageCheck.LethalCause(target, hit?.Vulns ?? vulns, hitSeverity, kind, ctx.Party);
-            ctx.ShowDamage(target, hitSeverity.FlyTextAmount(kills: cause != null), kind.Icon());
+            ctx.ShowDamage(target, hitSeverity.FlyTextAmount(kills: cause != null), kind);
             if (cause != null) ctx.Kill(target, Explain(reason, cause));
         }
     }
@@ -198,7 +198,7 @@ internal sealed class FollowUpEffect(EnemyAction followUp, Func<EnemyActionConte
     }
 }
 
-internal sealed class KnockbackEffect(Func<EnemyActionContext, SimCharacter, (float Distance, float Speed)?> push, float? knockbackDelay) : IEnemyActionEffect
+internal sealed class KnockbackEffect(Func<EnemyActionContext, SimCharacter, (float Distance, float Speed)?> push, float? knockbackDelay, uint? knockbackRow = null) : IEnemyActionEffect
 {
     public void Apply(EnemyActionContext ctx)
     {
@@ -206,7 +206,7 @@ internal sealed class KnockbackEffect(Func<EnemyActionContext, SimCharacter, (fl
         {
             if (ctx.IsKilled(target) || !target.IsAlive() || target is not ISimPartyMember) continue;
             if (push(ctx, target) is { } p)
-                ctx.Knockback(target, ctx.Caster.Position, p.Distance, p.Speed, knockbackDelay);
+                ctx.Knockback(target, ctx.Caster.Position, p.Distance, p.Speed, knockbackDelay, knockbackRow);
         }
     }
 }

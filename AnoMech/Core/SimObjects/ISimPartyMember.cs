@@ -17,14 +17,11 @@ public interface ISimPartyMember : ISimObject, IPositioned
 {
     PartyRole Role { get; set;}
 
-    // KO state. Set by the implementer's OnKilled; the member stays present
-    // (IsActive) but lies on the floor. Implementers reset it on revive.
+    // KO: the member stays present (IsActive) but lies on the floor.
     bool Dead { get; }
 
-    // Per-subclass effect of dying — flips Dead, then applies the visual/gameplay
-    // KO. Game.Kill calls this (outside godmode). SimPartyNpc sets HP=0 + plays the
-    // KO timeline; SimPlayer kicks the input-lockout hooks + KO pose.
-    void OnKilled();
+    // Game.Kill calls this outside godmode. byEnvironment: no action dealt the death.
+    void OnKilled(bool byEnvironment);
 
     // Default knockback speed (yalms/sec) when the caller doesn't know the
     // specific action — matches the FFXIV Knockback sheet's most common Speed
@@ -65,14 +62,10 @@ public interface ISimPartyMember : ISimObject, IPositioned
 // ISimPartyMember concept for party members and to plain presence otherwise.
 public static class SimCharacterDeathExtensions
 {
-    // Public so SimAssets harvests them: the KO pose rides on RoleState to peers.
-    public const ushort KoTimelineId = 72;
-    public const ushort KoLoopTimelineId = 73;
-
     // A party member is alive while not KO'd, an enemy until defeated; any other character
     // is alive while present. Null is not alive.
     public static bool IsAlive(this SimCharacter? c)
-        => c is { IsActive: true } and not ISimPartyMember { Dead: true } and not SimEnemy { IsDefeated: true };
+        => c is { IsActive: true, Dead: false };
 
     // A death no action deals (the arena wall, an uncleansed debuff): Die's explanation is then the whole message.
     public const uint Environment = 0;
@@ -95,11 +88,6 @@ public static class SimCharacterDeathExtensions
         // Names no action, so nothing downstream can tell which mechanic it was.
         [Obsolete("Name the action: Die(actionId, explanation).")]
         public bool Die(string cause) => Kill(c, cause, null);
-
-        public void PlayKoActionTimeline()
-        {
-            c.PlayActionTimeline(KoTimelineId, KoLoopTimelineId);
-        }
     }
 
     private static bool Kill(SimCharacter c, string cause, uint? actionId)

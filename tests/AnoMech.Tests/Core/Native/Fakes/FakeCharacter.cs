@@ -22,6 +22,8 @@ internal sealed class FakeCharacter(uint entityId, string name)
 
     public uint Health { get; set; }
     public uint MaxHealth { get; set; }
+    public uint Mana { get; set; }
+    public uint MaxMana { get; set; }
     public byte TargetableStatus { get; set; }
     public byte ModelState { get; set; }
     public bool HasDrawObject { get; set; }
@@ -39,21 +41,79 @@ internal sealed class FakeCharacter(uint entityId, string name)
 
     public void StartCarry(Vector3 destination, float rotation)
     {
+        glideRemaining = 0f;
         carryStart = Position;
         carryDestination = destination;
         carryElapsed = 0f;
         Rotation = rotation;
     }
 
+    // The client's ActorMove handling: a straight walk from where the model is to the packet's
+    // position over 1s, or a snap when every axis is within 1/32y.
+    private const float GlideSeconds = 1f;
+    private const float GlideSnapDistance = 0.03125f;
+    private Vector3 glideStep;
+    private float glideRemaining;
+
+    public void StartGlide(Vector3 target, float rotation)
+    {
+        Rotation = rotation;
+        var delta = target - Position;
+        if (MathF.Abs(delta.X) < GlideSnapDistance && MathF.Abs(delta.Y) < GlideSnapDistance && MathF.Abs(delta.Z) < GlideSnapDistance)
+        {
+            Position = target;
+            glideRemaining = 0f;
+            return;
+        }
+        glideStep = delta / GlideSeconds;
+        glideRemaining = GlideSeconds;
+    }
+
+    public void Teleport(Vector3 position, float rotation)
+    {
+        Position = position;
+        Rotation = rotation;
+        glideRemaining = 0f;
+    }
+
+    private Vector3 pushStart;
+    private Vector3 pushOffset;
+    private float pushDuration;
+    private float pushElapsed;
+
+    public void StartPush(float heading, float distance, float durationSeconds)
+    {
+        glideRemaining = 0f;
+        pushStart = Position;
+        pushOffset = new Vector3(MathF.Sin(heading), 0f, MathF.Cos(heading)) * distance;
+        pushDuration = MathF.Max(0.01f, durationSeconds);
+        pushElapsed = 0f;
+    }
+
     // The engine's own per-frame update, which runs after the plugin's.
     public void Tick(float deltaSeconds)
     {
+        if (glideRemaining > 0f)
+        {
+            var dt = MathF.Min(deltaSeconds, glideRemaining);
+            Position += glideStep * dt;
+            glideRemaining -= dt;
+        }
+
         if (IsCasting)
         {
             CurrentCastTime = MathF.Min(CurrentCastTime + deltaSeconds, TotalCastTime);
             // UNVERIFIED: whether the engine drops IsCasting at a full bar or only on the
             // ActionEffect; SimCast reads the full CurrentCastTime either way.
             if (CurrentCastTime >= TotalCastTime) IsCasting = false;
+        }
+
+        if (pushDuration > 0f)
+        {
+            pushElapsed += deltaSeconds;
+            var t = Math.Clamp(pushElapsed / pushDuration, 0f, 1f);
+            Position = pushStart + pushOffset * (1f - (1f - t) * (1f - t));
+            if (t >= 1f) pushDuration = 0f;
         }
 
         if (carryDestination is { } destination)

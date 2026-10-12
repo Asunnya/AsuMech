@@ -19,6 +19,12 @@ public sealed class Game : IDisposable
     // EventObj for the duty Exit portal — hidden on every scenario start so the
     // teleport-out interactable doesn't sit inside the simulated arena.
     private const uint ExitObjectBaseId = 2000139;
+    private const float EntranceBarrierOpenTime = 2f;
+    private const uint DirectorEObjModCategory = 0x6A;
+    private const uint EntranceBarrierOpenState = 7;
+
+    private IEventObjectProxy? entranceBarrier;
+    private float entranceBarrierOpenIn = -1f;
 
     public EventScheduler Events { get; } = new();
     public SimWorld World { get; }
@@ -33,8 +39,10 @@ public sealed class Game : IDisposable
     private readonly Dictionary<IZone, List<IPhase>> phasesByZone = new();
     private readonly Dictionary<IPhase, List<IScenario>> scenariosByPhase = new();
 
-    // Fixed scenario-local player spawn (16y south of centre).
-    public static readonly Vector3 PlayerSpawnLocal = new(0f, 0f, 16f);
+    // Scenario-local player spawn (16y south of centre) for a zone with no EntranceBarrier.
+    public static readonly Vector3 DefaultPlayerSpawnLocal = new(0f, 0f, 16f);
+
+    private Vector3 playerSpawnLocal = DefaultPlayerSpawnLocal;
 
     // Multiplier applied only to the EventScheduler's delta. Intentionally does not
     // scale enemy/party/tether/status ticks so cast bars, animations, and movement
@@ -103,9 +111,6 @@ public sealed class Game : IDisposable
     public float SecondsSinceTick => Paused || lastEventTick == 0
         ? 0f
         : (float)Stopwatch.GetElapsedTime(lastEventTick).TotalSeconds;
-    // The phase of the last run in the loaded zone, host and peer alike (activeScenario is
-    // host-only and cleared by a Reset).
-    private IPhase? lastPhase;
     private bool firstDeathScheduled;
     private bool firstFreezeScheduled;
 
@@ -229,6 +234,44 @@ public sealed class Game : IDisposable
     // id is null for a death that names none (the obsolete Die(string)).
     public event Action<PartyRole, string, uint?>? PartyMemberKilled;
 
+    // As retail's zone-in spawn: LayoutId binds the EObj to its layout placement, GimmickId to the
+    // wall SharedGroup. Retail sends the open state at commence, seconds after zone-in; here it
+    // only has to come after the SharedGroup attaches (~1s after the spawn). Once per zone-in, on
+    // every client; kept out of SimWorld so a restart's reset doesn't despawn it.
+    private void OpenEntranceBarrier(EntranceBarrier entrance)
+    {
+        var config = new EventObjectSpawnConfig
+        {
+            EObjId = entrance.EObjId,
+            LayoutId = entrance.EObjLayoutId,
+            GimmickId = entrance.WallLayoutId,
+            TargetableStatus = 5,
+        };
+        entranceBarrier = Natives.EventObjects.Spawn(config, World.Coordinates.ToGlobal(new Placement(entrance.Position, 0f)));
+        entranceBarrierOpenIn = EntranceBarrierOpenTime;
+    }
+
+    private void TickEntranceBarrier(float deltaSeconds)
+    {
+        if (entranceBarrierOpenIn < 0 || (entranceBarrierOpenIn -= deltaSeconds) >= 0) return;
+        entranceBarrier?.ActorControl(DirectorEObjModCategory, EntranceBarrierOpenState);
+    }
+
+    private void DespawnEntranceBarrier()
+    {
+        entranceBarrier?.Despawn();
+        entranceBarrier = null;
+        entranceBarrierOpenIn = -1f;
+    }
+
+    private static ushort[] ArenaMapEffects(IZone zone, IPhase phase)
+    {
+        var states = zone.ArenaMapEffectSnapshot.ToArray();
+        foreach (var (slot, state) in phase.ArenaMapEffectOverrides)
+            states[slot] = state;
+        return states;
+    }
+
     // The selected preset, or [0] as the default.
     private static IReadOnlyList<Waymark> ResolveWaymarks(IZone zone, int selectedWaymark)
     {
@@ -286,10 +329,10 @@ public sealed class Game : IDisposable
         // Captured before TryLoad: false only on the first start from the inn (a true
         // zone entry), true for any restart/switch within the already-loaded zone.
         var freshLoad = !World.Map.IsZoneLoaded;
-        if (!freshLoad && lastPhase != phase) World.Map.RestoreSuppressedArenaSlots();
+        playerSpawnLocal = zone.EntranceBarrier?.Position ?? DefaultPlayerSpawnLocal;
 
         if (!World.Map.TryLoad(
-                new TargetInstance(zone.TerritoryId, zone.Origin, zone.Origin + PlayerSpawnLocal, phase.Weather, phase.FogHold),
+                new TargetInstance(zone.TerritoryId, zone.Origin, zone.Origin + playerSpawnLocal, phase.Weather, phase.FogHold),
                 zone.Level, zone.ItemLevel))
         {
             Plugin.Log.Warning($"Game: {scenario.Name} did not enter its zone; aborting.");
@@ -301,9 +344,9 @@ public sealed class Game : IDisposable
         if (freshLoad) Natives.UserActions.OnSessionStart();
 
         World.HideObject(ExitObjectBaseId);
-        lastPhase = phase;
         World.ScenarioOrigin = zone.Origin;
-        World.Map.ArmColliderDrops(zone.ColliderRemovalPoints.Select(World.Coordinates.ToGlobal));
+        if (freshLoad && zone.EntranceBarrier is { } entrance)
+            OpenEntranceBarrier(entrance);
         World.PlaceWaymarks(ResolveWaymarks(zone, selectedWaymark));
         // Before CreateParty: the spawn ring draws from the run's party-spawn stream.
         var seed = requestedSeed ?? Random.Shared.Next();
@@ -313,6 +356,10 @@ public sealed class Game : IDisposable
         // Client-asset setup a peer needs too (see IZone.RunClientSetup).
         zone.RunClientSetup(World);
         phase.RunClientSetup(World);
+        // Every client sends its own; retail's zone-in header on a fresh load, its wipe-reset one
+        // on a restart.
+        if (zone.ArenaMapEffectSnapshot.Count > 0)
+            World.Map.SetEffectSnapshot(ArenaMapEffects(zone, phase), zoneIn: freshLoad);
         // A peer runs no scenario logic; zone.Run also creates the arena boundary the
         // out-of-arena check below reads, so that check no-ops for a peer too.
         if (!isPeer)
@@ -365,6 +412,7 @@ public sealed class Game : IDisposable
     {
         Natives.Bgm.Tick(deltaSeconds);
         RetryWaitingStart();
+        TickEntranceBarrier(deltaSeconds);
         if (Paused) return;
         lastEventTick = Stopwatch.GetTimestamp();
         Events.Tick(deltaSeconds * EventTimeScale);
@@ -417,9 +465,6 @@ public sealed class Game : IDisposable
             RunScenario(p);
     }
 
-    // Godmode preview: how long a swallowed-death HP-bar drop stays down before healing back.
-    private const float GodmodeHealSeconds = 1.2f;
-
     // Single entry point for "this character died". Always posts the cause
     // to chat and, on the first call of a run, fires the on-screen overlay
     // — both happen even in godmode so the user can learn what would have
@@ -455,15 +500,10 @@ public sealed class Game : IDisposable
 
         if (GodMode)
         {
-            // Godmode still previews the death: drop the player's bar and heal it back a beat later.
-            if (target is SimPlayer player)
-            {
-                player.DropHpBar();
-                Events.Add(GodmodeHealSeconds, player.RestoreHpBar);
-            }
+            // TODO: don't kill player but indicate damage was fatal
             return false;
         }
-        target.OnKilled();
+        target.OnKilled(byEnvironment: actionId == SimCharacterDeathExtensions.Environment);
         PartyMemberKilled?.Invoke(target.Role, cause, actionId);
         MechanicStreak = 0;
         deathOccurredThisRun = true;
@@ -517,7 +557,7 @@ public sealed class Game : IDisposable
     }
 
     // ScenarioOrigin must already be set (SetPosition resolves local -> world through it).
-    private void TeleportPlayerToSpawn() => Player?.SetPosition(PlayerSpawnLocal);
+    private void TeleportPlayerToSpawn() => Player?.SetPosition(playerSpawnLocal);
 
     // Menu label, e.g. "P5 Delta".
     public static string DisplayName(IScenario scenario)
@@ -541,6 +581,7 @@ public sealed class Game : IDisposable
             ResetInternal();
             Natives.UserActions.OnSessionEnd();   // restore the job gauge captured at session start
             Natives.Bgm.Reset();
+            DespawnEntranceBarrier();
             World.Map.Unload();
         });
     }
@@ -575,6 +616,7 @@ public sealed class Game : IDisposable
         activeScenario = null;
         Events.Clear();
         Natives.UserActions.OnSessionEnd();   // restore the gauge if the plugin unloads mid-session (no-op otherwise)
+        DespawnEntranceBarrier();
         World.Dispose();
     }
 }

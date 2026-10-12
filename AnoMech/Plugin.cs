@@ -36,12 +36,12 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IGameInteropProvider GameInterop { get; private set; } = null!;
     [PluginService] internal static IChatGui ChatGui { get; private set; } = null!;
     [PluginService] internal static IToastGui ToastGui { get; private set; } = null!;
-    [PluginService] internal static IFlyTextGui FlyText { get; private set; } = null!;
     [PluginService] internal static IPartyList PartyList { get; private set; } = null!;
     [PluginService] internal static IPluginLog Log { get; private set; } = null!;
     [PluginService] internal static IDutyState DutyState { get; private set; } = null!;
     [PluginService] internal static ICondition Condition { get; private set; } = null!;
     [PluginService] internal static IJobGauges JobGauges { get; private set; } = null!;
+    [PluginService] internal static IGameConfig GameConfig { get; private set; } = null!;
 
     private const string CommandName = "/anomech";
     private const string CommandAlias = "/ano";
@@ -132,7 +132,6 @@ public sealed class Plugin : IDalamudPlugin
             DutyState.DutyCompleted += OnDutyCompleted;
 
             // Initialize Pointers
-            CharacterManagerPointers.Initialize();
             EventFrameworkPointers.Initialize();
             EventObjectManagerPointers.Initialize();
             EventObjectPointers.Initialize();
@@ -140,7 +139,6 @@ public sealed class Plugin : IDalamudPlugin
             ModelContainerPointers.Initialize();
             PacketDispatcherPointers.Initialize();
             RsfPointers.Initialize();
-            StatusManagerPointers.Initialize();
             VfxDataPointers.Initialize();
 
             Log.Information($"===A cool log message from {PluginInterface.Manifest.Name}===");
@@ -184,7 +182,6 @@ public sealed class Plugin : IDalamudPlugin
         Natives.PartyHud = new PartyHud();
         Natives.HaterList = new HaterList();
         Natives.LimitBreak = new LimitBreakController();
-        Natives.Markings = new Markings();
         Natives.Waymarks = new Waymarks();
         Natives.Bgm = bgm = new Bgm();
         Natives.VfxSpawnLog = vfxSpawnLog = new VfxSpawnLog();

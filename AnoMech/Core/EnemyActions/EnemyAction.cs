@@ -63,7 +63,8 @@ public sealed record AreaSpec
 public sealed record TimingSpec
 {
     // Snapshot: who is hit, when statuses land and who dies are decided here.
-    // Hard to measure; keep 0 (bar end) unless the game clearly snapshots later.
+    // Hard to measure; keep 0 (bar end) unless the game clearly snapshots later. Past
+    // CastSpec.ActionEffectOffset the ActionEffect goes out before the hits are known and shows no damage.
     public float ResolveSnapshotOffset { get; init; }
     // Visual only: when flytext shows and killed characters die, counted from the snapshot.
     // Also starts knockbacks that have no delay of their own.

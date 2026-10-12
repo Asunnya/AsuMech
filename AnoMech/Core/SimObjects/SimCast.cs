@@ -3,6 +3,7 @@ using AnoMech.Core.Native.Interfaces;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 
 namespace AnoMech.Core.SimObjects;
@@ -85,18 +86,21 @@ public sealed class SimCast : ISimObject
         CastSeq++;
     }
 
-    public void NativeActionEffect(uint actionId, float animationLock, ushort spellId, byte animationVariation, ActionType actionType, byte flags, float? rotation = null, Vector3? position = null, GameObjectId? animationTargetId = null, GameObjectId? actionTargetId = null, GameObjectId? ballistaId = null)
+    // Returns the global sequence the targets' EffectResults name; 0 when nothing was sent.
+    public uint NativeActionEffect(uint actionId, float animationLock, ushort spellId, byte animationVariation, ActionType actionType, byte flags, float? rotation = null, Vector3? position = null, GameObjectId? animationTargetId = null, IReadOnlyList<ActionEffectTarget>? targets = null, GameObjectId? ballistaId = null)
     {
-        if (parent.Proxy is not { Exists: true } chara) return;
+        if (parent.Proxy is not { Exists: true } chara) return 0;
 
         var effectRotation = rotation ?? parent.Rotation;
-        chara.ReceiveActionEffect(new ActionEffectData(
+        var sequence = chara.ReceiveActionEffect(new ActionEffectData(
             actionId, actionType, animationLock, spellId, animationVariation, flags,
             effectRotation, coordinates.ToGlobal(position ?? Vector3.Zero),
-            animationTargetId, actionTargetId, ballistaId));
+            animationTargetId, targets, ballistaId));
 
         remainingAnimationLock = animationLock;
-        RecordEffect(actionId, animationLock, animationVariation, effectRotation, position, animationTargetId, actionTargetId);
+        RecordEffect(actionId, animationLock, animationVariation, effectRotation, position, animationTargetId,
+            targets is { Count: > 0 } ? targets[0].Id : null);
+        return sequence;
     }
 
     public void Cancel(CastCancelReason reason)

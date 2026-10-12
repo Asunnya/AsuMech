@@ -201,7 +201,9 @@ public sealed partial class MultiplayerManager
                         rotation: NetGuard.Rotation(e.EffectRotation),
                         position: NetGuard.TryPosition(e.EffectX, e.EffectY, e.EffectZ),
                         animationTargetId: ResolvePeerEnd(world, e.EffectAnimationTargetEnemyNetId, e.EffectAnimationTargetRole)?.GameObjectId,
-                        actionTargetId: ResolvePeerEnd(world, e.EffectActionTargetEnemyNetId, e.EffectActionTargetRole)?.GameObjectId);
+                        targets: ResolvePeerEnd(world, e.EffectActionTargetEnemyNetId, e.EffectActionTargetRole) is { } actionTarget
+                            ? [new ActionEffectTarget(actionTarget.GameObjectId)]
+                            : null);
             }
             ApplyNewVfx(enemy, e.NewVfx, $"enemy NetId {e.NetId}");
             ReconcilePersistentVfx(enemy, e.PersistentVfx, $"enemy NetId {e.NetId}");
@@ -483,7 +485,6 @@ public sealed partial class MultiplayerManager
                 DiagnosticLog.Info($"[Multiplayer] Peer: enemy NetId {netId} timeline hold {engine.HoldKind} {engine.HoldTimelineId} (seq {engine.HoldSeq}).");
                 switch (engine.HoldKind)
                 {
-                    case TimelineHoldKind.Loop: enemy.HoldTimelineLoop(engine.HoldTimelineId); break;
                     case TimelineHoldKind.Base: enemy.HoldTimelineBase(engine.HoldTimelineId); break;
                     default: enemy.ReleaseTimelineHold(engine.HoldTimelineId); break;
                 }
@@ -555,19 +556,6 @@ public sealed partial class MultiplayerManager
 
             if (world.Party.Get(r.Role) is not { } member) continue;
 
-            // Our own character goes through SimPlayer so the real MaxHealth is restored on Despawn.
-            var maxHp = Math.Min(r.MaxHp, NetGuard.MaxHp);
-            var currentHp = Math.Min(r.CurrentHp, maxHp);
-            var bc = member.BattleCharaPtr();
-            if (maxHp > 0)
-            {
-                if (member is SimPlayer me) me.ApplyNetworkHp(currentHp, maxHp);
-                else if (bc != null)
-                {
-                    bc->MaxHealth = maxHp;
-                    bc->Health = currentHp;
-                }
-            }
             var roleStatuses = NetGuard.Cap(r.Statuses, NetGuard.MaxStatusesPerEntity);
             if (!peerRoleReconciledStatuses.TryGetValue(r.Role, out var reconciled))
                 peerRoleReconciledStatuses[r.Role] = reconciled = new HashSet<(ushort, GameObjectId)>();
@@ -600,17 +588,14 @@ public sealed partial class MultiplayerManager
                     actor.PlayAction(r.PlayedActionId, NetGuard.Clamp(r.PlayedActionAnimationLock, 0f, 60f, 0.6f));
                 }
             }
-            // The KO pose comes with RoleKilledMessage; id 0 is a reset.
+            // The KO pose comes with RoleKilledMessage.
             if (!r.Dead && r.AnimationTimelineId is { } roleTimeline
                 && (!peerRoleAnimationTimelineSeq.TryGetValue(r.Role, out var lastRoleSeq) || lastRoleSeq != r.AnimationTimelineSeq))
             {
                 peerRoleAnimationTimelineSeq[r.Role] = r.AnimationTimelineSeq;
-                DiagnosticLog.Info($"[Multiplayer] Peer: role {r.Role} AnimationTimelineId -> {roleTimeline} (loop {r.AnimationTimelineLoopId}, seq {r.AnimationTimelineSeq}).");
-                if (roleTimeline == 0)
-                    member.ResetActionTimeline();
-                else if (SimAssets.Allow(SimAssetKind.Timeline, roleTimeline, $"role {r.Role} timeline")
-                    && (r.AnimationTimelineLoopId == 0 || SimAssets.Allow(SimAssetKind.Timeline, r.AnimationTimelineLoopId, $"role {r.Role} loop timeline")))
-                    member.PlayActionTimeline(roleTimeline, r.AnimationTimelineLoopId);
+                DiagnosticLog.Info($"[Multiplayer] Peer: role {r.Role} AnimationTimelineId -> {roleTimeline} (seq {r.AnimationTimelineSeq}).");
+                if (SimAssets.Allow(SimAssetKind.Timeline, roleTimeline, $"role {r.Role} timeline"))
+                    member.PlayActionTimeline(roleTimeline);
             }
         }
     }

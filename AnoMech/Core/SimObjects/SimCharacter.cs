@@ -5,6 +5,8 @@ using System.Numerics;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Geometry;
 using AnoMech.Core.Native.Interfaces;
+using AnoMech.Core.UserActions;
+using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 
 namespace AnoMech.Core.SimObjects;
@@ -41,15 +43,30 @@ public abstract class SimCharacter(Coordinates coordinates) : ISimObject, IPosit
 
     public virtual void Tick(float deltaSeconds)
     {
+        modelDrivenSeconds = MathF.Max(0f, modelDrivenSeconds - deltaSeconds);
         if (Proxy is { Exists: true } native)
         {
-            position = Coordinates.ToLocal(native.Position);
-            if (turnTarget is null) Rotation = native.Rotation;
+            var model = Coordinates.ToLocal(native.Position);
+            if (ModelDriven || !placed)
+            {
+                position = model;
+                glideTarget = model;
+                // A turn queued since the last tick hasn't reached the model yet.
+                if (!movePending)
+                {
+                    modelRotation = native.Rotation;
+                    if (turnTarget is null) Rotation = native.Rotation;
+                }
+                placed = true;
+            }
+            ModelDivergence = Vector2.Distance(new Vector2(position.X, position.Z), new Vector2(model.X, model.Z));
+            MaxModelDivergence = MathF.Max(MaxModelDivergence, ModelDivergence);
         }
         statusList.Update(deltaSeconds);
         vfx.Update(deltaSeconds);
         Movement.Tick(deltaSeconds);
         TickTurn(deltaSeconds);
+        FlushMove();
     }
 
 
@@ -63,28 +80,128 @@ public abstract class SimCharacter(Coordinates coordinates) : ISimObject, IPosit
     // Location Subsystem
     // -------------------------
 
-    // Character position in local coordinates. Updated every frame to be always in sync with game.
-    // Virtual so SimNetworkPuppet can report the peer's real position while the model catches up.
+    // The sim's own position, in local coordinates: what mechanics and the AI read, like the
+    // server's. The model follows it through SetPos/Move packets and trails by however long the
+    // client takes to apply them. Where the game moves the character itself (ModelDriven) it's
+    // copied from the model instead. Virtual so SimNetworkPuppet can report the peer's real
+    // position while its glide catches up.
     private Vector3 position;
     public virtual Vector3 Position => position;
     public float Rotation { get; private set; }
 
+    // The facing last sent to the model; trails Rotation while TurnTo turns it at TurnSpeed.
+    private float modelRotation;
+
+    // Yalms (XZ) between Position and the model at the start of the last tick.
+    public float ModelDivergence { get; private set; }
+    public float MaxModelDivergence { get; private set; }
+
+    // The game, not the sim, moves the character: the local player, or a server-driven move
+    // (a carry) in flight.
+    protected virtual bool ModelDriven => modelDrivenSeconds > 0f;
+    private float modelDrivenSeconds;
+
+    protected void FollowModelFor(float seconds) => modelDrivenSeconds = MathF.Max(modelDrivenSeconds, seconds);
+
+    // False until the sim gives the character a transform; the first tick with a model adopts
+    // the model's instead, so a turn can't drag it to the origin.
+    private bool placed;
+
+    // Teleport: an ActorSetPos.
     public void SetPosition(Vector3 newPosition)
     {
-        if (Proxy is not { Exists: true } obj) return;
-        obj.SetPosition(Coordinates.ToGlobal(newPosition));
-        position = newPosition; // early update, will be updated on next tick anyway
+        position = newPosition;
+        SendSetPos();
     }
 
     public void SetRotation(float rotation)
     {
-        if (Proxy is not { Exists: true } obj) return;
         turnTarget = null;
-        obj.SetRotation(MathUtil.NormalizeRotation(rotation));
-        Rotation = rotation; // early update, will be updated on next tick anyway
+        Rotation = rotation;
+        modelRotation = rotation;
+        SendSetPos();
     }
 
-    // Radians per second the model turns at under TurnTo; null turns instantly.
+    public void SetPosition(Placement placement)
+    {
+        turnTarget = null;
+        position = placement.Position;
+        Rotation = placement.Rotation;
+        modelRotation = placement.Rotation;
+        SendSetPos();
+    }
+
+    // Puts the model back on the sim's transform, e.g. once an actor that was moved while its
+    // spawn was in flight exists.
+    protected void ResendTransform() => SendSetPos();
+
+    private void SendSetPos()
+    {
+        placed = true;
+        movePending = false;
+        glideTarget = position;
+        lastSentTarget = position;
+        lastSentRotation = modelRotation;
+        Proxy?.SetPos(Coordinates.ToGlobal(position), modelRotation);
+    }
+
+    // The client walks the model from wherever it is to each ActorMove's position over exactly
+    // this long, at a constant speed, whatever the packet's speed byte says. A move aimed at
+    // where the sim will be this far ahead keeps the model level with it; one aimed at the sim's
+    // current spot leaves it trailing, still walking for up to this long after the sim stopped.
+    internal const float ModelGlideSeconds = 1f;
+
+    private bool movePending;
+    private ActorMoveFlags moveFlags;
+    private float moveSpeed;
+
+    // Where the model is being walked to, ModelGlideSeconds ahead of the sim on its path.
+    private Vector3 glideTarget;
+
+    // A repeat restarts the client's glide from the model's spot and slows it, so it's not resent.
+    private Vector3 lastSentTarget;
+    private float lastSentRotation;
+
+    // One step of a walk (or a slide, with ActorMoveFlags.Knockback): the position moves now,
+    // and the tick ends with an ActorMove aiming the model at `glideTarget` (see ModelGlideSeconds).
+    internal void StepTo(Vector3 next, Vector3 glideTarget, ActorMoveFlags flags, float speed)
+    {
+        placed = true;
+        position = next;
+        this.glideTarget = glideTarget;
+        moveFlags = flags;
+        moveSpeed = speed;
+        movePending = true;
+    }
+
+    // StepTo plus the facing at once, for a glide that already smooths its own rotation.
+    internal void StepTo(Placement next, Vector3 glideTarget, ActorMoveFlags flags, float speed)
+    {
+        turnTarget = null;
+        Rotation = next.Rotation;
+        modelRotation = next.Rotation;
+        StepTo(next.Position, glideTarget, flags, speed);
+    }
+
+    private void FlushMove()
+    {
+        if (!movePending) return;
+        movePending = false;
+        if (glideTarget != lastSentTarget || modelRotation != lastSentRotation)
+            SendMove(Coordinates.ToGlobal(glideTarget), modelRotation, moveFlags, moveSpeed);
+        lastSentTarget = glideTarget;
+        lastSentRotation = modelRotation;
+        moveFlags = ActorMoveFlags.None;
+        moveSpeed = 0f;
+    }
+
+    // SimPlayer overrides it: the client drops an ActorMove for its own player.
+    protected virtual void SendMove(Vector3 worldPosition, float rotation, ActorMoveFlags flags, float speed)
+    {
+        if (!ModelDriven) Proxy?.Move(worldPosition, rotation, flags, speed);
+    }
+
+    // Radians per second the model turns at under TurnTo; null turns it in one Move.
     protected virtual float? TurnSpeed => null;
 
     private float? turnTarget;
@@ -93,41 +210,35 @@ public abstract class SimCharacter(Coordinates coordinates) : ISimObject, IPosit
     // gradually, so a scenario that faces and fires in the same tick still aims where it faced.
     public void TurnTo(float rotation)
     {
+        Rotation = rotation;
         if (TurnSpeed is null)
         {
-            SetRotation(rotation);
+            turnTarget = null;
+            modelRotation = MathUtil.NormalizeRotation(rotation);
+            movePending = true;
             return;
         }
-        if (Proxy is not { Exists: true }) return;
-        Rotation = rotation;
         turnTarget = MathUtil.NormalizeRotation(rotation);
     }
 
     private void TickTurn(float deltaSeconds)
     {
         if (turnTarget is not { } target || TurnSpeed is not { } speed) return;
-        if (Proxy is not { Exists: true } obj)
-        {
-            turnTarget = null;
-            return;
-        }
-        var next = MathUtil.StepRotation(obj.Rotation, target, speed * deltaSeconds);
-        obj.SetRotation(next);
-        if (next == target) turnTarget = null;
-    }
-
-    public void SetPosition(Placement placement)
-    {
-        SetPosition(placement.Position);
-        SetRotation(placement.Rotation);
+        modelRotation = MathUtil.StepRotation(modelRotation, target, speed * deltaSeconds);
+        movePending = true;
+        if (modelRotation == target) turnTarget = null;
     }
 
     // Transform for an actor the engine hasn't created yet (a packet spawn in flight, see
-    // SimEnemy.SpawnFromPacket); SetPosition returns early without a native object.
+    // SimEnemy.SpawnFromPacket): the spawn packet already carries it.
     protected void SeedTransform(Vector3 newPosition, float rotation)
     {
+        placed = true;
         position = newPosition;
+        glideTarget = newPosition;
+        lastSentTarget = newPosition;
         Rotation = rotation;
+        modelRotation = rotation;
     }
 
     public void Face(Vector3? target) => Movement.Face(target);
@@ -255,24 +366,61 @@ public abstract class SimCharacter(Coordinates coordinates) : ISimObject, IPosit
                 status.Despawn();   // last stack consumed → remove the status
                 return null;
             }
+            if (status.Slot >= 0) SendStatusList();
             return status;
         }
 
         // No existing status: a non-positive request has nothing to remove.
         if (stacks <= 0) return null;
-        var s = new SimStatus(this, statusId, duration, (ushort)stacks, sourceObject);
-        statusList.Add(s);
-        return s;
+        return SpawnStatus(statusId, duration, (ushort)stacks, sourceObject);
     }
 
     // For logging: the party role when available, else the type name.
     private string DiagnosticName => (this as ISimPartyMember)?.Role.ToString() ?? GetType().Name;
 
     public SimStatus AddStatusParam(ushort statusId, int param, float duration = 0f)
+        => SpawnStatus(statusId, duration, (ushort)param, default);
+
+    private SimStatus SpawnStatus(ushort statusId, float duration, ushort param, GameObjectId sourceObject)
     {
-        var s = new SimStatus(this, statusId, duration, (ushort)param);
-        statusList.Add(s);
-        return s;
+        var status = new SimStatus(this, statusId, duration, param, sourceObject, FreeStatusSlot(statusId));
+        statusList.Add(status);
+        if (status.Slot < 0) return status;
+        SendStatusList();
+        ActorControl.GainEffect(statusId, param);
+        return status;
+    }
+
+    private const int StatusSlots = 60;
+
+    // The lowest free slot, as the server fills them. Ids without a sheet row get none: the party
+    // list and nameplates look the row up.
+    private int FreeStatusSlot(ushort statusId)
+    {
+        if (SimOnlyStatus.Is(statusId) || Natives.Data.Status(statusId) is null) return -1;
+        for (var slot = 0; slot < StatusSlots; slot++)
+            if (!statusList.Any(s => s.IsActive && s.Slot == slot))
+                return slot;
+        return -1;
+    }
+
+    // Sent on every change rather than once per frame: a status removed and re-added in the same
+    // frame keeps its slot, and the client only replays the gain effects when it sees the slot
+    // empty in between.
+    internal void SendStatusList()
+    {
+        if (Proxy is { } chara) SendStatusList(chara.Health, chara.Mana);
+    }
+
+    private void SendStatusList(uint health, uint mana)
+    {
+        if (Proxy is not { } chara) return;
+        var slots = new StatusSlot[StatusSlots];
+        foreach (var status in statusList)
+            if (status.IsActive && status.Slot >= 0)
+                slots[status.Slot] = new StatusSlot(status.StatusId, status.Stacks, status.RemainingTime, status.SourceObject.ObjectId);
+        var shield = Mitigation.ShieldFraction(statusList.Where(s => s.IsActive).Select(s => s.StatusId));
+        chara.ReceiveStatusList(slots, health, mana, (byte)Math.Clamp(shield * 100f, 0f, 100f));
     }
 
     public void RemoveStatus(ushort statusId)
@@ -327,42 +475,68 @@ public abstract class SimCharacter(Coordinates coordinates) : ISimObject, IPosit
     // -------------------------
 
     // Sampled by MultiplayerManager for scripted animation cues (a boss warp, a sleep pose).
-    // Movement and network interpolation use the *Native entry points, so the run cycle isn't
-    // broadcast. A reset is id 0 with its own seq bump.
     public ushort? AnimationTimelineId { get; private set; }
-    public ushort AnimationTimelineLoopId { get; private set; }
 
     // Same reasoning as SimCast.CastSeq: a repeat of the same id must read as a change.
     public int AnimationTimelineSeq { get; private set; }
 
-    // ActorControl carries no loop id, so a looped timeline goes to the engine directly.
-    public void PlayActionTimeline(ushort timelineId, ushort loopId = 0)
+    public void PlayActionTimeline(ushort timelineId)
     {
         AnimationTimelineId = timelineId;
-        AnimationTimelineLoopId = loopId;
         AnimationTimelineSeq++;
-        if (loopId == 0) ActorControl.PlayActionTimeline(timelineId);
-        else PlayActionTimelineNative(timelineId, loopId);
+        ActorControl.PlayActionTimeline(timelineId);
     }
-
-    internal void PlayActionTimelineNative(ushort timelineId, ushort loopId = 0, ushort baseOverride = 0)
-        => Proxy?.PlayActionTimeline(timelineId, loopId, baseOverride);
-
-    public void ResetActionTimeline()
-    {
-        AnimationTimelineId = 0;
-        AnimationTimelineLoopId = 0;
-        AnimationTimelineSeq++;
-        ResetActionTimelineNative();
-    }
-
-    internal void ResetActionTimelineNative() => Proxy?.ResetActionTimeline();
 
     public void VoiceLine(uint voiceLineId) => ActorControl.PlayVoiceLine(voiceLineId);
 
     public virtual void SetTargetable(bool targetable) => ActorControl.SetTargetable(targetable);
 
-    public virtual void CarryTo(Vector3 destination) => ActorControl.CarryTo(Coordinates.ToGlobal(destination), Rotation);
-    
+    // Retail's carry has settled ~0.9s after the AC; the engine animates it, so the sim follows
+    // the model until then.
+    private const float CarryModelSeconds = 1f;
+
+    public virtual void CarryTo(Vector3 destination)
+    {
+        FollowModelFor(CarryModelSeconds);
+        ActorControl.CarryTo(Coordinates.ToGlobal(destination), Rotation);
+    }
+
+    public bool Dead { get; private set; }
+
+    // Retail's death, all on one tick: 0x50 first for a death no action dealt (wall, falling off).
+    protected bool GoDown(bool byEnvironment)
+    {
+        if (!MarkDead()) return false;
+        if (byEnvironment) ActorControl.WallDeath(Proxy?.MaxHealth ?? 0);
+        PlayDeath();
+        return true;
+    }
+
+    // Split from PlayDeath for a death the client animates later than the server records it.
+    protected bool MarkDead()
+    {
+        if (Dead) return false;
+        Dead = true;
+        StopMoving();
+        if (Proxy is { Exists: true } chara && chara.GetTetherId(0) != 0) ActorControl.ClearTether();
+        return true;
+    }
+
+    protected void PlayDeath()
+    {
+        ActorControl.PlayDeathAnimation();
+        ActorControl.SetMode(CharacterModes.Dead);
+        statusList.Despawn();
+        SendStatusList(0, 0);
+    }
+
+    protected void Revive()
+    {
+        if (!Dead) return;
+        Dead = false;
+        ActorControl.Revive();
+        if (Proxy is { } chara) SendStatusList(chara.MaxHealth, chara.MaxMana);
+    }
+
     public ActorControl ActorControl => field ??= new ActorControl(() => Proxy);
 }

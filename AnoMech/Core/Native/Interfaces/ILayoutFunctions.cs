@@ -1,5 +1,3 @@
-using System.Numerics;
-
 namespace AnoMech.Core.Native.Interfaces;
 
 // The zone's LGB layout instances.
@@ -11,10 +9,6 @@ public interface ILayoutFunctions
     int SuppressLayer(ushort layerKey);
     void ReassertSuppressedLayers();
     void ClearSuppressedLayers();
-
-    // Drops the colliders of SharedGroups near the world-space center; returns how many it found
-    // (0 while the zone is still streaming in).
-    int DisableSpawnAreaColliders(Vector3 center, float radius);
 
     string DescribeActiveLayers();
     string DescribeLiveEffects();

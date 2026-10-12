@@ -13,8 +13,7 @@ namespace AnoMech.Core.Native.Implementations.Interop;
 // EObj scenery (arena tiles, telegraph markers, Exit portal, etc.) is loaded by
 // the engine at zone-init as SharedGroupLayoutInstances under
 // LayoutWorld.ActiveLayout->Layers->Instances. We never allocate these — we
-// look up the engine's existing instances and drive their state. Same iteration
-// pattern as DirectorFunctions.DisableSpawnAreaColliders.
+// look up the engine's existing instances and drive their state.
 internal static unsafe class LayoutQuery
 {
     // Walks every SharedGroup instance in the active layout. Visitor is
