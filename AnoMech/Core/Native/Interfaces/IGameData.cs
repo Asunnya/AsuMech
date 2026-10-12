@@ -12,8 +12,17 @@ public interface IGameData
     StatusRow? Status(ushort statusId);
 
     // Null for a missing row or an empty name.
-    string? StatusName(ushort statusId);
     string? BNpcName(uint nameId);
 
     bool FileExists(string path);
+}
+
+public static class GameDataExtensions
+{
+    // Falls back to the raw id so a message naming the row never goes blank.
+    public static string ActionName(this IGameData data, uint actionId)
+        => data.Action(actionId) is { Name.Length: > 0 } row ? row.Name : actionId.ToString();
+
+    public static string StatusName(this IGameData data, ushort statusId)
+        => data.Status(statusId) is { Name.Length: > 0 } row ? row.Name : statusId.ToString();
 }

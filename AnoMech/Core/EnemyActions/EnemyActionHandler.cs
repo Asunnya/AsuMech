@@ -27,11 +27,11 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimCast cast, SimWorld
         var id = action.ActionId;
         var target = at.Character;
         var location = at.Location;
-        var sheetCastTime = action.Cast.CastSecondsOverride ?? Natives.Data.Action(id)?.CastSeconds ?? 0f;
-        var castTime = MathF.Max(0f, sheetCastTime - CastSpec.ActionEffectOffset);
+        var sheetCastTime = Natives.Data.Action(id)?.CastSeconds ?? 0f;
+        var castTime = action.Cast.CastSecondsOverride ?? MathF.Max(0f, sheetCastTime - CastSpec.ActionEffectOffset);
         GameObjectId? castTarget = location is null ? (target ?? caster).GameObjectId : null;
         DiagnosticLog.Info(
-            $"[EnemyAction] Cast: {ActionLookup.Name(id)} ({id}) by {caster.DisplayName} from ({caster.Position.X:F1},{caster.Position.Z:F1}) castSeconds={castTime:F2}.");
+            $"[EnemyAction] Cast: {Natives.Data.ActionName(id)} ({id}) by {caster.DisplayName} from ({caster.Position.X:F1},{caster.Position.Z:F1}) castSeconds={castTime:F2}.");
 
         if (castTime > 0f)
         {
@@ -75,27 +75,30 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimCast cast, SimWorld
         if (target == caster) target = null;
         var aim = location ?? target?.Position;
         caster.Face(target?.Position);
+        var outcomes = delivery.Outcomes.Where(o => o.Damage is not null || o.Push is not null || o.Dodged || o.StatusGains.Count > 0).ToList();
         var listed = new List<SimCharacter>();
         if (target is not null) listed.Add(target);
-        listed.AddRange(delivery.Damage.Select(d => d.Target));
-        listed.AddRange(delivery.Pushes.Select(p => p.Target));
+        listed.AddRange(outcomes.Select(o => o.Target));
         var targets = new List<ActionEffectTarget>();
         var confirmations = new List<(SimCharacter Target, byte Index)>();
         foreach (var who in listed.Distinct())
         {
             if (!Natives.BattleCharas.IsInCharacterManager(who.GameObjectId.ObjectId)) continue;
+            var outcome = outcomes.FirstOrDefault(o => o.Target == who);
             var effects = new List<ActionEffectEntry>();
-            var damage = delivery.Damage.Where(d => d.Target == who).OrderByDescending(d => d.Amount).ToList();
-            var push = delivery.Pushes.Where(p => p.Target == who).ToList();
-            if (damage.Count > 0)
+            if (outcome?.Damage is { } damage)
             {
-                effects.Add(ActionEffectEntry.Damage(damage[0].Amount, damage[0].Kind.AttackType()));
+                effects.Add(ActionEffectEntry.Damage(damage.Amount, damage.Kind.AttackType()));
                 confirmations.Add((who, (byte)targets.Count));
             }
             // A push that deals nothing still gets a typeless zero hit, and no EffectResult.
-            else if (push.Count > 0)
+            else if (outcome?.Push is not null)
                 effects.Add(ActionEffectEntry.Damage(0, 0));
-            if (push.Count > 0 && push[0].KnockbackRow is { } row)
+            else if (outcome?.Dodged == true)
+                effects.Add(ActionEffectEntry.Dodge());
+            foreach (var statusId in outcome?.StatusGains.Take(MaxEffectsPerTarget - 3) ?? [])
+                effects.Add(ActionEffectEntry.StatusGain(statusId));
+            if (outcome?.Push?.KnockbackRow is { } row)
                 effects.Add(ActionEffectEntry.Knockback(row));
             effects.Add(ActionEffectEntry.ActionMarker(id));
             targets.Add(new ActionEffectTarget(who.GameObjectId, effects));
@@ -125,37 +128,43 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimCast cast, SimWorld
             hits = hits.Where(h => h != baiter).ToList();
         if (action.Area.AdjustTargets is { } adjust) hits = adjust(ctx, hits);
         ctx.Hits = hits;
-        handle.Resolved(origin, hits.Select(h => (h, h.Position)).ToList());
+        var positions = hits.Select(h => h.Position).ToList();
         DiagnosticLog.Info(
-            $"[EnemyAction] Resolve: {ActionLookup.Name(action.ActionId)} at ({origin.Position.X:F1},{origin.Position.Z:F1}) rot={origin.Rotation:F3} -- {hits.Count} target(s): "
+            $"[EnemyAction] Resolve: {Natives.Data.ActionName(action.ActionId)} at ({origin.Position.X:F1},{origin.Position.Z:F1}) rot={origin.Rotation:F3} -- {hits.Count} target(s): "
             + string.Join(", ", hits.Select(t => (t as ISimPartyMember)?.Role.ToString() ?? "?")));
 
         foreach (var effect in action.Effects)
-            effect.Apply(ctx);
-        handle.Killed(ctx.Killed.Keys.ToList());
+            effect.Apply(ctx, hits);
+        handle.Resolve(origin, hits.Select((h, i) => new EnemyActionCast.Hit(h, positions[i], ctx.IsKilled(h))).ToList());
 
-        delivery.Damage = ctx.DamageShown;
-        delivery.Pushes = ctx.Knockbacks.Select(k => (k.Target, k.KnockbackRow)).ToList();
+        delivery.Outcomes = ctx.Outcomes;
         // Ahead of the deaths it shares a time with, so the killing hit lands on a living target.
-        if (ctx.DamageShown.Count > 0)
+        if (ctx.Outcomes.Any(o => o.Damage is not null))
             Schedule(action.Timing.DamageDelay, () => ConfirmDamage(delivery));
-        foreach (var (who, from, distance, speed, delay, row) in ctx.Knockbacks)
+        foreach (var outcome in ctx.Outcomes)
         {
-            var byClient = who is SimPlayer && row is { } r && KnockbackLookup.ClientApplies(r);
-            Schedule(delay ?? action.Timing.DamageDelay, () =>
+            var who = outcome.Target;
+            if (outcome.Push is { } push)
             {
-                if (!who.IsAlive()) return;
-                if (byClient && who is SimPlayer player) player.HoldForClientKnockback(distance / speed);
-                else if (who is ISimPartyMember member) member.Knockback(from, distance, speed);
-            });
+                var byClient = who is SimPlayer && push.KnockbackRow is { } r && Natives.Data.Knockback(r) is { ClientApplies: true };
+                Schedule(push.Delay ?? action.Timing.DamageDelay, () =>
+                {
+                    if (!who.IsAlive()) return;
+                    if (byClient && who is SimPlayer player) player.HoldForClientKnockback(push.Distance / push.Speed);
+                    else if (who is ISimPartyMember member) member.Knockback(push.From, push.Distance, push.Speed);
+                });
+            }
+            if (outcome.Killed)
+                Schedule(action.Timing.DamageDelay, () => who.Die(action.ActionId, Explain(action.DeathExplanation, outcome.Explanation)));
         }
-        foreach (var (who, explanation) in ctx.Killed)
-            Schedule(action.Timing.DamageDelay, () => who.Die(action.ActionId, Explain(action.DeathExplanation, explanation)));
         foreach (var run in ctx.AfterResolveActions)
             run();
     }
 
     private const float ExcludeCasterThreshold = 0.01f;
+
+    // The ActionEffect's limit; damage, knockback and the marker take three.
+    private const int MaxEffectsPerTarget = 8;
 
     private static IReadOnlyList<SimCharacter> AreaHits(EnemyAction action, Placement origin, float casterHitboxRadius, SimParty party)
     {
@@ -192,11 +201,10 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimCast cast, SimWorld
                 chara.ReceiveEffectResult(delivery.Sequence, index, chara.Health);
     }
 
-    // Resolve's damage, for the ActionEffect; the ActionEffect's ids, for the EffectResults.
+    // Resolve's outcomes, for the ActionEffect; the ActionEffect's ids, for the EffectResults.
     private sealed class Delivery
     {
-        public IReadOnlyList<(SimCharacter Target, uint Amount, DamageKind Kind)> Damage = [];
-        public IReadOnlyList<(SimCharacter Target, uint? KnockbackRow)> Pushes = [];
+        public IReadOnlyCollection<EnemyActionContext.TargetOutcome> Outcomes = [];
         public uint Sequence;
         public IReadOnlyList<(SimCharacter Target, byte Index)> Confirmations = [];
         public bool ImpactDue;

@@ -142,7 +142,6 @@ public sealed record AttachedVfxState(string Path, float DurationSeconds);
 // VFX-only cue needs, and the two diagnostic delivery modes. Each is edge-triggered on its own
 // seq, because the run animation and the cast pipeline write the same native fields every frame.
 public sealed record ActorEngineState(
-    bool ModelHidden,
     byte Mode, byte ModeParam, int ModeSeq,
     TimelineHoldKind HoldKind, ushort HoldTimelineId, int HoldSeq,
     ushort DirectTimelineId, int DirectTimelineSeq,

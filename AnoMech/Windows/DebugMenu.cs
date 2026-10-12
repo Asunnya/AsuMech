@@ -39,11 +39,14 @@ internal sealed unsafe class DebugMenu
         this.plugin = plugin;
         // The position log samples off the framework tick, not this window's draw cadence.
         Plugin.Framework.Update += OnFrameworkUpdate;
+        InstallRecastTimesTap();
     }
 
     public void Dispose()
     {
         Plugin.Framework.Update -= OnFrameworkUpdate;
+        recastTimesHook?.Disable();
+        recastTimesHook?.Dispose();
         positionLogActionEffectHook?.Disable();
         positionLogActionEffectHook?.Dispose();
     }
@@ -447,9 +450,9 @@ internal sealed unsafe class DebugMenu
         ImGui.TextUnformatted("Recent actions pressed (newest last):");
         ImGui.SameLine();
         if (ImGui.SmallButton("Copy all##actions"))
-            ImGui.SetClipboardText(string.Join("\n", recentActions.Select(a => $"{a.ActionId} ({a.Type}) -- {ActionLookup.Name(a.ActionId)}")));
+            ImGui.SetClipboardText(string.Join("\n", recentActions.Select(a => $"{a.ActionId} ({a.Type}) -- {Natives.Data.ActionName(a.ActionId)}")));
         foreach (var (id, type) in recentActions)
-            ImGui.BulletText($"{id} ({type}) -- {ActionLookup.Name(id)}");
+            ImGui.BulletText($"{id} ({type}) -- {Natives.Data.ActionName(id)}");
 
         ImGui.Spacing();
         ImGui.TextUnformatted("Dump objects near player");
@@ -540,6 +543,11 @@ internal sealed unsafe class DebugMenu
             // The real trigger (~135 ms before Omega-M's 7B85 cast): 33 | 800375AC | 8000001E | 2AC
             InstanceContentDirectorHelper.ProcessDirectorUpdate(0x8000001E, 0x2AC);
         }
+
+        ImGui.SameLine();
+        if (ImGui.Button("Fire wipe territory init")) FireWipeTerritoryInit();
+        ImGui.SameLine();
+        if (ImGui.Button("Fire cleared recast times")) FireClearedRecastTimes();
 
         ImGui.Spacing();
         ImGui.TextUnformatted("Death system");
@@ -784,7 +792,7 @@ internal sealed unsafe class DebugMenu
         if (bc == null) return result;
         foreach (var status in bc->StatusManager.Status)
             if (status.StatusId != 0)
-                result.Add((status.StatusId, StatusLookup.Name(status.StatusId)));
+                result.Add((status.StatusId, Natives.Data.StatusName(status.StatusId)));
         return result;
     }
 
@@ -797,7 +805,7 @@ internal sealed unsafe class DebugMenu
         if (bc == null) return result;
         foreach (var status in bc->StatusManager.Status)
             if (status.StatusId != 0)
-                result.Add((status.StatusId, StatusLookup.Name(status.StatusId)));
+                result.Add((status.StatusId, Natives.Data.StatusName(status.StatusId)));
         return result;
     }
 
@@ -848,6 +856,88 @@ internal sealed unsafe class DebugMenu
         chara.AddStatus((ushort)statusId, duration, stacks, overrideStacks: true);
         Plugin.Log.Info($"Status: applied {statusId} (duration {(duration == 0f ? "default" : duration.ToString(CultureInfo.InvariantCulture))}, stacks {stacks}) on {who}");
     }
+
+    // Retail's wipe reset for the local player, UMAD and TOP alike: the 16 B territory packet
+    // (bytes 0x0A / 0x0D = warp type 25, flags 0x02), the player's ActorSetPos of that type ~0.1s
+    // later, then ActorControlSelf 0xC8 ~0.4s after that.
+    private static unsafe void FireWipeTerritoryInit()
+    {
+        var territory = ZoneSession.LoadedTerritory;
+        if (territory == 0 || Plugin.ObjectTable.LocalPlayer is not { } player)
+        {
+            Plugin.Log.Warning("[TerritoryInit] not in a sim stay; not firing");
+            return;
+        }
+        var entityId = player.EntityId;
+        var position = player.Position;
+        var rotation = player.Rotation;
+        var packet = stackalloc byte[16]
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x19, 0x01, 0x00, 0x02, 0, 0 };
+        *(ushort*)(packet + 4) = (ushort)territory;
+        Plugin.Log.Info($"[TerritoryInit] firing for territory {territory}");
+        ZoneSession.MuteTrips(TimeSpan.FromSeconds(10));
+        Core.Native.Implementations.Pointers.PacketDispatcherPointers.HandleTerritoryInitPacket(packet, 1);
+
+        Plugin.Framework.RunOnTick(() =>
+        {
+            var setPos = new Core.Native.Implementations.Pointers.ActorSetPosPacket
+            {
+                RotationInt = MathUtil.QuantizeRotation(MathUtil.NormalizeRotation(rotation)),
+                Type = 25,
+                Flags = 0x02,
+                X = position.X,
+                Y = position.Y,
+                Z = position.Z,
+            };
+            Plugin.Log.Info("[TerritoryInit] ActorSetPos type 25");
+            Core.Native.Implementations.Pointers.PacketDispatcherPointers.HandleActorSetPosPacket(entityId, &setPos);
+        }, TimeSpan.FromMilliseconds(100));
+        Plugin.Framework.RunOnTick(() =>
+        {
+            Plugin.Log.Info("[TerritoryInit] ActorControlSelf 0xC8");
+            FFXIVClientStructs.FFXIV.Client.Network.PacketDispatcher.HandleActorControlPacket(
+                entityId, 0xC8, 0, 0, 0, 0, 0, 0, 0, 0, 0xE0000000, false);
+        }, TimeSpan.FromMilliseconds(500));
+    }
+
+    // Read-only tap on the server's full recast-times packet, which no replay contains: logs when the
+    // live server sends it (zone-in, wipe, …) and which groups it carries.
+    private Hook<Core.Native.Implementations.Pointers.PacketDispatcherPointers.HandleUpdateRecastTimesPacketDelegate>? recastTimesHook;
+
+    private unsafe void InstallRecastTimesTap()
+    {
+        try
+        {
+            recastTimesHook = Plugin.GameInterop.HookFromAddress<Core.Native.Implementations.Pointers.PacketDispatcherPointers.HandleUpdateRecastTimesPacketDelegate>(
+                Plugin.SigScanner.ScanText(Core.Native.Implementations.Pointers.PacketDispatcherPointers.HandleUpdateRecastTimesPacketSignature),
+                RecastTimesDetour);
+            recastTimesHook.Enable();
+        }
+        catch (Exception e)
+        {
+            Plugin.Log.Warning($"[RecastTimes] tap not installed: {e.Message}");
+        }
+    }
+
+    private unsafe void RecastTimesDetour(uint entityId, Core.Native.Implementations.Pointers.UpdateRecastTimesPacket* packet)
+    {
+        try
+        {
+            var groups = new List<string>();
+            for (var i = 0; i < Core.Native.Implementations.Pointers.UpdateRecastTimesPacket.Capacity; i++)
+                if (packet->Elapsed[i] != 0f || packet->Total[i] != 0f)
+                    groups.Add($"{i}:{packet->Elapsed[i]:F2}/{packet->Total[i]:F2}");
+            Plugin.Log.Info($"[RecastTimes] received in territory {Plugin.ClientState.TerritoryType}, to 0x{entityId:X}: "
+                            + (groups.Count == 0 ? "all groups 0/0" : $"{groups.Count} non-zero (group:elapsed/total) {string.Join(" ", groups)}"));
+        }
+        catch (Exception e)
+        {
+            Plugin.Log.Warning($"[RecastTimes] tap failed: {e.Message}");
+        }
+        recastTimesHook!.Original(entityId, packet);
+    }
+
+    private static void FireClearedRecastTimes() => RecastTimes.ClearAll();
 
     // How far each model trails the sim's own position (yalms, XZ): the lag of the SetPos/Move
     // packets that drive it. The local player is the game's own, so it always reads 0.

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using AnoMech.Core.SimObjects;
 
 namespace AnoMech.Core.EnemyActions;
@@ -20,29 +21,29 @@ public abstract record Distribution
 
     public static Distribution Falloff(float lethalWithin) => new FalloffDistribution(lethalWithin);
 
-    // `index` is the target's place in ctx.Hits, nearest the origin first. The reason is said of a
+    // `index` is the target's place in `hits`, nearest the origin first. The reason is said of a
     // death the hit deals.
-    internal abstract (Hit? Hit, string? Reason) Assign(EnemyActionContext ctx, int index, SimCharacter target);
+    internal abstract (Hit? Hit, string? Reason) Assign(EnemyActionContext ctx, IReadOnlyList<SimCharacter> hits, int index, SimCharacter target);
 }
 
 internal sealed record EachDistribution : Distribution
 {
-    internal override (Hit? Hit, string? Reason) Assign(EnemyActionContext ctx, int index, SimCharacter target) => (null, null);
+    internal override (Hit? Hit, string? Reason) Assign(EnemyActionContext ctx, IReadOnlyList<SimCharacter> hits, int index, SimCharacter target) => (null, null);
 }
 
 internal sealed record WildChargeDistribution(int Front, int? Min, Hit? FrontHit, Hit? Understacked) : Distribution
 {
-    internal override (Hit? Hit, string? Reason) Assign(EnemyActionContext ctx, int index, SimCharacter target)
+    internal override (Hit? Hit, string? Reason) Assign(EnemyActionContext ctx, IReadOnlyList<SimCharacter> hits, int index, SimCharacter target)
     {
-        if (ctx.Hits.Count < Min)
-            return (Understacked ?? Severity.Lethal, $"{ctx.Hits.Count}/{Min} players in stack");
+        if (hits.Count < Min)
+            return (Understacked ?? Severity.Lethal, $"{hits.Count}/{Min} players in stack");
         return (index < Front ? FrontHit : null, null);
     }
 }
 
 internal sealed record FalloffDistribution(float LethalWithin) : Distribution
 {
-    internal override (Hit? Hit, string? Reason) Assign(EnemyActionContext ctx, int index, SimCharacter target)
+    internal override (Hit? Hit, string? Reason) Assign(EnemyActionContext ctx, IReadOnlyList<SimCharacter> hits, int index, SimCharacter target)
     {
         var dx = target.Position.X - ctx.Origin.Position.X;
         var dz = target.Position.Z - ctx.Origin.Position.Z;

@@ -27,7 +27,7 @@ public sealed record CastSpec
     public const float ActionEffectOffset = 0.3f;
 
     // How long after release the caster stays rooted while the animation plays. Read it from an
-    // in-game replay.
+    // in-game replay. Default is just a placeholder.
     public float AnimationLock { get; init; } = 0.6f;
     // How long after the bar starts the omen appears. Read it from an in-game replay.
     public float OmenDelay { get; init; }

@@ -152,7 +152,6 @@ public sealed class SimEnemy : SimNpc
     // finished streaming; logged shortly after spawn and again a few seconds later.
     private int slotCheckFrames;
     private bool slotCheckDone;
-    private bool slotReloadAttempted;
 
     public uint BNpcBaseId { get; }
 
@@ -303,15 +302,9 @@ public sealed class SimEnemy : SimNpc
         }
     }
 
-    // RenderFlags Model|Nameplate. The engine then drops the DrawObject entirely, so this does
-    // not keep action VFX alive on a hidden carrier; kept for the Flood carrier A/B.
-    // Re-asserted every tick because EnableDraw resets RenderFlags.
-    private bool modelHidden;
-
     // The engine-level state below is driven by explicit scenario calls and sampled for peers.
     // Tracked here rather than read back from native, which the run animation and the cast
     // pipeline overwrite every frame; each is edge-triggered on its own seq.
-    public bool ModelHidden => modelHidden;
     public (byte Mode, byte Param)? LastMode { get; private set; }
     public int ModeSeq { get; private set; }
     public TimelineHoldKind TimelineHoldState { get; private set; }
@@ -324,15 +317,6 @@ public sealed class SimEnemy : SimNpc
     // Sticky, so an ordinary enemy carries no engine block while a carrier that has been driven
     // keeps reporting: dropping the block after the last call would strand a peer on it.
     public bool HasEngineState { get; private set; }
-
-    public void SetModelHidden(bool hidden)
-    {
-        modelHidden = hidden;
-        HasEngineState = true;
-        ApplyModelHidden();
-    }
-
-    private void ApplyModelHidden() => Proxy?.SetModelHidden(modelHidden);
 
     // AnimLock (8) is the mode the client holds an actor in while an action animation plays.
     public void SetMode(CharacterModes mode, byte param = 0)
@@ -510,7 +494,6 @@ public sealed class SimEnemy : SimNpc
     {
         base.Tick(deltaSeconds);
         TickNetworkPosition(deltaSeconds);
-        if (modelHidden) ApplyModelHidden();
         cast.Tick(deltaSeconds);
         TickTimelineWatch(deltaSeconds);
         TickPacketSpawnCheckpoints();
@@ -522,30 +505,16 @@ public sealed class SimEnemy : SimNpc
             else if (slotCheckFrames == 5) LogModelSlotState("+5 frames");
             else if (slotCheckFrames == 210)
             {
-                var anyStuck = LogModelSlotState("+210 frames (~3.5s)");
-                // A slot still unloaded here is a failed load (HasModelInSlotLoaded cleared without
-                // populating Models[]); ReloadModel's DisableDraw/EnableDraw cycle gives it one retry.
-                if (anyStuck && !slotReloadAttempted)
-                {
-                    slotReloadAttempted = true;
-                    DiagnosticLog.Warn($"[SimEnemy] {DisplayName} (goid 0x{GameObjectId.ObjectId:X}) has a model slot stuck unloaded after 3.5s -- forcing one ReloadModel retry.");
-                    ReloadModel();
-                    slotCheckFrames = 0;
-                }
-                else
-                {
-                    slotCheckDone = true;
-                }
+                LogModelSlotState("+210 frames (~3.5s)");
+                slotCheckDone = true;
             }
         }
     }
 
-    // Returns true if any slot is still unloaded.
-    private bool LogModelSlotState(string label)
+    private void LogModelSlotState(string label)
     {
-        if (Proxy is not { Exists: true } chara) return false;
+        if (Proxy is not { Exists: true } chara) return;
         DiagnosticLog.Info($"[SimEnemy.LogModelSlotState] {DisplayName} (goid 0x{GameObjectId.ObjectId:X}) {label}: {chara.DescribeModelSlots()}");
-        return chara.HasUnloadedModelSlot ?? false;
     }
 
     public CharacterFind<T> Find<T>(List<T> targets) where T : IPositioned

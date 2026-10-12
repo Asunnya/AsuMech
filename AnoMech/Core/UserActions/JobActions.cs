@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using AnoMech.Core.Native.Implementations;
 using AnoMech.Core.SimObjects;
 using FFXIVClientStructs.FFXIV.Client.Game;
 
@@ -750,9 +751,9 @@ internal static unsafe class JobActions
         if (!CostGauges.TryGetValue((PlayerJob.Current, (uint)row.PrimaryCostType), out var gauges)) return;
         int amount = row.PrimaryCostValue;
         if (amount <= 0) return;
-        var jgm = JobGaugeManager.Instance();
-        if (jgm == null) return;
-        foreach (var gauge in gauges) gauge.Add(jgm, -amount);
+        using var edit = JobGaugeEdit.Begin();
+        if (edit.Gauge == null) return;
+        foreach (var gauge in gauges) gauge.Add(edit.Gauge, -amount);
     }
 
     private static IActionEffect Gauge(ResourceGauge gauge, int amount) => new GaugeEffect(gauge, amount);

@@ -522,7 +522,7 @@ public sealed class UmadP3BlackHoleScenario : IMultiplayerReplayable
         if (hole?.Cast(UmadActions.Nothingness, target) is not { } shot) return;
         PrimodialCrustsToResolve += shot.Hits.Count(h => h.Who.HasStatus(StatusId.MeanestExistence)
                                                          && !h.Who.HasStatus(StatusId.PrimordialCrust)
-                                                         && !shot.Kills.Contains(h.Who));
+                                                         && !h.Killed);
     }
 
     private void Run_Black_Hole_40004166()

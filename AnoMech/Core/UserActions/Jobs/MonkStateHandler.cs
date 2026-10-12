@@ -1,3 +1,4 @@
+using AnoMech.Core.Native.Implementations;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Gauge;
 
@@ -21,7 +22,8 @@ internal sealed unsafe class MonkStateHandler : IUserActionHandler
     {
         if (actionType != ActionType.Action) return;
         if (PlayerJob.Current != JobId.Monk) return;
-        var jgm = JobGaugeManager.Instance();
+        using var edit = JobGaugeEdit.Begin();
+        var jgm = edit.Gauge;
         if (jgm == null) return;
         var g = &jgm->Monk;
 
@@ -52,7 +54,8 @@ internal sealed unsafe class MonkStateHandler : IUserActionHandler
     public void OnTick(float deltaSeconds)
     {
         if (PlayerJob.Current != JobId.Monk) return;
-        var jgm = JobGaugeManager.Instance();
+        using var edit = JobGaugeEdit.Begin();
+        var jgm = edit.Gauge;
         if (jgm == null) return;
         var g = &jgm->Monk;
         if (g->BlitzTimeRemaining == 0) return;

@@ -45,13 +45,7 @@ public interface IBattleCharaProxy
     bool HasDrawObject { get; }
     bool IsDrawObjectVisible { get; set; }
 
-    // RenderFlags Model|Nameplate.
-    void SetModelHidden(bool hidden);
-
     byte ModelState { get; }
-
-    // Null without a DrawObject.
-    bool? HasUnloadedModelSlot { get; }
 
     // ── Animation ────────────────────────────────────────────────────────────
 

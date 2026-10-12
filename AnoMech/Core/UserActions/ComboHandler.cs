@@ -1,8 +1,8 @@
 using AnoMech.Core.Native.Implementations;
+using AnoMech.Core.Native.Interfaces;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
-using AnoMech.Core.Native.Implementations.Interop;
 
 namespace AnoMech.Core.UserActions;
 
@@ -20,13 +20,27 @@ internal sealed unsafe class ComboHandler : IUserActionHandler
         var role = PlayerCombo.RoleOf(actionId);
         if (role == ComboRole.None) return;
 
-        var player = (BattleChara*)(Plugin.ObjectTable.LocalPlayer?.Address ?? 0);
-        if (player == null) return;
+        var player = BattleCharaProxy.LocalPlayer;
+        if (!player.Exists) return;
         var am = ActionManager.Instance();
         if (am == null) return;
+        // SourceSequence makes the client treat it as that action resolving.
+        var target = DeliveryTarget(player);
+        player.ReceiveActionEffect(new ActionEffectData(
+            actionId, ActionType.Action, 0f, (ushort)actionId, 0, 0, player.Rotation, player.Position,
+            AnimationTarget: target,
+            Targets: [new ActionEffectTarget(target, [ActionEffectEntry.ActionMarker(actionId, role == ComboRole.Continuation)])],
+            SourceSequence: am->LastUsedActionSequence));
+    }
+
+    // The player's target, as the server delivers it; the player itself when the target isn't a
+    // registered BattleChara the client could deliver to.
+    private static GameObjectId DeliveryTarget(BattleCharaProxy player)
+    {
         var tgt = (GameObject*)(Plugin.TargetManager.Target?.Address ?? 0);
-        var targetId = tgt != null ? tgt->GetGameObjectId() : default;
-        var comboFlag = (byte)(role == ComboRole.Continuation ? 1 : 0);
-        ActionEffects.FireCombo((Character*)player, actionId, am->LastUsedActionSequence, comboFlag, targetId);
+        if (tgt == null) return player.GameObjectId;
+        var cm = CharacterManager.Instance();
+        if (cm == null || cm->LookupBattleCharaByEntityId(tgt->EntityId) == null) return player.GameObjectId;
+        return tgt->GetGameObjectId();
     }
 }

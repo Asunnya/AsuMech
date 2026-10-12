@@ -2,6 +2,7 @@ using System;
 using System.Numerics;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Party;
+using AnoMech.Core.Native.Interfaces;
 
 namespace AnoMech.Core.SimObjects;
 
@@ -80,7 +81,7 @@ public static class SimCharacterDeathExtensions
         // The message is the action's name, with `explanation` after it in parentheses.
         public bool Die(uint actionId, string? explanation = null)
         {
-            var name = actionId == Environment ? null : ActionLookup.Name(actionId);
+            var name = actionId == Environment ? null : Natives.Data.ActionName(actionId);
             var message = name is null ? explanation ?? "" : explanation is null ? name : $"{name} ({explanation})";
             return Kill(c, message, actionId);
         }

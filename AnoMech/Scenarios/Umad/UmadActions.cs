@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using AnoMech.Core;
 using AnoMech.Core.EnemyActions;
 using AnoMech.Core.SimObjects;
@@ -515,9 +516,9 @@ public static class UmadActions
 
     private sealed class NothingnessEffect : IEnemyActionEffect
     {
-        public void Apply(EnemyActionContext ctx)
+        public void Apply(EnemyActionContext ctx, IReadOnlyList<SimCharacter> hits)
         {
-            foreach (var target in ctx.Hits)
+            foreach (var target in hits)
             {
                 if (ctx.IsKilled(target) || !target.IsAlive()) continue;
                 if (target.HasStatus(UmadConstants.StatusId.MeanestExistence))
@@ -535,11 +536,11 @@ public static class UmadActions
                 else if (target.HasStatus(UmadConstants.StatusId.Unbecoming))
                 {
                     target.RemoveStatus(UmadConstants.StatusId.Unbecoming);
-                    target.AddStatus(UmadConstants.StatusId.MeanestExistence);
+                    ctx.AddStatus(target, UmadConstants.StatusId.MeanestExistence);
                 }
                 else
                 {
-                    target.AddStatus(UmadConstants.StatusId.Unbecoming);
+                    ctx.AddStatus(target, UmadConstants.StatusId.Unbecoming);
                 }
             }
         }

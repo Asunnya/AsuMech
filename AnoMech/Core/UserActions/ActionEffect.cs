@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using AnoMech.Core.Game.Party;
+using AnoMech.Core.Native.Implementations;
 using AnoMech.Core.SimObjects;
-using FFXIVClientStructs.FFXIV.Client.Game;
 
 namespace AnoMech.Core.UserActions;
 
@@ -32,8 +32,8 @@ internal sealed unsafe class GaugeEffect(ResourceGauge gauge, int amount) : IAct
     public void Apply(ActionContext ctx)
     {
         if (!ctx.CasterIsPlayer) return;
-        var jgm = JobGaugeManager.Instance();
-        if (jgm != null) gauge.Add(jgm, amount);
+        using var edit = JobGaugeEdit.Begin();
+        if (edit.Gauge != null) gauge.Add(edit.Gauge, amount);
     }
 }
 
@@ -43,8 +43,8 @@ internal sealed unsafe class SetGaugeEffect(ResourceGauge gauge, int value) : IA
     public void Apply(ActionContext ctx)
     {
         if (!ctx.CasterIsPlayer) return;
-        var jgm = JobGaugeManager.Instance();
-        if (jgm != null) gauge.Add(jgm, value - gauge.Read(jgm));
+        using var edit = JobGaugeEdit.Begin();
+        if (edit.Gauge != null) gauge.Add(edit.Gauge, value - gauge.Read(edit.Gauge));
     }
 }
 

@@ -377,7 +377,7 @@ internal class Movement(SimCharacter parent)
 internal sealed class PlayerMovement(SimCharacter parent) : Movement(parent)
 {
     // Normally a no-op, since AiManager addresses every slot uniformly; DebugBotControl lets
-    // the AI drive the real character (SyncInputLock then zeroes manual input via IsMoving).
+    // the AI drive the real character.
     public override void MoveTo(Vector3 t, float sp = 6f, float? finalRot = null)
     {
         if (DebugBotControl.Enabled)

@@ -62,6 +62,6 @@ internal sealed class LimitBreakHandler : IUserActionHandler
         if (actionType != ActionType.Action || !IsLimitBreak(actionId)) return;
         if (Plugin.GameInstance?.World.Party is not { Player: { } player } party) return;
         Resolve(party, player, actionId);
-        DiagnosticLog.Info($"[LimitBreak] {ActionLookup.Name(actionId)} ({actionId}) resolved -- the gauge is spent.");
+        DiagnosticLog.Info($"[LimitBreak] {Natives.Data.ActionName(actionId)} ({actionId}) resolved -- the gauge is spent.");
     }
 }

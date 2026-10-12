@@ -63,6 +63,7 @@ public abstract class SimCharacter(Coordinates coordinates) : ISimObject, IPosit
             MaxModelDivergence = MathF.Max(MaxModelDivergence, ModelDivergence);
         }
         statusList.Update(deltaSeconds);
+        FlushStatusList();
         vfx.Update(deltaSeconds);
         Movement.Tick(deltaSeconds);
         TickTurn(deltaSeconds);
@@ -351,8 +352,9 @@ public abstract class SimCharacter(Coordinates coordinates) : ISimObject, IPosit
     // -------------------------
 
     // sourceObject distinguishes independent same-id instances (UMAD P1 Tele-portent applies
-    // the same id twice with separate expiries).
-    public SimStatus? AddStatus(ushort statusId, float duration = 0f, int stacks = 1, bool overrideStacks = false, GameObjectId sourceObject = default)
+    // the same id twice with separate expiries). broadcastAddEvent false leaves a new status's
+    // gain flytext to the caller, e.g. an ActionEffect's status entry.
+    public SimStatus? AddStatus(ushort statusId, float duration = 0f, int stacks = 1, bool overrideStacks = false, GameObjectId sourceObject = default, bool broadcastAddEvent = true)
     {
         Core.DiagnosticLog.Info($"[SimCharacter] AddStatus: {DiagnosticName} gets status {statusId} (duration={duration:F1}, stacks={stacks}, overrideStacks={overrideStacks}, source=0x{sourceObject.ObjectId:X}).");
         if (FindStatus(statusId, sourceObject) is {} status)
@@ -366,28 +368,28 @@ public abstract class SimCharacter(Coordinates coordinates) : ISimObject, IPosit
                 status.Despawn();   // last stack consumed → remove the status
                 return null;
             }
-            if (status.Slot >= 0) SendStatusList();
+            if (status.Slot >= 0) statusListChanged = true;
             return status;
         }
 
         // No existing status: a non-positive request has nothing to remove.
         if (stacks <= 0) return null;
-        return SpawnStatus(statusId, duration, (ushort)stacks, sourceObject);
+        return SpawnStatus(statusId, duration, (ushort)stacks, sourceObject, broadcastAddEvent);
     }
 
     // For logging: the party role when available, else the type name.
     private string DiagnosticName => (this as ISimPartyMember)?.Role.ToString() ?? GetType().Name;
 
     public SimStatus AddStatusParam(ushort statusId, int param, float duration = 0f)
-        => SpawnStatus(statusId, duration, (ushort)param, default);
+        => SpawnStatus(statusId, duration, (ushort)param, default, broadcastAddEvent: true);
 
-    private SimStatus SpawnStatus(ushort statusId, float duration, ushort param, GameObjectId sourceObject)
+    private SimStatus SpawnStatus(ushort statusId, float duration, ushort param, GameObjectId sourceObject, bool broadcastAddEvent)
     {
         var status = new SimStatus(this, statusId, duration, param, sourceObject, FreeStatusSlot(statusId));
         statusList.Add(status);
         if (status.Slot < 0) return status;
-        SendStatusList();
-        ActorControl.GainEffect(statusId, param);
+        statusListChanged = true;
+        if (broadcastAddEvent) unannouncedGains.Add(status);
         return status;
     }
 
@@ -404,16 +406,25 @@ public abstract class SimCharacter(Coordinates coordinates) : ISimObject, IPosit
         return -1;
     }
 
-    // Sent on every change rather than once per frame: a status removed and re-added in the same
-    // frame keeps its slot, and the client only replays the gain effects when it sees the slot
-    // empty in between.
-    internal void SendStatusList()
+    private bool statusListChanged;
+    private readonly List<SimStatus> unannouncedGains = [];
+
+    internal void StatusListChanged() => statusListChanged = true;
+
+    // Once per tick, however many statuses changed. A status removed and re-added within one tick
+    // keeps its slot, so the client sees a refresh and doesn't replay the gain effects.
+    private void FlushStatusList()
     {
-        if (Proxy is { } chara) SendStatusList(chara.Health, chara.Mana);
+        if (statusListChanged) SendStatusList(Proxy?.Health ?? 0, Proxy?.Mana ?? 0);
+        foreach (var status in unannouncedGains)
+            if (status.IsActive)
+                ActorControl.GainEffect(status.StatusId, status.Stacks);
+        unannouncedGains.Clear();
     }
 
     private void SendStatusList(uint health, uint mana)
     {
+        statusListChanged = false;
         if (Proxy is not { } chara) return;
         var slots = new StatusSlot[StatusSlots];
         foreach (var status in statusList)

@@ -178,34 +178,12 @@ internal sealed unsafe class BattleCharaProxy : IBattleCharaProxy
         }
     }
 
-    public void SetModelHidden(bool hidden)
-    {
-        var obj = Ptr;
-        if (obj == null) return;
-        const VisibilityFlags bits = VisibilityFlags.Model | VisibilityFlags.Nameplate;
-        var go = (GameObject*)obj;
-        if (hidden) go->RenderFlags |= bits;
-        else go->RenderFlags &= ~bits;
-    }
-
     public byte ModelState
     {
         get
         {
             var obj = Ptr;
             return obj == null ? (byte)0 : obj->Timeline.ModelState;
-        }
-    }
-
-    public bool? HasUnloadedModelSlot
-    {
-        get
-        {
-            var obj = Ptr;
-            if (obj == null) return null;
-            var draw = (CharacterBase*)obj->DrawObject;
-            if (draw == null) return null;
-            return Enumerable.Range(0, draw->SlotCount).Any(i => draw->ModelsSpan[i].Value == null);
         }
     }
 
@@ -334,7 +312,7 @@ internal sealed unsafe class BattleCharaProxy : IBattleCharaProxy
             GlobalSequence = sequence,
             AnimationLock = effect.AnimationLock,
             BallistaEntityId = effect.Ballista?.ObjectId ?? NoTarget,
-            SourceSequence = 0,
+            SourceSequence = effect.SourceSequence,
             RotationInt = MathUtil.QuantizeRotation(effect.Rotation),
             SpellId = effect.SpellId,
             AnimationVariation = effect.AnimationVariation,

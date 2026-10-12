@@ -100,18 +100,6 @@ public class SimNpc : SimCharacter
     // Which sub-meshes show, e.g. Omega-M's shield.
     public void SetModeAttributeFlags(byte value) => ActorControl.SetModeAttributeFlags(value);
 
-    // Forces a model rebuild via DisableDraw -> EnableDraw, which retries a failed slot load
-    // and re-reads ModeAttributeFlags. The re-enable is deferred through the
-    // pendingDraw path (the rebuild is async, gated on IsReadyToDraw). Only cycles draw when
-    // the model is currently drawn: a hidden NPC keeps the written flags and applies them on
-    // its next EnableDraw from the visibility system, so we never force it visible.
-    protected void ReloadModel()
-    {
-        if (proxy is not { HasDrawObject: true } chara) return;
-        chara.DisableDraw();
-        pendingDraw = true;
-    }
-
     // Plays an action's own animation and VFX on this doppel through the same synthetic
     // ActionEffect a boss cast fires -- what lets a bot tank visibly pop its LB3 in Umad P3
     // Limit Cut. Effects (statuses, damage) stay the caller's job, exactly as for an enemy Cast.

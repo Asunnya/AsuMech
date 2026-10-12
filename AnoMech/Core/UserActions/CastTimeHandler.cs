@@ -1,6 +1,5 @@
 using AnoMech.Core.SimObjects;
 using FFXIVClientStructs.FFXIV.Client.Game;
-using FFXIVClientStructs.FFXIV.Client.Game.Character;
 
 namespace AnoMech.Core.UserActions;
 
@@ -18,28 +17,54 @@ namespace AnoMech.Core.UserActions;
 //    (Odd, but this is how the game behaves.)
 //  - Acceleration / Firestarter / Thunderhead — granted+consumed by the JobActions table.
 //
-// Dualcast is granted on cast COMPLETION of a genuine RDM hard cast (tracked from OnTick — not on cast
-// start, and not if the cast is interrupted). Registered before JobActionHandler so the spell-specific
-// statuses are still present when we check them.
-internal sealed unsafe class CastTimeHandler : IUserActionHandler
+// A press is handled when it happens: OnCastStart for a hard cast, OnAction for an instant one.
+// Dualcast is granted when a genuine RDM hard cast resolves, so never for an interrupted one. Runs
+// before JobActionHandler so the spell-specific statuses are still present when we check them.
+internal sealed class CastTimeHandler : IUserActionHandler
 {
     private const ushort SwiftcastStatus = 167, DualcastStatus = 1393, TriplecastStatus = 1211;
     private const ushort Acceleration = 1238, Firestarter = 165, Thunderhead = 3870;
     private const uint SwiftcastAction = 7561, TriplecastAction = 7421, Foul = 7422;
 
-    // A genuine RDM hard cast whose completion should grant Dualcast (0 = none tracked).
-    private uint pendingCastAction;
-    private float pendingCastTotal;
-    private float pendingCastMax;
+    // The hard cast in progress (0 = none), and whether resolving it grants Dualcast.
+    private uint castAction;
+    private bool castGrantsDualcast;
+
+    public void OnScenarioStart() => castAction = 0;
+
+    public void OnCastStart(ActionType actionType, uint actionId)
+    {
+        castAction = actionId;
+        castGrantsDualcast = OnPress(actionType, actionId);
+    }
+
+    public void OnCastInterrupted(ActionType actionType, uint actionId) => castAction = 0;
 
     public void OnAction(ActionType actionType, uint actionId)
     {
+        if (castAction != 0 && actionId == castAction)
+        {
+            castAction = 0;
+            if (castGrantsDualcast && Plugin.GameInstance?.Player is { } player)
+            {
+                player.RemoveStatus(DualcastStatus);
+                player.AddStatusParam(DualcastStatus, 0, 15f);
+            }
+            return;
+        }
+        OnPress(actionType, actionId);
+    }
+
+    // Grants and consumes the enablers; returns whether the action is a cast-time spell whose
+    // completion would grant Dualcast.
+    private static bool OnPress(ActionType actionType, uint actionId)
+    {
         var player = Plugin.GameInstance?.Player;
-        if (player == null) return;
+        if (player == null) return false;
 
         // Grant Swiftcast / Triplecast (both abilities → they don't consume Dualcast, so return).
-        if (actionType == ActionType.Action && actionId == SwiftcastAction) { player.RemoveStatus(SwiftcastStatus); player.AddStatusParam(SwiftcastStatus, 0, 10f); return; }
-        if (actionType == ActionType.Action && actionId == TriplecastAction) { player.RemoveStatus(TriplecastStatus); player.AddStatusParam(TriplecastStatus, 3, 15f); return; }
+        if (actionType == ActionType.Action && actionId == SwiftcastAction) { player.RemoveStatus(SwiftcastStatus); player.AddStatusParam(SwiftcastStatus, 0, 10f); return false; }
+        if (actionType == ActionType.Action && actionId == TriplecastAction) { player.RemoveStatus(TriplecastStatus); player.AddStatusParam(TriplecastStatus, 3, 15f); return false; }
 
         // Classify the executed action. Anything that isn't a category-4 ability (spell, weaponskill,
         // item, Sprint, …) consumes Dualcast.
@@ -72,43 +97,7 @@ internal sealed unsafe class CastTimeHandler : IUserActionHandler
             else if (player.HasStatus(SwiftcastStatus)) player.RemoveStatus(SwiftcastStatus);
         }
 
-        // Grant Dualcast when a genuine RDM hard cast completes (OnTick). Skip if Dualcast was just
-        // consumed on this cast, or if the cast was made instant (no cast bar).
-        if (isCastTimeSpell && !dualcastConsumed && PlayerJob.Current == JobId.RedMage)
-        {
-            var bc = (BattleChara*)(Plugin.ObjectTable.LocalPlayer?.Address ?? 0);
-            if (bc != null && bc->CastInfo.IsCasting && bc->CastInfo.TotalCastTime > 0.1f)
-            {
-                pendingCastAction = actionId;
-                pendingCastTotal = bc->CastInfo.TotalCastTime;
-                pendingCastMax = bc->CastInfo.CurrentCastTime;
-            }
-        }
-    }
-
-    public void OnTick(float deltaSeconds)
-    {
-        if (pendingCastAction == 0) return;
-        var bc = (BattleChara*)(Plugin.ObjectTable.LocalPlayer?.Address ?? 0);
-        if (bc == null) { pendingCastAction = 0; return; }
-
-        // Still casting the tracked spell → follow its progress.
-        if (bc->CastInfo.IsCasting && bc->CastInfo.ActionId == pendingCastAction)
-        {
-            if (bc->CastInfo.CurrentCastTime > pendingCastMax) pendingCastMax = bc->CastInfo.CurrentCastTime;
-            return;
-        }
-
-        // The tracked cast ended: grant Dualcast only if it reached completion (an interrupt stops well
-        // short — the cast can't be cancelled inside the slidecast window).
-        if (pendingCastMax >= pendingCastTotal - 0.4f)
-        {
-            var player = Plugin.GameInstance?.Player;
-            player?.RemoveStatus(DualcastStatus);
-            player?.AddStatusParam(DualcastStatus, 0, 15f);
-        }
-        pendingCastAction = 0;
-        pendingCastMax = 0;
+        return isCastTimeSpell && !dualcastConsumed && PlayerJob.Current == JobId.RedMage;
     }
 
     // A spell-specific instant status the player holds that applies to this spell (Acceleration →

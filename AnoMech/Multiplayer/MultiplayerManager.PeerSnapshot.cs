@@ -450,7 +450,6 @@ public sealed partial class MultiplayerManager
         peerEnemyLastCastSeq.Remove(netId);
         peerEnemyLastCancelSeq.Remove(netId);
         peerEnemyEngineSeqs.Remove(netId);
-        peerEnemyModelHidden.Remove(netId);
     }
 
     // The engine-level state behind a VFX-only cue: the carrier's timeline hold, its AnimLock,
@@ -458,12 +457,6 @@ public sealed partial class MultiplayerManager
     private void ApplyEngineState(SimEnemy enemy, int netId, ActorEngineState? engine)
     {
         if (engine is null) return;
-        if (!peerEnemyModelHidden.TryGetValue(netId, out var hidden) || hidden != engine.ModelHidden)
-        {
-            peerEnemyModelHidden[netId] = engine.ModelHidden;
-            DiagnosticLog.Info($"[Multiplayer] Peer: enemy NetId {netId} ModelHidden -> {engine.ModelHidden}.");
-            enemy.SetModelHidden(engine.ModelHidden);
-        }
         var applied = peerEnemyEngineSeqs.GetValueOrDefault(netId);
         if (engine.ModeSeq > 0 && engine.ModeSeq != applied.Mode)
         {

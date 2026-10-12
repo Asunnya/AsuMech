@@ -13,20 +13,18 @@ public sealed class EnemyActionCast
     public bool IsCancelled { get; private set; }
     public Placement Origin { get; private set; }
 
-    // Nearest to Origin first, each where it stood at resolve.
-    public IReadOnlyList<(SimCharacter Who, Vector3 At)> Hits { get; private set; } = [];
+    // At = where Who stood at resolve. Killed is decided at resolve; they die TimingSpec.DamageDelay later.
+    public sealed record Hit(SimCharacter Who, Vector3 At, bool Killed);
 
-    // Decided at resolve; they die TimingSpec.DamageDelay later.
-    public IReadOnlyCollection<SimCharacter> Kills { get; private set; } = [];
+    // Nearest to Origin first.
+    public IReadOnlyList<Hit> Hits { get; private set; } = [];
 
     internal void Cancelled() => IsCancelled = true;
 
-    internal void Resolved(Placement origin, IReadOnlyList<(SimCharacter Who, Vector3 At)> hits)
+    internal void Resolve(Placement origin, IReadOnlyList<Hit> hits)
     {
         IsResolved = true;
         Origin = origin;
         Hits = hits;
     }
-
-    internal void Killed(IReadOnlyCollection<SimCharacter> kills) => Kills = kills;
 }

@@ -1,4 +1,5 @@
 using Dalamud.Utility.Signatures;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Event;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using System.Runtime.InteropServices;
@@ -210,6 +211,30 @@ public unsafe struct MapEffectSnapshotPacket
     [FieldOffset(0x6)] public fixed ushort States[Capacity];
 }
 
+// Every recast group's state at once; at zone-in the server sends it all zero, which clears every
+// cooldown. The Duty Recorder never writes it, so replays don't contain it.
+[StructLayout(LayoutKind.Explicit, Size = 0x280)]
+public unsafe struct UpdateRecastTimesPacket
+{
+    public const int Capacity = 80;
+
+    [FieldOffset(0x000)] public fixed float Elapsed[Capacity];
+    [FieldOffset(0x140)] public fixed float Total[Capacity];
+}
+
+// The server's whole job gauge. The current gauge's ReceivePacketValues copies Values onto its own
+// struct from offset 0x08 on; how many bytes, and which it keeps (MCH's overheat timer), is per job.
+[StructLayout(LayoutKind.Explicit, Size = 0x10)]
+public unsafe struct ActorGaugePacket
+{
+    public const int ValuesLength = 0x0E;
+    // Where Values land in JobGaugeManager: its gauge union starts at 0x08.
+    public const int ManagerValuesOffset = 0x10;
+
+    [FieldOffset(0x0)] public byte ClassJobId;
+    [FieldOffset(0x2)] public fixed byte Values[ValuesLength];
+}
+
 internal unsafe class PacketDispatcherPointers
 {
     [Signature("40 53 57 48 81 EC ?? ?? ?? ?? 48 8B FA 8B", UseFlags = SignatureUseFlags.Pointer, ScanType = ScanType.Text)]
@@ -262,6 +287,26 @@ internal unsafe class PacketDispatcherPointers
     [Signature("48 89 5C 24 ?? 57 48 83 EC 20 48 8B D9 48 8B FA 48 8B 89 58 01 00 00 48 85 C9 0F 84 ?? ?? ?? ?? 48 8B 01 FF 50 18 84 C0 0F 84 ?? ?? ?? ?? 4C 8B 9B 58 01 00 00 8B 07 49 8B 8B D8 02 00 00 39 01 0F 85 ?? ?? ?? ?? 49 8B 83 90 0C 00 00 48 85 C0 0F 84 ?? ?? ?? ?? 0F B6 57 04 45 32 D2", UseFlags = SignatureUseFlags.Pointer, ScanType = ScanType.Text)]
     public static HandleMapEffectSnapshotPacketDelegate HandleMapEffectSnapshotPacket { get; private set; } = null!;
 
+    // A packet for another job than ClassJobId rebuilds the gauge for that job instead.
+    [Signature("4C 8B 01 4D 85 C0 74 ?? 0F B6 02 38 41 58 75 ?? 49 8B 00 49 8B C8 48 FF 60 18", UseFlags = SignatureUseFlags.Pointer, ScanType = ScanType.Text)]
+    public static HandleActorGaugePacketDelegate HandleActorGaugePacket { get; private set; } = null!;
+
+    // 16 B, u16 TerritoryType at +4; sent at zone-in and ~3.2s after every wipe. Another territory
+    // than the one loaded makes the client load it. What it resets in place is UNVERIFIED. The live
+    // dispatcher passes 1.
+    [Signature("44 0F B6 C2 48 8B D1 48 8D 0D ?? ?? ?? ?? E9 ?? ?? ?? ?? CC", UseFlags = SignatureUseFlags.Pointer, ScanType = ScanType.Text)]
+    public static HandleTerritoryInitPacketDelegate HandleTerritoryInitPacket { get; private set; } = null!;
+
+    public delegate void HandleTerritoryInitPacketDelegate(byte* packet, byte flag);
+
+    public const string HandleUpdateRecastTimesPacketSignature = "48 89 5C 24 08 57 48 83 EC 20 48 8B DA 33 FF 90 F3 0F 10 9B 40 01 00 00";
+
+    [Signature(HandleUpdateRecastTimesPacketSignature, UseFlags = SignatureUseFlags.Pointer, ScanType = ScanType.Text)]
+    public static HandleUpdateRecastTimesPacketDelegate HandleUpdateRecastTimesPacket { get; private set; } = null!;
+
+    // The server addresses it to the local player.
+    public delegate void HandleUpdateRecastTimesPacketDelegate(uint entityId, UpdateRecastTimesPacket* packet);
+
     public delegate void HandleActorCastPacketDelegate(uint entityId, ActorCastPacket* packet);
     public delegate void HandleActorSetPosPacketDelegate(uint entityId, ActorSetPosPacket* packet);
     public delegate void HandleActorMovePacketDelegate(uint entityId, ActorMovePacket* packet);
@@ -276,6 +321,7 @@ internal unsafe class PacketDispatcherPointers
     public delegate void HandleFieldMarkerPresetPacketDelegate(MarkingController* controller, FieldMarkerPresetPacket* packet);
     public delegate void HandleMapEffectPacketDelegate(EventFramework* framework, MapEffectPacket* packet);
     public delegate void HandleMapEffectSnapshotPacketDelegate(EventFramework* framework, MapEffectSnapshotPacket* packet);
+    public delegate void HandleActorGaugePacketDelegate(JobGaugeManager* manager, ActorGaugePacket* packet);
 
     public static void Initialize()
     {

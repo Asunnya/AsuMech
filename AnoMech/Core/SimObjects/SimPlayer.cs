@@ -67,13 +67,11 @@ public sealed class SimPlayer(Coordinates coordinates) : SimCharacter(coordinate
         if (!Dead) pushRemaining = durationSeconds;
     }
 
-    // The input lock is re-derived every tick from Dead/Movement/statuses.
     public override void Tick(float deltaSeconds)
     {
         pushRemaining = MathF.Max(0f, pushRemaining - deltaSeconds);
         base.Tick(deltaSeconds);
         SampleActivity();
-        SyncInputLock();
     }
 
     private void SampleActivity()
@@ -95,8 +93,7 @@ public sealed class SimPlayer(Coordinates coordinates) : SimCharacter(coordinate
 
     public void OnKilled(bool byEnvironment)
     {
-        if (!GoDown(byEnvironment)) return;
-        SyncInputLock(); // engage the lock now, not one frame later
+        GoDown(byEnvironment);
     }
 
     public override void Despawn()
@@ -105,14 +102,5 @@ public sealed class SimPlayer(Coordinates coordinates) : SimCharacter(coordinate
         StopMoving();
         pushRemaining = 0f;
         Revive();
-        // Nothing ticks between a reset and the next scenario, so the lock must clear here.
-        SyncInputLock();
-    }
-
-    private void SyncInputLock()
-    {
-        var hooks = Natives.PlayerInput;
-        hooks.ZeroMovement = Dead || Movement.IsMoving || MovementLocked;
-        hooks.DisableAllActions = Dead || ActionsLocked;
     }
 }

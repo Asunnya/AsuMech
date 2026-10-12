@@ -7,6 +7,7 @@ using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using Dalamud.Game.ClientState.Conditions;
+using AnoMech.Core.Native.Interfaces;
 using FFXIVClientStructs.FFXIV.Client.Game;
 
 namespace AnoMech.Core.Native.Implementations;
@@ -53,14 +54,14 @@ public sealed unsafe partial class ZoneSession
         zoneChangeCastSeen = false;
         zoneChangeCastLost = false;
         zoneChangeCastProgress = 0f;
-        DiagnosticLog.Info($"[ZoneGuard] {ActionLookup.Name(actionId)} pressed -- Start is blocked until it resolves.");
+        DiagnosticLog.Info($"[ZoneGuard] {Natives.Data.ActionName(actionId)} pressed -- Start is blocked until it resolves.");
     }
 
     public static void NoteTerritoryChanged(uint territory)
     {
         lastTerritoryChangeAt = Stopwatch.GetTimestamp();
         if (zoneChangePressedAt != null)
-            DiagnosticLog.Info($"[ZoneGuard] Zone changed to {territory} -- the pending {ActionLookup.Name(zoneChangeActionId)} resolved.");
+            DiagnosticLog.Info($"[ZoneGuard] Zone changed to {territory} -- the pending {Natives.Data.ActionName(zoneChangeActionId)} resolved.");
         zoneChangePressedAt = null;
         Current?.GuardTerritoryChanged(territory);
     }
@@ -89,7 +90,7 @@ public sealed unsafe partial class ZoneSession
         if (!Plugin.ClientState.IsLoggedIn || Plugin.ObjectTable.LocalPlayer is not { } player) return "no local player";
         if (Zoning()) return "zoning";
         if (player.IsCasting || IsServerActingSoon()) return "the server may still act on the last action";
-        if (zoneChangePressedAt != null) return $"{ActionLookup.Name(zoneChangeActionId)} has not resolved";
+        if (zoneChangePressedAt != null) return $"{Natives.Data.ActionName(zoneChangeActionId)} has not resolved";
         return null;
     }
 
@@ -149,7 +150,7 @@ public sealed unsafe partial class ZoneSession
             zoneChangeActionId = player.CastActionId;
             zoneChangeCastSeen = false;
             zoneChangeCastLost = false;
-            DiagnosticLog.Info($"[ZoneGuard] {ActionLookup.Name(zoneChangeActionId)} cast seen -- Start is blocked until it resolves.");
+            DiagnosticLog.Info($"[ZoneGuard] {Natives.Data.ActionName(zoneChangeActionId)} cast seen -- Start is blocked until it resolves.");
         }
         if (zoneChangePressedAt is not { } pressedAt) return;
         var elapsed = Stopwatch.GetElapsedTime(pressedAt).TotalSeconds;
@@ -173,7 +174,7 @@ public sealed unsafe partial class ZoneSession
         else if (elapsed > ZoneChangeHoldSeconds)
             release = $"{ZoneChangeHoldSeconds:F0}s passed with no zone change";
         if (release == null) return;
-        DiagnosticLog.Info($"[ZoneGuard] {ActionLookup.Name(zoneChangeActionId)} hold released: {release}.");
+        DiagnosticLog.Info($"[ZoneGuard] {Natives.Data.ActionName(zoneChangeActionId)} hold released: {release}.");
         zoneChangePressedAt = null;
     }
 
@@ -200,9 +201,9 @@ public sealed unsafe partial class ZoneSession
         var c = Plugin.Condition;
         if (c[ConditionFlag.BetweenAreas] || c[ConditionFlag.BetweenAreas51]) return "zoning";
         if (SecondsSince(lastTerritoryChangeAt) < SettleSeconds) return Settling("the zone", out settling);
-        if (player.IsCasting) return $"casting {ActionLookup.Name(player.CastActionId)}";
+        if (player.IsCasting) return $"casting {Natives.Data.ActionName(player.CastActionId)}";
         if (zoneChangePressedAt is { } pressed)
-            return $"{ActionLookup.Name(zoneChangeActionId)} was used {Stopwatch.GetElapsedTime(pressed).TotalSeconds:F0}s ago and has not resolved";
+            return $"{Natives.Data.ActionName(zoneChangeActionId)} was used {Stopwatch.GetElapsedTime(pressed).TotalSeconds:F0}s ago and has not resolved";
         if (IsPlayerBusy()) return "busy (cutscene, NPC event, crafting, trading, zoning, combat, mounted, queued, etc.)";
         // Nothing the character did during the hold reached the server.
         if (Current is { sendHoldActive: true }) return Settling("the debug send hold", out settling);
@@ -222,6 +223,20 @@ public sealed unsafe partial class ZoneSession
     private long guardArmedAt;
     private int stayId;
     private string? tripReason;
+#if DEBUG
+    // Lets a debug button fire a packet the guard would read as the stay going wrong.
+    private static long tripsMutedUntil;
+    private static string? lastMutedTrip;
+
+    // Dalamud's TerritoryType reads the inn during a stay.
+    internal static uint LoadedTerritory => Current is { guardArmed: true } session ? session.loadedTerritory : 0;
+
+    internal static void MuteTrips(TimeSpan duration)
+    {
+        tripsMutedUntil = Stopwatch.GetTimestamp() + (long)(duration.TotalSeconds * Stopwatch.Frequency);
+        lastMutedTrip = null;
+    }
+#endif
     // Dalamud's territory follows real zone-ins only (the sim's own loads leave it on the inn),
     // so anything else is one. GameMain's reads 0 after the sim's load, so it is only logged.
     private uint innClientTerritory;
@@ -377,7 +392,7 @@ public sealed unsafe partial class ZoneSession
         else if (Plugin.ObjectTable.LocalPlayer is { IsCasting: true } player
                  && player.CastActionId is TeleportActionId or ReturnActionId
                  && player.CurrentCastTime > Stopwatch.GetElapsedTime(guardArmedAt).TotalSeconds + 0.05)
-            Trip($"a {ActionLookup.Name(player.CastActionId)} cast begun before the firewall went up is completing on the server");
+            Trip($"a {Natives.Data.ActionName(player.CastActionId)} cast begun before the firewall went up is completing on the server");
 
         if (pendingLift != null && tripReason == null) TryLift();
     }
@@ -398,6 +413,14 @@ public sealed unsafe partial class ZoneSession
     // drift further from the server.
     private void Trip(string reason)
     {
+#if DEBUG
+        if (Stopwatch.GetTimestamp() < tripsMutedUntil)
+        {
+            if (reason != lastMutedTrip) Plugin.Log.Warning($"[ZoneGuard] Trip muted for a debug test: {reason}");
+            lastMutedTrip = reason;
+            return;
+        }
+#endif
         tripReason = reason;
         DiagnosticLog.Warn(StateSnapshot($"TRIPPED: {reason}"));
         Die(reason);

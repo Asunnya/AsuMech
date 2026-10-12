@@ -39,7 +39,7 @@ public sealed class SimPartyNpc : SimNpc, ISimPartyMember
         if (!this.IsAlive() || ActionsLocked) return 0;
         var actionId = LimitBreakHandler.ActionId(ClassJob, level);
         if (actionId == 0 || !UseAction(actionId)) return 0;
-        DiagnosticLog.Info($"[SimPartyNpc] {Role} (job {ClassJob}) uses LB{level} {ActionLookup.Name(actionId)}.");
+        DiagnosticLog.Info($"[SimPartyNpc] {Role} (job {ClassJob}) uses LB{level} {Natives.Data.ActionName(actionId)}.");
         return actionId;
     }
 

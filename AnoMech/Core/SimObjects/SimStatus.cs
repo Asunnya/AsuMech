@@ -59,7 +59,7 @@ public sealed class SimStatus : ISimObject
         if (!IsActive) return;
         IsActive = false;
         if (Slot < 0) return;
-        target.SendStatusList();
+        target.StatusListChanged();
         target.ActorControl.LoseEffect(StatusId, Stacks, SourceObject);
     }
 }

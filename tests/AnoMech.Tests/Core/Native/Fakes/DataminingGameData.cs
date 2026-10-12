@@ -64,10 +64,8 @@ internal sealed class DataminingGameData(FakeRsvFunctions rsv) : IGameData
 
     public StatusRow? Status(ushort statusId)
         => Statuses.Value.Row(statusId) is { } row
-            ? new StatusRow(statusId, row.Bool("LockMovement"), row.Bool("LockActions"), row.Bool("LockControl"))
+            ? new StatusRow(statusId, Resolve(row.Text("Name")) ?? "", row.Bool("LockMovement"), row.Bool("LockActions"), row.Bool("LockControl"))
             : null;
-
-    public string? StatusName(ushort statusId) => NonEmpty(Resolve(Statuses.Value.Row(statusId)?.Text("Name")));
 
     public string? BNpcName(uint nameId) => NonEmpty(Resolve(BNpcNames.Value.Row(nameId)?.Text("Singular")));
 

@@ -22,7 +22,7 @@ internal static class DamageCheck
     }
 
     private static string? MissingProtection(VulnSpec spec)
-        => spec.Protections.Count > 0 ? $"no {StatusLookup.Name(spec.Protections[0])}" : null;
+        => spec.Protections.Count > 0 ? $"no {Natives.Data.StatusName(spec.Protections[0])}" : null;
 
     public static bool IsTank(SimCharacter target) => target is ISimPartyMember { Role: PartyRole.OffTank or PartyRole.MainTank };
 

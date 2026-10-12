@@ -163,7 +163,7 @@ public sealed partial class MultiplayerManager
                 newVfx,
                 enemy.HasEngineState
                     ? new ActorEngineState(
-                        enemy.ModelHidden, enemy.LastMode?.Mode ?? 0, enemy.LastMode?.Param ?? 0, enemy.ModeSeq,
+                        enemy.LastMode?.Mode ?? 0, enemy.LastMode?.Param ?? 0, enemy.ModeSeq,
                         enemy.TimelineHoldState, enemy.TimelineHoldId, enemy.TimelineHoldSeq,
                         enemy.DirectTimelineId, enemy.DirectTimelineSeq, enemy.ForceLoadTimelineSeq)
                     : null,
