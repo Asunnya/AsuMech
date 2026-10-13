@@ -396,6 +396,7 @@ public sealed class DsrP2ThordanScenario : IScenario
         var helper = world.SpawnEnemy(new EnemySpawnConfig(
             BNpcBaseId: BNpcBaseId.Dummy,
             NameId: nameId,
+            Visibility: SpawnVisibility.InvisibleHelper,
             Level: Level,
             Targetable: false,
             EnemyList: EnemyListMode.Never,
@@ -412,7 +413,7 @@ public sealed class DsrP2ThordanScenario : IScenario
             Targetable: false,
             EnemyList: EnemyListMode.Never,
             Placement: FacingCentre(AtBearing(bearing, radius)),
-            IsVisible: visible,
+            Visibility: SimEnemy.LegacyVisibility(false, visible),
             NpcSpawnTemplate: DsrNpcSpawn.Build(baseId, nameId, 1)));
 
     private void OnPlayerAction(ActionType actionType, uint actionId, ulong targetId)
@@ -461,7 +462,6 @@ public sealed class DsrP2ThordanScenario : IScenario
             Targetable: false,
             EnemyList: EnemyListMode.Always,
             Placement: new Placement(Vector3.Zero, 0f),
-            HitboxRadius: ThordanHitboxRadius,
             NpcSpawnTemplate: DsrNpcSpawn.Build(BNpcBaseId.Thordan, BNpcNameId.Thordan, ThordanMaxHp)));
     }
 
@@ -644,7 +644,7 @@ public sealed class DsrP2ThordanScenario : IScenario
     private void MarkDefamations()
     {
         foreach (var role in state.Defamations)
-            party.Get(role)?.AttachLockonVfx(LockonId.SkywardLeap, 9.1f, persistent: false);
+            party.Get(role)?.AttachLockonVfx(LockonId.SkywardLeap);
     }
 
     private void ThordanLeapsToWall()
@@ -907,8 +907,8 @@ public sealed class DsrP2ThordanScenario : IScenario
 
     private void MarkPlungeTargets()
     {
-        party.Get(state.FirstPlungeTarget)?.AttachLockonVfx(LockonId.OneSword, 8.1f, persistent: false);
-        party.Get(state.SecondPlungeTarget)?.AttachLockonVfx(LockonId.TwoSwords, 13.5f, persistent: false);
+        party.Get(state.FirstPlungeTarget)?.AttachLockonVfx(LockonId.OneSword);
+        party.Get(state.SecondPlungeTarget)?.AttachLockonVfx(LockonId.TwoSwords);
     }
 
     // Shared proximity damage on the marked player's light party.
@@ -1046,7 +1046,7 @@ public sealed class DsrP2ThordanScenario : IScenario
     {
         foreach (var role in state.MeteorTargets)
         {
-            party.Get(role)?.AttachLockonVfx(LockonId.MeteorPrey, 12f, persistent: false);
+            party.Get(role)?.AttachLockonVfx(LockonId.MeteorPrey);
             party.Get(role)?.AddStatus(StatusId.Prey, PreySeconds);
         }
     }

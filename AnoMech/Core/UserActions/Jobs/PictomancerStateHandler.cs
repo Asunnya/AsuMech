@@ -1,3 +1,4 @@
+using AnoMech.Core.Native.Implementations;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Gauge;
 
@@ -17,7 +18,8 @@ internal sealed unsafe class PictomancerStateHandler : IUserActionHandler
     {
         if (actionType != ActionType.Action) return;
         if (PlayerJob.Current != JobId.Pictomancer) return;
-        var jgm = JobGaugeManager.Instance();
+        using var edit = JobGaugeEdit.Begin();
+        var jgm = edit.Gauge;
         if (jgm == null) return;
         ref var g = ref jgm->Pictomancer;
 

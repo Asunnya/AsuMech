@@ -103,7 +103,6 @@ public sealed class M9sAetherlettingScenario : IScenario
             Level: 100,
             Targetable: true,
             EnemyList: EnemyListMode.Always,
-            IsVisible: true,
             Placement: new Placement(Vector3.Zero, MathF.PI)));
         state.Satisfied.Attach(vamp);
     }
@@ -116,7 +115,6 @@ public sealed class M9sAetherlettingScenario : IScenario
             Targetable: false,
             EnemyList: EnemyListMode.Never,
             // Drawn so its action timelines play; the helper's ModelChara has no mesh.
-            IsVisible: true,
             Placement: placement));
         if (helper != null) helpers.Add(helper);
         return helper;
@@ -161,7 +159,7 @@ public sealed class M9sAetherlettingScenario : IScenario
         foreach (var role in state.SpreadPairs[pair])
         {
             if (world.Party.Get(role) is not { } target || !target.IsAlive()) continue;
-            target.AttachLockonVfx(LockonId.Aetherletting, persistent: false);
+            target.AttachLockonVfx(LockonId.Aetherletting);
             SpawnHelper(new Placement(Vector3.Zero, 0f))?.LegacyCast(ActionId.AetherlettingSpread, castSeconds: 4.7f, target: target);
         }
     }

@@ -2,6 +2,7 @@ using System;
 using System.Numerics;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Party;
+using AnoMech.Core.Native.Interfaces;
 
 namespace AnoMech.Core.SimObjects;
 
@@ -17,14 +18,11 @@ public interface ISimPartyMember : ISimObject, IPositioned
 {
     PartyRole Role { get; set;}
 
-    // KO state. Set by the implementer's OnKilled; the member stays present
-    // (IsActive) but lies on the floor. Implementers reset it on revive.
+    // KO: the member stays present (IsActive) but lies on the floor.
     bool Dead { get; }
 
-    // Per-subclass effect of dying — flips Dead, then applies the visual/gameplay
-    // KO. Game.Kill calls this (outside godmode). SimPartyNpc sets HP=0 + plays the
-    // KO timeline; SimPlayer kicks the input-lockout hooks + KO pose.
-    void OnKilled();
+    // Game.Kill calls this outside godmode. byEnvironment: no action dealt the death.
+    void OnKilled(bool byEnvironment);
 
     // Default knockback speed (yalms/sec) when the caller doesn't know the
     // specific action — matches the FFXIV Knockback sheet's most common Speed
@@ -52,7 +50,7 @@ public interface ISimPartyMember : ISimObject, IPositioned
     void TeleportTo(Placement placement) => ((SimCharacter)this).SetPosition(placement);
 
     // SimNetworkPuppet hands it to the owning peer.
-    void CarryTo(Vector3 destination, CarryMode mode = CarryMode.Native);
+    void CarryTo(Vector3 destination);
 
     // A no-op for humans, who press their own Sprint; only bots cast, including a debug bot in the
     // local player's seat.
@@ -65,14 +63,10 @@ public interface ISimPartyMember : ISimObject, IPositioned
 // ISimPartyMember concept for party members and to plain presence otherwise.
 public static class SimCharacterDeathExtensions
 {
-    // Public so SimAssets harvests them: the KO pose rides on RoleState to peers.
-    public const ushort KoTimelineId = 72;
-    public const ushort KoLoopTimelineId = 73;
-
-    // A party member is alive while not KO'd; any other character is alive while
-    // present. Null is not alive.
+    // A party member is alive while not KO'd, an enemy until defeated; any other character
+    // is alive while present. Null is not alive.
     public static bool IsAlive(this SimCharacter? c)
-        => c is { IsActive: true } and not ISimPartyMember { Dead: true };
+        => c is { IsActive: true, Dead: false };
 
     // A death no action deals (the arena wall, an uncleansed debuff): Die's explanation is then the whole message.
     public const uint Environment = 0;
@@ -87,7 +81,7 @@ public static class SimCharacterDeathExtensions
         // The message is the action's name, with `explanation` after it in parentheses.
         public bool Die(uint actionId, string? explanation = null)
         {
-            var name = actionId == Environment ? null : ActionLookup.Name(actionId);
+            var name = actionId == Environment ? null : Natives.Data.ActionName(actionId);
             var message = name is null ? explanation ?? "" : explanation is null ? name : $"{name} ({explanation})";
             return Kill(c, message, actionId);
         }
@@ -95,11 +89,6 @@ public static class SimCharacterDeathExtensions
         // Names no action, so nothing downstream can tell which mechanic it was.
         [Obsolete("Name the action: Die(actionId, explanation).")]
         public bool Die(string cause) => Kill(c, cause, null);
-
-        public void PlayKoActionTimeline()
-        {
-            c.PlayActionTimeline(KoTimelineId, KoLoopTimelineId);
-        }
     }
 
     private static bool Kill(SimCharacter c, string cause, uint? actionId)

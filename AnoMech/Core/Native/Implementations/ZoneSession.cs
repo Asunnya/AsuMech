@@ -673,7 +673,7 @@ public sealed unsafe partial class ZoneSession : IZoneSession, IDisposable
                 uiState->DirectorTodo.IsShown = false;
             }
 
-            EventFrameworkPointers.TerminateDirector(eventFramework, 0x80030000 + loadedInstanceContent.Value);
+            SendDirectorControl(DirectorClearCategory, InstanceContentDirectorBase + loadedInstanceContent.Value);
             loadedInstanceContent = null;
 
             ResetSync(uiState, player, classJobId);
@@ -695,7 +695,7 @@ public sealed unsafe partial class ZoneSession : IZoneSession, IDisposable
             var contentId = cfc.Content.RowId;
             Plugin.Log.Information($"[ZoneSession] ContentId={contentId}");
 
-            EventFrameworkPointers.InitDirector(eventFramework, 0x80030000 + contentId, contentId, 0);
+            SendDirectorControl(DirectorInitCategory, InstanceContentDirectorBase + contentId, contentId);
 
             loadedInstanceContent = contentId;
             InstanceContentDirectorHelper.SetDutyData(cfc);
@@ -722,6 +722,14 @@ public sealed unsafe partial class ZoneSession : IZoneSession, IDisposable
         Plugin.Log.Information("[ZoneSession] LoadZone complete");
         completedLoad = territory;
     }
+
+    // ActorControlSelf, as the server sends them: 0x64 p1 director id, p2 InstanceContent row; 0x65 p1 director id.
+    private const uint DirectorInitCategory = 0x64;
+    private const uint DirectorClearCategory = 0x65;
+    private const uint InstanceContentDirectorBase = 0x80030000;
+
+    private static void SendDirectorControl(uint category, uint directorId, uint contentId = 0)
+        => PacketDispatcher.HandleActorControlPacket(Plugin.ObjectTable.LocalPlayer!.EntityId, category, directorId, contentId, 0, 0, 0, 0, 0, 0, 0xE0000000, false);
 
     private void SetLocalPlayerPosition(Vector3 position, float? rotation = null)
     {

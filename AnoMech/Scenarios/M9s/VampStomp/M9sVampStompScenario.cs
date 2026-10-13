@@ -102,7 +102,6 @@ public sealed class M9sVampStompScenario : IScenario
             Level: 100,
             Targetable: true,
             EnemyList: EnemyListMode.Always,
-            IsVisible: true,
             Placement: new Placement(new Vector3(0f, 0f, -10f), 0f)));
         state.Satisfied.Attach(vamp);
     }
@@ -115,7 +114,6 @@ public sealed class M9sVampStompScenario : IScenario
             Targetable: false,
             EnemyList: EnemyListMode.Never,
             // Drawn so its action timelines play; the helper's ModelChara has no mesh.
-            IsVisible: true,
             Placement: new Placement(position, 0f)));
         if (helper != null) helpers.Add(helper);
         return helper;
@@ -127,7 +125,7 @@ public sealed class M9sVampStompScenario : IScenario
     private void MarkBrutalRain()
     {
         brutalRainHits = state.Satisfied.BrutalRainHits;
-        BrutalRainTarget()?.AttachLockonVfx(LockonId.ShareMulti, persistent: false);
+        BrutalRainTarget()?.AttachLockonVfx(LockonId.ShareMulti);
     }
 
     // A fresh helper per hit: one helper can't start a second cast while the first is still releasing.

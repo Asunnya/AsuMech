@@ -8,12 +8,21 @@ namespace AnoMech.Core.UserActions;
 // what it needs. Handlers are stored and dispatched as a list by UserActions.
 internal interface IUserActionHandler
 {
-    // A player action executed. UserActions dedupes this to once per actual execution
-    // (a queued/spammed press or our own re-entrant fire won't call it again).
+    // Off, the handler is skipped while the module is disabled.
+    bool RunsWhenDisabled => false;
+
+    // A player action resolved: at once for an instant action, when the cast bar completes
+    // for a hard cast. UserActions dedupes this to once per actual execution (a
+    // queued/spammed press or our own re-entrant fire won't call it again).
     void OnAction(ActionType actionType, uint actionId) { }
 
     // Same, for a handler that needs who the action was aimed at.
     void OnAction(ActionType actionType, uint actionId, ulong targetId) => OnAction(actionType, actionId);
+
+    // A player action began a cast bar; OnAction follows if it completes, OnCastInterrupted if not.
+    void OnCastStart(ActionType actionType, uint actionId) { }
+
+    void OnCastInterrupted(ActionType actionType, uint actionId) { }
 
     // A scenario started — reset cooldowns/gauges the server would otherwise track.
     void OnScenarioStart() { }

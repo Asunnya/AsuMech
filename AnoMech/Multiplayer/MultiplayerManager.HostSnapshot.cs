@@ -64,7 +64,7 @@ public sealed partial class MultiplayerManager
             }
             if (puppet.PendingNetworkCarry is { } carry)
             {
-                _ = relay!.SendAsync(new CarryMessage(role, carry.Destination.X, carry.Destination.Y, carry.Destination.Z, (int)carry.Mode));
+                _ = relay!.SendAsync(new CarryMessage(role, carry.X, carry.Y, carry.Z));
                 puppet.ClearPendingNetworkCarry();
             }
         }
@@ -88,7 +88,7 @@ public sealed partial class MultiplayerManager
             {
                 netId = nextEnemyNetId++;
                 hostEnemyNetIds[enemy] = netId;
-                DiagnosticLog.Info($"[Multiplayer] Host: broadcasting new enemy NetId {netId} -- BNpcBase {enemy.BNpcBaseId}, pos {enemy.Position}, visible {enemy.Visible}.");
+                DiagnosticLog.Info($"[Multiplayer] Host: broadcasting new enemy NetId {netId} -- BNpcBase {enemy.BNpcBaseId}, pos {enemy.Position}, visibility {enemy.SpawnConfig.Visibility}.");
             }
             var cfg = enemy.SpawnConfig;
             var modelState = enemy.ModelState;
@@ -116,7 +116,7 @@ public sealed partial class MultiplayerManager
                 && (!hostEnemyLastLoggedAnimationState.TryGetValue(enemy, out var lastStateSeq) || lastStateSeq != enemy.AnimationStateSeq))
             {
                 hostEnemyLastLoggedAnimationState[enemy] = enemy.AnimationStateSeq;
-                DiagnosticLog.Info($"[Multiplayer] Host: enemy NetId {netId} (BNpcBase {enemy.BNpcBaseId}) AnimationState -> ({animState.Arg2},{animState.Arg3}) (seq {enemy.AnimationStateSeq}).");
+                DiagnosticLog.Info($"[Multiplayer] Host: enemy NetId {netId} (BNpcBase {enemy.BNpcBaseId}) AnimationState -> ({animState.Slot},{animState.Value}) (seq {enemy.AnimationStateSeq}).");
             }
             var casting = enemy.Casting;
             // Pairs with the peer's line, so a missing effect narrows to the send or the receive.
@@ -146,10 +146,10 @@ public sealed partial class MultiplayerManager
                 SimAssets.WarnIfUnknownPath(path, "enemy persistent VFX");
             enemies.Add(new EnemyState(
                 netId, enemy.BNpcBaseId, cfg.NameId, cfg.Level, enemy.Targetable, enemy.EnemyListMode,
-                cfg.ModelCharaId, cfg.Scale, cfg.HitboxRadius, cfg.InitialModeAttributeFlags, enemy.Visible, modelState,
+                cfg.ModelCharaId, cfg.InitialModeAttributeFlags, cfg.Visibility, modelState,
                 enemy.ActiveStatuses.Where(s => !SimOnlyStatus.Is(s.StatusId)).Select(s => new EnemyStatusState(s.StatusId, s.Stacks, s.RemainingTime, s.Instance)).ToList(),
                 enemy.AnimationTimelineId, enemy.AnimationTimelineSeq, newLockonVfxIds,
-                enemy.AnimationState?.Arg2, enemy.AnimationState?.Arg3, enemy.AnimationStateSeq,
+                enemy.AnimationState?.Slot, enemy.AnimationState?.Value, enemy.AnimationStateSeq,
                 enemy.Position.X, enemy.Position.Y, enemy.Position.Z, enemy.Rotation,
                 casting.IsCasting, casting.CastSeq, casting.ActionId, casting.Total, casting.OmenDelay, casting.Rotation,
                 casting.TargetLocation?.X, casting.TargetLocation?.Y, casting.TargetLocation?.Z,
@@ -163,7 +163,7 @@ public sealed partial class MultiplayerManager
                 newVfx,
                 enemy.HasEngineState
                     ? new ActorEngineState(
-                        enemy.ModelHidden, enemy.LastMode?.Mode ?? 0, enemy.LastMode?.Param ?? 0, enemy.ModeSeq,
+                        enemy.LastMode?.Mode ?? 0, enemy.LastMode?.Param ?? 0, enemy.ModeSeq,
                         enemy.TimelineHoldState, enemy.TimelineHoldId, enemy.TimelineHoldSeq,
                         enemy.DirectTimelineId, enemy.DirectTimelineSeq, enemy.ForceLoadTimelineSeq)
                     : null,
@@ -293,9 +293,8 @@ public sealed partial class MultiplayerManager
                     && (!hostRoleLastLoggedAnimationTimeline.TryGetValue(role, out var lastSeq) || lastSeq != member.AnimationTimelineSeq))
                 {
                     hostRoleLastLoggedAnimationTimeline[role] = member.AnimationTimelineSeq;
-                    DiagnosticLog.Info($"[Multiplayer] Host: role {role} AnimationTimelineId -> {roleTimelineId} (loop {member.AnimationTimelineLoopId}, seq {member.AnimationTimelineSeq}).");
-                    if (roleTimelineId != 0) SimAssets.WarnIfUnknown(SimAssetKind.Timeline, roleTimelineId, "role timeline");
-                    SimAssets.WarnIfUnknown(SimAssetKind.Timeline, member.AnimationTimelineLoopId, "role loop timeline");
+                    DiagnosticLog.Info($"[Multiplayer] Host: role {role} AnimationTimelineId -> {roleTimelineId} (seq {member.AnimationTimelineSeq}).");
+                    SimAssets.WarnIfUnknown(SimAssetKind.Timeline, roleTimelineId, "role timeline");
                 }
                 foreach (var lockon in newLockonVfxIds)
                     SimAssets.WarnIfUnknown(SimAssetKind.Lockon, lockon, "role lockon");
@@ -310,7 +309,7 @@ public sealed partial class MultiplayerManager
             roles.Add(new RoleState(role, member != null, dead,
                 member?.Position.X ?? 0f, member?.Position.Y ?? 0f, member?.Position.Z ?? 0f, member?.Rotation ?? 0f,
                 statuses, newLockonVfxIds, currentHp, maxHp,
-                member?.AnimationTimelineId, member?.AnimationTimelineLoopId ?? 0, member?.AnimationTimelineSeq ?? 0, newVfx,
+                member?.AnimationTimelineId, member?.AnimationTimelineSeq ?? 0, newVfx,
                 PersistentVfxForPeers(member, $"role {role}"),
                 (member as SimNpc)?.PlayedActionId ?? 0, (member as SimNpc)?.PlayedActionAnimationLock ?? 0.6f,
                 (member as SimNpc)?.PlayedActionSeq ?? 0));

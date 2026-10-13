@@ -12,6 +12,7 @@ using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Windowing;
 using AnoMech.Core;
 using AnoMech.Core.Game;
+using AnoMech.Core.Native.Interfaces;
 using AnoMech.Core.SimObjects;
 using AnoMech.Scenarios.Top;
 
@@ -191,14 +192,14 @@ internal sealed class DamageDebugWindow : Window, IDisposable
             AoeQuery? query = lastRecordedQuery;
             if (query is { } q)
             {
-                var name = ActionLookup.Name(q.ActionId);
+                var name = Natives.Data.ActionName(q.ActionId);
                 var actionSheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.Sheets.Action>();
                 sb.AppendLine($"Most recent AOE -- Action: {q.ActionId} (0x{q.ActionId:X}) \"{name}\"");
                 if (actionSheet.TryGetRow(q.ActionId, out var action))
                     sb.AppendLine($"  CastType={action.CastType}  EffectRange={action.EffectRange}  XAxisModifier={action.XAxisModifier}");
                 else
                     sb.AppendLine("  (row not found in Action sheet)");
-                sb.AppendLine($"  OmenRotate={q.OmenRotate:F3}  SizeOverride={(q.Size is { } sz ? sz.ToString("F3") : "(none)")}  CastTypeOverride={(q.CastType is { } ct ? ct.ToString() : "(none)")}");
+                sb.AppendLine($"  OmenRotate={q.OmenRotate:F3}  SizeOverride={(q.Size is { } sz ? sz.ToString("F3") : "(none)")}  CastTypeOverride={(q.CastTypeOverride is { } ct ? ct.ToString() : "(none)")}");
                 sb.AppendLine();
 
                 var src = q.Source;

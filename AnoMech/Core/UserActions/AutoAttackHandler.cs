@@ -6,6 +6,7 @@ using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using Lumina.Excel.Sheets;
 using AnoMech.Core.Native.Implementations.Interop;
+using AnoMech.Core.Native.Interfaces;
 
 namespace AnoMech.Core.UserActions;
 
@@ -37,8 +38,9 @@ internal sealed unsafe class AutoAttackHandler : IUserActionHandler
     {
         if (swingCooldown > 0f) swingCooldown -= deltaSeconds;
         if (swingCooldown > 0f) return;
-        if (!UIState.Instance()->WeaponState.AutoAttackState.IsAutoAttacking) return;
-        if (Plugin.GameInstance is not { } game || game.Player is not { Dead: false }) return;
+        if (!Natives.PlayerInput.IsAutoAttacking) return;
+        // Stun and death only hold the swing; autos stay on.
+        if (Plugin.GameInstance is not { } game || game.Player is not { Dead: false, ActionsLocked: false }) return;
 
         var player = (BattleChara*)(Plugin.ObjectTable.LocalPlayer?.Address ?? 0);
         if (player == null || player->CastInfo.IsCasting) return;
@@ -48,10 +50,20 @@ internal sealed unsafe class AutoAttackHandler : IUserActionHandler
         if (!InReach(player, enemy, ReachOf(job))) return;
 
         var actionId = ActionIdOf(job);
-        var variation = (byte)(swingCount++ % 3);
         swingCooldown = WeaponDelay();
-        ActionEffects.FireAutoAttack((Character*)player, actionId, enemy.GameObjectId, variation);
+        Swing(actionId, enemy);
         JobActions.ApplyAutoAttack(game.Player, actionId, enemy.GameObjectId, rng);
+    }
+
+    // Shaped like the server's: no source sequence (it swings on its own timer), a 0.1s lock and
+    // the variation cycling 0-2.
+    private void Swing(uint actionId, SimEnemy enemy)
+    {
+        var player = BattleCharaProxy.LocalPlayer;
+        player.ReceiveActionEffect(new ActionEffectData(
+            actionId, ActionType.Action, 0.1f, (ushort)actionId, (byte)(swingCount++ % 3), 0, player.Rotation, player.Position,
+            AnimationTarget: enemy.GameObjectId,
+            Targets: [new ActionEffectTarget(enemy.GameObjectId)]));
     }
 
     // The swing is delivered to the enemy, so it must resolve through CharacterManager.

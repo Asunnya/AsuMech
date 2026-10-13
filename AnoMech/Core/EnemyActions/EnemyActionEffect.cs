@@ -1,21 +1,35 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using AnoMech.Core.Native.Interfaces;
 using AnoMech.Core.SimObjects;
 
 namespace AnoMech.Core.EnemyActions;
 
-// Applied to the characters an action hit (EnemyActionContext.Hits), after the area decided who
-// they are. Effects run in list order: one listed after a Damage sees who that damage killed.
+// Applied to `hits`: those the area caught (EnemyActionContext.Hits), narrowed by any filter
+// wrapping the effect. Effects run in list order: one listed after a Damage sees who that damage killed.
+// This model is very rough approximation on what could be happening on server,
+// and is candidate for rework should we want to extend this further.
 public interface IEnemyActionEffect
 {
-    void Apply(EnemyActionContext ctx);
+    void Apply(EnemyActionContext ctx, IReadOnlyList<SimCharacter> hits);
 }
 
 // Authoring helpers: `using static AnoMech.Core.EnemyActions.EnemyActionEffects;`.
 public static class EnemyActionEffects
 {
-    public static IEnemyActionEffect Damage(DamageSpec spec, Severity? severity = null, Distribution? split = null)
-        => new DamageEffect(spec, severity ?? Severity.Normal, split ?? Distribution.Each);
+    // The damage kind comes from the Action sheet's AttackType; override it only where the game's
+    // own hit carries a different one.
+    public static IEnemyActionEffect Damage(Severity? severity = null, Distribution? split = null, DamageKind? kindOverride = null)
+        => Damage(VulnSpec.None, severity, split, kindOverride);
+
+    public static IEnemyActionEffect Damage(VulnSpec vulns, Severity? severity = null, Distribution? split = null, DamageKind? kindOverride = null)
+        => new DamageEffect(vulns, severity ?? Severity.Normal, split ?? Distribution.Each, kindOverride);
+
+    public static VulnSpec VulnerableTo(ushort statusId, float? requiredMitigation = null, int minStacks = 1)
+        => VulnSpec.None.VulnerableTo(statusId, requiredMitigation, minStacks);
+
+    public static VulnSpec ProtectedBy(ushort statusId) => VulnSpec.None.ProtectedBy(statusId);
 
     // Survivors only.
     public static IEnemyActionEffect ApplyStatus(ushort statusId, float duration) => new ApplyStatusEffect(statusId, duration);
@@ -35,10 +49,10 @@ public static class EnemyActionEffects
     public static IEnemyActionEffect FollowUp(EnemyAction followUp, Func<EnemyActionContext, bool> when)
         => new FollowUpEffect(followUp, when);
 
-    // Away from the caster, by a Knockback sheet row. Survivors only. `knockbackDelay` is from
-    // resolve; null = TimingSpec.DamageDelay.
+    // Away from the caster, by a Knockback sheet row. Survivors only.
+    // `knockbackDelay` is from resolve and used only for bots; null = TimingSpec.DamageDelay.
     public static IEnemyActionEffect Knockback(uint knockbackId, float? knockbackDelay = null)
-        => new KnockbackEffect((_, _) => KnockbackLookup.TryGet(knockbackId, out var distance, out var speed) ? (distance, speed) : null, knockbackDelay);
+        => new KnockbackEffect((_, _) => Natives.Data.Knockback(knockbackId) is { } kb ? (kb.Distance, kb.Speed) : null, knockbackDelay, knockbackId);
 
     // Away from the caster, for an action with no known Knockback row. Survivors only.
     public static IEnemyActionEffect Knockback(float distance, float speed, float? knockbackDelay = null)
@@ -53,51 +67,50 @@ public static class EnemyActionEffects
     // whoever has it in their back 90° arc.
     public static IEnemyActionEffect Gaze(bool lookAway) => new GazeEffect(lookAway);
 
+    // The caster dies by this action (a self-destruct). Its death animation waits for
+    // CastSpec.AnimationLock, so set that from a replay.
+    public static IEnemyActionEffect DefeatCaster() => new DefeatCasterEffect();
+
     // `effect` applied to the cast's target alone, when the area caught it.
-    public static IEnemyActionEffect OnTarget(IEnemyActionEffect effect) => new FilteredEffect(effect, castTarget: true);
+    public static IEnemyActionEffect OnTarget(IEnemyActionEffect effect)
+        => new FilteredEffect(effect, (ctx, hits) => hits.Where(t => ReferenceEquals(t, ctx.Target)));
 
     // `effect` applied to everyone hit but the cast's target.
-    public static IEnemyActionEffect OnOthers(IEnemyActionEffect effect) => new FilteredEffect(effect, castTarget: false);
+    public static IEnemyActionEffect OnOthers(IEnemyActionEffect effect)
+        => new FilteredEffect(effect, (ctx, hits) => hits.Where(t => !ReferenceEquals(t, ctx.Target)));
+
+    // `effect` applied to those hit who carry `statusId` when it runs.
+    public static IEnemyActionEffect OnHavingStatus(ushort statusId, IEnemyActionEffect effect)
+        => new FilteredEffect(effect, (_, hits) => hits.Where(t => t.HasStatus(statusId)));
 
     // `effect` applied to the `count` hit nearest the origin (the front of a wild charge).
-    public static IEnemyActionEffect OnFront(int count, IEnemyActionEffect effect) => new FrontEffect(effect, count);
+    public static IEnemyActionEffect OnFront(int count, IEnemyActionEffect effect)
+        => new FilteredEffect(effect, (_, hits) => hits.Take(count));
 }
 
-internal sealed class FrontEffect(IEnemyActionEffect effect, int count) : IEnemyActionEffect
+internal sealed class DefeatCasterEffect : IEnemyActionEffect
 {
-    public void Apply(EnemyActionContext ctx)
-    {
-        var hits = ctx.Hits;
-        ctx.Hits = hits.Take(count).ToList();
-        try { effect.Apply(ctx); }
-        finally { ctx.Hits = hits; }
-    }
+    public void Apply(EnemyActionContext ctx, IReadOnlyList<SimCharacter> hits) => ctx.Caster.DefeatByOwnAction(ctx.Action);
 }
 
-internal sealed class FilteredEffect(IEnemyActionEffect effect, bool castTarget) : IEnemyActionEffect
+internal sealed class FilteredEffect(IEnemyActionEffect effect, Func<EnemyActionContext, IReadOnlyList<SimCharacter>, IEnumerable<SimCharacter>> select) : IEnemyActionEffect
 {
-    public void Apply(EnemyActionContext ctx)
-    {
-        var hits = ctx.Hits;
-        ctx.Hits = hits.Where(t => ReferenceEquals(t, ctx.Target) == castTarget).ToList();
-        try { effect.Apply(ctx); }
-        finally { ctx.Hits = hits; }
-    }
+    public void Apply(EnemyActionContext ctx, IReadOnlyList<SimCharacter> hits) => effect.Apply(ctx, select(ctx, hits).ToList());
 }
 
 // A hit on someone an earlier hit already kills still shows its own number.
-internal sealed class DamageEffect(DamageSpec spec, Severity severity, Distribution split) : IEnemyActionEffect
+internal sealed class DamageEffect(VulnSpec vulns, Severity severity, Distribution split, DamageKind? kindOverride) : IEnemyActionEffect
 {
-    public void Apply(EnemyActionContext ctx)
+    public void Apply(EnemyActionContext ctx, IReadOnlyList<SimCharacter> hits)
     {
-        for (var i = 0; i < ctx.Hits.Count; i++)
+        var kind = kindOverride ?? DamageKinds.FromAttackType(Natives.Data.Action(ctx.Action.ActionId)?.AttackType ?? 0);
+        for (var i = 0; i < hits.Count; i++)
         {
-            var target = ctx.Hits[i];
-            var (hit, reason) = split.Assign(ctx, i, target);
-            var hitSpec = hit?.Spec ?? spec;
+            var target = hits[i];
+            var (hit, reason) = split.Assign(ctx, hits, i, target);
             var hitSeverity = hit?.Severity ?? severity;
-            var cause = DamageCheck.LethalCause(target, hitSpec, hitSeverity, ctx.Party);
-            ctx.ShowDamage(target, hitSeverity.FlyTextAmount(kills: cause != null), hitSpec.Icon);
+            var cause = DamageCheck.LethalCause(target, hit?.Vulns ?? vulns, hitSeverity, kind, ctx.Party);
+            ctx.ShowDamage(target, hitSeverity.FlyTextAmount(kills: cause != null), kind);
             if (cause != null) ctx.Kill(target, Explain(reason, cause));
         }
     }
@@ -109,19 +122,19 @@ internal sealed class DamageEffect(DamageSpec spec, Severity severity, Distribut
 
 internal sealed class ApplyStatusEffect(ushort statusId, float duration) : IEnemyActionEffect
 {
-    public void Apply(EnemyActionContext ctx)
+    public void Apply(EnemyActionContext ctx, IReadOnlyList<SimCharacter> hits)
     {
-        foreach (var target in ctx.Hits)
+        foreach (var target in hits)
             if (!ctx.IsKilled(target) && target.IsAlive())
-                target.AddStatus(statusId, duration);
+                ctx.AddStatus(target, statusId, duration);
     }
 }
 
 internal sealed class RemoveStatusEffect(ushort statusId) : IEnemyActionEffect
 {
-    public void Apply(EnemyActionContext ctx)
+    public void Apply(EnemyActionContext ctx, IReadOnlyList<SimCharacter> hits)
     {
-        foreach (var target in ctx.Hits)
+        foreach (var target in hits)
             if (!ctx.IsKilled(target) && target.IsAlive())
                 target.RemoveStatus(statusId);
     }
@@ -129,51 +142,57 @@ internal sealed class RemoveStatusEffect(ushort statusId) : IEnemyActionEffect
 
 internal sealed class ApplyRuinEffect(RuinSpec ruin, ushort statusId, int times, float duration) : IEnemyActionEffect
 {
-    public void Apply(EnemyActionContext ctx)
+    public void Apply(EnemyActionContext ctx, IReadOnlyList<SimCharacter> hits)
     {
-        foreach (var target in ctx.Hits)
+        foreach (var target in hits)
         {
             if (ctx.IsKilled(target) || !target.IsAlive()) continue;
             if (ruin.Overloads(target, times))
-                ctx.Kill(target, $"{StatusLookup.Name(statusId)} overload");
+                ctx.Kill(target, $"{Natives.Data.StatusName(statusId)} overload");
             else
-                target.AddStatus(statusId, duration);
+                ctx.AddStatus(target, statusId, duration);
         }
     }
 }
 
 internal sealed class ApplyStatusOrOverloadEffect(ushort statusId, int maxStacks, float duration) : IEnemyActionEffect
 {
-    public void Apply(EnemyActionContext ctx)
+    public void Apply(EnemyActionContext ctx, IReadOnlyList<SimCharacter> hits)
     {
-        foreach (var target in ctx.Hits)
+        foreach (var target in hits)
         {
             if (ctx.IsKilled(target) || !target.IsAlive()) continue;
             if (target.FindStatus(statusId) is { } status && status.Stacks >= maxStacks)
-                ctx.Kill(target, $"already at {maxStacks} {StatusLookup.Name(statusId)}");
+                ctx.Kill(target, $"already at {maxStacks} {Natives.Data.StatusName(statusId)}");
             else
-                target.AddStatus(statusId, duration);
+                ctx.AddStatus(target, statusId, duration);
         }
     }
 }
 
 internal sealed class GazeEffect(bool lookAway) : IEnemyActionEffect
 {
-    public void Apply(EnemyActionContext ctx)
+    public void Apply(EnemyActionContext ctx, IReadOnlyList<SimCharacter> hits)
     {
         var from = ctx.Origin.Position;
-        foreach (var target in ctx.Hits)
+        var kind = DamageKinds.FromAttackType(Natives.Data.Action(ctx.Action.ActionId)?.AttackType ?? 0);
+        foreach (var target in hits)
         {
             var facing = target.Placement();
             if (lookAway ? facing.IsLookingAt(from) : facing.IsLookingAwayFrom(from))
+            {
+                ctx.ShowDamage(target, Severity.Lethal.FlyTextAmount(kills: true), kind);
                 ctx.Kill(target, lookAway ? "looked at the gaze" : "faced away from the gaze");
+            }
+            else
+                ctx.Dodge(target);
         }
     }
 }
 
 internal sealed class FollowUpEffect(EnemyAction followUp, Func<EnemyActionContext, bool> when) : IEnemyActionEffect
 {
-    public void Apply(EnemyActionContext ctx)
+    public void Apply(EnemyActionContext ctx, IReadOnlyList<SimCharacter> hits)
     {
         if (!when(ctx)) return;
         var caster = ctx.Caster;
@@ -181,15 +200,15 @@ internal sealed class FollowUpEffect(EnemyAction followUp, Func<EnemyActionConte
     }
 }
 
-internal sealed class KnockbackEffect(Func<EnemyActionContext, SimCharacter, (float Distance, float Speed)?> push, float? knockbackDelay) : IEnemyActionEffect
+internal sealed class KnockbackEffect(Func<EnemyActionContext, SimCharacter, (float Distance, float Speed)?> push, float? knockbackDelay, uint? knockbackRow = null) : IEnemyActionEffect
 {
-    public void Apply(EnemyActionContext ctx)
+    public void Apply(EnemyActionContext ctx, IReadOnlyList<SimCharacter> hits)
     {
-        foreach (var target in ctx.Hits)
+        foreach (var target in hits)
         {
             if (ctx.IsKilled(target) || !target.IsAlive() || target is not ISimPartyMember) continue;
             if (push(ctx, target) is { } p)
-                ctx.Knockback(target, ctx.Caster.Position, p.Distance, p.Speed, knockbackDelay);
+                ctx.Knockback(target, p.Distance, p.Speed, knockbackDelay, knockbackRow);
         }
     }
 }

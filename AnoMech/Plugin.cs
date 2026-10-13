@@ -36,12 +36,12 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IGameInteropProvider GameInterop { get; private set; } = null!;
     [PluginService] internal static IChatGui ChatGui { get; private set; } = null!;
     [PluginService] internal static IToastGui ToastGui { get; private set; } = null!;
-    [PluginService] internal static IFlyTextGui FlyText { get; private set; } = null!;
     [PluginService] internal static IPartyList PartyList { get; private set; } = null!;
     [PluginService] internal static IPluginLog Log { get; private set; } = null!;
     [PluginService] internal static IDutyState DutyState { get; private set; } = null!;
     [PluginService] internal static ICondition Condition { get; private set; } = null!;
     [PluginService] internal static IJobGauges JobGauges { get; private set; } = null!;
+    [PluginService] internal static IGameConfig GameConfig { get; private set; } = null!;
 
     private const string CommandName = "/anomech";
     private const string CommandAlias = "/ano";
@@ -74,7 +74,6 @@ public sealed class Plugin : IDalamudPlugin
     // The native implementations behind Natives that hold hooks or game state to hand back.
     private ZoneSession? zoneSession;
     private MapEffects? mapEffects;
-    private EnmityHud? enmityHud;
     private Bgm? bgm;
     private VfxSpawnLog? vfxSpawnLog;
     private OpcodeUpdater? opcodeUpdater;
@@ -143,7 +142,6 @@ public sealed class Plugin : IDalamudPlugin
             DutyState.DutyCompleted += OnDutyCompleted;
 
             // Initialize Pointers
-            CharacterManagerPointers.Initialize();
             EventFrameworkPointers.Initialize();
             EventObjectManagerPointers.Initialize();
             EventObjectPointers.Initialize();
@@ -151,9 +149,6 @@ public sealed class Plugin : IDalamudPlugin
             ModelContainerPointers.Initialize();
             PacketDispatcherPointers.Initialize();
             RsfPointers.Initialize();
-            StatusManagerPointers.Initialize();
-            TimelineContainerPointers.Initialize();
-            VfxContainerPointers.Initialize();
             VfxDataPointers.Initialize();
 
             Log.Information($"===A cool log message from {PluginInterface.Manifest.Name}===");
@@ -195,9 +190,8 @@ public sealed class Plugin : IDalamudPlugin
         Natives.Rsv = new RsvFunctions();
         Natives.Rsf = new RsfFunctions();
         Natives.PartyHud = new PartyHud();
-        Natives.EnmityHud = enmityHud = new EnmityHud();
+        Natives.HaterList = new HaterList();
         Natives.LimitBreak = new LimitBreakController();
-        Natives.Markings = new Markings();
         Natives.Waymarks = new Waymarks();
         Natives.Bgm = bgm = new Bgm();
         Natives.VfxSpawnLog = vfxSpawnLog = new VfxSpawnLog();
@@ -242,7 +236,6 @@ public sealed class Plugin : IDalamudPlugin
         Game?.Dispose();
         // After Game.Dispose, whose World teardown still writes through them.
         bgm?.Dispose();
-        enmityHud?.Dispose();
         mapEffects?.Dispose();
         zoneSession?.Dispose();
         opcodeUpdater?.Dispose();

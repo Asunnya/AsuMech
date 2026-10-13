@@ -95,7 +95,7 @@ public class UltimatePredationScenario : IMultiplayerReplayable
                     Level: 70,
                     Targetable: true,
                     EnemyList: EnemyListMode.Always,
-                    IsVisible: true,
+                    Visibility: SpawnVisibility.Visible,
                     Placement: new Placement(
                         new Vector3(0, 0, -10),
                         0),
@@ -109,7 +109,7 @@ public class UltimatePredationScenario : IMultiplayerReplayable
                     Level: 70,
                     Targetable: false,
                     EnemyList: EnemyListMode.Never,
-                    IsVisible: false,
+                    Visibility: SpawnVisibility.HiddenUntilShown,
                     Placement: new Placement(
                         new Vector3(0, 0, 0),
                         0))
@@ -122,7 +122,7 @@ public class UltimatePredationScenario : IMultiplayerReplayable
                     Level: 70,
                     Targetable: false,
                     EnemyList: EnemyListMode.Never,
-                    IsVisible: false,
+                    Visibility: SpawnVisibility.HiddenUntilShown,
                     Placement: new Placement(
                         new Vector3(0, 0, 0),
                         0))
@@ -135,16 +135,11 @@ public class UltimatePredationScenario : IMultiplayerReplayable
                     Level: 70,
                     Targetable: false,
                     EnemyList: EnemyListMode.Never,
-                    IsVisible: false,
+                    Visibility: SpawnVisibility.HiddenUntilShown,
                     Placement: new Placement(
                         new Vector3(0, 0, 0),
                         0))
             );
-
-            utils.Awaken(ultima, true);
-            utils.Awaken(garuda, false);
-            utils.Awaken(ifrit, false);
-            utils.Awaken(titan, false);
 
             state.ScenarioObjects.Titan = titan;
 
@@ -157,13 +152,22 @@ public class UltimatePredationScenario : IMultiplayerReplayable
                     Level: 70,
                     Targetable: false,
                     EnemyList: EnemyListMode.Never,
-                    IsVisible: true,
+                    Visibility: SpawnVisibility.InvisibleHelper,
                     Placement: new Placement(
                         new Vector3(0, 0, 0),
                         0)
                     )
                 );
             }
+        });
+
+        // Once the engine has created the actors; an ActorControl sent before that is dropped.
+        world.Events.Add(0.5f, () =>
+        {
+            utils.Awaken(ultima, true);
+            utils.Awaken(garuda, false);
+            utils.Awaken(ifrit, false);
+            utils.Awaken(titan, false);
         });
     }
 
@@ -324,7 +328,6 @@ public class UltimatePredationScenario : IMultiplayerReplayable
 
         world.Events.Add(12.28f, () =>
         {
-            garuda?.SetVisible(true);
             garuda?.PlayActionTimeline(ActionTimelineId.WarpEnd);
         });
 
@@ -373,7 +376,6 @@ public class UltimatePredationScenario : IMultiplayerReplayable
 
         world.Events.Add(12.28f, () =>
         {
-            ifrit?.SetVisible(true);
             ifrit?.PlayActionTimeline(ActionTimelineId.WarpEnd);
         });
 
@@ -435,7 +437,6 @@ public class UltimatePredationScenario : IMultiplayerReplayable
 
         world.Events.Add(12.28f, () =>
         {
-            titan?.SetVisible(true);
             titan?.PlayActionTimeline(ActionTimelineId.WarpEnd);
         });
 
@@ -475,12 +476,12 @@ public class UltimatePredationScenario : IMultiplayerReplayable
 
         var boulderPositions = state.BoulderPositions;
 
-        BombBoulder(52.70f, 53.19f, 55.34f, 58.99f, 60.37f, boulderPositions[0]);
-        BombBoulder(54.65f, 55.34f, 57.25f, 61.04f, 62.29f, boulderPositions[1]);
-        BombBoulder(56.75f, 57.25f, 59.24f, 62.99f, 64.17f, boulderPositions[2]);
-        BombBoulder(58.73f, 59.24f, 61.29f, 65.14f, 66.39f, boulderPositions[3]);
-        BombBoulder(60.62f, 61.29f, 63.24f, 67.11f, 68.39f, boulderPositions[4]);
-        BombBoulder(62.74f, 63.24f, 65.39f, 69.11f, 70.26f, boulderPositions[5]);
+        BombBoulder(52.70f, 53.19f, 55.34f, 58.99f, boulderPositions[0]);
+        BombBoulder(54.65f, 55.34f, 57.25f, 61.04f, boulderPositions[1]);
+        BombBoulder(56.75f, 57.25f, 59.24f, 62.99f, boulderPositions[2]);
+        BombBoulder(58.73f, 59.24f, 61.29f, 65.14f, boulderPositions[3]);
+        BombBoulder(60.62f, 61.29f, 63.24f, 67.11f, boulderPositions[4]);
+        BombBoulder(62.74f, 63.24f, 65.39f, 69.11f, boulderPositions[5]);
 
         world.Events.Add(54.45f, () =>
         {
@@ -520,7 +521,7 @@ public class UltimatePredationScenario : IMultiplayerReplayable
                     Level: 70,
                     Targetable: false,
                     EnemyList: EnemyListMode.Never,
-                    IsVisible: true,
+                    Visibility: SpawnVisibility.Visible,
                     Placement: placement)
             );
 
@@ -548,7 +549,7 @@ public class UltimatePredationScenario : IMultiplayerReplayable
         });
     }
 
-    private void BombBoulder(float spawnOffset, float buryOffset, float castOffset, float fadeOffset, float despawnOffset, Vector3 position)
+    private void BombBoulder(float spawnOffset, float buryOffset, float castOffset, float fadeOffset, Vector3 position)
     {
         SimEnemy? boulder = null;
 
@@ -559,7 +560,7 @@ public class UltimatePredationScenario : IMultiplayerReplayable
                 Level: 70,
                 Targetable: false,
                 EnemyList: EnemyListMode.Never,
-                IsVisible: false,
+                Visibility: SpawnVisibility.HiddenUntilShown,
                 Placement: new(position, 0)
                 )
             )
@@ -567,14 +568,12 @@ public class UltimatePredationScenario : IMultiplayerReplayable
 
         world.Events.Add(buryOffset, () =>
         {
-            boulder?.SetVisible(true);
             boulder?.Cast(Actions.Bury);
         });
 
         world.Events.Add(castOffset, () => boulder?.Cast(Actions.Burst));
 
-        world.Events.Add(fadeOffset, () => boulder!.ActorControl(607, boulder.EntityId, 1, 0, 100));
-        world.Events.Add(despawnOffset, () => boulder?.Despawn());
+        world.Events.Add(fadeOffset, () => boulder?.FadeOut());
     }
 
     public MpMessage? BuildReplayStateMessage()

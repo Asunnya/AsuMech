@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AnoMech.Core.EnemyActions;
 using AnoMech.Core;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Party;
@@ -38,7 +39,7 @@ public class DamageSolver
         var placement = source.Placement();
         if (coneRotationDelta is { } delta)
             placement = placement with { Rotation = placement.Rotation + delta };
-        var query = new AoeQuery(actionId, placement, size: size, extraRange: extraRange);
+        var query = new AoeQuery(actionId, placement, size: size, casterHitboxRadius: extraRange);
 #if DEBUG
         AnoMech.Windows.DamageDebugWindow.Instance?.Record(query);
 #endif
@@ -264,9 +265,6 @@ public class DamageSolver
     public void ApplyDamage(SimCharacter target, float fractionOfMaxHp, uint actionId, string context, bool lethal)
     {
         if (target is not ISimPartyMember) return;
-        var name = ActionLookup.Name(actionId);
-        if (target.Proxy is { Exists: true } chara)
-            chara.ShowFlyText((uint)MathF.Round(fractionOfMaxHp * chara.MaxHealth), name);
         if (!lethal) return;
         Kill(target, actionId, context);
     }

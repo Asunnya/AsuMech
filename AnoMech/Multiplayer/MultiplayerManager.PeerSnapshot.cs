@@ -97,7 +97,7 @@ public sealed partial class MultiplayerManager
             if (!peerEnemies.TryGetValue(e.NetId, out var enemy))
             {
                 // The template is resolved by name from this build's own captures, never from
-                // wire bytes; the plain doppel is the fallback either way.
+                // wire bytes; a packet built from the config is the fallback either way.
                 byte[]? template = null;
                 var enableDraw = false;
                 if (e.NpcSpawnTemplate is { } templateName && !peerEnemyTemplateFailed.Contains(e.NetId))
@@ -108,20 +108,20 @@ public sealed partial class MultiplayerManager
                         enableDraw = e.PacketSpawnEnableDraw;
                     }
                     else
-                        DiagnosticLog.Warn($"[Multiplayer] Peer: enemy NetId {e.NetId} names unknown spawn template '{NetGuard.Clean(templateName)}' -- spawning the plain doppel.");
+                        DiagnosticLog.Warn($"[Multiplayer] Peer: enemy NetId {e.NetId} names unknown spawn template '{NetGuard.Clean(templateName)}' -- spawning from a built packet.");
                 }
                 // A scenario can override the BNpcBase row's model (UCOB P5's Golden Bahamut), so
                 // this has to travel; the allowlist is what stops it naming a foreign one.
                 var config = new EnemySpawnConfig(
-                    e.BNpcBaseId, e.NameId, e.Level, e.Targetable, Enum.IsDefined(e.EnemyList) ? e.EnemyList : EnemyListMode.Never, e.Visible,
+                    e.BNpcBaseId, e.NameId, e.Level, e.Targetable, Enum.IsDefined(e.EnemyList) ? e.EnemyList : EnemyListMode.Never,
+                    Enum.IsDefined(e.Visibility) ? e.Visibility : SpawnVisibility.HiddenUntilShown,
                     placement,
                     ModelCharaId: e.ModelCharaId != 0
                         && SimAssets.Allow(SimAssetKind.ModelChara, e.ModelCharaId, $"enemy NetId {e.NetId} model")
                         ? e.ModelCharaId : 0,
-                    NetGuard.Clamp(e.Scale, 0f, 100f), NetGuard.Clamp(e.HitboxRadius, 0f, 100f),
                     e.InitialModeAttributeFlags,
                     NpcSpawnTemplate: template, PacketSpawnEnableDraw: enableDraw);
-                DiagnosticLog.Info($"[Multiplayer] Peer: first snapshot of enemy NetId {e.NetId} -- BNpcBase {e.BNpcBaseId}, pos ({e.X:F2},{e.Y:F2},{e.Z:F2}), rot {e.Rotation:F2}, visible {e.Visible}"
+                DiagnosticLog.Info($"[Multiplayer] Peer: first snapshot of enemy NetId {e.NetId} -- BNpcBase {e.BNpcBaseId}, pos ({e.X:F2},{e.Y:F2},{e.Z:F2}), rot {e.Rotation:F2}, visibility {e.Visibility}"
                     + $", cast {e.CastActionId}/seq {e.CastSeq}, effect {e.EffectActionId}/seq {e.EffectSeq}"
                     + $"{(template != null ? $", template {e.NpcSpawnTemplate}" : "")} -- spawning local doppel.");
                 enemy = world.SpawnEnemy(config);
@@ -132,10 +132,10 @@ public sealed partial class MultiplayerManager
                 }
                 peerEnemies[e.NetId] = enemy;
             }
-            // The engine dropped the real-packet spawn: the next snapshot recreates it as a plain doppel.
+            // The engine dropped the real-packet spawn: the next snapshot recreates it from a built packet.
             if (enemy.PacketSpawnFailed)
             {
-                DiagnosticLog.Warn($"[Multiplayer] Peer: enemy NetId {e.NetId} (BNpcBase {e.BNpcBaseId}) packet spawn failed locally -- falling back to the plain doppel.");
+                DiagnosticLog.Warn($"[Multiplayer] Peer: enemy NetId {e.NetId} (BNpcBase {e.BNpcBaseId}) packet spawn failed locally -- falling back to a built packet.");
                 peerEnemyTemplateFailed.Add(e.NetId);
                 enemy.Despawn();
                 ForgetPeerEnemy(e.NetId);
@@ -143,12 +143,11 @@ public sealed partial class MultiplayerManager
             }
             // Interpolated in Tick; a hard SetPosition every snapshot stutters.
             enemy.ApplyNetworkPosition(placement.Position, placement.Rotation);
-            enemy.SetVisible(e.Visible);
             enemy.SetTargetable(e.Targetable);
             // Nothing below lands on an actor the engine hasn't created yet; leaving the seqs
             // unrecorded makes the next snapshot retry.
             if (enemy.PacketSpawnPending) continue;
-            // Only on change: SetModelState rebuilds the model.
+            // Only on change: SetModelState replays the pose transition.
             if (!peerEnemyModelState.TryGetValue(e.NetId, out var lastModelState) || lastModelState != e.ModelState)
             {
                 peerEnemyModelState[e.NetId] = e.ModelState;
@@ -173,7 +172,7 @@ public sealed partial class MultiplayerManager
             var cancelKnown = peerEnemyLastCancelSeq.TryGetValue(e.NetId, out var lastCancelSeq);
             peerEnemyLastCancelSeq[e.NetId] = e.CancelSeq;
             if (cancelKnown && lastCancelSeq != e.CancelSeq)
-                casting.Cancel();
+                casting.Cancel(CastCancelReason.Interrupted);
             if (e.CastSeq > 0
                 && (!peerEnemyLastCastSeq.TryGetValue(e.NetId, out var lastCastSeq) || lastCastSeq != e.CastSeq))
             {
@@ -202,7 +201,9 @@ public sealed partial class MultiplayerManager
                         rotation: NetGuard.Rotation(e.EffectRotation),
                         position: NetGuard.TryPosition(e.EffectX, e.EffectY, e.EffectZ),
                         animationTargetId: ResolvePeerEnd(world, e.EffectAnimationTargetEnemyNetId, e.EffectAnimationTargetRole)?.GameObjectId,
-                        actionTargetId: ResolvePeerEnd(world, e.EffectActionTargetEnemyNetId, e.EffectActionTargetRole)?.GameObjectId);
+                        targets: ResolvePeerEnd(world, e.EffectActionTargetEnemyNetId, e.EffectActionTargetRole) is { } actionTarget
+                            ? [new ActionEffectTarget(actionTarget.GameObjectId)]
+                            : null);
             }
             ApplyNewVfx(enemy, e.NewVfx, $"enemy NetId {e.NetId}");
             ReconcilePersistentVfx(enemy, e.PersistentVfx, $"enemy NetId {e.NetId}");
@@ -214,14 +215,14 @@ public sealed partial class MultiplayerManager
                 peerEnemyAnimationTimeline[e.NetId] = e.AnimationTimelineSeq;
                 DiagnosticLog.Info($"[Multiplayer] Peer: enemy NetId {e.NetId} (BNpcBase {e.BNpcBaseId}) AnimationTimelineId -> 0x{timelineId:X4} (seq {e.AnimationTimelineSeq}).");
                 if (SimAssets.Allow(SimAssetKind.Timeline, timelineId, $"enemy NetId {e.NetId} timeline"))
-                    enemy.PlayAnimationTimeline(timelineId);
+                    enemy.PlayActionTimeline(timelineId);
             }
             if (e.NewLockonVfxIds.Count > 0)
             {
                 DiagnosticLog.Info($"[Multiplayer] Peer: enemy NetId {e.NetId} (BNpcBase {e.BNpcBaseId}) NewLockonVfxIds -> [{string.Join(",", e.NewLockonVfxIds)}].");
                 foreach (var lockonId in NetGuard.Cap(e.NewLockonVfxIds, NetGuard.MaxLockonVfxPerEntity))
                     if (SimAssets.Allow(SimAssetKind.Lockon, lockonId, $"enemy NetId {e.NetId} lockon"))
-                        enemy.AttachLockonVfx(lockonId, persistent: false);
+                        enemy.AttachLockonVfx(lockonId);
             }
             if (e.AnimationStateArg2 is { } arg2 && e.AnimationStateArg3 is { } arg3
                 && (!peerEnemyAnimationState.TryGetValue(e.NetId, out var lastStateSeq) || lastStateSeq != e.AnimationStateSeq))
@@ -229,7 +230,7 @@ public sealed partial class MultiplayerManager
                 peerEnemyAnimationState[e.NetId] = e.AnimationStateSeq;
                 DiagnosticLog.Info($"[Multiplayer] Peer: enemy NetId {e.NetId} (BNpcBase {e.BNpcBaseId}) AnimationState -> ({arg2},{arg3}) (seq {e.AnimationStateSeq}).");
                 if (arg2 is >= 0 and <= NetGuard.MaxAnimationStateArg && arg3 is >= 0 and <= NetGuard.MaxAnimationStateArg)
-                    enemy.SetAnimationState(arg2, arg3);
+                    enemy.SetAnimationState((byte)arg2, (byte)arg3);
             }
         }
         foreach (var staleId in peerEnemies.Keys.Where(id => !seenEnemyIds.Contains(id)).ToList())
@@ -449,7 +450,6 @@ public sealed partial class MultiplayerManager
         peerEnemyLastCastSeq.Remove(netId);
         peerEnemyLastCancelSeq.Remove(netId);
         peerEnemyEngineSeqs.Remove(netId);
-        peerEnemyModelHidden.Remove(netId);
     }
 
     // The engine-level state behind a VFX-only cue: the carrier's timeline hold, its AnimLock,
@@ -457,12 +457,6 @@ public sealed partial class MultiplayerManager
     private void ApplyEngineState(SimEnemy enemy, int netId, ActorEngineState? engine)
     {
         if (engine is null) return;
-        if (!peerEnemyModelHidden.TryGetValue(netId, out var hidden) || hidden != engine.ModelHidden)
-        {
-            peerEnemyModelHidden[netId] = engine.ModelHidden;
-            DiagnosticLog.Info($"[Multiplayer] Peer: enemy NetId {netId} ModelHidden -> {engine.ModelHidden}.");
-            enemy.SetModelHidden(engine.ModelHidden);
-        }
         var applied = peerEnemyEngineSeqs.GetValueOrDefault(netId);
         if (engine.ModeSeq > 0 && engine.ModeSeq != applied.Mode)
         {
@@ -484,7 +478,6 @@ public sealed partial class MultiplayerManager
                 DiagnosticLog.Info($"[Multiplayer] Peer: enemy NetId {netId} timeline hold {engine.HoldKind} {engine.HoldTimelineId} (seq {engine.HoldSeq}).");
                 switch (engine.HoldKind)
                 {
-                    case TimelineHoldKind.Loop: enemy.HoldTimelineLoop(engine.HoldTimelineId); break;
                     case TimelineHoldKind.Base: enemy.HoldTimelineBase(engine.HoldTimelineId); break;
                     default: enemy.ReleaseTimelineHold(engine.HoldTimelineId); break;
                 }
@@ -556,19 +549,6 @@ public sealed partial class MultiplayerManager
 
             if (world.Party.Get(r.Role) is not { } member) continue;
 
-            // Our own character goes through SimPlayer so the real MaxHealth is restored on Despawn.
-            var maxHp = Math.Min(r.MaxHp, NetGuard.MaxHp);
-            var currentHp = Math.Min(r.CurrentHp, maxHp);
-            var bc = member.BattleCharaPtr();
-            if (maxHp > 0)
-            {
-                if (member is SimPlayer me) me.ApplyNetworkHp(currentHp, maxHp);
-                else if (bc != null)
-                {
-                    bc->MaxHealth = maxHp;
-                    bc->Health = currentHp;
-                }
-            }
             var roleStatuses = NetGuard.Cap(r.Statuses, NetGuard.MaxStatusesPerEntity);
             if (!peerRoleReconciledStatuses.TryGetValue(r.Role, out var reconciled))
                 peerRoleReconciledStatuses[r.Role] = reconciled = new HashSet<(ushort, GameObjectId)>();
@@ -585,7 +565,7 @@ public sealed partial class MultiplayerManager
                 DiagnosticLog.Info($"[Multiplayer] Peer: role {r.Role} NewLockonVfxIds -> [{string.Join(",", r.NewLockonVfxIds)}].");
                 foreach (var lockonId in NetGuard.Cap(r.NewLockonVfxIds, NetGuard.MaxLockonVfxPerEntity))
                     if (SimAssets.Allow(SimAssetKind.Lockon, lockonId, $"role {r.Role} lockon"))
-                        member.AttachLockonVfx(lockonId, persistent: false);
+                        member.AttachLockonVfx(lockonId);
             }
             ApplyNewVfx(member, r.NewVfx, $"role {r.Role}");
             ReconcilePersistentVfx(member, r.PersistentVfx, $"role {r.Role}");
@@ -601,17 +581,14 @@ public sealed partial class MultiplayerManager
                     actor.PlayAction(r.PlayedActionId, NetGuard.Clamp(r.PlayedActionAnimationLock, 0f, 60f, 0.6f));
                 }
             }
-            // The KO pose comes with RoleKilledMessage; id 0 is a reset.
+            // The KO pose comes with RoleKilledMessage.
             if (!r.Dead && r.AnimationTimelineId is { } roleTimeline
                 && (!peerRoleAnimationTimelineSeq.TryGetValue(r.Role, out var lastRoleSeq) || lastRoleSeq != r.AnimationTimelineSeq))
             {
                 peerRoleAnimationTimelineSeq[r.Role] = r.AnimationTimelineSeq;
-                DiagnosticLog.Info($"[Multiplayer] Peer: role {r.Role} AnimationTimelineId -> {roleTimeline} (loop {r.AnimationTimelineLoopId}, seq {r.AnimationTimelineSeq}).");
-                if (roleTimeline == 0)
-                    member.ResetActionTimeline();
-                else if (SimAssets.Allow(SimAssetKind.Timeline, roleTimeline, $"role {r.Role} timeline")
-                    && (r.AnimationTimelineLoopId == 0 || SimAssets.Allow(SimAssetKind.Timeline, r.AnimationTimelineLoopId, $"role {r.Role} loop timeline")))
-                    member.PlayActionTimeline(roleTimeline, r.AnimationTimelineLoopId);
+                DiagnosticLog.Info($"[Multiplayer] Peer: role {r.Role} AnimationTimelineId -> {roleTimeline} (seq {r.AnimationTimelineSeq}).");
+                if (SimAssets.Allow(SimAssetKind.Timeline, roleTimeline, $"role {r.Role} timeline"))
+                    member.PlayActionTimeline(roleTimeline);
             }
         }
     }
@@ -637,8 +614,7 @@ public sealed partial class MultiplayerManager
     {
         if (!PeerInRun) return;
         if (!NetGuard.TryPosition(msg.X, msg.Y, msg.Z, out var destination)) return;
-        var mode = NetGuard.InRange(msg.Mode, 3) ? (Core.SimObjects.CarryMode)msg.Mode : Core.SimObjects.CarryMode.Native;
-        OwnMember(msg.Role, "Carry")?.CarryTo(destination, mode);
+        OwnMember(msg.Role, "Carry")?.CarryTo(destination);
     }
 
     private void OnPushReceived(PushMessage msg)

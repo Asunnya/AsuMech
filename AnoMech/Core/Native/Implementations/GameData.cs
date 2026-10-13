@@ -20,19 +20,20 @@ internal sealed class GameData : IGameData
             actionId,
             row.Name.ExtractText(),
             row.Cast100ms / 10f,
-            row.CastType,
+            (CastType)row.CastType,
             row.EffectRange,
             row.XAxisModifier,
             row.Omen.ValueNullable is { RowId: not 0 } omen ? omen.Path.ToString() : null,
             row.OmenAlt.ValueNullable is { RowId: not 0 } omenAlt ? omenAlt.Path.ToString() : null,
             row.ActionCategory.RowId,
             row.CanTargetSelf,
-            row.CanTargetParty);
+            row.CanTargetParty,
+            (sbyte)row.AttackType.RowId);
     }
 
     public KnockbackRow? Knockback(uint knockbackId)
         => Plugin.DataManager.GetExcelSheet<LuminaKnockback>().TryGetRow(knockbackId, out var row)
-            ? new KnockbackRow(knockbackId, row.Distance, row.Speed)
+            ? new KnockbackRow(knockbackId, row.Distance, row.Speed, row.Direction)
             : null;
 
     public ClassJobRow? ClassJob(uint classJobId)
@@ -65,11 +66,8 @@ internal sealed class GameData : IGameData
 
     public StatusRow? Status(ushort statusId)
         => Plugin.DataManager.GetExcelSheet<LuminaStatus>().TryGetRow(statusId, out var row)
-            ? new StatusRow(statusId, row.LockMovement, row.LockActions, row.LockControl)
+            ? new StatusRow(statusId, row.Name.ExtractText(), row.LockMovement, row.LockActions, row.LockControl)
             : null;
-
-    public string? StatusName(ushort statusId)
-        => Plugin.DataManager.GetExcelSheet<LuminaStatus>().TryGetRow(statusId, out var row) ? NonEmpty(row.Name.ExtractText()) : null;
 
     public string? BNpcName(uint nameId)
         => Plugin.DataManager.GetExcelSheet<LuminaBNpcName>().TryGetRow(nameId, out var row) ? NonEmpty(row.Singular.ExtractText()) : null;

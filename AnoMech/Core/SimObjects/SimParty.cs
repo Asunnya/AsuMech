@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Numerics;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Party;
+using AnoMech.Core.Native.Interfaces;
+using AnoMech.Core.UserActions;
 using AnoMech.Scenarios;
 
 namespace AnoMech.Core.SimObjects;
@@ -23,11 +25,15 @@ public sealed class SimParty : ISimObject
 
     private readonly SimCharacter?[] slots = new SimCharacter?[8];
 
-    public SimParty() { Find = new CharacterFind<SimCharacter>(ActiveMembers); }
+    public SimParty()
+    {
+        Find = new CharacterFind<SimCharacter>(ActiveMembers);
+        LimitBreak = new LimitBreakGauge(() => Player?.ActorControl);
+    }
 
     public CharacterFind<SimCharacter> Find { get; }
 
-    public LimitBreakGauge LimitBreak { get; } = new();
+    public LimitBreakGauge LimitBreak { get; }
 
     // The bot in `role` casts its job's limit break at the level the gauge allows, emptying it.
     // False if the slot is not a live bot (humans press their own), no bar is filled, or the job
@@ -41,8 +47,9 @@ public sealed class SimParty : ISimObject
             DiagnosticLog.Info($"[SimParty] {role} limit break skipped: no bar is filled.");
             return false;
         }
-        if (!bot.UseLimitBreak(level)) return false;
-        LimitBreak.Spend();
+        var actionId = bot.UseLimitBreak(level);
+        if (actionId == 0) return false;
+        LimitBreakHandler.Resolve(this, bot, actionId);
         return true;
     }
 
@@ -90,14 +97,10 @@ public sealed class SimParty : ISimObject
     public void Knockback(Vector3 source, float distance)
         => ForEachActive(m => (m as ISimPartyMember)?.Knockback(source, distance));
 
-    // Raidwide knockback resolved from KnockbackTable + Lumina Knockback sheet.
-    // Resolves once at the party level so an unmapped action logs a single
-    // warning rather than one per slot.
     public void Knockback(Vector3 source, uint knockbackId)
     {
-        if (!KnockbackLookup.TryGet(knockbackId, out var distance, out var speed))
-            return;
-        ForEachActive(m => (m as ISimPartyMember)?.Knockback(source, distance, speed));
+        if (Natives.Data.Knockback(knockbackId) is not { } kb) return;
+        ForEachActive(m => (m as ISimPartyMember)?.Knockback(source, kb.Distance, kb.Speed));
     }
 
     // Only slots within `radius` of `source` are pushed. `exclude` is the stack holder when
@@ -106,8 +109,7 @@ public sealed class SimParty : ISimObject
     // casts the hit reaction first (its movement plays out over the next 0.7s).
     public void Knockback(Vector3 source, uint knockbackId, float radius, SimCharacter? exclude = null)
     {
-        if (!KnockbackLookup.TryGet(knockbackId, out var distance, out var speed))
-            return;
+        if (Natives.Data.Knockback(knockbackId) is not { } kb) return;
         var radiusSq = radius * radius;
         ForEachActive(m =>
         {
@@ -115,7 +117,7 @@ public sealed class SimParty : ISimObject
             var dx = m.Position.X - source.X;
             var dz = m.Position.Z - source.Z;
             if (dx * dx + dz * dz <= radiusSq)
-                (m as ISimPartyMember)?.Knockback(source, distance, speed);
+                (m as ISimPartyMember)?.Knockback(source, kb.Distance, kb.Speed);
         });
     }
 
@@ -174,11 +176,17 @@ public sealed class SimParty : ISimObject
                 slots[i] = null;
             }
         }
-        LimitBreak.Tick();
+    }
+
+    // The whole party, the local player included, is in combat for the whole run.
+    internal void SetInCombat(bool inCombat)
+    {
+        foreach (var member in AllMembers()) member.ActorControl.SetInCombat(inCombat);
     }
 
     public void Despawn()
     {
+        SetInCombat(false);
         LimitBreak.Restore();
         for (int i = 0; i < slots.Length; i++)
         {

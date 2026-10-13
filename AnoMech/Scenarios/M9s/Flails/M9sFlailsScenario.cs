@@ -203,7 +203,6 @@ public sealed class M9sFlailsScenario : IScenario
             Level: 100,
             Targetable: targetable,
             EnemyList: enemyList,
-            IsVisible: true,
             Placement: placement));
         if (enemy != null) helpers.Add(enemy);
         return enemy;
@@ -217,7 +216,6 @@ public sealed class M9sFlailsScenario : IScenario
             Level: 100,
             Targetable: true,
             EnemyList: EnemyListMode.Always,
-            IsVisible: true,
             Placement: new Placement(Vector3.Zero, MathF.PI)));
         state.Satisfied.Attach(vamp);
     }

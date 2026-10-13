@@ -3,15 +3,15 @@ using FFXIVClientStructs.FFXIV.Client.Game;
 
 namespace AnoMech.Core.UserActions;
 
-// Sprint's status, which the server would grant on use, plus clearing its cooldown at
-// scenario start. Resolved unconditionally — unlike the other handlers, it runs even
-// when the module is disabled (UserActions keeps it separate from the gated list).
-internal sealed unsafe class SprintHandler : IUserActionHandler
+// Sprint's status, which the server would grant on use. Runs even when the module is disabled.
+internal sealed class SprintHandler : IUserActionHandler
 {
     private const uint SprintActionId = 3;
     private const ushort SprintStatusId = 50;
     private const float SprintDuration = 10f;
     private const ushort SprintStatusParam = 30; // speed magnitude, carried in Status.Param
+
+    public bool RunsWhenDisabled => true;
 
     public void OnAction(ActionType actionType, uint actionId)
     {
@@ -22,19 +22,4 @@ internal sealed unsafe class SprintHandler : IUserActionHandler
 
     public static void Apply(SimCharacter character, float duration)
         => character.AddStatus(SprintStatusId, duration, SprintStatusParam);
-
-    // Sprint goes on cooldown when the player presses it inside a scenario
-    // (LocalPlayerInputHooks lets Original run so the recast starts). Clear it so each
-    // scenario starts with Sprint ready, regardless of a press just before Start.
-    public void OnScenarioStart()
-    {
-        var am = ActionManager.Instance();
-        if (am == null) return;
-        var group = am->GetRecastGroup((int)ActionType.Action, SprintActionId);
-        if (group < 0) return;
-        var detail = am->GetRecastGroupDetail(group);
-        if (detail == null) return;
-        detail->IsActive = false;
-        detail->Elapsed = 0f;
-    }
 }

@@ -75,8 +75,6 @@ public sealed class DsrP1KnightsScenario : IScenario
     private const uint ZephirinMaxHp = 6920000;
     private const uint ThordanMaxHp = 7439000;
 
-    private const uint CancelCastControl = 15;
-    private const uint CancelCastReason = 540;
 
     private SimWorld world = null!;
     private SimParty party = null!;
@@ -239,7 +237,7 @@ public sealed class DsrP1KnightsScenario : IScenario
             Level: Level,
             Targetable: targetable,
             EnemyList: enemyList,
-            IsVisible: visible,
+            Visibility: SimEnemy.LegacyVisibility(baseId == BNpcBaseId.Dummy, visible),
             Placement: placement));
 
     private SimEnemy? SpawnKnight(uint baseId, uint nameId, uint maxHp, Placement placement, bool targetable, EnemyListMode enemyList) =>
@@ -367,7 +365,7 @@ public sealed class DsrP1KnightsScenario : IScenario
     private void MarkSlashPrey(IReadOnlyList<PartyRole> prey)
     {
         foreach (var role in prey)
-            party.Get(role)?.AttachLockonVfx(LockonId.HyperdimensionalSlash, 6f, persistent: false);
+            party.Get(role)?.AttachLockonVfx(LockonId.HyperdimensionalSlash);
     }
 
     // One actor plays one effect at a time, so each chain and flame explosion needs its own carrier.
@@ -608,7 +606,7 @@ public sealed class DsrP1KnightsScenario : IScenario
         if (!hallowingCasting || hallowingInterrupted || adelphel == null) return;
         hallowingInterrupted = true;
         hallowingCasting = false;
-        adelphel.ActorControl(CancelCastControl, CancelCastReason, 1, ActionId.HoliestHallowing, 1);
+        adelphel.ActorControl.CancelCast(ActionId.HoliestHallowing, CastCancelReason.Interrupted);
     }
 
     private void ResolveHoliestHallowing(PartyRole assigned)
@@ -637,7 +635,7 @@ public sealed class DsrP1KnightsScenario : IScenario
     private void MarkChainSymbols()
     {
         foreach (var (role, symbol) in state.Symbols)
-            party.Get(role)?.AttachLockonVfx(SymbolLockon(symbol), 8f, persistent: false);
+            party.Get(role)?.AttachLockonVfx(SymbolLockon(symbol));
     }
 
     private static uint SymbolLockon(ChainSymbol symbol) => symbol switch

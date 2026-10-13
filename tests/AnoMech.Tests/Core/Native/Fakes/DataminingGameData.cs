@@ -27,19 +27,20 @@ internal sealed class DataminingGameData(FakeRsvFunctions rsv) : IGameData
             actionId,
             rsv.Resolve(row.Text("Name")),
             row.UInt("Cast100ms") / 10f,
-            row.Byte("CastType"),
+            (CastType)row.Byte("CastType"),
             row.Byte("EffectRange"),
             row.Byte("XAxisModifier"),
             OmenPath(row.UInt("Omen")),
             OmenPath(row.UInt("OmenAlt")),
             row.UInt("ActionCategory"),
             row.Bool("CanTargetSelf"),
-            row.Bool("CanTargetParty"));
+            row.Bool("CanTargetParty"),
+            row.SByte("AttackType"));
     }
 
     public KnockbackRow? Knockback(uint knockbackId)
         => Knockbacks.Value.Row(knockbackId) is { } row
-            ? new KnockbackRow(knockbackId, row.Byte("Distance"), row.Byte("Speed"))
+            ? new KnockbackRow(knockbackId, row.Byte("Distance"), row.Byte("Speed"), row.Byte("Direction"))
             : null;
 
     public ClassJobRow? ClassJob(uint classJobId)
@@ -72,10 +73,8 @@ internal sealed class DataminingGameData(FakeRsvFunctions rsv) : IGameData
 
     public StatusRow? Status(ushort statusId)
         => Statuses.Value.Row(statusId) is { } row
-            ? new StatusRow(statusId, row.Bool("LockMovement"), row.Bool("LockActions"), row.Bool("LockControl"))
+            ? new StatusRow(statusId, Resolve(row.Text("Name")) ?? "", row.Bool("LockMovement"), row.Bool("LockActions"), row.Bool("LockControl"))
             : null;
-
-    public string? StatusName(ushort statusId) => NonEmpty(Resolve(Statuses.Value.Row(statusId)?.Text("Name")));
 
     public string? BNpcName(uint nameId) => NonEmpty(Resolve(BNpcNames.Value.Row(nameId)?.Text("Singular")));
 
@@ -194,6 +193,7 @@ internal sealed class DataminingGameData(FakeRsvFunctions rsv) : IGameData
         public uint UInt(string column) => uint.Parse(Text(column), CultureInfo.InvariantCulture);
         public ulong ULong(string column) => ulong.Parse(Text(column), CultureInfo.InvariantCulture);
         public byte Byte(string column) => byte.Parse(Text(column), CultureInfo.InvariantCulture);
+        public sbyte SByte(string column) => sbyte.Parse(Text(column), CultureInfo.InvariantCulture);
         public ushort UShort(string column) => ushort.Parse(Text(column), CultureInfo.InvariantCulture);
         public float Float(string column) => float.Parse(Text(column), CultureInfo.InvariantCulture);
         public bool Bool(string column) => bool.Parse(Text(column));

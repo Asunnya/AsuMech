@@ -67,21 +67,13 @@ public class EventObjectSpawnConfig
     public bool RestoreStateOnDespawn { get; init; } = false;
 }
 
-// Handle around an EventObject GameObject allocated via the manager's
-// CreateEventObject (the 40-slot pool exposed in GameObjectManager indices
-// 449-488). Mirror of SimEnemy / SimNpc for the EObj actor pool: we own the
-// slot, write position/rotation/state directly on the GameObject, and release
-// the slot on Despawn via GameObject.Terminate (vfunc 60).
+// An EventObject in EventObjectManager's 40-slot pool, spawned and despawned through the
+// client's own spawn/despawn-object packet handlers.
 //
 // Rendering note: EObjs render via the LayoutEngine scene graph using their
 // attached SharedGroup, NOT via GameObject.DrawObject. Visibility is therefore
 // driven by the state field at actor+0x1B2 (which gates which SG sub-instances
 // are visible), not by EnableDraw/DisableDraw — those are character-only.
-//
-// Why not packets: the canonical spawn path is HandleSpawnObjectPacket, which
-// brings zone-state guards, housing/MJI branches, and forwards to SetEventId/
-// SetFateId/SetEventState that don't apply to simulated scenery. We use the
-// same internals-only pattern BattleCharaSpawn uses for SimEnemy/SimPartyNpc.
 public class SimEventObject : ISimObject, IPositioned
 {
     private IEventObjectProxy? obj;
@@ -227,6 +219,10 @@ public class SimEventObject : ISimObject, IPositioned
         FadeOutSeq++;
         obj?.ActorControl(607, obj.EntityId, 1, 0, 100);
     }
+
+    // ActorControl 409 (EObjSetState). Unk is constant per EObj kind in retail (0x8005xxxx); its
+    // meaning is unknown, so pass the replay's value.
+    public void EObjSetState(ushort state, uint unk) => obj?.ActorControl(409, state, unk);
 
     public uint LastDirectorState { get; private set; }
     public int DirectorModSeq { get; private set; }

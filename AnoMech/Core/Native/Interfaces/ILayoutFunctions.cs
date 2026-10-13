@@ -1,5 +1,4 @@
 using System.Numerics;
-
 namespace AnoMech.Core.Native.Interfaces;
 
 // The zone's LGB layout instances.

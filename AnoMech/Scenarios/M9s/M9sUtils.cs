@@ -67,7 +67,7 @@ public sealed class M9sHardcore(SimParty party, DamageSolver damage, M9sSatisfie
             if (targets.Count == 2) break;
             if (party.Get(role) is not { } target || !target.IsAlive()) continue;
             targets.Add(target);
-            target.AttachLockonVfx(LockonId.Tankbuster, persistent: false);
+            target.AttachLockonVfx(LockonId.Tankbuster);
             spawnHelper(from)?.LegacyCast(actionId, castSeconds: 4.7f, target: target);
         }
     }

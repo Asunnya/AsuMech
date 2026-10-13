@@ -246,7 +246,7 @@ public sealed class UwuP2IfritScenario : IScenario
             Level: Level,
             Targetable: targetable,
             EnemyList: enemyList,
-            IsVisible: visible,
+            Visibility: SimEnemy.LegacyVisibility(baseId == BNpcBaseId.Dummy, visible),
             Placement: placement));
 
     private SimEnemy? SpawnHelper(Vector3 position, float rotation = 0f)

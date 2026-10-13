@@ -80,28 +80,25 @@ internal static class PartyCreator
 
     private static SimPartyNpc? Spawn(PartyMemberPreset preset, SimWorld world, PartyRole role, Placement placement)
     {
-        if (Natives.BattleCharas.SpawnDoppel(preset, world.Coordinates.ToGlobal(placement)) is not { } chara) return null;
+        if (Natives.BattleCharas.SpawnDoppel(preset, world.Coordinates.ToGlobal(placement), out var entityId) is not { } chara) return null;
 
         Plugin.Log.Info($"PartyCreator: spawned {preset.Name} ({role}, job {preset.ClassJob}) at index {chara.Slot}");
         var member = new SimPartyNpc(chara, world.Coordinates, role, preset.ClassJob, preset.Name);
         // Bots steer around the scenario's geometry; only doppels get the live
         // field (bosses/puppets keep ObstacleField.Empty and move in straight lines).
         member.Obstacles = world.Obstacles;
-        // Seed the stored Position/Rotation to match the spawn placement so
-        // anything reading SimCharacter.Position before the first Tick sees
-        // the correct value (the Tick re-sync only kicks in next frame).
-        member.SetPosition(placement);
+        member.BeginPacketSpawn(entityId, placement);
         return member;
     }
 
     // Same visuals as a bot, but excluded from the Obstacles field only steering doppels need.
     private static SimNetworkPuppet? SpawnPuppet(PartyMemberPreset preset, SimWorld world, PartyRole role, Placement placement)
     {
-        if (Natives.BattleCharas.SpawnDoppel(preset, world.Coordinates.ToGlobal(placement)) is not { } chara) return null;
+        if (Natives.BattleCharas.SpawnDoppel(preset, world.Coordinates.ToGlobal(placement), out var entityId) is not { } chara) return null;
 
         Plugin.Log.Info($"PartyCreator: spawned network puppet {preset.Name} ({role}, job {preset.ClassJob}) at index {chara.Slot}");
         var puppet = new SimNetworkPuppet(chara, world.Coordinates, role, preset.ClassJob, preset.Name);
-        puppet.SetPosition(placement);
+        puppet.BeginPacketSpawn(entityId, placement);
         return puppet;
     }
 }

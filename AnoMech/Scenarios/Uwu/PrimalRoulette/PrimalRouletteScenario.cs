@@ -189,7 +189,7 @@ public sealed class PrimalRouletteScenario : IScenario
             Level: Level,
             Targetable: targetable,
             EnemyList: enemyList,
-            IsVisible: visible,
+            Visibility: SimEnemy.LegacyVisibility(baseId == BNpcBaseId.Dummy, visible),
             Placement: placement,
             InitialModeAttributeFlags: modeAttributeFlags));
 

@@ -142,7 +142,6 @@ public sealed record AttachedVfxState(string Path, float DurationSeconds);
 // VFX-only cue needs, and the two diagnostic delivery modes. Each is edge-triggered on its own
 // seq, because the run animation and the cast pipeline write the same native fields every frame.
 public sealed record ActorEngineState(
-    bool ModelHidden,
     byte Mode, byte ModeParam, int ModeSeq,
     TimelineHoldKind HoldKind, ushort HoldTimelineId, int HoldSeq,
     ushort DirectTimelineId, int DirectTimelineSeq,
@@ -155,8 +154,8 @@ public sealed record ActorEngineState(
 // one-shot NewVfx.
 public sealed record EnemyState(
     int NetId, uint BNpcBaseId, uint NameId, byte Level, bool Targetable,
-    EnemyListMode EnemyList, uint ModelCharaId, float Scale, float HitboxRadius,
-    byte? InitialModeAttributeFlags, bool Visible, byte ModelState,
+    EnemyListMode EnemyList, uint ModelCharaId,
+    byte? InitialModeAttributeFlags, SpawnVisibility Visibility, byte ModelState,
     IReadOnlyList<EnemyStatusState> Statuses, ushort? AnimationTimelineId, int AnimationTimelineSeq, IReadOnlyList<uint> NewLockonVfxIds,
     int? AnimationStateArg2, int? AnimationStateArg3, int AnimationStateSeq,
     float X, float Y, float Z, float Rotation,
@@ -185,7 +184,7 @@ public sealed record RoleState(
     PartyRole Role, bool Filled, bool Dead, float X, float Y, float Z, float Rotation,
     IReadOnlyList<EnemyStatusState> Statuses, IReadOnlyList<uint> NewLockonVfxIds,
     uint CurrentHp, uint MaxHp,
-    ushort? AnimationTimelineId = null, ushort AnimationTimelineLoopId = 0, int AnimationTimelineSeq = 0,
+    ushort? AnimationTimelineId = null, int AnimationTimelineSeq = 0,
     IReadOnlyList<AttachedVfxState>? NewVfx = null, IReadOnlyList<string>? PersistentVfx = null,
     uint PlayedActionId = 0, float PlayedActionAnimationLock = 0.6f, int PlayedActionSeq = 0);
 
@@ -222,7 +221,7 @@ public sealed record KnockbackMessage(PartyRole Role, float SourceX, float Sourc
 // TargetRole releases the follow.
 public sealed record TeleportMessage(PartyRole Role, float X, float Y, float Z, float Rotation) : MpMessage, IHostOnlyMessage;
 public sealed record PushMessage(PartyRole Role, float Heading, float Distance, float Speed, float DurationSeconds) : MpMessage, IHostOnlyMessage;
-public sealed record CarryMessage(PartyRole Role, float X, float Y, float Z, int Mode = 0) : MpMessage, IHostOnlyMessage;
+public sealed record CarryMessage(PartyRole Role, float X, float Y, float Z) : MpMessage, IHostOnlyMessage;
 public sealed record FollowMessage(PartyRole Role, PartyRole? TargetRole, int? TargetEnemyNetId, float Speed) : MpMessage, IHostOnlyMessage;
 
 // One per SimWorld.OmenSpawned. Path is checked against SimAssets on receipt: it is the one

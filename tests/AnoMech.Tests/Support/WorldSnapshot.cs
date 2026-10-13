@@ -1,7 +1,6 @@
 using System.Globalization;
 using System.Numerics;
 using System.Text;
-using AnoMech.Core;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.Native.Interfaces;
@@ -39,7 +38,7 @@ internal static class WorldSnapshot
             var action = Natives.Data.Action(query.ActionId);
             var shape = action is null ? "unknown action" : $"CastType {action.CastType}, range {action.EffectRange}, width {action.XAxisModifier}";
             var extras = $"{(query.OmenRotate != 0f ? $", omenRotate {F(query.OmenRotate)}" : "")}{(query.Size is { } size ? $", size {F(size)}" : "")}";
-            text.AppendLine($"  t={F(time)} {ActionLookup.Name(query.ActionId)} ({query.ActionId}; {shape}) from {P(query.Source.Position)} facing {F(query.Source.Rotation)}{extras}");
+            text.AppendLine($"  t={F(time)} {Natives.Data.ActionName(query.ActionId)} ({query.ActionId}; {shape}) from {P(query.Source.Position)} facing {F(query.Source.Rotation)}{extras}");
             var targets = focus is null ? positions : positions.Where(p => world.Party.Get(p.Role) == focus);
             foreach (var (role, position) in targets)
                 text.AppendLine($"    {role}: {EdgeDistance(query, position)}");
@@ -67,17 +66,17 @@ internal static class WorldSnapshot
     private static void AppendEnemies(StringBuilder text, SimWorld world, bool includeHidden)
     {
         var enemies = world.Children.OfType<SimEnemy>().ToList();
-        var shown = enemies.Where(e => includeHidden || e.Visible).ToList();
+        var shown = enemies.Where(e => includeHidden || e.SpawnConfig.Visibility == SpawnVisibility.Visible).ToList();
         var omitted = enemies.Count - shown.Count;
         text.AppendLine($"Enemies ({enemies.Count}{(omitted > 0 ? $", {omitted} hidden not shown" : "")}):");
         foreach (var enemy in shown)
         {
-            var flags = $"{(enemy.IsActive ? "" : " INACTIVE")}{(enemy.Visible ? "" : " hidden")}";
+            var flags = $"{(enemy.IsActive ? "" : " INACTIVE")}{(enemy.SpawnConfig.Visibility == SpawnVisibility.Visible ? "" : " spawned hidden")}";
             text.AppendLine($"  {Label(world, enemy)} (BNpcBase {enemy.BNpcBaseId}, id 0x{enemy.GameObjectId.ObjectId:X}) {P(enemy.Position)} facing {F(enemy.Rotation)}{flags}{Moving(enemy)}");
             if (enemy.IsCasting)
             {
                 var target = enemy.CastTargetLocation is { } location ? $" at {P(location)}" : "";
-                text.AppendLine($"    casting {ActionLookup.Name(enemy.CastActionId)} ({enemy.CastActionId}) {F(enemy.CastProgress * enemy.CastTotalSeconds)}/{F(enemy.CastTotalSeconds)}s{target}");
+                text.AppendLine($"    casting {Natives.Data.ActionName(enemy.CastActionId)} ({enemy.CastActionId}) {F(enemy.CastProgress * enemy.CastTotalSeconds)}/{F(enemy.CastTotalSeconds)}s{target}");
             }
             AppendStatuses(text, enemy);
         }
@@ -109,7 +108,7 @@ internal static class WorldSnapshot
         var statuses = character.ActiveStatusSnapshot;
         if (statuses.Count == 0) return;
         text.AppendLine("    statuses: " + string.Join("; ", statuses.Select(s =>
-            $"{Natives.Data.StatusName(s.StatusId)?.Trim() ?? "?"} ({s.StatusId}){(s.Stacks > 1 ? $" x{s.Stacks}" : "")}{(s.RemainingTime > 0f ? $" {F(s.RemainingTime)}s" : "")}")));
+            $"{Natives.Data.StatusName(s.StatusId).Trim()} ({s.StatusId}){(s.Stacks > 1 ? $" x{s.Stacks}" : "")}{(s.RemainingTime > 0f ? $" {F(s.RemainingTime)}s" : "")}")));
     }
 
     private static string Moving(SimCharacter character)

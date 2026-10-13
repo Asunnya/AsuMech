@@ -161,7 +161,6 @@ public sealed class DsrP3NidhoggScenario : IScenario
             Targetable: false,
             EnemyList: EnemyListMode.Always,
             Placement: new Placement(Vector3.Zero, 0f),
-            HitboxRadius: NidhoggHitboxRadius,
             NpcSpawnTemplate: DsrNpcSpawn.Build(BNpcBaseId.Nidhogg, BNpcNameId.Nidhogg, NidhoggMaxHp)));
     }
 
@@ -189,7 +188,7 @@ public sealed class DsrP3NidhoggScenario : IScenario
         foreach (var (role, line) in state.Lines)
         {
             if (party.Get(role) is not { } member) continue;
-            member.AttachLockonVfx(line switch { 1 => LockonId.FirstInLine, 2 => LockonId.SecondInLine, _ => LockonId.ThirdInLine }, 5f, persistent: false);
+            member.AttachLockonVfx(line switch { 1 => LockonId.FirstInLine, 2 => LockonId.SecondInLine, _ => LockonId.ThirdInLine });
             member.AddStatus(line switch { 1 => StatusId.FirstInLine, 2 => StatusId.SecondInLine, _ => StatusId.ThirdInLine });
         }
     }

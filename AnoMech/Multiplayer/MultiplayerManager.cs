@@ -68,7 +68,6 @@ public sealed partial class MultiplayerManager : IDisposable
     // Engine-state seqs applied per NetId (see ActorEngineState): re-issuing an unchanged mode
     // or hold restarts it.
     private readonly Dictionary<int, (int Mode, int Hold, int Direct, int ForceLoad)> peerEnemyEngineSeqs = new();
-    private readonly Dictionary<int, bool> peerEnemyModelHidden = new();
     private readonly Dictionary<PartyRole, int> peerRoleAnimationTimelineSeq = new();
     private readonly Dictionary<PartyRole, int> peerRolePlayedActionSeq = new();
     private readonly Dictionary<PartyRole, Dictionary<(ushort Id, int Ordinal), ushort>> peerRoleLastLoggedStatuses = new();
@@ -397,7 +396,6 @@ public sealed partial class MultiplayerManager : IDisposable
         peerEventObjectFadeSeq.Clear();
         peerEventObjectDirectorSeq.Clear();
         peerEnemyEngineSeqs.Clear();
-        peerEnemyModelHidden.Clear();
         peerLastSeenMs.Clear();
         peerLastHelloMs.Clear();
         deferredLeaveMs.Clear();
@@ -1061,7 +1059,6 @@ public sealed partial class MultiplayerManager : IDisposable
         peerEventObjectFadeSeq.Clear();
         peerEventObjectDirectorSeq.Clear();
         peerEnemyEngineSeqs.Clear();
-        peerEnemyModelHidden.Clear();
         peerEnteredInstance = false;
         peerEntryQueued = true;
         endAfterPeerEntry = null;

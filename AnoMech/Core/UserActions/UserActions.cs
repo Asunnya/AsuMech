@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using AnoMech.Core.Native.Implementations;
+using AnoMech.Core.Native.Implementations.Pointers;
 using AnoMech.Core.Native.Interfaces;
 using AnoMech.Core.UserActions.Jobs;
 using FFXIVClientStructs.FFXIV.Client.Game;
@@ -9,28 +10,23 @@ using FFXIVClientStructs.FFXIV.Client.Game.Character;
 namespace AnoMech.Core.UserActions;
 
 // Optional, self-contained module: resolves the local player's own actions
-// client-side, filling in the server responses the sim firewall blocks. Sprint is
-// resolved unconditionally; the feature handlers only while Enabled. Nothing in the
-// engine depends on it.
+// client-side, filling in the server responses the sim firewall blocks. Handlers run only
+// while Enabled, unless they declare RunsWhenDisabled. Nothing in the engine depends on it.
 public sealed unsafe class UserActions : IUserActions, IDisposable
 {
     private readonly LocalPlayerInputHooks hooks;
-    private readonly IUserActionHandler sprint = new SprintHandler();
 
-    // Cast-time enablers. Runs when the cast BEGINS: enabler bookkeeping (Swiftcast/Dualcast/…) is
-    // tied to starting the cast, and it does its own cast-completion tracking for the Dualcast grant.
-    private readonly IUserActionHandler castTime = new CastTimeHandler();
-
-    // Runs after every other handler's OnScenarioStart so a handler's own reset can't undo the seed.
-    private readonly IUserActionHandler startingResources = new StartingResourcesHandler();
-
-    // The spell's own effects (gauge writes, status grants/clears, combo advancement). Applied at cast
-    // RESOLUTION — immediately for an instant cast, on completion for a hard cast, and not at all if the
-    // cast is interrupted (a spell resolves when its cast bar finishes, not when it starts). In order:
-    // JobActionHandler and the state handlers precede ComboHandler so their combo-gated logic reads the
+    // OnAction is the action's RESOLUTION — immediately for an instant cast, on completion for a hard
+    // cast, and not at all if the cast is interrupted (a spell resolves when its cast bar finishes, not
+    // when it starts). In order: ResetHandler first so every other handler's OnScenarioStart lands on
+    // the reset; CastTimeHandler before JobActionHandler, which clears the statuses it checks; and
+    // JobActionHandler and the state handlers before ComboHandler so their combo-gated logic reads the
     // pre-advance combo state.
-    private readonly List<IUserActionHandler> effectHandlers =
+    private readonly List<IUserActionHandler> handlers =
     [
+        new ResetHandler(),
+        new SprintHandler(),
+        new CastTimeHandler(),
         new JobActionHandler(),
         new LimitBreakHandler(),
         new SamuraiStateHandler(),
@@ -43,11 +39,6 @@ public sealed unsafe class UserActions : IUserActions, IDisposable
         new ViperStateHandler(),
         new NinjaStateHandler(),
         new ComboHandler(),
-    ];
-
-    // Per-frame-only handlers (no cast-sensitive OnAction effect).
-    private readonly List<IUserActionHandler> tickHandlers =
-    [
         new TimedGaugeHandler(),
         new CastInterruptHandler(),
         new AutoAttackHandler(),
@@ -65,18 +56,10 @@ public sealed unsafe class UserActions : IUserActions, IDisposable
     // and a handler's own re-entrant fire (ActionEffect Receive re-enters the hook).
     private ushort processedSeq;
 
-    // The job gauge is the one player resource the handlers write straight to native memory
-    // instead of through the tick-managed status list — so, unlike statuses (cleared on the
-    // SimPlayer's Despawn), it survives a scenario teardown and would leave the player's real
-    // gauge in the simulated state after they leave. We snapshot it once when the sim zone
-    // first loads and write it back when the session ends. Layout — FFXIVClientStructs
-    // JobGaugeManager (size 0x60): gauge union at 0x08, ClassJobId at 0x58 — so the gauge data
-    // is the 0x50-byte region [0x08, 0x58); CurrentGauge (0x00) is a pointer we must not touch.
-    private const int GaugeUnionOffset = 0x08;
-    private const int GaugeUnionSize = 0x50;
-    private readonly byte[] gaugeSnapshot = new byte[GaugeUnionSize];
-    private bool hasGaugeSnapshot;
-    private byte snapshotJob;
+    // Unlike statuses (cleared on the SimPlayer's Despawn), the job gauge survives a scenario
+    // teardown and would leave the player's real gauge in the simulated state after they leave,
+    // so the one the sim zone loaded with is sent back when the session ends.
+    private ActorGaugePacket? gaugeSnapshot;
 
     public bool Enabled { get; private set; }
 
@@ -91,57 +74,36 @@ public sealed unsafe class UserActions : IUserActions, IDisposable
         hooks.ActionExecuted += OnActionExecuted;
     }
 
+    private bool Runs(IUserActionHandler handler) => Enabled || handler.RunsWhenDisabled;
+
     public void Enable() => Enabled = true;
     public void Disable() => Enabled = false;
 
     // Called by Game at scenario start.
     public void OnScenarioStart()
     {
-        sprint.OnScenarioStart();
-        if (!Enabled) return;
-        castTime.OnScenarioStart();
-        foreach (var handler in effectHandlers) handler.OnScenarioStart();
-        foreach (var handler in tickHandlers) handler.OnScenarioStart();
-        startingResources.OnScenarioStart();
         pendingResolve = false;
+        if (!SimActive) return;
+        foreach (var handler in handlers) if (Runs(handler)) handler.OnScenarioStart();
     }
 
     // Called by Game when the sim zone first loads (a true session start, not a restart within
-    // an already-loaded zone). Captures the player's pristine job gauge for OnSessionEnd to
-    // restore. Snapshots unconditionally — cheap, and it keeps the restore correct even if the
+    // an already-loaded zone). Snapshots unconditionally, so the restore stays correct even if the
     // module is enabled/disabled part-way through the session.
-    public void OnSessionStart()
-    {
-        var jgm = JobGaugeManager.Instance();
-        if (jgm == null) return;
-        snapshotJob = jgm->ClassJobId;
-        fixed (byte* dst = gaugeSnapshot)
-            Buffer.MemoryCopy((byte*)jgm + GaugeUnionOffset, dst, GaugeUnionSize, GaugeUnionSize);
-        hasGaugeSnapshot = true;
-    }
+    public void OnSessionStart() => gaugeSnapshot = JobGaugeEdit.Capture();
 
-    // Called by Game when the player leaves the sim zone. Writes back the gauge captured at
-    // session start, undoing every client-side gauge write the run made. Skips the write if the
-    // player changed jobs mid-session — the snapshot bytes would decode as a different gauge.
+    // Called by Game when the player leaves the sim zone.
     public void OnSessionEnd()
     {
-        if (!hasGaugeSnapshot) return;
-        hasGaugeSnapshot = false;
-        var jgm = JobGaugeManager.Instance();
-        if (jgm == null || jgm->ClassJobId != snapshotJob) return;
-        fixed (byte* src = gaugeSnapshot)
-            Buffer.MemoryCopy(src, (byte*)jgm + GaugeUnionOffset, GaugeUnionSize, GaugeUnionSize);
+        if (gaugeSnapshot is { } snapshot) JobGaugeEdit.Restore(snapshot);
+        gaugeSnapshot = null;
     }
 
     // Called each frame by Plugin.OnFrameworkUpdate.
     public void Tick(float deltaSeconds)
     {
         if (!SimActive) return;
-        sprint.OnTick(deltaSeconds);
-        if (!Enabled) return;
-        castTime.OnTick(deltaSeconds);
-        foreach (var handler in effectHandlers) handler.OnTick(deltaSeconds);
-        foreach (var handler in tickHandlers) handler.OnTick(deltaSeconds);
+        foreach (var handler in handlers) if (Runs(handler)) handler.OnTick(deltaSeconds);
         ResolvePendingCast();
     }
 
@@ -153,12 +115,6 @@ public sealed unsafe class UserActions : IUserActions, IDisposable
         var seq = am->LastUsedActionSequence;
         if (seq == processedSeq) return; // queued press / re-entrant fire — already handled
         processedSeq = seq;
-
-        sprint.OnAction(actionType, actionId);
-        if (!Enabled) return;
-
-        // Enabler bookkeeping happens as the cast begins.
-        castTime.OnAction(actionType, actionId);
 
         // Effects resolve when the cast finishes. Instant (or made instant) → now; a real cast bar
         // this action started → deferred to completion (see ResolvePendingCast). The ActionId match
@@ -174,10 +130,11 @@ public sealed unsafe class UserActions : IUserActions, IDisposable
             pendingTarget = targetId;
             pendingTotal = bc->CastInfo.TotalCastTime;
             pendingMax = bc->CastInfo.CurrentCastTime;
+            foreach (var handler in handlers) if (Runs(handler)) handler.OnCastStart(actionType, actionId);
         }
         else
         {
-            foreach (var handler in effectHandlers) handler.OnAction(actionType, actionId, targetId);
+            foreach (var handler in handlers) if (Runs(handler)) handler.OnAction(actionType, actionId, targetId);
         }
     }
 
@@ -199,7 +156,11 @@ public sealed unsafe class UserActions : IUserActions, IDisposable
         {
             var am = ActionManager.Instance();
             if (am != null) processedSeq = am->LastUsedActionSequence; // dedup any re-entrant combo fire during dispatch
-            foreach (var handler in effectHandlers) handler.OnAction(pendingType, pendingAction, pendingTarget);
+            foreach (var handler in handlers) if (Runs(handler)) handler.OnAction(pendingType, pendingAction, pendingTarget);
+        }
+        else
+        {
+            foreach (var handler in handlers) if (Runs(handler)) handler.OnCastInterrupted(pendingType, pendingAction);
         }
         pendingResolve = false;
         pendingMax = 0;

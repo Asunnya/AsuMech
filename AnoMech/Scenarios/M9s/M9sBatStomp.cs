@@ -137,7 +137,6 @@ public sealed class M9sBatStomp(SimWorld world, DamageSolver damage, M9sSatisfie
                     Level: 100,
                     Targetable: false,
                     EnemyList: EnemyListMode.Never,
-                    IsVisible: true,
                     Placement: pattern.BatPlacement(ring, i, 0f)));
                 if (bat != null) bats.Add((bat, ring, i));
             }

@@ -109,7 +109,6 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
             world.Events.Add(CloneAppearAt[k], () => CloneAppear(clone));
         }
         world.Events.Add(14.55f, ChaosLands);
-        world.Events.Add(14.94f, BotTankLimitBreak);
         world.Events.Add(17.56f, () => state.Objects.Exdeath?.Follow(party.Get(PartyRole.OffTank)));
         world.Events.Add(NumbersAt, AttachNumbers);
         world.Events.Add(19.967f, ResolveCyclones);
@@ -145,7 +144,7 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
             state.Objects.Chaos?.Follow(party.Get(PartyRole.MainTank));
             state.Objects.Exdeath?.Follow(party.Get(PartyRole.OffTank));
         });
-        world.Events.Add(50.581f, () => state.Objects.Kefka?.PlayAnimationTimeline(TimelineId.Spawn));
+        world.Events.Add(50.581f, () => state.Objects.Kefka?.PlayActionTimeline(ActionTimelineId.WarpEnd));
     }
 
     // Scheduled by host and peer alike, so broadcast: false; a peer's own clones play the same
@@ -199,15 +198,15 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
         var hold = SpotHeading(state.BossSpot);
         objects.Kefka = world.SpawnEnemy(new EnemySpawnConfig(
             BNpcBaseId: BNpcBaseId.KefkaP3, NameId: BNpcNameId.Kefka, Level: 100,
-            Targetable: false, EnemyList: EnemyListMode.Always, IsVisible: true,
+            Targetable: false, EnemyList: EnemyListMode.Always, Visibility: SpawnVisibility.Visible,
             Placement: new Placement(new Vector3(0f, 0f, -10f), 0f)));
         objects.Chaos = world.SpawnEnemy(new EnemySpawnConfig(
             BNpcBaseId: BNpcBaseId.ChaosP3, NameId: BNpcNameId.Chaos, Level: 100,
-            Targetable: true, EnemyList: EnemyListMode.Always, IsVisible: true,
+            Targetable: true, EnemyList: EnemyListMode.Always, Visibility: SpawnVisibility.Visible,
             Placement: new Placement(OnCircle(hold, 9f), hold + MathF.PI)));
         objects.Exdeath = world.SpawnEnemy(new EnemySpawnConfig(
             BNpcBaseId: BNpcBaseId.Exdeath, NameId: BNpcNameId.Exdeath, Level: 100,
-            Targetable: true, EnemyList: EnemyListMode.Always, IsVisible: true,
+            Targetable: true, EnemyList: EnemyListMode.Always, Visibility: SpawnVisibility.Visible,
             Placement: new Placement(
                 OnCircle(hold, 10.6f) + OnCircle(hold + MathF.PI / 2f, 1.6f),
                 hold + MathF.PI)));
@@ -217,19 +216,19 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
         for (var k = 0; k < 8; k++)
             objects.Clones[k] = world.SpawnEnemy(new EnemySpawnConfig(
                 BNpcBaseId: BNpcBaseId.KefkaCloneP3, NameId: BNpcNameId.Kefka, Level: 100,
-                Targetable: false, EnemyList: EnemyListMode.Never, IsVisible: true,
+                Targetable: false, EnemyList: EnemyListMode.Never, Visibility: SpawnVisibility.Visible,
                 Placement: new Placement(Vector3.Zero, 0f),
                 NpcSpawnTemplate: UmadRealPackets.CloneP3NpcSpawn, PacketSpawnEnableDraw: true));
         // Cyclone's caster-side VFX needs a real skeleton; the real 9020 helpers have none.
         for (var i = 0; i < 8; i++)
             cycloneHelpers[i] = world.SpawnEnemy(new EnemySpawnConfig(
                 BNpcBaseId: BNpcBaseId.Chaos, NameId: BNpcNameId.Chaos, Level: 1,
-                Targetable: false, EnemyList: EnemyListMode.Never, IsVisible: false,
+                Targetable: false, EnemyList: EnemyListMode.Never, Visibility: SpawnVisibility.HiddenUntilShown,
                 Placement: new Placement(WindCrystalPos, 0f)));
         // The strike's VFX sits on the target, so the helper's model never matters.
         thunderHelper = world.SpawnEnemy(new EnemySpawnConfig(
             BNpcBaseId: BNpcBaseId.KefkaHelper, NameId: BNpcNameId.Exdeath, Level: 1,
-            Targetable: false, EnemyList: EnemyListMode.Never, IsVisible: false,
+            Targetable: false, EnemyList: EnemyListMode.Never, Visibility: SpawnVisibility.InvisibleHelper,
             Placement: new Placement(WindCrystalPos, 0f)));
         // The fire and water crystals faded when their elements resolved, before this window.
         windCrystal = world.SpawnEventObject(new EventObjectSpawnConfig { EObjId = EObjId.WindCrystal, Placement = new Placement(WindCrystalPos, -0.785f) });
@@ -283,14 +282,6 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
         chaos.Cast(UmadActions.UmbraSmash, umbraImpact);
     }
 
-    // Skipped by default when the human is a tank, so the press is theirs to make.
-    private void BotTankLimitBreak()
-    {
-        if (!(settingsWindow.Overrides.BotTankLimitBreak ?? !party.PlayerRole.IsTank())) return;
-        if (party.UseLimitBreak(PartyRole.MainTank) || party.UseLimitBreak(PartyRole.OffTank)) return;
-        DiagnosticLog.Warn("[UmadP3LimitCut] No bot tank used LB3.");
-    }
-
     private void ChaosLands()
     {
         if (state.Objects.Chaos is not { } chaos) return;
@@ -303,7 +294,6 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
         if (state.Objects.Clones[k] is not { } clone) return;
         var spot = state.PlacementSpot(k);
         clone.SetPosition(new Placement(SpotPosition(spot), SpotHeading(spot) + MathF.PI));
-        clone.SetVisible(true);
         if (k == 0) state.Objects.Kefka?.SetAnimationState(0, 0);
     }
 
@@ -318,7 +308,7 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
         for (var k = 0; k < 8; k++)
         {
             if (party.Get(state.Numbers[k]) is not { } member || !member.IsAlive()) continue;
-            member.AttachLockonVfx(LockonId.LimitCutNumbers[k], duration: ChargeAt[k] - NumbersAt, persistent: false);
+            member.AttachLockonVfx(LockonId.LimitCutNumbers[k]);
         }
     }
 

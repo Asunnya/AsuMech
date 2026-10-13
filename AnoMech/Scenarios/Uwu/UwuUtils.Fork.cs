@@ -47,10 +47,8 @@ public partial class UwuUtils
     public static void Lockon(SimCharacter? target, uint lockonId)
     {
         if (target == null) return;
-        target.ActorControl(SetLockonControl, lockonId, target.GameObjectId.ObjectId);
+        target.ActorControl.HeadMarker(lockonId);
     }
-
-    private const uint SetLockonControl = 34;
 
     public static void CastSelf(SimEnemy? caster, uint actionId, float castSeconds) =>
         caster?.NativeCast(actionId, ActionType.Action, 0f, castSeconds, false, targetId: caster.GameObjectId);

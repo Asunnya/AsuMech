@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using System.Numerics;
+using System.Collections.Generic;
 using AnoMech.Core.Native.Implementations.Interop;
 using AnoMech.Core.Native.Interfaces;
 using FFXIVClientStructs.FFXIV.Client.LayoutEngine;

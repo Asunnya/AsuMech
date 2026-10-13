@@ -8,7 +8,6 @@ using AnoMech.Core.Game.Party;
 using AnoMech.Core.SimObjects;
 using AnoMech.Multiplayer;
 using FFXIVClientStructs.FFXIV.Client.Game;
-using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using static AnoMech.Scenarios.Uwu.UwuConstants;
 using AnoMech.Core.Native.Interfaces;
 using Actions = AnoMech.Scenarios.Uwu.UwuActions;
@@ -152,7 +151,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
                     Level: 70,
                     Targetable: true,
                     EnemyList: EnemyListMode.Always,
-                    IsVisible: true,
+                    Visibility: SpawnVisibility.Visible,
                     Placement: new Placement(
                         new Vector3(0, 0, -10),
                         0),
@@ -166,7 +165,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
                     Level: 70,
                     Targetable: false,
                     EnemyList: EnemyListMode.Never,
-                    IsVisible: false,
+                    Visibility: SpawnVisibility.HiddenUntilShown,
                     Placement: new Placement(
                         new Vector3(0, 0, 0),
                         0))
@@ -181,7 +180,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
                     Level: 70,
                     Targetable: false,
                     EnemyList: EnemyListMode.Never,
-                    IsVisible: false,
+                    Visibility: SpawnVisibility.HiddenUntilShown,
                     Placement: new Placement(
                         new Vector3(0, 0, 0),
                         0))
@@ -196,18 +195,13 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
                     Level: 70,
                     Targetable: false,
                     EnemyList: EnemyListMode.Never,
-                    IsVisible: false,
+                    Visibility: SpawnVisibility.HiddenUntilShown,
                     Placement: new Placement(
                         new Vector3(0, 0, 0),
                         0))
             );
 
             titan?.AddStatusParam(StatusId.Woken, 0);
-
-            utils.Awaken(ultima!, true);
-            utils.Awaken(garuda!, false);
-            utils.Awaken(ifrit!, false);
-            utils.Awaken(titan!, false);
 
             chirada = world.SpawnEnemy(
                 new EnemySpawnConfig(
@@ -216,7 +210,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
                     Level: 70,
                     Targetable: false,
                     EnemyList: EnemyListMode.Never,
-                    IsVisible: false,
+                    Visibility: SpawnVisibility.HiddenUntilShown,
                     Placement: new Placement(
                         new Vector3(0, 0, 0),
                         0))
@@ -229,7 +223,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
                     Level: 70,
                     Targetable: false,
                     EnemyList: EnemyListMode.Never,
-                    IsVisible: false,
+                    Visibility: SpawnVisibility.HiddenUntilShown,
                     Placement: new Placement(
                         new Vector3(0, 0, 0),
                         0))
@@ -244,7 +238,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
                     Level: 70,
                     Targetable: false,
                     EnemyList: EnemyListMode.Never,
-                    IsVisible: true,
+                    Visibility: SpawnVisibility.InvisibleHelper,
                     Placement: new Placement(
                         new Vector3(0, 0, 0),
                         0)
@@ -257,6 +251,15 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
 
             mt?.AddStatus(StatusId.ThermalLow);
             healer?.AddStatus(StatusId.ThermalLow);
+        });
+
+        // Once the engine has created the actors; an ActorControl sent before that is dropped.
+        world.Events.Add(0.5f, () =>
+        {
+            utils.Awaken(ultima, true);
+            utils.Awaken(garuda, false);
+            utils.Awaken(ifrit, false);
+            utils.Awaken(titan, false);
         });
     }
 
@@ -345,25 +348,19 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
 
         world.Events.Add(12.37f, () =>
         {
-            garuda?.SetVisible(true);
             garuda?.PlayActionTimeline(ActionTimelineId.WarpEnd);
 
-            chirada?.SetVisible(true);
             chirada?.PlayActionTimeline(ActionTimelineId.WarpEnd);
 
-            suparna?.SetVisible(true);
             suparna?.PlayActionTimeline(ActionTimelineId.WarpEnd);
         });
 
-        world.Events.Add(14.50f, () => garuda?.PlayActionTimeline(ActionTimelineId.RazorPlume));
+        world.Events.Add(14.50f, () => garuda?.PlayActionTimeline(TimelineId.RazorPlume));
 
         world.Events.Add(15.48f, () =>
         {
-            var playerMistral1 = state.PlayerMistralSongs[0]!;
-            var playerMistral2 = state.PlayerMistralSongs[1]!;
-
-            Lockon(playerMistral1, LockonId.MistralSong);
-            Lockon(playerMistral2, LockonId.MistralSong);
+            state.PlayerMistralSongs[0]?.AttachLockonVfx(LockonId.MistralSong);
+            state.PlayerMistralSongs[1]?.AttachLockonVfx(LockonId.MistralSong);
         });
 
         world.Events.Add(17.95f, () =>
@@ -463,24 +460,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
 
         utils.FeatherRain([() => dummies[8], () => dummies[9], () => dummies[10], () => dummies[11], () => dummies[12]], 41.20f, 42.47f, state.FeatherRainTargets);
 
-        world.Events.Add(42.97f, () =>
-        {
-            foreach (var (razorPlume, _) in razorPlumes)
-            {
-                razorPlume!.ActorControl(14); // Death Animation
-                razorPlume!.ActorControl(2, 2); // Set Mode
-            }
-
-            razorPlumesDamage = false;
-        });
-
-        world.Events.Add(51.12f, () =>
-        {
-            foreach (var (razorPlume, _) in razorPlumes)
-            {
-                razorPlume!.ActorControl(39); // Fade-Out
-            }
-        });
+        world.Events.Add(42.97f, () => razorPlumesDamage = false);
 
         world.Events.Add(52.87f, DespawnRazorPlumes);
     }
@@ -495,7 +475,6 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
 
         world.Events.Add(12.37f, () =>
         {
-            ifrit?.SetVisible(true);
             ifrit?.PlayActionTimeline(ActionTimelineId.WarpEnd);
         });
 
@@ -519,7 +498,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
 
         world.Events.Add(31.60f, () => ifrit?.PlayActionTimeline(ActionTimelineId.WarpEnd));
 
-        world.Events.Add(33.60f, () => Lockon(state.PlayerFlamingCrush, LockonId.FlamingCrush));
+        world.Events.Add(33.60f, () => state.PlayerFlamingCrush?.AttachLockonVfx(LockonId.FlamingCrush));
 
         world.Events.Add(38.78f, () =>
         {
@@ -539,7 +518,6 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
 
         world.Events.Add(12.37f, () =>
         {
-            titan?.SetVisible(true);
             titan?.PlayActionTimeline(ActionTimelineId.WarpEnd);
         });
 
@@ -564,14 +542,14 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
                 Level: 70,
                 Targetable: false,
                 EnemyList: EnemyListMode.Manual,
-                IsVisible: true,
+                Visibility: SpawnVisibility.Visible,
                 Placement: new(state.PlayerGaol!.Position, 0)
                 )
             )
         );
 
         // Unknown
-        world.Events.Add(23.32f, () => graniteGaol!.ActorControl(36, 1, 142));
+        world.Events.Add(23.32f, () => graniteGaol!.ActorControl.Send(36, 1, 142));
 
         world.Events.Add(23.54f, () =>
         {
@@ -589,9 +567,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
             state.PlayerGaol!.SetTargetable(true);
             state.PlayerGaol!.RemoveStatus(StatusId.Fetters);
 
-            graniteGaol!.Proxy?.SetMode(CharacterModes.Dead);
-            graniteGaol!.CancelCast();
-            graniteGaol!.ActorControl(14); // Death Animation
+            graniteGaol!.Defeat();
         });
 
         world.Events.Add(32.84f, () =>
@@ -604,10 +580,6 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
         utils.LandslideLines(() => titan, [() => dummies[8], () => dummies[9], () => dummies[10], () => dummies[11], () => dummies[12]], 32.84f, LandslideType.Normal);
 
         utils.LandslideLines(() => titan, [() => dummies[3], () => dummies[4], () => dummies[5], () => dummies[6], () => dummies[7]], 35.07f, LandslideType.Awaken);
-
-        world.Events.Add(36.95f, () => graniteGaol!.ActorControl(39)); // Fade-Out
-
-        world.Events.Add(38.78f, () => graniteGaol?.Despawn());
 
         world.Events.Add(41.20f, () => titan?.PlayActionTimeline(ActionTimelineId.WarpStart));
     }
@@ -643,7 +615,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
                 Level: 70,
                 Targetable: false,
                 EnemyList: EnemyListMode.Never,
-                IsVisible: true,
+                Visibility: SpawnVisibility.Visible,
                 Placement: placement,
                 InitialModeAttributeFlags: 0x0
                 )
@@ -661,11 +633,6 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
         {
             plume?.Despawn();
         }
-    }
-
-    private void Lockon(SimCharacter? target, uint lockonId)
-    {
-        target!.ActorControl(34, lockonId, target.GameObjectId.ObjectId);
     }
 
     public MpMessage? BuildReplayStateMessage()

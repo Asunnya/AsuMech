@@ -6,11 +6,12 @@ public sealed record ActionRow(
     uint Id,
     string Name,
     float CastSeconds,
-    byte CastType,
+    CastType CastType,
     byte EffectRange,
     byte XAxisModifier,
     string? OmenPath,
     string? OmenAltPath,
     uint ActionCategory,
     bool CanTargetSelf,
-    bool CanTargetParty);
+    bool CanTargetParty,
+    sbyte AttackType);

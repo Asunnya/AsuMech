@@ -1,18 +1,24 @@
 using System;
 using System.Numerics;
 using AnoMech.Core.Game.Geometry;
+using AnoMech.Core.Native.Interfaces;
 using AnoMech.Core.SimObjects;
 
 namespace AnoMech.Core.Game;
 
+// The animation is the client's: it plays an NPC's run (or a slide's knockback pose) from the
+// ActorMoves the steps send, and the local player's from its own input.
 internal class Movement(SimCharacter parent)
 {
-    protected const ushort RunTimelineId = 22;
-    private const ushort KnockbackTimelineId = 156;
-
     // After a follower reaches its target it waits this long before chasing again,
     // so it doesn't twitch back into motion the instant the target drifts.
     private const float FollowArrivalCooldown = 0.5f;
+
+    // A follow lands exactly on the hitbox edge; float error mustn't keep it walking.
+    private const float FollowArrivalSlack = 0.05f;
+
+    // A step went out since the last Halt, so the model may be aimed ahead of the sim.
+    private bool stepping;
 
     private Vector3? destination;
     private float speed;
@@ -21,16 +27,14 @@ internal class Movement(SimCharacter parent)
     private bool avoid = true;
     private int steerSide;
     private bool moveForced;
-    private ushort timelineId;
-    private bool timelineBaseOverride;
-    private bool animActive;
+    private ActorMoveFlags stepFlags;
 
     // Only PushInDirectionEased sets this; every other move steps at a fixed speed.
     private float? easeDuration;
     private float easeElapsed;
     private Vector3 easeStart;
-    private float easeDelay;
-    private bool easeOut;
+
+    protected SimCharacter Parent => parent;
 
     protected virtual ObstacleField Obstacles => parent.Obstacles;
 
@@ -40,6 +44,7 @@ internal class Movement(SimCharacter parent)
 
     private SimCharacter? followTarget;
     private bool followForced;
+    private bool followWalking;
     private float followCooldown;
 
     private SimTether? interceptTether;
@@ -55,8 +60,8 @@ internal class Movement(SimCharacter parent)
     // Narrower than IsMoving: true only while a PushInDirectionEased is mid-flight.
     public bool IsEasedMoving => easeDuration != null;
 
-    public virtual void MoveTo(Vector3 t, float sp = 6f, float? finalRot = null, ushort tl = RunTimelineId, bool baseOverride = true)
-        => InternalMoveTo(t, sp, finalRot, tl, baseOverride);
+    public virtual void MoveTo(Vector3 t, float sp = 6f, float? finalRot = null)
+        => InternalMoveTo(t, sp, finalRot);
 
     // forced: the mechanic itself is taking control (UMAD P1's Confusion), as opposed to a
     // strat walking a bot to its spot. Only a forced follow may drive a real player -- see
@@ -152,8 +157,8 @@ internal class Movement(SimCharacter parent)
     {
         var kbDestination = parent.Placement().Face(source).MoveForward(-distance).Position;
         // Knockback is forced movement: don't steer around or stop short of obstacles.
-        InternalMoveTo(kbDestination, kbSpeed, tl: KnockbackTimelineId, baseOverride: false, faceTravel: false, avoid: false, forced: true);
-        GiveUpForcedMoveAfter(distance, kbSpeed);
+        InternalMoveTo(kbDestination, kbSpeed, faceTravel: false, avoid: false, forced: true,
+            flags: ActorMoveFlags.Knockback);
     }
 
     // Forced movement along a fixed heading (Umad P1's arrows), with Knockback's forced-move
@@ -162,16 +167,9 @@ internal class Movement(SimCharacter parent)
     {
         var dir = new Vector2(MathF.Sin(heading), MathF.Cos(heading));
         var dest = parent.Position + new Vector3(dir.X * distance, 0f, dir.Y * distance);
-        InternalMoveTo(dest, pushSpeed, tl: KnockbackTimelineId, baseOverride: false, faceTravel: false, avoid: false, forced: true);
-        GiveUpForcedMoveAfter(distance, pushSpeed);
+        InternalMoveTo(dest, pushSpeed, faceTravel: false, avoid: false, forced: true,
+            flags: ActorMoveFlags.Knockback);
     }
-
-    // A wall's collision can hold the player short of a forced-move destination; without a
-    // deadline the move never ends and the input lock tied to it stays on.
-    private float? forcedMoveDeadline;
-
-    private void GiveUpForcedMoveAfter(float distance, float moveSpeed) =>
-        forcedMoveDeadline = moveSpeed > 0f ? distance / moveSpeed + 0.5f : null;
 
     // Same forced-move semantics, but smoothstep-eased over durationSeconds: a real arrow push
     // eases in, holds and eases out over ~1s rather than sliding at one speed.
@@ -182,30 +180,17 @@ internal class Movement(SimCharacter parent)
         var dest = start + new Vector3(dir.X * distance, 0f, dir.Y * distance);
         // Speed is meaningless for an eased move. The ease fields are set after the call, which
         // clears easeDuration.
-        InternalMoveTo(dest, 0f, tl: KnockbackTimelineId, baseOverride: false, faceTravel: false, avoid: false, forced: true);
+        InternalMoveTo(dest, 0f, faceTravel: false, avoid: false, forced: true,
+            flags: ActorMoveFlags.Knockback);
         easeStart = start;
         easeDuration = MathF.Max(0.01f, durationSeconds);
         easeElapsed = 0f;
     }
 
-    public void Carry(Vector3 destination, float delaySeconds, float durationSeconds)
-    {
-        var start = parent.Position;
-        InternalMoveTo(destination, 0f, tl: KnockbackTimelineId, baseOverride: false, faceTravel: false, avoid: false, forced: true);
-        easeStart = start;
-        easeDuration = MathF.Max(0.01f, durationSeconds);
-        easeElapsed = 0f;
-        easeDelay = MathF.Max(0f, delaySeconds);
-        easeOut = true;
-    }
-
-    // Shared move entry for MoveTo (locomotion) and Knockback (one-shot action).
-    // `baseOverride` selects the animation mechanism in StartAnim: true for a
-    // looping locomotion clip (run/walk), false for a one-shot action timeline
-    // (knockback). See StartAnim for why the two need different handling.
+    // Shared move entry for MoveTo (a walk) and Knockback/Push (a forced slide).
     private void InternalMoveTo(
-        Vector3 moveDestination, float sp = 6f, float? finalRot = null, ushort tl = RunTimelineId, bool baseOverride = true,
-        bool faceTravel = true, bool avoid = true, bool forced = false)
+        Vector3 moveDestination, float sp = 6f, float? finalRot = null,
+        bool faceTravel = true, bool avoid = true, bool forced = false, ActorMoveFlags flags = ActorMoveFlags.None)
     {
         if (!parent.IsAlive()) return;   // dead characters don't move
         if (!forced && Locked) return;
@@ -217,6 +202,7 @@ internal class Movement(SimCharacter parent)
             steerSide = 0;
         }
         destination = moveDestination;
+        stepFlags = flags;
         moveForced = forced;
         speed = MathF.Max(0f, sp);
         finalRotation = finalRot;
@@ -224,13 +210,6 @@ internal class Movement(SimCharacter parent)
         this.avoid = avoid;
         // A stale ease must not carry onto a fixed-speed move.
         easeDuration = null;
-        easeDelay = 0f;
-        easeOut = false;
-        forcedMoveDeadline = null;
-        var sameAnim = animActive && timelineId == tl;
-        timelineId = tl;
-        timelineBaseOverride = baseOverride;
-        if (!sameAnim) StartAnim();
     }
 
     public void Tick(float deltaSeconds)
@@ -239,7 +218,7 @@ internal class Movement(SimCharacter parent)
 
         if (parent.AnimationLock)
         {
-            StopAnim();
+            Halt();
             return;
         }
 
@@ -248,32 +227,15 @@ internal class Movement(SimCharacter parent)
 
         if (destination is not { } dest) return;
 
-        if (forcedMoveDeadline is { } deadline)
-        {
-            forcedMoveDeadline = deadline - deltaSeconds;
-            if (forcedMoveDeadline <= 0f)
-            {
-                Stop();
-                return;
-            }
-        }
-
-        // Re-assert the movement animation if a move is still pending but its
-        // animation was stopped while we were animation-locked. Follow re-issues
-        // via InternalMoveTo every tick (which restarts the anim itself), but a
-        // one-shot MoveTo/Knockback won't, so re-assert here or it would slide the
-        // rest of the way unanimated.
-        if (!animActive) StartAnim();
-
         // Eased moves have their own path: the fixed-speed branch would treat speed 0 as "arrived".
         if (easeDuration is { } duration)
         {
-            if (easeDelay > 0f) { easeDelay -= deltaSeconds; return; }
             easeElapsed += deltaSeconds;
             var t = Math.Clamp(easeElapsed / duration, 0f, 1f);
-            var eased = easeOut ? 1f - (1f - t) * (1f - t) * (1f - t) : t * t * (3f - 2f * t);
-            var next = Vector3.Lerp(easeStart, dest, eased);
-            parent.SetPosition(next);
+            var next = Vector3.Lerp(easeStart, dest, SmoothStep(t));
+            var glide = Vector3.Lerp(easeStart, dest, SmoothStep(Math.Clamp((easeElapsed + SimCharacter.ModelGlideSeconds) / duration, 0f, 1f)));
+            var stepSpeed = deltaSeconds > 0f ? Vector3.Distance(parent.Position, next) / deltaSeconds : 0f;
+            Step(next, glide, stepSpeed, arrived: t >= 1f);
             if (t >= 1f) Stop();
             return;
         }
@@ -294,7 +256,8 @@ internal class Movement(SimCharacter parent)
         if (distSq <= step * step || step <= 0f)
         {
             var rot = finalRotation ?? (faceTravel && distSq > 1e-6f ? MathF.Atan2(dx, dz) : parent.Rotation);
-            parent.SetPosition(new Vector3(dest2.X, dest.Y, dest2.Y));
+            var arrival = new Vector3(dest2.X, dest.Y, dest2.Y);
+            Step(arrival, arrival, speed, arrived: true);
             parent.TurnTo(rot);
             finalRotation = null;
             Stop();
@@ -307,8 +270,12 @@ internal class Movement(SimCharacter parent)
             // empty, nothing blocks, or this is forced movement.
             var heading = avoid ? Obstacles.Steer(new Vector2(cur.X, cur.Z), desired, dist, ref steerSide) : desired;
             var next = new Vector3(cur.X + heading.X * step, cur.Y, cur.Z + heading.Y * step);
-            parent.SetPosition(next);
-            if (faceTravel) parent.TurnTo(MathF.Atan2(heading.X, heading.Y));
+            var lead = speed * SimCharacter.ModelGlideSeconds;
+            var glide = lead >= dist
+                ? new Vector3(dest2.X, dest.Y, dest2.Y)
+                : new Vector3(cur.X + heading.X * lead, cur.Y, cur.Z + heading.Y * lead);
+            Step(next, glide, speed, arrived: false);
+            if (faceTravel && !GameWalks) parent.TurnTo(MathF.Atan2(heading.X, heading.Y));
         }
     }
 
@@ -335,17 +302,26 @@ internal class Movement(SimCharacter parent)
         }
 
         var stopDist = parent.HitboxRadius + followTarget.HitboxRadius;
-        if (parent.Placement().DistanceSq(followTarget) <= stopDist * stopDist)
+        var reach = stopDist + FollowArrivalSlack;
+        if (parent.Placement().DistanceSq(followTarget) <= reach * reach)
         {
-            // Start the cooldown only on the frame we actually arrive (were moving).
-            if (IsMoving) followCooldown = FollowArrivalCooldown;
+            // Start the cooldown only on the frame we actually arrive (were walking the follow;
+            // the walk may already have stopped itself on the edge point).
+            if (IsMoving || followWalking) followCooldown = FollowArrivalCooldown;
+            followWalking = false;
             Stop();
             Face(followTarget.Position);
         }
         else
         {
+            // Walk to the hitbox edge, not the centre: the model is aimed ahead along the path
+            // (SimCharacter.ModelGlideSeconds), so a centre destination would carry it inside.
+            var target = followTarget.Position;
+            var away = new Vector2(parent.Position.X - target.X, parent.Position.Z - target.Z);
+            var edge = away.LengthSquared() > 1e-6f ? Vector2.Normalize(away) * stopDist : Vector2.Zero;
+            followWalking = true;
             internalReissue = true;
-            InternalMoveTo(followTarget.Position, speed, forced: followForced);
+            InternalMoveTo(new Vector3(target.X + edge.X, target.Y, target.Z + edge.Y), speed, forced: followForced);
             internalReissue = false;
         }
     }
@@ -363,34 +339,30 @@ internal class Movement(SimCharacter parent)
         destination = null;
         interceptTether = null;
         easeDuration = null;
-        StopAnim();
+        Halt();
     }
 
+    private static float SmoothStep(float t) => t * t * (3f - 2f * t);
 
-    // Two distinct animation mechanisms, selected by timelineBaseOverride:
-    //   * Locomotion (run/walk, 22): the engine recomputes the base slot from the
-    //     character's movement state every frame, and a SetPosition-driven doppel
-    //     reads as velocity 0 -> idle, which clobbers a plain PlayActionTimeline
-    //     (the model just slides). BaseOverride is the one field the engine forces
-    //     instead, so we pass timelineId there to keep the run loop applied.
-    //   * One-shot action (knockback, 156): an action timeline isn't derived from
-    //     movement state, so it plays through with baseOverride 0; ResetActionTimeline
-    //     (StopAnim) returns it to idle on arrival. Passing it as BaseOverride would
-    //     loop the pose forever (the original "knockback stuck" bug).
-    protected void StartAnim()
+    // One step toward `next` at `stepSpeed` y/s; `glide` is where the sim will be
+    // SimCharacter.ModelGlideSeconds from now. `arrived` on the step that lands on the destination.
+    protected virtual void Step(Vector3 next, Vector3 glide, float stepSpeed, bool arrived)
     {
-        // Native entry point: SimEnemy's PlayActionTimeline override broadcasts scenario cues,
-        // which movement must not trigger.
-        parent.PlayActionTimelineNative(timelineId, baseOverride: timelineBaseOverride ? timelineId : (ushort)0);
-        animActive = true;
+        stepping = true;
+        parent.StepTo(next, glide, stepFlags, stepSpeed);
     }
 
-    protected void StopAnim()
+    // Movement stopped or is held by an animation lock. The model was aimed ahead of the sim, so
+    // it's re-aimed where the sim stopped.
+    protected virtual void Halt()
     {
-        if (!animActive) return;
-        parent.ResetActionTimelineNative();
-        animActive = false;
+        if (!stepping) return;
+        stepping = false;
+        parent.StepTo(parent.Position, parent.Position, ActorMoveFlags.None, 0f);
     }
+
+    // The game walks the character itself (real input) and faces it the way it goes.
+    protected virtual bool GameWalks => false;
 
     public void Face(Vector3? t)
     {
@@ -405,12 +377,12 @@ internal class Movement(SimCharacter parent)
 internal sealed class PlayerMovement(SimCharacter parent) : Movement(parent)
 {
     // Normally a no-op, since AiManager addresses every slot uniformly; DebugBotControl lets
-    // the AI drive the real character (SyncInputLock then zeroes manual input via IsMoving).
-    public override void MoveTo(Vector3 t, float sp = 6f, float? finalRot = null, ushort tl = RunTimelineId, bool baseOverride = true)
+    // the AI drive the real character.
+    public override void MoveTo(Vector3 t, float sp = 6f, float? finalRot = null)
     {
         if (DebugBotControl.Enabled)
         {
-            base.MoveTo(t, sp, finalRot, tl, baseOverride);
+            base.MoveTo(t, sp, finalRot);
             return;
         }
         // NO-OP - player cannot be moved like this
@@ -423,6 +395,23 @@ internal sealed class PlayerMovement(SimCharacter parent) : Movement(parent)
 
     // A human walks a forced follow (Confusion) straight; only a bot steers around geometry.
     protected override ObstacleField Obstacles => DebugBotControl.Enabled ? base.Obstacles : ObstacleField.Empty;
+
+    // The client owns its player's position, so the walk goes in as movement input and the game
+    // moves the character at its own run (or sprint) speed.
+    protected override void Step(Vector3 next, Vector3 glide, float stepSpeed, bool arrived)
+    {
+        if (arrived)
+        {
+            Halt();
+            return;
+        }
+        var d = next - Parent.Position;
+        Natives.PlayerInput.Steer(new Vector2(d.X, d.Z), stepSpeed);
+    }
+
+    protected override void Halt() => Natives.PlayerInput.Steer(null, 0f);
+
+    protected override bool GameWalks => true;
 }
 
 // Position comes from received poses (SimNetworkPuppet.ApplyNetworkPose); a scheduled bot
@@ -432,7 +421,7 @@ internal sealed class NetworkPuppetMovement(SimCharacter parent) : Movement(pare
     // The owner's own client applies their lock.
     protected override bool Locked => false;
 
-    public override void MoveTo(Vector3 t, float sp = 6f, float? finalRot = null, ushort tl = RunTimelineId, bool baseOverride = true)
+    public override void MoveTo(Vector3 t, float sp = 6f, float? finalRot = null)
     {
         // NO-OP - position comes from the network, not local pathing
     }

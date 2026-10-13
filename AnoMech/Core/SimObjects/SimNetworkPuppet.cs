@@ -25,27 +25,19 @@ public sealed class SimNetworkPuppet : SimNpc, ISimPartyMember
     private float estimatedPoseInterval = 0.05f;
     private const float MaxPoseExtrapolationSeconds = 1f;
     private Vector3 poseVelocity;
-    // Game.Movement.RunTimelineId; the Movement property below shadows that type name here.
-    private const ushort RunTimelineId = 22;
 
     private Vector3? targetPosition;
     private float targetRotation;
-    private bool interpAnimActive;
-    private bool poseMoving;
-
-    // Below this, two consecutive poses read as "same spot" rather than motion.
-    private const float PoseMovementEpsilon = 0.01f;
 
     // Mechanic resolution must see where the peer's real character is, not where the model
     // has interpolated to; base.Position stays what Tick drives and what is rendered.
     public override Vector3 Position => targetPosition ?? base.Position;
 
     public PartyRole Role { get; set; }
-    public bool Dead { get; private set; }
     public byte ClassJob { get; }
     public string DisplayName { get; }
 
-    internal SimNetworkPuppet(IBattleCharaProxy proxy, Coordinates coordinates, PartyRole role, byte classJob, string name) : base(proxy, coordinates)
+    internal SimNetworkPuppet(IBattleCharaProxy proxy, Coordinates coordinates, PartyRole role, byte classJob, string name) : base(proxy, coordinates, pendingDraw: false)
     {
         Role = role;
         ClassJob = classJob;
@@ -54,14 +46,11 @@ public sealed class SimNetworkPuppet : SimNpc, ISimPartyMember
 
     private protected override Movement Movement => field ??= new NetworkPuppetMovement(this);
 
-    // The position write happens in Tick so the model steps toward the pose with the run
-    // animation playing. poseMoving comes from whether the reported position is advancing,
-    // not from interpolation state (see SimEnemy.TickNetworkPosition).
+    // The position moves in Tick, which steps toward the pose.
     public void ApplyNetworkPose(Vector3 position, float rotation)
     {
         if (targetPosition is { } previous)
         {
-            poseMoving = Vector3.DistanceSquared(previous, position) > PoseMovementEpsilon * PoseMovementEpsilon;
             estimatedPoseInterval += (timeSinceLastPose - estimatedPoseInterval) * IntervalSmoothingFactor;
             poseVelocity = timeSinceLastPose > MinPacingWindowSeconds ? (position - previous) / timeSinceLastPose : Vector3.Zero;
         }
@@ -85,22 +74,15 @@ public sealed class SimNetworkPuppet : SimNpc, ISimPartyMember
         var remainingWindow = MathF.Max(estimatedPoseInterval - timeSinceLastPose, MinPacingWindowSeconds);
         var step = MathF.Max(dist / remainingWindow, CatchUpSpeed) * deltaSeconds;
         var nextRotation = MathUtil.StepRotation(Rotation, targetRotation, AngularCatchUpSpeed * deltaSeconds);
-        if (dist > SnapThreshold || dist <= step)
+        var glideSpeed = deltaSeconds > 0f ? MathF.Min(dist, step) / deltaSeconds : 0f;
+        // The model is aimed where the peer will be a glide ahead (see SimCharacter.ModelGlideSeconds).
+        var glide = target + poseVelocity * ModelGlideSeconds;
+        if (dist > SnapThreshold)
             SetPosition(new Placement(target, nextRotation));
+        else if (dist <= step)
+            StepTo(new Placement(target, nextRotation), glide, ActorMoveFlags.None, glideSpeed);
         else
-            SetPosition(new Placement(basePos + delta / dist * step, nextRotation));
-
-        // Native entry points: interpolation is not a scenario cue to broadcast.
-        if (poseMoving && !interpAnimActive)
-        {
-            PlayActionTimelineNative(RunTimelineId, baseOverride: RunTimelineId);
-            interpAnimActive = true;
-        }
-        else if (!poseMoving && interpAnimActive)
-        {
-            ResetActionTimelineNative();
-            interpAnimActive = false;
-        }
+            StepTo(new Placement(basePos + delta / dist * step, nextRotation), glide, ActorMoveFlags.None, glideSpeed);
     }
 
     // A forced move here only moves the host's cosmetic copy; MultiplayerManager polls these
@@ -146,9 +128,9 @@ public sealed class SimNetworkPuppet : SimNpc, ISimPartyMember
     public void ClearPendingNetworkTeleport() => PendingNetworkTeleport = null;
 
     // The owner's client performs the carry; this copy follows their reported poses.
-    public (Vector3 Destination, CarryMode Mode)? PendingNetworkCarry { get; private set; }
+    public Vector3? PendingNetworkCarry { get; private set; }
 
-    public override void CarryTo(Vector3 destination, CarryMode mode = CarryMode.Native) => PendingNetworkCarry = (destination, mode);
+    public override void CarryTo(Vector3 destination) => PendingNetworkCarry = destination;
 
     public void ClearPendingNetworkCarry() => PendingNetworkCarry = null;
 
@@ -167,13 +149,10 @@ public sealed class SimNetworkPuppet : SimNpc, ISimPartyMember
 
     public void ClearPendingNetworkFollow() => PendingNetworkFollow = null;
 
-    public void OnKilled()
+    protected override void OnPacketSpawned(IBattleCharaProxy chara) => ActorControl.ZoneIn();
+
+    public void OnKilled(bool byEnvironment)
     {
-        Dead = true;
-        StopMoving();
-        interpAnimActive = false;
-        if (Proxy is not { Exists: true } chara) return;
-        chara.ApplyDeadState();
-        this.PlayKoActionTimeline();
+        GoDown(byEnvironment);
     }
 }

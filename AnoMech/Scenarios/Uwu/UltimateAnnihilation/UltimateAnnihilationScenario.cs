@@ -251,7 +251,7 @@ public sealed class UltimateAnnihilationScenario : IScenario
             Level: Level,
             Targetable: targetable,
             EnemyList: enemyList,
-            IsVisible: visible,
+            Visibility: SimEnemy.LegacyVisibility(baseId == BNpcBaseId.Dummy, visible),
             Placement: placement,
             InitialModeAttributeFlags: modeAttributeFlags));
 
@@ -490,7 +490,7 @@ public sealed class UltimateAnnihilationScenario : IScenario
         if (ultima == null || Get(PartyRole.MainTank) is not { } mainTank || !mainTank.IsAlive()) return;
         ultima.Face(mainTank);
         PlayEffect(ultima, ActionId.DiffractiveLaser, 1.1f, target: mainTank.GameObjectId);
-        var hits = party.Find.InsideActionAoe(ActionId.DiffractiveLaser, ultima.Placement(), extraRange: ultima.HitboxRadius);
+        var hits = party.Find.InsideActionAoe(ActionId.DiffractiveLaser, ultima.Placement(), casterHitboxRadius: ultima.HitboxRadius);
         UwuUtils.KillSnapshot(damage, hits.Where(hit => !IsTank(hit)), ActionId.DiffractiveLaser, "stood in the tank cleave");
     }
 

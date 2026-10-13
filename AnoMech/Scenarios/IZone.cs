@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using AnoMech.Core.Game;
+using AnoMech.Core.Map;
 using AnoMech.Core.SimObjects;
 
 namespace AnoMech.Scenarios;
@@ -25,8 +26,14 @@ public interface IZone
     // At least one; [0] is the default.
     IReadOnlyList<WaymarkLayout> WaymarkPresets { get; }
 
-    // Scenario-local positions whose BG SharedGroup colliders are dropped at start.
-    IReadOnlyList<Vector3> ColliderRemovalPoints => Array.Empty<Vector3>();
+    // From the server's zone-in spawn packet for the EObj. The player spawns at its Position.
+    // Null = spawn at Game.DefaultPlayerSpawnLocal, no spawn wall opened.
+    EntranceBarrier? EntranceBarrier => null;
+
+    // Resting state per MapEffect slot, copied from the server's MapEffect snapshot packet in a
+    // replay (the same at zone-in and every wipe reset). Sent at the start of every scenario,
+    // merged with IPhase.ArenaMapEffectOverrides. Empty = the zone has no MapEffect slots.
+    IReadOnlyList<ushort> ArenaMapEffectSnapshot => Array.Empty<ushort>();
 
     // Zone-wide setup, first in the cascade. Default no-op. Host/solo only -- may create
     // host-only simulation state (arena boundaries, scheduled MapEffect broadcasts) that

@@ -164,7 +164,7 @@ public class UwuConstants
         public const uint VulcanBurstUltima = 11508;
     }
 
-    public class ActionTimelineId
+    public static class TimelineId
     {
         public const ushort RazorPlume = 1412;
         public const ushort WarpStart = 7737;

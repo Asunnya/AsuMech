@@ -3,42 +3,41 @@ using AnoMech.Core.Native.Interfaces;
 
 namespace AnoMech.Core.Game.Party;
 
-// The party's faked limit break gauge. Solo in the inn the real gauge is empty, so a scenario
-// that grants one has it written into LimitBreakController every tick, for display only: the
-// real values are saved once and written back when the party despawns. The client gates presses
-// on it; the request packet is eaten by the firewall.
+// The party's faked limit break gauge. Solo in the inn the real gauge is empty, so Set sends the
+// local player the gauge's ActorControlSelf, for display only: the real values are saved once and
+// sent back when the party despawns. The client gates presses on it; the request packet is eaten
+// by the firewall.
 public sealed class LimitBreakGauge
 {
     private const ushort UnitsPerBar = 10000;
     private const byte Bars = 3;
 
-    // Null until a scenario grants a gauge; the native one is then left alone.
-    private ushort? units;
+    private readonly Func<ActorControl?> player;
+    private ushort units;
     private LimitBreakBars? saved;
 
-    public int FilledBars => (units ?? 0) / UnitsPerBar;
+    internal LimitBreakGauge(Func<ActorControl?> player) => this.player = player;
+
+    public int FilledBars => units / UnitsPerBar;
 
     public void Set(float bars)
-        => units = (ushort)(Math.Clamp(bars, 0f, Bars) * UnitsPerBar);
-
-    public void Spend()
     {
-        if (units != null) units = 0;
+        units = (ushort)(Math.Clamp(bars, 0f, Bars) * UnitsPerBar);
+        saved ??= Natives.LimitBreak.Read();
+        player()?.SetLimitBreakGauge(Bars, units, UnitsPerBar);
     }
 
-    internal void Tick()
+    internal void Spend()
     {
-        if (units is not { } current) return;
-        if (Natives.LimitBreak.Read() is not { } real) return;
-        saved ??= real;
-        Natives.LimitBreak.Write(new LimitBreakBars(Bars, current, UnitsPerBar));
+        units = 0;
+        player()?.SetLimitBreakGauge(Bars, units, UnitsPerBar);
     }
 
     internal void Restore()
     {
-        units = null;
+        units = 0;
         if (saved is not { } s) return;
         saved = null;
-        Natives.LimitBreak.Write(s);
+        player()?.SetLimitBreakGauge(s.BarCount, s.CurrentUnits, s.BarUnits);
     }
 }

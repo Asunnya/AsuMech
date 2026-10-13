@@ -48,7 +48,8 @@ internal sealed class SimArenaBoundary : ISimObject
         // Member positions are scenario-local; the boundary is centered on local zero.
         foreach (var member in party.ActiveMembers())
         {
-            if (IsOutside(member.Position)) member.Die(SimCharacterDeathExtensions.Environment, cause);
+            if (!IsOutside(member.Position)) continue;
+            member.Die(SimCharacterDeathExtensions.Environment, cause);
         }
     }
 

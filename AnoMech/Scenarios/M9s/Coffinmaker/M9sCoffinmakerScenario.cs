@@ -136,7 +136,6 @@ public sealed class M9sCoffinmakerScenario : IScenario
             Level: 100,
             Targetable: true,
             EnemyList: EnemyListMode.Always,
-            IsVisible: true,
             Placement: new Placement(Vector3.Zero, MathF.PI)));
         state.Satisfied.Attach(vamp);
     }
@@ -149,7 +148,6 @@ public sealed class M9sCoffinmakerScenario : IScenario
             Level: 100,
             Targetable: true,
             EnemyList: EnemyListMode.Always,
-            IsVisible: true,
             Placement: new Placement(new Vector3(0f, 0f, -25f), 0f)));
     }
 
@@ -161,7 +159,6 @@ public sealed class M9sCoffinmakerScenario : IScenario
             Targetable: false,
             EnemyList: EnemyListMode.Never,
             // Drawn so its action timelines play; the helper's ModelChara has no mesh.
-            IsVisible: true,
             Placement: placement));
         if (helper != null) helpers.Add(helper);
         return helper;

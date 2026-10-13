@@ -1,3 +1,4 @@
+using AnoMech.Core.Native.Implementations;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Gauge;
 
@@ -13,7 +14,8 @@ internal sealed unsafe class ViperStateHandler : IUserActionHandler
     {
         if (actionType != ActionType.Action) return;
         if (PlayerJob.Current != JobId.Viper) return;
-        var jgm = JobGaugeManager.Instance();
+        using var edit = JobGaugeEdit.Begin();
+        var jgm = edit.Gauge;
         if (jgm == null) return;
 
         switch (actionId)

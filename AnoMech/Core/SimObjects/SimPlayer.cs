@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Numerics;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Party;
@@ -10,48 +9,12 @@ namespace AnoMech.Core.SimObjects;
 
 public sealed class SimPlayer(Coordinates coordinates) : SimCharacter(coordinates), ISimPartyMember
 {
-    private const ushort StunStatusId = 896;  // "Down for the Count" (896) — IsPermanent + LockControl variant.
-    // Out-of-combat speed buff; it only ends on entering battle, which the firewalled server never signals.
-    private const ushort JogStatusId = 4209;
-
-    // The real HP bar is only touched on a scenario KO (a 1-HP sliver), restored in RestoreHpBar.
-    public void DropHpBar()
-    {
-        if (Proxy is { Exists: true } chara) chara.Health = 1;
-    }
-
-    public void RestoreHpBar()
-    {
-        if (Proxy is { Exists: true } chara && chara.Health < chara.MaxHealth) chara.Health = chara.MaxHealth;
-    }
-
-    // Real native MaxHealth before it was overridden; null if inactive.
-    private uint? realMaxHealth;
-
-    // Host-authoritative HP for a peer's own character; the real MaxHealth is captured once so
-    // Despawn restores it no matter what a host sent.
-    public void ApplyNetworkHp(uint currentHp, uint maxHp)
-    {
-        if (Proxy is not { Exists: true } chara || maxHp == 0) return;
-        realMaxHealth ??= chara.MaxHealth;
-        chara.MaxHealth = maxHp;
-        chara.Health = Math.Min(currentHp, maxHp);
-    }
-
-    // Must run before RestoreHpBar: restore MaxHealth first, then clamp Health down.
-    public void RestoreRealMaxHealth()
-    {
-        if (realMaxHealth is not { } original) return;
-        if (Proxy is { Exists: true } chara)
-        {
-            chara.MaxHealth = original;
-            if (chara.Health > original) chara.Health = original;
-        }
-        realMaxHealth = null;
-    }
-
     public PartyRole Role { get; set; }
-    public bool Dead { get; private set; }
+
+    // The out-of-combat Jog buff only ends on entering battle, which the firewalled server never
+    // signals; resending the sim's own status list clears it.
+    private const float StatusListResendSeconds = 1f;
+    private float statusListResendIn;
 
     // For stillness/movement mechanics: IsMoving = movement input, a jump, any action, or an
     // in-flight debug-bot MoveTo; IsActing also counts auto-attacks. Forced false while KO'd.
@@ -62,35 +25,64 @@ public sealed class SimPlayer(Coordinates coordinates) : SimCharacter(coordinate
 
     private protected override PlayerMovement Movement => field ??= new PlayerMovement(this);
 
+    // The client is authoritative for its own player, as in the real game.
+    protected override bool ModelDriven => true;
+
+    // Only a turn reaches here (PlayerMovement walks through input, not steps); the client drops
+    // ActorMove for its own player, so the turn goes as a SetPos on the spot.
+    protected override void SendMove(Vector3 worldPosition, float rotation, ActorMoveFlags flags, float speed)
+        => Proxy.SetPos(Proxy.Position, rotation);
+
     public void UseSprint(float duration)
     {
         if (DebugBotControl.Enabled && !Dead && !ActionsLocked) SprintHandler.Apply(this, duration);
     }
 
-    public void Knockback(Vector3 source, float distance, float speed) => Movement.Knockback(source, distance, speed);
+    // Pushes go to the client as the retail push packet rather than through Movement.
+    private float pushRemaining;
 
-    public void PushInDirection(float heading, float distance, float speed) => Movement.PushInDirection(heading, distance, speed);
+    // Holds a debug bot's Movement while the client slides, so the two don't fight over the position.
+    public override bool AnimationLock => pushRemaining > 0f;
 
-    public void PushInDirectionEased(float heading, float distance, float durationSeconds) => Movement.PushInDirectionEased(heading, distance, durationSeconds);
-
-    // The input lock is re-derived every tick from Dead/Movement/statuses.
-    public override void Tick(float deltaSeconds)
+    public void Knockback(Vector3 source, float distance, float speed)
     {
-        base.Tick(deltaSeconds);
-        if (Proxy is { Exists: true } chara) chara.RemoveStatus(JogStatusId);
-        SampleActivity();
-        SyncInputLock();
+        var dx = Position.X - source.X;
+        var dz = Position.Z - source.Z;
+        if (dx * dx + dz * dz < 1e-6f || speed <= 0f) return;
+        Push(MathF.Atan2(dx, dz), distance, distance / speed);
     }
 
-    // The client's own prediction runs the whole cast; this only counts it as activity for
-    // stillness mechanics.
-    public bool IsLimitBreaking
+    public void PushInDirection(float heading, float distance, float speed)
     {
-        get
+        if (speed > 0f) Push(heading, distance, distance / speed);
+    }
+
+    public void PushInDirectionEased(float heading, float distance, float durationSeconds) => Push(heading, distance, durationSeconds);
+
+    private void Push(float heading, float distance, float durationSeconds)
+    {
+        if (Dead) return;
+        ActorControl.Push(heading, distance, durationSeconds);
+        pushRemaining = durationSeconds;
+    }
+
+    // A knockback the client applies itself from the ActionEffect: nothing to send, only the hold.
+    internal void HoldForClientKnockback(float durationSeconds)
+    {
+        if (!Dead) pushRemaining = durationSeconds;
+    }
+
+    public override void Tick(float deltaSeconds)
+    {
+        pushRemaining = MathF.Max(0f, pushRemaining - deltaSeconds);
+        statusListResendIn -= deltaSeconds;
+        if (statusListResendIn <= 0f)
         {
-            var chara = Proxy;
-            return chara.IsCasting && LimitBreakHandler.IsLimitBreak(chara.CastActionId);
+            statusListResendIn = StatusListResendSeconds;
+            StatusListChanged();
         }
+        base.Tick(deltaSeconds);
+        SampleActivity();
     }
 
     private void SampleActivity()
@@ -104,46 +96,22 @@ public sealed class SimPlayer(Coordinates coordinates) : SimCharacter(coordinate
             IsActing = false;
             return;
         }
-        IsMoving = hooks.MovementInputActive || actedThisFrame || hooks.IsJumping || Movement.IsMoving;
-        // A limit break casts for seconds, and an Acceleration Bomb landing in that window has
-        // caught the player acting, exactly as it would in the fight.
-        IsActing = IsMoving || hooks.IsAutoAttacking || IsLimitBreaking;
+        IsMoving = hooks.MovementInputActive || actedThisFrame || hooks.IsJumping || Movement.IsMoving || pushRemaining > 0f;
+        // The press is one frame, but the whole cast bar counts: an Acceleration Bomb landing
+        // mid-cast catches the player acting, exactly as it would in the fight.
+        IsActing = IsMoving || hooks.IsAutoAttacking || Proxy.IsCasting;
     }
 
-    public void OnKilled()
+    public void OnKilled(bool byEnvironment)
     {
-        Dead = true;
-        StopMoving();
-        DropHpBar(); // godmode preview skips this path
-        AddStatus(StunStatusId);
-        this.PlayKoActionTimeline();
-        SyncInputLock(); // engage the lock now, not one frame later
+        GoDown(byEnvironment);
     }
 
     public override void Despawn()
     {
         base.Despawn();
         StopMoving();
-        // Order matters; see RestoreRealMaxHealth.
-        RestoreRealMaxHealth();
-        // Unconditional: also covers a godmode preview drop, where Dead is never set.
-        RestoreHpBar();
-        // PartyHud's sim shield would otherwise stay on the real character's HP bar.
-        Proxy.ClearShield();
-        if (Dead)
-        {
-            ResetActionTimelineNative();
-            PlayActionTimelineNative(77); // revive
-            Dead = false;
-        }
-        // Nothing ticks between a reset and the next scenario, so the lock must clear here.
-        SyncInputLock();
-    }
-
-    private void SyncInputLock()
-    {
-        var hooks = Natives.PlayerInput;
-        hooks.ZeroMovement = Dead || Movement.IsMoving || MovementLocked;
-        hooks.DisableAllActions = Dead || ActionsLocked;
+        pushRemaining = 0f;
+        Revive();
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 using AnoMech.Core.Game;
+using AnoMech.Core.Map;
 using AnoMech.Core.SimObjects;
 
 namespace AnoMech.Scenarios.Uwu;
@@ -26,6 +27,8 @@ public sealed class UwuZone : IZone
 
     public IReadOnlyList<WaymarkLayout> WaymarkPresets { get; } =
         [new WaymarkLayout("Standard", UwuConstants.StandardWaymarks), new WaymarkLayout("Naur", UwuConstants.NaurWaymarks)];
+
+    public EntranceBarrier? EntranceBarrier => new(2007457, 0x700D77, 0x700D76, new Vector3(0f, 0f, 16f));
 
     public void Run(SimWorld world) => world.EnforceArenaBoundary(UwuConstants.Geometry.ArenaRadius);
 }

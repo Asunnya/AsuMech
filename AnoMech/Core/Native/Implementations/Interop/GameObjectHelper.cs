@@ -1,21 +1,19 @@
-using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using System;
 
 namespace AnoMech.Core.Native.Implementations.Interop;
 
 public static unsafe class GameObjectHelper
 {
-    // UTF-8 into the 64-byte Name field (63 + terminator), trimmed on a character boundary so a
-    // peer's display name with non-ASCII letters is never cut mid-sequence.
-    public static void WriteName(GameObject* obj, string name)
+    // UTF-8 into a name field of `size` bytes, terminator included, trimmed on a character
+    // boundary so a peer's display name with non-ASCII letters is never cut mid-sequence.
+    public static void WriteName(byte* field, int size, string name)
     {
         var bytes = System.Text.Encoding.UTF8.GetBytes(name);
-        while (bytes.Length > 63)
+        while (bytes.Length > size - 1)
         {
             name = name[..^1];
             bytes = System.Text.Encoding.UTF8.GetBytes(name);
         }
-        for (int i = 0; i < bytes.Length; i++) obj->Name[i] = bytes[i];
-        obj->Name[bytes.Length] = 0;
+        for (int i = 0; i < size; i++) field[i] = i < bytes.Length ? bytes[i] : (byte)0;
     }
 }

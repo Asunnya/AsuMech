@@ -23,9 +23,8 @@ public static class Natives
     public static IRsfFunctions Rsf { get; internal set; } = null!;
 
     public static IPartyHud PartyHud { get; internal set; } = null!;
-    public static IEnmityHud EnmityHud { get; internal set; } = null!;
+    public static IHaterList HaterList { get; internal set; } = null!;
     public static ILimitBreakController LimitBreak { get; internal set; } = null!;
-    public static IMarkings Markings { get; internal set; } = null!;
     public static IWaymarks Waymarks { get; internal set; } = null!;
     public static IBgm Bgm { get; internal set; } = null!;
 

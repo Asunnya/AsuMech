@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 using AnoMech.Core.Game;
+using AnoMech.Core.Map;
 using AnoMech.Core.SimObjects;
 
 namespace AnoMech.Scenarios.Ucob;
@@ -20,6 +21,8 @@ public sealed class UcobZone : IZone
 
     public IReadOnlyList<WaymarkLayout> WaymarkPresets { get; } =
         [new WaymarkLayout("Aether Markers", UcobConstants.AetherWaymarks)];
+
+    public EntranceBarrier? EntranceBarrier => new(2000182, 0x6BD976, 0x6BD972, new Vector3(0f, 0f, 18f));
 
     // The zone loads with its default (P1/P3) arena geometry rather than the Golden Bahamut
     // floor — dressing each phase correctly means switching whole native layout layers, which

@@ -1,6 +1,6 @@
 using System.Numerics;
-using AnoMech.Core;
 using AnoMech.Core.Game.Party;
+using AnoMech.Core.Native.Interfaces;
 using AnoMech.Core.SimObjects;
 using AnoMech.Scenarios;
 
@@ -82,7 +82,7 @@ internal sealed class NegativeRun<TScenario>(PartyRole role, int strat) where TS
         => Judge(() => $"someone to die to {NameOf(actionId)}", actionId, PerRole.All, []);
 
     private static string NameOf(uint actionId)
-        => actionId == NegativeRun.TheEnvironment ? "the environment" : $"{ActionLookup.Name(actionId)} ({actionId})";
+        => actionId == NegativeRun.TheEnvironment ? "the environment" : $"{Natives.Data.ActionName(actionId)} ({actionId})";
 
     private ScenarioRun? run;
     private int runSeed;

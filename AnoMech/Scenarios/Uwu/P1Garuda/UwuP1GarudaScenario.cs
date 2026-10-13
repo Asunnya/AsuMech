@@ -152,7 +152,7 @@ public sealed class UwuP1GarudaScenario : IScenario
         world.Events.Add(76.17f, () => Raidwide(garuda, ActionId.AerialBlast, AerialBlastDamage, 2.3f));
 
         world.Events.Add(87.62f, SpawnSisters);
-        world.Events.Add(87.71f, () => PlaySisters(ActionTimelineId.SistersArrive));
+        world.Events.Add(87.71f, () => PlaySisters(ActionTimelineId.WarpEnd2));
         world.Events.Add(89.52f, () => ShowSisters(true));
         world.Events.Add(89.85f, () => PlaySisters(ActionTimelineId.WarpStart2));
         utils.FeatherRain(FeatherRainDummies, 89.85f, 91.36f, 92.34f, resolve: KillFeatherRain);
@@ -205,7 +205,7 @@ public sealed class UwuP1GarudaScenario : IScenario
             Level: Level,
             Targetable: targetable,
             EnemyList: enemyList,
-            IsVisible: visible,
+            Visibility: SimEnemy.LegacyVisibility(baseId == BNpcBaseId.Dummy, visible),
             Placement: placement));
 
     private SimEnemy? SpawnHelper(Vector3 position, float rotation = 0f)

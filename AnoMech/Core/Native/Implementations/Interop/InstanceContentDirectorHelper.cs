@@ -1,6 +1,7 @@
 using AnoMech.Core.Native.Implementations.Pointers;
 using FFXIVClientStructs.FFXIV.Client.Game.Event;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
+using FFXIVClientStructs.FFXIV.Client.Network;
 using FFXIVClientStructs.FFXIV.Client.System.String;
 using Lumina.Excel.Sheets;
 using System;
@@ -38,10 +39,17 @@ internal static unsafe class InstanceContentDirectorHelper
             return false;
         }
 
-        var eventId = director->GetEventId();
-        eventFramework->ProcessDirectorUpdate(eventId, category, arg1, arg2, arg3, arg4, arg5, arg6);
+        var localPlayer = Plugin.ObjectTable.LocalPlayer;
+        if (localPlayer == null) return false;
+
+        PacketDispatcher.HandleActorControlPacket(localPlayer.EntityId, DirectorUpdateCategory, director->GetEventId(),
+            category, arg1, arg2, arg3, arg4, arg5, arg6, NoTarget, false);
         return true;
     }
+
+    // ActorControlSelf: p1 director id, p2 variable, p3..p8 its values.
+    private const uint DirectorUpdateCategory = 0x6D;
+    private const uint NoTarget = 0xE0000000;
 
     public static void SetDirectorData(byte sequence, byte unknown, byte* unionData, ulong length = 12)
     {

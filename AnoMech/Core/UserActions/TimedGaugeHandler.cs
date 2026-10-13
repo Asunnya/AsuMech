@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using AnoMech.Core.Native.Implementations;
 using FFXIVClientStructs.FFXIV.Client.Game;
 
 namespace AnoMech.Core.UserActions;
@@ -8,7 +9,7 @@ namespace AnoMech.Core.UserActions;
 //  - regen (decay=false): +Amount every Seconds, capped at the gauge Max (WHM Lily, SGE Addersgall).
 //  - decay (decay=true):  reset to 0 Seconds after the last action write (GNB combo timer).
 // Both are server-driven in the real game (the ActorGauge packet the sim firewalls), so we
-// run them client-side. `writeTimer` (optional) is the gauge's own countdown field
+// run them here and send the ActorGauge ourselves. `writeTimer` (optional) is the gauge's own countdown field
 // (WhiteMage.LilyTimer, Sage.AddersgallTimer) — the visible fill ring; kept in sync as ms.
 internal sealed unsafe class TimedGauge(JobId job, ResourceGauge gauge, float seconds, bool decay, int amount = 1, GaugeWriter? writeTimer = null)
 {
@@ -28,7 +29,8 @@ internal sealed unsafe class TimedGaugeHandler : IUserActionHandler
     public void OnTick(float deltaSeconds)
     {
         var job = PlayerJob.Current;
-        var jgm = JobGaugeManager.Instance();
+        using var edit = JobGaugeEdit.Begin();
+        var jgm = edit.Gauge;
         if (jgm == null) return;
 
         foreach (var tg in JobActions.TimedGauges)
