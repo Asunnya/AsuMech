@@ -81,9 +81,13 @@ public sealed class UmadP4KefkaSaysAi(UmadP4KefkaSaysAi.GazeLayout gazeLayout) :
     }
 
     // Acceleration Bomb checks party.Player.IsActing at one instant (same wave/slot mapping as
-    // the scenario). Fake (must move): a tiny slow in-place wiggle that brackets the check
-    // without crossing any hazard. Real (must stand still): every possible resolve time already
+    // the scenario). Fake (must move): a short step started just before the check; the game walks
+    // the player at run speed whatever speed is asked, so it spans the check by its length, not
+    // its speed, then walks back to where it stood. Real (must stand still): every possible resolve time already
     // falls in a gap between moves.
+    private const float WiggleLead = 0.12f;
+    private const float WiggleLength = 1.2f;
+
     private static void ScheduleAccelerationBombDodge(UmadP4KefkaSaysState state, SimWorld world)
     {
         var role = world.Party.PlayerRole;
@@ -101,18 +105,20 @@ public sealed class UmadP4KefkaSaysAi(UmadP4KefkaSaysAi.GazeLayout gazeLayout) :
 
         if (bomb is not ({ } resolveTime, false)) return; // no bomb this run, or a real one -- already handled
 
-        world.Events.Add(resolveTime - 0.6f, () =>
+        world.Events.Add(resolveTime - WiggleLead, () =>
         {
             var member = world.Party.Get(role);
             if (member == null || !member.IsAlive())
             {
-                DiagnosticLog.Info($"[AccelerationBombDodge] wiggle skipped (member null or dead) at scheduled t={resolveTime - 0.6f:F2}.");
+                DiagnosticLog.Info($"[AccelerationBombDodge] wiggle skipped (member null or dead) at scheduled t={resolveTime - WiggleLead:F2}.");
                 return;
             }
-            DiagnosticLog.Info($"[AccelerationBombDodge] wiggle firing at t={resolveTime - 0.6f:F2} (resolve at {resolveTime:F2}) from ({member.Position.X:F1},{member.Position.Z:F1}).");
+            DiagnosticLog.Info($"[AccelerationBombDodge] wiggle firing at t={resolveTime - WiggleLead:F2} (resolve at {resolveTime:F2}) from ({member.Position.X:F1},{member.Position.Z:F1}).");
             var toDestination = (member.MoveDestination ?? member.Position) - member.Position;
             var step = toDestination.Length() > 0.05f ? Vector3.Normalize(toDestination) : Vector3.UnitX;
-            member.MoveTo(member.Position + step * 0.3f, speed: 0.4f);
+            var from = member.Position;
+            member.MoveTo(from + step * WiggleLength);
+            world.Events.Add(2f * WiggleLead, () => { if (member.IsAlive()) member.MoveTo(from); });
         });
     }
 
