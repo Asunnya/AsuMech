@@ -48,11 +48,8 @@ public sealed class HelloWorld(SimParty party, PartyRole holder, bool near)
         foreach (var member in world.Party.AllMembers())
         {
             if (member.IsAlive()) continue;
-            var status = member.HasStatus(StatusId.HelloNearWorld) ? StatusId.HelloNearWorld
-                : member.HasStatus(StatusId.HelloDistantWorld) ? StatusId.HelloDistantWorld
-                : (ushort)0;
-            if (status == 0) continue;
-            member.RemoveStatus(status);
+            var held = member.TakeStatusLostOnDeath(StatusId.HelloNearWorld) | member.TakeStatusLostOnDeath(StatusId.HelloDistantWorld);
+            if (!held) continue;
             var helper = world.SpawnEnemy(new EnemySpawnConfig(
                 BNpcBaseId: BNpcBaseId.OmegaHelper, Visibility: SpawnVisibility.InvisibleHelper,
                 Targetable: false,

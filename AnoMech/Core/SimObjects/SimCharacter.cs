@@ -462,6 +462,12 @@ public abstract class SimCharacter(Coordinates coordinates) : ISimObject, IPosit
 
     public bool HasStatus(ushort statusId) => FindStatus(statusId) != null;
 
+    // Death strips every status, as in the game; a mechanic that fires when its holder dies asks
+    // here instead. True once per status.
+    private HashSet<ushort>? statusesAtDeath;
+
+    public bool TakeStatusLostOnDeath(ushort statusId) => statusesAtDeath?.Remove(statusId) == true;
+
     public bool HasAnyStatus(Predicate<ushort> match) => statusList.Exists(status => status.IsActive && match(status.StatusId));
 
     // Sampled for peers; AddStatus is otherwise entirely local.
@@ -542,6 +548,7 @@ public abstract class SimCharacter(Coordinates coordinates) : ISimObject, IPosit
     {
         ActorControl.PlayDeathAnimation();
         ActorControl.SetMode(CharacterModes.Dead);
+        statusesAtDeath = statusList.Where(status => status.IsActive).Select(status => status.StatusId).ToHashSet();
         statusList.Despawn();
         SendStatusList(0, 0);
     }
@@ -550,6 +557,7 @@ public abstract class SimCharacter(Coordinates coordinates) : ISimObject, IPosit
     {
         if (!Dead) return;
         Dead = false;
+        statusesAtDeath = null;
         ActorControl.Revive();
         if (Proxy is { } chara) SendStatusList(chara.MaxHealth, chara.MaxMana);
     }

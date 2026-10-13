@@ -179,9 +179,8 @@ public sealed class UmadP4KefkaSaysScenario : IMultiplayerReplayable
         var status = state.AllaganFieldStatus;
         state.Wave3.ForEach(c =>
         {
-            if (c.HasStatus(status) && !c.IsAlive())
+            if (!c.IsAlive() && c.TakeStatusLostOnDeath(status))
             {
-                c.RemoveStatus(status);
                 var helper = detonationHelpers[detonatioHelperIndex++ % 4];
                 helper.SetPosition(c.Position);
                 world.Events.Add(0.1f, () => helper.Cast(UmadActions.DeathSurgeWipe));
