@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Numerics;
 using AnoMech.Core.Native.Interfaces;
 
@@ -9,8 +10,15 @@ internal sealed class FakeLayoutFunctions : ILayoutFunctions
     public void ReassertSuppressedLayers() { }
     public void ClearSuppressedLayers() { }
 
-    // Any non-zero count: the zone is fully streamed in from the first frame.
-    public int DisableSpawnAreaColliders(Vector3 center, float radius) => 1;
+    // Calls that find nothing yet, as while the zone is still streaming in.
+    public int ColliderCallsBeforeStreamed { get; set; }
+    public List<Vector3> ColliderDropCenters { get; } = [];
+
+    public int DisableSpawnAreaColliders(Vector3 center, float radius)
+    {
+        ColliderDropCenters.Add(center);
+        return ColliderDropCenters.Count > ColliderCallsBeforeStreamed ? 1 : 0;
+    }
 
     public void PlaySharedGroupTimeline(string sgbPath, uint index) { }
 

@@ -347,6 +347,8 @@ public sealed class Game : IDisposable
         World.ScenarioOrigin = zone.Origin;
         if (freshLoad && zone.EntranceBarrier is { } entrance)
             OpenEntranceBarrier(entrance);
+        else if (freshLoad)
+            World.Map.DropSpawnWall(zone.Origin + playerSpawnLocal);
         World.PlaceWaymarks(ResolveWaymarks(zone, selectedWaymark));
         // Before CreateParty: the spawn ring draws from the run's party-spawn stream.
         var seed = requestedSeed ?? Random.Shared.Next();

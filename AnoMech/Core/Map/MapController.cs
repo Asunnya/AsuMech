@@ -55,6 +55,12 @@ public sealed class MapController
 
     private PendingSnapshot? pendingSnapshot;
 
+    // A zone without an EntranceBarrier keeps its spawn wall's collision; it streams in over
+    // several frames, so the drop is retried until a SharedGroup near the spawn is found.
+    private Vector3? pendingSpawnWallDrop;
+    private int spawnWallDropFramesLeft;
+    private const float SpawnWallRadius = 10f;
+
     private struct PendingDirectorUpdate
     {
         public uint Category, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6;
@@ -120,9 +126,29 @@ public sealed class MapController
         Natives.MapEffects.Loaded = false;
         pendingEffects.Clear();
         pendingSnapshot = null;
+        pendingSpawnWallDrop = null;
         pendingDirectorUpdates.Clear();
         Natives.Layout.ClearSuppressedLayers();
         layerDumpFrame = int.MaxValue;
+    }
+
+    public void DropSpawnWall(Vector3 spawn)
+    {
+        pendingSpawnWallDrop = spawn;
+        spawnWallDropFramesLeft = RetryMaxFrames;
+    }
+
+    private void TickSpawnWallDrop()
+    {
+        if (pendingSpawnWallDrop is not { } spawn) return;
+        if (Natives.Layout.DisableSpawnAreaColliders(spawn, SpawnWallRadius) > 0)
+        {
+            pendingSpawnWallDrop = null;
+            return;
+        }
+        if (--spawnWallDropFramesLeft > 0) return;
+        DiagnosticLog.Warn($"[MapController] Gave up dropping the spawn wall after {RetryMaxFrames} frames -- no SharedGroup near ({spawn.X:F1},{spawn.Z:F1}).");
+        pendingSpawnWallDrop = null;
     }
 
     // Forces one native LGB layer's instances inactive for as long as the zone stays loaded.
@@ -152,6 +178,7 @@ public sealed class MapController
             }
         }
         Natives.Zone.TickWeather();
+        TickSpawnWallDrop();
 
         if (pendingSnapshot != null)
         {
