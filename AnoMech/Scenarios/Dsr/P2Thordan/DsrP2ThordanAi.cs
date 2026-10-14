@@ -26,7 +26,7 @@ public sealed class DsrP2ThordanAi : IScenarioAi<DsrP2ThordanState>
     private const float TankBesideThordanDegrees = 17f;
     private const float AfterLightningStorm = 45.60f;
     private static readonly float[] HeavyImpactWaves = [45.36f, 47.28f, 49.14f, 51.02f, 52.89f];
-    private static readonly float[] StackerOffsetDegrees = [-3f, 0f, 3f];
+    private static readonly float[] StackerOffsetDegrees = [-1.5f, 0f, 1.5f];
     private const float PlungeGroupRadius = 20f;
     private const float PlungeGroupOffsetDegrees = 12f;
     private const float BrightsphereDodgeDegrees = 32f;
