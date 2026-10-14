@@ -39,6 +39,7 @@ public sealed class DsrP3NidhoggScenario : IScenario
     private const float AutoAttackHalfWidth = 1.5f;
     private const float AutoAttackRange = 60f;
     private const float DiveTowerRadius = 5f;
+    private static readonly Vector3 DiverWaitingSpot = new(23f, 0f, 4f);
     private const float SoulTetherRadius = 5f;
     private const float FourTowerRadius = 11.31f;
     // UNVERIFIED: the donut's safe inner radius.
@@ -60,6 +61,7 @@ public sealed class DsrP3NidhoggScenario : IScenario
 
     private SimEnemy? nidhogg;
     private readonly List<SimEnemy> divers = [];
+    private readonly Queue<SimEnemy> waitingDivers = new();
     private readonly List<SimEnemy>[] diveTowerCasters = [[], [], []];
     private readonly List<(SimEnemy Caster, Vector3 At, int Needed)> fourTowers = [];
     private readonly List<SimEnemy> geirskogulCasters = [];
@@ -73,6 +75,7 @@ public sealed class DsrP3NidhoggScenario : IScenario
         damage = new DamageSolver(party);
         state = new DsrP3NidhoggState(world.Rng, overrides);
         divers.Clear();
+        waitingDivers.Clear();
         foreach (var casters in diveTowerCasters) casters.Clear();
         fourTowers.Clear();
         geirskogulCasters.Clear();
@@ -85,6 +88,7 @@ public sealed class DsrP3NidhoggScenario : IScenario
         world.Events.Add(0f, () => world.EnforceArenaBoundary(Geometry.ThordanArenaRadius, "Touched the death wall"));
         world.Events.Add(0f, () => world.PlaceWaymarks(NaurWaymarks));
         world.Events.Add(0f, SpawnNidhogg);
+        world.Events.Add(0f, SpawnWaitingDivers);
         world.Events.Add(0.09f, () => world.Map.DirectorUpdate(ArenaDirector.Layout, 0U, ArenaDirector.NidhoggLayout));
         world.Events.Add(4.10f, () => world.Map.DirectorUpdate(ArenaDirector.MapChange, ArenaDirector.KnightsMap));
         world.Events.Add(5.13f, () => world.Map.AddEffect(ArenaDirector.NidhoggSlotOn, ArenaDirector.NidhoggSlot));
@@ -214,6 +218,18 @@ public sealed class DsrP3NidhoggScenario : IScenario
                 member.RemoveStatus(status);
     }
 
+    // One diver per Dive from Grace target waits hidden off the arena; a diver spawned in the frame
+    // it dives drops the effect.
+    private void SpawnWaitingDivers()
+    {
+        for (var i = 0; i < 8; i++)
+        {
+            if (SpawnDiver(new Placement(DiverWaitingSpot, 0f)) is not { } diver) continue;
+            diver.SetVisible(false);
+            waitingDivers.Enqueue(diver);
+        }
+    }
+
     // Each dive lands on its player; its tower is placed from where they stand and face.
     private void Dive(int line)
     {
@@ -227,7 +243,9 @@ public sealed class DsrP3NidhoggScenario : IScenario
             var at = member.Position;
             var forward = new Vector3(MathF.Sin(member.Rotation), 0f, MathF.Cos(member.Rotation));
             towers.Add((role, at + forward * DsrP3NidhoggState.DiveOffset(arrow)));
-            if (SpawnDiver(new Placement(at, member.Rotation)) is not { } diver) continue;
+            if (!waitingDivers.TryDequeue(out var diver)) continue;
+            diver.SetPosition(new Placement(at, member.Rotation));
+            diver.SetVisible(true);
             diveTowerCasters[line - 1].Add(diver);
             PlayEffect(diver, DiveAction(arrow), 1.1f, target: member.GameObjectId, at: at);
             foreach (var hit in party.Find.InsideCircle(at, DiveTowerRadius))
