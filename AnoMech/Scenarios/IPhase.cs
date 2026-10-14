@@ -13,7 +13,7 @@ public interface IPhase
     IZone Zone { get; }
     byte? Weather => null;
     ushort Bgm => 0;
-    // Optional per-frame hold of the zone's environment fog value (ZoneSession.FogHold);
+    // Optional per-frame hold of the zone's environment fog value (ZoneControl.FogHold);
     // null = let the engine's own weather transition run.
     float? FogHold => null;
 

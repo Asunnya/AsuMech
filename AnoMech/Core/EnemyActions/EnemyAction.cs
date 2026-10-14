@@ -37,6 +37,9 @@ public sealed record CastSpec
 
     // Turns the omen, the animation and the area from the caster's facing, in radians.
     public float Rotation { get; init; }
+
+    // False for an action retail fires at a target without turning the caster to it.
+    public bool FaceTarget { get; init; } = true;
 }
 
 // The sheet's area is enough for most actions; customize it here when it isn't.

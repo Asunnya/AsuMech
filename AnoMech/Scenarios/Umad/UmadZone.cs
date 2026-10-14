@@ -43,9 +43,16 @@ public sealed class UmadZone : IZone
 
     public IReadOnlyList<WaymarkLayout> WaymarkPresets => Waymarks;
 
+    public float? FallFloor => -5f;
+
     public EntranceBarrier? EntranceBarrier => new(2000182, 0xBC174E, 0xBC174C, new Vector3(0.41f, 0f, 15.75f));
 
-    public void Run(SimWorld world) => world.EnforceArenaBoundary(UmadConstants.Geometry.ArenaRadius, "Fell off the arena");
+    // Every pull's commence sets the two director variables; what they drive is UNVERIFIED.
+    public void Run(SimWorld world)
+    {
+        world.Map.DirectorUpdate(0x80000028U, 0x4U);
+        world.Map.DirectorUpdate(0x8000000DU, 0x1U);
+    }
 
     // Replay-derived RSV/RSF data the server would deliver in a real duty; peers need it too, or
     // their BgParts point at unseeded paths and render black. Idempotent.

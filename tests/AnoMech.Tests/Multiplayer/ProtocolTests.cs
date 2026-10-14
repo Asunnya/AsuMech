@@ -28,7 +28,7 @@ public class ProtocolTests
     public void FullEightPlayerSnapshotIsAccepted()
     {
         var id = RelayWire.PeerId(RelayWire.NewSecret());
-        var role = new RoleState(default, true, false, 0, 0, 0, 0, [], [], 10000, 10000);
+        var role = new RoleState(default, true, false, 0, 0, 0, 0, [], 10000, 10000);
         var message = new RolesSnapshotMessage(Enumerable.Repeat(role, 8).ToList());
         Assert.That(RelayWire.Validate(JsonSerializer.SerializeToUtf8Bytes<MpMessage>(message), true, id), Is.EqualTo("rolesSnapshot"));
     }
@@ -65,7 +65,6 @@ public class ProtocolTests
         var enemy = Sample<EnemyState>(typeof(EnemyState), id) with
         {
             Statuses = Enumerable.Repeat(new EnemyStatusState(1, 1, 30), 64).ToArray(),
-            NewVfx = Enumerable.Repeat(new AttachedVfxState("vfx/x.avfx", 1f), 200).ToArray(),
         };
         var message = new WorldSnapshotMessage(Enumerable.Repeat(enemy, 256).ToList(), [], []);
         Assert.That(Receive(JsonSerializer.SerializeToUtf8Bytes<MpMessage>(message), true, id), Is.TypeOf<WorldSnapshotMessage>());

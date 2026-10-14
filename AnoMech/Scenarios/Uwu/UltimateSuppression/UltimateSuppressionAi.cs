@@ -25,7 +25,6 @@ public class UltimateSuppressionAi : IScenarioAi<UltimateSuppressionState>
         ai.Move(15f, Eruptions1);
         ai.Move(18.3f, Eruptions2);
         ai.Move(18.8f, Eruptions3);
-        ai.Move(19.3f, TanksInterceptOwnSistersMistralSong);
         ai.Move(21f, Eruptions4);
         ai.Move(23.25f, FeatherRain1);
         ai.Move(23.6f, MainTankFollowsGaol);
@@ -47,8 +46,8 @@ public class UltimateSuppressionAi : IScenarioAi<UltimateSuppressionState>
             .ToArray();
 
         return AiMove.Create(
-            new(-6, 8),  // MT
-            new(-6, 8), // OT
+            new(-6.1f, 9.5f), // MT, Chirada
+            new(-7.6f, 8.4f), // OT, Suparna
             spots[0], // H1
             spots[1], // H2
             spots[2], // M1
@@ -117,19 +116,10 @@ public class UltimateSuppressionAi : IScenarioAi<UltimateSuppressionState>
             ]);
     }
 
-    private IAiMove TanksInterceptOwnSistersMistralSong()
-    {
-        return AiMove.Create(
-            new(-3.5f, 8.7f), // MT, Chirada
-            new(-7.4f, 5f) // OT, Suparna
-            ).NaturalOrder();
-    }
-
     private IAiMove Eruptions4()
     {
         return AiMove.Create(
-            null, // MT
-            new(-6, 8), // OT, out of Garuda's Mistral Song
+            null, null, // Tanks
             null, null, null,
             new(12, -2), new(12, -2), // Eruption
             null

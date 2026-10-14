@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using AnoMech.Core.Native.Interfaces;
 using AnoMech.Multiplayer;
 
 namespace AnoMech.Core;
@@ -55,7 +56,7 @@ internal static class DiagnosticLog
     public static void LogSnapshot(string label, string content)
         => Add($"=== {label} ==={Environment.NewLine}{content}{Environment.NewLine}=== end {label} ===");
 
-    // For a deliberate process kill (ZoneSession's guard): the message and the run's last lines
+    // For a deliberate process kill (ZoneControl's guard): the message and the run's last lines
     // are written synchronously to their own file, and the async writer is drained, since
     // Environment.FailFast runs no finalizers. Returns that file's path, or null.
     public static string? Fatal(string message)
@@ -95,14 +96,14 @@ internal static class DiagnosticLog
         if (ShouldPersistToDisk()) EnqueueForDisk(line);
     }
 
-    // Disk logging only while the plugin is doing something; idle time in the overworld would
+    // Disk logging only where the plugin can be doing something; idle time in the overworld would
     // generate I/O for nothing. Null-checked since this can run before Plugin's constructor has
     // assigned these statics.
     private static bool ShouldPersistToDisk()
         => ForcePersist
-           || (Plugin.MainWindow?.IsOpen ?? false)
-           || Plugin.GameInstance?.ActiveScenario != null
-           || Plugin.MultiplayerInstance?.SessionCode != null;
+           || (Natives.Zone?.IsInInn() ?? false)
+           || Plugin.Game?.Zone != null
+           || Plugin.Multiplayer?.SessionCode != null;
 
     // Set by DebugMenu's Position Logger: with MainWindow closed and no scenario active, nothing
     // would reach disk. A bool, not a refcount, while it has one caller.

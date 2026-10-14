@@ -35,7 +35,7 @@ public sealed partial class MultiplayerManager
     private void SendSelfPose()
     {
         if (pendingSelfPoseSend is not (null or { IsCompleted: true })) return;
-        var player = Plugin.GameInstance.World.Party.Player;
+        var player = Plugin.Game.World.Party.Player;
         if (player == null) return;
         pendingSelfPoseSend = relay!.SendAsync(new SelfPoseMessage(MyPeerId, player.Position.X, player.Position.Y, player.Position.Z, player.Rotation));
     }
@@ -67,7 +67,7 @@ public sealed partial class MultiplayerManager
             return;
         }
         if (!NetGuard.TryPosition(msg.X, msg.Y, msg.Z, out var pose)) return;
-        if (Plugin.GameInstance.World.Party.Get(role) is SimNetworkPuppet puppet)
+        if (Plugin.Game.World.Party.Get(role) is SimNetworkPuppet puppet)
             puppet.ApplyNetworkPose(pose, NetGuard.Rotation(msg.Rotation));
         else
             DiagnosticLog.Debug($"[Multiplayer] SelfPose from {Session.NameOf(msg.PeerId)} ({role}) but that slot isn't a SimNetworkPuppet -- dropping.");
@@ -80,7 +80,7 @@ public sealed partial class MultiplayerManager
         // Before the zone entry, spawned enemies would be torn down by the load while
         // peerEnemies still tracked them.
         if (!PeerInRun) return;
-        var world = Plugin.GameInstance.World;
+        var world = Plugin.Game.World;
 
         var seenEnemyIds = new HashSet<int>();
         foreach (var e in NetGuard.Cap(snap.Enemies, NetGuard.MaxEnemiesPerSnapshot))
@@ -96,20 +96,6 @@ public sealed partial class MultiplayerManager
             var freshlySpawned = !peerEnemies.ContainsKey(e.NetId);
             if (!peerEnemies.TryGetValue(e.NetId, out var enemy))
             {
-                // The template is resolved by name from this build's own captures, never from
-                // wire bytes; a packet built from the config is the fallback either way.
-                byte[]? template = null;
-                var enableDraw = false;
-                if (e.NpcSpawnTemplate is { } templateName && !peerEnemyTemplateFailed.Contains(e.NetId))
-                {
-                    if (UmadRealPackets.NpcSpawnTemplates.TryGetValue(templateName, out var bytes))
-                    {
-                        template = bytes;
-                        enableDraw = e.PacketSpawnEnableDraw;
-                    }
-                    else
-                        DiagnosticLog.Warn($"[Multiplayer] Peer: enemy NetId {e.NetId} names unknown spawn template '{NetGuard.Clean(templateName)}' -- spawning from a built packet.");
-                }
                 // A scenario can override the BNpcBase row's model (UCOB P5's Golden Bahamut), so
                 // this has to travel; the allowlist is what stops it naming a foreign one.
                 var config = new EnemySpawnConfig(
@@ -119,11 +105,9 @@ public sealed partial class MultiplayerManager
                     ModelCharaId: e.ModelCharaId != 0
                         && SimAssets.Allow(SimAssetKind.ModelChara, e.ModelCharaId, $"enemy NetId {e.NetId} model")
                         ? e.ModelCharaId : 0,
-                    e.InitialModeAttributeFlags,
-                    NpcSpawnTemplate: template, PacketSpawnEnableDraw: enableDraw);
+                    e.InitialModeAttributeFlags);
                 DiagnosticLog.Info($"[Multiplayer] Peer: first snapshot of enemy NetId {e.NetId} -- BNpcBase {e.BNpcBaseId}, pos ({e.X:F2},{e.Y:F2},{e.Z:F2}), rot {e.Rotation:F2}, visibility {e.Visibility}"
-                    + $", cast {e.CastActionId}/seq {e.CastSeq}, effect {e.EffectActionId}/seq {e.EffectSeq}"
-                    + $"{(template != null ? $", template {e.NpcSpawnTemplate}" : "")} -- spawning local doppel.");
+                    + $", cast {e.CastActionId}/seq {e.CastSeq}, effect {e.EffectActionId}/seq {e.EffectSeq} -- spawning local doppel.");
                 enemy = world.SpawnEnemy(config);
                 if (enemy == null)
                 {
@@ -132,11 +116,10 @@ public sealed partial class MultiplayerManager
                 }
                 peerEnemies[e.NetId] = enemy;
             }
-            // The engine dropped the real-packet spawn: the next snapshot recreates it from a built packet.
+            // The engine dropped the packet spawn: the next snapshot recreates it.
             if (enemy.PacketSpawnFailed)
             {
-                DiagnosticLog.Warn($"[Multiplayer] Peer: enemy NetId {e.NetId} (BNpcBase {e.BNpcBaseId}) packet spawn failed locally -- falling back to a built packet.");
-                peerEnemyTemplateFailed.Add(e.NetId);
+                DiagnosticLog.Warn($"[Multiplayer] Peer: enemy NetId {e.NetId} (BNpcBase {e.BNpcBaseId}) packet spawn failed locally -- respawning.");
                 enemy.Despawn();
                 ForgetPeerEnemy(e.NetId);
                 continue;
@@ -205,25 +188,7 @@ public sealed partial class MultiplayerManager
                             ? [new ActionEffectTarget(actionTarget.GameObjectId)]
                             : null);
             }
-            ApplyNewVfx(enemy, e.NewVfx, $"enemy NetId {e.NetId}");
-            ReconcilePersistentVfx(enemy, e.PersistentVfx, $"enemy NetId {e.NetId}");
             ApplyEngineState(enemy, e.NetId, e.Engine);
-            // Keyed on the seq, not the id: a reused enemy replays the same timeline id.
-            if (e.AnimationTimelineId is { } timelineId
-                && (!peerEnemyAnimationTimeline.TryGetValue(e.NetId, out var lastSeq) || lastSeq != e.AnimationTimelineSeq))
-            {
-                peerEnemyAnimationTimeline[e.NetId] = e.AnimationTimelineSeq;
-                DiagnosticLog.Info($"[Multiplayer] Peer: enemy NetId {e.NetId} (BNpcBase {e.BNpcBaseId}) AnimationTimelineId -> 0x{timelineId:X4} (seq {e.AnimationTimelineSeq}).");
-                if (SimAssets.Allow(SimAssetKind.Timeline, timelineId, $"enemy NetId {e.NetId} timeline"))
-                    enemy.PlayActionTimeline(timelineId);
-            }
-            if (e.NewLockonVfxIds.Count > 0)
-            {
-                DiagnosticLog.Info($"[Multiplayer] Peer: enemy NetId {e.NetId} (BNpcBase {e.BNpcBaseId}) NewLockonVfxIds -> [{string.Join(",", e.NewLockonVfxIds)}].");
-                foreach (var lockonId in NetGuard.Cap(e.NewLockonVfxIds, NetGuard.MaxLockonVfxPerEntity))
-                    if (SimAssets.Allow(SimAssetKind.Lockon, lockonId, $"enemy NetId {e.NetId} lockon"))
-                        enemy.AttachLockonVfx(lockonId);
-            }
             if (e.AnimationStateArg2 is { } arg2 && e.AnimationStateArg3 is { } arg3
                 && (!peerEnemyAnimationState.TryGetValue(e.NetId, out var lastStateSeq) || lastStateSeq != e.AnimationStateSeq))
             {
@@ -238,13 +203,12 @@ public sealed partial class MultiplayerManager
             DiagnosticLog.Info($"[Multiplayer] Peer: enemy NetId {staleId} no longer in snapshot -- despawning local doppel.");
             peerEnemies[staleId].Despawn();
             ForgetPeerEnemy(staleId);
-            peerEnemyTemplateFailed.Remove(staleId);
         }
 
         // UMAD P3 black holes: a peer never runs the scenario's obstacle setup, so a debug-bot
         // peer's MoveTo would cut straight through one.
         world.Obstacles.Clear();
-        var localPlayer = Plugin.GameInstance.World.Party.Player;
+        var localPlayer = Plugin.Game.World.Party.Player;
         foreach (var (netId, bh) in peerEnemies.Where(kvp => kvp.Value.BNpcBaseId == BNpcBaseId.BlackHole))
         {
             world.Obstacles.Add(new CircleObstacle(new Vector2(bh.Position.X, bh.Position.Z), UmadP3BlackHoleScenario.BlackHoleAvoidRadius));
@@ -312,17 +276,13 @@ public sealed partial class MultiplayerManager
                     EObjId = o.EObjId,
                     Placement = eoPlacement,
                     TimelineState = o.TimelineState,
-                    SpawnVisible = true,
                     LayoutId = o.LayoutId,
                     EventId = o.EventId,
                     EntityId = o.EntityId,
                     TargetableStatus = o.TargetableStatus,
                     Arg2 = o.Arg2,
-                    MuteSound = o.MuteSound,
-                    ForceSharedGroupActive = o.ForceSharedGroupActive,
-                    HideAtState = o.HideAtState,
                 };
-                DiagnosticLog.Info($"[Multiplayer] Peer: first snapshot of event object NetId {o.NetId} -- EObj 0x{o.EObjId:X}, pos ({o.X:F2},{o.Y:F2},{o.Z:F2}), state {o.CurrentState} -- spawning local copy.");
+                DiagnosticLog.Info($"[Multiplayer] Peer: first snapshot of event object NetId {o.NetId} -- EObj 0x{o.EObjId:X}, pos ({o.X:F2},{o.Y:F2},{o.Z:F2}) -- spawning local copy.");
                 eo = world.SpawnEventObject(config);
                 if (eo == null)
                 {
@@ -330,40 +290,6 @@ public sealed partial class MultiplayerManager
                     continue;
                 }
                 peerEventObjects[o.NetId] = eo;
-                // CurrentState is only meaningful once something has written it; seeding stops
-                // the reconcile below stamping a never-written 0 over the spawn's TimelineState.
-                peerEventObjectState[o.NetId] = o.CurrentState;
-                if (o.CurrentState != 0) eo.SetState(o.CurrentState);
-            }
-            eo.SetPosition(eoPlacement);
-            // A beat writes the state itself, so the plain SetState below stays quiet for it.
-            if (o.AnimationState is { } animState && o.AnimationBitmask is { } animBitmask
-                && (!peerEventObjectAnimationSeq.TryGetValue(o.NetId, out var lastAnimSeq) || lastAnimSeq != o.AnimationSeq))
-            {
-                peerEventObjectAnimationSeq[o.NetId] = o.AnimationSeq;
-                peerEventObjectState[o.NetId] = o.CurrentState;
-                var beatMode = Enum.IsDefined(o.AnimationMode) ? o.AnimationMode : PropBeatMode.ActorControl;
-                DiagnosticLog.Info($"[Multiplayer] Peer: event object NetId {o.NetId} (EObj 0x{o.EObjId:X}) beat (0x{animState:X},0x{animBitmask:X}) via {beatMode} (seq {o.AnimationSeq}).");
-                if (animState <= ushort.MaxValue) eo.PlayBeat(animState, animBitmask, beatMode);
-            }
-            else if (!peerEventObjectState.TryGetValue(o.NetId, out var lastState) || lastState != o.CurrentState)
-            {
-                peerEventObjectState[o.NetId] = o.CurrentState;
-                DiagnosticLog.Info($"[Multiplayer] Peer: event object NetId {o.NetId} (EObj 0x{o.EObjId:X}) CurrentState -> {o.CurrentState}.");
-                eo.SetState(o.CurrentState);
-            }
-            if (o.FadeOutSeq > 0 && peerEventObjectFadeSeq.GetValueOrDefault(o.NetId) != o.FadeOutSeq)
-            {
-                peerEventObjectFadeSeq[o.NetId] = o.FadeOutSeq;
-                DiagnosticLog.Info($"[Multiplayer] Peer: event object NetId {o.NetId} (EObj 0x{o.EObjId:X}) fading out (seq {o.FadeOutSeq}).");
-                eo.FadeOut();
-            }
-            if (o.DirectorModSeq > 0 && o.DirectorState <= ushort.MaxValue
-                && peerEventObjectDirectorSeq.GetValueOrDefault(o.NetId) != o.DirectorModSeq)
-            {
-                peerEventObjectDirectorSeq[o.NetId] = o.DirectorModSeq;
-                DiagnosticLog.Info($"[Multiplayer] Peer: event object NetId {o.NetId} (EObj 0x{o.EObjId:X}) director state {o.DirectorState} (seq {o.DirectorModSeq}).");
-                eo.DirectorEObjMod(o.DirectorState);
             }
         }
         foreach (var staleId in peerEventObjects.Keys.Where(id => !seenEventObjectIds.Contains(id)).ToList())
@@ -371,10 +297,6 @@ public sealed partial class MultiplayerManager
             DiagnosticLog.Info($"[Multiplayer] Peer: event object NetId {staleId} no longer in snapshot -- despawning local copy.");
             peerEventObjects[staleId].Despawn();
             peerEventObjects.Remove(staleId);
-            peerEventObjectState.Remove(staleId);
-            peerEventObjectAnimationSeq.Remove(staleId);
-            peerEventObjectFadeSeq.Remove(staleId);
-            peerEventObjectDirectorSeq.Remove(staleId);
         }
     }
 
@@ -444,7 +366,6 @@ public sealed partial class MultiplayerManager
         peerEnemyReconciledStatuses.Remove(netId);
         peerEnemyModelState.Remove(netId);
         peerEnemyLastLoggedStatuses.Remove(netId);
-        peerEnemyAnimationTimeline.Remove(netId);
         peerEnemyAnimationState.Remove(netId);
         peerEnemyLastEffectSeq.Remove(netId);
         peerEnemyLastCastSeq.Remove(netId);
@@ -452,15 +373,13 @@ public sealed partial class MultiplayerManager
         peerEnemyEngineSeqs.Remove(netId);
     }
 
-    // The engine-level state behind a VFX-only cue: the carrier's timeline hold, its AnimLock,
-    // and the diagnostic delivery modes. Each applies on its own seq change.
+    // The engine-level state behind a VFX-only cue: the carrier's AnimLock. Applies on its seq change.
     private void ApplyEngineState(SimEnemy enemy, int netId, ActorEngineState? engine)
     {
         if (engine is null) return;
-        var applied = peerEnemyEngineSeqs.GetValueOrDefault(netId);
-        if (engine.ModeSeq > 0 && engine.ModeSeq != applied.Mode)
+        if (engine.ModeSeq > 0 && engine.ModeSeq != peerEnemyEngineSeqs.GetValueOrDefault(netId))
         {
-            applied.Mode = engine.ModeSeq;
+            peerEnemyEngineSeqs[netId] = engine.ModeSeq;
             if (Enum.IsDefined((CharacterModes)engine.Mode))
             {
                 DiagnosticLog.Info($"[Multiplayer] Peer: enemy NetId {netId} Mode -> {(CharacterModes)engine.Mode}/{engine.ModeParam} (seq {engine.ModeSeq}).");
@@ -469,80 +388,17 @@ public sealed partial class MultiplayerManager
             else
                 DiagnosticLog.Warn($"[Multiplayer] Peer: enemy NetId {netId} sent mode {engine.Mode}, which is no CharacterModes value -- dropping.");
         }
-        if (engine.HoldSeq > 0 && engine.HoldSeq != applied.Hold)
-        {
-            applied.Hold = engine.HoldSeq;
-            if (Enum.IsDefined(engine.HoldKind)
-                && (engine.HoldKind == TimelineHoldKind.None || SimAssets.Allow(SimAssetKind.Timeline, engine.HoldTimelineId, $"enemy NetId {netId} timeline hold")))
-            {
-                DiagnosticLog.Info($"[Multiplayer] Peer: enemy NetId {netId} timeline hold {engine.HoldKind} {engine.HoldTimelineId} (seq {engine.HoldSeq}).");
-                switch (engine.HoldKind)
-                {
-                    case TimelineHoldKind.Base: enemy.HoldTimelineBase(engine.HoldTimelineId); break;
-                    default: enemy.ReleaseTimelineHold(engine.HoldTimelineId); break;
-                }
-            }
-        }
-        if (engine.DirectTimelineSeq > 0 && engine.DirectTimelineSeq != applied.Direct)
-        {
-            applied.Direct = engine.DirectTimelineSeq;
-            if (SimAssets.Allow(SimAssetKind.Timeline, engine.DirectTimelineId, $"enemy NetId {netId} direct timeline"))
-            {
-                DiagnosticLog.Info($"[Multiplayer] Peer: enemy NetId {netId} PlayTimelineDirect({engine.DirectTimelineId}) (seq {engine.DirectTimelineSeq}).");
-                enemy.PlayTimelineDirect(engine.DirectTimelineId);
-            }
-        }
-        if (engine.ForceLoadTimelineSeq > 0 && engine.ForceLoadTimelineSeq != applied.ForceLoad)
-        {
-            applied.ForceLoad = engine.ForceLoadTimelineSeq;
-            enemy.ForceLoadBaseTimeline();
-        }
-        peerEnemyEngineSeqs[netId] = applied;
-    }
-
-    // Reconciled like the statuses: the host's set is the truth, and a path that drops out of it
-    // is removed locally. Only VFX this client added persistently are ever in its own set.
-    private static void ReconcilePersistentVfx(SimCharacter target, IReadOnlyList<string>? paths, string who)
-    {
-        var wanted = NetGuard.Cap(paths, NetGuard.MaxVfxPerEntity);
-        var current = target.ActivePersistentVfxPaths;
-        if (wanted.Count == 0 && current.Count == 0) return;
-        foreach (var raw in wanted)
-        {
-            var path = NetGuard.Clean(raw);
-            if (current.Contains(path)) continue;
-            if (!SimAssets.AllowOmenPath(path, $"{who} persistent vfx")) continue;
-            DiagnosticLog.Info($"[Multiplayer] Peer: {who} attaching persistent vfx '{path}'.");
-            target.AddVfx(path, persistent: true);
-        }
-        foreach (var path in current)
-        {
-            if (wanted.Any(p => NetGuard.Clean(p) == path)) continue;
-            DiagnosticLog.Info($"[Multiplayer] Peer: {who} removing persistent vfx '{path}'.");
-            target.RemoveVfx(path);
-        }
-    }
-
-    private static void ApplyNewVfx(SimCharacter target, IReadOnlyList<AttachedVfxState>? newVfx, string who)
-    {
-        foreach (var v in NetGuard.Cap(newVfx, NetGuard.MaxVfxPerEntity))
-        {
-            var path = NetGuard.Clean(v.Path);
-            if (!SimAssets.AllowOmenPath(path, $"{who} vfx")) continue;
-            DiagnosticLog.Info($"[Multiplayer] Peer: {who} attaching vfx '{path}'.");
-            target.AddVfx(path, NetGuard.Clamp(v.DurationSeconds, 0f, 600f), persistent: false);
-        }
     }
 
     private unsafe void OnRolesSnapshotReceived(RolesSnapshotMessage snap)
     {
         if (!PeerInRun) return;
-        var world = Plugin.GameInstance.World;
+        var world = Plugin.Game.World;
 
         var myRole = MyClaimedRole;
         foreach (var r in NetGuard.Cap(snap.Roles, Enum.GetValues<PartyRole>().Length))
         {
-            // Position is self-authoritative for our own role; statuses, lockons and HP are not.
+            // Position is self-authoritative for our own role; statuses and HP are not.
             if (r.Role != myRole && world.Party.Get(r.Role) is SimNetworkPuppet puppet
                 && NetGuard.TryPosition(r.X, r.Y, r.Z, out var rolePosition))
                 puppet.ApplyNetworkPose(rolePosition, NetGuard.Rotation(r.Rotation));
@@ -560,46 +416,16 @@ public sealed partial class MultiplayerManager
                 peerRoleLastLoggedStatuses[r.Role] = lastStatuses = new Dictionary<(ushort Id, int Ordinal), ushort>();
             LogStatusChanges($"Peer: role {r.Role} ({DescribeRoleOwner(r.Role, member)})",
                 roleStatuses.Select(s => (s.StatusId, s.Stacks, s.RemainingTime)).ToList(), lastStatuses);
-            if (r.NewLockonVfxIds.Count > 0)
-            {
-                DiagnosticLog.Info($"[Multiplayer] Peer: role {r.Role} NewLockonVfxIds -> [{string.Join(",", r.NewLockonVfxIds)}].");
-                foreach (var lockonId in NetGuard.Cap(r.NewLockonVfxIds, NetGuard.MaxLockonVfxPerEntity))
-                    if (SimAssets.Allow(SimAssetKind.Lockon, lockonId, $"role {r.Role} lockon"))
-                        member.AttachLockonVfx(lockonId);
-            }
-            ApplyNewVfx(member, r.NewVfx, $"role {r.Role}");
-            ReconcilePersistentVfx(member, r.PersistentVfx, $"role {r.Role}");
-            // A doppel's own action animation (a bot tank's limit break). Our own seat is a
-            // SimPlayer, whose actions are its owner's real button presses.
-            if (r.PlayedActionSeq > 0 && member is SimNpc actor
-                && (!peerRolePlayedActionSeq.TryGetValue(r.Role, out var lastPlayed) || lastPlayed != r.PlayedActionSeq))
-            {
-                peerRolePlayedActionSeq[r.Role] = r.PlayedActionSeq;
-                if (SimAssets.Allow(SimAssetKind.Action, r.PlayedActionId, $"role {r.Role} action"))
-                {
-                    DiagnosticLog.Info($"[Multiplayer] Peer: role {r.Role} plays action {r.PlayedActionId} (seq {r.PlayedActionSeq}).");
-                    actor.PlayAction(r.PlayedActionId, NetGuard.Clamp(r.PlayedActionAnimationLock, 0f, 60f, 0.6f));
-                }
-            }
-            // The KO pose comes with RoleKilledMessage.
-            if (!r.Dead && r.AnimationTimelineId is { } roleTimeline
-                && (!peerRoleAnimationTimelineSeq.TryGetValue(r.Role, out var lastRoleSeq) || lastRoleSeq != r.AnimationTimelineSeq))
-            {
-                peerRoleAnimationTimelineSeq[r.Role] = r.AnimationTimelineSeq;
-                DiagnosticLog.Info($"[Multiplayer] Peer: role {r.Role} AnimationTimelineId -> {roleTimeline} (seq {r.AnimationTimelineSeq}).");
-                if (SimAssets.Allow(SimAssetKind.Timeline, roleTimeline, $"role {r.Role} timeline"))
-                    member.PlayActionTimeline(roleTimeline);
-            }
         }
     }
 
     // Forced moves land on our own character only: every other slot is a puppet the host's
     // pose snapshots already place.
-    private ISimPartyMember? OwnMember(PartyRole role, string what)
+    private SimCharacter? OwnMember(PartyRole role, string what)
     {
         if (role != MyClaimedRole) return null;
-        if (Plugin.GameInstance.World.Party.Get(role) is ISimPartyMember member) return member;
-        DiagnosticLog.Debug($"[Multiplayer] {what} for {role} but that slot isn't an ISimPartyMember locally -- dropping.");
+        if (Plugin.Game.World.Party.Get(role) is { } member) return member;
+        DiagnosticLog.Debug($"[Multiplayer] {what} for {role} but that slot is empty locally -- dropping.");
         return null;
     }
 
@@ -624,20 +450,19 @@ public sealed partial class MultiplayerManager
         var heading = NetGuard.Rotation(msg.Heading);
         var distance = NetGuard.Clamp(msg.Distance, 0f, 200f);
         if (msg.DurationSeconds > 0f)
-            member.PushInDirectionEased(heading, distance, NetGuard.Clamp(msg.DurationSeconds, 0.01f, 60f));
-        else
-            member.PushInDirection(heading, distance, NetGuard.Clamp(msg.Speed, 0f, 500f));
+            member.Push(heading, distance, NetGuard.Clamp(msg.DurationSeconds, 0.01f, 60f));
+        else if (msg.Speed > 0f)
+            member.Push(heading, distance, distance / NetGuard.Clamp(msg.Speed, 0.01f, 500f));
     }
 
     private void OnFollowReceived(FollowMessage msg)
     {
         if (!PeerInRun) return;
-        if (OwnMember(msg.Role, "Follow") is not SimCharacter me) return;
-        var target = ResolvePeerEnd(Plugin.GameInstance.World, msg.TargetEnemyNetId, msg.TargetRole);
+        if (OwnMember(msg.Role, "Follow") is not { } me) return;
+        var target = ResolvePeerEnd(Plugin.Game.World, msg.TargetEnemyNetId, msg.TargetRole);
         DiagnosticLog.Info($"[Multiplayer] Peer: {msg.Role} {(target == null ? "released from follow" : $"following {msg.TargetRole?.ToString() ?? $"enemy#{msg.TargetEnemyNetId}"} at {msg.Speed:F1}y/s")}.");
-        // Only forced follows are ever sent (see SimNetworkPuppet.Follow), and only a forced one
-        // may drive the real character.
-        me.Follow(target, NetGuard.Clamp(msg.Speed, 0f, 20f), forced: true);
+        // Only forced follows are ever sent (see RemoteMotion.ForceFollow).
+        me.ForceFollow(target, NetGuard.Clamp(msg.Speed, 0f, 20f));
     }
 
     private SimCharacter? ResolvePeerEnd(SimWorld world, int? enemyNetId, PartyRole? role)
@@ -652,8 +477,8 @@ public sealed partial class MultiplayerManager
         if (!PeerInRun) return;
         var cause = NetGuard.Clean(msg.Cause);
         DiagnosticLog.Info($"[Multiplayer] {msg.Role} killed: {cause}");
-        if (Plugin.GameInstance.World.Party.Get(msg.Role) is ISimPartyMember member)
-            Plugin.GameInstance.Kill(member, cause);
+        if (Plugin.Game.World.Party.Get(msg.Role) is ISimPartyMember member)
+            Plugin.Game.Kill(member, cause);
         else
             DiagnosticLog.Debug($"[Multiplayer] RoleKilled for {msg.Role} but that slot isn't an ISimPartyMember locally -- dropping.");
     }
@@ -662,27 +487,15 @@ public sealed partial class MultiplayerManager
     {
         if (!PeerInRun) return;
         if (!NetGuard.TryPosition(msg.SourceX, msg.SourceY, msg.SourceZ, out var source)) return;
-        if (Plugin.GameInstance.World.Party.Get(msg.Role) is ISimPartyMember member)
-            member.Knockback(source, NetGuard.Clamp(msg.Distance, 0f, 200f), NetGuard.Clamp(msg.Speed, 0f, 500f));
-        else
-            DiagnosticLog.Debug($"[Multiplayer] Knockback for {msg.Role} but that slot isn't an ISimPartyMember locally -- dropping.");
-    }
-
-    private void OnSpawnOmenReceived(SpawnOmenMessage msg)
-    {
-        if (!PeerInRun) return;
-        if (!NetGuard.TryPosition(msg.X, msg.Y, msg.Z, out var position)) return;
-        if (!Plugin.GameInstance.World.CanSpawnOmen)
+        // A push, not a Knockback: the peer's replay of the hit's ActionEffect carries no knockback
+        // entry for its client to apply.
+        if (Plugin.Game.World.Party.Get(msg.Role) is not { } member)
         {
-            DiagnosticLog.Warn($"[Multiplayer] Peer: dropping SpawnOmen -- already at {NetGuard.MaxLiveOmens} live omens.");
+            DiagnosticLog.Debug($"[Multiplayer] Knockback for {msg.Role} but that slot is empty locally -- dropping.");
             return;
         }
-        var omenPath = NetGuard.Clean(msg.Path);
-        if (!SimAssets.AllowOmenPath(omenPath, "SpawnOmen")) return;
-        Plugin.GameInstance.World.SpawnOmen(
-            omenPath, new Placement(position, NetGuard.Rotation(msg.Rotation)),
-            new Vector3(NetGuard.Clamp(msg.ScaleX, 0f, 1000f), NetGuard.Clamp(msg.ScaleY, 0f, 1000f), NetGuard.Clamp(msg.ScaleZ, 0f, 1000f)),
-            NetGuard.Clamp(msg.DurationSeconds, 0f, 600f));
+        var distance = NetGuard.Clamp(msg.Distance, 0f, 200f);
+        if (msg.Speed > 0f) member.Push(source, distance, distance / NetGuard.Clamp(msg.Speed, 0.01f, 500f));
     }
 
     private void OnEndReceived(EndMessage msg)
@@ -700,11 +513,11 @@ public sealed partial class MultiplayerManager
             DiagnosticLog.Info("[Multiplayer] EndMessage received while our zone entry is queued -- acting on it once it completes.");
             return;
         }
-        if (!Plugin.GameInstance.World.Map.IsInInstance) return;
+        if (!Plugin.Game.World.Map.IsInInstance) return;
         if (msg.ReturnedToInn)
-            Plugin.GameInstance.Leave();
+            Plugin.Game.Leave();
         else
-            Plugin.GameInstance.Reset();
+            Plugin.Game.Reset();
     }
 
 }

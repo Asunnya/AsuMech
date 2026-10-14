@@ -3,6 +3,7 @@ using System.Numerics;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
+using AnoMech.Core.Native.Interfaces;
 
 namespace AnoMech.Windows;
 
@@ -18,7 +19,7 @@ public class ConfigWindow : Window, IDisposable
         Size = new Vector2(380, 310) * ImGuiHelpers.GlobalScale;
         SizeCondition = ImGuiCond.Always;
 
-        configuration = plugin.Configuration;
+        configuration = Plugin.Config;
     }
 
     public void Dispose() { }
@@ -51,8 +52,8 @@ public class ConfigWindow : Window, IDisposable
         {
             configuration.EnableUserActions = userActions;
             configuration.Save();
-            if (userActions) Plugin.UserActions.Enable();
-            else Plugin.UserActions.Disable();
+            if (userActions) Natives.UserActions.Enable();
+            else Natives.UserActions.Disable();
         }
 
         if (configuration.EnableUserActions)

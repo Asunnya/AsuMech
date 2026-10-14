@@ -35,7 +35,7 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
     private SimParty party = null!;
 
     // Exposed so MultiplayerManager can broadcast the AI-relevant subset after a host Start --
-    // see UmadP3BlackHoleScenario.LastState. BeyondDefenseTarget resolves later (t=35.3s);
+    // see UmadP3BlackHoleScenario.LastState. BeyondDefenseTarget resolves later (t=35.7s);
     // LastState aliasing `state` is what lets BuildMidRunUpdateMessage pick that change up.
     public TopP5DeltaState? LastState { get; private set; }
 
@@ -47,11 +47,17 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
     private SimEnemy? finalHelper;
     private SimEnemy? opticalUnit;
     private List<SimEnemy?>? rocketPunches;
+    private List<Vector3>? punchSpots;
     private List<SimEnemy?>? armUnits;
     private List<SimTether> tethersShort = [];
     private List<SimTether> tethersLong = [];
     private HelloWorld? nearSolver;
     private HelloWorld? farSolver;
+    private readonly Dictionary<SimCharacter, SimEnemy?> tetherHelpers = [];
+    private List<SimEnemy?> monitorHelpers = [];
+    private SimEnemy? nearHelloHelper;
+    private SimEnemy? farHelloHelper;
+    private HelloWorldHolderDeaths holderDeaths = null!;
 
     public void Run(SimWorld worldParam, int? selectedAi)
     {
@@ -59,34 +65,42 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
         party = worldParam.Party;
         state = new TopP5DeltaState(world.Rng, settingsWindow.Overrides, party.PlayerRole);
         LastState = state;
+        holderDeaths = new HelloWorldHolderDeaths(world);
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<TopP5DeltaState>)AiStrats[idx]).Run(state, world);
 
         world.Events.Add(0.1f, SpawnOmega);
         world.Events.Add(2f, () => omega?.Cast(Actions.RunMiDeltaVersion));
+        world.Events.Add(2.1f, SpawnDeltaAdds);
+        world.Events.Add(2.1f, SpawnHelpers);
         // Delta arena transition animation (index 0x07) — real game fires these
         // at +8/+24/+27/+42s relative to the Run: mi cast. Cast is at t=2f here.
         world.Events.Add(10f, EyeSpawn);
         world.Events.Add(26.1f, EyeStartCharging);
-        world.Events.Add(29f, EyeDoneCharging);
-        world.Events.Add(44f, EyeDespawn);
+        world.Events.Add(28.8f, EyeDoneCharging);
+        world.Events.Add(43.8f, EyeDespawn);
         world.Events.Add(10f, () => omega?.PlayActionTimeline(ActionTimelineId.WarpStart));
         world.Events.Add(10.1f, ApplyDeltaTethers);           // HW debuffs confirmed at t=10.053s
-        world.Events.Add(10.1f, SpawnDeltaAdds);
+        world.Events.Add(10.1f, SpawnOpticalUnit);
+        world.Events.Add(10.2f, RevealDeltaAdds);
         world.Events.Add(10f, () => omega?.SetTargetable(false));
-        world.Events.Add(17.3f, SpawnRocketPunches); // Peripheral Synthesis fires t=17.31s
-        world.Events.Add(18.15f, () => rocketPunches?.ForEach(punch => punch?.ActorControl.PopIn()));
+        world.Events.Add(17.3f, () => beetle?.Cast(ActionId.PeripheralSynthesis));
+        world.Events.Add(18.25f, SpawnRocketPunches);
+        world.Events.Add(19.05f, () => rocketPunches?.ForEach(punch => punch?.ActorControl.PopIn()));
         world.Events.Add(20.3f, () =>finalHelper?.Cast(ActionId.ArchivePeripheral));
         world.Events.Add(23.5f, SpawnArmUnits);               // Archive Peripheral fires t=20.30s
         world.Events.Add(25.3f, MarkArmUnitRotations);        // +1s after arm spawn
+        world.Events.Add(25.5f, () => armUnits?.ForEach(unit => unit?.SetVisibleInEnemyList(true)));
         world.Events.Add(28.1f, ApplyDeltaRealTethers); // same window as optical laser
-        world.Events.Add(28.2f, () => opticalUnit?.Cast(Actions.OpticalLaser));
+        world.Events.Add(28.2f, OmegaFaceSouth);
+        world.Events.Add(28.9f, () => opticalUnit?.Cast(Actions.OpticalLaser));
         world.Events.Add(28.4f, () => omega?.PlayActionTimeline(ActionTimelineId.WarpEnd));
         world.Events.Add(30.5f, StartMonitors);         // BeyondDefense + OWC casts start t=30.43/30.47s
         world.Events.Add(30.1f, StartPunchExplosions);  // 3s cast, resolves at 33.5f
-        world.Events.Add(35.3f, FireBeyondDefenseAoe);        // BeyondDefense jump t=35.336s, AOE lands t=35.649s
+        world.Events.Add(33.9f, SlideFistsOntoTheirSpots);
+        world.Events.Add(35.7f, FireBeyondDefenseAoe);
         world.Events.Add(35.6f, StartHyperPulse);             // HyperPulse cast starts t=35.559s, fires t=38.060s
-        world.Events.Add(35.2f, DespawnRocketPunches);
+        world.Events.Add(35.2f, FadeOutRocketPunches);
         world.Events.Add(38.6f, NextHyperPulse);              // rotation steps ~0.58s each
         world.Events.Add(39.2f, NextHyperPulse);
         world.Events.Add(39.8f, NextHyperPulse);
@@ -94,24 +108,25 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
         world.Events.Add(40.5f, FireMonitors);                // OWC AOE fires t=40.509s
         world.Events.Add(41.0f, NextHyperPulse);              // last HP step, same tick as pile pitch t=40.999s
         world.Events.Add(41.0f, FirePilePitch);               // Pile Pitch fires t=40.999s
-        world.Events.Add(44.5f, () => armUnits?.Select((unit, i) => (unit, i)).ToList().ForEach(t => t.unit?.PlayActionTimeline(state.ArmHandedness[t.i].ArmUnitWarpStartTimelineId)));
-        world.Events.Add(45.5f, () => armUnits?.ForEach(unit => unit?.Despawn()));
+        world.Events.Add(41.5f, () => armUnits?.ForEach(unit => unit?.SetVisibleInEnemyList(false)));
+        world.Events.Add(41.6f, () => armUnits?.Select((unit, i) => (unit, i)).ToList().ForEach(t => t.unit?.PlayActionTimeline(state.ArmHandedness[t.i].ArmUnitWarpStartTimelineId)));
+        world.Events.Add(43.6f, () => armUnits?.ForEach(unit => unit?.Despawn()));
         world.Events.Add(43.5f, StartSwivelCannon);           // Swivel Cannon cast starts t=43.458s
         world.Events.Add(44.1f, () => omega?.PlayActionTimeline(ActionTimelineId.WarpStart));
         world.Events.Add(43.5f, () => finalHelper?.PlayActionTimeline(ActionTimelineId.WarpStart));
         world.Events.Add(45.5f, () => finalHelper?.Despawn());  // despawn signal t=43.591s
         world.Events.Add(47.5f, () => CheckTethersExpired(tethersShort));             // tethers applied t=30.2, 18s life → expire 48.2
-        world.Events.Add(53.2f, EndSwivelCannon);             // 43.458 + 9.7s cast = t=53.158s
-        world.Events.Add(53.2f, () => DropHelloPuddle(state.NearWorldRole, true));
-        world.Events.Add(53.2f, () => DropHelloPuddle(state.FarWorldRole, false));
+        world.Events.Add(54f, OmegaFaceNorth);
+        world.Events.Add(54.1f, () => DropHelloPuddle(state.NearWorldRole, true));
+        world.Events.Add(54.1f, () => DropHelloPuddle(state.FarWorldRole, false));
         world.Events.Add(54.2f, () => omega?.PlayActionTimeline(ActionTimelineId.WarpEnd));
-        world.Events.Add(54.2f, () => HopHelloPuddle(true));
-        world.Events.Add(54.2f, () => HopHelloPuddle(false));
         world.Events.Add(55.2f, () => HopHelloPuddle(true));
         world.Events.Add(55.2f, () => HopHelloPuddle(false));
+        world.Events.Add(56.1f, () => HopHelloPuddle(true));
+        world.Events.Add(56.1f, () => HopHelloPuddle(false));
         world.Events.Add(56.6f, () => beetle?.PlayActionTimeline(ActionTimelineId.WarpStart));
         world.Events.Add(58.6f, () => beetle?.Despawn());
-        world.Events.Add(56.5f, () => omega?.SetTargetable(true));
+        world.Events.Add(58.2f, () => omega?.SetTargetable(true));
         world.Events.Add(65.1f, () => CheckTethersExpired(tethersLong));             // tethers expire t=30.2+36=66.2
     }
     
@@ -119,7 +134,7 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
     {
         TickTethers(tethersLong, tether => tether.StretchLt(Geometry.HwTetherBreakDistance));
         TickTethers(tethersShort, tether => tether.StretchGt(Geometry.HwTetherBreakDistance));
-        HelloWorld.CheckHolderDeaths(world);
+        holderDeaths.Check();
     }
 
 
@@ -148,6 +163,7 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
             Level: 90,
             Targetable: true,
             InitialModeAttributeFlags: 0x10,
+            LayoutId: 0x91E486,
             Placement: new Placement(Vector3.Zero, MathF.PI)));
     }
 
@@ -158,26 +174,38 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
             NameId: BNpcNameId.OmegaBeetle,
             Level: 90,
             Targetable: false,
-            EnemyList: EnemyListMode.Always,
+            EnemyList: EnemyListMode.OnlyWhenVisible,
+            Visibility: SpawnVisibility.HiddenUntilShown,
+            LayoutId: 0x91E489,
             Placement: new Placement(new Vector3(-20f, 0f, 0f) * state.EyeSpawn.Mul, MathF.PI / 2f * state.EyeSpawn.Mul)));
-        beetle?.PlayActionTimeline(ActionTimelineId.WarpEnd);
-
-        opticalUnit = world.SpawnEnemy(new EnemySpawnConfig(
-            BNpcBaseId: BNpcBaseId.OpticalUnit,
-            NameId: BNpcNameId.OpticalUnit,
-            Level: 90,
-            Targetable: false,
-            EnemyList: EnemyListMode.Never,
-            Placement: new Placement(new Vector3(0f, 0f, -45f) * state.EyeSpawn.Mul, MathF.PI / 2f - MathF.PI / 2 * state.EyeSpawn.Mul)));
 
         finalHelper = world.SpawnEnemy(new EnemySpawnConfig(
             BNpcBaseId: BNpcBaseId.FinalHelper,
             NameId: BNpcNameId.OmegaFinal,
             Level: 90,
             Targetable: false,
-            EnemyList: EnemyListMode.Always,
+            EnemyList: EnemyListMode.OnlyWhenVisible,
+            Visibility: SpawnVisibility.HiddenUntilShown,
+            LayoutId: 0x946F2B,
             Placement: new Placement(new Vector3(20f, 0f, 0f) * state.EyeSpawn.Mul, -MathF.PI / 2f * state.EyeSpawn.Mul)));
+    }
+
+    private void RevealDeltaAdds()
+    {
+        beetle?.PlayActionTimeline(ActionTimelineId.WarpEnd);
         finalHelper?.PlayActionTimeline(ActionTimelineId.WarpEnd);
+    }
+
+    private void SpawnOpticalUnit()
+    {
+        opticalUnit = world.SpawnEnemy(new EnemySpawnConfig(
+            BNpcBaseId: BNpcBaseId.OpticalUnit,
+            NameId: BNpcNameId.OpticalUnit,
+            Level: 90,
+            Targetable: false,
+            EnemyList: EnemyListMode.Never,
+            LayoutId: 0x91D42D,
+            Placement: new Placement(new Vector3(0f, 0f, -45f) * state.EyeSpawn.Mul, MathF.PI / 2f - MathF.PI / 2 * state.EyeSpawn.Mul)));
     }
 
     private void ApplyDeltaTethers()
@@ -196,7 +224,6 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
 
     private void SpawnRocketPunches()
     {
-        beetle?.Cast(ActionId.PeripheralSynthesis);
         rocketPunches = Enumerable.Range(0, 8).Select(i =>
         {
             var placement = party.Get(state.TetherOrder[i])!.Placement().MoveForward(-Geometry.PunchBackDistance);
@@ -207,17 +234,14 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
                                              Targetable: false,
                                              Visibility: SpawnVisibility.HiddenUntilPopIn,
                                              EnemyList: EnemyListMode.Always,
+                                             LayoutId: state.FistColors[i] == BNpcBaseId.RocketPunchYellow ? 0x91D1E8u : 0x91D1E9u,
                                              Placement: placement));
-            // punch?.AddVfx(VfxPath.RocketPunchSpawn, persistent: false);
             return punch;
         }).ToList();
     }
 
     private void SpawnArmUnits()
     {
-        omega?.SetModeAttributeFlags(0x31);
-        omega?.SetModelState(0x04);
-        
         armUnits = Enumerable.Range(0, 6).Select(i =>
         {
             var unit = world.SpawnEnemy(new EnemySpawnConfig(
@@ -225,7 +249,8 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
                 NameId: state.ArmHandedness[i].ArmUnitNameId,
                 Level: 90,
                 Targetable: false,
-                EnemyList: EnemyListMode.Always,
+                EnemyList: EnemyListMode.Manual,
+                LayoutId: state.ArmHandedness[i].ArmUnitLayoutId,
                 Placement: new Placement(Geometry.ArmUnitPlacements[i].Position * new Vector3(state.EyeSpawn.Mul, 1, 1), Geometry.ArmUnitPlacements[i].Rotation)));
             unit?.PlayActionTimeline(state.ArmHandedness[i].ArmUnitWarpEndTimelineId);
             return unit;
@@ -236,7 +261,7 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
     {
         armUnits?.Select((unit, i) => (unit, i))
             .ToList()
-            .ForEach(t => t.unit?.AttachLockonVfx(state.ArmHandedness[t.i].RotateLockonId));
+            .ForEach(t => t.unit?.AttachLockonVfx(state.ArmRotations[t.i].LockonId));
     }
 
     private void ApplyDeltaRealTethers()
@@ -262,8 +287,8 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
         if (tether.A is not { } a || tether.B is not { } b) return;
         Plugin.Log.Info($"Tether broken {tether.TetherId}");
         tether.Resolved = true;
-        SpawnHwTetherHelper(a.Position, Actions.HwTetherBreak);
-        SpawnHwTetherHelper(b.Position, Actions.HwTetherBreak);
+        SpawnHwTetherHelper(a, Actions.HwTetherBreak);
+        SpawnHwTetherHelper(b, Actions.HwTetherBreak);
         tether.Despawn();
     }
 
@@ -273,23 +298,35 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
         if (tether.A is not { } a || tether.B is not { } b) return;
         Plugin.Log.Info($"Tether failed {tether.TetherId}");
         tether.Resolved = true;
-        SpawnHwTetherHelper(a.Position, Actions.HwTetherFail);
-        SpawnHwTetherHelper(b.Position, Actions.HwTetherFail);
+        SpawnHwTetherHelper(a, Actions.HwTetherFail);
+        SpawnHwTetherHelper(b, Actions.HwTetherFail);
         tether.Despawn();
     }
 
-    private void SpawnHwTetherHelper(Vector3 pos, EnemyAction action)
-        => SpawnHelper(pos)?.Cast(action);
-
-    private SimEnemy? SpawnHelper(Vector3 pos)
+    // Casts on a helper spawned the same frame play no animation, so every helper exists well
+    // before its cast and is moved onto the spot when it fires.
+    private void SpawnHelpers()
     {
-        var helper = world.SpawnEnemy(new EnemySpawnConfig(
+        foreach (var member in party.AllMembers())
+            tetherHelpers[member] = SpawnHelper();
+        monitorHelpers = Enumerable.Range(0, 4).Select(_ => SpawnHelper()).ToList();
+        nearHelloHelper = SpawnHelper();
+        farHelloHelper = SpawnHelper();
+        holderDeaths.SpawnHelpers();
+    }
+
+    private SimEnemy? SpawnHelper()
+        => world.SpawnEnemy(new EnemySpawnConfig(
             BNpcBaseId: BNpcBaseId.OmegaHelper, Visibility: SpawnVisibility.InvisibleHelper,
             Targetable: false,
             EnemyList: EnemyListMode.Never,
-            Placement: new Placement(pos, 0f)));
-        if (helper != null) world.Events.Add(Duration.MonitorHelperLifetime, helper.Despawn);
-        return helper;
+            Placement: new Placement(Vector3.Zero, 0f)));
+
+    private void SpawnHwTetherHelper(SimCharacter member, EnemyAction action)
+    {
+        if (tetherHelpers.GetValueOrDefault(member) is not { } helper) return;
+        helper.SetPosition(member.Position);
+        helper.Cast(action);
     }
 
     private void StartMonitors()
@@ -309,6 +346,7 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
         var punchTargets = Enumerable.Range(0, 8)
                                      .Select(i => party.Get(state.TetherOrder[i])!.Position)
                                      .ToList();
+        punchSpots = punchTargets;
         for(var i = 0; i < 8; i++)
         {
             var punch = rocketPunches[i];
@@ -359,9 +397,19 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
             });
     }
 
-    private void DespawnRocketPunches()
+    private void SlideFistsOntoTheirSpots()
     {
-        rocketPunches?.ForEach(punch => punch?.Despawn());
+        if (rocketPunches is null || punchSpots is null) return;
+        for (var i = 0; i < rocketPunches.Count; i++)
+        {
+            if (rocketPunches[i] is not { } punch) continue;
+            punch.MoveTo(punchSpots[i], Vector3.Distance(punch.Position, punchSpots[i]), punch.Rotation);
+        }
+    }
+
+    private void FadeOutRocketPunches()
+    {
+        rocketPunches?.ForEach(punch => punch?.FadeOut());
         rocketPunches = null;
     }
 
@@ -372,7 +420,7 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
             .ToList()
             .ForEach(t =>
             {
-                var step = state.ArmHandedness[t.i].Mul * Geometry.HyperPulseStep;
+                var step = state.ArmRotations[t.i].Mul * Geometry.HyperPulseStep;
                 t.unit!.SetPosition(new Placement(t.unit.Position, t.unit.Rotation + step));
                 t.unit.Cast(Actions.HyperPulseShoot);
             });
@@ -389,8 +437,12 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
         targets.AddRange(MonitorTargets(playerMonitor.Placement(), state.PlayerMonitorSide, exclude: playerMonitor));
         playerMonitor.RemoveStatus(state.PlayerMonitorSide.MonitorDebuffId);
 
-        foreach (var member in targets)
-            SpawnHelper(member.Position)?.Cast(Actions.OversampledWaveCannon, member);
+        foreach (var (member, monitorHelper) in targets.Zip(monitorHelpers))
+        {
+            if (monitorHelper is null) continue;
+            monitorHelper.SetPosition(member.Position);
+            monitorHelper.Cast(Actions.OversampledWaveCannon, member);
+        }
     }
 
     private IReadOnlyList<SimCharacter> MonitorTargets(Placement src, Side side, SimCharacter? exclude)
@@ -406,10 +458,18 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
     private void StartSwivelCannon()
         => beetle?.Cast(state.SwivelCannonSide == Side.Left ? Actions.SwivelCannonLeft : Actions.SwivelCannonRight);
 
-    private void EndSwivelCannon()
+    private void OmegaFaceSouth()
+    {
+        omega?.SetModeAttributeFlags(0x31);
+        omega?.SetModelState(0x04);
+        omega?.SetRotation(0f);
+    }
+
+    private void OmegaFaceNorth()
     {
         omega?.SetModeAttributeFlags(0x32);
         omega?.SetModelState(0x00);
+        omega?.SetRotation(MathF.PI);
     }
 
     private void CheckTethersExpired(List<SimTether> tethers)
@@ -430,8 +490,10 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
     private void HopHelloPuddle(bool near)
     {
         var solver = near ? nearSolver : farSolver;
-        if ( solver?.Position is not {} position) return;
-        solver.CastSpell(SpawnHelper(position));
+        var helper = near ? nearHelloHelper : farHelloHelper;
+        if (solver is null) return;
+        solver.SetPosition(helper);
+        solver.CastSpell(helper);
     }
 
     // Delta arena transition animation (index 0x07).
@@ -446,7 +508,7 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
             s.TetherOrder.ToArray(), s.FistColors.ToArray(), s.PlayerMonitorIndex,
             s.PlayerMonitorSide == Side.Left, s.OmegaMonitorSide == Side.Left,
             s.EyeSpawn == NorthSouth.North, s.SwivelCannonSide == Side.Left,
-            s.ArmHandedness.Select(side => side == Side.Left).ToArray(),
+            s.ArmRotations.Select(rotation => rotation == ArmRotation.Clockwise).ToArray(),
             s.FarWorldRole, s.NearWorldRole, s.FarWorldTetherIndex)
         : null;
 
@@ -454,11 +516,11 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
     {
         if (message is not TopP5DeltaAiReplayStateMessage msg) return null;
         // BeyondDefenseTarget starts null here, guaranteed set by ApplyMidRunUpdate before the
-        // Ai reads it (t=35.3s < 36.2s).
+        // Ai reads it (t=35.7s < 36.2s).
         var shadowState = TopP5DeltaState.FromNetworkReplay(
             msg.TetherOrder, msg.FistColors, msg.PlayerMonitorIndex,
             msg.PlayerMonitorSideIsLeft, msg.OmegaMonitorSideIsLeft, msg.EyeSpawnIsNorth,
-            msg.SwivelCannonSideIsLeft, msg.ArmHandednessIsLeft, msg.FarWorldRole,
+            msg.SwivelCannonSideIsLeft, msg.ArmRotatesClockwise, msg.FarWorldRole,
             msg.NearWorldRole, msg.FarWorldTetherIndex);
         ((IScenarioAi<TopP5DeltaState>)AiStrats[aiIndex]).Run(shadowState, replayWorld);
         return shadowState;

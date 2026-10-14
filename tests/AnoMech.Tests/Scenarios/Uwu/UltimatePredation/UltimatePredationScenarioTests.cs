@@ -208,7 +208,7 @@ public class UltimatePredationScenarioTests
             Probe = probe =>
             {
                 if (!probe.Crossed(0.5f)) return;
-                var scenario = probe.Game.Scenarios.OfType<UltimatePredationScenario>().Single();
+                var scenario = probe.Game.Catalog.Scenarios.OfType<UltimatePredationScenario>().Single();
                 host = scenario.LastState;
                 replayed = (UltimatePredationState?)scenario.StartReplay(scenario.BuildReplayStateMessage()!, 0, MainTank, probe.World);
             },

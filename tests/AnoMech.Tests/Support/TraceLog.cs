@@ -12,6 +12,9 @@ public class TraceLog : DispatchProxy
     public IReadOnlyList<string> Lines => lines;
     public List<string> Warnings { get; } = [];
 
+    // file:line of the scheduler entry fired last.
+    public string LastFired { get; private set; } = "";
+
     public static TraceLog Create(Func<float> clock)
     {
         var log = (TraceLog)(object)Create<IPluginLog, TraceLog>();
@@ -26,12 +29,16 @@ public class TraceLog : DispatchProxy
         if (method?.Name is { } name && Level(name) is { } level)
         {
             var message = Format(args ?? []);
+            if (message.StartsWith(FiredPrefix, StringComparison.Ordinal))
+                LastFired = message[FiredPrefix.Length..].Split(' ')[0];
             Add(level, message);
             if (level is "WARN" or "ERROR" or "FATAL")
                 Warnings.Add(message);
         }
         return method is { ReturnType.IsValueType: true } && method.ReturnType != typeof(void) ? Activator.CreateInstance(method.ReturnType) : null;
     }
+
+    private const string FiredPrefix = "[EventScheduler] fired ";
 
     private static string? Level(string method) => method switch
     {

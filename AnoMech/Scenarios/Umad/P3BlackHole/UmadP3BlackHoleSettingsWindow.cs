@@ -121,7 +121,7 @@ public sealed class UmadP3BlackHoleSettingsWindow
     {
         ImGui.Separator();
         // Only the host's plan is read.
-        var mpGuest = Plugin.MultiplayerInstance is { IsConnected: true, IsHost: false };
+        var mpGuest = Plugin.Multiplayer is { IsConnected: true, IsHost: false };
         ImGui.TextUnformatted("Thunder III plan (planning tank bots will follow):");
         ImGui.BeginDisabled(mpGuest);
         DrawThunderIIIRow("##thunder1", "Set 1 (~42.6s):", Overrides.ThunderSet1, Overrides.ThunderSet2, v => Overrides.ThunderSet1 = v);

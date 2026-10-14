@@ -31,7 +31,7 @@ public sealed partial class MultiplayerManager
         if (MyClaimedRole is not { } myRole) return;
         if (pendingGenericReplayState is not { } msg) return;
         if (TryResolveScenario() is not IMultiplayerReplayable replayable) return;
-        var world = Plugin.GameInstance.World;
+        var world = Plugin.Game.World;
 
         debugBotReplayStarted = true;
         if (!IsValidAiIndex(replayable))
@@ -45,16 +45,7 @@ public sealed partial class MultiplayerManager
         {
             debugShadowStateGeneric = shadowState;
             DebugBotControl.Enabled = true;
-            GiveLocalPlayerObstacles();
         }
-    }
-
-    // PartyCreator wires the obstacle field to bot doppels only; a bot-driven real character
-    // steers like one (see IMultiplayerReplayable.RebuildPeerObstacles).
-    private static void GiveLocalPlayerObstacles()
-    {
-        var world = Plugin.GameInstance.World;
-        if (world.Party.Player is { } player) player.Obstacles = world.Obstacles;
     }
 
     // Clears the run's replay state, not the sticky debugBotControlled toggle.

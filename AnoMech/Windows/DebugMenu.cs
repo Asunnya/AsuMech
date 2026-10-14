@@ -27,12 +27,15 @@ namespace AnoMech.Windows;
 // pose / cast mutators, status application, object-table dumps, map-effect and
 // director replay, BGM test. Owned by MainWindow (constructed only in DEBUG
 // builds) and drawn inline via DrawDebugContent / DrawSpeedControl. Holds the
-// Plugin reference so the moved bodies keep their `plugin.Game.*` access; the
+// Plugin reference so the moved bodies keep their `Plugin.Game.*` access; the
 // Plugin.* services (Log, TargetManager, ObjectTable, ClientState) are static.
 internal sealed unsafe class DebugMenu
 {
     private readonly Plugin plugin;
     private readonly ActorControlDebug actorControlDebug = new();
+    private readonly LockReplayDebug lockReplayDebug = new();
+    private readonly PacketCaptureDebug packetCaptureDebug = new();
+    private readonly PreloadActionTmbTap preloadActionTmbTap = new();
 
     public DebugMenu(Plugin plugin)
     {
@@ -49,12 +52,16 @@ internal sealed unsafe class DebugMenu
         recastTimesHook?.Dispose();
         positionLogActionEffectHook?.Disable();
         positionLogActionEffectHook?.Dispose();
+        preloadActionTmbTap.Dispose();
+        packetCaptureDebug.Dispose();
     }
 
     private void OnFrameworkUpdate(IFramework framework)
     {
         TickPositionLog();
         actorControlDebug.Tick();
+        lockReplayDebug.Tick();
+        packetCaptureDebug.Tick();
     }
 
     private string debugBNpcBaseIdText = "15720";
@@ -65,7 +72,6 @@ internal sealed unsafe class DebugMenu
     private string debugCastActionIdText = "0";
     private string debugCastAnimVariationText = "0";
     private string debugLockonIdText = "0";
-    private string debugVfxPathText = "vfx/lockon/eff/lockon_en_01v.avfx";
     private string debugStatusIdText = "0";
     private string debugStatusDurationText = "0";
     private string debugStatusStacksText = "1";
@@ -220,7 +226,7 @@ internal sealed unsafe class DebugMenu
     // continue at real time (see Game.Tick).
     public void DrawSpeedControl()
     {
-        var game = plugin.Game;
+        var game = Plugin.Game;
         ImGui.TextUnformatted("Speed:");
         for (int x = 1; x <= 4; x++)
         {
@@ -248,7 +254,7 @@ internal sealed unsafe class DebugMenu
         ImGui.Separator();
         // IsActing/IsMoving are only sampled while a scenario player ticks; the raw hook
         // signals stay live everywhere.
-        var simPlayer = plugin.Game.Player;
+        var simPlayer = Plugin.Game.Player;
         if (simPlayer == null)
             ImGui.TextDisabled("IsActing: -   IsMoving: -   (no scenario player)");
         else
@@ -257,7 +263,7 @@ internal sealed unsafe class DebugMenu
             ImGui.SameLine();
             DrawBoolFlag("IsMoving", simPlayer.IsMoving);
         }
-        var inputHooks = Plugin.PlayerInputHooks;
+        var inputHooks = Natives.PlayerInput;
         DrawBoolFlag("MovementInput", inputHooks.MovementInputActive);
         ImGui.SameLine();
         DrawBoolFlag("AutoAttacking", inputHooks.IsAutoAttacking);
@@ -291,8 +297,8 @@ internal sealed unsafe class DebugMenu
                 }
                 // Anchor to the player so Offset=0 lands at our feet; a scenario run overwrites it.
                 var player = Plugin.ObjectTable.LocalPlayer;
-                if (player != null) plugin.Game.World.ScenarioOrigin = player.Position;
-                TimelineDebug.LastSpawn = plugin.Game.World.SpawnEnemy(new EnemySpawnConfig(
+                if (player != null) Plugin.Game.World.ScenarioOrigin = player.Position;
+                TimelineDebug.LastSpawn = Plugin.Game.World.SpawnEnemy(new EnemySpawnConfig(
                     BNpcBaseId: baseId,
                     Targetable: true,
                     InitialModeAttributeFlags: initialModeAttrFlags));
@@ -314,11 +320,10 @@ internal sealed unsafe class DebugMenu
             {
                 // Same anchor trick as the BNpc spawn.
                 var player = Plugin.ObjectTable.LocalPlayer;
-                if (player != null) plugin.Game.World.ScenarioOrigin = player.Position;
-                plugin.Game.World.SpawnEventObject(new EventObjectSpawnConfig
+                if (player != null) Plugin.Game.World.ScenarioOrigin = player.Position;
+                Plugin.Game.World.SpawnEventObject(new EventObjectSpawnConfig
                 {
                     EObjId = eObjRowId,
-                    SpawnVisible = true
                 });
             }
         }
@@ -348,13 +353,6 @@ internal sealed unsafe class DebugMenu
             else Plugin.Log.Warning($"Lockon: can't parse LockonId '{debugLockonIdText}'");
         }
 
-        ImGui.Spacing();
-        ImGui.TextUnformatted("Spawn VFX path on target");
-        ImGui.Separator();
-        ImGui.SetNextItemWidth(320 * uiScale);
-        ImGui.InputText("VfxPath", ref debugVfxPathText, 256);
-        if (ImGui.Button("Spawn VFX on target"))
-            SpawnVfxOnTarget(debugVfxPathText);
 
         ImGui.Spacing();
         ImGui.TextUnformatted("Set ModelState on target");
@@ -446,7 +444,7 @@ internal sealed unsafe class DebugMenu
         foreach (var (id, name) in targetStatuses)
             ImGui.BulletText($"{id} -- {name}");
 
-        var recentActions = Plugin.PlayerInputHooks.RecentActions;
+        var recentActions = Natives.PlayerInput.RecentActions;
         ImGui.TextUnformatted("Recent actions pressed (newest last):");
         ImGui.SameLine();
         if (ImGui.SmallButton("Copy all##actions"))
@@ -465,9 +463,6 @@ internal sealed unsafe class DebugMenu
         ImGui.SameLine();
         if (ImGui.Button("Enumerate SharedGroups"))
             DumpSharedGroups();
-        ImGui.SameLine();
-        if (ImGui.Button("Bump EObj State"))
-            BumpEventObjectState();
 
         ImGui.Spacing();
         ImGui.TextUnformatted("Map effect");
@@ -487,17 +482,17 @@ internal sealed unsafe class DebugMenu
             else if (!TryParseId(debugMapEffectTimelineText, out var timeline) || timeline > 0xFFFF)
                 Plugin.Log.Warning($"Map effect: can't parse Timeline '{debugMapEffectTimelineText}'");
             else
-                plugin.Game.World.Map.AddEffect((timeline << 16) | mapState, (byte)idx);
+                Plugin.Game.World.Map.AddEffect((timeline << 16) | mapState, (byte)idx);
         }
 
         ImGui.Spacing();
-        ImGui.TextUnformatted("Weather lab (sky-tint only -- writes EnvManager.ActiveWeather, never WeatherManager)");
+        ImGui.TextUnformatted("Weather lab (WeatherChange packet)");
         ImGui.Separator();
         ImGui.TextWrapped("This zone's own catalog (read live from EnvScene._weatherIds): 2 Fair Skies, "
             + "77/78/79/89/174/175/176 all \"Dimensional Disruption\". One click each, or type any other id below.");
         foreach (var id in (ReadOnlySpan<byte>)[2, 77, 78, 79, 89, 174, 175, 176])
         {
-            if (ImGui.Button($"{id}##weatherquick")) plugin.Game.World.SetWeather(id);
+            if (ImGui.Button($"{id}##weatherquick")) Plugin.Game.World.Map.SetWeather(id, (float)0.5);
             ImGui.SameLine();
         }
         ImGui.NewLine();
@@ -509,7 +504,7 @@ internal sealed unsafe class DebugMenu
             if (!TryParseId(debugWeatherIdText, out var wid) || wid > 0xFF)
                 Plugin.Log.Warning($"Weather: can't parse id '{debugWeatherIdText}'");
             else
-                plugin.Game.World.SetWeather((byte)wid);
+                Plugin.Game.World.Map.SetWeather((byte)wid, (float)0.5);
         }
         ImGui.SetNextItemWidth(220);
         if (ImGui.SliderFloat("Day time (seconds, 0=midnight/43200=noon)", ref debugDayTimeSeconds, 0f, 86400f))
@@ -520,6 +515,12 @@ internal sealed unsafe class DebugMenu
 
         ImGui.Spacing();
         actorControlDebug.Draw();
+
+        ImGui.Spacing();
+        lockReplayDebug.Draw();
+
+        ImGui.Spacing();
+        packetCaptureDebug.Draw();
 
         ImGui.Spacing();
         ImGui.TextUnformatted("Director update (ActorControl replay)");
@@ -554,11 +555,11 @@ internal sealed unsafe class DebugMenu
         ImGui.Separator();
         if (ImGui.Button("Kill MT"))
         {
-            var mt = plugin.Game.World.Party.Get(PartyRole.MainTank);
+            var mt = Plugin.Game.World.Party.Get(PartyRole.MainTank);
             mt?.Die("Debug kill");
         }
         ImGui.SameLine();
-        if (ImGui.Button("Kill player") && plugin.Game.Player is { } p) p.Die("Debug kill");
+        if (ImGui.Button("Kill player") && Plugin.Game.Player is { } p) p.Die("Debug kill");
 
         ImGui.Spacing();
         ImGui.TextUnformatted("BGM test");
@@ -571,7 +572,7 @@ internal sealed unsafe class DebugMenu
             if (!TryParseId(debugBgmIdText, out var bgmId) || bgmId > ushort.MaxValue)
                 Plugin.Log.Warning($"BGM: can't parse BgmId '{debugBgmIdText}'");
             else
-                Natives.Bgm.Play((ushort)bgmId);
+                Plugin.Game.World.PlayBgm((ushort)bgmId);
         }
         ImGui.SameLine();
         if (ImGui.Button("Stop##bgm")) Natives.Bgm.Reset();
@@ -613,7 +614,7 @@ internal sealed unsafe class DebugMenu
             return;
         }
         var targetId = target.GameObjectId;
-        foreach (var enemy in plugin.Game.World.Children.OfType<SimEnemy>())
+        foreach (var enemy in Plugin.Game.World.Children.OfType<SimEnemy>())
         {
             if ((ulong)enemy.GameObjectId == targetId)
             {
@@ -643,52 +644,14 @@ internal sealed unsafe class DebugMenu
             Plugin.Log.Warning($"Lockon: target '{target.Name}' is not a tracked sim character");
             return;
         }
-        var iconName = Natives.Vfx.LockonIconName(lockonId);
-        if (iconName == null)
+        var iconName = Plugin.DataManager.GetExcelSheet<Lumina.Excel.Sheets.Lockon>().GetRowOrDefault(lockonId)?.IconName.ExtractText();
+        if (string.IsNullOrEmpty(iconName))
         {
             Plugin.Log.Warning($"Lockon: no IconName for LockonId {lockonId}");
             return;
         }
         chara.AttachLockonVfx(lockonId);
         Plugin.Log.Info($"Lockon: attached {lockonId} ({iconName}) on '{target.Name}'");
-    }
-
-    // Attaches a raw VFX path to the targeted sim character — enemy doppel, party doppel, or
-    // the player if self-targeted — falling back to the player when nothing tracked is targeted,
-    // since testing a mark on yourself is the common case. Fire-and-forget (persistent: false):
-    // the game owns the VFX lifetime, the sim doesn't track or remove it.
-    private void SpawnVfxOnTarget(string path)
-    {
-        path = path.Trim();
-        if (path.Length == 0)
-        {
-            Plugin.Log.Warning("Spawn VFX: empty path");
-            return;
-        }
-        if (!Natives.Data.FileExists(path)) return;
-
-        SimCharacter? chara = null;
-        var who = "player";
-        var target = Plugin.TargetManager.Target;
-        if (target != null)
-        {
-            chara = ResolveSimCharacter(target.GameObjectId);
-            if (chara != null) who = target.Name.ToString();
-        }
-        chara ??= plugin.Game.World.Party.Player;
-        if (chara == null)
-        {
-            Plugin.Log.Warning("Spawn VFX: no tracked target and no player; start a scenario first");
-            return;
-        }
-        if (!chara.IsActive)
-        {
-            Plugin.Log.Warning($"Spawn VFX: '{who}' is not active");
-            return;
-        }
-
-        chara.AddVfx(path, persistent: false);
-        Plugin.Log.Info($"Spawn VFX: '{path}' on '{who}'");
     }
 
     private void SetModelStateOnTarget(byte value)
@@ -700,7 +663,7 @@ internal sealed unsafe class DebugMenu
             return;
         }
         var targetId = target.GameObjectId;
-        foreach (var enemy in plugin.Game.World.Children.OfType<SimEnemy>())
+        foreach (var enemy in Plugin.Game.World.Children.OfType<SimEnemy>())
         {
             if ((ulong)enemy.GameObjectId == targetId)
             {
@@ -721,7 +684,7 @@ internal sealed unsafe class DebugMenu
             return;
         }
         var targetId = target.GameObjectId;
-        foreach (var enemy in plugin.Game.World.Children.OfType<SimEnemy>())
+        foreach (var enemy in Plugin.Game.World.Children.OfType<SimEnemy>())
         {
             if ((ulong)enemy.GameObjectId == targetId)
             {
@@ -741,14 +704,14 @@ internal sealed unsafe class DebugMenu
             Plugin.Log.Warning("Cast: no target selected");
             return;
         }
-        var player = plugin.Game.Player;
+        var player = Plugin.Game.Player;
         if (player == null)
         {
             Plugin.Log.Warning("Cast: no local player");
             return;
         }
         var targetId = target.GameObjectId;
-        foreach (var enemy in plugin.Game.World.Children.OfType<SimEnemy>())
+        foreach (var enemy in Plugin.Game.World.Children.OfType<SimEnemy>())
         {
             if ((ulong)enemy.GameObjectId == targetId)
             {
@@ -769,7 +732,7 @@ internal sealed unsafe class DebugMenu
             return;
         }
         var targetId = target.GameObjectId;
-        foreach (var enemy in plugin.Game.World.Children.OfType<SimEnemy>())
+        foreach (var enemy in Plugin.Game.World.Children.OfType<SimEnemy>())
         {
             if ((ulong)enemy.GameObjectId == targetId)
             {
@@ -840,7 +803,7 @@ internal sealed unsafe class DebugMenu
         string who;
         if (onPlayer)
         {
-            chara = plugin.Game.Player;
+            chara = Plugin.Game.Player;
             who = "player";
             if (chara == null) { Plugin.Log.Warning("Status: no local player"); return; }
         }
@@ -862,7 +825,7 @@ internal sealed unsafe class DebugMenu
     // later, then ActorControlSelf 0xC8 ~0.4s after that.
     private static unsafe void FireWipeTerritoryInit()
     {
-        var territory = ZoneSession.LoadedTerritory;
+        var territory = ZoneControl.LoadedTerritory;
         if (territory == 0 || Plugin.ObjectTable.LocalPlayer is not { } player)
         {
             Plugin.Log.Warning("[TerritoryInit] not in a sim stay; not firing");
@@ -875,7 +838,7 @@ internal sealed unsafe class DebugMenu
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x19, 0x01, 0x00, 0x02, 0, 0 };
         *(ushort*)(packet + 4) = (ushort)territory;
         Plugin.Log.Info($"[TerritoryInit] firing for territory {territory}");
-        ZoneSession.MuteTrips(TimeSpan.FromSeconds(10));
+        ZoneControl.MuteTrips(TimeSpan.FromSeconds(10));
         Core.Native.Implementations.Pointers.PacketDispatcherPointers.HandleTerritoryInitPacket(packet, 1);
 
         Plugin.Framework.RunOnTick(() =>
@@ -945,7 +908,7 @@ internal sealed unsafe class DebugMenu
     {
         ImGui.TextUnformatted("Model divergence (live / max)");
         ImGui.Separator();
-        var world = plugin.Game.World;
+        var world = Plugin.Game.World;
         var any = false;
         foreach (var chara in world.Party.AllMembers().Concat(world.Children.OfType<SimEnemy>()))
         {
@@ -965,9 +928,9 @@ internal sealed unsafe class DebugMenu
     // Null if the target isn't one of ours.
     private SimCharacter? ResolveSimCharacter(ulong gameObjectId)
     {
-        foreach (var c in plugin.Game.World.Children.OfType<SimCharacter>())
+        foreach (var c in Plugin.Game.World.Children.OfType<SimCharacter>())
             if ((ulong)c.GameObjectId == gameObjectId) return c;
-        foreach (var m in plugin.Game.World.Party.AllMembers())
+        foreach (var m in Plugin.Game.World.Party.AllMembers())
             if ((ulong)m.GameObjectId == gameObjectId) return m;
         return null;
     }
@@ -1050,20 +1013,5 @@ internal sealed unsafe class DebugMenu
         foreach (var (_, line) in rows) Plugin.Log.Info(line);
     }
 
-    // Increments SetState on every live SimEventObject per click, to find which state value
-    // activates an EObj's hidden visuals.
-    private static ushort eventObjectStateProbe;
-    private void BumpEventObjectState()
-    {
-        eventObjectStateProbe++;
-        int n = 0;
-        foreach (var child in plugin.Game.World.Children)
-        {
-            if (child is not SimEventObject eo || !eo.IsAlive) continue;
-            eo.SetState(eventObjectStateProbe);
-            n++;
-        }
-        Plugin.Log.Info($"Bumped EObj state to {eventObjectStateProbe} on {n} SimEventObjects");
-    }
 }
 #endif

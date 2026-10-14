@@ -92,6 +92,7 @@ public class UltimatePredationScenario : IMultiplayerReplayable
                 new EnemySpawnConfig(
                     BNpcBaseId: BNpcBaseId.UltimaWeapon,
                     NameId: BNpcNameId.UltimaWeapon,
+                    LayoutId: 0x701FD7,
                     Level: 70,
                     Targetable: true,
                     EnemyList: EnemyListMode.Always,
@@ -106,6 +107,7 @@ public class UltimatePredationScenario : IMultiplayerReplayable
                 new EnemySpawnConfig(
                     BNpcBaseId: BNpcBaseId.Garuda,
                     NameId: BNpcNameId.Garuda,
+                    LayoutId: 0x701FBF,
                     Level: 70,
                     Targetable: false,
                     EnemyList: EnemyListMode.Never,
@@ -119,10 +121,12 @@ public class UltimatePredationScenario : IMultiplayerReplayable
                 new EnemySpawnConfig(
                     BNpcBaseId: BNpcBaseId.Ifrit,
                     NameId: BNpcNameId.Ifrit,
+                    LayoutId: 0x701FC8,
                     Level: 70,
                     Targetable: false,
                     EnemyList: EnemyListMode.Never,
                     Visibility: SpawnVisibility.HiddenUntilShown,
+                    DisplayFlags: 0x60008,
                     Placement: new Placement(
                         new Vector3(0, 0, 0),
                         0))
@@ -132,10 +136,12 @@ public class UltimatePredationScenario : IMultiplayerReplayable
                 new EnemySpawnConfig(
                     BNpcBaseId: BNpcBaseId.Titan,
                     NameId: BNpcNameId.Titan,
+                    LayoutId: 0x701FCE,
                     Level: 70,
                     Targetable: false,
                     EnemyList: EnemyListMode.Never,
                     Visibility: SpawnVisibility.HiddenUntilShown,
+                    DisplayFlags: 0x60008,
                     Placement: new Placement(
                         new Vector3(0, 0, 0),
                         0))
@@ -149,10 +155,12 @@ public class UltimatePredationScenario : IMultiplayerReplayable
                 new EnemySpawnConfig(
                     BNpcBaseId: BNpcBaseId.Dummy,
                     NameId: BNpcNameId.Dummy,
-                    Level: 70,
+                    LayoutId: 0x704D3F,
+                    Level: 1,
                     Targetable: false,
                     EnemyList: EnemyListMode.Never,
                     Visibility: SpawnVisibility.InvisibleHelper,
+                    Engaged: false,
                     Placement: new Placement(
                         new Vector3(0, 0, 0),
                         0)
@@ -345,8 +353,16 @@ public class UltimatePredationScenario : IMultiplayerReplayable
 
     private void GarudaPost()
     {
-        GarudaSister(new Placement(new Vector3(15, 0, 0), -90), BNpcNameId.Chirada);
-        GarudaSister(new Placement(new Vector3(-15, 0, 0), 90), BNpcNameId.Suparna);
+        GarudaSister(
+            new Placement(new Vector3(15, 0, 0), Geometry.LookAtCenterRotation[DirectionEnum.E]),
+            new Placement(new Vector3(0, 0, -19.5f), Geometry.LookAtCenterRotation[DirectionEnum.N]),
+            BNpcNameId.Chirada,
+            0x70205C);
+        GarudaSister(
+            new Placement(new Vector3(-15, 0, 0), Geometry.LookAtCenterRotation[DirectionEnum.W]),
+            new Placement(new Vector3(-19.5f, 0, 0), Geometry.LookAtCenterRotation[DirectionEnum.W]),
+            BNpcNameId.Suparna,
+            0x70205B);
 
         world.Events.Add(64.38f, () =>
         {
@@ -406,20 +422,17 @@ public class UltimatePredationScenario : IMultiplayerReplayable
         utils.EruptionPuddle(() => dummies[11], () => eruptionBaits[0], 39.03f);
         utils.EruptionPuddle(() => dummies[12], () => eruptionBaits[1], 39.03f);
 
-        world.Events.Add(41.13f, () => eruptionBaits = party.Find.FarestN(ifrit!.Position, 2));
         utils.EruptionPuddle(() => dummies[9], () => eruptionBaits[0], 41.13f);
         utils.EruptionPuddle(() => dummies[10], () => eruptionBaits[1], 41.13f);
 
-        world.Events.Add(43.02f, () => eruptionBaits = party.Find.FarestN(ifrit!.Position, 2));
         utils.EruptionPuddle(() => dummies[11], () => eruptionBaits[0], 43.02f);
         utils.EruptionPuddle(() => dummies[12], () => eruptionBaits[1], 43.02f);
 
-        world.Events.Add(45.15f, () => eruptionBaits = party.Find.FarestN(ifrit!.Position, 2));
         utils.EruptionPuddle(() => dummies[9], () => eruptionBaits[0], 45.15f);
         utils.EruptionPuddle(() => dummies[10], () => eruptionBaits[1], 45.15f);
 
         // TODO: Actual Infernal Fetters logic
-        world.Events.Add(46.94f, () => world.Tether(dps, ot, TetherId.InfernalFetters, 21, StatusId.InfernalFetters));
+        world.Events.Add(46.94f, () => world.Tether(ot, dps, TetherId.InfernalFetters, 21, StatusId.InfernalFetters));
 
         // Infernal Fetters VFX is handled by dummies[11] and dummies[12]
         world.Events.Add(47.19f, () =>
@@ -508,7 +521,7 @@ public class UltimatePredationScenario : IMultiplayerReplayable
     private void RadiantPlume(Vector3 position, int dummyIndex)
         => world.Events.Add(49.05f, () => dummies[dummyIndex]?.Cast(Actions.RadiantPlumePuddle, position));
 
-    private void GarudaSister(Placement placement, uint nameId)
+    private void GarudaSister(Placement placement, Placement exitPlacement, uint nameId, uint layoutId)
     {
         SimEnemy? sister = null;
 
@@ -518,10 +531,12 @@ public class UltimatePredationScenario : IMultiplayerReplayable
                 new EnemySpawnConfig(
                     BNpcBaseId: BNpcBaseId.SuparnaChirada,
                     NameId: nameId,
+                    LayoutId: layoutId,
                     Level: 70,
                     Targetable: false,
                     EnemyList: EnemyListMode.Never,
                     Visibility: SpawnVisibility.Visible,
+                    Engaged: false,
                     Placement: placement)
             );
 
@@ -532,11 +547,7 @@ public class UltimatePredationScenario : IMultiplayerReplayable
 
         world.Events.Add(72.49f, () => sister?.PlayActionTimeline(ActionTimelineId.WarpStart2));
 
-        world.Events.Add(74.37f, () => sister?.SetPosition(
-             new Placement(
-                 new Vector3(0f, 0f, -19.5f),
-                 0
-             )));
+        world.Events.Add(74.37f, () => sister?.SetPosition(exitPlacement));
     }
 
     private void CrimsonCycloneAwaken(Placement placement, int dummyIndex)
@@ -557,10 +568,13 @@ public class UltimatePredationScenario : IMultiplayerReplayable
             new EnemySpawnConfig(
                 BNpcBaseId: BNpcBaseId.BombBoulder,
                 NameId: BNpcNameId.BombBoulder,
+                LayoutId: 0x701FD1,
                 Level: 70,
                 Targetable: false,
                 EnemyList: EnemyListMode.Never,
-                Visibility: SpawnVisibility.HiddenUntilShown,
+                Visibility: SpawnVisibility.HiddenUntilPopIn,
+                DisplayFlags: 0x40028,
+                Engaged: false,
                 Placement: new(position, 0)
                 )
             )
@@ -568,6 +582,7 @@ public class UltimatePredationScenario : IMultiplayerReplayable
 
         world.Events.Add(buryOffset, () =>
         {
+            boulder?.ActorControl.PopIn(0);
             boulder?.Cast(Actions.Bury);
         });
 

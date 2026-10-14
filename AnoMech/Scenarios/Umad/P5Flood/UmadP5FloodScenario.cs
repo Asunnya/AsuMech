@@ -73,8 +73,7 @@ public sealed class UmadP5FloodScenario : IMultiplayerReplayable
     // edge. The 40 x 10 rect (anchor at the back edge) runs straight through the arena. The near
     // point on one side always resolves with the far point on the other, then the remaining
     // pair; NW-SE mirrors NE-SW in X. Both hit VFX (z5r2_b2_g02/g04_c0v) are action vfx the
-    // native ActionEffectHandler renders on its own once the caster has a real DrawObject; never
-    // AddVfx them manually (a second, mis-bound copy).
+    // native ActionEffectHandler renders on its own once the caster has a real DrawObject.
 
     private const float Along = 20f;
     private const float NearOffset = 5f;
@@ -256,10 +255,7 @@ public sealed class UmadP5FloodScenario : IMultiplayerReplayable
         chaoticFloodCaster?.Cast(UmadActions.ChaoticFlood, target);
     }
 
-    // Not BNpcBaseId.KefkaHelper on its own: it resolves to ModelChara 480 (Type=0, Model=0), which
-    // loads no model, so an actor-attached VFX has nothing to anchor to while its sound still
-    // plays. The engine builds the real helper from its captured spawn packet instead; the Chaos
-    // carrier stands in if the handler declines.
+    // The Chaos carrier stands in if the handler declines.
     private SimEnemy? SpawnHelper(Vector3 position, float rotation)
     {
         var real = world.SpawnEnemy(new EnemySpawnConfig(
@@ -269,9 +265,7 @@ public sealed class UmadP5FloodScenario : IMultiplayerReplayable
             Targetable: false,
             EnemyList: EnemyListMode.Never,
             Visibility: SpawnVisibility.InvisibleHelper,
-            Placement: new Placement(position, rotation),
-            NpcSpawnTemplate: UmadRealPackets.HelperNpcSpawn,
-            PacketSpawnEnableDraw: true));
+            Placement: new Placement(position, rotation)));
         if (real != null) return real;   // pending until the engine fills the slot (SimEnemy.PacketSpawnPending)
         DiagnosticLog.Warn($"[UmadP5Flood] real-packet helper spawn at {position} was refused -- falling back to the Chaos carrier.");
         return SpawnChaosCarrier(position, rotation);

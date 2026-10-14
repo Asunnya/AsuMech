@@ -6,7 +6,12 @@ namespace AnoMech.Tests;
 internal sealed class FakeUserActions : IUserActions
 {
     public bool Enabled { get; set; }
+    public void Enable() => Enabled = true;
+    public void Disable() => Enabled = false;
     public void OnSessionStart() { }
     public void OnScenarioStart() { }
     public void OnSessionEnd() { }
+    public void Tick(float deltaSeconds) { }
+
+    public void Dispose() { }
 }

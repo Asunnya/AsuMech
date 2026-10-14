@@ -5,7 +5,6 @@ using FFXIVClientStructs.FFXIV.Client.Network;
 using FFXIVClientStructs.FFXIV.Client.System.String;
 using Lumina.Excel.Sheets;
 using System;
-using System.Linq;
 
 namespace AnoMech.Core.Native.Implementations.Interop;
 
@@ -17,7 +16,7 @@ internal static unsafe class InstanceContentDirectorHelper
     {
         // Outside a sim this resolves the director of whatever instance the player is really
         // in -- a live duty -- and drives its state machine. Nothing here may run there.
-        if (Plugin.GameInstance?.World.Map.IsInInstance != true)
+        if (Plugin.Game?.World.Map.IsInInstance != true)
         {
             Plugin.Log.Debug("[EventFrameworkHelper.ProcessDirectorUpdate] no sim in progress -- ignoring.");
             return false;
@@ -51,47 +50,32 @@ internal static unsafe class InstanceContentDirectorHelper
     private const uint DirectorUpdateCategory = 0x6D;
     private const uint NoTarget = 0xE0000000;
 
-    public static void SetDirectorData(byte sequence, byte unknown, byte* unionData, ulong length = 12)
+    // 0 when no director is loaded.
+    public static uint DirectorEventId()
     {
         var eventFramework = EventFramework.Instance();
+        var director = eventFramework == null ? null : eventFramework->GetInstanceContentDirector();
+        return director == null ? 0 : director->GetEventId();
+    }
 
-        if (eventFramework == null)
-        {
-            Plugin.Log.Debug("[EventFrameworkHelper.SetDirectorData (ptr)] EventFramework.Instance() was null");
-            return;
-        }
-
-        var director = eventFramework->GetInstanceContentDirector();
+    public static void SetDirectorData(byte sequence, byte unknown, ReadOnlySpan<byte> unionData)
+    {
+        var eventFramework = EventFramework.Instance();
+        var director = eventFramework == null ? null : eventFramework->GetInstanceContentDirector();
 
         if (director == null)
         {
-            Plugin.Log.Debug("[EventFrameworkHelper.SetDirectorData (ptr)] eventFramework->GetInstanceContentDirector() was null");
+            Plugin.Log.Debug("[EventFrameworkHelper.SetDirectorData] no InstanceContentDirector");
             return;
         }
 
-        var eventId = director->GetEventId();
-        EventFrameworkPointers.SetDirectorData(eventFramework, eventId, sequence, unknown, unionData, length);
-    }
+        const int length = PacketDispatcherPointers.DirectorVarsDataLength;
+        var data = stackalloc byte[length];
+        var span = new Span<byte>(data, length);
+        span.Clear();
+        unionData[..Math.Min(unionData.Length, length)].CopyTo(span);
 
-    public static void SetDirectorData(byte sequence, byte unk, byte[] unionData, bool fillExtraData = true)
-    {
-        if (unionData.Length < 12 && fillExtraData)
-        {
-            var extraBytes = 12 - unionData.Length;
-            Plugin.Log.Debug($"[EventFrameworkHelper.SetDirectorData (array)] Adding {extraBytes} to unionData.");
-            Array.Resize(ref unionData, 12);
-        }
-        else if (unionData.Length > 12)
-        {
-            var extraBytes = unionData.Length - 12;
-            Plugin.Log.Debug($"[EventFrameworkHelper.SetDirectorData (array)] Removing {extraBytes} from unionData, as the maximum sane size is 12.");
-            unionData = unionData.Take(12).ToArray();
-        }
-
-        fixed (byte* unionDataPtr = unionData)
-        {
-            SetDirectorData(sequence, unk, unionDataPtr, (ulong)unionData.Length);
-        }
+        PacketDispatcherPointers.HandleDirectorVarsPacket(director->GetEventId(), sequence, unknown, data, length);
     }
 
     public static void SetDutyData(ContentFinderCondition contentFinderCondition)

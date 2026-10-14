@@ -13,8 +13,8 @@ public static class UwuActions
     private static readonly AreaSpec SparesGaoled = new() { AdjustTargets = (_, hits) =>
         hits.Where(h => !h.HasStatus(StatusId.Fetters)).ToList() };
 
-    // TODO: find proper delay and knockbackId
-    private static readonly IEnemyActionEffect LandslideKnockback = Knockback(distance: 30, speed: 50, knockbackDelay: 0.7f);
+    // TODO: find proper delay and knockbackId; a push until the row is known
+    private static readonly IEnemyActionEffect LandslideKnockback = Push(distance: 30, speed: 50, pushDelay: 0.7f);
 
     // -- Shared --
     public static readonly EnemyAction FeatherRain = new(ActionId.FeatherRain)
@@ -22,7 +22,7 @@ public static class UwuActions
         Cast = new() { AnimationLock = 1.1f },
         Area = SparesGaoled,
         Effects = [Damage(Lethal)],
-        Timing = new() { DamageDelay = 0.4f },
+        Timing = new() { DamageDelay = 0.72f },
     };
 
     public static readonly EnemyAction EruptionPuddle = new(ActionId.EruptionPuddle)
@@ -56,7 +56,7 @@ public static class UwuActions
     public static readonly EnemyAction ViscousAetheroplasmUltima = new(ActionId.ViscousAetheroplasmUltima) 
     {
        Cast = new() { AnimationLock = 2.1f },
-       Effects = [Damage(), ApplyStatus(1532, 10)], 
+       Effects = [Damage(), ApplyStatus(1532, 10, delayToEffectResult: true)], 
        Timing = new() { DamageDelay = 1.1f },
     };
     
@@ -88,11 +88,11 @@ public static class UwuActions
     {
         Cast = new() { AnimationLock = 2.1f },
         Effects = [Damage(TankBuster)],
-        Timing = new() { DamageDelay = 2.6f },
+        Timing = new() { DamageDelay = 2.92f },
     };
 
     // TODO: real tank-purge damage
-    public static readonly EnemyAction TankPurge = Raidwide(ActionId.TankPurge, 2.1f, 0.8f);
+    public static readonly EnemyAction TankPurge = Raidwide(ActionId.TankPurge, 2.1f, 1.12f);
 
     public static readonly EnemyAction LightPillarCircle = new(ActionId.LightPillarCircle)
     {
@@ -145,7 +145,7 @@ public static class UwuActions
         Timing = new() { DamageDelay = 1.37f }, // TODO: verify with replay
     };
 
-    public static readonly EnemyAction MistralShriek = Raidwide(ActionId.MistralShriek, 2.3f, damage: 0.90f);
+    public static readonly EnemyAction MistralShriek = Raidwide(ActionId.MistralShriek, 2.3f, damage: 1.23f);
 
     public static readonly EnemyAction MistralSong = new(ActionId.MistralSong)
     {
@@ -173,11 +173,11 @@ public static class UwuActions
     };
     public static readonly EnemyAction Mesohigh = new(ActionId.Mesohigh)
     {
-        Cast = new() { AnimationLock = 2.1f },
+        Cast = new() { AnimationLock = 2.1f, FaceTarget = false },
         Effects = [
             Damage(ProtectedBy(StatusId.ThermalLow), Lethal),
         ],
-        Timing = new() { DamageDelay = 0.83f }, // TODO: verify with replay
+        Timing = new() { DamageDelay = 0.99f },
     };
 
     public static EnemyAction SuperCyclone(int thermalLowStacks) => thermalLowStacks switch
@@ -187,10 +187,13 @@ public static class UwuActions
         _ => SuperCyclone3,
     };
 
+    private static readonly IEnemyActionEffect SuperCycloneRazorPlumeKnockback =
+        OnNpcs(BNpcBaseId.RazorPlume, Knockback(KnockbackId.SuperCyclone, knockbackDelay: 0.6f));
+
     private static readonly EnemyAction SuperCyclone1 = new(ActionId.SuperCyclone1)
     {
         Cast = new() { AnimationLock = 2.1f },
-        Effects = [Damage()],
+        Effects = [Damage(), SuperCycloneRazorPlumeKnockback],
         Timing = new() { DamageDelay = 0.5f },
     };
 
@@ -200,6 +203,7 @@ public static class UwuActions
         Effects = [
             Damage(VulnerableTo(StatusId.SuperCycloneVuln)),
             ApplyStatus(StatusId.SuperCycloneVuln, 2f),
+            SuperCycloneRazorPlumeKnockback,
         ],
         Timing = new() { DamageDelay = 0.5f }, 
     };
@@ -207,7 +211,7 @@ public static class UwuActions
     private static readonly EnemyAction SuperCyclone3 = new(ActionId.SuperCyclone3)
     {
         Cast = new() { AnimationLock = 2.1f },
-        Effects = [Damage(Lethal)],
+        Effects = [Damage(Lethal), SuperCycloneRazorPlumeKnockback],
         Timing = new() { DamageDelay = 0.5f }, 
     };
 
@@ -224,7 +228,7 @@ public static class UwuActions
     {
         Cast = new() { AnimationLock = 2.1f },
         Effects = [Damage(Lethal)],
-        Timing = new() { DamageDelay = 0.4f },
+        Timing = new() { DamageDelay = 0.67f },
     };
 
     public static readonly EnemyAction CrimsonCycloneAwaken = new(ActionId.CrimsonCycloneAwaken)
@@ -237,12 +241,12 @@ public static class UwuActions
 
     public static readonly EnemyAction FlamingCrush = new(ActionId.FlamingCrush)
     {
-        Cast = new() { AnimationLock = 2.1f },
+        Cast = new() { AnimationLock = 2.1f, FaceTarget = false },
         Effects = [
             Damage(split: Distribution.Stack(6)), 
             ApplyStatus(StatusId.AccursedFlame, 3f)
         ],
-        Timing = new() { DamageDelay = 0.73f }, // TODO: verify with replay
+        Timing = new() { DamageDelay = 0.93f },
     };
 
     // -- Titan --
@@ -250,6 +254,11 @@ public static class UwuActions
 
     // Cancelled before it goes off: the sim always breaks the gaol in time.
     public static readonly EnemyAction GraniteImpact = new(ActionId.GraniteImpact);
+
+    public static readonly EnemyAction RockThrow = new(ActionId.RockThrow)
+    {
+        Cast = new() { AnimationLock = 2.1f, FaceTarget = false },
+    };
 
     public static readonly EnemyAction Bury = new(ActionId.Bury)
     {

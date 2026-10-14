@@ -22,18 +22,16 @@ public sealed record ExaflareLine(Vector3 Start, float Rotation, float Telegraph
 // or on one that is not in this pair", never "find the gap" (adjacent lanes are 8y apart and
 // each blast is 6y, so the lanes overlap).
 //
-// Every number here is measured from a clear log (fflogs r7bCpTZQJ2AdzVKH, fight 3, all four
-// Exaflare sets agree): lane offsets and spacing, the 20y start-back, 6 eruptions, 8y per step,
-// 1.47s between steps, 3.0s between pairs, the first pair's arrow going up 2.01s after the boss
-// starts its Exaflare cast, and the first eruption 3.97s after its own arrow.
+// The second eruption trails the first by ~1.6s, longer than the 1.476s between later steps.
 public sealed class UcobP5ExaflaresState
 {
     public const float HitRadius = 6f;              // ExaflareFirst/Rest EffectRange
     public const float Advance = 8f;
-    public const float RollInterval = 1.47f;
+    public const float RollInterval = 1.476f;
     public const int HitsPerLine = 6;
     public const float StartDistance = 20f;
     public const float TelegraphSeconds = 3.97f;    // arrow omen up to its own release (the first eruption)
+    public const float SecondHitSeconds = 5.58f;    // arrow omen up to the second eruption, the first ExaflareRest
 
     public const int PairCount = 3;
     public const float PairInterval = 3f;
@@ -95,7 +93,7 @@ public sealed class UcobP5ExaflaresState
         Lines = lines;
         Hits = hits;
         LastHitAt = FirstTelegraphAt + (PairCount - 1) * PairInterval
-                    + TelegraphSeconds + (HitsPerLine - 1) * RollInterval;
+                    + SecondHitSeconds + (HitsPerLine - 2) * RollInterval;
     }
 
     private static ExaflareLine BuildLine(Vector3 travel, Vector3 lateral, float rotation, float offset, float telegraphAt)
@@ -105,7 +103,7 @@ public sealed class UcobP5ExaflaresState
         for (var i = 0; i < HitsPerLine; i++)
             hits.Add(new ExaflareHit(
                 start + travel * (Advance * i),
-                telegraphAt + TelegraphSeconds + i * RollInterval,
+                telegraphAt + (i == 0 ? TelegraphSeconds : SecondHitSeconds + (i - 1) * RollInterval),
                 telegraphAt));
 
         return new ExaflareLine(start, rotation, telegraphAt, hits);

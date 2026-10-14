@@ -13,7 +13,7 @@ internal static class ActionTargets
 {
     public static IReadOnlyList<SimCharacter> Friendly(ActionContext ctx)
     {
-        if (Plugin.GameInstance is not { } game || !TryGetAction(ctx.ActionId, out var action)) return [];
+        if (Plugin.Game is not { } game || !TryGetAction(ctx.ActionId, out var action)) return [];
         var members = game.World.Party.ActiveMembers();
         switch (action.CastType)
         {
@@ -31,7 +31,7 @@ internal static class ActionTargets
 
     public static IReadOnlyList<SimEnemy> Hostile(ActionContext ctx)
     {
-        if (Plugin.GameInstance is not { } game || !TryGetAction(ctx.ActionId, out var action)) return [];
+        if (Plugin.Game is not { } game || !TryGetAction(ctx.ActionId, out var action)) return [];
         var enemies = game.World.Children.OfType<SimEnemy>().Where(e => e.IsActive);
         switch (action.CastType)
         {

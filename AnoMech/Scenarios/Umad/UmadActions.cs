@@ -28,32 +28,40 @@ public static class UmadActions
 
     // -- P1 Tele-trouncing --
 
+    // The helpers casting these at a player stay as they stand, unturned.
+    public static readonly EnemyAction TeleTrouncingArrowSpawn = new(UmadConstants.ActionId.TeleTrouncingArrowSpawn)
+    {
+        Cast = new() { AnimationLock = 1.1f, FaceTarget = false },
+    };
+
     public static readonly EnemyAction DoubleTroubleTrapStack = new(UmadConstants.ActionId.DoubleTroubleTrapStack)
     {
-        Cast = new() { AnimationLock = 1.1f },
+        Cast = new() { AnimationLock = 1.1f, FaceTarget = false },
         Effects =
         [
             Damage(MagicVulns, split: Stack(4)),
             OnOthers(MagicVulnerabilityUp),
-            OnOthers(Knockback(UmadConstants.KnockbackId.DoubleTroubleTrapStack, knockbackDelay: 0f)),
+            OnOthers(Knockback(UmadConstants.KnockbackId.DoubleTroubleTrapStack, knockbackDelay: 0.70f)),
         ],
-        Timing = new() { DamageDelay = 0.67f },
+        Timing = new() { DamageDelay = 0.64f },
     };
 
     public static readonly EnemyAction IndulgentWill = new(UmadConstants.ActionId.IndulgentWill)
     {
-        Cast = new() { AnimationLock = 1.1f },
-        Effects = [Damage(MagicVulns)],
-        Timing = new() { DamageDelay = 0.63f },
+        Cast = new() { AnimationLock = 1.1f, FaceTarget = false },
+        // Retail's gain entry for Confused carries param0 0xA4; what the client reads it as is UNVERIFIED.
+        Effects = [Damage(MagicVulns), ApplyStatus(UmadConstants.StatusId.Confused, 6f, delayToEffectResult: true, entryParam: 0xA4)],
+        Timing = new() { DamageDelay = 0.61f },
     };
 
     public static readonly EnemyAction IdyllicWill = new(UmadConstants.ActionId.IdyllicWill)
     {
-        Cast = new() { AnimationLock = 1.1f },
+        Cast = new() { AnimationLock = 1.1f, FaceTarget = false },
         Effects = [Damage(MagicVulns), MagicVulnerabilityUp],
         Timing = new() { DamageDelay = 0.63f },
     };
 
+    // UNVERIFIED for Real1: no replay has it hitting anyone; Real2's delay is reused.
     public static readonly EnemyAction ThrummingThunderReal1 = ThrummingThunder(UmadConstants.ActionId.ThrummingThunderIII_Real);
     public static readonly EnemyAction ThrummingThunderReal2 = ThrummingThunder(UmadConstants.ActionId.ThrummingThunderIII_FakeAnim);
 
@@ -61,7 +69,7 @@ public static class UmadActions
     {
         Cast = new() { AnimationLock = 1.1f },
         Effects = [Damage(MagicVulns, Lethal)],
-        Timing = new() { DamageDelay = 0.65f },
+        Timing = new() { DamageDelay = 0.60f },
     };
 
     public static readonly EnemyAction IndolentWill = StatueGaze(UmadConstants.ActionId.IndolentWill, lookAway: true);
@@ -76,16 +84,16 @@ public static class UmadActions
 
     public static readonly EnemyAction FlagrantFireSpread = new(UmadConstants.ActionId.FlagrantFireSpread)
     {
-        Cast = new() { AnimationLock = 1.1f },
+        Cast = new() { AnimationLock = 1.1f, FaceTarget = false },
         Effects = [Damage(MagicVulns), MagicVulnerabilityUp],
-        Timing = new() { DamageDelay = 0.63f },
+        Timing = new() { DamageDelay = 0.60f },
     };
 
     public static readonly EnemyAction FlagrantFireStack = new(UmadConstants.ActionId.FlagrantFireStack)
     {
-        Cast = new() { AnimationLock = 1.1f },
+        Cast = new() { AnimationLock = 1.1f, FaceTarget = false },
         Effects = [Damage(MagicVulns, split: Stack(4)), MagicVulnerabilityUp],
-        Timing = new() { DamageDelay = 0.71f },
+        Timing = new() { DamageDelay = 0.62f },
     };
 
     // -- P2 Forsaken --
@@ -282,7 +290,7 @@ public static class UmadActions
         Cast = new() { AnimationLock = 3.1f },
         Effects =
         [
-            Knockback(VacuumWavePush, 40f, knockbackDelay: 0.78f),
+            Push(VacuumWavePush, 40f, pushDelay: 0.78f),
             RemoveStatus(UmadConstants.StatusId.Headwind),
             RemoveStatus(UmadConstants.StatusId.Tailwind),
         ],

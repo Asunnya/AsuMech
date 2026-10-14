@@ -3,38 +3,44 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using AnoMech.Core.Game;
-using AnoMech.Core.Game.Geometry;
+using AnoMech.Core.Game.Motion;
 using AnoMech.Core.Native.Interfaces;
 using AnoMech.Core.UserActions;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 
 namespace AnoMech.Core.SimObjects;
 
 // Common base for anything in the simulated world that has a BattleChara behind it
-public abstract class SimCharacter(Coordinates coordinates) : ISimObject, IPositioned
+public abstract class SimCharacter : ISimObject, IPositioned
 {
-    private readonly List<SimVfx> vfx = [];
+    // createMotion gets the character itself, which a derived constructor can't hand its base.
+    private protected SimCharacter(Coordinates coordinates, Func<SimCharacter, CharacterMotion> createMotion)
+    {
+        Coordinates = coordinates;
+        Motion = createMotion(this);
+        Casting = new SimCast(this, coordinates);
+    }
+
+    // Authoritative list of statuses for character. In-game status list can be be little different and it's ok by design.
     private readonly List<SimStatus> statusList = [];
 
     // Null once the character has no native object to stand for (despawned).
     internal abstract IBattleCharaProxy? Proxy { get; }
 
-    private protected abstract Movement Movement { get; }
+    private protected CharacterMotion Motion { get; }
 
-    protected readonly Coordinates Coordinates = coordinates;
+    // The cast packets as sent, for multiplayer to sample on the host and replay on a peer.
+    internal SimCast Casting { get; }
 
-    // Obstacles this character's Movement steers around. Defaults to the shared
-    // empty field (no avoidance — straight lines); PartyCreator points party
-    // doppels and the player at world.Obstacles so only bots avoid geometry.
-    internal ObstacleField Obstacles { get; set; } = ObstacleField.Empty;
+    protected readonly Coordinates Coordinates;
 
     public virtual bool IsActive => Proxy is { Exists: true };
 
     // True while the character is rooted by an in-progress action (cast bar up or
-    // release animation still playing). The Movement subsystem reads this to hold
-    // an active follow in place until the animation finishes. Default false; types
-    // that simulate casts (SimEnemy) override it.
+    // release animation still playing): an ordered walk holds in place until it ends.
+    // Types that simulate casts (SimEnemy) override it.
     public virtual bool AnimationLock => false;
 
     public GameObjectId GameObjectId => Proxy?.GameObjectId ?? default;
@@ -43,305 +49,132 @@ public abstract class SimCharacter(Coordinates coordinates) : ISimObject, IPosit
 
     public virtual void Tick(float deltaSeconds)
     {
-        modelDrivenSeconds = MathF.Max(0f, modelDrivenSeconds - deltaSeconds);
-        if (Proxy is { Exists: true } native)
-        {
-            var model = Coordinates.ToLocal(native.Position);
-            if (ModelDriven || !placed)
-            {
-                position = model;
-                glideTarget = model;
-                // A turn queued since the last tick hasn't reached the model yet.
-                if (!movePending)
-                {
-                    modelRotation = native.Rotation;
-                    if (turnTarget is null) Rotation = native.Rotation;
-                }
-                placed = true;
-            }
-            ModelDivergence = Vector2.Distance(new Vector2(position.X, position.Z), new Vector2(model.X, model.Z));
-            MaxModelDivergence = MathF.Max(MaxModelDivergence, ModelDivergence);
-        }
         statusList.Update(deltaSeconds);
         FlushStatusList();
-        vfx.Update(deltaSeconds);
-        Movement.Tick(deltaSeconds);
-        TickTurn(deltaSeconds);
-        FlushMove();
+        Casting.Tick(deltaSeconds);
+        Motion.Tick(deltaSeconds, new MotionGates(this.IsAlive(), MovementLocked, AnimationLock));
+        confusedChaseHold = MathF.Max(0f, confusedChaseHold - deltaSeconds);
     }
+
+    private float confusedChaseHold;
+
+    // A confused character (ActorControl.Confused) chases its nearest ally; this stands the chase
+    // still for a while, as a mechanic's own pause. A forced move in flight holds it too.
+    public void HoldConfusedChase(float seconds) => confusedChaseHold = MathF.Max(confusedChaseHold, seconds);
+
+    internal bool ConfusedChaseHeld => confusedChaseHold > 0f || Motion.IsForcedMoving;
 
 
     public virtual void Despawn()
     {
         statusList.Despawn();
-        vfx.Despawn();
+        Motion.Clear();
     }
 
     // -------------------------
     // Location Subsystem
     // -------------------------
 
-    // The sim's own position, in local coordinates: what mechanics and the AI read, like the
-    // server's. The model follows it through SetPos/Move packets and trails by however long the
-    // client takes to apply them. Where the game moves the character itself (ModelDriven) it's
-    // copied from the model instead. Virtual so SimNetworkPuppet can report the peer's real
-    // position while its glide catches up.
-    private Vector3 position;
-    public virtual Vector3 Position => position;
-    public float Rotation { get; private set; }
-
-    // The facing last sent to the model; trails Rotation while TurnTo turns it at TurnSpeed.
-    private float modelRotation;
+    // What mechanics and the AI read, like the server's position; CharacterMotion says where each
+    // kind of character gets it.
+    public Vector3 Position => Motion.Position;
+    public float Rotation => Motion.Rotation;
 
     // Yalms (XZ) between Position and the model at the start of the last tick.
-    public float ModelDivergence { get; private set; }
-    public float MaxModelDivergence { get; private set; }
-
-    // The game, not the sim, moves the character: the local player, or a server-driven move
-    // (a carry) in flight.
-    protected virtual bool ModelDriven => modelDrivenSeconds > 0f;
-    private float modelDrivenSeconds;
-
-    protected void FollowModelFor(float seconds) => modelDrivenSeconds = MathF.Max(modelDrivenSeconds, seconds);
-
-    // False until the sim gives the character a transform; the first tick with a model adopts
-    // the model's instead, so a turn can't drag it to the origin.
-    private bool placed;
+    public float ModelDivergence => Motion.ModelDivergence;
+    public float MaxModelDivergence => Motion.MaxModelDivergence;
 
     // Teleport: an ActorSetPos.
-    public void SetPosition(Vector3 newPosition)
+    public void SetPosition(Vector3 position) => Motion.SetPosition(position);
+    public void SetPosition(Placement placement) => Motion.SetPlacement(placement);
+    public void SetRotation(float rotation) => Motion.SetPlacement(new Placement(Position, rotation));
+
+    public void TurnTo(float rotation) => Motion.TurnTo(rotation);
+    public void Face(Vector3? target)
     {
-        position = newPosition;
-        SendSetPos();
+        if (target is { } t) Motion.Face(t);
     }
-
-    public void SetRotation(float rotation)
-    {
-        turnTarget = null;
-        Rotation = rotation;
-        modelRotation = rotation;
-        SendSetPos();
-    }
-
-    public void SetPosition(Placement placement)
-    {
-        turnTarget = null;
-        position = placement.Position;
-        Rotation = placement.Rotation;
-        modelRotation = placement.Rotation;
-        SendSetPos();
-    }
-
-    // Puts the model back on the sim's transform, e.g. once an actor that was moved while its
-    // spawn was in flight exists.
-    protected void ResendTransform() => SendSetPos();
-
-    private void SendSetPos()
-    {
-        placed = true;
-        movePending = false;
-        glideTarget = position;
-        lastSentTarget = position;
-        lastSentRotation = modelRotation;
-        Proxy?.SetPos(Coordinates.ToGlobal(position), modelRotation);
-    }
-
-    // The client walks the model from wherever it is to each ActorMove's position over exactly
-    // this long, at a constant speed, whatever the packet's speed byte says. A move aimed at
-    // where the sim will be this far ahead keeps the model level with it; one aimed at the sim's
-    // current spot leaves it trailing, still walking for up to this long after the sim stopped.
-    internal const float ModelGlideSeconds = 1f;
-
-    private bool movePending;
-    private ActorMoveFlags moveFlags;
-    private float moveSpeed;
-
-    // Where the model is being walked to, ModelGlideSeconds ahead of the sim on its path.
-    private Vector3 glideTarget;
-
-    // A repeat restarts the client's glide from the model's spot and slows it, so it's not resent.
-    private Vector3 lastSentTarget;
-    private float lastSentRotation;
-
-    // One step of a walk (or a slide, with ActorMoveFlags.Knockback): the position moves now,
-    // and the tick ends with an ActorMove aiming the model at `glideTarget` (see ModelGlideSeconds).
-    internal void StepTo(Vector3 next, Vector3 glideTarget, ActorMoveFlags flags, float speed)
-    {
-        placed = true;
-        position = next;
-        this.glideTarget = glideTarget;
-        moveFlags = flags;
-        moveSpeed = speed;
-        movePending = true;
-    }
-
-    // StepTo plus the facing at once, for a glide that already smooths its own rotation.
-    internal void StepTo(Placement next, Vector3 glideTarget, ActorMoveFlags flags, float speed)
-    {
-        turnTarget = null;
-        Rotation = next.Rotation;
-        modelRotation = next.Rotation;
-        StepTo(next.Position, glideTarget, flags, speed);
-    }
-
-    private void FlushMove()
-    {
-        if (!movePending) return;
-        movePending = false;
-        if (glideTarget != lastSentTarget || modelRotation != lastSentRotation)
-            SendMove(Coordinates.ToGlobal(glideTarget), modelRotation, moveFlags, moveSpeed);
-        lastSentTarget = glideTarget;
-        lastSentRotation = modelRotation;
-        moveFlags = ActorMoveFlags.None;
-        moveSpeed = 0f;
-    }
-
-    // SimPlayer overrides it: the client drops an ActorMove for its own player.
-    protected virtual void SendMove(Vector3 worldPosition, float rotation, ActorMoveFlags flags, float speed)
-    {
-        if (!ModelDriven) Proxy?.Move(worldPosition, rotation, flags, speed);
-    }
-
-    // Radians per second the model turns at under TurnTo; null turns it in one Move.
-    protected virtual float? TurnSpeed => null;
-
-    private float? turnTarget;
-
-    // Rotation (what mechanics read) takes the new facing at once; only the model turns
-    // gradually, so a scenario that faces and fires in the same tick still aims where it faced.
-    public void TurnTo(float rotation)
-    {
-        Rotation = rotation;
-        if (TurnSpeed is null)
-        {
-            turnTarget = null;
-            modelRotation = MathUtil.NormalizeRotation(rotation);
-            movePending = true;
-            return;
-        }
-        turnTarget = MathUtil.NormalizeRotation(rotation);
-    }
-
-    private void TickTurn(float deltaSeconds)
-    {
-        if (turnTarget is not { } target || TurnSpeed is not { } speed) return;
-        modelRotation = MathUtil.StepRotation(modelRotation, target, speed * deltaSeconds);
-        movePending = true;
-        if (modelRotation == target) turnTarget = null;
-    }
-
-    // Transform for an actor the engine hasn't created yet (a packet spawn in flight, see
-    // SimEnemy.SpawnFromPacket): the spawn packet already carries it.
-    protected void SeedTransform(Vector3 newPosition, float rotation)
-    {
-        placed = true;
-        position = newPosition;
-        glideTarget = newPosition;
-        lastSentTarget = newPosition;
-        Rotation = rotation;
-        modelRotation = rotation;
-    }
-
-    public void Face(Vector3? target) => Movement.Face(target);
     public void Face(IPositioned? target) => Face(target?.Position);
+
+    // While a status locks movement only forced moves run (a forced Follow included); an AI order
+    // is dropped, not deferred.
     public void MoveTo(Vector3 target, float speed = 6f, float? finalRotation = null)
-        => Movement.MoveTo(target, speed, finalRotation);
+    {
+        if (this.IsAlive() && !MovementLocked) Motion.MoveTo(target, speed, finalRotation);
+    }
     public void MoveTo(Placement p) => MoveTo(p.Position);
-    public void StopMoving() => Movement.Stop();
+    public void StopMoving() => Motion.Stop();
 
-    public void Intercept(SimTether? tether, float margin = 3f) => Movement.Intercept(tether, margin);
-    public bool IsIntercepting => Movement.IsIntercepting;
-    public bool IsEasedMoving => Movement.IsEasedMoving;
-    public Vector3? MoveDestination => Movement.Destination;
-
-    // forced: the mechanic is taking control, not a strat positioning a bot (see
-    // Movement.Follow). Virtual so SimNetworkPuppet can hand a forced follow to its owner.
-    public virtual void Follow(SimCharacter? target = null, float speed = 6f, bool forced = false)
-        => Movement.Follow(target, speed, forced);
-
-
-    // -------------------------
-    // VFX Subsystem
-    // -------------------------
-
-    // Self-attached actor VFX keyed by path.
-    // persistent: true  → tracked by sim (might crash if we try to remove vfx after game already did that)
-    // persistent: false → fire-and-forget (game is responsible for duration and cleaning of vfx)
-    public void AddVfx(string path, float duration = 0f, bool persistent = true)
+    public void Intercept(SimTether? tether, float margin = 3f)
     {
-        if (!Natives.Data.FileExists(path))
-        {
-            Plugin.Log.Warning($"VFX path not found '{path}'");
-            return;
-        }
-        if (!IsActive) return;
-        if (persistent && FindVfx(path) is {} existing)
-        {
-            existing.Refresh(duration);
-            return;
-        }
-        var spawned = new SimVfx(this, path, duration);
-        if (persistent && spawned.IsActive)
-            vfx.Add(spawned);
-        else if (!persistent)
-        {
-            if (pendingVfx.Count < AnoMech.Multiplayer.NetGuard.MaxVfxPerEntity) pendingVfx.Add((path, duration));
-            else droppedPendingVfx++;
-        }
+        if (!MovementLocked) Motion.Intercept(tether, margin);
+    }
+    public bool IsIntercepting => Motion.IsIntercepting;
+    public Vector3? MoveDestination => Motion.Destination;
+
+    // An AI order; a mechanic that takes control uses ForceFollow. A null or dead target releases it.
+    public void Follow(SimCharacter? target = null, float speed = 6f)
+    {
+        if (MovementLocked && target.IsAlive()) return;
+        Motion.Follow(target, speed);
     }
 
-    // Every non-persistent AddVfx since the last drain, sampled for peers like the lockons.
-    private readonly List<(string Path, float Duration)> pendingVfx = [];
-    private int droppedPendingVfx;
+    // Forced movement says what the mechanic does; the motion sends what retail shows for this kind
+    // of character. Each call below names the replay packets it stands for and what the sim sends:
+    // the local player gets the packet retail sends the pushed player; a bot gets what a replay shows
+    // for another player, ActorMoves its own client reports (flag 0x08 on a slide). A KO'd character
+    // isn't moved.
 
-    public IReadOnlyList<(string Path, float Duration)> DrainPendingVfx(out int dropped)
+    // Replay: ActionEffect entry 0x1F on the target, value = Knockback row; for a Direction 6 row
+    // also ActorControlSelf 0xE1 to the pushed player; for an NPC, the NPC knockback packet. Usually
+    // reached through an EnemyAction's Knockback(knockbackId) effect, which also puts the entry in
+    // the ActionEffect.
+    // Sim: player - nothing (the client slides itself from the entry), or 0xE1 for Direction 6;
+    // bot - ActorMove slide with flag 0x08; NPC - the NPC knockback packet.
+    public void Knockback(Vector3 source, uint knockbackRow)
     {
-        dropped = droppedPendingVfx;
-        droppedPendingVfx = 0;
-        if (pendingVfx.Count == 0) return [];
-        var result = pendingVfx.ToArray();
-        pendingVfx.Clear();
-        return result;
+        if (Natives.Data.Knockback(knockbackRow) is { } row) Force(new ForcedMove.Knockback(source, row));
     }
 
-    // Every lockon attached since the last drain, so two in one tick (P4's Blizzard+Lightning
-    // orbs) both replicate.
-    private readonly List<uint> pendingLockonVfxIds = [];
-    private int droppedPendingLockonVfxIds;
+    // Replay: ActorControlSelf 0xE1 to the pushed player with no Knockback entry in the
+    // ActionEffect; p1 heading, p2 distance x10000, p3 duration x10000. Away from a caster through
+    // an EnemyAction's Push(distance, speed) effect (UMAD Vacuum Wave).
+    // Sim: player - 0xE1; bot - ActorMove slide with flag 0x08; NPC - the NPC knockback packet.
+    public void Push(float heading, float distance, float durationSeconds)
+        => Force(new ForcedMove.Push(heading, distance, durationSeconds));
 
-    public IReadOnlyList<uint> DrainPendingLockonVfxIds(out int dropped)
+    public void Push(Vector3 source, float distance, float durationSeconds)
+        => Force(new ForcedMove.PushAway(source, distance, durationSeconds));
+
+    // Replay: ActorControl 0xF1 on the carried character, p1/p2 the quantized destination (UMAD P1
+    // arrows); chained carries ~1s apart, each after the first following 0xE5 WarpEnd.
+    // Sim: 0xF1 for player and bot alike; no ActorMove while it plays.
+    public void CarryTo(Vector3 destination) => Force(new ForcedMove.Carry(destination));
+
+    // A mechanic's snap, which a remote player's own client has to make; SetPosition is the
+    // engine-side one. Replay and sim: ActorSetPos.
+    public void TeleportTo(Placement placement) => Motion.Force(new ForcedMove.Teleport(placement));
+
+    // Replay (UMAD P1 Confusion): the confused player's own movement, nothing that names the
+    // target. Live, never in a replay: forced-move end + follow {target, 1} to the confused player
+    // about every 0.1s, which only turns them; what walks them in retail is UNVERIFIED. A null or
+    // dead target releases it, which always applies.
+    // Sim: player - forced-move end + approach {range, target}, which the client walks itself;
+    // bot - ActorMoves of the navigator's chase.
+    public void ForceFollow(SimCharacter? target, float speed = 6f)
     {
-        dropped = droppedPendingLockonVfxIds;
-        droppedPendingLockonVfxIds = 0;
-        if (pendingLockonVfxIds.Count == 0) return [];
-        var result = pendingLockonVfxIds.ToArray();
-        pendingLockonVfxIds.Clear();
-        return result;
+        if (this.IsAlive() || target is null) Motion.Force(new ForcedMove.Follow(target.IsAlive() ? target : null, speed));
     }
 
-    // The Lockon check keeps an id a peer sent from reaching the client's handler.
-    public void AttachLockonVfx(uint lockonId)
+    private void Force(ForcedMove move)
     {
-        if (!IsActive || Natives.Vfx.LockonIconName(lockonId) is null) return;
-        ActorControl.HeadMarker(lockonId);
-        if (pendingLockonVfxIds.Count < AnoMech.Multiplayer.NetGuard.MaxLockonVfxPerEntity) pendingLockonVfxIds.Add(lockonId);
-        else droppedPendingLockonVfxIds++;
+        if (this.IsAlive()) Motion.Force(move);
     }
 
-    // Sampled for peers and reconciled there like the statuses: unlike the fire-and-forget ones
-    // above, a persistent VFX ends by removal, which no one-shot event could carry.
-    public IReadOnlyList<string> ActivePersistentVfxPaths
-        => vfx.Count == 0 ? [] : vfx.Where(v => v.IsActive).Select(v => v.Path).Distinct().ToList();
+    internal bool WalksWith(INavigated walker) => ReferenceEquals(Motion, walker);
 
-    public SimVfx? FindVfx(string path)
-    {
-        return vfx.Find(v => v.IsActive && v.Path == path);
-    }
 
-    public void RemoveVfx(string path)
-    {
-        FindVfx(path)?.Despawn();
-    }
+    public void AttachLockonVfx(uint lockonId) => ActorControl.HeadMarker(lockonId);
 
     // FIXME: minor, keep track of tethers and slots attached to character
     public bool HasTetherInSlot0(ushort tetherId)
@@ -353,8 +186,9 @@ public abstract class SimCharacter(Coordinates coordinates) : ISimObject, IPosit
 
     // sourceObject distinguishes independent same-id instances (UMAD P1 Tele-portent applies
     // the same id twice with separate expiries). broadcastAddEvent false leaves a new status's
-    // gain flytext to the caller, e.g. an ActionEffect's status entry.
-    public SimStatus? AddStatus(ushort statusId, float duration = 0f, int stacks = 1, bool overrideStacks = false, GameObjectId sourceObject = default, bool broadcastAddEvent = true)
+    // gain flytext to the caller, e.g. an ActionEffect's status entry. hidden keeps a new status out
+    // of the status list until SimStatus.Reveal; refreshing one the client already shows ignores it.
+    public SimStatus? AddStatus(ushort statusId, float duration = 0f, int stacks = 1, bool overrideStacks = false, GameObjectId sourceObject = default, bool broadcastAddEvent = true, bool hidden = false)
     {
         Core.DiagnosticLog.Info($"[SimCharacter] AddStatus: {DiagnosticName} gets status {statusId} (duration={duration:F1}, stacks={stacks}, overrideStacks={overrideStacks}, source=0x{sourceObject.ObjectId:X}).");
         if (FindStatus(statusId, sourceObject) is {} status)
@@ -368,26 +202,26 @@ public abstract class SimCharacter(Coordinates coordinates) : ISimObject, IPosit
                 status.Despawn();   // last stack consumed → remove the status
                 return null;
             }
-            if (status.Slot >= 0) statusListChanged = true;
+            if (status.Slot >= 0 && !status.Hidden) statusListChanged = true;
             return status;
         }
 
         // No existing status: a non-positive request has nothing to remove.
         if (stacks <= 0) return null;
-        return SpawnStatus(statusId, duration, (ushort)stacks, sourceObject, broadcastAddEvent);
+        return SpawnStatus(statusId, duration, (ushort)stacks, sourceObject, broadcastAddEvent, hidden);
     }
 
     // For logging: the party role when available, else the type name.
     private string DiagnosticName => (this as ISimPartyMember)?.Role.ToString() ?? GetType().Name;
 
     public SimStatus AddStatusParam(ushort statusId, int param, float duration = 0f)
-        => SpawnStatus(statusId, duration, (ushort)param, default, broadcastAddEvent: true);
+        => SpawnStatus(statusId, duration, (ushort)param, default, broadcastAddEvent: true, hidden: false);
 
-    private SimStatus SpawnStatus(ushort statusId, float duration, ushort param, GameObjectId sourceObject, bool broadcastAddEvent)
+    private SimStatus SpawnStatus(ushort statusId, float duration, ushort param, GameObjectId sourceObject, bool broadcastAddEvent, bool hidden)
     {
-        var status = new SimStatus(this, statusId, duration, param, sourceObject, FreeStatusSlot(statusId));
+        var status = new SimStatus(this, statusId, duration, param, sourceObject, FreeStatusSlot(statusId), hidden);
         statusList.Add(status);
-        if (status.Slot < 0) return status;
+        if (status.Slot < 0 || hidden) return status;
         statusListChanged = true;
         if (broadcastAddEvent) unannouncedGains.Add(status);
         return status;
@@ -428,8 +262,8 @@ public abstract class SimCharacter(Coordinates coordinates) : ISimObject, IPosit
         if (Proxy is not { } chara) return;
         var slots = new StatusSlot[StatusSlots];
         foreach (var status in statusList)
-            if (status.IsActive && status.Slot >= 0)
-                slots[status.Slot] = new StatusSlot(status.StatusId, status.Stacks, status.RemainingTime, status.SourceObject.ObjectId);
+            if (status.IsActive && status.Slot >= 0 && !status.Hidden)
+                slots[status.Slot] = new StatusSlot(status.StatusId, status.Stacks, status.RemainingTime, (status.ShownSource ?? status.SourceObject).ObjectId);
         var shield = Mitigation.ShieldFraction(statusList.Where(s => s.IsActive).Select(s => s.StatusId));
         chara.ReceiveStatusList(slots, health, mana, (byte)Math.Clamp(shield * 100f, 0f, 100f));
     }
@@ -465,12 +299,12 @@ public abstract class SimCharacter(Coordinates coordinates) : ISimObject, IPosit
 
     public IReadOnlyList<SimStatus> ActiveStatuses => statusList.Where(s => s.IsActive).ToList();
 
-    // The client enforces the Status sheet's Lock* flags from the server's statuses; sim statuses
-    // never reach that path, so the sheet is read here.
+    // A status's Lock* flags don't stop anyone client-side: the local player only through the
+    // server's conditions (SimPlayer), doppels not at all, so the sheet is read here.
     public bool MovementLocked => AnyActiveStatusRow(row => row.LockMovement || row.LockControl);
     public bool ActionsLocked => AnyActiveStatusRow(row => row.LockActions || row.LockControl);
 
-    private bool AnyActiveStatusRow(Func<StatusRow, bool> predicate)
+    private protected bool AnyActiveStatusRow(Func<StatusRow, bool> predicate)
     {
         foreach (var status in statusList)
         {
@@ -485,32 +319,21 @@ public abstract class SimCharacter(Coordinates coordinates) : ISimObject, IPosit
     // Other Subsystem
     // -------------------------
 
-    // Sampled by MultiplayerManager for scripted animation cues (a boss warp, a sleep pose).
-    public ushort? AnimationTimelineId { get; private set; }
+    public void PlayActionTimeline(ushort timelineId) => ActorControl.PlayActionTimeline(timelineId);
 
-    // Same reasoning as SimCast.CastSeq: a repeat of the same id must read as a change.
-    public int AnimationTimelineSeq { get; private set; }
-
-    public void PlayActionTimeline(ushort timelineId)
+    // Plays an action's own animation and VFX on this character through the same synthetic
+    // ActionEffect a boss cast fires, with itself as the target -- a bot tank's LB3 in Umad P3
+    // Limit Cut, the player's mechanic result mark. Effects (statuses, damage) stay the caller's
+    // job, exactly as for an enemy Cast.
+    public void PlayAction(uint actionId, float animationLock = 0.6f)
     {
-        AnimationTimelineId = timelineId;
-        AnimationTimelineSeq++;
-        ActorControl.PlayActionTimeline(timelineId);
+        Casting.NativeActionEffect(actionId, animationLock, (ushort)actionId, 0, ActionType.Action, 0,
+            animationTargetId: GameObjectId, targets: [new ActionEffectTarget(GameObjectId)]);
     }
 
     public void VoiceLine(uint voiceLineId) => ActorControl.PlayVoiceLine(voiceLineId);
 
     public virtual void SetTargetable(bool targetable) => ActorControl.SetTargetable(targetable);
-
-    // Retail's carry has settled ~0.9s after the AC; the engine animates it, so the sim follows
-    // the model until then.
-    private const float CarryModelSeconds = 1f;
-
-    public virtual void CarryTo(Vector3 destination)
-    {
-        FollowModelFor(CarryModelSeconds);
-        ActorControl.CarryTo(Coordinates.ToGlobal(destination), Rotation);
-    }
 
     public bool Dead { get; private set; }
 
@@ -549,5 +372,17 @@ public abstract class SimCharacter(Coordinates coordinates) : ISimObject, IPosit
         if (Proxy is { } chara) SendStatusList(chara.MaxHealth, chara.MaxMana);
     }
 
-    public ActorControl ActorControl => field ??= new ActorControl(() => Proxy);
+    // A party member outlives the run: back on its feet at full HP, with nothing the run put on it.
+    internal virtual void ClearRunState()
+    {
+        statusList.Despawn();
+        if (ActorControl.Confused) ActorControl.SetConfused(false);
+        confusedChaseHold = 0f;
+        Motion.Clear();
+        if (Dead) Revive();
+        else if (Proxy is { } chara) SendStatusList(chara.MaxHealth, chara.MaxMana);
+    }
+
+    private ActorControl? actorControl;
+    public ActorControl ActorControl => actorControl ??= new ActorControl(() => Proxy);
 }

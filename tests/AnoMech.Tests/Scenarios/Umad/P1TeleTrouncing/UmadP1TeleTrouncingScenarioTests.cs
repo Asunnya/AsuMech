@@ -1,4 +1,5 @@
 using System.Numerics;
+using AnoMech.Core.EnemyActions;
 using AnoMech.Core.Game.Party;
 using AnoMech.Scenarios;
 using AnoMech.Scenarios.Umad;
@@ -67,7 +68,7 @@ public class UmadP1TeleTrouncingScenarioTests
             .FreezeAt(14.5f)
             .TeleportAt(21f, to: new(-6, -6))
             .TeleportAt(24f, to: new(0, -7))
-            .ShouldKill(ActionId.ConfusedAttack, OffTank);
+            .ShouldKill(CommonActions.ConfusedAttack.ActionId, OffTank);
 
     // C takes the first arrow of its own ride 0.14s before Confused lands; the rest of the ride
     // goes as usual.
@@ -122,7 +123,7 @@ public class UmadP1TeleTrouncingScenarioTests
     public void StandingNextToConfusedPlayerGetsCaught()
         => TeleTrouncing(RegenHealer)
             .TeleportAt(28.6f, to: new(0, 8.3f))
-            .ShouldKill(ActionId.ConfusedAttack, RegenHealer);
+            .ShouldKill(CommonActions.ConfusedAttack.ActionId, RegenHealer);
 
 
     // In the real slot-2 line through (-3.5,-3.5).

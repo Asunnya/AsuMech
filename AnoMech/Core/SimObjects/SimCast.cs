@@ -115,10 +115,13 @@ public sealed class SimCast : ISimObject
             remainingAnimationLock = MathF.Max(0f, remainingAnimationLock - deltaSeconds);
     }
 
-    // Clearing CastInfo matters because despawn deletes the BattleChara via DeleteObjectByIndex ->
-    // Character::Terminate, whose scheduler teardown reads a still-live cast/action timeline and
-    // crashes on freed state (C0000005 at TimelineGroup.PlayAction).
-    public void Despawn() => parent.Proxy?.ClearCast();
+    // Character::Terminate's scheduler teardown crashes on a still-live cast timeline
+    // (C0000005 at TimelineGroup.PlayAction), so the cast is called off before the despawn.
+    public void Despawn()
+    {
+        if (parent.Proxy is { IsCasting: true } chara)
+            parent.ActorControl.CancelCast(chara.CastActionId, CastCancelReason.Silent);
+    }
 
     private void RecordEffect(uint actionId, float animationLock, byte animationVariation, float rotation, Vector3? position,
         GameObjectId? animationTargetId, GameObjectId? actionTargetId)

@@ -31,9 +31,12 @@ public sealed class ActorControl
     private const uint LimitBreakCastCategory = 0x47;
     private const uint LimitBreakResolveCategory = 0x48;
     private const uint WallDeathCategory = 0x50;
+    private const uint ConfusionCategory = 0x52;
     private const uint ModelStateCategory = 0x3F;
     private const uint GimmickJumpCategory = 0xDC;
     private const uint ZoneInCategory = 0xC8;
+    private const uint FellOutCategory = 0xED;
+    private const uint FallStateCategory = 0x107;
     private const uint SlideCategory = 0xDF;
     private const uint WarpCategory = 0xF1;
     private const uint ActionTimelineCategory = 0x197;
@@ -46,6 +49,7 @@ public sealed class ActorControl
     private const uint MarkingCategory = 0x1F6;
 
     // ActorControlSelf: only the local player's client acts on it.
+    private const uint AutoAttackCategory = 0x01;
     private const uint GroundVfxCategory = 0xB7;
     private const uint PushCategory = 0xE1;
     private const uint LimitBreakGaugeCategory = 0x1F9;
@@ -96,6 +100,22 @@ public sealed class ActorControl
 
     public void PlayDeathAnimation() => Send(DeathAnimationCategory);
 
+    // ActorControlSelf, retail's answer to the client's own report of a fall out of the arena
+    // (outbound 0x01EF): the client reports once, and until answered won't fall again and gets
+    // "too far" from every server interaction. Which of the two is the answer is UNVERIFIED.
+    public void FellOutOfArena()
+    {
+        Send(FellOutCategory, 1);
+        Send(FallStateCategory, 1);
+    }
+
+    // ActorControlSelf, retail's close of a fall once the player is back on the arena.
+    public void FallRecovered()
+    {
+        ZoneIn();
+        Send(FallStateCategory, 0);
+    }
+
     // Announces a status the status list already carries; the slot itself comes from the list.
     public void GainEffect(ushort statusId, ushort param) => Send(GainEffectCategory, statusId, param);
 
@@ -116,6 +136,25 @@ public sealed class ActorControl
     // Retail sends it only for deaths no action dealt (death wall, falling off), never for
     // a mechanic's hit. What the client does with it is UNVERIFIED.
     public void WallDeath(uint health) => Send(WallDeathCategory, health);
+
+    // Retail sends it only with Confused: p1 5284 (UMAD P1) or 1051 (Iron Kiss) as the status lands,
+    // 0 as it runs out; what the id selects is UNVERIFIED. Confused is what was last sent: while it
+    // holds, the party chases (SimParty), as the server drives a confused player.
+    public bool Confused { get; private set; }
+
+    // Retail opens it with auto-attack (ActorControlSelf 0x01: 0, 1) and a weapon draw whose p3 is
+    // 1, a draw seen nowhere else, all in one frame. UNVERIFIED that the client's forced follow
+    // needs either.
+    public void SetConfused(bool confused)
+    {
+        Confused = confused;
+        if (confused)
+        {
+            Send(AutoAttackCategory, 0, 1);
+            Send(WeaponCategory, 1, 1, 1);
+        }
+        Send(ConfusionCategory, confused ? 5284u : 0u);
+    }
 
     // Reveals an actor spawned SpawnVisibility.HiddenUntilPopIn; 
     // Timeline 0 = no animation, in cases when an action fired in the same frame plays its own animation

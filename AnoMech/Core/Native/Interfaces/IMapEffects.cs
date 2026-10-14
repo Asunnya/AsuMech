@@ -4,7 +4,7 @@ namespace AnoMech.Core.Native.Interfaces;
 
 // The zone's MapEffect slots (the server's type-257 packets). Apply returns false while the
 // slot's SharedGroup hasn't streamed in yet; the caller retries.
-public interface IMapEffects
+public interface IMapEffects : IDisposable
 {
     // While false, Apply refuses: nothing outside a sim may reach the native path.
     bool Loaded { get; set; }

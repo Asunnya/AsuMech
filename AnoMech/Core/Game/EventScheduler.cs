@@ -9,7 +9,7 @@ namespace AnoMech.Core.Game;
 // world.Events passthrough (world.Events.Add(offset, ...)) and SimObjects that
 // need to schedule receive the instance via constructor injection. Game.Tick
 // advances the scheduler (scaled by Game.EventTimeScale) before World.Tick;
-// Game.ResetInternal clears it between scenarios.
+// ScenarioSession.End clears it between scenarios.
 public sealed class EventScheduler
 {
     private readonly List<Entry> entries = new();

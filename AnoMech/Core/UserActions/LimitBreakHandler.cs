@@ -53,14 +53,14 @@ internal sealed class LimitBreakHandler : IUserActionHandler
     public void OnCastStart(ActionType actionType, uint actionId)
     {
         if (actionType != ActionType.Action || !IsLimitBreak(actionId)) return;
-        if (Plugin.GameInstance?.World.Party is not { Player: { } player } party) return;
+        if (Plugin.Game?.World.Party is not { Player: { } player } party) return;
         StartCast(party, player, actionId);
     }
 
     public void OnAction(ActionType actionType, uint actionId)
     {
         if (actionType != ActionType.Action || !IsLimitBreak(actionId)) return;
-        if (Plugin.GameInstance?.World.Party is not { Player: { } player } party) return;
+        if (Plugin.Game?.World.Party is not { Player: { } player } party) return;
         Resolve(party, player, actionId);
         DiagnosticLog.Info($"[LimitBreak] {Natives.Data.ActionName(actionId)} ({actionId}) resolved -- the gauge is spent.");
     }

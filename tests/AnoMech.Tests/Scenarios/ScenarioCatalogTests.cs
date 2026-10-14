@@ -6,10 +6,10 @@ namespace AnoMech.Tests;
 public class ScenarioCatalogTests
 {
     private static IEnumerable<TestCaseData> ScenarioStrats()
-        => from scenario in ScenarioCatalog.Create()
+        => from scenario in ScenarioCatalog.Create().Scenarios
            from strat in scenario.AiStrats.Select((ai, index) => (ai, index))
            select new TestCaseData(scenario.GetType(), strat.index)
-               .SetName($"{Game.FullName(scenario)} [{strat.ai.Name}]");
+               .SetName($"{scenario.FullName()} [{strat.ai.Name}]");
 
     [TestCaseSource(nameof(ScenarioStrats))]
     public void SunnyDay(Type scenarioType, int strat)

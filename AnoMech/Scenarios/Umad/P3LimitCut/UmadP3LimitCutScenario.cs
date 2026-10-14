@@ -210,15 +210,11 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
             Placement: new Placement(
                 OnCircle(hold, 10.6f) + OnCircle(hold + MathF.PI / 2f, 1.6f),
                 hold + MathF.PI)));
-        // Built from a real clone's NpcSpawn packet: visible at the centre, hidden only by
-        // animation state (0,1), as the real ones sit for 86s. Spawning them invisible and
-        // flipping RenderFlags at placement showed a washed-out white Kefka.
         for (var k = 0; k < 8; k++)
             objects.Clones[k] = world.SpawnEnemy(new EnemySpawnConfig(
                 BNpcBaseId: BNpcBaseId.KefkaCloneP3, NameId: BNpcNameId.Kefka, Level: 100,
                 Targetable: false, EnemyList: EnemyListMode.Never, Visibility: SpawnVisibility.Visible,
-                Placement: new Placement(Vector3.Zero, 0f),
-                NpcSpawnTemplate: UmadRealPackets.CloneP3NpcSpawn, PacketSpawnEnableDraw: true));
+                Placement: new Placement(Vector3.Zero, 0f)));
         // Cyclone's caster-side VFX needs a real skeleton; the real 9020 helpers have none.
         for (var i = 0; i < 8; i++)
             cycloneHelpers[i] = world.SpawnEnemy(new EnemySpawnConfig(

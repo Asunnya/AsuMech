@@ -7,6 +7,8 @@ namespace AnoMech.Core.Native.Implementations.Interop;
 
 internal static unsafe class EventObjectHelper
 {
+    private const uint DefaultEntityIdBase = 0x4000FD00u;
+
     public static bool Create(SpawnObjectPacket* packet, out int slot, out GameObject* eventObject)
     {
         var manager = EventObjectManager.Instance();
@@ -35,24 +37,14 @@ internal static unsafe class EventObjectHelper
             packet->ObjectIndex = (byte)freeId;
         }
 
+        // ActorControls reach an EObj by entity id; EObjs sharing one (0, the default) get each
+        // other's beats and DirectorEObjMods.
+        if (packet->EntityId == 0)
+            packet->EntityId = DefaultEntityIdBase + packet->ObjectIndex;
+
         PacketDispatcher.HandleSpawnObjectPacket(0, packet);
         slot = packet->ObjectIndex;
         eventObject = EventObjectManagerPointers.GetEventObjectByIndex(manager, (uint)slot);
         return eventObject != null;
-    }
-
-    // Writes the EObj state field (actor[0x1B2]) and notifies the attached
-    // SharedGroupLayoutInstance to switch sub-instances. Different SGs use
-    // different state values to gate which sub-instances are visible —
-    // simulator code finds the right value empirically per EObj row.
-    public static void SetState(GameObject* obj, ushort state)
-    {
-        if (obj == null)
-        {
-            Plugin.Log.Warning("[EventObjectHelper.SetState] obj was null.");
-            return;
-        }
-
-        EventObjectPointers.SetEventObjectState((EventObject*)obj, state, 1, 0);
     }
 }

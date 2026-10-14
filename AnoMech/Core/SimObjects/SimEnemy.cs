@@ -1,5 +1,7 @@
 using AnoMech.Core.EnemyActions;
 using AnoMech.Core.Game;
+using AnoMech.Core.Game.Geometry;
+using AnoMech.Core.Game.Motion;
 using AnoMech.Core.Native.Interfaces;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
@@ -14,8 +16,8 @@ namespace AnoMech.Core.SimObjects;
 // Placement.Rotation is absolute radians: 0 = south, π/2 = east, π = north, -π/2 = west.
 // ModelCharaId (non-zero) overrides the BNpcBase visual, e.g. a no-shield variant.
 
-// How the engine shows the actor on spawn; the value is the SpawnNpcPacket DisplayFlags every
-// captured server spawn of that kind carries.
+// How the engine shows the actor on spawn; the value is the SpawnNpcPacket DisplayFlags sent
+// unless EnemySpawnConfig.DisplayFlags gives retail's exact ones.
 // Visible          — drawn at spawn.
 // HiddenUntilShown — bit 0x20000; hidden until a warp_end/show timeline reveals it (bosses,
 //                    clones, arm units).
@@ -45,14 +47,6 @@ public enum EnemyListMode
     Manual,
 }
 
-// How a VFX-only timeline is pinned in place after its action fired (see
-// SimEnemy.HoldTimelineBase): None also carries the id being released.
-public enum TimelineHoldKind
-{
-    None,
-    Base,
-}
-
 public record struct EnemySpawnConfig(
     uint BNpcBaseId,
     uint NameId = 0,
@@ -63,26 +57,27 @@ public record struct EnemySpawnConfig(
     Placement Placement = default,
     uint ModelCharaId = 0,
     byte? InitialModeAttributeFlags = null, // null = engine default; set when the idle sub-mesh variant differs (Omega-M = 0x10)
-    // A captured real NpcSpawn packet body (see UmadRealPackets) used instead of the one built
-    // from this config; of the fields above only NameId, Targetable, EnemyList and Placement
-    // still apply.
-    byte[]? NpcSpawnTemplate = null,
-    // Request the draw object ourselves. The engine builds none for a meshless actor, and a
-    // caster without a draw object has its action timeline cleared within frames.
-    bool PacketSpawnEnableDraw = false);
+    // Retail's exact DisplayFlags where they differ from the Visibility's own. What the bits outside
+    // the Visibility ones do is UNVERIFIED.
+    uint? DisplayFlags = null,
+    // Weapon drawn and in combat from spawn. Retail never engages some actors. UNVERIFIED: a drawn
+    // weapon swaps the model's idle for its battle idle, hiding idle-only visuals (Razor Plume).
+    bool Engaged = true,
+    // Retail's layout instance for the BNpc, in the territory's own layout. The Razor Plume's idle
+    // visual needs this or the director EventId BattleCharas sends; UNVERIFIED which.
+    uint LayoutId = 0);
 
 public sealed class SimEnemy : SimNpc
 {
-    // The cast packets and the animation lock live in SimCast; EnemyActionHandler decides when
+    // The cast packets and the animation lock live in Casting; EnemyActionHandler decides when
     // they go out and what the action does.
-    private readonly SimCast cast;
     private readonly EnemyActionHandler actions;
     private readonly EventScheduler events;
 
     // The server's own ceiling: bosses turn at most ~145° per ~0.3s movement tick.
     private const float BossTurnSpeed = MathF.PI * 8f / 3f;
 
-    protected override float? TurnSpeed => BossTurnSpeed;
+    private readonly SimulatedMotion motion;
 
     // Peer-only smoothing for ApplyNetworkPosition, same model as SimNetworkPuppet: the
     // catch-up speed is a floor once the real snapshot interval is known, anything beyond
@@ -135,10 +130,9 @@ public sealed class SimEnemy : SimNpc
         }
         else
         {
-            // The model is aimed where the host's enemy will be a glide ahead (see
-            // SimCharacter.ModelGlideSeconds).
-            var glide = target + networkVelocity * ModelGlideSeconds;
-            StepTo(dist <= step ? target : basePos + delta / dist * step, glide, ActorMoveFlags.None,
+            // The model is aimed where the host's enemy will be ModelSync.LeadSeconds ahead.
+            var glide = target + networkVelocity * ModelSync.LeadSeconds;
+            motion.StepTo(dist <= step ? target : basePos + delta / dist * step, glide,
                 deltaSeconds > 0f ? MathF.Min(dist, step) / deltaSeconds : 0f);
             TurnTo(networkTargetRotation);
         }
@@ -185,24 +179,23 @@ public sealed class SimEnemy : SimNpc
         _ => false,
     };
 
-    public bool IsCasting => cast.IsCasting;
-    public uint CastActionId => cast.ActionId;
-    public float CastProgress => cast.Progress;
-    public Vector3? CastTargetLocation => cast.TargetLocation;
-    public float CastTotalSeconds => cast.Total;
-
-    // The cast packets as sent, for multiplayer to sample on the host and replay on a peer.
-    internal SimCast Casting => cast;
+    public bool IsCasting => Casting.IsCasting;
+    public uint CastActionId => Casting.ActionId;
+    public float CastProgress => Casting.Progress;
+    public Vector3? CastTargetLocation => Casting.TargetLocation;
+    public float CastTotalSeconds => Casting.Total;
 
     // The engine's own NpcSpawn handler creates the actor and enables its draw, as for a real
     // server spawn.
-    private SimEnemy(IBattleCharaProxy proxy, uint bNpcBaseId, string displayName, EnemyListMode enemyListMode, SimWorld world) : base(proxy, world.Coordinates, pendingDraw: false)
+    private SimEnemy(IBattleCharaProxy proxy, uint bNpcBaseId, string displayName, EnemyListMode enemyListMode, SimWorld world)
+        : base(proxy, world.Coordinates,
+            self => new SimulatedMotion(() => self.Proxy, world.Coordinates, self.ActorControl, ObstacleField.Empty, BossTurnSpeed, npc: true))
     {
+        motion = (SimulatedMotion)Motion;
         BNpcBaseId = bNpcBaseId;
         DisplayName = displayName;
         EnemyListMode = enemyListMode;
-        cast = new SimCast(this, world.Coordinates);
-        actions = new EnemyActionHandler(this, cast, world);
+        actions = new EnemyActionHandler(this, Casting, world);
         events = world.Events;
     }
 
@@ -213,7 +206,6 @@ public sealed class SimEnemy : SimNpc
     internal static SimEnemy? Spawn(EnemySpawnConfig config, SimWorld world)
     {
         if (!Natives.BattleCharas.LocalPlayer.Exists) return null;
-        if (config.NpcSpawnTemplate is null && config.Visibility == SpawnVisibility.InvisibleHelper) config = config with { PacketSpawnEnableDraw = true };
         return SpawnFromPacket(config, world);
     }
 
@@ -234,21 +226,17 @@ public sealed class SimEnemy : SimNpc
     protected override void OnPacketSpawned(IBattleCharaProxy chara)
     {
         var targetableBefore = chara.TargetableStatus;
-        SetTargetable(SpawnConfig.Targetable);
-        // Retail engages every enemy, helpers included, ~0.8s into the pull and adds on arrival;
-        // the sim has no pre-pull, so every enemy is engaged from its spawn.
-        ActorControl.SetWeaponDrawn(true);
-        ActorControl.SetInCombat(true);
-        if (SpawnConfig.PacketSpawnEnableDraw) RequestDraw();
+        if (SpawnConfig.Targetable) // enemies spawn untargettable
+            SetTargetable(SpawnConfig.Targetable);
+        // Retail engages enemies ~0.8s into the pull and adds on arrival; the sim has no pre-pull,
+        // so they are engaged from their spawn.
+        if (SpawnConfig.Engaged)
+        {
+            ActorControl.SetWeaponDrawn(true);
+            ActorControl.SetInCombat(true);
+        }
         DiagnosticLog.Info($"[SimEnemy.SpawnFromPacket] {DisplayName} (goid 0x{GameObjectId.ObjectId:X}) created by the engine after {PacketSpawnFrames} frames: {DescribeDrawState()} "
             + $"Targetable=0x{targetableBefore:X}->0x{chara.TargetableStatus:X} name=\"{chara.Name}\" pos {chara.Position}.");
-    }
-
-    public override void Despawn()
-    {
-        Movement.Follow(null);
-        cast.Despawn();
-        base.Despawn();
     }
 
     /// <summary>
@@ -307,12 +295,6 @@ public sealed class SimEnemy : SimNpc
     // pipeline overwrite every frame; each is edge-triggered on its own seq.
     public (byte Mode, byte Param)? LastMode { get; private set; }
     public int ModeSeq { get; private set; }
-    public TimelineHoldKind TimelineHoldState { get; private set; }
-    public ushort TimelineHoldId { get; private set; }
-    public int TimelineHoldSeq { get; private set; }
-    public ushort DirectTimelineId { get; private set; }
-    public int DirectTimelineSeq { get; private set; }
-    public int ForceLoadTimelineSeq { get; private set; }
 
     // Sticky, so an ordinary enemy carries no engine block while a carrier that has been driven
     // keeps reporting: dropping the block after the last call would strand a peer on it.
@@ -371,55 +353,9 @@ public sealed class SimEnemy : SimNpc
 
     internal string DescribeActionTimeline() => Proxy?.DescribeActionTimeline() ?? "no BattleChara";
 
-    // Debug: the engine's own resource loader for the base slot's scheduler timeline.
-    public ulong ForceLoadBaseTimeline()
-    {
-        ForceLoadTimelineSeq++;
-        HasEngineState = true;
-        if (Proxy is not { Exists: true } chara) return 0;
-        var result = chara.LoadBaseTimelineResources();
-        DiagnosticLog.Info($"[SimEnemy] {DisplayName} (goid 0x{GameObjectId.ObjectId:X}) LoadTimelineResources on slot 0 -> {result}: {DescribeActionTimeline()}");
-        return result;
-    }
-
-    // Debug: the sequencer's own entry point, with no action effect around it.
-    public void PlayTimelineDirect(ushort timelineId)
-    {
-        DirectTimelineId = timelineId;
-        DirectTimelineSeq++;
-        HasEngineState = true;
-        Proxy?.PlayTimelineDirect(timelineId);
-    }
-
-    // Debug hold for a timeline whose VFX dies the moment its slot clears: sets
-    // TimelineContainer.BaseOverride. Release clears it.
-    public void HoldTimelineBase(ushort timelineId)
-    {
-        NoteTimelineHold(TimelineHoldKind.Base, timelineId);
-        Proxy?.SetBaseOverride(timelineId);
-    }
-
-    private void NoteTimelineHold(TimelineHoldKind kind, ushort timelineId)
-    {
-        TimelineHoldState = kind;
-        TimelineHoldId = timelineId;
-        TimelineHoldSeq++;
-        HasEngineState = true;
-    }
-
-    public void ReleaseTimelineHold(ushort timelineId)
-    {
-        NoteTimelineHold(TimelineHoldKind.None, timelineId);
-        if (Proxy is not { Exists: true } chara) return;
-        chara.SetBaseOverride(0);
-        if (chara.GetSlotTimeline(0) == timelineId)
-            chara.SetSlotTimeline(0, 0);
-        DiagnosticLog.Info($"[SimEnemy] {DisplayName} (goid 0x{GameObjectId.ObjectId:X}) timeline hold released: {DescribeActionTimeline()}");
-    }
-
     internal string DescribeDrawState() => Proxy?.DescribeDrawState() ?? "no BattleChara";
 
-    // Edge-tracked like AnimationTimelineId, and sampled for peers.
+    // Sampled for peers; the seq makes a repeat of the same state read as a change.
     public (byte Slot, byte Value)? AnimationState { get; private set; }
     public int AnimationStateSeq { get; private set; }
 
@@ -447,7 +383,7 @@ public sealed class SimEnemy : SimNpc
     // Interrupts the cast still on its bar: neither its effect nor its mechanics go out.
     public void CancelCast(CastCancelReason reason) => actions.CancelCast(reason);
 
-    public override bool AnimationLock => cast.IsBusy;
+    public override bool AnimationLock => Casting.IsBusy;
 
     public const float DefaultCorpseFadeDelay = 8f;
     private const float CorpseFadeDuration = 1.7f;
@@ -494,7 +430,6 @@ public sealed class SimEnemy : SimNpc
     {
         base.Tick(deltaSeconds);
         TickNetworkPosition(deltaSeconds);
-        cast.Tick(deltaSeconds);
         TickTimelineWatch(deltaSeconds);
         TickPacketSpawnCheckpoints();
 

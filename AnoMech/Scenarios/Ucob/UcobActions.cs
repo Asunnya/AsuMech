@@ -8,20 +8,33 @@ namespace AnoMech.Scenarios.Ucob;
 public static class UcobActions
 {
 
+    public static readonly EnemyAction AutoAttack = new(ActionId.AutoAttack)
+    {
+        Cast = new() { AnimationLock = 0.1f },
+        Effects = [Damage()],
+        Timing = new() { DamageDelay = 1.03f },
+    };
+
     // -- Exaflare --
-    // The kill is held past the snapshot so the KO reads off the visible bloom.
-    private static readonly TimingSpec ExaflareTiming = new() { DamageDelay = 0.6f };
+
+    public static readonly EnemyAction Exaflare = new(ActionId.Exaflare)
+    {
+        Cast = new() { AnimationLock = 3.1f },
+    };
 
     public static readonly EnemyAction ExaflareFirst = new(ActionId.ExaflareFirst)
     {
+        Cast = new() { AnimationLock = 1.6f },
         Effects = [Damage(Lethal)],
-        Timing = ExaflareTiming,
+        // UNVERIFIED: no recorded hit; assumes ExaflareRest's 0.32s after the ActionEffect, which
+        // comes CastSpec.ActionEffectOffset after the bar ends.
+        Timing = new() { DamageDelay = 0.62f },
     };
 
     public static readonly EnemyAction ExaflareRest = new(ActionId.ExaflareRest)
     {
-        Cast = new() { AnimationLock = 0f },
+        Cast = new() { AnimationLock = 1.5f },
         Effects = [Damage(Lethal)],
-        Timing = ExaflareTiming,
+        Timing = new() { DamageDelay = 0.32f },
     };
 }

@@ -9,8 +9,8 @@ public interface IBattleCharas
 {
     IBattleCharaProxy LocalPlayer { get; }
 
-    // The engine's own NpcSpawn handler builds the actor from config.NpcSpawnTemplate, or from a
-    // packet built from the config, a few frames later; until then the proxy doesn't exist. Its
+    // The engine's own NpcSpawn handler builds the actor from a packet built from the config, a
+    // few frames later; until then the proxy doesn't exist. Its
     // slot stays reserved until ReleaseSlot. Null when a sheet row is missing or no slot is free.
     IBattleCharaProxy? SpawnBattleNpcFromPacket(EnemySpawnConfig config, Placement placement, out uint entityId);
 

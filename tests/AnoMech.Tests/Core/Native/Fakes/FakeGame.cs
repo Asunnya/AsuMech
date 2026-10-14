@@ -5,15 +5,23 @@ namespace AnoMech.Tests;
 // The game client behind Natives for a headless run.
 internal sealed class FakeGame
 {
-    public FakeBattleCharas BattleCharas { get; } = new();
-    public FakeEventObjects EventObjects { get; } = new();
+    public SimTimeline Timeline { get; } = new();
+    public FakeBattleCharas BattleCharas { get; }
+    public FakeEventObjects EventObjects { get; }
     public FakeFramework Framework { get; } = FakeFramework.Create();
-    public FakeZoneSession Zone { get; }
-    public FakeMapEffects MapEffects { get; } = new();
+    public FakeZoneControl Zone { get; }
+    public FakeMapEffects MapEffects { get; }
     public FakeUserActions UserActions { get; } = new();
     public FakeLocalPlayerInput PlayerInput { get; } = new();
+    public FakePlayerConditions PlayerConditions { get; } = new();
 
-    private FakeGame() => Zone = new FakeZoneSession(BattleCharas.Player);
+    private FakeGame()
+    {
+        BattleCharas = new FakeBattleCharas(Timeline);
+        EventObjects = new FakeEventObjects(Timeline);
+        MapEffects = new FakeMapEffects(Timeline);
+        Zone = new FakeZoneControl(BattleCharas.Player, Timeline);
+    }
 
     public static FakeGame Install()
     {
@@ -22,23 +30,21 @@ internal sealed class FakeGame
         Natives.Data = new DataminingGameData(rsv);
         Natives.BattleCharas = game.BattleCharas;
         Natives.EventObjects = game.EventObjects;
-        Natives.HiddenObjects = new FakeHiddenObjects();
         Natives.PlayerInput = game.PlayerInput;
         Natives.UserActions = game.UserActions;
-        Natives.Vfx = new FakeVfxFunctions();
         Natives.TimelinePreload = new FakeActionTimelinePreload();
         Natives.Zone = game.Zone;
         Natives.MapEffects = game.MapEffects;
         Natives.Layout = new FakeLayoutFunctions();
-        Natives.Director = new FakeInstanceContentDirector(game.Zone);
+        Natives.Director = new FakeInstanceContentDirector(game.Zone, game.Timeline);
         Natives.Rsv = rsv;
         Natives.Rsf = new FakeRsfFunctions();
         Natives.PartyHud = new FakePartyHud();
-        Natives.HaterList = new FakeHaterList();
+        Natives.HaterList = new FakeHaterList(game.Timeline);
+        Natives.PlayerConditions = game.PlayerConditions;
         Natives.LimitBreak = new FakeLimitBreakController();
         Natives.Waymarks = new FakeWaymarks();
-        Natives.Bgm = new FakeBgm();
-        Natives.VfxSpawnLog = new FakeVfxSpawnLog();
+        Natives.Bgm = new FakeBgm(game.Timeline);
         DalamudServices.Install(nameof(Plugin.Framework), game.Framework);
         return game;
     }
@@ -51,7 +57,6 @@ internal sealed class FakeGame
         update(deltaSeconds);
         WalkSteeredPlayer(deltaSeconds);
         BattleCharas.Tick(deltaSeconds);
-        EventObjects.Tick(deltaSeconds);
     }
 
     private void WalkSteeredPlayer(float deltaSeconds)

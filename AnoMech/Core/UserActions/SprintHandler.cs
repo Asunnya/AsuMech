@@ -17,7 +17,7 @@ internal sealed class SprintHandler : IUserActionHandler
     {
         // Effect lands on the scenario's SimPlayer (null off-scenario, so this no-ops).
         if (actionType == ActionType.Action && actionId == SprintActionId)
-            if (Plugin.GameInstance?.Player is { } player) Apply(player, SprintDuration);
+            if (Plugin.Game?.Player is { } player) Apply(player, SprintDuration);
     }
 
     public static void Apply(SimCharacter character, float duration)

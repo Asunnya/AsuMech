@@ -144,7 +144,7 @@ public sealed class UmadP2ForsakenScenario : IMultiplayerReplayable
         foreach (var at in new[] { 1.30f, 11.35f, 14.39f, 17.43f, 20.47f, 23.51f })
             world.Events.Add(at, () => kefka_40004FD3?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.OffTank)));
         world.Events.Add(2.46f, () => kefka_40004FD3?.Cast(UmadActions.Forsaken));
-        world.Events.Add(9.43f, () => world.SetWeather(89));
+        world.Events.Add(9.43f, () => world.Map.SetWeather(89));
         
         RunKefkaEndAttack(kefka_40004FD3, 0, 25.61f);
         RunKefkaEndAttack(kefka_40004FD3, 1, 46.52f);

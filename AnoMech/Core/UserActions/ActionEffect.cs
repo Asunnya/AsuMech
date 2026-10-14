@@ -68,7 +68,7 @@ internal static class HostReport
     public static void RoleStatus(IReadOnlyList<PartyRole> roles, ushort statusId, float duration)
     {
         if (Mitigation.ByStatusId.ContainsKey(statusId))
-            Plugin.MultiplayerInstance?.ReportAppliedRoleStatus(roles, statusId, duration);
+            Plugin.Multiplayer?.ReportAppliedRoleStatus(roles, statusId, duration);
     }
 }
 
@@ -99,7 +99,7 @@ internal sealed class EnemyStatusEffect(ushort statusId, float duration, int sta
             enemy.RemoveStatus(statusId);
             enemy.AddStatusParam(statusId, stacks, duration);
         }
-        Plugin.MultiplayerInstance?.ReportAppliedEnemyStatus(enemies, statusId, duration);
+        Plugin.Multiplayer?.ReportAppliedEnemyStatus(enemies, statusId, duration);
     }
 }
 

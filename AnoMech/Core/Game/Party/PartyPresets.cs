@@ -7,21 +7,8 @@ namespace AnoMech.Core.Game.Party;
 // dressed in their respective level-50 artifact (AF1) gear.
 //
 // Standard is laid out in PartyRole order — index N == (PartyRole)N.
-// ForPlayerJob returns an 8-element array where the slot the local player
-// fills is null, so role indices stay stable across the skip.
 public static class PartyPresets
 {
-    public static IReadOnlyList<PartyMemberPreset?> ForPlayerJob(uint playerJob) =>
-        ForRole(SkipRoleForJob(playerJob));
-
-    public static IReadOnlyList<PartyMemberPreset?> ForRole(PartyRole skip)
-    {
-        var result = new PartyMemberPreset?[Standard.Length];
-        for (int i = 0; i < Standard.Length; i++)
-            result[i] = (PartyRole)i == skip ? null : Standard[i];
-        return result;
-    }
-
     // Tanks default to skipping Warrior (PLD player swaps to skipping Paladin).
     // Melee defaults to skipping Monk (MNK player skips Dragoon instead).
     // Casters and unknown jobs fall through to skipping Black Mage.
@@ -60,7 +47,14 @@ public static class PartyPresets
 
 // A seat a real player holds over the network; both override the role preset's, and ClassJob 0
 // leaves the preset's job.
-public sealed record NetworkSeat(string Name, byte ClassJob);
+public sealed record NetworkSeat(string Name, byte ClassJob)
+{
+    public PartyMemberPreset Dress(PartyMemberPreset preset) => preset with
+    {
+        Name = Name.Length > 0 ? Name : preset.Name,
+        ClassJob = ClassJob != 0 ? ClassJob : preset.ClassJob,
+    };
+}
 
 public sealed record PartyMemberPreset(
     string Name,

@@ -170,7 +170,7 @@ public sealed class TopP5DeltaAi : IScenarioAi<TopP5DeltaState>
             ArmUnitPlacements.Select((placement, i) =>
                                          placement.MoveForward(0.5f)
                                                   .RotateAroundOrigin(
-                                                      0.15f * state.ArmHandedness[i].Mul * state.EyeSpawn.Mul)
+                                                      0.15f * state.ArmRotations[i].Mul * state.EyeSpawn.Mul)
                                                   .Position2)
                              .Prepend(new Vector2(0f, 6f))
                              .Prepend(new Vector2(0f, -6f))

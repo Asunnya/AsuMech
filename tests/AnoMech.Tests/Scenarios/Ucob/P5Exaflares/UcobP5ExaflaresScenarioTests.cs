@@ -11,9 +11,9 @@ namespace AnoMech.Tests;
 // Every roll is pinned: lanes fire as pairs (4, -12), (-20, 12), (-4, 20). With the lanes rolling
 // N, lane offset is x and hit k lands at z = 20 - 8k, 6y wide; adjacent spots are 8y apart.
 //
-//    8.98 first pair erupts at z=20, then every 1.47s: 10.45 z=12, 11.92 z=4, 13.39 z=-4, ...
+//    8.98 first pair erupts at z=20, 10.60 z=12, then every 1.476s: 12.08 z=4, 13.55 z=-4, ...
 //   11.98 second pair, 14.98 third pair, same cadence.
-//   Each eruption snapshots who is in it and kills them 0.6s later.
+//   Each eruption snapshots who is in it; the kill lands 0.32s after it erupts.
 public class UcobP5ExaflaresScenarioTests
 {
     private static readonly float[] LaneOrder = [4f, -12f, -20f, 12f, -4f, 20f];
@@ -78,18 +78,18 @@ public class UcobP5ExaflaresScenarioTests
             .ShouldKill(ActionId.ExaflareRest, RegenHealer);
     }
 
-    // Caught by the 10.45 snapshot, then out onto lane 4's burned first spot before the kill lands.
+    // Caught by the 10.60 snapshot, then out onto lane 4's burned first spot before the kill lands.
     [Test]
     public void LeavingAfterTheSnapshotStillDies()
         => Exaflares(MeleeDpsA)
-            .TeleportAt(10.3f, to: new(4, 12))
-            .TeleportAt(10.5f, to: new(4, 20))
+            .TeleportAt(10.45f, to: new(4, 12))
+            .TeleportAt(10.75f, to: new(4, 20))
             .ShouldKill(ActionId.ExaflareRest, MeleeDpsA);
 
     // Into lane 4's z=12 spot just after its snapshot; nothing else reaches it afterwards.
     [Test]
     public void LingeringFlameIsHarmless()
-        => ShouldSurvive(MeleeDpsA, new Takeover(10.6f, new Vector2(4, 12)));
+        => ShouldSurvive(MeleeDpsA, new Takeover(10.75f, new Vector2(4, 12)));
 
     [Test]
     public void StandingOnABurnedLaneIsSafe()

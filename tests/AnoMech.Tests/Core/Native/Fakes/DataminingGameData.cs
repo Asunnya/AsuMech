@@ -34,7 +34,8 @@ internal sealed class DataminingGameData(FakeRsvFunctions rsv) : IGameData
             row.UInt("ActionCategory"),
             row.Bool("CanTargetSelf"),
             row.Bool("CanTargetParty"),
-            row.SByte("AttackType"));
+            row.SByte("AttackType"),
+            row.Bool("TargetArea"));
     }
 
     public KnockbackRow? Knockback(uint knockbackId)

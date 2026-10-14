@@ -45,7 +45,7 @@ public class TopP5DeltaScenarioTests
                 o.PlayerMonitorSide = Side.Left;
                 o.TetherOrder = Order;
                 o.FistColors = [Yellow, Blue, Blue, Yellow, Yellow, Blue, Blue, Yellow];
-                o.ArmHandedness = [Side.Left, Side.Left, Side.Left, Side.Right, Side.Right, Side.Right];
+                o.ArmRotations = [ArmRotation.CounterClockwise, ArmRotation.CounterClockwise, ArmRotation.CounterClockwise, ArmRotation.Clockwise, ArmRotation.Clockwise, ArmRotation.Clockwise];
                 o.HelloWorld[MainTank] = HelloWorldOption.Far;
                 o.HelloWorld[OffTank] = HelloWorldOption.Near;
                 o.Monitor[ShieldHealer] = true;

@@ -15,7 +15,7 @@ internal sealed class JobActionHandler : IUserActionHandler
     public void OnAction(ActionType actionType, uint actionId, ulong targetId)
     {
         if (actionType != ActionType.Action) return;
-        var player = Plugin.GameInstance?.Player;
+        var player = Plugin.Game?.Player;
         if (player == null) return;
 
         // Clear first so a line action can re-grant after its own weaponskill clear.

@@ -380,8 +380,7 @@ public sealed class UmadP3BlackHoleScenario : IMultiplayerReplayable
     private void Run_EventObj_1EC03D_40004163()
     {
         SimEventObject? eventObj_1EC03D_40004163 = null;
-        world.Events.Add(6.04f, () => eventObj_1EC03D_40004163 = world.SpawnEventObject(new EventObjectSpawnConfig { EObjId = EObjId.EarthCore, Placement = new Placement(new Vector3(0f, 0f, 4f), 0.000f), SpawnVisible = false }));
-        world.Events.Add(6.13f, () => eventObj_1EC03D_40004163?.SetVisible(true));
+        world.Events.Add(6.04f, () => eventObj_1EC03D_40004163 = world.SpawnEventObject(new EventObjectSpawnConfig { EObjId = EObjId.EarthCore, Placement = new Placement(new Vector3(0f, 0f, 4f), 0.000f) }));
         world.Events.Add(140.13f, () => eventObj_1EC03D_40004163?.Despawn());
     }
 

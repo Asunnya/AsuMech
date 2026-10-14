@@ -17,7 +17,7 @@ namespace AnoMech.Core.Native.Implementations;
 // state is what the slot rests in; the director plays it once the SGB is ready. The timeline
 // mask plays now if the SGB is ready; each bit selects one of the SGB's timelines, and the ones
 // not set stop. A zero mask only stores the state.
-internal sealed unsafe class MapEffects : IMapEffects, IDisposable
+internal sealed unsafe class MapEffects : IMapEffects
 {
     public bool Loaded { get; set; } = false;
 

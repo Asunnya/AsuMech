@@ -26,13 +26,12 @@ public sealed partial class MultiplayerManager
     {
         running = false;
         DebugBotControl.Enabled = false;
-        Plugin.GameInstance.PartyMemberKilled -= OnPartyMemberKilledHost;
-        Plugin.GameInstance.World.OmenSpawned -= OnOmenSpawnedHost;
+        Plugin.Game.PartyMemberKilled -= OnPartyMemberKilledHost;
         Session.Started = false; // or the Start button stays disabled
     }
 
     // Tick()'s edge trigger fires once per run (hostScenarioStarted), so a Reset followed by
-    // a separate Leave needs this called explicitly for the Leave half.
+    // a separate Leave relies on OnInstanceExited for the Leave half.
     //
     // returnedToInn is caller-supplied: Leave()/Reset() do their work in a deferred
     // Framework.Run callback, so IsInInstance read right after Leave() still says true.
@@ -52,46 +51,48 @@ public sealed partial class MultiplayerManager
         endResendTimer = 0f;
     }
 
-    // The host's own Leave button, right after Game.Leave(); see BroadcastRunEnded.
-    public void NotifyLeftInstance()
+    // Skipped when a path that left already broadcast the return to inn itself.
+    private void OnInstanceExited()
     {
         if (!IsHost || relay is not { IsConnected: true }) return;
+        if (pendingEndResendReturnedToInn == true) return;
         BroadcastRunEnded(returnedToInn: true);
     }
 
-    // Subscribed on first Tick (Plugin.GameInstance isn't set at field-init time); the
+    // Subscribed on first Tick (Plugin.Game isn't set at field-init time); the
     // handlers gate on IsHost.
-    private bool mapEventsSubscribed;
+    private bool gameEventsSubscribed;
 
-    private void SubscribeMapEventsOnce()
+    private void SubscribeGameEventsOnce()
     {
-        if (mapEventsSubscribed) return;
-        mapEventsSubscribed = true;
-        Plugin.GameInstance.World.Map.EffectApplied += (packetFlags, index) =>
+        if (gameEventsSubscribed) return;
+        gameEventsSubscribed = true;
+        Plugin.Game.InstanceExited += OnInstanceExited;
+        Plugin.Game.World.Map.EffectApplied += (packetFlags, index) =>
         {
             if (!IsHost || relay is not { IsConnected: true }) return;
             DiagnosticLog.Info($"[Multiplayer] Host: broadcasting MapEffect packetFlags=0x{packetFlags:X8} index=0x{index:X}.");
             _ = relay.SendAsync(new MapEffectMessage(packetFlags, index));
         };
-        Plugin.GameInstance.World.Map.DirectorUpdated += (category, arg1, arg2, arg3, arg4, arg5, arg6) =>
+        Plugin.Game.World.Map.DirectorUpdated += (category, arg1, arg2, arg3, arg4, arg5, arg6) =>
         {
             if (!IsHost || relay is not { IsConnected: true }) return;
             DiagnosticLog.Info($"[Multiplayer] Host: broadcasting MapDirectorUpdate category=0x{category:X8}.");
             _ = relay.SendAsync(new MapDirectorUpdateMessage(category, arg1, arg2, arg3, arg4, arg5, arg6));
         };
-        Plugin.GameInstance.World.Map.WeatherChanged += (weatherId, transition) =>
+        Plugin.Game.World.Map.WeatherChanged += (weatherId, transition) =>
         {
             if (!IsHost || relay is not { IsConnected: true }) return;
             DiagnosticLog.Info($"[Multiplayer] Host: broadcasting SetWeather weatherId={weatherId} transition={transition}.");
             _ = relay.SendAsync(new SetWeatherMessage(weatherId, transition));
         };
-        Plugin.GameInstance.World.Map.FogHoldChanged += value =>
+        Plugin.Game.World.Map.FogHoldChanged += value =>
         {
             if (!IsHost || relay is not { IsConnected: true }) return;
             DiagnosticLog.Info($"[Multiplayer] Host: broadcasting SetFogHold {(value is { } v ? v.ToString("F0") : "off")}.");
             _ = relay.SendAsync(new SetFogHoldMessage(value));
         };
-        Plugin.GameInstance.World.Announced += text =>
+        Plugin.Game.World.Announced += text =>
         {
             if (!IsHost || relay is not { IsConnected: true }) return;
             _ = relay.SendAsync(new AnnouncementMessage(text));
@@ -120,15 +121,16 @@ public sealed partial class MultiplayerManager
     {
         if (deltaSeconds is > 0f and < MaxFrameSampleSeconds)
             averageFrameSeconds += (deltaSeconds - averageFrameSeconds) * FrameSmoothing;
-        SubscribeMapEventsOnce();
+        StampEventClock();
+        SubscribeGameEventsOnce();
         DrainPendingMessages();
 
         // Before the IsConnected return below: this is the relay-down case.
-        if (IsHost && disconnectedSinceMs is { } since && running && Plugin.GameInstance.World.Map.IsInInstance
+        if (IsHost && disconnectedSinceMs is { } since && running && Plugin.Game.World.Map.IsInInstance
             && Environment.TickCount64 - since > PeerStaleTimeoutMs)
         {
             DiagnosticLog.Warn($"[Multiplayer] Disconnected from the relay for over {PeerStaleTimeoutMs / 1000}s while running -- leaving the zone myself (every peer has likely already given up waiting and left on their own).");
-            Plugin.GameInstance.Leave();
+            Plugin.Game.Leave();
             EndHostRunLocally();
             disconnectedSinceMs = null;
             LobbyChanged?.Invoke();
@@ -190,21 +192,24 @@ public sealed partial class MultiplayerManager
             // rather than running: the deferred zone entry may not have happened yet, and
             // Leave() assumes it has.
             DiagnosticLog.Warn($"[Multiplayer] Lost contact with the host (no message in {SecondsSinceHostMessage:F1}s, threshold {PeerStaleTimeoutMs / 1000}s) -- leaving.");
-            if (running && Plugin.GameInstance.World.Map.IsInInstance) Plugin.GameInstance.Leave();
+            if (running && Plugin.Game.World.Map.IsInInstance) Plugin.Game.Leave();
             LeaveSession();
             SessionEndReason = "Lost contact with the host.";
             LobbyChanged?.Invoke();
             return;
         }
 
-        if (IsHost) RetryWaitingStart();
+        if (IsHost)
+        {
+            if (startWait.Tick()) LobbyChanged?.Invoke();
+        }
         else AnswerStartCheck(deltaSeconds);
 
         if (!running) return;
 
         if (IsHost)
         {
-            if (Plugin.GameInstance.ActiveScenario != null)
+            if (Plugin.Game.ActiveScenario != null)
             {
                 hostScenarioStarted = true;
             }
@@ -216,7 +221,7 @@ public sealed partial class MultiplayerManager
             {
                 // Reset/Leave's deferred work is done by now, so IsInInstance is safe to read
                 // here (see BroadcastRunEnded).
-                BroadcastRunEnded(!Plugin.GameInstance.World.Map.IsInInstance);
+                BroadcastRunEnded(!Plugin.Game.World.Map.IsInInstance);
                 return;
             }
             if (!aiReplayStateSent) TrySendAiReplayState();
@@ -228,7 +233,7 @@ public sealed partial class MultiplayerManager
         else
         {
             if (!peerEnteredInstance) return; // this run's zone entry is still queued
-            if (!Plugin.GameInstance.World.Map.IsInInstance)
+            if (!Plugin.Game.World.Map.IsInInstance)
             {
                 DiagnosticLog.Info("[Multiplayer] Peer's zone was unloaded out from under the run (IsInInstance went false) -- stopping locally.");
                 running = false;

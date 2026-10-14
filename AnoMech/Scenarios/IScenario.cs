@@ -51,6 +51,19 @@ public interface IScenario
     IReadOnlyList<string> SettingsConflicts => [];
 
     // Deterministic instance-progress replay (native DirectorUpdate/AddEffect calls) with no
-    // host-only dependency, so Game.RunScenarioInternal schedules it for a peer too.
+    // host-only dependency, so ScenarioSession.Start schedules it for a peer too.
     void RunInstanceEvents(SimWorld world) { }
+}
+
+public static class ScenarioExtensions
+{
+    // Menu label, e.g. "P5 Delta".
+    public static string DisplayName(this IScenario scenario)
+    {
+        var phase = scenario.Phase;
+        return string.IsNullOrEmpty(phase.Name) ? scenario.Name : $"{phase.Name} {scenario.Name}";
+    }
+
+    public static string FullName(this IScenario scenario)
+        => $"{scenario.Phase.Zone.Name} — {scenario.DisplayName()}";
 }

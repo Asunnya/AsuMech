@@ -27,6 +27,7 @@ public sealed class TopP5DeltaStateOverrides
     internal IReadOnlyList<PartyRole>? TetherOrder { get; set; }
     internal IReadOnlyList<uint>? FistColors { get; set; }
     internal IReadOnlyList<Side>? ArmHandedness { get; set; }
+    internal IReadOnlyList<ArmRotation>? ArmRotations { get; set; }
     internal Side? OmegaMonitorSide { get; set; }
     internal Side? PlayerMonitorSide { get; set; }
 

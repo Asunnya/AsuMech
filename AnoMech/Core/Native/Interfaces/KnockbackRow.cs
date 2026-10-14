@@ -7,4 +7,6 @@ public sealed record KnockbackRow(uint Id, float Distance, float Speed, byte Dir
     // The client pushes its own player from an ActionEffect's knockback entry for every Direction
     // but 6, which the server sends as the push packet instead.
     public bool ClientApplies => Direction <= 5;
+
+    public bool AwayFromTarget => Direction == 6;
 }

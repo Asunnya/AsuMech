@@ -32,24 +32,12 @@ internal sealed unsafe class BattleCharas : IBattleCharas
 
     public IBattleCharaProxy LocalPlayer => BattleCharaProxy.LocalPlayer;
 
-    // Without a template the packet is built from the config. Only per-instance fields are
-    // patched: slot, position/rotation, the English name, and a dangling owner reference.
+    // Only per-instance fields are patched into the built packet: slot, position/rotation, the
+    // English name, and a dangling owner reference.
     public IBattleCharaProxy? SpawnBattleNpcFromPacket(EnemySpawnConfig config, Placement placement, out uint entityId)
     {
         entityId = 0;
-        if (config.NpcSpawnTemplate is { Length: var length } && length != sizeof(SpawnNpcPacket))
-        {
-            DiagnosticLog.Warn($"[BattleCharas.SpawnBattleNpcFromPacket] template is {length} bytes, expected {sizeof(SpawnNpcPacket)}.");
-            return null;
-        }
-        SpawnNpcPacket packet;
-        if (config.NpcSpawnTemplate is { } template)
-        {
-            packet = new SpawnNpcPacket();
-            fixed (byte* src = template) Buffer.MemoryCopy(src, &packet, sizeof(SpawnNpcPacket), template.Length);
-        }
-        else if (BuildSpawnPacket(config) is { } built) packet = built;
-        else return null;
+        if (BuildSpawnPacket(config) is not { } packet) return null;
         if (CharacterManager.Instance() == null) return null;
         var idx = CharacterManagerHelper.FindFreeIndex();
         if (idx < 0)
@@ -116,9 +104,12 @@ internal sealed unsafe class BattleCharas : IBattleCharas
         common.TetherTargetId = 0xE0000000;
         common.BaseId = config.BNpcBaseId;
         common.NameId = config.NameId;
+        common.LayoutId = config.LayoutId;
+        // Retail binds every duty BNpc to the duty's director.
+        common.EventId = InstanceContentDirectorHelper.DirectorEventId();
         common.MaxHealthPoints = EnemyMaxHealth;
         common.HealthPoints = EnemyMaxHealth;
-        common.DisplayFlags = (uint)config.Visibility;
+        common.DisplayFlags = config.DisplayFlags ?? (uint)config.Visibility;
         common.MaxResourcePoints = helper ? (ushort)0 : SpawnResourcePoints;
         common.ResourcePoints = common.MaxResourcePoints;
         common.ModelChara = (ushort)modelCharaId;

@@ -46,6 +46,33 @@ public struct ActorMovePacket
     [FieldOffset(0x0A)] public ushort PositionZ; // Quantized Position
 }
 
+// Flag: retail sends 1 for Confused; what 0 would do is UNVERIFIED.
+[StructLayout(LayoutKind.Explicit, Size = 0x8)]
+public struct ForcedFollowPacket
+{
+    [FieldOffset(0x00)] public uint TargetEntityId;
+    [FieldOffset(0x04)] public byte Flag;
+}
+
+// Range in yalms, whole numbers only.
+[StructLayout(LayoutKind.Explicit, Size = 0x8)]
+public struct ForcedApproachPacket
+{
+    [FieldOffset(0x00)] public byte Range;
+    [FieldOffset(0x04)] public uint TargetEntityId;
+}
+
+// The server moving an NPC a knockback pushed; it slides there over DurationSeconds.
+[StructLayout(LayoutKind.Explicit, Size = 0x10)]
+public struct NpcKnockbackPacket
+{
+    [FieldOffset(0x00)] public ushort RotationInt; // Quantized Rotation
+    [FieldOffset(0x04)] public float DurationSeconds;
+    [FieldOffset(0x0A)] public ushort PositionX; // Quantized Position
+    [FieldOffset(0x0C)] public ushort PositionY; // Quantized Position
+    [FieldOffset(0x0E)] public ushort PositionZ; // Quantized Position
+}
+
 [StructLayout(LayoutKind.Explicit, Size = 0x1)]
 public partial struct DespawnCharacterPacket
 {
@@ -61,6 +88,19 @@ public partial struct UpdateClassInfoPacket
     [FieldOffset(0x6)] public ushort SyncedLevel;
     [FieldOffset(0x8)] public ushort ClassJobExp;
     [FieldOffset(0xC)] public uint BaseRestedExperience;
+}
+
+// The local player's whole attribute block. The handler writes every BaseParam row with a
+// PacketIndex to PlayerState.Attributes[row] from Attributes[PacketIndex], so a packet must carry
+// all of them, not only the ones that change. BaseStats go to PlayerState.BaseStrength..BasePiety.
+[StructLayout(LayoutKind.Explicit, Size = 0x90)]
+public unsafe struct PlayerStatsPacket
+{
+    public const int AttributesCapacity = 30;
+    public const int BaseStatsCapacity = 6;
+
+    [FieldOffset(0x00)] public fixed int Attributes[AttributesCapacity];
+    [FieldOffset(0x78)] public fixed int BaseStats[BaseStatsCapacity];
 }
 
 [StructLayout(LayoutKind.Explicit, Size = 0x8)]
@@ -235,6 +275,18 @@ public unsafe struct ActorGaugePacket
     [FieldOffset(0x2)] public fixed byte Values[ValuesLength];
 }
 
+// Sets WeatherManager's server weather slot, which the environment follows. Retail sends it at
+// zone-in, at every phase change and on a wipe reset.
+[StructLayout(LayoutKind.Explicit, Size = 0x8)]
+public struct WeatherChangePacket
+{
+    [FieldOffset(0x0)] public byte WeatherId;
+    // Bit 0 only. Retail sets it on duty weathers; UCOB clears it when resetting to the
+    // territory's own weather.
+    [FieldOffset(0x1)] public byte Forced;
+    [FieldOffset(0x4)] public float TransitionTime;
+}
+
 internal unsafe class PacketDispatcherPointers
 {
     [Signature("40 53 57 48 81 EC ?? ?? ?? ?? 48 8B FA 8B", UseFlags = SignatureUseFlags.Pointer, ScanType = ScanType.Text)]
@@ -249,6 +301,9 @@ internal unsafe class PacketDispatcherPointers
     // Technically the real HandleUpdateClassInfoPacket is a wrapper to this sig... but this is still close to other HandleX methods, so it fits here
     [Signature("48 89 5C 24 ?? 57 48 83 EC 20 48 8B DA 48 8D 0D ?? ?? ?? ?? 33", UseFlags = SignatureUseFlags.Pointer, ScanType = ScanType.Text)]
     public static HandleUpdateClassInfoPacketDelegate HandleUpdateClassInfoPacket { get; private set; } = null!;
+
+    [Signature("48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC 20 33 FF 48 8B F2 8B DF E8 ?? ?? ?? ?? 85 C0 74 ?? 90 8B CB", UseFlags = SignatureUseFlags.Pointer, ScanType = ScanType.Text)]
+    public static HandlePlayerStatsPacketDelegate HandlePlayerStatsPacket { get; private set; } = null!;
 
     [Signature("48 89 74 24 ?? 57 48 83 EC ?? 0F B6 02 33 F6 89 05 ?? ?? ?? ?? 48 8B FA 40 38 32", UseFlags = SignatureUseFlags.Pointer, ScanType = ScanType.Text)]
     public static HandleUpdateHaterPacketDelegate HandleUpdateHaterPacket { get; private set; } = null!;
@@ -272,6 +327,10 @@ internal unsafe class PacketDispatcherPointers
     // Queues the packet; the client applies it to the actor's move controller on a later frame.
     [Signature("48 89 5C 24 08 57 48 83 EC 20 4C 63 05 ?? ?? ?? ?? 48 8B DA 33 D2 8B F9 41 8D 40 01", UseFlags = SignatureUseFlags.Pointer, ScanType = ScanType.Text)]
     public static HandleActorMovePacketDelegate HandleActorMovePacket { get; private set; } = null!;
+
+    // Queued like ActorMove, then handed to the character's move controller at +0x4C0.
+    [Signature("48 89 6C 24 18 56 48 83 EC 20 4C 63 0D ?? ?? ?? ?? 48 8B F2 44 8B 1D ?? ?? ?? ?? 33 D2 44 8B 05 ?? ?? ?? ?? 8B E9 41 8D", UseFlags = SignatureUseFlags.Pointer, ScanType = ScanType.Text)]
+    public static HandleNpcKnockbackPacketDelegate HandleNpcKnockbackPacket { get; private set; } = null!;
 
     // The handler body behind the dispatcher's thunk, which only loads MarkingController.Instance().
     // Unlike PlacePreset it has no territory check.
@@ -299,6 +358,22 @@ internal unsafe class PacketDispatcherPointers
 
     public delegate void HandleTerritoryInitPacketDelegate(byte* packet, byte flag);
 
+    // The handler body behind the dispatcher's thunk; it ignores the WeatherManager the thunk
+    // passes and loads its own.
+    [Signature("44 0F B6 4A 01 48 8D 0D ?? ?? ?? ?? F3 0F 10 52 04 41 80 E1 01", UseFlags = SignatureUseFlags.Pointer, ScanType = ScanType.Text)]
+    public static HandleWeatherChangePacketDelegate HandleWeatherChangePacket { get; private set; } = null!;
+
+    public delegate void HandleWeatherChangePacketDelegate(WeatherManager* manager, WeatherChangePacket* packet);
+
+    // The dispatcher handles the director-vars packet {u32 director id, u8 sequence, u8 unknown,
+    // u8 data[12]} inline and calls this with its fields; replay playback calls it the same way.
+    [Signature("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 48 83 EC 30 49 8B D9 41 0F B6 F8 0F B6 F2 8B E9 E8", UseFlags = SignatureUseFlags.Pointer, ScanType = ScanType.Text)]
+    public static HandleDirectorVarsPacketDelegate HandleDirectorVarsPacket { get; private set; } = null!;
+
+    public const int DirectorVarsDataLength = 12;
+
+    public delegate void HandleDirectorVarsPacketDelegate(uint directorId, byte sequence, byte unknown, byte* data, ulong length);
+
     public const string HandleUpdateRecastTimesPacketSignature = "48 89 5C 24 08 57 48 83 EC 20 48 8B DA 33 FF 90 F3 0F 10 9B 40 01 00 00";
 
     [Signature(HandleUpdateRecastTimesPacketSignature, UseFlags = SignatureUseFlags.Pointer, ScanType = ScanType.Text)]
@@ -307,12 +382,54 @@ internal unsafe class PacketDispatcherPointers
     // The server addresses it to the local player.
     public delegate void HandleUpdateRecastTimesPacketDelegate(uint entityId, UpdateRecastTimesPacket* packet);
 
+    // The handler body behind the dispatcher's thunk, which only loads Conditions.Instance(). Bit n
+    // is the n-th Condition row with IsNetworked, in row order; every networked condition is
+    // written, so a packet must carry all of them. The Duty Recorder never writes it, so replays
+    // don't contain it.
+    [Signature("48 89 5C 24 08 48 89 6C 24 10 48 89 74 24 18 48 89 7C 24 20 41 54 41 56 41 57 48 83 EC 20 4C 8B FA 4C 8B E1 E8 ?? ?? ?? ?? 48 8B C8 48 8B D8 E8", UseFlags = SignatureUseFlags.Pointer, ScanType = ScanType.Text)]
+    public static HandlePlayerStateFlagsPacketDelegate HandlePlayerStateFlagsPacket { get; private set; } = null!;
+
+    public const int PlayerStateFlagsLength = 16;
+
+    public delegate void HandlePlayerStateFlagsPacketDelegate(Conditions* conditions, byte* bits);
+
+    // A forced-move controller on the client drives the local player; these are never in a
+    // replay. Follow only turns the player to face the target, done once facing it; retail sends
+    // end + follow about every 0.1s to a Confused player.
+    [Signature("44 0F B6 41 04 8B 11 48 8D 0D ?? ?? ?? ?? E9", UseFlags = SignatureUseFlags.Pointer, ScanType = ScanType.Text)]
+    public static HandleForcedFollowPacketDelegate HandleForcedFollowPacket { get; private set; } = null!;
+
+    // Unique only together with the next function, which the compiler places after it.
+    [Signature("48 8D 0D ?? ?? ?? ?? E9 ?? ?? ?? ?? CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC 48 8B 15 ?? ?? ?? ?? 48 85 D2 74 0C 48 8D 0D", UseFlags = SignatureUseFlags.Pointer, ScanType = ScanType.Text)]
+    public static HandleForcedFollowEndPacketDelegate HandleForcedFollowEndPacket { get; private set; } = null!;
+
+    public delegate void HandleForcedFollowPacketDelegate(ForcedFollowPacket* packet);
+
+    // Takes no payload.
+    public delegate void HandleForcedFollowEndPacketDelegate(nint unused);
+
+    // The same controller's approach mode: the client walks its own player to the entity until
+    // within Range. UNVERIFIED that retail uses it for Confused.
+    [Signature("0F B6 01 44 8B 41 04 48 8D 0D ?? ?? ?? ?? 66 0F 6E C8", UseFlags = SignatureUseFlags.Pointer, ScanType = ScanType.Text)]
+    public static HandleForcedApproachPacketDelegate HandleForcedApproachPacket { get; private set; } = null!;
+
+    public delegate void HandleForcedApproachPacketDelegate(ForcedApproachPacket* packet);
+
+    // Hard stop: ends the controller's mode and halts the local player where they stand. Takes no
+    // payload; the handler loads the player itself.
+    [Signature("48 8B 15 ?? ?? ?? ?? 48 85 D2 74 0C 48 8D 0D ?? ?? ?? ?? E9", UseFlags = SignatureUseFlags.Pointer, ScanType = ScanType.Text)]
+    public static HandleForcedStopPacketDelegate HandleForcedStopPacket { get; private set; } = null!;
+
+    public delegate void HandleForcedStopPacketDelegate(nint unused);
+
     public delegate void HandleActorCastPacketDelegate(uint entityId, ActorCastPacket* packet);
     public delegate void HandleActorSetPosPacketDelegate(uint entityId, ActorSetPosPacket* packet);
     public delegate void HandleActorMovePacketDelegate(uint entityId, ActorMovePacket* packet);
+    public delegate void HandleNpcKnockbackPacketDelegate(uint entityId, NpcKnockbackPacket* packet);
     public delegate void HandleDespawnObjectPacketDelegate(uint unused, byte* packet);
     public delegate void HandleDespawnCharacterPacketDelegate(ulong unused, DespawnCharacterPacket* packet);
     public delegate void HandleUpdateClassInfoPacketDelegate(ulong unused, UpdateClassInfoPacket* packet);
+    public delegate void HandlePlayerStatsPacketDelegate(uint unused, PlayerStatsPacket* packet);
     public delegate void HandleUpdateHaterPacketDelegate(ulong unused, HaterPacket* packet);
     public delegate void HandleEffectResultBasicPacketDelegate(uint entityId, EffectResultBasicPacket* packet, byte replay);
     public delegate void HandleStatusEffectListDoublePacketDelegate(uint entityId, StatusEffectListDoublePacket* packet, byte replay);

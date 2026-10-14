@@ -1,5 +1,6 @@
 using AnoMech.Core.Game;
 using AnoMech.Core.Native.Implementations;
+using AnoMech.Core.Native.Interfaces;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 
 namespace AnoMech.Core.UserActions;
@@ -15,7 +16,7 @@ internal sealed unsafe class CastInterruptHandler : IUserActionHandler
 
     public void OnTick(float deltaSeconds)
     {
-        var hooks = Plugin.PlayerInputHooks;
+        var hooks = Natives.PlayerInput;
         var cancelRequested = hooks.PollCancelCast(); // drain every frame so a stale latch can't carry over
 
         var player = (BattleChara*)(Plugin.ObjectTable.LocalPlayer?.Address ?? 0);

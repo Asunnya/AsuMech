@@ -110,7 +110,7 @@ public sealed partial class MultiplayerManager
 
     // Host-driven world state is applied only inside a live run; outside one it would act on
     // the real inn.
-    private bool PeerInRun => !IsHost && running && peerEnteredInstance && Plugin.GameInstance.World.Map.IsInInstance;
+    private bool PeerInRun => !IsHost && running && peerEnteredInstance && Plugin.Game.World.Map.IsInInstance;
 
     private static Guid? ClaimedPeerId(MpMessage message) => message switch
     {
@@ -174,7 +174,7 @@ public sealed partial class MultiplayerManager
         // can send it). Keep in sync with the `when !IsHost` cases below.
         if (!IsHost && message is LobbyStateMessage or StartMessage or WorldSnapshotMessage or RolesSnapshotMessage
             or RoleKilledMessage or KnockbackMessage or TeleportMessage or PushMessage or FollowMessage
-            or SpawnOmenMessage or EndMessage or PingMessage or PeerStatusMessage
+            or EndMessage or PingMessage or PeerStatusMessage
             or SetFogHoldMessage or AnnouncementMessage
             or IScenarioReplayStateMessage or IScenarioMidRunUpdateMessage or KickMessage)
         {
@@ -259,7 +259,7 @@ public sealed partial class MultiplayerManager
                 var duration = NetGuard.Clamp(applied.Duration, 0f, NetGuard.MaxMitigationSeconds);
                 foreach (var role in NetGuard.Cap(applied.Roles, 8).Where(Enum.IsDefined))
                 {
-                    if (Plugin.GameInstance.World.Party.Get(role) is not { } member)
+                    if (Plugin.Game.World.Party.Get(role) is not { } member)
                     {
                         DiagnosticLog.Warn($"[Multiplayer] Host: {who} reported status {applied.StatusId} on role {role}, but that slot is empty -- dropping.");
                         continue;
@@ -302,7 +302,7 @@ public sealed partial class MultiplayerManager
                 var who = Session.NameOf(abort.PeerId);
                 var reason = $"{who} couldn't start: {NetGuard.Clean(abort.Reason)}";
                 DiagnosticLog.Warn($"[Multiplayer] {reason} -- ending the run for everyone.");
-                if (Plugin.GameInstance.World.Map.IsInInstance) Plugin.GameInstance.Leave();
+                if (Plugin.Game.World.Map.IsInInstance) Plugin.Game.Leave();
                 BroadcastRunEnded(returnedToInn: true, reason);
                 break;
             }
@@ -330,9 +330,6 @@ public sealed partial class MultiplayerManager
             case FollowMessage follow when !IsHost:
                 OnFollowReceived(follow);
                 break;
-            case SpawnOmenMessage omen when !IsHost:
-                OnSpawnOmenReceived(omen);
-                break;
             case EndMessage end when !IsHost:
                 OnEndReceived(end);
                 break;
@@ -351,7 +348,7 @@ public sealed partial class MultiplayerManager
                 var who = Session.NameOf(ended.PeerId); // before LeaveSessionInternal wipes Session
                 DiagnosticLog.Info($"[Multiplayer] Host {who} left -- session ending for the whole group.");
                 // IsInInstance, not running: a Reset clears running while staying in-instance.
-                if (Plugin.GameInstance.World.Map.IsInInstance) Plugin.GameInstance.Leave();
+                if (Plugin.Game.World.Map.IsInInstance) Plugin.Game.Leave();
                 LeaveSessionInternal(notifyOthers: false);
                 SessionEndReason = $"{who} left -- session ended.";
                 LobbyChanged?.Invoke();
@@ -374,7 +371,7 @@ public sealed partial class MultiplayerManager
             // Everyone else learns of it from the lobby state broadcast alongside.
             case KickMessage kick when !IsHost && kick.PeerId == MyPeerId:
                 DiagnosticLog.Info($"[Multiplayer] {(kick.Banned ? "Banned" : "Removed")} from the session by the host.");
-                if (Plugin.GameInstance.World.Map.IsInInstance) Plugin.GameInstance.Leave();
+                if (Plugin.Game.World.Map.IsInInstance) Plugin.Game.Leave();
                 LeaveSessionInternal(notifyOthers: false);
                 SessionEndReason = kick.Banned
                     ? "You were banned from the session by the host."
@@ -384,20 +381,20 @@ public sealed partial class MultiplayerManager
             // Only a seated peer can end the run for everyone.
             case ResetRequestMessage req when IsHost && Session.RoleOf(req.PeerId) != null:
                 DiagnosticLog.Info($"[Multiplayer] {Session.NameOf(req.PeerId)} requested a reset.");
-                Plugin.GameInstance.Reset();
+                Plugin.Game.Reset();
                 break;
             // IsInInstance, not running: Leave must still work after a Reset.
             case LeaveRequestMessage req when IsHost && Session.RoleOf(req.PeerId) != null:
                 DiagnosticLog.Info($"[Multiplayer] {Session.NameOf(req.PeerId)} requested to leave the instance.");
-                if (Plugin.GameInstance.World.Map.IsInInstance)
-                    Plugin.GameInstance.Leave();
+                if (Plugin.Game.World.Map.IsInInstance)
+                    Plugin.Game.Leave();
                 // Unconditional, or the requester's own Leave button waits forever.
                 BroadcastRunEnded(returnedToInn: true);
                 break;
             // Can't loop into a re-broadcast: the map-event handlers gate on IsHost.
             case MapEffectMessage effect when PeerInRun:
                 DiagnosticLog.Info($"[Multiplayer] Peer: applying MapEffect packetFlags=0x{effect.PacketFlags:X8} index=0x{effect.Index:X}.");
-                Plugin.GameInstance.World.Map.AddEffect(effect.PacketFlags, effect.Index);
+                Plugin.Game.World.Map.AddEffect(effect.PacketFlags, effect.Index);
                 break;
             case MapDirectorUpdateMessage directorUpdate when PeerInRun:
                 if (!MapController.IsReplayableDirectorCategory(directorUpdate.Category))
@@ -406,7 +403,7 @@ public sealed partial class MultiplayerManager
                     break;
                 }
                 DiagnosticLog.Info($"[Multiplayer] Peer: applying MapDirectorUpdate category=0x{directorUpdate.Category:X8}.");
-                Plugin.GameInstance.World.Map.DirectorUpdate(
+                Plugin.Game.World.Map.DirectorUpdate(
                     directorUpdate.Category, directorUpdate.Arg1, directorUpdate.Arg2,
                     directorUpdate.Arg3, directorUpdate.Arg4, directorUpdate.Arg5, directorUpdate.Arg6);
                 break;
@@ -417,14 +414,14 @@ public sealed partial class MultiplayerManager
                     break;
                 }
                 DiagnosticLog.Info($"[Multiplayer] Peer: applying SetWeather weatherId={weather.WeatherId} transition={weather.Transition}.");
-                Plugin.GameInstance.World.Map.SetWeather(weather.WeatherId, NetGuard.Clamp(weather.Transition, 0f, 60f, 0.5f));
+                Plugin.Game.World.Map.SetWeather(weather.WeatherId, NetGuard.Clamp(weather.Transition, 0f, 60f, 0.5f));
                 break;
             case SetFogHoldMessage fog when PeerInRun:
                 DiagnosticLog.Info($"[Multiplayer] Peer: applying SetFogHold {(fog.FogHold is { } value ? value.ToString("F0") : "off")}.");
-                Plugin.GameInstance.World.Map.SetFogHold(fog.FogHold is { } hold ? NetGuard.Clamp(hold, 0f, 100_000f) : null);
+                Plugin.Game.World.Map.SetFogHold(fog.FogHold is { } hold ? NetGuard.Clamp(hold, 0f, 100_000f) : null);
                 break;
             case AnnouncementMessage announcement when PeerInRun:
-                Plugin.GameInstance.World.Announce(NetGuard.Clean(announcement.Text));
+                Plugin.Game.World.Announce(NetGuard.Clean(announcement.Text));
                 break;
             // Every IMultiplayerReplayable scenario routes through these two cases.
             case MpMessage genericMsg when !IsHost && genericMsg is IScenarioReplayStateMessage:

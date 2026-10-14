@@ -12,9 +12,9 @@ namespace AnoMech.Core.UserActions;
 // Optional, self-contained module: resolves the local player's own actions
 // client-side, filling in the server responses the sim firewall blocks. Handlers run only
 // while Enabled, unless they declare RunsWhenDisabled. Nothing in the engine depends on it.
-public sealed unsafe class UserActions : IUserActions, IDisposable
+public sealed unsafe class UserActions : IUserActions
 {
-    private readonly LocalPlayerInputHooks hooks;
+    private readonly ILocalPlayerInput hooks;
 
     // OnAction is the action's RESOLUTION — immediately for an instant cast, on completion for a hard
     // cast, and not at all if the cast is interrupted (a spell resolves when its cast bar finishes, not
@@ -66,9 +66,9 @@ public sealed unsafe class UserActions : IUserActions, IDisposable
     // The module only acts while the sim zone is loaded — never in a real duty / open
     // world, where the client is server-connected and our synthetic packets/writes
     // would be harmful.
-    private static bool SimActive => Plugin.GameInstance?.World.Map.IsInInstance ?? false;
+    private static bool SimActive => Plugin.Game?.World.Map.IsInInstance ?? false;
 
-    public UserActions(LocalPlayerInputHooks hooks)
+    public UserActions(ILocalPlayerInput hooks)
     {
         this.hooks = hooks;
         hooks.ActionExecuted += OnActionExecuted;

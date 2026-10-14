@@ -13,10 +13,6 @@ internal static class NetGuard
     public const int MaxTethersPerSnapshot = 128;
     public const int MaxEventObjectsPerSnapshot = 256;
     public const int MaxStatusesPerEntity = 64;
-    // Legit sim data, so generous; the host logs anything over (WarnOverVfxCap).
-    public const int MaxLockonVfxPerEntity = 200;
-    public const int MaxVfxPerEntity = 200;
-    public const int MaxLiveOmens = 512;
     public const int MaxPendingMapCalls = 512;
     // Bound how long a burst can hold the framework thread.
     public const int MaxQueuedMessages = 8192;

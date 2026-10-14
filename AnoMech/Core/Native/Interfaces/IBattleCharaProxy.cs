@@ -33,29 +33,19 @@ public interface IBattleCharaProxy
     // moves at, as other players report it. The client ignores it for the local player.
     void Move(Vector3 position, float rotation, ActorMoveFlags flags, float speed);
 
+    // The server's move of an NPC a knockback pushed: the client slides it there over
+    // `durationSeconds`. Players and bots never get one.
+    void NpcKnockback(Vector3 position, float rotation, float durationSeconds);
+
     float HitboxRadius { get; }
 
     // ── Model ────────────────────────────────────────────────────────────────
 
-    bool IsReadyToDraw { get; }
-    void EnableDraw();
-    void DisableDraw();
-
-    // DrawObject.Visibility: SpawnVisibility.HiddenUntilShown, and the setter a no-op, while there is no DrawObject.
+    // DrawObject.Visibility: SpawnVisibility.HiddenUntilShown while there is no DrawObject.
     bool HasDrawObject { get; }
-    bool IsDrawObjectVisible { get; set; }
+    bool IsDrawObjectVisible { get; }
 
     byte ModelState { get; }
-
-    // ── Animation ────────────────────────────────────────────────────────────
-
-    void SetBaseOverride(ushort timelineId);
-    ushort GetSlotTimeline(uint slot);
-    void SetSlotTimeline(uint slot, ushort timelineId);
-    void PlayTimelineDirect(ushort timelineId);
-
-    // 0 when slot 0 has no scheduler timeline.
-    ulong LoadBaseTimelineResources();
 
     // ── Casting ──────────────────────────────────────────────────────────────
 
@@ -66,7 +56,6 @@ public interface IBattleCharaProxy
     float CurrentCastTime { get; }
     float TotalCastTime { get; }
 
-    void ClearCast();
     void ReceiveActorCast(ActorCastData cast);
 
     // Returns the packet's global sequence, which the targets' EffectResults name.
@@ -81,6 +70,13 @@ public interface IBattleCharaProxy
 
     // ActorControlTarget: an ActorControl that also names a target actor.
     void ActorControlTarget(uint category, GameObjectId target, uint arg1 = 0, uint arg2 = 0, uint arg3 = 0, uint arg4 = 0);
+
+    // The server's forced move (Confused): the client walks its own player to the target.
+    // Self-only; null ends it.
+    void ForcedFollow(uint? targetEntityId);
+
+    // Ends the forced move and halts the player where they stand. Self-only.
+    void StopForcedMove();
 
     // ── Combat state ─────────────────────────────────────────────────────────
 
@@ -101,10 +97,6 @@ public interface IBattleCharaProxy
     void ReceiveStatusList(IReadOnlyList<StatusSlot> statuses, uint health, uint mana, byte shield);
 
     // ── Effects ──────────────────────────────────────────────────────────────
-
-    // Check the path with IGameData.FileExists first: a bad path crashes on the file thread.
-    // Null when the spawn failed.
-    IActorVfxProxy? AttachVfx(string path);
 
     ushort GetTetherId(byte slot);
 

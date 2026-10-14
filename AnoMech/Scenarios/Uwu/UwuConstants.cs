@@ -140,19 +140,23 @@ public class UwuConstants
         public const ushort FlamingCrush = 117;
     }
 
+    public class KnockbackId
+    {
+        public const uint SuperCyclone = 123;
+    }
+
     public class Duration
     {
-        public const float RazorPlumeRotation = 17.95f;
-        public const float RazorPlumeBack = 1f;
+        public const float RazorPlumeCircling = 16.5f;
     }
 
     public class Geometry
     {
         public const float ArenaRadius = 19.4f;
+        public const float NpcKnockbackStopRadius = 20f;
         public const float WickedTornadoOuterRadius = 20; // 20 is the EffectRange in the Action sheet
 
         public static readonly float RazorPlumeRotation = float.DegreesToRadians(-450);
-        public static readonly float RazorPlumeBackDistance = 3.6f;
         public static readonly FrozenDictionary<DirectionEnum, float> LookAtCenterRotation;
         public static readonly FrozenDictionary<DirectionEnum, Placement> UltimaPlacements;
         public static readonly FrozenDictionary<DirectionEnum, Placement> GarudaPlacements;

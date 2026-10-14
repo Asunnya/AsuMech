@@ -5,7 +5,7 @@ using AnoMech.Core.SimObjects;
 namespace AnoMech.Tests;
 
 // EventObjectManager's 40-slot pool.
-internal sealed class FakeEventObjects : IEventObjects
+internal sealed class FakeEventObjects(SimTimeline timeline) : IEventObjects
 {
     private const int SlotCount = 40;
     private const uint EntityIdBase = 0x40100000u;
@@ -17,14 +17,13 @@ internal sealed class FakeEventObjects : IEventObjects
         var slot = Array.FindIndex(slots, o => o is not { Exists: true });
         if (slot < 0) return null;
         var entityId = config.EntityId != 0 ? config.EntityId : EntityIdBase + (uint)slot;
-        var obj = new FakeEventObject(slot, entityId, placement.Position, placement.Rotation, config.TimelineState);
+        timeline.Add("eobj_spawn", entityId, $"EObj{config.EObjId}", config.EObjId.ToString(), "EObj", position: placement.Position,
+            rotation: placement.Rotation,
+            detail: $"layout=0x{config.LayoutId:X} event=0x{(uint)config.EventId:X} owner=0x{config.OwnerId:X} gimmick=0x{config.GimmickId:X} "
+                    + $"radius={SimTimeline.F(config.Radius)} event_state={config.EventState} targetable={config.TargetableStatus} "
+                    + $"visibility={config.VisibilityFlag} index={config.ObjectIndex} timeline_state={config.TimelineState} arg2=0x{config.Arg2:X}");
+        var obj = new FakeEventObject(slot, entityId, placement.Position, placement.Rotation, timeline, $"EObj{config.EObjId}");
         slots[slot] = obj;
         return obj;
-    }
-
-    internal void Tick(float deltaSeconds)
-    {
-        foreach (var obj in slots)
-            if (obj is { Exists: true }) obj.Tick(deltaSeconds);
     }
 }
