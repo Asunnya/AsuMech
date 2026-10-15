@@ -65,6 +65,7 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
         party = worldParam.Party;
         state = new TopP5DeltaState(world.Rng, settingsWindow.Overrides, party.PlayerRole);
         LastState = state;
+        lastBroadcastBeyondDefenseTarget = null;
         holderDeaths = new HelloWorldHolderDeaths(world);
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<TopP5DeltaState>)AiStrats[idx]).Run(state, world);

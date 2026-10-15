@@ -47,6 +47,7 @@ public sealed class TopP5OmegaScenario : IMultiplayerReplayable
         party = worldParam.Party;
         state = new TopP5OmegaState(world.Rng, world.Party, settingsWindow.Overrides);
         LastState = state;
+        helloWorld2Broadcast = false;
         holderDeaths = new HelloWorldHolderDeaths(world);
         var solo = selectedAi is null;
         if (selectedAi is { } idx && idx < AiStrats.Count)
