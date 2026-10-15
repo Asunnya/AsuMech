@@ -74,11 +74,24 @@ internal sealed class PacketReplay(PeerNatives natives, SimWorld world, PartyRol
         return PacketActor.None;
     }
 
+    // An actor here, by its GameObjectId, as the host's packets name it.
+    public uint HostActorOfObject(ulong gameObjectId)
+    {
+        var entityId = (uint)gameObjectId;
+        if (entityId is 0 or NoTarget) return PacketActor.None;
+        foreach (var (role, member) in world.Party.FilledSlots())
+            if (member.EntityId == entityId) return PacketActor.Seat(role);
+        foreach (var (actor, copy) in spawned)
+            if (copy.LocalEntityId == entityId) return actor;
+        return PacketActor.None;
+    }
+
     // The host's enemy (by its entity id) or seat, as this client's world has it.
     public SimCharacter? MirrorOfHost(uint actor) => actor == PacketActor.None ? null : MirrorOf(actor);
 
     public void Apply(GamePacket packet)
     {
+        if (packet.ShownBy == myRole) return;
         switch (packet)
         {
             case SpawnNpcPacket p: SpawnNpc(p); return;

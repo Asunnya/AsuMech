@@ -128,6 +128,7 @@ public sealed partial class MultiplayerManager
         PeerAppliedRoleStatusMessage m => m.PeerId,
         StreamGapMessage m => m.PeerId,
         StreamLostMessage m => m.PeerId,
+        ActedMessage m => m.PeerId,
         _ => null,
     };
 
@@ -241,6 +242,9 @@ public sealed partial class MultiplayerManager
                 break;
             case StreamStateMessage state when !IsHost && state.PeerId == MyPeerId:
                 if (stream != null) Transmit(stream.State(senderPeerId, state.StreamEpoch, state.Sent, state.Received));
+                break;
+            case ActedMessage acted when IsHost:
+                OnPeerActed(acted);
                 break;
             // Mitigation reports put statuses on the host's own characters: seated peers only,
             // known ids only, durations clamped.

@@ -33,6 +33,7 @@ internal sealed class PacketRecorder
     private readonly Dictionary<IBattleCharaProxy, (PartyRole Role, SeatKind Kind)> seats = new();
     private readonly Dictionary<PartyRole, (bool Status, bool Control)> afflictions = new();
     private readonly RecordingBattleChara localPlayer;
+    private PartyRole? shownBy;
 
     public bool Recording { get; set; }
     public bool HasPending => pending.Count > 0;
@@ -116,8 +117,19 @@ internal sealed class PacketRecorder
 
     private void Add(GamePacket packet)
     {
-        if (Recording) pending.Add(packet);
+        if (Recording) pending.Add(shownBy is { } seat ? packet with { ShownBy = seat } : packet);
     }
+
+    // What `show` sends is the seat's own action, which its client showed already: tagged so that
+    // client skips it, and kept off the host's own player.
+    public void ShownBy(PartyRole seat, Action show)
+    {
+        shownBy = seat;
+        try { show(); }
+        finally { shownBy = null; }
+    }
+
+    private bool AlreadyShown(RecordingBattleChara proxy) => shownBy != null && ReferenceEquals(proxy, localPlayer);
 
     // ── Addressing ───────────────────────────────────────────────────────────
 
@@ -390,12 +402,12 @@ internal sealed class PacketRecorder
         public void ReceiveActorCast(ActorCastData cast)
         {
             recorder.RecordCast(this, cast);
-            inner.ReceiveActorCast(cast);
+            if (!recorder.AlreadyShown(this)) inner.ReceiveActorCast(cast);
         }
 
         public uint ReceiveActionEffect(ActionEffectData effect)
         {
-            var sequence = inner.ReceiveActionEffect(effect);
+            var sequence = recorder.AlreadyShown(this) ? 0 : inner.ReceiveActionEffect(effect);
             recorder.RecordEffect(this, sequence, effect);
             return sequence;
         }
@@ -409,7 +421,7 @@ internal sealed class PacketRecorder
         public void ActorControl(uint category, uint arg1 = 0, uint arg2 = 0, uint arg3 = 0, uint arg4 = 0, uint arg5 = 0, uint arg6 = 0, uint arg7 = 0, uint arg8 = 0)
         {
             recorder.RecordControl(this, category, [arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8]);
-            inner.ActorControl(category, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+            if (!recorder.AlreadyShown(this)) inner.ActorControl(category, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
         }
 
         public void ActorControlTarget(uint category, GameObjectId target, uint arg1 = 0, uint arg2 = 0, uint arg3 = 0, uint arg4 = 0)
