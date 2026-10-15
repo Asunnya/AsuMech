@@ -195,6 +195,7 @@ public sealed partial class MultiplayerManager
                 }
                 peerLastSeenMs[hello.PeerId] = NowMs;
                 peerLastHelloMs[hello.PeerId] = NowMs;
+                answeredPingMs[hello.PeerId] = PingClockMs();
                 var build = new PeerBuildInfo(NetGuard.Clean(hello.Version), NetGuard.Clean(hello.Checksum));
                 Session.Names[hello.PeerId] = NetGuard.Clean(hello.DisplayName);
                 Session.Builds[hello.PeerId] = build;
@@ -225,6 +226,7 @@ public sealed partial class MultiplayerManager
             case PongMessage pong when IsHost:
                 peerLastSeenMs[pong.PeerId] = NowMs;
                 peerLatencyMs[pong.PeerId] = PingClockMs() - pong.SentAtMs;
+                answeredPingMs[pong.PeerId] = Math.Max(answeredPingMs.GetValueOrDefault(pong.PeerId), Math.Min(pong.SentAtMs, PingClockMs()));
                 if (stream?.Pong(pong.PeerId, pong.StreamEpoch, pong.StreamSent, pong.StreamReceived) is { } askPeer) Transmit(askPeer);
                 break;
             case StreamGapMessage gap when IsHost:

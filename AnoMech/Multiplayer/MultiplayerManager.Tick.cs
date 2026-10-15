@@ -208,6 +208,7 @@ public sealed partial class MultiplayerManager
             }
 
             if (deferredLeaveMs.Count > 0) ConfirmDeferredLeaves();
+            if (running && Plugin.Game.World.Map.IsInInstance) EndRunIfBehind();
         }
         else if (IsSessionNotFound)
         {

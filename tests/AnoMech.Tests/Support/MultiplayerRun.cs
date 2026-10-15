@@ -17,8 +17,8 @@ internal sealed class MultiplayerRun
     private const double StartSeconds = 45;
     private const double FlushSeconds = 2;
     // A link that dropped is back within the reconnect backoff, and the ping cycle finds what's
-    // still missing within two more.
-    private const double SettleSeconds = 30;
+    // still missing within two more; a download that fell behind drains what it holds.
+    private const double SettleSeconds = 60;
     // As in game. The host's arrive at once, so a peer has to show everything the host's client
     // was told even while its own copies are still on the way.
     public static readonly (int Min, int Max) PeerSpawnFrames = (2, 6);
