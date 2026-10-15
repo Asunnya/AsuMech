@@ -173,8 +173,14 @@ public sealed partial class MultiplayerManager
             LobbyChanged?.Invoke();
         }
 
-        if (relay is not { IsConnected: true }) return;
+        if (relay is { IsConnected: true } && !TickLink(deltaSeconds)) return;
+        TickRun(deltaSeconds);
+    }
 
+    // What needs the link up: the Hello until it's answered, the ping cycle and the liveness it
+    // checks, the lobby's start check. False once the session is over.
+    private bool TickLink(float deltaSeconds)
+    {
         AnnounceOwnJobIfChanged();
         ResendHelloUntilAcknowledged(deltaSeconds);
 
@@ -209,7 +215,7 @@ public sealed partial class MultiplayerManager
             LeaveSession();
             SessionEndReason = reason;
             LobbyChanged?.Invoke();
-            return;
+            return false;
         }
         else if (IsHostStale)
         {
@@ -221,7 +227,7 @@ public sealed partial class MultiplayerManager
             LeaveSession();
             SessionEndReason = "Lost contact with the host.";
             LobbyChanged?.Invoke();
-            return;
+            return false;
         }
 
         if (IsHost)
@@ -229,7 +235,13 @@ public sealed partial class MultiplayerManager
             if (startWait.Tick()) LobbyChanged?.Invoke();
         }
         else AnswerStartCheck(deltaSeconds);
+        return true;
+    }
 
+    // The run goes on whether the link is up or not: what it sends meanwhile goes out once the
+    // link is back (SessionStream).
+    private void TickRun(float deltaSeconds)
+    {
         if (!running) return;
 
         if (IsHost)
