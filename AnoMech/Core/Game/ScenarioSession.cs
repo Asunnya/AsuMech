@@ -123,6 +123,9 @@ public sealed class ScenarioSession
         // Here rather than in scenario.Run (which peers skip).
         DiagnosticLog.Clear();
 #endif
+        // The run's clock starts at 0, as EventScheduler.FromRunStart's offsets assume: a stay's
+        // first run follows no End to have cleared it.
+        world.Events.Clear();
         var phase = Scenario.Phase;
         var zone = phase.Zone;
         world.PlaceWaymarks(ResolveWaymarks(zone, run.SelectedWaymark));
