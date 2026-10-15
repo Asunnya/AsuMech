@@ -15,6 +15,8 @@ internal sealed class FakeEventObjects(SimTimeline timeline) : IEventObjects
     // As FakeBattleCharas.SlotOffset.
     public int SlotOffset { get; set; }
 
+    internal int Live => slots.Count(o => o is { Exists: true });
+
     public IEventObjectProxy? Spawn(EventObjectSpawnConfig config, Placement placement)
     {
         var slot = FindFreeSlot();

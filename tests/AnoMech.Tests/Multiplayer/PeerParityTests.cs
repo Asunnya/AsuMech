@@ -36,6 +36,16 @@ public class PeerParityTests
     public void APeerSeesWhatTheHostSeesOverABadConnection(Type scenarioType, ConnectionProfile link)
         => Verify(MultiplayerRun.Play(scenarioType, 0, 1, Host, [new PlayerSeat(PeerSeat)], link, link));
 
+    private static IEnumerable<TestCaseData> Restarts() =>
+        from scenario in Scenarios
+        select new TestCaseData(scenario.GetType()).SetArgDisplayNames(scenario.FullName());
+
+    // The stay's next run: its stage comes from the host as well, onto an arena already the
+    // host's, with every actor of the run before gone.
+    [TestCaseSource(nameof(Restarts))]
+    public void APeerSeesWhatTheHostSeesAfterAReset(Type scenarioType)
+        => Verify(MultiplayerRun.Play(scenarioType, 0, 1, Host, [new PlayerSeat(PeerSeat)], runs: 2));
+
     private static void Verify(MultiplayerRun run)
     {
         Assert.That(run.Failure, Is.Null);
@@ -49,5 +59,10 @@ public class PeerParityTests
         var refused = run.Peers.Prepend(run.Host).SelectMany(c => c.Log.Warnings).Where(w => w.Contains("[SimAssets]")).Distinct().ToList();
         Assert.That(refused, Is.Empty, "ids this build's allowlist doesn't have");
         Assert.That(gaps, Is.Empty, $"{gaps.Count} differences between what the host's and the peer's games were told");
+        foreach (var peer in run.Peers)
+        {
+            Assert.That(peer.Fake.BattleCharas.Live, Is.EqualTo(run.Host.Fake.BattleCharas.Live), $"characters {peer.Name}'s client still has against the host's");
+            Assert.That(peer.Fake.EventObjects.Live, Is.EqualTo(run.Host.Fake.EventObjects.Live), $"event objects {peer.Name}'s client still has against the host's");
+        }
     }
 }

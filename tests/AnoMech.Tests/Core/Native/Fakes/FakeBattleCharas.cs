@@ -55,6 +55,9 @@ internal sealed class FakeBattleCharas : IBattleCharas
 
     internal FakeCharacter? ActorAt(int slot) => slot < 0 ? Player : slots[slot];
 
+    // Every character in the table but the local player: doppels and NPCs.
+    internal int Live => slots.Count(s => s != null);
+
     internal void Free(int slot)
     {
         slots[slot] = null;

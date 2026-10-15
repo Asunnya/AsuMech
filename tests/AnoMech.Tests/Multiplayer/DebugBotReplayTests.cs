@@ -24,10 +24,20 @@ public partial class DebugBotReplayTests
         select new TestCaseData(scenario.GetType(), strat.index).SetArgDisplayNames(scenario.FullName(), strat.ai.Name);
 
     [TestCaseSource(nameof(Strats))]
-    public void EveryBotPeerWalksWhereTheHostsAiSendsItsSeat(Type scenarioType, int strat)
+    public void EveryBotPeerWalksWhereTheHostsAiSendsItsSeat(Type scenarioType, int strat) => Verify(scenarioType, strat, runs: 1);
+
+    private static IEnumerable<TestCaseData> FirstStrats() =>
+        from scenario in ScenarioCatalog.Create().Scenarios.Where(s => s.SupportsMultiplayer)
+        select new TestCaseData(scenario.GetType()).SetArgDisplayNames(scenario.FullName());
+
+    // The stay's next run: each peer's bot starts over on that run's rolls and clock.
+    [TestCaseSource(nameof(FirstStrats))]
+    public void EveryBotPeerWalksWhereTheHostsAiSendsItsSeatAfterAReset(Type scenarioType) => Verify(scenarioType, 0, runs: 2);
+
+    private static void Verify(Type scenarioType, int strat, int runs)
     {
         var peers = Enum.GetValues<PartyRole>().Where(r => r != HostSeat).Select(r => new PlayerSeat(r)).ToList();
-        var run = MultiplayerRun.Play(scenarioType, strat, 1, new PlayerSeat(HostSeat), peers);
+        var run = MultiplayerRun.Play(scenarioType, strat, 1, new PlayerSeat(HostSeat), peers, runs: runs);
         Assert.That(run.Failure, Is.Null);
 
         var wrong = new List<string>();

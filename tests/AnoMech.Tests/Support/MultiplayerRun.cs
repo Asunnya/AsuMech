@@ -11,6 +11,7 @@ internal sealed record PlayerSeat(PartyRole Role, bool BotControlled = true);
 internal sealed class MultiplayerRun
 {
     private const double LobbySeconds = 10;
+    private const double ResetSeconds = 10;
     // Enter, the stage's settle and the start, with the start check's own wait.
     private const double StartSeconds = 45;
     private const double FlushSeconds = 2;
@@ -34,7 +35,7 @@ internal sealed class MultiplayerRun
     public TestClient Host { get; }
     public IReadOnlyList<TestClient> Peers { get; }
     public IReadOnlyList<Death> Deaths => deaths;
-    // On the relay's clock, from the host's run starting to its end.
+    // On the relay's clock, from the host's last run starting to its end.
     public double StartedAt { get; private set; } = double.NaN;
     public double EndedAt { get; private set; } = double.NaN;
     public string? Failure { get; private set; }
@@ -57,15 +58,22 @@ internal sealed class MultiplayerRun
     }
 
     // immortal: nobody dies on the host, so a player who never moves still sees the whole fight.
+    // runs: the fight played again after the host's Reset, in the same stay and on the same rolls,
+    // as forced rolls replay it.
     public static MultiplayerRun Play(Type scenarioType, int strat, int seed, PlayerSeat host, IReadOnlyList<PlayerSeat> peers,
-        ConnectionProfile? hostLink = null, ConnectionProfile? peerLink = null, double timeout = 600, bool immortal = false)
+        ConnectionProfile? hostLink = null, ConnectionProfile? peerLink = null, double timeout = 600, bool immortal = false, int runs = 1)
     {
         var run = new MultiplayerRun(seed, host, peers, hostLink ?? TestRelay.Perfect, peerLink ?? TestRelay.Perfect);
         run.Host.Game.GodMode = immortal;
+        run.Host.Game.PartyMemberKilled += (role, cause, actionId) => run.deaths.Add(new Death(role, cause, actionId, run.Host.Game.World.Events.Elapsed, ""));
         try
         {
             run.Lobby(host, peers);
-            run.Fight(scenarioType, strat, seed, timeout);
+            for (var i = 0; i < runs; i++)
+            {
+                if (i > 0) run.Reset();
+                run.Fight(scenarioType, strat, seed, timeout);
+            }
         }
         catch (Exception e)
         {
@@ -101,9 +109,15 @@ internal sealed class MultiplayerRun
         RunUntil(() => Peers.All(p => p.Multiplayer.MyClaimedRole == p.Seat), LobbySeconds, "peers claiming their seats");
     }
 
+    // The host's Reset button: every client's run ends, and the stay goes on.
+    private void Reset()
+    {
+        Host.Do(() => Host.Game.Reset());
+        RunUntil(() => Host.Game.ActiveScenario == null && Peers.All(p => p.Game.ActiveScenario == null), ResetSeconds, "everyone resetting");
+    }
+
     private void Fight(Type scenarioType, int strat, int seed, double timeout)
     {
-        Host.Game.PartyMemberKilled += (role, cause, actionId) => deaths.Add(new Death(role, cause, actionId, Host.Game.World.Events.Elapsed, ""));
         Host.Do(() => Host.Multiplayer.StartScenario(new AnoMech.ScenarioSelection(
             Host.Game.Catalog.Scenarios.Single(s => s.GetType() == scenarioType), strat, 0, seed, null)));
         bool Refused() => Host.Multiplayer.StartCheckFailureReason != null || Host.Multiplayer.RunEndReason != null;
