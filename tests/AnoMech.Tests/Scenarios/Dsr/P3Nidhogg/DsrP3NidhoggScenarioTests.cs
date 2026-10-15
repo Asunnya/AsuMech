@@ -56,6 +56,6 @@ public class DsrP3NidhoggScenarioTests
                 o.TowerSoakers = [2, 2, 2, 2];
                 o.SoulTetherTargets = [CasterDps, PhysRangedDps];
             })
-            .TeleportAt(90.5f, to: new Vector2(0f, 10f))
+            .TeleportAt(90.5f, to: Vector2.Zero)
             .ShouldKill(ActionId.SoulTether, RegenHealer);
 }

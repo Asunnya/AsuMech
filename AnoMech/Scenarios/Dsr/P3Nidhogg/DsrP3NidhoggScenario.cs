@@ -41,7 +41,8 @@ public sealed class DsrP3NidhoggScenario : IScenario
     private const float DiveTowerRadius = 5f;
     private static readonly Vector3 DiverWaitingSpot = new(23f, 0f, 4f);
     private const float SoulTetherRadius = 5f;
-    private const float FourTowerRadius = 11.31f;
+    private const float SoulTetherHalfWidth = 0.5f;
+    private const float SoulTetherSourceClearance = 2f;
     // UNVERIFIED: the donut's safe inner radius.
     private const float LashingWheelInnerRadius = 6f;
     // UNVERIFIED: Drachenlance's cone width.
@@ -66,6 +67,7 @@ public sealed class DsrP3NidhoggScenario : IScenario
     private readonly List<(SimEnemy Caster, Vector3 At, int Needed)> fourTowers = [];
     private readonly List<SimEnemy> geirskogulCasters = [];
     private readonly SimTether?[] soulTethers = new SimTether?[2];
+    private readonly SimEnemy?[] soulTetherSources = new SimEnemy?[2];
     private readonly bool[] soulTetherLocked = new bool[2];
 
     public void Run(SimWorld worldParam, int? selectedAi)
@@ -80,6 +82,7 @@ public sealed class DsrP3NidhoggScenario : IScenario
         fourTowers.Clear();
         geirskogulCasters.Clear();
         Array.Clear(soulTethers);
+        Array.Clear(soulTetherSources);
         Array.Clear(soulTetherLocked);
 
         if (selectedAi is { } idx && idx < AiStrats.Count)
@@ -153,7 +156,7 @@ public sealed class DsrP3NidhoggScenario : IScenario
     public void Tick(float delta, float elapsed)
     {
         for (var i = 0; i < soulTethers.Length; i++)
-            LockSoulTetherOnTank(i);
+            PassSoulTether(i);
     }
 
     private void SpawnNidhogg()
@@ -406,7 +409,7 @@ public sealed class DsrP3NidhoggScenario : IScenario
         fourTowers.Clear();
         for (var i = 0; i < DsrP3NidhoggState.TowerBearings.Length; i++)
         {
-            var at = AtBearing(DsrP3NidhoggState.TowerBearings[i], FourTowerRadius);
+            var at = DsrP3NidhoggState.FourTowerSpot(i);
             if (SpawnDiver(new Placement(at, RotationTowards(at, Vector3.Zero))) is not { } caster) continue;
             fourTowers.Add((caster, at, state.TowerSoakers[i]));
         }
@@ -442,24 +445,36 @@ public sealed class DsrP3NidhoggScenario : IScenario
     private void CastFourTowerGeirskoguls() =>
         CastGeirskogulsFrom(fourTowers.Where((_, i) => i != state.QuietTower).Select(t => t.Caster).ToList());
 
-    // Two non-tanks are tethered; a tank steps across the beam to take one over.
+    // Two non-tanks are tethered, one by Nidhogg and one by the quiet tower's diver; a tank steps
+    // across each beam to take it over.
     private void TetherSoulTethers()
     {
-        if (nidhogg == null) return;
+        soulTetherSources[0] = nidhogg;
+        soulTetherSources[1] = fourTowers.Count > state.QuietTower ? fourTowers[state.QuietTower].Caster : nidhogg;
         for (var i = 0; i < soulTethers.Length; i++)
         {
+            if (soulTetherSources[i] is not { } source) continue;
             var first = party.Get(state.SoulTetherTargets[i]) is { } holder && holder.IsAlive() ? holder : null;
-            soulTethers[i] = world.Tether(nidhogg, End.Passable(first), TetherId.SoulTether);
+            if (first != null) soulTethers[i] = world.Tether(source, first, TetherId.SoulTether);
         }
     }
 
-    private void LockSoulTetherOnTank(int i)
+    // A tank stepping into the beam takes it over. Only tanks do: the tethers start while the
+    // party still stands in the towers, so the beams cross other soakers before anyone moves.
+    private void PassSoulTether(int i)
     {
-        if (soulTetherLocked[i] || nidhogg == null || soulTethers[i] is not { IsActive: true } tether) return;
-        if (tether.B is not ISimPartyMember { Role: PartyRole.MainTank or PartyRole.OffTank } tank) return;
-        if (soulTethers.Any(t => t != tether && t?.B == tether.B)) return;
+        if (soulTetherLocked[i] || soulTetherSources[i] is not { } source || soulTethers[i] is not { IsActive: true } tether) return;
+        if (tether.B is not SimCharacter holder || !holder.IsAlive()) return;
+        var length = FlatDistance(holder.Position, source.Position) - SoulTetherSourceClearance;
+        if (length <= 0f) return;
+        var beam = new Placement(holder.Position, RotationTowards(holder.Position, source.Position));
+        var taker = party.Find.InsideRect(beam, SoulTetherHalfWidth, length)
+            .Where(m => m != holder && m.IsAlive() && m is ISimPartyMember { Role: PartyRole.MainTank or PartyRole.OffTank } && soulTethers.All(t => t?.B != m))
+            .OrderBy(m => FlatDistance(m.Position, holder.Position))
+            .FirstOrDefault(m => FlatDistance(m.Position, holder.Position) > SoulTetherHalfWidth);
+        if (taker == null) return;
         tether.Despawn();
-        soulTethers[i] = world.Tether(nidhogg, (SimCharacter)tank, TetherId.SoulTether);
+        soulTethers[i] = world.Tether(source, taker, TetherId.SoulTether);
         soulTetherLocked[i] = true;
     }
 
@@ -471,7 +486,7 @@ public sealed class DsrP3NidhoggScenario : IScenario
             soulTethers[i]!.Despawn();
             soulTethers[i] = null;
             if (!holder.IsAlive()) continue;
-            PlayEffect(nidhogg, ActionId.SoulTether, 1.1f, target: holder.GameObjectId, at: holder.Position);
+            PlayEffect(soulTetherSources[i], ActionId.SoulTether, 1.1f, target: holder.GameObjectId, at: holder.Position);
             foreach (var hit in party.Find.InsideCircle(holder.Position, SoulTetherRadius).ToList())
             {
                 if (hit is ISimPartyMember { Role: PartyRole.MainTank or PartyRole.OffTank }) damage.ApplyDamage(hit, SoulTetherTankDamage, ActionId.SoulTether, "tank buster", lethal: false);

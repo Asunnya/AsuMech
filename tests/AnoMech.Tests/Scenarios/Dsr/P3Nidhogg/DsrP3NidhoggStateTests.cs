@@ -77,4 +77,14 @@ public class DsrP3NidhoggStateTests
         Assert.That(DsrP3NidhoggState.DiveOffset(DiveArrow.Down), Is.EqualTo(-14f));
         Assert.That(DsrP3NidhoggState.DiveOffset(DiveArrow.Circle), Is.EqualTo(0f));
     }
+
+    [Test]
+    public void NidhoggPullsTheFirstSoulTetherAndTheQuietTowersDiverTheSecond()
+    {
+        foreach (var state in Rolls())
+        {
+            Assert.That(state.SoulTetherSource(0), Is.EqualTo(System.Numerics.Vector3.Zero));
+            Assert.That(state.SoulTetherSource(1), Is.EqualTo(DsrP3NidhoggState.FourTowerSpot(state.QuietTower)));
+        }
+    }
 }

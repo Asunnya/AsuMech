@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using AnoMech.Core.Game.Party;
+using static AnoMech.Scenarios.Dsr.DsrConstants;
 
 namespace AnoMech.Scenarios.Dsr.P3Nidhogg;
 
@@ -15,6 +17,13 @@ public sealed class DsrP3NidhoggState
 
     // Intercardinal tower bearings for TowerSoakers, NE, SE, SW, NW.
     public static readonly float[] TowerBearings = [45f, 135f, 225f, 315f];
+    private const float FourTowerRadius = 11.31f;
+
+    public static Vector3 FourTowerSpot(int tower) => AtBearing(TowerBearings[tower], FourTowerRadius);
+
+    // Nidhogg pulls the first Soul Tether, the quiet tower's diver the second.
+    public Vector3 SoulTetherSource(int tether) => tether == 0 ? Vector3.Zero : FourTowerSpot(QuietTower);
+
     private static readonly int[][] TowerSoakerSets = [[1, 1, 3, 3], [1, 2, 2, 3], [1, 1, 2, 4], [2, 2, 2, 2]];
     private static readonly int[] LineSizes = [3, 2, 3];
     private static readonly PartyRole[] NonTanks =
