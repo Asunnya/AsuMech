@@ -86,12 +86,6 @@ public sealed partial class MultiplayerManager
             DiagnosticLog.Info($"[Multiplayer] Host: broadcasting SetWeather weatherId={weatherId} transition={transition}.");
             _ = relay.SendAsync(new SetWeatherMessage(weatherId, transition));
         };
-        Plugin.Game.World.Map.FogHoldChanged += value =>
-        {
-            if (!IsHost || relay is not { IsConnected: true }) return;
-            DiagnosticLog.Info($"[Multiplayer] Host: broadcasting SetFogHold {(value is { } v ? v.ToString("F0") : "off")}.");
-            _ = relay.SendAsync(new SetFogHoldMessage(value));
-        };
         Plugin.Game.World.Announced += text =>
         {
             if (!IsHost || relay is not { IsConnected: true }) return;

@@ -43,7 +43,6 @@ namespace AnoMech.Multiplayer;
 [JsonDerivedType(typeof(MapEffectMessage), "mapEffect")]
 [JsonDerivedType(typeof(MapDirectorUpdateMessage), "mapDirectorUpdate")]
 [JsonDerivedType(typeof(SetWeatherMessage), "setWeather")]
-[JsonDerivedType(typeof(SetFogHoldMessage), "setFogHold")]
 [JsonDerivedType(typeof(AnnouncementMessage), "announcement")]
 [JsonDerivedType(typeof(P4AiReplayStateMessage), "p4AiReplayState")]
 [JsonDerivedType(typeof(P5AiReplayStateMessage), "p5AiReplayState")]
@@ -247,9 +246,6 @@ public sealed record MapDirectorUpdateMessage(
 
 // Replay of world.SetWeather; scenarios use it mid-fight for lighting cues.
 public sealed record SetWeatherMessage(byte WeatherId, float Transition) : MpMessage, IHostOnlyMessage;
-
-// Replay of MapController.SetFogHold, a scenario's live fog toggle; null releases the hold.
-public sealed record SetFogHoldMessage(float? FogHold) : MpMessage, IHostOnlyMessage;
 
 // Replay of SimWorld.Announce: a scenario's own mid-run message to the party.
 public sealed record AnnouncementMessage(string Text) : MpMessage, IHostOnlyMessage;

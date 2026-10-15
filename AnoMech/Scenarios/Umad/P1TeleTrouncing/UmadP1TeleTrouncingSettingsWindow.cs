@@ -27,7 +27,6 @@ public sealed class UmadP1TeleTrouncingSettingsWindow
 #if DEBUG
             DrawPropKnobs();
             DrawPropBeatRow(fireAppear, fireWindUp);
-            DrawHazeRow();
 #endif
             SettingsGrid.End();
         }
@@ -56,17 +55,9 @@ public sealed class UmadP1TeleTrouncingSettingsWindow
         Overrides.ThunderOrientationFlipped = null;
         Overrides.ThunderRealOffset = null;
         Overrides.PropsBindDirector = true;
-        Overrides.HoldHaze = false;
     }
 
 #if DEBUG
-    private void DrawHazeRow()
-    {
-        SettingsGrid.Row("Zone (debug):");
-        var haze = Overrides.HoldHaze;
-        if (ImGui.Checkbox("Hold P1 haze##holdhaze", ref haze)) Overrides.HoldHaze = haze;
-    }
-
     private void DrawPropKnobs()
     {
         SettingsGrid.Row("Statue props (debug):");

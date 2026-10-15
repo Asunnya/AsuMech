@@ -294,18 +294,6 @@ public sealed unsafe partial class ZoneControl : IZoneControl
     private byte[]? envSimulatorSnapshot;
     private static readonly int[] WeatherDiagCheckpointsMs = [0, 250, 500, 750, 1000, 1500, 2000, 3000, 5000, 7000, 10000];
 
-    // Candidate fog/view-distance offsets found by that diff: both climb from 1000 to 1800 during
-    // the "red haze, then clears up" window and are duplicated across the two structs. Unlabeled
-    // in FFXIVClientStructs; a hypothesis. Re-asserted every frame because the native transition
-    // climbs them back on its own.
-    private const int EnvStateFogOffset = 0xD8;
-    private const int EnvSimulatorFogOffset = 0x2F8;
-
-    // The value both fog fields are held at every frame while non-null (TickWeather); null =
-    // the engine's own transition. Set per phase through IPhase.FogHold by
-    // MapController.SetPhaseWeather, never globally: only Umad P1 wants its pre-transition haze kept.
-    public float? FogHold { get; set; }
-
     private void StartWeatherDiagnostic(byte weatherId)
     {
         weatherDiagStartMs = Environment.TickCount64;
@@ -322,15 +310,6 @@ public sealed unsafe partial class ZoneControl : IZoneControl
     {
         if (!IsActive) return;
         SendPendingWeather();
-        if (FogHold is { } hold)
-        {
-            var env = EnvManager.Instance();
-            if (env != null)
-            {
-                *(float*)((byte*)&env->EnvState + EnvStateFogOffset) = hold;
-                *(float*)((byte*)&env->EnvSimulator + EnvSimulatorFogOffset) = hold;
-            }
-        }
 
         if (weatherDiagStartMs is not { } start) return;
         var elapsedMs = Environment.TickCount64 - start;
@@ -434,7 +413,6 @@ public sealed unsafe partial class ZoneControl : IZoneControl
         envSimulatorSnapshot = null;
         pendingWeather = null;
         RestoreOriginalWeather();
-        FogHold = null; // stop re-asserting the fog hold before the inn's own value loads
 
         // The reload can throw; the firewall and the Occupied flag must be released regardless,
         // or the client is left unable to send anything until the plugin is unloaded.

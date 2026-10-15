@@ -10,8 +10,6 @@ public sealed class UmadZone : IZone
 {
     public static readonly UmadZone Instance = new();
 
-    // Deactivating the arena SharedGroups on top of these states was tried: the engine
-    // re-activates them, a visible frame each time.
     public IReadOnlyList<ushort> ArenaMapEffectSnapshot { get; } =
     [
         1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1,
@@ -21,7 +19,6 @@ public sealed class UmadZone : IZone
     private static readonly Dictionary<byte, ushort> P3ArenaMapEffectOverrides = new() { [0x00] = 0x200, [0x13] = 4 };
 
     // 77 is the zone-in weather between pulls; a pull switches to 78.
-    public const float P1Haze = 1000f;
     public static readonly Phase P1 = new(Instance, "P1", 78, 20291,
         arenaMapEffectOverrides: new Dictionary<byte, ushort> { [0x00] = 0x10 });
     public static readonly Phase P2 = new(Instance, "P2", 79, 20292,
@@ -47,24 +44,19 @@ public sealed class UmadZone : IZone
 
     public IReadOnlyList<WaymarkLayout> WaymarkPresets => Waymarks;
 
-    public float? FallFloor => -5f;
+    public EntranceBarrier EntranceBarrier => new(2000182, 0xBC174E, 0xBC174C, new Vector3(0.41f, 0f, 15.75f));
 
-    public EntranceBarrier? EntranceBarrier => new(2000182, 0xBC174E, 0xBC174C, new Vector3(0.41f, 0f, 15.75f));
-
-    // Every pull's commence sets the two director variables; what they drive is UNVERIFIED.
     public void Run(SimWorld world)
     {
         world.Map.DirectorUpdate(0x80000028U, 0x4U);
         world.Map.DirectorUpdate(0x8000000DU, 0x1U);
     }
 
-    // Replay-derived RSV/RSF data the server would deliver in a real duty; peers need it too, or
-    // their BgParts point at unseeded paths and render black. Idempotent.
     public void RunClientSetup(SimWorld world) => UmadReplayData.Seed();
 
     private static readonly IReadOnlyList<WaymarkLayout> Waymarks =
     [
-        new WaymarkLayout("Diamond Waymarks", (IReadOnlyList<Waymark>)[
+        new WaymarkLayout("Diamond Waymarks", [
             new(WaymarkSlot.A,     new Vector3(  0, 0, -12)),
             new(WaymarkSlot.B,     new Vector3( 12, 0,   0)),
             new(WaymarkSlot.C,     new Vector3(  0, 0,  12)),

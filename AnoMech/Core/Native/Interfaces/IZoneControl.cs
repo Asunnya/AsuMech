@@ -29,9 +29,6 @@ public interface IZoneControl : IDisposable
     void SetWeather(byte weatherId, float transition = 0.5f);
     void TickWeather();
 
-    // Environment fog held each frame; null releases it.
-    float? FogHold { get; set; }
-
     // A captured server packet, replayed through the client's own dispatcher. False when it could
     // not be delivered.
     bool InjectIncomingPacket(uint sourceEntityId, ushort opcode, ReadOnlySpan<byte> body, string what);

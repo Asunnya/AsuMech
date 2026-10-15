@@ -125,7 +125,6 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         party = world.Party;
         state = new UmadP1TeleTrouncingState(world.Rng, settingsWindow.Overrides);
         LastState = state;
-        hazeHoldApplied = true;   // what InstanceSession.ApplyPhase just applied from the phase
 
         // Game.Catalog reuses one instance across runs; a stopped run's arrow wrappers still
         // hold their frozen positions, and TickArrows would bind someone against them on the
@@ -464,7 +463,6 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
     public void Tick(float delta, float elapsed)
     {
         TickArrows(delta, elapsed);
-        TickHazeHold();
     }
 
     private SimEnemy? SpawnHelper()
@@ -501,17 +499,6 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
             helpers[i]?.Despawn();
             helpers[i] = null;
         }
-    }
-
-    private bool hazeHoldApplied;
-
-    private void TickHazeHold()
-    {
-        var want = settingsWindow.Overrides.HoldHaze;
-        if (want == hazeHoldApplied) return;
-        hazeHoldApplied = want;
-        world.Map.SetFogHold(want ? UmadZone.P1Haze : null);
-        DiagnosticLog.Info($"[UmadP1TeleTrouncing] P1 haze hold {(want ? "on" : "off")} (settings window).");
     }
 
     private void TickArrows(float delta, float elapsed)

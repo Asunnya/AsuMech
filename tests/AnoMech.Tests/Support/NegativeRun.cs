@@ -45,7 +45,7 @@ internal sealed class NegativeRun<TScenario>(PartyRole role, int strat) where TS
     public NegativeRun<TScenario> TeleportAt(float time, Vector2 to, float? facing = null)
         => Add(new Takeover(time, to, facing));
 
-    // Below the zone's FallFloor: the client's own fall, which only the local player can take.
+    // Below InstanceSession's FallFloor: the client's own fall, which only the local player can take.
     public NegativeRun<TScenario> DropBelowArenaAt(float time, Vector2 to)
         => Add(new Takeover(time, to, Y: -10f));
 

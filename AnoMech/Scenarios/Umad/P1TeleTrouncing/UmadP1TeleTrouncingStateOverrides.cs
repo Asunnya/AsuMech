@@ -39,6 +39,4 @@ public sealed class UmadP1TeleTrouncingStateOverrides
     // Debug knob for the statue props: bind them to the instance content director (the real
     // packets' EventId).
     public bool PropsBindDirector { get; set; } = true;
-
-    public bool HoldHaze { get; set; } = false;
 }

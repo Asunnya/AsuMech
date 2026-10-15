@@ -74,16 +74,6 @@ public sealed class MapController
     // arena-transform lighting cues that no SimObject carries.
     public event Action<byte, float>? WeatherChanged;
 
-    // Live toggle of the per-frame fog hold (see ZoneControl.FogHold) -- a scenario's debug knob.
-    // Mirrored to peers, whose own load-time value came from the phase and never moves again.
-    public event Action<float?>? FogHoldChanged;
-
-    public void SetFogHold(float? value)
-    {
-        Natives.Zone.FogHold = value;
-        FogHoldChanged?.Invoke(value);
-    }
-
     // Immediately change the active weather (mid-scenario). transition = fade seconds.
     public void SetWeather(byte weatherId, float transition = 0.5f)
     {
@@ -183,11 +173,9 @@ public sealed class MapController
         DiagnosticLog.Info($"[MapController] Enter: territoryId={territoryId}.");
     }
 
-    // Per phase; a phase without a fog hold clears a previous one's. A fresh load delays the
-    // weather so the engine settles; a loaded zone takes it now.
-    public void SetPhaseWeather(byte? weatherId, float? fogHold, bool freshLoad)
+    // A fresh load delays the weather so the engine settles; a loaded zone takes it now.
+    public void SetPhaseWeather(byte? weatherId, bool freshLoad)
     {
-        Natives.Zone.FogHold = fogHold;
         if (weatherId is not { } wid) return;
         if (freshLoad) ApplyWeather(wid);
         else SetWeather(wid);

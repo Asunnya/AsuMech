@@ -16,9 +16,6 @@ public sealed class InstanceSession
     private const uint DirectorEObjModCategory = 0x6A;
     private const uint EntranceBarrierOpenState = 7;
 
-    // Scenario-local player spawn (16y south of centre) for a zone with no EntranceBarrier.
-    public static readonly Vector3 DefaultPlayerSpawnLocal = new(0f, 0f, 16f);
-
     private readonly SimWorld world;
     private readonly Vector3 playerSpawnLocal;
     private IEventObjectProxy? entranceBarrier;
@@ -51,7 +48,7 @@ public sealed class InstanceSession
         // ZoneControl.Enter asks once more before the firewall goes up.
         refusal = Natives.Zone.StartBlockedReason(out _)
                   ?? (Natives.BattleCharas.LocalPlayer.Exists ? null : "no local player");
-        var spawn = zone.EntranceBarrier?.Position ?? DefaultPlayerSpawnLocal;
+        var spawn = zone.EntranceBarrier.Position;
         if (refusal is null && !Natives.Zone.IsActive && !Natives.Zone.Enter(zone.TerritoryId, zone.Origin + spawn))
             refusal = "the zone was not entered (see the log)";
         if (refusal is not null)
@@ -64,8 +61,7 @@ public sealed class InstanceSession
         // Before any action mutates it, so Exit can restore it.
         Natives.UserActions.OnSessionStart();
         world.ScenarioOrigin = zone.Origin;
-        if (zone.EntranceBarrier is { } entrance)
-            session.OpenEntranceBarrier(entrance);
+        session.OpenEntranceBarrier(zone.EntranceBarrier);
         return session;
     }
 
@@ -75,7 +71,7 @@ public sealed class InstanceSession
     {
         var zoneIn = !phaseApplied;
         phaseApplied = true;
-        world.Map.SetPhaseWeather(phase.Weather, phase.FogHold, zoneIn);
+        world.Map.SetPhaseWeather(phase.Weather, zoneIn);
         if (Zone.ArenaMapEffectSnapshot.Count > 0)
             world.Map.SetEffectSnapshot(ArenaMapEffects(phase), zoneIn);
     }
@@ -105,22 +101,25 @@ public sealed class InstanceSession
 
     private void TeleportPlayerToSpawn() => world.Party.Player?.SetPosition(playerSpawnLocal);
 
-    // True when the player was below the zone's FallFloor and has been put back at the centre, with
+    // True when the player was below FallFloor and has been put back at the centre, with
     // retail's answer to the client's own fall report. Caught early on purpose: moving a corpse back
     // after a long fall (2.45s in) left the client unable to fall or act again. Retail's own
     // placement (ActorSetPos type 25 or 5) starts a client load, and with it the zone guard's trip
     // and a desync with the real server ("too far" after leaving).
     public bool CatchFall()
     {
-        if (fallCloseIn >= 0f || Zone.FallFloor is not { } floor) return false;
+        if (fallCloseIn >= 0f) return false;
         var lp = Natives.BattleCharas.LocalPlayer;
-        if (!lp.Exists || world.Coordinates.ToLocal(lp.Position).Y >= floor) return false;
+        if (!lp.Exists || world.Coordinates.ToLocal(lp.Position).Y >= FallFloor) return false;
         playerControl.FellOutOfArena();
         lp.SetPos(world.Coordinates.ToGlobal(Vector3.Zero), lp.Rotation);
         fallCloseIn = FallCloseDelay;
         return true;
     }
 
+    // Scenario-local Y below which the player has fallen off the arena. The whole stay puts them
+    // straight back at the centre, and a running scenario also kills them.
+    private const float FallFloor = -5f;
     private const float FallCloseDelay = 2f;
     // Below the platform but not yet caught: the client has (or is about to have) reported the fall.
     private const float FallingBelow = -0.5f;
@@ -167,7 +166,6 @@ public sealed class InstanceSession
     // outbound opcode moves every patch and nothing keeps it current.
     private void SettleFall()
     {
-        if (Zone.FallFloor is null) return;
         var lp = Natives.BattleCharas.LocalPlayer;
         var falling = lp.Exists && world.Coordinates.ToLocal(lp.Position).Y < FallingBelow;
         if (falling)

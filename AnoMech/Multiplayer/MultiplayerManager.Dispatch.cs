@@ -176,7 +176,7 @@ public sealed partial class MultiplayerManager
         if (!IsHost && message is LobbyStateMessage or StartMessage or WorldSnapshotMessage or RolesSnapshotMessage
             or RoleKilledMessage or KnockbackMessage or TeleportMessage or PushMessage or FollowMessage
             or EndMessage or PingMessage or PeerStatusMessage
-            or SetFogHoldMessage or AnnouncementMessage
+            or AnnouncementMessage
             or IScenarioReplayStateMessage or IScenarioMidRunUpdateMessage or KickMessage)
         {
             lastHostMessageMs = Environment.TickCount64;
@@ -416,10 +416,6 @@ public sealed partial class MultiplayerManager
                 }
                 DiagnosticLog.Info($"[Multiplayer] Peer: applying SetWeather weatherId={weather.WeatherId} transition={weather.Transition}.");
                 Plugin.Game.World.Map.SetWeather(weather.WeatherId, NetGuard.Clamp(weather.Transition, 0f, 60f, 0.5f));
-                break;
-            case SetFogHoldMessage fog when PeerInRun:
-                DiagnosticLog.Info($"[Multiplayer] Peer: applying SetFogHold {(fog.FogHold is { } value ? value.ToString("F0") : "off")}.");
-                Plugin.Game.World.Map.SetFogHold(fog.FogHold is { } hold ? NetGuard.Clamp(hold, 0f, 100_000f) : null);
                 break;
             case AnnouncementMessage announcement when PeerInRun:
                 Plugin.Game.World.Announce(NetGuard.Clean(announcement.Text));

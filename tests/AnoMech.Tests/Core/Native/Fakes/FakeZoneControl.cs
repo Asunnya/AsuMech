@@ -41,7 +41,6 @@ internal sealed class FakeZoneControl(FakeCharacter player, SimTimeline timeline
         => timeline.Add("weather", id: weatherId.ToString(), name: "Weather", detail: $"transition={SimTimeline.F(transition, "F1")}");
     public void TickWeather() { }
     public void TickGuard() { }
-    public float? FogHold { get; set; }
     public bool InjectIncomingPacket(uint sourceEntityId, ushort opcode, ReadOnlySpan<byte> body, string what) => false;
     public void HoldSendFirewall(bool hold) { }
     public uint MaxActionEffectCounter => 0;
