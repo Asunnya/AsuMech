@@ -353,6 +353,7 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
     // nearest its own DodgeSlap spot: the slap-dodge follows with under 2s to get there. Each
     // shockwave then leans a few degrees off the diagonal toward the perpendicular of its own
     // cone so neither dodge stands on the (hit-counting) cone edge.
+    private const float SideTieTolerance = 1e-3f;
     private const float ArenaRadius = 20f;             // ~outer Black Hole ring (z=-17), tune in-game
     private const float ImplosionBorderInset = 1f;
     private const float ImplosionMinChaosDistance = 4f; // closer in, the lean clears the cone edge by too little
@@ -491,10 +492,12 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
 
         // Of alpha±45°, at least one clears the 8y half-width corridor (edge perpendicular
         // = edge·|sin(β-θ)|, ≥ 12.7y even with the hole on the line). Take the side farther
-        // from the line — the larger |sin(β-θ)| — which is always the safe one.
+        // from the line — the larger |sin(β-θ)| — which is always the safe one. A hole on the
+        // line or square to it ties, and the tie goes to `plus` on every client: a peer's copy
+        // of the hole stands a float rounding away from the host's.
         var plus = alpha + MathF.PI / 4f;
         var minus = alpha - MathF.PI / 4f;
-        var beta = MathF.Abs(MathF.Sin(plus - theta)) >= MathF.Abs(MathF.Sin(minus - theta)) ? plus : minus;
+        var beta = MathF.Abs(MathF.Sin(minus - theta)) > MathF.Abs(MathF.Sin(plus - theta)) + SideTieTolerance ? minus : plus;
 
         const float edge = 18f;   // ride out to the arena edge, past the hole's r=17 ring
         return new Vector3(edge * MathF.Sin(beta), 0f, -edge * MathF.Cos(beta));
