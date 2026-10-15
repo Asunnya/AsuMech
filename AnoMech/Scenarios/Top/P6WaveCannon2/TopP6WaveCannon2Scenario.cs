@@ -56,7 +56,7 @@ public sealed class TopP6WaveCannon2Scenario : IMultiplayerReplayable
     private void Run_Alpha_Omega_4000A771(bool solo)
     {
         SimEnemy? alpha_Omega_4000A771 = null;
-        world.Events.Add(0f, () => alpha_Omega_4000A771 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.AlphaOmega, NameId: BNpcNameId.AlphaOmega, Level: 90, Targetable: true, EnemyList: EnemyListMode.Always, Visibility: SpawnVisibility.Visible, LayoutId: 0x91E4E6, Placement: new Placement(new Vector3(0.000f, -0.000f, 0.000f), -MathF.PI))));
+        world.Events.Add(0f, () => alpha_Omega_4000A771 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.AlphaOmega, NameId: BNpcNameId.AlphaOmega, Level: 90, Targetable: true, EnemyList: EnemyListMode.Always, Visibility: SpawnVisibility.Visible, LayoutId: BNpcLayoutId.AlphaOmega, Placement: new Placement(new Vector3(0.000f, -0.000f, 0.000f), -MathF.PI))));
         world.Events.Add(0.5f, () => alpha_Omega_4000A771?.AddStatus(StatusId.CodeMi));
         world.Events.Add(1.90f, () => alpha_Omega_4000A771?.Cast(Actions.CosmoArrow, new Vector3(-0.008f, -0.015f, -0.008f)));
         if (solo) return;

@@ -107,7 +107,7 @@ public sealed class TopP2PartySynergyScenario : IMultiplayerReplayable
     private void Run_Omega_4000A4E9()
     {
         SimEnemy? omega_4000A4E9 = null;
-        world.Events.Add(0f, () => omega_4000A4E9 = world.SpawnEnemy(new EnemySpawnConfig(InitialModeAttributeFlags: 0x10, BNpcBaseId: BNpcBaseId.OmegaM, NameId: BNpcNameId.OmegaM_1DD3, Level: 90, Targetable: true, EnemyList: EnemyListMode.Always, Visibility: SpawnVisibility.Visible, LayoutId: 0x91D426, Placement: new Placement(new Vector3(-3f, 0f, 0f), MathF.PI))));
+        world.Events.Add(0f, () => omega_4000A4E9 = world.SpawnEnemy(new EnemySpawnConfig(InitialModeAttributeFlags: 0x10, BNpcBaseId: BNpcBaseId.OmegaM, NameId: BNpcNameId.OmegaM_1DD3, Level: 90, Targetable: true, EnemyList: EnemyListMode.Always, Visibility: SpawnVisibility.Visible, LayoutId: BNpcLayoutId.OmegaM, Placement: new Placement(new Vector3(-3f, 0f, 0f), MathF.PI))));
         world.Events.Add(1f, () => omega_4000A4E9?.AddStatus(StatusId.OmegaM_D7E, stacks: (ushort)490, overrideStacks: true));
         world.Events.Add(1.88f, () => omega_4000A4E9?.Cast(ActionId.PartySynergyM, animationLock: 3.1f));
         world.Events.Add(7.93f, () => omega_4000A4E9?.SetTargetable(false));
@@ -133,7 +133,7 @@ public sealed class TopP2PartySynergyScenario : IMultiplayerReplayable
     private void Run_Omega_4000A4E8()
     {
         SimEnemy? omega_4000A4E8 = null;
-        world.Events.Add(0f, () => omega_4000A4E8 = world.SpawnEnemy(new EnemySpawnConfig(InitialModeAttributeFlags: 0x10, BNpcBaseId: BNpcBaseId.OmegaF, NameId: BNpcNameId.OmegaM_1DD3, Level: 90, Targetable: true, EnemyList: EnemyListMode.Always, Visibility: SpawnVisibility.Visible, LayoutId: 0x91D427, Placement: new Placement(new Vector3(3f, 0f, 0f), MathF.PI))));
+        world.Events.Add(0f, () => omega_4000A4E8 = world.SpawnEnemy(new EnemySpawnConfig(InitialModeAttributeFlags: 0x10, BNpcBaseId: BNpcBaseId.OmegaF, NameId: BNpcNameId.OmegaM_1DD3, Level: 90, Targetable: true, EnemyList: EnemyListMode.Always, Visibility: SpawnVisibility.Visible, LayoutId: BNpcLayoutId.OmegaF, Placement: new Placement(new Vector3(3f, 0f, 0f), MathF.PI))));
         world.Events.Add(1f, () => omega_4000A4E8?.AddStatus(StatusId.OmegaF, stacks: (ushort)491, overrideStacks: true));
         world.Events.Add(1.92f, () => omega_4000A4E8?.Cast(ActionId.PartySynergyF, animationLock: 3.1f));
         world.Events.Add(7.98f, () => omega_4000A4E8?.SetTargetable(false));
@@ -159,7 +159,7 @@ public sealed class TopP2PartySynergyScenario : IMultiplayerReplayable
     private void Run_Omega_F_4000A4FD()
     {
         SimEnemy? omega_F_4000A4FD = null;
-        world.Events.Add(2.23f, () => omega_F_4000A4FD = world.SpawnEnemy(new EnemySpawnConfig(InitialModeAttributeFlags: OmegaAttack.SpawnAttributeFlags, BNpcBaseId: BNpcBaseId.OmegaFClone, NameId: BNpcNameId.OmegaF, Level: 90, Targetable: false, EnemyList: EnemyListMode.OnlyWhenVisible, Visibility: SpawnVisibility.HiddenUntilShown, LayoutId: 0x91D42B, Placement: new Placement(new Vector3(0.000f, -0.000f, 0.000f), 3.140f))));
+        world.Events.Add(2.23f, () => omega_F_4000A4FD = world.SpawnEnemy(new EnemySpawnConfig(InitialModeAttributeFlags: OmegaAttack.SpawnAttributeFlags, BNpcBaseId: BNpcBaseId.OmegaFClone, NameId: BNpcNameId.OmegaF, Level: 90, Targetable: false, EnemyList: EnemyListMode.OnlyWhenVisible, Visibility: SpawnVisibility.HiddenUntilShown, LayoutId: BNpcLayoutId.OmegaFClone, Placement: new Placement(new Vector3(0.000f, -0.000f, 0.000f), 3.140f))));
         world.Events.Add(10.07f, () => state.AttackF.Reshape(omega_F_4000A4FD));
         world.Events.Add(10.07f, () => omega_F_4000A4FD?.SetPosition(state.AttackDir.Apply(new Placement(new Vector3(0f, 0f, -10f), 0))));
         world.Events.Add(10.16f, () => omega_F_4000A4FD?.PlayActionTimeline(ActionTimelineId.WarpEnd));
@@ -171,7 +171,7 @@ public sealed class TopP2PartySynergyScenario : IMultiplayerReplayable
     private void Run_Omega_M_4000A4FE()
     {
         SimEnemy? omega_M_4000A4FE = null;
-        world.Events.Add(2.23f, () => omega_M_4000A4FE = world.SpawnEnemy(new EnemySpawnConfig(InitialModeAttributeFlags: OmegaAttack.SpawnAttributeFlags, BNpcBaseId: BNpcBaseId.OmegaMClone, NameId: BNpcNameId.OmegaM, Level: 90, Targetable: false, EnemyList: EnemyListMode.OnlyWhenVisible, Visibility: SpawnVisibility.HiddenUntilShown, LayoutId: 0x91D42A, Placement: new Placement(new Vector3(0.000f, -0.000f, 0.000f), 3.140f))));
+        world.Events.Add(2.23f, () => omega_M_4000A4FE = world.SpawnEnemy(new EnemySpawnConfig(InitialModeAttributeFlags: OmegaAttack.SpawnAttributeFlags, BNpcBaseId: BNpcBaseId.OmegaMClone, NameId: BNpcNameId.OmegaM, Level: 90, Targetable: false, EnemyList: EnemyListMode.OnlyWhenVisible, Visibility: SpawnVisibility.HiddenUntilShown, LayoutId: BNpcLayoutId.OmegaMClone, Placement: new Placement(new Vector3(0.000f, -0.000f, 0.000f), 3.140f))));
         world.Events.Add(10.07f, () => state.AttackM.Reshape(omega_M_4000A4FE));
         world.Events.Add(10.07f, () => omega_M_4000A4FE?.SetPosition(state.AttackDir.Flip().Apply(new Placement(new Vector3(0, 0, -10f), 0f))));
         world.Events.Add(10.16f, () => omega_M_4000A4FE?.PlayActionTimeline(ActionTimelineId.WarpEnd));
@@ -185,7 +185,7 @@ public sealed class TopP2PartySynergyScenario : IMultiplayerReplayable
         for (int i = 0; i < 4; i++) {
             SimEnemy? omega_M_4000A4FF = null;
             var position = state.NewNorthB.Rotate(1 + i * 2).Apply(new Placement(new Vector3(0, 0, -13), 0));
-            world.Events.Add(2.23f, () => omega_M_4000A4FF = world.SpawnEnemy(new EnemySpawnConfig(InitialModeAttributeFlags: OmegaAttack.SpawnAttributeFlags, BNpcBaseId: BNpcBaseId.OmegaMClone, NameId: BNpcNameId.OmegaM, Level: 90, Targetable: false, EnemyList: EnemyListMode.OnlyWhenVisible, Visibility: SpawnVisibility.HiddenUntilShown, LayoutId: 0x91D42A, Placement: new Placement(new Vector3(0.000f, -0.000f, 0.000f), 3.140f))));
+            world.Events.Add(2.23f, () => omega_M_4000A4FF = world.SpawnEnemy(new EnemySpawnConfig(InitialModeAttributeFlags: OmegaAttack.SpawnAttributeFlags, BNpcBaseId: BNpcBaseId.OmegaMClone, NameId: BNpcNameId.OmegaM, Level: 90, Targetable: false, EnemyList: EnemyListMode.OnlyWhenVisible, Visibility: SpawnVisibility.HiddenUntilShown, LayoutId: BNpcLayoutId.OmegaMClone, Placement: new Placement(new Vector3(0.000f, -0.000f, 0.000f), 3.140f))));
             world.Events.Add(10.07f, () => omega_M_4000A4FF?.SetPosition(position));
             world.Events.Add(16.17f, () => omega_M_4000A4FF?.PlayActionTimeline(ActionTimelineId.WarpEnd));
             world.Events.Add(31.82f, () => omega_M_4000A4FF?.Cast(Actions.EfficientBladework));
@@ -197,7 +197,7 @@ public sealed class TopP2PartySynergyScenario : IMultiplayerReplayable
     private void Run_Optical_Unit_4000A3E7()
     {
         SimEnemy? optical_Unit_4000A3E7 = null;
-        world.Events.Add(0f, () => optical_Unit_4000A3E7 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.OpticalUnit, NameId: BNpcNameId.OpticalUnit, Level: 90, Targetable: false, EnemyList: EnemyListMode.Never, Visibility: SpawnVisibility.HiddenUntilShown, LayoutId: 0x91D42D, Placement: new Placement(new Vector3(0.150f, 0.000f, -0.600f), -0.000f))));
+        world.Events.Add(0f, () => optical_Unit_4000A3E7 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.OpticalUnit, NameId: BNpcNameId.OpticalUnit, Level: 90, Targetable: false, EnemyList: EnemyListMode.Never, Visibility: SpawnVisibility.HiddenUntilShown, LayoutId: BNpcLayoutId.OpticalUnit, Placement: new Placement(new Vector3(0.150f, 0.000f, -0.600f), -0.000f))));
         world.Events.Add(7.93f, () => optical_Unit_4000A3E7?.SetPosition(state.NewNorthA.Apply(new Placement(new Vector3(0f, 0f, 45f), MathF.PI))));
         world.Events.Add(20.76f, () => optical_Unit_4000A3E7?.Cast(Actions.OpticalLaser));
         

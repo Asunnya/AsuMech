@@ -141,7 +141,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
                 new EnemySpawnConfig(
                     BNpcBaseId: BNpcBaseId.UltimaWeapon,
                     NameId: BNpcNameId.UltimaWeapon,
-                    LayoutId: 0x701FD7,
+                    LayoutId: BNpcLayoutId.UltimaWeapon,
                     Level: 70,
                     Targetable: true,
                     EnemyList: EnemyListMode.Always,
@@ -156,7 +156,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
                 new EnemySpawnConfig(
                     BNpcBaseId: BNpcBaseId.Garuda,
                     NameId: BNpcNameId.Garuda,
-                    LayoutId: 0x701FBF,
+                    LayoutId: BNpcLayoutId.Garuda,
                     Level: 70,
                     Targetable: false,
                     EnemyList: EnemyListMode.Never,
@@ -172,7 +172,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
                 new EnemySpawnConfig(
                     BNpcBaseId: BNpcBaseId.Ifrit,
                     NameId: BNpcNameId.Ifrit,
-                    LayoutId: 0x701FC8,
+                    LayoutId: BNpcLayoutId.Ifrit,
                     Level: 70,
                     Targetable: false,
                     EnemyList: EnemyListMode.Never,
@@ -189,7 +189,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
                 new EnemySpawnConfig(
                     BNpcBaseId: BNpcBaseId.Titan,
                     NameId: BNpcNameId.Titan,
-                    LayoutId: 0x701FCE,
+                    LayoutId: BNpcLayoutId.Titan,
                     Level: 70,
                     Targetable: false,
                     EnemyList: EnemyListMode.Never,
@@ -206,7 +206,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
                 new EnemySpawnConfig(
                     BNpcBaseId: BNpcBaseId.SuparnaChirada,
                     NameId: BNpcNameId.Chirada,
-                    LayoutId: 0x70205C,
+                    LayoutId: BNpcLayoutId.Chirada,
                     Level: 70,
                     Targetable: false,
                     EnemyList: EnemyListMode.Never,
@@ -222,7 +222,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
                 new EnemySpawnConfig(
                     BNpcBaseId: BNpcBaseId.SuparnaChirada,
                     NameId: BNpcNameId.Suparna,
-                    LayoutId: 0x70205B,
+                    LayoutId: BNpcLayoutId.Suparna,
                     Level: 70,
                     Targetable: false,
                     EnemyList: EnemyListMode.Never,
@@ -240,7 +240,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
                 new EnemySpawnConfig(
                     BNpcBaseId: BNpcBaseId.Dummy,
                     NameId: BNpcNameId.Dummy,
-                    LayoutId: 0x704D3F,
+                    LayoutId: BNpcLayoutId.Dummy,
                     Level: 1,
                     Targetable: false,
                     EnemyList: EnemyListMode.Never,
@@ -538,7 +538,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
             new EnemySpawnConfig(
                 BNpcBaseId: BNpcBaseId.GraniteGaol,
                 NameId: BNpcNameId.GraniteGaol,
-                LayoutId: 0x701FD3,
+                LayoutId: BNpcLayoutId.GraniteGaol,
                 Level: 70,
                 Targetable: false,
                 EnemyList: EnemyListMode.Manual,
@@ -618,7 +618,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
                 Visibility: SpawnVisibility.Visible,
                 DisplayFlags: 0x40008,
                 Engaged: false,
-                LayoutId: 0x701FC2,
+                LayoutId: BNpcLayoutId.RazorPlume,
                 Placement: placement,
                 InitialModeAttributeFlags: 0x0
                 )

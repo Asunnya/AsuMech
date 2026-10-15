@@ -39,12 +39,12 @@ public sealed class UcobZone : IZone
     // TODO: Spotted issue with rendering, arena appears dependent on inn the sim starts in
     public void Run(SimWorld world)
     {
-        var deathWall = SpawnArenaEObj(world, 0x6C7D48, 0x6BF5D1, 1);
-        p5Arena = SpawnArenaEObj(world, 0x6D0C52, 0x6D0597, 1);
-        SpawnArenaEObj(world, 0x6C641C, 0x6D0616, 1);
-        SpawnArenaEObj(world, 0x6C0E8A, 0x6B6DD9, 4);
-        SpawnArenaEObj(world, 0x6C0D4C, 0x6B6DBB, 1);
-        SpawnArenaEObj(world, 0x6C0D4B, 0x6B6CB2, 1);
+        var deathWall = SpawnArenaEObj(world, UcobConstants.ArenaLayoutId.DeathWall, 0x6BF5D1, 1);
+        p5Arena = SpawnArenaEObj(world, UcobConstants.ArenaLayoutId.P5Arena, 0x6D0597, 1);
+        SpawnArenaEObj(world, UcobConstants.ArenaLayoutId.Piece1, 0x6D0616, 1);
+        SpawnArenaEObj(world, UcobConstants.ArenaLayoutId.Piece2, 0x6B6DD9, 4);
+        SpawnArenaEObj(world, UcobConstants.ArenaLayoutId.Piece3, 0x6B6DBB, 1);
+        SpawnArenaEObj(world, UcobConstants.ArenaLayoutId.Piece4, 0x6B6CB2, 1);
         world.Events.Add(ArenaBeatAt, () => deathWall?.PlayBeat(4, 0x8));
     }
 
