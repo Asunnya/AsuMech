@@ -249,7 +249,11 @@ public sealed partial class MultiplayerManager
             TickHostEntry(deltaSeconds);
             if (Plugin.Game.ActiveScenario != null)
             {
-                hostScenarioStarted = true;
+                if (!hostScenarioStarted)
+                {
+                    hostScenarioStarted = true;
+                    AnnounceStart();
+                }
             }
             else if (!hostScenarioStarted)
             {

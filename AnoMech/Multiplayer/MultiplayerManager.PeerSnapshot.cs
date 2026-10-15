@@ -151,15 +151,13 @@ public sealed partial class MultiplayerManager
         if (IsHost || peerRunStarted || clock is null) return;
         if (!running || !peerEnteredInstance || peerRunParams is not { } p) return;
         peerRunStarted = true;
-        hostClockAtStart = clock;
-        hostClockReceivedAt = Time.GetTimestamp();
-        eventClockSynced = false;
-        pingClock = null;
+        var receivedAt = Time.GetTimestamp();
         if (peerNatives != null) peerNatives.HostOwnsArena = true;
-        Plugin.Game.StartScenario(p, OnPeerStartResolved);
+        Plugin.Game.StartScenario(p, refusal => OnPeerStartResolved(refusal, clock, receivedAt));
     }
 
-    private void OnPeerStartResolved(string? refusal)
+    // The clock syncs to the host's once the run is up: starting it sets it to zero.
+    private void OnPeerStartResolved(string? refusal, RunClockState clock, long receivedAt)
     {
         if (!running) return;
         if (refusal != null)
@@ -168,6 +166,10 @@ public sealed partial class MultiplayerManager
             AbortStart(refusal);
             return;
         }
+        hostClockAtStart = clock;
+        hostClockReceivedAt = receivedAt;
+        eventClockSynced = false;
+        pingClock = null;
         DiagnosticLog.Info("[Multiplayer] Peer's run is up -- applying the host's packets and sending SelfPose.");
         peerNatives?.TagSeats(Plugin.Game.World.Party, RemoteSeats());
         TryStartDebugBotReplay();

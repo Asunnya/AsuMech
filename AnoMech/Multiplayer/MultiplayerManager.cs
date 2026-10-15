@@ -787,11 +787,11 @@ public sealed partial class MultiplayerManager : IDisposable
 
     private LobbyStateMessage LobbyMessage() => Session.ToMessage() with { Clock = HostRunClock() };
 
-    // Null until the host's own run is up, so a broadcast while the start is queued can't hand
-    // out the idle clock.
+    // Null until the host's own run has had its first tick, so a broadcast while the start is
+    // queued can't hand out the idle clock, nor the zero it reads before that tick.
     private RunClockState? HostRunClock()
     {
-        if (!IsHost || !running || Plugin.Game.ActiveScenario is null) return null;
+        if (!IsHost || !running || !hostScenarioStarted || Plugin.Game.ActiveScenario is null) return null;
         return new RunClockState(EventClockNow(), averageFrameSeconds);
     }
 
@@ -1040,6 +1040,11 @@ public sealed partial class MultiplayerManager : IDisposable
             return;
         }
         recorder?.TagSeats(Plugin.Game.World.Party);
+    }
+
+    // On the run's first tick, when its clock reads what a peer syncs to.
+    private void AnnounceStart()
+    {
         FlushPackets(force: true);
         _ = Send(LobbyMessage());
         _ = Send(new StartMessage(HostRunClock()));
