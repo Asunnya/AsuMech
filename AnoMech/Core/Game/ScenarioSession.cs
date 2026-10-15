@@ -15,7 +15,7 @@ public enum SessionMode
     Local,
     // Runs the scenario for a multiplayer lobby.
     Host,
-    // Sets the same stage but never runs or ticks the scenario's own logic; the host's snapshots
+    // Sets the same stage but never runs or ticks the scenario's own logic; the host's packets
     // drive the run.
     Peer,
 }
@@ -33,8 +33,8 @@ public sealed class ScenarioSession
 
     // Bardam's Mettle's Success/Failure marks (Checkmark/X): unnamed actions whose AnimationEnd
     // gimmick timeline plays the mark on the target.
-    private const uint MechanicSuccessAction = 9450;
-    private const uint MechanicFailureAction = 9451;
+    public const uint MechanicSuccessActionId = 9450;
+    public const uint MechanicFailureActionId = 9451;
 
     private readonly SimWorld world;
     private readonly InstanceSession instance;
@@ -188,7 +188,7 @@ public sealed class ScenarioSession
         if (deathOccurred) return;
         var clean = lastMistakeElapsed is null;
         if (clean && Plugin.Config.EnableMechanicResultMarks)
-            world.Party.Player?.PlayAction(MechanicSuccessAction, animationLock: 0f);
+            world.Party.Player?.PlayAction(MechanicSuccessActionId, animationLock: 0f);
         Finished?.Invoke(clean);
     }
 
@@ -204,7 +204,7 @@ public sealed class ScenarioSession
         {
             lastMistakeElapsed = elapsed;
             if (Plugin.Config.EnableMechanicResultMarks)
-                world.Party.Player?.PlayAction(MechanicFailureAction, animationLock: 0f);
+                world.Party.Player?.PlayAction(MechanicFailureActionId, animationLock: 0f);
         }
     }
 

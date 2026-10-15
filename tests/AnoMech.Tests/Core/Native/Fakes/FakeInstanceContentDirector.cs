@@ -13,6 +13,8 @@ internal sealed class FakeInstanceContentDirector(FakeZoneControl zone, SimTimel
         return zone.IsActive;
     }
 
-    public void SetDirectorData(byte sequence, byte unknown, byte[] unionData) { }
-    public void Commence() { }
+    public void SetDirectorData(byte sequence, byte unknown, byte[] unionData)
+        => timeline.Add("director_data", id: sequence.ToString(), detail: $"unknown={unknown} data={Convert.ToHexString(unionData)}");
+
+    public void Commence() => timeline.Add("commence");
 }

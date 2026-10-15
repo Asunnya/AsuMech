@@ -122,13 +122,6 @@ internal sealed class SimulatedMotion : CharacterMotion, INavigated
         forcedMove = null;
     }
 
-    // A walk driven from outside the navigator: a peer's copy following the host's snapshots.
-    public void StepTo(Vector3 next, Vector3 glide, float speed)
-    {
-        placed = true;
-        Step(next, glide, speed, arrived: false);
-    }
-
     public override void Force(ForcedMove move)
     {
         switch (move)

@@ -48,7 +48,6 @@ public class SimEventObject : ISimObject, IPositioned
 
     public uint EObjRowId => SpawnConfig.EObjId;
 
-    // Lets a peer reconstruct the same prop.
     public EventObjectSpawnConfig SpawnConfig { get; }
 
     public bool IsAlive => obj != null;

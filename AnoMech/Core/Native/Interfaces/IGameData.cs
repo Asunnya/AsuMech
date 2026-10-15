@@ -16,6 +16,8 @@ public interface IGameData
     // Null for a missing row or an empty name.
     string? BNpcName(uint nameId);
 
+    bool WeatherExists(byte weatherId);
+
     bool FileExists(string path);
 }
 

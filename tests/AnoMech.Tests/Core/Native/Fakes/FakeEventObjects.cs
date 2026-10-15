@@ -12,9 +12,12 @@ internal sealed class FakeEventObjects(SimTimeline timeline) : IEventObjects
 
     private readonly FakeEventObject?[] slots = new FakeEventObject?[SlotCount];
 
+    // As FakeBattleCharas.SlotOffset.
+    public int SlotOffset { get; set; }
+
     public IEventObjectProxy? Spawn(EventObjectSpawnConfig config, Placement placement)
     {
-        var slot = Array.FindIndex(slots, o => o is not { Exists: true });
+        var slot = FindFreeSlot();
         if (slot < 0) return null;
         var entityId = config.EntityId != 0 ? config.EntityId : EntityIdBase + (uint)slot;
         timeline.Add("eobj_spawn", entityId, $"EObj{config.EObjId}", config.EObjId.ToString(), "EObj", position: placement.Position,
@@ -25,5 +28,15 @@ internal sealed class FakeEventObjects(SimTimeline timeline) : IEventObjects
         var obj = new FakeEventObject(slot, entityId, placement.Position, placement.Rotation, timeline, $"EObj{config.EObjId}");
         slots[slot] = obj;
         return obj;
+    }
+
+    private int FindFreeSlot()
+    {
+        for (var k = 0; k < slots.Length; k++)
+        {
+            var i = (SlotOffset + k) % slots.Length;
+            if (slots[i] is not { Exists: true }) return i;
+        }
+        return -1;
     }
 }

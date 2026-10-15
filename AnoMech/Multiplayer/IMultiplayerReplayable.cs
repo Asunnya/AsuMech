@@ -26,16 +26,16 @@ public interface IMultiplayerReplayable : IScenario
     // Optional, peer-only: applies whatever BuildMidRunUpdateMessage produced.
     void ApplyMidRunUpdate(object shadowState, MpMessage message) { }
 
-    // Optional, peer-only, every snapshot: re-resolve SimEnemy handles that hadn't replicated
-    // yet when StartReplay ran.
+    // Optional, peer-only, every frame: re-resolve SimEnemy handles that hadn't reached this
+    // client yet when StartReplay ran. peerEnemies: this client's copies of the host's enemies.
     void RefreshLiveHandles(object shadowState, IReadOnlyDictionary<int, SimEnemy> peerEnemies) { }
 
     // Optional, peer-only, every frame: per-frame Ai work the scenario's own Tick drives on the
     // host, since a peer never runs that Tick.
     void TickReplay(object shadowState, float deltaSeconds) { }
 
-    // Optional, peer-only, every snapshot, after `obstacles` was cleared: a bot-driven peer's
-    // steering obstacles, rebuilt from the replicated world since the scenario's own Obstacles
-    // calls never run there.
+    // Optional, peer-only, every frame, after `obstacles` was cleared: a bot-driven peer's
+    // steering obstacles, rebuilt from what this client was shown, since the scenario's own
+    // Obstacles calls never run there.
     void RebuildPeerObstacles(ObstacleField obstacles, IReadOnlyDictionary<int, SimEnemy> peerEnemies, IReadOnlyDictionary<int, SimEventObject> peerEventObjects, SimCharacter? localPlayer) { }
 }

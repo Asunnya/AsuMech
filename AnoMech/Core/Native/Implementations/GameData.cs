@@ -9,6 +9,7 @@ using LuminaModelSkeleton = Lumina.Excel.Sheets.ModelSkeleton;
 using LuminaStatus = Lumina.Excel.Sheets.Status;
 using LuminaTerritoryType = Lumina.Excel.Sheets.TerritoryType;
 using LuminaContentFinderCondition = Lumina.Excel.Sheets.ContentFinderCondition;
+using LuminaWeather = Lumina.Excel.Sheets.Weather;
 
 namespace AnoMech.Core.Native.Implementations;
 
@@ -75,6 +76,8 @@ internal sealed class GameData : IGameData
 
     public string? BNpcName(uint nameId)
         => Plugin.DataManager.GetExcelSheet<LuminaBNpcName>().TryGetRow(nameId, out var row) ? NonEmpty(row.Singular.ExtractText()) : null;
+
+    public bool WeatherExists(byte weatherId) => Plugin.DataManager.GetExcelSheet<LuminaWeather>().HasRow(weatherId);
 
     public bool FileExists(string path) => Plugin.DataManager.FileExists(path);
 

@@ -2,7 +2,8 @@ using AnoMech.Core.Native.Interfaces;
 
 namespace AnoMech.Tests;
 
-// The game client behind Natives for a headless run.
+// The game client behind Natives for a headless run. A multiplayer test runs one per client and
+// Activates whichever it is driving.
 internal sealed class FakeGame
 {
     public SimTimeline Timeline { get; } = new();
@@ -13,40 +14,64 @@ internal sealed class FakeGame
     public FakeMapEffects MapEffects { get; }
     public FakeUserActions UserActions { get; } = new();
     public FakeLocalPlayerInput PlayerInput { get; } = new();
-    public FakePlayerConditions PlayerConditions { get; } = new();
+    public FakePlayerConditions PlayerConditions { get; }
+
+    private readonly FakeRsvFunctions rsv = new();
+    private readonly DataminingGameData data;
+    private readonly FakeActionTimelinePreload timelinePreload = new();
+    private readonly FakeLayoutFunctions layout = new();
+    private readonly FakeInstanceContentDirector director;
+    private readonly FakeRsfFunctions rsf = new();
+    private readonly FakePartyHud partyHud = new();
+    private readonly FakeHaterList haterList;
+    private readonly FakeLimitBreakController limitBreak = new();
+    private readonly FakeWaymarks waymarks = new();
+    private readonly FakeBgm bgm;
 
     private FakeGame()
     {
+        data = new DataminingGameData(rsv);
         BattleCharas = new FakeBattleCharas(Timeline);
         EventObjects = new FakeEventObjects(Timeline);
         MapEffects = new FakeMapEffects(Timeline);
         Zone = new FakeZoneControl(BattleCharas.Player, Timeline);
+        PlayerConditions = new FakePlayerConditions(Timeline);
+        director = new FakeInstanceContentDirector(Zone, Timeline);
+        haterList = new FakeHaterList(Timeline);
+        bgm = new FakeBgm(Timeline);
     }
 
     public static FakeGame Install()
     {
-        var game = new FakeGame();
-        var rsv = new FakeRsvFunctions();
-        Natives.Data = new DataminingGameData(rsv);
-        Natives.BattleCharas = game.BattleCharas;
-        Natives.EventObjects = game.EventObjects;
-        Natives.PlayerInput = game.PlayerInput;
-        Natives.UserActions = game.UserActions;
-        Natives.TimelinePreload = new FakeActionTimelinePreload();
-        Natives.Zone = game.Zone;
-        Natives.MapEffects = game.MapEffects;
-        Natives.Layout = new FakeLayoutFunctions();
-        Natives.Director = new FakeInstanceContentDirector(game.Zone, game.Timeline);
-        Natives.Rsv = rsv;
-        Natives.Rsf = new FakeRsfFunctions();
-        Natives.PartyHud = new FakePartyHud();
-        Natives.HaterList = new FakeHaterList(game.Timeline);
-        Natives.PlayerConditions = game.PlayerConditions;
-        Natives.LimitBreak = new FakeLimitBreakController();
-        Natives.Waymarks = new FakeWaymarks();
-        Natives.Bgm = new FakeBgm(game.Timeline);
-        DalamudServices.Install(nameof(Plugin.Framework), game.Framework);
+        var game = Create();
+        game.Activate();
         return game;
+    }
+
+    public static FakeGame Create() => new();
+
+    // Points Natives and Plugin.Framework at this client's fakes.
+    public void Activate()
+    {
+        Natives.Data = data;
+        Natives.BattleCharas = BattleCharas;
+        Natives.EventObjects = EventObjects;
+        Natives.PlayerInput = PlayerInput;
+        Natives.UserActions = UserActions;
+        Natives.TimelinePreload = timelinePreload;
+        Natives.Zone = Zone;
+        Natives.MapEffects = MapEffects;
+        Natives.Layout = layout;
+        Natives.Director = director;
+        Natives.Rsv = rsv;
+        Natives.Rsf = rsf;
+        Natives.PartyHud = partyHud;
+        Natives.HaterList = haterList;
+        Natives.PlayerConditions = PlayerConditions;
+        Natives.LimitBreak = limitBreak;
+        Natives.Waymarks = waymarks;
+        Natives.Bgm = bgm;
+        DalamudServices.Install(nameof(Plugin.Framework), Framework);
     }
 
     // One client frame in the real order: Dalamud drains queued Framework.Run work, then raises

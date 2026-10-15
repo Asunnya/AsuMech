@@ -17,12 +17,14 @@ namespace AnoMech.Multiplayer;
 [JsonDerivedType(typeof(LobbyStateMessage), "lobby")]
 [JsonDerivedType(typeof(ClaimRoleMessage), "claim")]
 [JsonDerivedType(typeof(ReleaseRoleMessage), "release")]
+[JsonDerivedType(typeof(EnterMessage), "enter")]
+[JsonDerivedType(typeof(EnteredMessage), "entered")]
 [JsonDerivedType(typeof(StartMessage), "start")]
 [JsonDerivedType(typeof(StartCheckMessage), "startCheck")]
 [JsonDerivedType(typeof(StartCheckResponseMessage), "startCheckResponse")]
 [JsonDerivedType(typeof(StartAbortMessage), "startAbort")]
 [JsonDerivedType(typeof(SelfPoseMessage), "pose")]
-[JsonDerivedType(typeof(WorldSnapshotMessage), "snapshot")]
+[JsonDerivedType(typeof(GamePacketsMessage), "packets")]
 [JsonDerivedType(typeof(RolesSnapshotMessage), "rolesSnapshot")]
 [JsonDerivedType(typeof(RoleKilledMessage), "killed")]
 [JsonDerivedType(typeof(KnockbackMessage), "knockback")]
@@ -40,9 +42,6 @@ namespace AnoMech.Multiplayer;
 [JsonDerivedType(typeof(AiReplayStateMessage), "aiReplayState")]
 [JsonDerivedType(typeof(P2AiReplayStateMessage), "p2AiReplayState")]
 [JsonDerivedType(typeof(P2LockonsUpdateMessage), "p2LockonsUpdate")]
-[JsonDerivedType(typeof(MapEffectMessage), "mapEffect")]
-[JsonDerivedType(typeof(MapDirectorUpdateMessage), "mapDirectorUpdate")]
-[JsonDerivedType(typeof(SetWeatherMessage), "setWeather")]
 [JsonDerivedType(typeof(AnnouncementMessage), "announcement")]
 [JsonDerivedType(typeof(P4AiReplayStateMessage), "p4AiReplayState")]
 [JsonDerivedType(typeof(P5AiReplayStateMessage), "p5AiReplayState")]
@@ -111,6 +110,12 @@ public sealed record ReleaseRoleMessage(Guid PeerId) : MpMessage;
 // a fresh Hello included, until unbanned.
 public sealed record KickMessage(Guid PeerId, bool Banned = false) : MpMessage, IHostOnlyMessage;
 
+// After the start check: everyone zones in and sets the run's stage (Game.PrepareRun), answering
+// with EnteredMessage; the host starts once all have.
+public sealed record EnterMessage : MpMessage, IHostOnlyMessage;
+
+public sealed record EnteredMessage(Guid PeerId) : MpMessage;
+
 public sealed record StartMessage(RunClockState? Clock = null) : MpMessage, IHostOnlyMessage;
 
 // Sent before StartMessage; every claimed peer answers, so "can't start" reaches the host
@@ -126,67 +131,17 @@ public sealed record StartAbortMessage(Guid PeerId, string Reason) : MpMessage;
 // Peer -> host. Applied to that peer's SimNetworkPuppet and republished in the next Roles list.
 public sealed record SelfPoseMessage(Guid PeerId, float X, float Y, float Z, float Rotation) : MpMessage;
 
-// One SimEnemy as the host has it. NetId is a host-assigned per-run id. Cast* fields mirror
-// SimCast rather than a sheet, which wouldn't match a scenario's synthetic helper actions. The
-// Seq counters are the edge triggers: an effect never sets IsCasting. Targets resolve by
-// NetId/role since a GameObjectId means nothing across clients.
-public sealed record EnemyStatusState(ushort StatusId, ushort Stacks, float RemainingTime, int Instance = 0);
+// The players' seats, the host's own included, where the host has them.
+public sealed record RoleState(PartyRole Role, float X, float Y, float Z, float Rotation);
 
-// Engine-level actor state a scenario drives directly: the AnimLock a VFX-only cue needs.
-// Edge-triggered on its seq, because the run animation and the cast pipeline write the same
-// native field every frame.
-public sealed record ActorEngineState(byte Mode, byte ModeParam, int ModeSeq);
-
-// Cast* and Effect* are the host's last ActorCast and ActionEffect packets, which a peer replays
-// field for field; CancelSeq its interrupts.
-public sealed record EnemyState(
-    int NetId, uint BNpcBaseId, uint NameId, byte Level, bool Targetable,
-    EnemyListMode EnemyList, uint ModelCharaId,
-    byte? InitialModeAttributeFlags, SpawnVisibility Visibility, byte ModelState,
-    IReadOnlyList<EnemyStatusState> Statuses,
-    int? AnimationStateArg2, int? AnimationStateArg3, int AnimationStateSeq,
-    float X, float Y, float Z, float Rotation,
-    bool IsCasting, int CastSeq, uint CastActionId, float CastSeconds, float CastOmenDelay, float CastRotation,
-    float? CastTargetX, float? CastTargetY, float? CastTargetZ,
-    int? CastTargetEnemyNetId, PartyRole? CastTargetRole,
-    int CancelSeq,
-    int EffectSeq, uint EffectActionId, float EffectAnimationLock, byte EffectAnimationVariation, float EffectRotation,
-    float? EffectX, float? EffectY, float? EffectZ,
-    int? EffectAnimationTargetEnemyNetId, PartyRole? EffectAnimationTargetRole,
-    int? EffectActionTargetEnemyNetId, PartyRole? EffectActionTargetRole,
-    ActorEngineState? Engine = null);
-
-// Each end resolves to a live enemy (by NetId) or a party role.
-public sealed record TetherState(int NetId, ushort TetherId, int? AEnemyNetId, PartyRole? ARole, int? BEnemyNetId, PartyRole? BRole);
-
-// Host-authoritative even for a peer's own role: a peer runs no scenario logic, so statuses
-// and HP come from here.
-public sealed record RoleState(
-    PartyRole Role, bool Filled, bool Dead, float X, float Y, float Z, float Rotation,
-    IReadOnlyList<EnemyStatusState> Statuses,
-    uint CurrentHp, uint MaxHp);
-
-// LayoutId picks the SharedGroup the engine attaches; 0 requests the wrong one. EventId binds
-// the prop to the instance director as the real spawn packets do.
-public sealed record EventObjectState(
-    int NetId, uint EObjId, ushort TimelineState,
-    float X, float Y, float Z, float Rotation, uint LayoutId,
-    uint EventId = 0, uint EntityId = 0, byte TargetableStatus = 1, uint Arg2 = 0);
-
-// Full-state, so a dropped frame costs one tick of staleness, not a wrong reconstruction.
-public sealed record WorldSnapshotMessage(
-    List<EnemyState> Enemies, List<TetherState> Tethers,
-    List<EventObjectState> EventObjects) : MpMessage, IHostOnlyMessage;
-
-// Paced independently of WorldSnapshotMessage (see RelayClient's priority queue): role
-// positions are small and urgent, enemy data can be large.
 public sealed record RolesSnapshotMessage(List<RoleState> Roles) : MpMessage, IHostOnlyMessage;
 
 // One per Game.PartyMemberKilled; the recipient kills whatever holds that role locally.
 public sealed record RoleKilledMessage(PartyRole Role, string Cause) : MpMessage, IHostOnlyMessage;
 
-// One per knockback on a SimNetworkPuppet, applied to whoever holds that role locally.
-public sealed record KnockbackMessage(PartyRole Role, float SourceX, float SourceY, float SourceZ, float Distance, float Speed) : MpMessage, IHostOnlyMessage;
+// One per knockback on a SimNetworkPuppet, applied to whoever holds that role locally. Row: the
+// Knockback sheet row, whose ActionEffect entry that seat's own client applies itself.
+public sealed record KnockbackMessage(PartyRole Role, float SourceX, float SourceY, float SourceZ, uint Row) : MpMessage, IHostOnlyMessage;
 
 // The other forced movements a scenario applies to a party member, each from the matching
 // ForcedMove on a SimNetworkPuppet. Push takes DurationSeconds when > 0, else Distance / Speed;
@@ -194,7 +149,7 @@ public sealed record KnockbackMessage(PartyRole Role, float SourceX, float Sourc
 public sealed record TeleportMessage(PartyRole Role, float X, float Y, float Z, float Rotation) : MpMessage, IHostOnlyMessage;
 public sealed record PushMessage(PartyRole Role, float Heading, float Distance, float Speed, float DurationSeconds) : MpMessage, IHostOnlyMessage;
 public sealed record CarryMessage(PartyRole Role, float X, float Y, float Z) : MpMessage, IHostOnlyMessage;
-public sealed record FollowMessage(PartyRole Role, PartyRole? TargetRole, int? TargetEnemyNetId, float Speed) : MpMessage, IHostOnlyMessage;
+public sealed record FollowMessage(PartyRole Role, PartyRole? TargetRole, uint TargetEnemy, float Speed) : MpMessage, IHostOnlyMessage;
 
 // ReturnedToInn distinguishes Reset() (stays in-zone) from Leave() (unloads); both clear
 // ActiveScenario identically. Reason is set only when the group couldn't otherwise explain
@@ -237,15 +192,6 @@ public sealed record P2AiReplayStateMessage(
 // Lockons are reassigned mid-run by ReapplyLockons (host-only); a stale replay lookup would
 // miss and throw inside EventScheduler.Tick, killing every later scheduled move.
 public sealed record P2LockonsUpdateMessage(Dictionary<PartyRole, uint> Lockons) : MpMessage, IScenarioMidRunUpdateMessage;
-
-// 1:1 replays of MapController.AddEffect/DirectorUpdate, which scenarios call for native
-// instance state (arena colour, tower reveals, director flags) outside any SimObject.
-public sealed record MapEffectMessage(uint PacketFlags, byte Index) : MpMessage, IHostOnlyMessage;
-public sealed record MapDirectorUpdateMessage(
-    uint Category, uint Arg1, uint Arg2, uint Arg3, uint Arg4, uint Arg5, uint Arg6) : MpMessage, IHostOnlyMessage;
-
-// Replay of world.SetWeather; scenarios use it mid-fight for lighting cues.
-public sealed record SetWeatherMessage(byte WeatherId, float Transition) : MpMessage, IHostOnlyMessage;
 
 // Replay of SimWorld.Announce: a scenario's own mid-run message to the party.
 public sealed record AnnouncementMessage(string Text) : MpMessage, IHostOnlyMessage;
@@ -348,9 +294,9 @@ public sealed record UltimatePredationAiReplayStateMessage(
     float SafeSecondSetX, float SafeSecondSetY, float SafeSecondSetZ, float SafeSecondSetRotation) : MpMessage, IScenarioReplayStateMessage;
 
 // Peer -> host: an enemy debuff (Reprisal) applied locally; the peer's enemy doppels
-// are cosmetic, so this is how the host's enemy gets the debuff.
-public sealed record PeerAppliedEnemyStatusMessage(Guid PeerId, List<int> EnemyNetIds, ushort StatusId, float Duration) : MpMessage;
+// are cosmetic, so this is how the host's enemy gets the debuff. Enemies by host entity id.
+public sealed record PeerAppliedEnemyStatusMessage(Guid PeerId, List<uint> Enemies, ushort StatusId, float Duration) : MpMessage;
 
 // Party counterpart, the peer's own role included: a peer's presses land only on its own
 // client, and the host decides who lives from the statuses on its own copies.
-public sealed record PeerAppliedRoleStatusMessage(Guid PeerId, List<PartyRole> Roles, ushort StatusId, float Duration) : MpMessage;
+public sealed record PeerAppliedRoleStatusMessage(Guid PeerId, List<PartyRole> Roles, ushort StatusId, float Duration, ushort Param = 0) : MpMessage;
