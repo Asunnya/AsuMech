@@ -188,7 +188,7 @@ public sealed unsafe partial class ZoneControl : IZoneControl
     // Load the target territory, teleport player to playerSpawn, enable firewall. Firewall is
     // enabled before the zone load (matching Hyperborea's sequence). False when the start is
     // refused or the firewall didn't arm; nothing is loaded then.
-    public bool Enter(uint territoryId, Vector3 playerSpawn, byte levelSyncCap, ushort itemLevelSyncCap)
+    public bool Enter(uint territoryId, Vector3 playerSpawn)
     {
         if (StartBlockedReason() is { } blocked)
         {
@@ -200,7 +200,7 @@ public sealed unsafe partial class ZoneControl : IZoneControl
         sessionSave.TerritoryId = Plugin.ClientState.TerritoryType;
         sessionSave.Position = localPlayer.Position;
         sessionSave.Rotation = localPlayer.Rotation;
-        levelSync.Capture(levelSyncCap, itemLevelSyncCap);
+        levelSync.Capture();
 
         EnableFirewall();
         if (!FirewallArmed(out var why))

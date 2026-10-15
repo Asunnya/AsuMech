@@ -26,8 +26,6 @@ public sealed class UcobZone : IZone
     public string Name => "The Unending Coil of Bahamut";
     public uint TerritoryId => 733;
     public Vector3 Origin => new(0f, 0f, 0f);
-    public byte Level => UcobConstants.Level;
-    public ushort ItemLevel => UcobConstants.ItemLevel;
 
     public IReadOnlyList<WaymarkLayout> WaymarkPresets { get; } =
         [new WaymarkLayout("Aether Markers", UcobConstants.AetherWaymarks)];

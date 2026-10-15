@@ -65,7 +65,10 @@ public record struct EnemySpawnConfig(
     bool Engaged = true,
     // Retail's layout instance for the BNpc, in the territory's own layout. The Razor Plume's idle
     // visual needs this or the director EventId BattleCharas sends; UNVERIFIED which.
-    uint LayoutId = 0);
+    uint LayoutId = 0,
+    // False for an ally the duty spawns (FRU's Gaia and Ryne): it sends battalion 0, as retail
+    // does, so the client treats it as friendly.
+    bool IsHostile = true);
 
 public sealed class SimEnemy : SimNpc
 {

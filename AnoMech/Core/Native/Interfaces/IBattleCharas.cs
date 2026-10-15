@@ -16,7 +16,7 @@ public interface IBattleCharas
 
     // A Lalafell party doppel wearing the preset's gear, built by the engine's own PlayerSpawn
     // handler; arrives and reserves its slot like SpawnBattleNpcFromPacket.
-    IBattleCharaProxy? SpawnDoppel(PartyMemberPreset preset, Placement placement, out uint entityId);
+    IBattleCharaProxy? SpawnDoppel(PartyMemberPreset preset, byte level, Placement placement, out uint entityId);
 
     bool IsInCharacterManager(uint entityId);
 

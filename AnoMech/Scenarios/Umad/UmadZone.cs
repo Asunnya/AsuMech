@@ -44,7 +44,6 @@ public sealed class UmadZone : IZone
     public string Name => "Dancing Mad";
     public uint TerritoryId => 1363;
     public Vector3 Origin => new(100f, 0f, 100f);
-    public byte Level => 100;
 
     public IReadOnlyList<WaymarkLayout> WaymarkPresets => Waymarks;
 

@@ -29,6 +29,9 @@ internal static class PartyCreator
         return new Placement(local, MathF.Atan2(-local.X, -local.Z));
     }
 
+    // The level cap, for a territory the duty sync doesn't cover.
+    private const byte UnsyncedLevel = 100;
+
     public static ISimPartyMember? Spawn(PartySlot slot, SimWorld world, PartyRole role, Placement placement) => slot switch
     {
         BotSlot bot => SpawnBot(bot.Preset, world, role, placement),
@@ -36,9 +39,12 @@ internal static class PartyCreator
         _ => null,
     };
 
+    // Everyone in the duty is synced to its level, as the player is.
+    private static byte Level(SimWorld world) => Natives.Data.DutyLevel(world.Map.TerritoryId) ?? UnsyncedLevel;
+
     private static SimPartyNpc? SpawnBot(PartyMemberPreset preset, SimWorld world, PartyRole role, Placement placement)
     {
-        if (Natives.BattleCharas.SpawnDoppel(preset, world.Coordinates.ToGlobal(placement), out var entityId) is not { } chara) return null;
+        if (Natives.BattleCharas.SpawnDoppel(preset, Level(world), world.Coordinates.ToGlobal(placement), out var entityId) is not { } chara) return null;
 
         Plugin.Log.Info($"PartyCreator: spawned {preset.Name} ({role}, job {preset.ClassJob}) at index {chara.Slot}");
         // Bots steer around the scenario's geometry; bosses walk straight lines.
@@ -50,7 +56,7 @@ internal static class PartyCreator
     // Same visuals as a bot; the owner's own client moves it.
     private static SimNetworkPuppet? SpawnPuppet(PartyMemberPreset preset, SimWorld world, PartyRole role, Placement placement)
     {
-        if (Natives.BattleCharas.SpawnDoppel(preset, world.Coordinates.ToGlobal(placement), out var entityId) is not { } chara) return null;
+        if (Natives.BattleCharas.SpawnDoppel(preset, Level(world), world.Coordinates.ToGlobal(placement), out var entityId) is not { } chara) return null;
 
         Plugin.Log.Info($"PartyCreator: spawned network puppet {preset.Name} ({role}, job {preset.ClassJob}) at index {chara.Slot}");
         var puppet = new SimNetworkPuppet(chara, world.Coordinates, role, preset.ClassJob, preset.Name);

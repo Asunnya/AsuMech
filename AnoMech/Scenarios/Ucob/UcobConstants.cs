@@ -7,7 +7,6 @@ namespace AnoMech.Scenarios.Ucob;
 public class UcobConstants
 {
     public const byte Level = 70;
-    public const ushort ItemLevel = 345;
 
     public static class Geometry
     {

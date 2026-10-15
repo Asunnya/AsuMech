@@ -17,8 +17,9 @@ public interface IZoneControl : IDisposable
     // Every frame, inside a session or not: the start gate's timers and the session's safety nets.
     void TickGuard();
 
-    // False when refused; nothing is loaded then.
-    bool Enter(uint territoryId, Vector3 playerSpawn, byte levelSync, ushort itemLevelSync);
+    // False when refused; nothing is loaded then. The player is synced to the duty's level and
+    // item level.
+    bool Enter(uint territoryId, Vector3 playerSpawn);
 
     // Back to the inn territory and position.
     void Revert();

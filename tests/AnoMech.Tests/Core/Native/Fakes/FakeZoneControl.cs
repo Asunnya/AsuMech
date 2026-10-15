@@ -19,7 +19,7 @@ internal sealed class FakeZoneControl(FakeCharacter player, SimTimeline timeline
         return null;
     }
 
-    public bool Enter(uint territoryId, Vector3 playerSpawn, byte levelSync, ushort itemLevelSync)
+    public bool Enter(uint territoryId, Vector3 playerSpawn)
     {
         innPosition = player.Position;
         innRotation = player.Rotation;

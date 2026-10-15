@@ -18,6 +18,8 @@ internal sealed class DataminingGameData(FakeRsvFunctions rsv) : IGameData
     private static readonly Lazy<Sheet> ModelSkeletons = Load("ModelSkeleton");
     private static readonly Lazy<Sheet> Omens = Load("Omen");
     private static readonly Lazy<Sheet> Statuses = Load("Status");
+    private static readonly Lazy<Sheet> TerritoryTypes = Load("TerritoryType");
+    private static readonly Lazy<Sheet> ContentFinderConditions = Load("ContentFinderCondition");
 
     public ActionRow? Action(uint actionId)
     {
@@ -66,6 +68,16 @@ internal sealed class DataminingGameData(FakeRsvFunctions rsv) : IGameData
     public StatusRow? Status(ushort statusId)
         => Statuses.Value.Row(statusId) is { } row
             ? new StatusRow(statusId, Resolve(row.Text("Name")) ?? "", row.Bool("LockMovement"), row.Bool("LockActions"), row.Bool("LockControl"), row.Byte("MaxStacks"))
+            : null;
+
+    public TerritoryTypeRow? TerritoryType(uint territoryId)
+        => TerritoryTypes.Value.Row(territoryId) is { } row
+            ? new TerritoryTypeRow(territoryId, row.UInt("ContentFinderCondition"))
+            : null;
+
+    public ContentFinderConditionRow? ContentFinderCondition(uint contentFinderConditionId)
+        => ContentFinderConditions.Value.Row(contentFinderConditionId) is { } row
+            ? new ContentFinderConditionRow(contentFinderConditionId, row.Byte("ClassJobLevelSync"))
             : null;
 
     public string? BNpcName(uint nameId) => NonEmpty(Resolve(BNpcNames.Value.Row(nameId)?.Text("Singular")));

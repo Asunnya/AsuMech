@@ -11,8 +11,7 @@ namespace AnoMech.Core.Native.Implementations;
 // The duty's level and item-level sync on the local player, undone on the way back to the inn.
 internal sealed unsafe class LevelSync
 {
-    private bool levelSync;
-    private bool itemLevelSync;
+    private bool levelSynced;
     private int level;
     private int exp;
     private uint restedExp;
@@ -20,69 +19,61 @@ internal sealed unsafe class LevelSync
     private PlayerStatsPacket savedStats;
 
     // Before the zone load, while the player still has the inn's values.
-    public void Capture(byte levelSyncCap, ushort itemLevelSyncCap)
+    public void Capture()
     {
-        levelSync = levelSyncCap != 0;
-        itemLevelSync = itemLevelSyncCap != 0;
         level = Plugin.ObjectTable.LocalPlayer!.Level;
         exp = Plugin.PlayerState.GetClassJobExperience(Plugin.PlayerState.ClassJob.Value);
         restedExp = Plugin.PlayerState.BaseRestedExperience;
+        levelSynced = false;
         statsSynced = false;
     }
 
     public void Apply(ContentFinderCondition cfc, Character* player, byte classJobId)
     {
         var cfcLevelSync = cfc.ClassJobLevelSync;
+        var currentLevel = (byte)Plugin.PlayerState.Level;
+        levelSynced = cfcLevelSync != 0 && currentLevel > cfcLevelSync;
 
-        if (levelSync)
+        if (levelSynced)
         {
-            var currentLevel = (byte)Plugin.PlayerState.Level;
-            var levelSynced = currentLevel > cfcLevelSync;
-
-            if (levelSynced)
+            var updateClassInfoPacket = new UpdateClassInfoPacket
             {
-                var updateClassInfoPacket = new UpdateClassInfoPacket
-                {
-                    ClassJobId = classJobId,
-                    CurrentLevel = currentLevel,
-                    ClassJobLevel = currentLevel,
-                    SyncedLevel = cfcLevelSync,
-                    ClassJobExp = 0,
-                    BaseRestedExperience = 0
-                };
+                ClassJobId = classJobId,
+                CurrentLevel = currentLevel,
+                ClassJobLevel = currentLevel,
+                SyncedLevel = cfcLevelSync,
+                ClassJobExp = 0,
+                BaseRestedExperience = 0
+            };
 
-                PacketDispatcherPointers.HandleUpdateClassInfoPacket(0, &updateClassInfoPacket);
-                SendCharacterLevel(player, cfcLevelSync);
-            }
+            PacketDispatcherPointers.HandleUpdateClassInfoPacket(0, &updateClassInfoPacket);
+            SendCharacterLevel(player, cfcLevelSync);
         }
 
-        if (itemLevelSync)
+        var ilvlSync = cfc.ItemLevelSync != 0 ? cfc.ItemLevelSync : cfc.ItemLevelRequired;
+
+        if (ilvlSync != 0)
         {
-            var ilvlSync = cfc.ItemLevelSync != 0 ? cfc.ItemLevelSync : cfc.ItemLevelRequired;
+            Plugin.Log.Debug($"Setting up iLvl sync to {ilvlSync}");
+            savedStats = ReadPlayerStats();
+            statsSynced = true;
 
-            if (ilvlSync != 0)
+            var stats = savedStats;
+            foreach (var (baseParamId, value) in GetSyncedAttributes(cfcLevelSync, ilvlSync))
             {
-                Plugin.Log.Debug($"Setting up iLvl sync to {ilvlSync}");
-                savedStats = ReadPlayerStats();
-                statsSynced = true;
-
-                var stats = savedStats;
-                foreach (var (baseParamId, value) in GetSyncedAttributes(cfcLevelSync, ilvlSync))
+                if (PacketIndex((uint)baseParamId) is { } index)
                 {
-                    if (PacketIndex((uint)baseParamId) is { } index)
-                    {
-                        stats.Attributes[index] = value;
-                    }
+                    stats.Attributes[index] = value;
                 }
-
-                PacketDispatcherPointers.HandlePlayerStatsPacket(0, &stats);
             }
+
+            PacketDispatcherPointers.HandlePlayerStatsPacket(0, &stats);
         }
     }
 
     public void Reset(Character* player, byte classJobId)
     {
-        if (levelSync)
+        if (levelSynced)
         {
             var updateClassInfoPacket = new UpdateClassInfoPacket
             {

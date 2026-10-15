@@ -15,8 +15,6 @@ public sealed class UwuZone : IZone
     public string Name => "The Weapon's Refrain";
     public uint TerritoryId => 777;
     public Vector3 Origin => new(100f, 0f, 100f);
-    public byte Level => UwuConstants.Level;
-    public ushort ItemLevel => UwuConstants.ItemLevel;
 
     public IReadOnlyList<WaymarkLayout> WaymarkPresets { get; } =
         [new WaymarkLayout("Default", UwuConstants.NaurWaymarks)];

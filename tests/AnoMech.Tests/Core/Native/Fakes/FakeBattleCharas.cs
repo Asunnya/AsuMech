@@ -74,12 +74,12 @@ internal sealed class FakeBattleCharas : IBattleCharas
         Timeline.Add("spawn", entityId, name, config.BNpcBaseId.ToString(), "BNpcBase", position: placement.Position,
             rotation: placement.Rotation,
             detail: $"bnpcname={config.NameId} visibility={config.Visibility} display_flags=0x{config.DisplayFlags ?? (uint)config.Visibility:X} layout=0x{config.LayoutId:X} model={config.ModelCharaId} sheet_model={bnpc.ModelChara} "
-                    + $"level={config.Level} targetable={(config.Targetable ? 1 : 0)} enemy_list={config.EnemyList}"
+                    + $"level={config.Level} battalion={(config.IsHostile ? 4 : 0)} targetable={(config.Targetable ? 1 : 0)} enemy_list={config.EnemyList}"
                     + (config.InitialModeAttributeFlags is { } flags ? $" mode_attr=0x{flags:X}" : ""));
         return new FakeBattleChara(this, slot);
     }
 
-    public IBattleCharaProxy? SpawnDoppel(PartyMemberPreset preset, Placement placement, out uint entityId)
+    public IBattleCharaProxy? SpawnDoppel(PartyMemberPreset preset, byte level, Placement placement, out uint entityId)
     {
         entityId = 0;
         var slot = FindFreeSlot();

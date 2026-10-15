@@ -52,7 +52,7 @@ public sealed class InstanceSession
         refusal = Natives.Zone.StartBlockedReason(out _)
                   ?? (Natives.BattleCharas.LocalPlayer.Exists ? null : "no local player");
         var spawn = zone.EntranceBarrier?.Position ?? DefaultPlayerSpawnLocal;
-        if (refusal is null && !Natives.Zone.IsActive && !Natives.Zone.Enter(zone.TerritoryId, zone.Origin + spawn, zone.Level, zone.ItemLevel))
+        if (refusal is null && !Natives.Zone.IsActive && !Natives.Zone.Enter(zone.TerritoryId, zone.Origin + spawn))
             refusal = "the zone was not entered (see the log)";
         if (refusal is not null)
         {

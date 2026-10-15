@@ -65,6 +65,7 @@ public sealed class MapController
     // True while a scenario was started by loading a client-side zone.
     // Cleared by Unload() and Reset().
     public bool IsInInstance { get; private set; }
+    public uint TerritoryId { get; private set; }
 
     // Apply weather after a zone load (1-second delayed to let the engine settle).
     public void ApplyWeather(byte weatherId) => Natives.Zone.ApplyWeather(weatherId);
@@ -176,6 +177,7 @@ public sealed class MapController
     public void Enter(uint territoryId)
     {
         IsInInstance = true;
+        TerritoryId = territoryId;
         layerDumpFrame = 0;
         Natives.MapEffects.Loaded = true;
         DiagnosticLog.Info($"[MapController] Enter: territoryId={territoryId}.");

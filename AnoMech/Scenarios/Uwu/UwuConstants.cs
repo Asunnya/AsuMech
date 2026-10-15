@@ -9,9 +9,6 @@ namespace AnoMech.Scenarios.Uwu;
 
 public class UwuConstants
 {
-    public const byte Level = 70;
-    public const ushort ItemLevel = 375;
-
     public static IReadOnlyList<Waymark> NaurWaymarks =>
     [
         new(WaymarkSlot.A, new Vector3(0, 0, -6.7f)),

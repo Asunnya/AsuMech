@@ -15,8 +15,6 @@ public interface IZone
     string Name { get; }                                    // canonical duty name
     uint TerritoryId { get; }
     Vector3 Origin { get; }
-    byte Level => 0;
-    ushort ItemLevel => 0;
 
     // At least one; [0] is the default.
     IReadOnlyList<WaymarkLayout> WaymarkPresets { get; }
