@@ -42,6 +42,8 @@ See: https://github.com/anomek/MyDalamudPlugins
         - [\[LPDU\] Buddies](https://raidplan.io/plan/142oXOZpPc_jh3dd)
         - [\[Old\] p3Z Buddy Meow](https://raidplan.io/plan/lZWqxfxvyhF9sp3Z)
         - [\[Old\] zP6 South adjust](https://raidplan.io/plan/rtc1FcuZFMuyBzP6)
+      - JP _by [altair9x](https://github.com/altair9x)_
+        - [Yan](https://yan-flash.com/ultimate/yosei-ranbu#ult-phase-2)
     - P3 Limit Cut _by [Evernow](https://github.com/Evernow)_
     - P3 Black Hole _old bh (single tethers, n/s stomps)_
       - D>S>A
