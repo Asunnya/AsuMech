@@ -8,7 +8,7 @@ using AnoMech.Core.SimObjects;
 namespace AnoMech.Scenarios;
 
 // A raid territory: the identity every scenario inside it shares. Authored bottom-up —
-// scenarios point at their IPhase, phases point here — and Game derives the downward
+// scenarios point at their IPhase, phases point here — and ScenarioCatalog derives the downward
 // zone -> phase -> scenario view for the menu.
 public interface IZone
 {

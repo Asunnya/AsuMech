@@ -14,17 +14,17 @@ namespace AnoMech.Tests;
 //
 //   17.20  First Eruptions snapshot under R and C; Razor Plumes spawn on the diagonals at 17.95,
 //          setting off Featherlance on touch until 42.97, sweeping round at radius 17 from 20.82.
-//   20.81  Mistral Songs hit the nearest in Chirada's (6,6) and Suparna's (-6,-6) cones; M1 and M2
-//          stand at (-8,10), MT in front of Chirada at (-3.5,8.7) and OT of Suparna at (-7.4,5).
+//   20.48  Mistral Songs hit the nearest in Chirada's (6,6) and Suparna's (-6,-6) cones; M1 and M2
+//          stand at (-8,10), MT in front of Chirada at (-5.2,8.1) and OT of Suparna at (-5.8,7.6).
 //   21.32  H1 is gaoled at (8,8) until 30.24; the last Eruptions snapshot on it at 23.25.
 //   24.81  Feather Rain snapshots on its targets' 22.57 spots, again at 26.80 and 43.17.
 //   25.40  First Light Pillar, under H2.
-//   27.40  Aetherochemical Lasers from Ultima (13.7,-13.7), 8y wide: centre, then right at 31.41
-//          (along z=-13.7), then left at 35.54 (along x=13.7).
+//   27.20  Aetherochemical Lasers from Ultima (13.7,-13.7), 8y wide: centre, then right at 31.33
+//          (along z=-13.7), then left at 35.45 (along x=13.7).
 //   34.74  Titan's Landslides from (-13.7,13.7) snapshot, knocking 30y back at 35.77.
 //   37.92  Mesohigh resolves on whoever holds Garuda's (-13.7,-13.7) tether; MT intercepts it from
 //          (-4,-7).
-//   38.78  Flaming Crush on M1 needs 6 of the 7 others but MT; the stack is at (6.7,0).
+//   38.62  Flaming Crush on M1 needs 6 of the 7 others but MT; the stack is at (6.7,0).
 //   40.88  Featherlance, 8y round each plume, now pulled back to the diagonals at radius 20.5.
 public class UltimateSuppressionScenarioTests
 {
@@ -123,7 +123,7 @@ public class UltimateSuppressionScenarioTests
             .FreezeAt(24.6f)
             .ShouldKill(ActionId.LightPillarCircle, ShieldHealer);
 
-    [TestCase(ActionId.AetherochemicalLaserCenter, 27.2f, 0f, 0f)]
+    [TestCase(ActionId.AetherochemicalLaserCenter, 27.0f, 0f, 0f)]
     [TestCase(ActionId.AetherochemicalLaserRight, 31.2f, 0f, -13.7f)]
     [TestCase(ActionId.AetherochemicalLaserLeft, 35.3f, 13.7f, -6f)]
     public void DiesToAetherochemicalLaser(uint laser, float at, float x, float z)
@@ -163,7 +163,7 @@ public class UltimateSuppressionScenarioTests
     [Test]
     public void SweepingRazorPlumeSetsOffFeatherlance()
         => Suppression(MeleeDpsB)
-            .TeleportAt(21f, to: new(0, 17))
+            .TeleportAt(21f, to: new(17, 0))
             .ShouldKill(ActionId.Featherlance, MeleeDpsB);
 
     [Test]
@@ -176,13 +176,13 @@ public class UltimateSuppressionScenarioTests
     [Test]
     public void FlamingCrushUnderstackedKillsStack()
         => Suppression(MeleeDpsB)
-            .MoveBotAt(38.6f, CasterDps, to: new(1, 10))
-            .TeleportAt(38.6f, to: new(0, 10))
+            .MoveBotAt(38.4f, CasterDps, to: new(1, 10))
+            .TeleportAt(38.4f, to: new(0, 10))
             .ShouldKill(ActionId.FlamingCrush, OffTank, RegenHealer, ShieldHealer, MeleeDpsA, PhysRangedDps);
 
     [Test]
     public void FlamingCrushWithOneMissingSurvives()
-        => SurvivesUntil(40f, MeleeDpsB, new Takeover(38.6f, new Vector2(0, 10)));
+        => SurvivesUntil(40f, MeleeDpsB, new Takeover(38.4f, new Vector2(0, 10)));
 
     // Halfway down the beam from MT to Garuda.
     [Test]

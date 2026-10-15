@@ -87,12 +87,13 @@ public class TopP5OmegaScenarioTests
             .ShouldKill(TheEnvironment, holder)
             .ShouldKill(ActionId.HelloWorldFail, AllBut(holder));
 
-    // Out along F's diagonal, which is one arm of the cross.
-    [TestCase(1)]
-    [TestCase(3)]
-    [TestCase(5)]
-    [TestCase(7)]
-    public void DiesToOptimizedBlizzard(int first)
+    // On the cross's arm square to F's diagonal, 4y from F on the east or west side, clear of the
+    // north and south Diffuse Wave Cannons.
+    [TestCase(1, 9.8f, -4.1f)]
+    [TestCase(3, 9.8f, 4.1f)]
+    [TestCase(5, -9.8f, 4.1f)]
+    [TestCase(7, -9.8f, -4.1f)]
+    public void DiesToOptimizedBlizzard(int first, float x, float z)
     {
         var direction = Direction.All[first];
         Omega(MainTank, o =>
@@ -100,7 +101,7 @@ public class TopP5OmegaScenarioTests
                 o.FirstAttackDirection = direction;
                 o.SecondAttackDirection = direction.Rotate(2);
             })
-            .TeleportAt(23.5f, to: Around(direction, 0, -14))
+            .TeleportAt(23.5f, to: new(x, z))
             .ShouldKill(ActionId.OptimizedBlizzardIII, MainTank);
     }
 

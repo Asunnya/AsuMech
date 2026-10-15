@@ -19,6 +19,8 @@ internal sealed class MultiplayerUi
     internal static readonly Vector4 BadColor = new(1f, 0.4f, 0.4f, 1f);
     internal static readonly Vector4 MutedColor = new(0.6f, 0.6f, 0.6f, 1f);
     private static readonly Vector4 CodeColor = new(1f, 0.85f, 0.3f, 1f);
+    // Hidden until EmbeddedRelay is backed by a real server.
+    private static bool ShowEmbeddedServer => false;
     private const string LockedWhileRunning = "Locked while the fight is running -- changes apply to the next start.";
 
     private readonly Plugin plugin;
@@ -57,8 +59,7 @@ internal sealed class MultiplayerUi
         ImGui.TextUnformatted("Multiplayer");
         ImGui.Separator();
 
-        // TODO: hidden until EmbeddedRelay is backed by a real server.
-        if (false)
+        if (ShowEmbeddedServer)
         {
             if (ImGui.Button("Run embedded server"))
             {

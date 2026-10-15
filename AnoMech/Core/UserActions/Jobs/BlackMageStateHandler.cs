@@ -6,7 +6,7 @@ using FFXIVClientStructs.FFXIV.Client.Game.Gauge;
 namespace AnoMech.Core.UserActions.Jobs;
 
 // Black Mage's elemental gauge — the Astral Fire / Umbral Ice state machine plus Umbral Hearts,
-// Astral Soul (packed in EnochianFlags bits 2+), the 15s Enochian countdown, and the Paradox marker.
+// Astral Soul, the 15s Enochian countdown, and the Paradox marker.
 // A scalar ResourceGauge can't hold this. Polyglot stays in the JobActions data table (do not write it).
 internal sealed unsafe class BlackMageStateHandler : IUserActionHandler
 {
@@ -66,7 +66,7 @@ internal sealed unsafe class BlackMageStateHandler : IUserActionHandler
             case Manafont:
                 SetStance(g, 3);
                 g->UmbralHearts = 3;
-                g->EnochianFlags |= EnochianFlags.Paradox;
+                g->ParadoxActive = true;
                 break;
 
             // Blizzard I: neutral/fire -> Umbral Ice I, already-ice -> +1 stack (cap -3).
@@ -100,7 +100,7 @@ internal sealed unsafe class BlackMageStateHandler : IUserActionHandler
 
             case Paradox:
                 Refresh(g);
-                g->EnochianFlags &= ~EnochianFlags.Paradox;
+                g->ParadoxActive = false;
                 break;
         }
     }
@@ -125,7 +125,9 @@ internal sealed unsafe class BlackMageStateHandler : IUserActionHandler
             g->EnochianTimer = 0;
             g->ElementStance = 0;
             g->UmbralHearts = 0;
-            g->EnochianFlags = EnochianFlags.None;   // clears Enochian, Paradox and Astral Soul at once
+            g->EnochianActive = false;
+            g->ParadoxActive = false;
+            g->AstralSoulStacks = 0;
         }
     }
 
@@ -133,7 +135,7 @@ internal sealed unsafe class BlackMageStateHandler : IUserActionHandler
     private static void SetStance(BlackMageGauge* g, sbyte stance)
     {
         g->ElementStance = stance;
-        g->EnochianFlags |= EnochianFlags.Enochian;
+        g->EnochianActive = true;
         g->EnochianTimer = 15000;
     }
 
@@ -143,12 +145,11 @@ internal sealed unsafe class BlackMageStateHandler : IUserActionHandler
     private static void ConsumeHearts(BlackMageGauge* g, int n)
         => g->UmbralHearts = (byte)Math.Max(g->UmbralHearts - n, 0);
 
-    // Astral Soul (0..6) is packed into EnochianFlags bits 2+; preserve the Enochian/Paradox bits (low 2).
     private static void SetAstralSoul(BlackMageGauge* g, int stacks)
-        => g->EnochianFlags = (EnochianFlags)(((int)g->EnochianFlags & 3) | (Math.Clamp(stacks, 0, 6) << 2));
+        => g->AstralSoulStacks = Math.Clamp(stacks, 0, 6);
 
     private static void AddAstralSoul(BlackMageGauge* g, int delta)
-        => SetAstralSoul(g, (((int)g->EnochianFlags >> 2) & 7) + delta);
+        => SetAstralSoul(g, g->AstralSoulStacks + delta);
 
     // Fire/Blizzard swap to Paradox once its gauge marker is armed. The marker is granted on reaching
     // Umbral Ice III with 3 Umbral Hearts (plus directly by Manafont); it persists — carried into Astral
@@ -159,6 +160,6 @@ internal sealed unsafe class BlackMageStateHandler : IUserActionHandler
     private static void TryArmParadox(BlackMageGauge* g)
     {
         if (g->ElementStance == -3 && g->UmbralHearts == 3)
-            g->EnochianFlags |= EnochianFlags.Paradox;
+            g->ParadoxActive = true;
     }
 }

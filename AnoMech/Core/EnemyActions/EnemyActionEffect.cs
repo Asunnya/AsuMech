@@ -32,8 +32,9 @@ public static class EnemyActionEffects
     public static VulnSpec ProtectedBy(ushort statusId) => VulnSpec.None.ProtectedBy(statusId);
 
     // Survivors only. delayToEffectResult as EnemyActionContext.AddStatus: retail does this for some
-    // statuses (Viscous Aetheroplasm, HP Penalty, Damage Down, regens) and not others (vulns, Ruin,
-    // Doom, stuns), and no sheet column tells them apart.
+    // statuses (Damage Down, Sleep, Confused, HP Penalty, long resistance downs) and not others
+    // (vulns, Ruin, Doom, stuns, short resistance downs). It's chosen per status within an action;
+    // neither the packet nor any sheet column tells them apart, so read it off a replay.
     public static IEnemyActionEffect ApplyStatus(ushort statusId, float duration, bool delayToEffectResult = false, byte entryParam = 0)
         => new ApplyStatusEffect(statusId, duration, delayToEffectResult, entryParam);
 

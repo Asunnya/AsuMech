@@ -57,14 +57,17 @@ communicate that with user and try to verify first.
 
 - **Projects.** `AnoMech/` (the plugin), `AnoMech.Relay/` (multiplayer relay library: wire format
   in `Network/`, server in `Server/`), `AnoMech.Relay.Host/` (standalone relay exe + Dockerfile).
-- **Frame loop.** `Plugin.OnFrameworkUpdate` → `Game.Tick` (`Core/Game/Game.cs`) → `EventScheduler`
-  (scaled by `EventTimeScale`) → `SimWorld.Tick` (map, children, then `EnemyList` / `PartyHud`
-  refresh). All on the Framework thread. `EventTimeScale` only scales the scheduler; casts,
-  animation, movement and statuses run at real time.
+- **Frame loop.** `Plugin.OnFrameworkUpdate` → `Natives.Tick` (first, so the zone guard runs even
+  when `Game.Tick` is paused or throws) → `RunController.Tick` → `Game.Tick` (`Core/Game/Game.cs`)
+  → `Multiplayer.Tick`. `Game.Tick` ticks the `InstanceSession` and checks for falls, then, unless
+  paused, ticks `EventScheduler` → `SimWorld.Tick` (map, party + `PartyHud` refresh, children, then
+  `EnemyList`) → `ScenarioSession`. All on the Framework thread. `EventTimeScale` scales all three
+  of those ticks, so sim-side cast, status and movement timers speed up with it; only the client's
+  own animation runs at real time.
 - **`Core/SimObjects/`** — in-world entities (`SimWorld` root, `SimCharacter` / `SimEnemy` /
   `SimParty`, `SimCast`, `SimStatus`, `SimTether`, …). Read the rules in the header of
   `ISimObject.cs` before adding a type: spawn through the parent's API (`SimWorld.SpawnEnemy`,
-  `CreateParty`, `Tether`, …), never `new` from outside; helpers live in `Core/`, not here.
+  `SeatParty`, `Tether`, …), never `new` from outside; helpers live in `Core/`, not here.
 - **`Core/Game/`, `Core/Map/`, `Core/EnemyActions/`, `Core/UserActions/`** — orchestration (`Game`,
   `EventScheduler`, `Movement`, party creation, AI), arena/map state, boss action definitions, and
   client-side resolution of the player's own actions.
@@ -72,8 +75,9 @@ communicate that with user and try to verify first.
   and the only part of Native that sim code (`Core/SimObjects`, `Core/Game`, `Core/Map`,
   `Scenarios`) may name. Sim code reaches the game through the static `Natives` locator (Plugin
   installs implementations, tests install fakes via `FakeGame.Install`) and per-object proxies
-  (`IBattleCharaProxy`, `IEventObjectProxy`). Implementations hold no sim logic. Windows,
-  Multiplayer and UserActions handlers may use `Implementations/` directly. Where Dalamud already
+  (`IBattleCharaProxy`, `IEventObjectProxy`). Implementations hold no sim logic. Plugin glue
+  (`Plugin.cs`, `RunController.cs`), Windows, Multiplayer and UserActions handlers may use
+  `Implementations/` directly. Where Dalamud already
   has a service interface (`IFramework`, `IChatGui`, …), call `Plugin.<Service>` and stand it in via
   `tests/AnoMech.Tests/Support/DalamudServices.cs`; `IGameData` is the exception, because Lumina
   rows can't be built without game files.
@@ -89,7 +93,7 @@ communicate that with user and try to verify first.
   than one scenario needs belongs in `Core/`, built once and reused, not copied between scenarios
   or hidden in a family's helper class.
 - **Structure.** `IZone` (territory, origin, waymarks) ← `IPhase` (weather, BGM) ← `IScenario`.
-  Each scenario points up at its phase, and `Game` builds the menu tree from that. Register new
+  Each scenario points up at its phase, and `ScenarioCatalog` builds the menu tree from that. Register new
   scenarios in `ScenarioCatalog`. A family folder (`Scenarios/Top/`) holds `<Family>Zone.cs`,
   `<Family>Constants.cs` (IDs) and `<Family>Actions.cs` (`EnemyAction` definitions). Each scenario
   folder holds `*Scenario` (timeline, spawns, casts), `*Ai` (party strats), `*State` (per-run
@@ -108,3 +112,24 @@ communicate that with user and try to verify first.
 - **Randomness** comes only from `world.Rng`, rolled into `*State`, so a seed reproduces a run.
   Every strat in `AiStrats` must clear the fight with no deaths: `ScenarioCatalogTests` checks this
   for every catalog entry.
+
+## Multiplayer
+
+Being rewritten. Existing code doesn't follow it yet.
+
+- **Keep multiplayer out of Core and Scenarios where possible.** The sim runs once, on the host,
+  as it does solo, and multiplayer logic belongs in `Multiplayer/`. Avoid host/peer branches,
+  multiplayer-only flags, overloads or mirrored state in Core and Scenarios; add them only when
+  there's no other way. Core objects that exist because of multiplayer (e.g. the remote player's
+  puppet, `SimNetworkPuppet` / `RemoteMotion`) are fine. Keep them minimal.
+- **Broadcast through Natives.** Multiplayer installs its own `Natives` implementations (and
+  proxies) that call the real one and forward the call to peers. Peers run no sim; they apply what
+  they receive. Spawn ids are deterministic, so most calls replay verbatim; calls aimed at the local
+  player (self-only ActorControl, local statuses, knockback, gauge, LB) and per-client views (party
+  HUD, enemy list) are routed or rebuilt for each client's own seat.
+- **Zone-in and start are separate.** Everyone zones in first; the host starts once all are in.
+- **Movement.** Each client sends its own pose every tick; other seats are steered from those
+  poses via `RemoteMotion`, like bots and NPCs. Forced moves go to the owning client, which runs
+  them itself and reports the result through its poses.
+- **Cleanup.** Multiplayer tracks what it spawned on each peer and clears it on run end,
+  disconnect or host leave.

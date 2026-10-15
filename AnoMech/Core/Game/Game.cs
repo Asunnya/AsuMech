@@ -1,5 +1,6 @@
 using System;
 using AnoMech.Core.Game.Party;
+using AnoMech.Core.Native.Interfaces;
 using AnoMech.Core.SimObjects;
 using AnoMech.Scenarios;
 using Dalamud.Game.Text;
@@ -45,8 +46,11 @@ public sealed class Game : IDisposable
     public void StartScenario(RunScenarioParams p, Action<string?>? resolved = null)
         => Deferred(() => StartScenarioNow(p), resolved);
 
+    private static readonly TimeSpan ZoneInStartDelay = TimeSpan.FromSeconds(2);
+
     // Zones in first unless already staying in the run's zone in `mode`; a stay entered in another
-    // mode refuses the run rather than playing it there.
+    // mode refuses the run rather than playing it there. A fresh zone-in applies the phase and
+    // seats the party at once, and waits ZoneInStartDelay before the run starts.
     public void EnterAndStart(RunScenarioParams p, SessionMode mode, Action<string?>? resolved = null)
     {
         var zone = p.Scenario.Phase.Zone;
@@ -55,11 +59,28 @@ public sealed class Game : IDisposable
             StartScenario(p, resolved);
             return;
         }
+        // Pinned so the run reseeds to the stream the party was seated from, and its bots keep
+        // their ring spots.
+        p = p with { Seed = p.Seed ?? Random.Shared.Next() };
         ZoneIn(zone, mode, refusal =>
         {
-            if (refusal != null) resolved?.Invoke(refusal);
-            else StartScenario(p, resolved);
+            if (refusal != null)
+            {
+                resolved?.Invoke(refusal);
+                return;
+            }
+            instance?.ApplyPhase(p.Scenario.Phase);
+            SeatParty(p);
+            Plugin.Framework.RunOnTick(() => StartScenario(p, resolved), ZoneInStartDelay);
         });
+    }
+
+    private void SeatParty(RunScenarioParams p)
+    {
+        var player = Natives.BattleCharas.LocalPlayer;
+        if (!player.Exists) return;
+        World.Reseed(p.Seed!.Value);
+        World.SeatParty(p.Party.Roster(player.ClassJob));
     }
 
     public void Reset() => Plugin.Framework.Run(() =>
@@ -165,9 +186,12 @@ public sealed class Game : IDisposable
             // TODO: don't kill player but indicate damage was fatal
             return false;
         }
+        var character = target as SimCharacter;
+        var heldStatuses = character?.ActiveStatuses ?? [];
         target.OnKilled(byEnvironment: actionId == SimCharacterDeathExtensions.Environment);
         PartyMemberKilled?.Invoke(target.Role, cause, actionId);
         run?.OnKilled();
+        if (character != null) World.RunDeathRules(character, heldStatuses);
         return true;
     }
 

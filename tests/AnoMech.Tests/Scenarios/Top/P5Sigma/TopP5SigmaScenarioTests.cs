@@ -220,7 +220,7 @@ public class TopP5SigmaScenarioTests
     [Test]
     public void DistantWorldJumpOntoArmBaitWipes()
         => Sigma(ShieldHealer)
-            .TeleportAt(67.5f, to: new(-5, 10))
+            .TeleportAt(67.5f, to: new(-8, 13))
             .ShouldKill(ActionId.HelloDistantWorldJump, MainTank)
             .ShouldKill(ActionId.HelloWorldFail, AllBut(MainTank));
 }

@@ -29,6 +29,11 @@ public sealed class UmadZone : IZone
     public static readonly Phase P3 = new(Instance, "P3", 174, 20293, arenaMapEffectOverrides: P3ArenaMapEffectOverrides);
     public static readonly Phase P4 = new(Instance, "P4", 174, 20293, arenaMapEffectOverrides: P3ArenaMapEffectOverrides);
     public static readonly Phase P5 = new(Instance, "P5", 175, 20294,
+        init: world =>
+        {
+            world.Map.DirectorUpdate(0x80000028U, 0x0U, 0x4U, 0x6U);
+            world.Map.DirectorUpdate(0x8000000DU, 0x2U);
+        },
         arenaMapEffectOverrides: new Dictionary<byte, ushort>
         {
             [0x00] = 0x800, [0x13] = 4,

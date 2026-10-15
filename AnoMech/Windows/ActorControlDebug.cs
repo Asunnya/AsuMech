@@ -207,7 +207,7 @@ internal sealed unsafe class ActorControlDebug
             ["Mode"] = $"{chara->Mode}/{chara->ModeParam}",
             ["ModelState"] = $"0x{timeline->ModelState:X2}",
             ["WeaponDrawn"] = timeline->IsWeaponDrawn.ToString(),
-            ["OffhandDrawn"] = chara->IsOffhandDrawn.ToString(),
+            ["OffhandDrawn"] = chara->LifeSkillContainer.IsOffhandDrawn.ToString(),
             ["InCombat"] = chara->InCombat.ToString(),
             ["CondInCombat"] = Plugin.Condition[Dalamud.Game.ClientState.Conditions.ConditionFlag.InCombat].ToString(),
             ["ModeAttrFlags"] = $"0x{chara->ModelContainer.ModeAttributeFlags:X2}",

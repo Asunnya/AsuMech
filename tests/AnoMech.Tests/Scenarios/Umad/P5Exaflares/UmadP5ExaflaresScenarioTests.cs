@@ -105,6 +105,6 @@ public class UmadP5ExaflaresScenarioTests
     [Test]
     public void DiesWalkingOffArena()
         => Exaflares(MainTank)
-            .TeleportAt(3f, to: new(0, 20.5f))
+            .DropBelowArenaAt(3f, to: new(0, 20.5f))
             .ShouldKill(TheEnvironment, MainTank);
 }

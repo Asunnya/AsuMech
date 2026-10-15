@@ -11,8 +11,8 @@ namespace AnoMech.Core.Native.Implementations;
 internal sealed unsafe class PlayerConditions : IPlayerConditions
 {
     // Retail has five networked "suffering status affliction" conditions (28, 29, 63, 72, 73).
-    // Confused raises 63. UNVERIFIED: 28 for movement and action locks is a guess.
-    private const ConditionFlag StatusAfflictionFlag = ConditionFlag.SufferingStatusAffliction;
+    // Confused raises 63; 73 locks both movement and actions.
+    private const ConditionFlag StatusAfflictionFlag = ConditionFlag.SufferingStatusAffliction73;
     private const ConditionFlag ControlAfflictionFlag = ConditionFlag.SufferingStatusAffliction63;
 
     private readonly ConditionFlag[] networked = Plugin.DataManager.GetExcelSheet<Condition>()

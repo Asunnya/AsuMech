@@ -8,9 +8,17 @@ namespace AnoMech.Scenarios.Top;
 
 // A Hello World holder dying with the puddle still on them fails it. Casts on a helper spawned the
 // same frame play no animation, so each member's fail helper is spawned up front.
-public sealed class HelloWorldHolderDeaths(SimWorld world)
+public sealed class HelloWorldHolderDeaths
 {
+    private readonly SimWorld world;
     private readonly Dictionary<SimCharacter, SimEnemy?> helpers = [];
+
+    public HelloWorldHolderDeaths(SimWorld world)
+    {
+        this.world = world;
+        world.OnDeathWithStatus(StatusId.HelloNearWorld, Fail);
+        world.OnDeathWithStatus(StatusId.HelloDistantWorld, Fail);
+    }
 
     public void SpawnHelpers()
     {
@@ -22,19 +30,10 @@ public sealed class HelloWorldHolderDeaths(SimWorld world)
                 Placement: new Placement(Vector3.Zero, 0f)));
     }
 
-    public void Check()
+    private void Fail(SimCharacter member)
     {
-        foreach (var member in world.Party.AllMembers())
-        {
-            if (member.IsAlive()) continue;
-            var status = member.HasStatus(StatusId.HelloNearWorld) ? StatusId.HelloNearWorld
-                : member.HasStatus(StatusId.HelloDistantWorld) ? StatusId.HelloDistantWorld
-                : (ushort)0;
-            if (status == 0) continue;
-            member.RemoveStatus(status);
-            if (helpers.GetValueOrDefault(member) is not { } helper) continue;
-            helper.SetPosition(member.Position);
-            helper.Cast(TopActions.HelloWorldFail);
-        }
+        if (helpers.GetValueOrDefault(member) is not { } helper) return;
+        helper.SetPosition(member.Position);
+        helper.Cast(TopActions.HelloWorldFail);
     }
 }

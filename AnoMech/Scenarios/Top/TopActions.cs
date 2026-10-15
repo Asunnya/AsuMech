@@ -128,7 +128,7 @@ public static class TopActions
             Damage(MagicVulns),
             ApplyRuin(ComeRuin, 2, 10.96f),
             ApplyStatus(StatusId.MagicVulnerabilityUp, 4.96f),
-            ApplyStatus(StatusId.HPPenalty, 3f),
+            ApplyStatus(StatusId.HPPenalty, 3f, delayToEffectResult: true),
         ],
     };
 

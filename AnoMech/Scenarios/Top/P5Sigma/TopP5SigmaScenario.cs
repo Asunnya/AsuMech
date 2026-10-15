@@ -68,7 +68,6 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
     
     public void Tick(float delta, float elapsed)
     {
-        holderDeaths.Check();
     }
     
     private void Run_PlayerTethers()

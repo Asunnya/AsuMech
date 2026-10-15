@@ -19,8 +19,8 @@ public sealed class UmadP3LimitCutScenarioObjects
 }
 
 // Per-run randomization: any start spot, either direction, the charges walking the circle the
-// other way from the same start, the numbers a plain permutation, the boss spot the party's
-// choice. Headwind/Tailwind splits 4/4, 5/3, 3/5 or 2/6 rather than a coin per player, which
+// other way from the same start, the numbers a plain permutation, the wind crystal (and so the
+// boss spot) any intercardinal. Headwind/Tailwind splits 4/4, 5/3, 3/5 or 2/6 rather than a coin per player, which
 // would reach 6/2 far too often.
 public sealed class UmadP3LimitCutState
 {

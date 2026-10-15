@@ -53,7 +53,7 @@ public class UltimatePredationAi : IScenarioAi<UltimatePredationState>
         ai.Move(39.25f, EruptionBaits2, jitter: 0.25f);
         ai.Move(41.45f, EruptionBaits3, jitter: 0.25f);
         ai.Move(43.25f, EruptionBaits4, jitter: 0.25f);
-        ai.Move(45.35f, () => AiMove.All(new(0, -8.5f)), jitter: 0.25f);
+        ai.Move(45.35f, () => AiMove.All(new(0, -8.9f)), jitter: 0.25f);
         ai.Move(54f, () => AiMove.All(new(0, -18)), jitter: 0.25f);
         ai.Move(55.75f, UltimaLandslideDodge, jitter: 0.125f);
         ai.Move(58f, () => AiMove.All(new(0, -18)), jitter: 0.25f);

@@ -18,7 +18,7 @@ public sealed record EventObjectSpawnConfig
 
     public sbyte ObjectIndex { get; init; } = -1;
     public byte TargetableStatus { get; init; } = 1; // 1 - untargettable
-    public byte VisibilityFlag { get; init; } = 0;
+    public bool Hidden { get; init; }
     public uint EntityId { get; init; } = 0;
     public uint LayoutId { get; init; } = 0;
     public EventId EventId { get; init; } = 0;

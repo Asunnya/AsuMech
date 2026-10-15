@@ -138,7 +138,6 @@ public sealed class TopP5OmegaScenario : IMultiplayerReplayable
 
     public void Tick(float delta, float elapsed)
     {
-        holderDeaths.Check();
     }
 
     private void Run_Omega_M_4000A63C()

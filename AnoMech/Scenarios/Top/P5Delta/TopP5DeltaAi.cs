@@ -39,7 +39,7 @@ public sealed class TopP5DeltaAi : IScenarioAi<TopP5DeltaState>
         ai.Move(50f, RescueUnsafe);
         ai.Move(56f, ReturnToMiddle);
         ai.Move(56.5f, TankForward);
-        ai.Move(60.0f, BreakLastTether);
+        ai.Move(61.0f, BreakLastTether);
     }
 
     private void Swap01(IAiRoles s)

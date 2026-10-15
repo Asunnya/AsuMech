@@ -47,7 +47,8 @@ public class UmadP2ForsakenScenarioTests
                 tweak?.Invoke(o);
             });
 
-    // A soaker steps out to Kefka just before its tower resolves.
+    // A soaker steps out to Kefka just before its tower resolves, after any All Things Ending
+    // snapshot just ahead of it, which would catch anyone standing on Kefka.
     [TestCase(22.66f, MainTank)]
     [TestCase(32.67f, MainTank)]
     [TestCase(43.71f, MainTank)]
@@ -58,7 +59,7 @@ public class UmadP2ForsakenScenarioTests
     [TestCase(95.82f, MainTank)]
     public void UnderfilledTowerWipes(float tower, PartyRole soaker)
         => Forsaken(soaker)
-            .TeleportAt(tower - 0.1f, to: new(0, 0))
+            .TeleportAt(tower - 0.04f, to: new(0, 0))
             .ShouldKill(ActionId.TheRiverOfLight, PerRole.All);
 
     [Test]
@@ -143,9 +144,9 @@ public class UmadP2ForsakenScenarioTests
 
     // Once Kefka has turned, the player crosses to its own side of the bait.
     [TestCase(0, 38.7f, -9.7f, 0f)]
-    [TestCase(1, 59.6f, 0f, -9.7f)]
-    [TestCase(2, 80.5f, 9.7f, 0f)]
-    [TestCase(3, 101.5f, 6.86f, 6.86f)]
+    [TestCase(1, 59.83f, 0f, -9.7f)]
+    [TestCase(2, 80.87f, 9.7f, 0f)]
+    [TestCase(3, 101.95f, 6.86f, 6.86f)]
     public void CrossingPastKefkaThroughPastsEndDies(int occurrence, float at, float x, float y)
         => Forsaken(MainTank, o => o.EndAttacks[occurrence] = EndAttack.PastsEnd)
             .TeleportAt(at, to: new(x, y))
@@ -154,6 +155,6 @@ public class UmadP2ForsakenScenarioTests
     [Test]
     public void DiesWalkingOffArena()
         => Forsaken(MainTank)
-            .TeleportAt(3f, to: new(0, 20.5f))
+            .DropBelowArenaAt(3f, to: new(0, 20.5f))
             .ShouldKill(TheEnvironment, MainTank);
 }

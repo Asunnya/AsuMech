@@ -20,7 +20,7 @@ namespace AnoMech.Tests;
 //   41.0  Pile Pitch on OT RH SH.
 //   50    M1 rescued from the cone to (-9.5,3.5), breaking M1-M2's green tether.
 //   53.2  Hello World: near OT (0,6) -> M1 and M2 in either order, far MT (0,19) -> R (-19,1) -> C (16,10).
-//   60    R and C meet to break the last green tether.
+//   61    R and C meet to break the last green tether, once the jump targets' vulns are gone.
 public class TopP5DeltaScenarioTests
 {
     private static readonly PartyRole[] Order =
@@ -148,8 +148,7 @@ public class TopP5DeltaScenarioTests
         => Delta(RegenHealer)
             .TeleportAt(33.6f, to: new(-18.15f, -7.1f))
             .TeleportAt(36.2f, to: new(14, -1))
-            .ShouldKill(ActionId.HyperPulseDeltaShoot, MeleeDpsB)
-            .ShouldKill(ActionId.HwTetherFail, AllBut(MeleeDpsB));
+            .ShouldKill(ActionId.HyperPulseDeltaShoot, MeleeDpsB);
 
     // OT carries Near World, so the party goes with them.
     [Test]
@@ -203,13 +202,13 @@ public class TopP5DeltaScenarioTests
             .ShouldKillSomeone(ActionId.OversampledWaveCannonAoe);
 
     // Monitor targets still have Magic Vulnerability Up, the Pile Pitch stack Twice Come Ruin; MT's
-    // from Beyond Defense has run out, but the tether the dead leave unbroken takes them anyway.
+    // from Beyond Defense has run out, but the Hello World holder among the dead wipes them anyway.
     [Test]
     public void BreakingFirstGreenTetherEarlyKillsTheVulnerable()
         => Delta(MeleeDpsA)
             .TeleportAt(44f, to: new(-10, 4))
             .ShouldKill(ActionId.HwTetherBreak, AllBut(MainTank))
-            .ShouldKill(ActionId.HwTetherFail, MainTank);
+            .ShouldKill(ActionId.HelloWorldFail, MainTank);
 
     // The safe side's sign is eye x cannon side; mirrored by the eye east to west as well.
     [TestCase(true, true)]
@@ -257,7 +256,7 @@ public class TopP5DeltaScenarioTests
     [Test]
     public void BreakingLastGreenTetherEarlyKillsHelloWorldJumpTargets()
         => Delta(PhysRangedDps)
-            .TeleportAt(58.6f, to: new(2, 3))
+            .TeleportAt(59.4f, to: new(2, 3))
             .ShouldKill(ActionId.HwTetherBreak, MeleeDpsA, MeleeDpsB, PhysRangedDps, CasterDps);
 
     // R stays put when it should walk in to C.

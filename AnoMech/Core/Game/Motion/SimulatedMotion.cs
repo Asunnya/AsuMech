@@ -110,6 +110,8 @@ internal sealed class SimulatedMotion : CharacterMotion, INavigated
 
     public override void Follow(SimCharacter? target, float speed) => navigator.Follow(target, speed, forced: false);
 
+    public void KeepFacing(SimCharacter? target) => navigator.KeepFacing(target);
+
     public override void Intercept(SimTether? tether, float margin) => navigator.Intercept(tether, margin);
 
     public override void Stop() => navigator.Stop();

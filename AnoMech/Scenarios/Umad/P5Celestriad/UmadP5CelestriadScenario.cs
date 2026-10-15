@@ -19,8 +19,11 @@ namespace AnoMech.Scenarios.Umad.P5Celestriad;
 // the 3 sets (UmadP5CelestriadState.ElementForSet), never their debuff element until the final
 // set, so nobody soaks the same element twice. Free players always fill the doubled element's
 // second active tower. Sets 0 and 2 (the 1st and 3rd soaks) each get a single Catastrophic
-// Choice cast while their towers are lit, and that set resolves exactly when the cast completes;
-// set 1 has no Catastrophic Choice and resolves independently in between, on UNVERIFIED timing.
+// Choice cast while their towers are lit. A set's towers go off about 0.6s after that cast
+// lands, and the Choice's Quake or Tornado 0.2-0.3s after the towers.
+//
+// Retail fires each set's towers from 4 helpers moved onto them when the set lights, alternating
+// two groups: one for sets 0 and 2, another for set 1.
 public sealed class UmadP5CelestriadScenario : IMultiplayerReplayable
 {
     public string Name => "Celestriad";
@@ -44,13 +47,11 @@ public sealed class UmadP5CelestriadScenario : IMultiplayerReplayable
     private SimWorld world = null!;
     private SimParty party = null!;
     private SimEnemy? kefka;
-    private sealed record TowerInstance(
-        CelestriadElement Element,
-        int SubIndex,
-        SimEventObject? Tower,
-        SimEventObject? ActiveOverlay,
-        SimEnemy? Marker);
-    private readonly List<TowerInstance> towerInstances = [];
+    private SimEnemy? choiceHelper;
+    // Aligned with state.AllTowers: active-tower selections use those indices.
+    private readonly List<SimEventObject?> towers = [];
+    // Per set, aligned with state.SetActiveTowers[set].
+    private readonly List<SimEnemy?>[] towerHelpers = [[], [], []];
 
     public void Run(SimWorld worldParam, int? selectedAi)
     {
@@ -58,28 +59,34 @@ public sealed class UmadP5CelestriadScenario : IMultiplayerReplayable
         party = worldParam.Party;
         state = new UmadP5CelestriadState(world.Rng, party, settingsWindow.Overrides);
         LastState = state;
-        towerInstances.Clear();
+        towers.Clear();
+        foreach (var helpers in towerHelpers) helpers.Clear();
 
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<UmadP5CelestriadState>)AiStrats[idx]).Run(state, world);
 
         world.Events.Add(0f, SpawnKefka);
+        world.Events.Add(0f, SpawnChoiceHelper);
         world.Events.Add(1.0f, () => kefka?.Cast(ActionId.Celestriad, animationLock: 3.1f));
         world.Events.Add(6.1f, ApplyDebuffs);
-        world.Events.Add(6.1f, SpawnAllTowers);
-        world.Events.Add(6.1f, () => ActivateTowers(0));
-        world.Events.Add(10.18f, () => LaunchChoice(0));
-        world.Events.Add(14.18f, () => ResolveSet(0));
-        world.Events.Add(14.3f, () => DeactivateTowers(0));
-        world.Events.Add(14.4f, () => ActivateTowers(1));
-        world.Events.Add(20.5f, () => ResolveSet(1));
-        world.Events.Add(20.6f, () => DeactivateTowers(1));
-        world.Events.Add(20.6f, () => ActivateTowers(2));
-        world.Events.Add(22.34f, () => LaunchChoice(2));
-        world.Events.Add(26.34f, () => ResolveSet(2));
-        world.Events.Add(26.44f, () => DeactivateTowers(2));
-        world.Events.Add(29.44f, DespawnAllTowers);
-        world.Events.Add(29.44f, () => kefka?.Despawn());
+        world.Events.Add(6.22f, SpawnAllTowers);
+        world.Events.Add(9.05f, () => SpawnTowerHelpers(0));
+        world.Events.Add(9.05f, () => LightTowers(0));
+        world.Events.Add(10.17f, () => LaunchChoice(0));
+        world.Events.Add(15.06f, () => SpendTowers(0));
+        world.Events.Add(15.06f, () => ResolveTowers(0));
+        world.Events.Add(15.06f, () => SpawnTowerHelpers(1));
+        world.Events.Add(15.06f, () => LightTowers(1));
+        world.Events.Add(15.26f, () => ResolveChoice(0));
+        world.Events.Add(21.01f, () => SpendTowers(1));
+        world.Events.Add(21.01f, () => MoveTowerHelpers(from: 0, to: 2));
+        world.Events.Add(21.01f, () => LightTowers(2));
+        world.Events.Add(21.11f, () => ResolveTowers(1));
+        world.Events.Add(22.30f, () => LaunchChoice(2));
+        world.Events.Add(27.10f, () => SpendTowers(2));
+        world.Events.Add(27.10f, () => ResolveTowers(2));
+        world.Events.Add(27.39f, () => ResolveChoice(2));
+        world.Events.Add(29.44f, DespawnAll);
     }
 
     public void Tick(float delta, float elapsed) { }
@@ -96,6 +103,11 @@ public sealed class UmadP5CelestriadScenario : IMultiplayerReplayable
             Placement: new Placement(Vector3.Zero, MathF.PI)));
     }
 
+    private void SpawnChoiceHelper()
+    {
+        choiceHelper = SpawnHelper(new Placement(Vector3.Zero, MathF.PI));
+    }
+
     // Silent: no cast or animation on the player when the initial debuff lands, just the status.
     private void ApplyDebuffs()
     {
@@ -106,81 +118,98 @@ public sealed class UmadP5CelestriadScenario : IMultiplayerReplayable
         }
     }
 
-    // One cast per applicable set; that set resolves exactly when this cast completes.
     private void LaunchChoice(int set)
     {
         if (state.AeroVariant[set] is not { } choice || kefka is null) return;
         kefka.Cast(choice.CastActionId, animationLock: 3.8f);
     }
 
+    private void ResolveChoice(int set)
+    {
+        if (state.AeroVariant[set] is { } choice)
+            choiceHelper?.Cast(choice.Resolution);
+    }
 
     private void SpawnAllTowers()
     {
         foreach (var tower in state.AllTowers)
         {
-            var eobj = world.SpawnEventObject(new EventObjectSpawnConfig
+            towers.Add(world.SpawnEventObject(new EventObjectSpawnConfig
             {
                 EObjId = tower.Element.TowerEObjId,
-                Placement = new Placement(tower.Position, 0f),
+                LayoutId = EObjId.CelestriadTowerLayoutId + (uint)tower.RingIndex,
+                EventId = EObjId.PropEventId,
+                TargetableStatus = 5,
+                Arg2 = EObjId.CelestriadTowerArg2 + ((uint)tower.RingIndex << 16),
+                Placement = new Placement(tower.Position, MathF.Atan2(-tower.Position.X, -tower.Position.Z)),
                 TimelineState = EObjState.CelestriadTowerDormant,
-            });
-            var marker = world.SpawnEnemy(new EnemySpawnConfig(
-                BNpcBaseId: BNpcBaseId.KefkaHelper,
-                NameId: BNpcNameId.Kefka,
-                Level: 1,
-                Targetable: false,
-                EnemyList: EnemyListMode.Never,
-                Visibility: SpawnVisibility.InvisibleHelper,
-                Placement: new Placement(tower.Position, 0f)));
-            // Keep this aligned with state.AllTowers: active-tower selections use those indices.
-            towerInstances.Add(new TowerInstance(tower.Element, tower.SubIndex, eobj, null, marker));
+            }));
         }
     }
 
-    private void ActivateTowers(int set)
+    private void LightTowers(int set)
     {
         foreach (var towerIndex in state.SetActiveTowers[set])
-        {
-            var tower = state.AllTowers[towerIndex];
-            var overlay = world.SpawnEventObject(new EventObjectSpawnConfig
-            {
-                EObjId = tower.Element.TowerEObjId,
-                Placement = new Placement(tower.Position, 0f),
-                TimelineState = EObjState.CelestriadTowerActive,
-            });
-            if (overlay is null) continue;
-            towerInstances[towerIndex] = towerInstances[towerIndex] with { ActiveOverlay = overlay };
-        }
+            towers[towerIndex]?.PlayBeat(EObjState.CelestriadTowerLit, EObjState.CelestriadTowerLitMask);
     }
 
-    private void DeactivateTowers(int set)
+    private void SpendTowers(int set)
     {
         foreach (var towerIndex in state.SetActiveTowers[set])
-        {
-            towerInstances[towerIndex].ActiveOverlay?.Despawn();
-            towerInstances[towerIndex] = towerInstances[towerIndex] with { ActiveOverlay = null };
-        }
+            towers[towerIndex]?.PlayBeat(EObjState.CelestriadTowerSpent, EObjState.CelestriadTowerSpentMask);
     }
 
-    private void ResolveSet(int set)
+    private void SpawnTowerHelpers(int set)
     {
-        foreach (var tower in towerInstances)
-            if (tower.ActiveOverlay is not null)
-                tower.Marker?.Cast(tower.Element.Tower);
-
-        if (state.AeroVariant[set] is { } choice)
-            kefka?.Cast(choice.Resolution);
+        foreach (var towerIndex in state.SetActiveTowers[set])
+            towerHelpers[set].Add(SpawnHelper(new Placement(state.AllTowers[towerIndex].Position, 0f)));
     }
 
-    private void DespawnAllTowers()
+    // A helper already standing on one of the new set's towers stays there.
+    private void MoveTowerHelpers(int from, int to)
     {
-        foreach (var instance in towerInstances)
+        var targets = state.SetActiveTowers[to];
+        var assigned = new SimEnemy?[targets.Count];
+        var filled = new bool[targets.Count];
+        var free = new Queue<SimEnemy?>();
+        for (var i = 0; i < towerHelpers[from].Count; i++)
         {
-            instance.Tower?.Despawn();
-            instance.ActiveOverlay?.Despawn();
-            instance.Marker?.Despawn();
+            var stay = targets.ToList().IndexOf(state.SetActiveTowers[from][i]);
+            if (stay >= 0) (assigned[stay], filled[stay]) = (towerHelpers[from][i], true);
+            else free.Enqueue(towerHelpers[from][i]);
         }
-        towerInstances.Clear();
+        for (var i = 0; i < targets.Count; i++)
+        {
+            if (filled[i] || !free.TryDequeue(out var helper)) continue;
+            assigned[i] = helper;
+            helper?.SetPosition(new Placement(state.AllTowers[targets[i]].Position, 0f));
+        }
+        towerHelpers[to].AddRange(assigned);
+    }
+
+    private void ResolveTowers(int set)
+    {
+        for (var i = 0; i < towerHelpers[set].Count; i++)
+            towerHelpers[set][i]?.Cast(state.AllTowers[state.SetActiveTowers[set][i]].Element.Tower);
+    }
+
+    private SimEnemy? SpawnHelper(Placement placement) => world.SpawnEnemy(new EnemySpawnConfig(
+        BNpcBaseId: BNpcBaseId.KefkaHelper,
+        NameId: BNpcNameId.Kefka,
+        Level: 1,
+        Targetable: false,
+        EnemyList: EnemyListMode.Never,
+        Visibility: SpawnVisibility.InvisibleHelper,
+        Placement: placement));
+
+    private void DespawnAll()
+    {
+        foreach (var tower in towers) tower?.Despawn();
+        towers.Clear();
+        foreach (var helper in towerHelpers.SelectMany(h => h).Distinct()) helper?.Despawn();
+        foreach (var helpers in towerHelpers) helpers.Clear();
+        choiceHelper?.Despawn();
+        kefka?.Despawn();
     }
 
     public MpMessage? BuildReplayStateMessage()

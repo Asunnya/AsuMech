@@ -95,6 +95,6 @@ public class UmadP5CelestriadScenarioTests
     [Test]
     public void DiesWalkingOffArena()
         => Celestriad(MainTank)
-            .TeleportAt(3f, to: new(0, 20.5f))
+            .DropBelowArenaAt(3f, to: new(0, 20.5f))
             .ShouldKill(TheEnvironment, MainTank);
 }

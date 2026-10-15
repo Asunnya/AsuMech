@@ -172,6 +172,21 @@ public sealed class SimWorld : ISimObject, IDisposable
     }
     
 
+    private readonly List<(ushort StatusId, Action<SimCharacter> Handler)> deathRules = [];
+
+    // For the rest of the run, `handler` runs whenever a party member holding `statusId` goes down,
+    // e.g. a debuff that detonates on its holder's corpse. A death godmode spares doesn't count.
+    public void OnDeathWithStatus(ushort statusId, Action<SimCharacter> handler)
+        => deathRules.Add((statusId, handler));
+
+    // Takes the statuses held before death, since going down wipes them.
+    internal void RunDeathRules(SimCharacter member, IReadOnlyList<SimStatus> heldStatuses)
+    {
+        foreach (var (statusId, handler) in deathRules.ToList())
+            if (heldStatuses.Any(s => s.StatusId == statusId))
+                handler(member);
+    }
+
     // A one-shot VFX sheet row at a scenario-local point, e.g. FRU's Return marker (1013) under each
     // player. Shown on this client only.
     public void PlaceGroundVfx(uint vfxId, Vector3 position)
@@ -181,9 +196,12 @@ public sealed class SimWorld : ISimObject, IDisposable
     // called after ScenarioOrigin is set and the run reseeded: the spawn ring draws from it.
     public void ApplyParty(IReadOnlyList<PartySlot?> roster)
     {
-        Party.Apply(roster, this);
+        SeatParty(roster);
         Party.SetInCombat(true);
     }
+
+    // ApplyParty without entering combat: the party standing in the zone before a run starts.
+    public void SeatParty(IReadOnlyList<PartySlot?> roster) => Party.Apply(roster, this);
 
     public void Tick(float deltaSeconds)
     {
@@ -199,6 +217,7 @@ public sealed class SimWorld : ISimObject, IDisposable
         children.Despawn();
         enemyList.Clear();
         Obstacles.Clear();
+        deathRules.Clear();
         NpcKnockbackStopRadius = null;
         Party.EndRun();
     }

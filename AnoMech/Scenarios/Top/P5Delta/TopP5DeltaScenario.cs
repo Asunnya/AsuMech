@@ -134,7 +134,6 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
     {
         TickTethers(tethersLong, tether => tether.StretchLt(Geometry.HwTetherBreakDistance));
         TickTethers(tethersShort, tether => tether.StretchGt(Geometry.HwTetherBreakDistance));
-        holderDeaths.Check();
     }
 
 

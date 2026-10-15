@@ -1,8 +1,9 @@
 namespace AnoMech.Core.EnemyActions;
 
 // Unique also covers darkness and typeless hits: the game cuts them only by mitigation that reduces
-// all damage, and shows them with the same flytext icon.
-public enum DamageKind { Physical, Magic, Unique }
+// all damage, and shows them with the same flytext icon. Typeless is the same for mitigation, but
+// goes out with attack type 0, as retail sends a hit with no type at all (White Hole).
+public enum DamageKind { Physical, Magic, Unique, Typeless }
 
 public static class DamageKinds
 {
@@ -17,6 +18,7 @@ public static class DamageKinds
     {
         DamageKind.Physical => 1,
         DamageKind.Magic => 5,
+        DamageKind.Typeless => 0,
         _ => 6,
     };
 }

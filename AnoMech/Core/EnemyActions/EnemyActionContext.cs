@@ -65,14 +65,14 @@ public sealed class EnemyActionContext
     // Shown as a dodge, for one who escaped the action, e.g. by facing a gaze correctly.
     public void Dodge(SimCharacter who) => Outcome(who).Dodged = true;
 
-    // Applied now, so effects after this one see it; the client sees it, from the caster, only with
-    // the EffectResult at TimingSpec.DamageDelay. delayToEffectResult: its full duration also runs
-    // from then, instead of from the ability. entryParam goes in the ActionEffect's gain entry.
+    // Applied now, so effects after this one see it, and shown to the client, from the caster, with
+    // the ActionEffect. delayToEffectResult: shown only with the EffectResult at TimingSpec.DamageDelay,
+    // its full duration running from then. entryParam goes in the ActionEffect's gain entry.
     public void AddStatus(SimCharacter who, ushort statusId, float duration = 0f, int stacks = 1, bool delayToEffectResult = false,
         byte entryParam = 0)
     {
         var delay = delayToEffectResult && duration > 0f ? Action.Timing.DamageDelay : 0f;
-        if (who.AddStatus(statusId, duration + delay, stacks, broadcastAddEvent: false, hidden: true) is not { Slot: >= 0 } status) return;
+        if (who.AddStatus(statusId, duration + delay, stacks, broadcastAddEvent: false, hidden: delayToEffectResult) is not { Slot: >= 0 } status) return;
         status.ShownAsFrom(Caster);
         Outcome(who).StatusGains.Add((statusId, entryParam));
         if (status.Hidden) hiddenStatuses.Add(status);

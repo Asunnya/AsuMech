@@ -19,8 +19,8 @@ namespace AnoMech.Tests;
 //          RH (12,6) SH (-6,12); the second wave at 17.32 one slot on round the r=12 square.
 //          Each arrow carries 6y onto the next, so the 16 make one clockwise ring.
 //   22.78  Confetti: MT at (-6,-6) with OT RH SH at (-4,-4); M2 at (6,6) with M1 R C at (4,4).
-//   28.46  Idyllic Will (5y) on MT (0,-7) OT (-7,0) RH (0,15) SH (15,0).
-//   29.09  Confused M1 (0,7) M2 (7,0) R (0,-15) C (-15,0) chase the nearest sleeper; each rides
+//   28.46  Idyllic Will (5y) on MT (0,-9) OT (-9,0) RH (0,15) SH (15,0).
+//   29.09  Confused M1 (0,9) M2 (9,0) R (0,-15) C (-15,0) chase the nearest sleeper; each rides
 //          four arrows of the ring.
 //   41.40  Thrumming Thunder; 41.49 the gaze from (5.25,-66); 42.19 Flagrant Fire, spread with
 //          M1 at (0.7,1.7) and OT at (6.3,6.2), or the stacks on MT and M1.
@@ -61,13 +61,15 @@ public class UmadP1TeleTrouncingScenarioTests
             });
 
     // MT stays on its first arrow, so the second drops onto it and both vanish. C, carried off
-    // M1's second arrow onto the gap, walks on to OT.
+    // M1's second arrow onto the gap, walks on to OT. OT waits beside the gap: left at (-9,0) it
+    // ties with M1, whose ride ends at (-12,0) just as C sets off.
     [Test]
     public void CollidedArrowsLetConfusedPlayerThrough()
         => TeleTrouncing(MainTank)
             .FreezeAt(14.5f)
             .TeleportAt(21f, to: new(-6, -6))
-            .TeleportAt(24f, to: new(0, -7))
+            .TeleportAt(24f, to: new(0, -9))
+            .MoveBotAt(30f, OffTank, to: new(-12, -3))
             .ShouldKill(CommonActions.ConfusedAttack.ActionId, OffTank);
 
     // C takes the first arrow of its own ride 0.14s before Confused lands; the rest of the ride
@@ -109,7 +111,7 @@ public class UmadP1TeleTrouncingScenarioTests
     [Test]
     public void ClippingSleepersIdyllicWillDies()
         => TeleTrouncing(MeleeDpsA)
-            .TeleportAt(28f, to: new(0, -4))
+            .TeleportAt(28f, to: new(0, -6))
             .ShouldKill(ActionId.IndulgentWill, MeleeDpsA);
 
     [Test]
@@ -172,6 +174,6 @@ public class UmadP1TeleTrouncingScenarioTests
     [Test]
     public void DiesWalkingOffArena()
         => TeleTrouncing(MainTank)
-            .TeleportAt(3f, to: new(0, 20.5f))
+            .DropBelowArenaAt(3f, to: new(0, 20.5f))
             .ShouldKill(TheEnvironment, MainTank);
 }

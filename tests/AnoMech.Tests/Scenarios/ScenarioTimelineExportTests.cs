@@ -50,7 +50,12 @@ public class ScenarioTimelineExportTests
                 owner = Property(owner, member).GetValue(owner)
                         ?? throw new ArgumentException($"{path}: {member} is null.");
             var property = Property(owner, members[^1]);
-            property.SetValue(owner, Parse(property.PropertyType, text));
+            var value = Parse(property.PropertyType, text);
+            // A get-only array (EndAttacks { get; } = new EndAttack?[4]) is filled in place.
+            if (!property.CanWrite && property.GetValue(owner) is Array existing && value is Array items)
+                Array.Copy(items, existing, Math.Min(items.Length, existing.Length));
+            else
+                property.SetValue(owner, value);
         }
 
         static PropertyInfo Property(object owner, string member)

@@ -196,6 +196,9 @@ public abstract class SimCharacter : ISimObject, IPositioned
             // overrideStacks: stacks is the absolute target; otherwise it's a
             // relative delta (negative consumes stacks).
             int delta = overrideStacks ? stacks - status.Stacks : stacks;
+            // Reapplying refreshes a status; it gains stacks only up to the sheet's MaxStacks.
+            if (!overrideStacks && delta > 0 && Natives.Data.Status(statusId) is { } row)
+                delta = Math.Clamp(Math.Max((int)row.MaxStacks, 1) - status.Stacks, 0, delta);
             status.Reapply(duration, delta);
             if (status.Stacks == 0)
             {

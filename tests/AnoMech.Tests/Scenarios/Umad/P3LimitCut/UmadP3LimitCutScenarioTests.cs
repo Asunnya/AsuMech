@@ -1,3 +1,4 @@
+using System.Numerics;
 using AnoMech.Core.Game.Party;
 using AnoMech.Scenarios;
 using AnoMech.Scenarios.Umad.P3LimitCut;
@@ -57,16 +58,27 @@ public class UmadP3LimitCutScenarioTests
     // West of Exdeath, so the push runs west: Headwind wants west, Tailwind east.
     [TestCase(RegenHealer, FacingEast)]
     [TestCase(CasterDps, FacingWest)]
-    public void WrongFacingForWindFallsOff(PartyRole player, float facing)
-        => LimitCut(player)
-            .TeleportAt(15.5f, to: new(0, -7), facing: facing)
-            .ShouldKill(TheEnvironment, player);
+    public void WrongFacingForWindPushesOffArena(PartyRole player, float facing)
+        => Assert.That(PushedTo(player, new(0, -7), facing).Length(), Is.GreaterThan(Umad.Geometry.ArenaRadius));
 
     [Test]
-    public void CorrectFacingAtEdgeFallsOff()
-        => LimitCut(CasterDps)
-            .TeleportAt(15.5f, to: new(-15, -7), facing: FacingEast)
-            .ShouldKill(TheEnvironment, CasterDps);
+    public void CorrectFacingAtEdgePushesOffArena()
+        => Assert.That(PushedTo(CasterDps, new(-15, -7), FacingEast).Length(), Is.GreaterThan(Umad.Geometry.ArenaRadius));
+
+    // A headless run has no terrain to fall from, so where the push lands stands in for the fall.
+    private static Vector2 PushedTo(PartyRole player, Vector2 from, float facing)
+    {
+        var landed = Vector2.Zero;
+        ScenarioRun.Execute(typeof(UmadP3LimitCutScenario), 0, Random.Shared.Next(), new ScenarioRunOptions
+        {
+            PlayerRole = player,
+            StopAt = 18f,
+            Overrides = o => Pin((UmadP3LimitCutStateOverrides)o),
+            Takeovers = [new Takeover(15.5f, from, facing)],
+            Probe = p => { if (p.Crossed(17.9f)) landed = new(p.Member(player)!.Position.X, p.Member(player)!.Position.Z); },
+        });
+        return landed;
+    }
 
     [Test]
     public void CycloneAloneDies()
@@ -97,6 +109,6 @@ public class UmadP3LimitCutScenarioTests
     [Test]
     public void DiesWalkingOffArena()
         => LimitCut(MainTank)
-            .TeleportAt(3f, to: new(0, 20.5f))
+            .DropBelowArenaAt(3f, to: new(0, 20.5f))
             .ShouldKill(TheEnvironment, MainTank);
 }

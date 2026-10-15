@@ -51,6 +51,8 @@ internal sealed class Navigator(INavigated walker)
     private SimTether? interceptTether;
     private float interceptMargin = 3f;   // park this many yards short of either tether endpoint
 
+    private SimCharacter? faceTarget;
+
     // Set around RetargetIntercept/TickFollow's own re-issued move so SetDestination doesn't
     // cancel the tracking driving them; any external move cancels a stale Intercept/Follow.
     private bool internalReissue;
@@ -58,7 +60,7 @@ internal sealed class Navigator(INavigated walker)
     public bool IsMoving => destination != null;
     public Vector3? Destination => destination;
     public bool IsIntercepting => interceptTether != null;
-    public bool HasOrders => destination != null || followTarget != null || interceptTether != null;
+    public bool HasOrders => destination != null || followTarget != null || interceptTether != null || faceTarget != null;
 
     public void MoveTo(Vector3 to, float sp, float? finalRot) => SetDestination(to, sp, finalRot, forced: false);
 
@@ -79,6 +81,10 @@ internal sealed class Navigator(INavigated walker)
         interceptTether = null;
         speed = MathF.Max(0f, sp);
     }
+
+    // Turns to the target whenever the walker is free: not held by an animation lock, walking or
+    // following. Outlasts a one-off Face (a cast release faces its own target); null releases it.
+    public void KeepFacing(SimCharacter? target) => faceTarget = target;
 
     // Walk to the nearest point on the tether line and keep tracking it: TickIntercept
     // re-projects every frame so a tether whose endpoints drift is still met. `margin`
@@ -180,7 +186,11 @@ internal sealed class Navigator(INavigated walker)
         TickFollow(deltaSeconds);
         TickIntercept();
 
-        if (destination is not { } dest) return;
+        if (destination is not { } dest)
+        {
+            if (followTarget == null && faceTarget.IsAlive()) Face(faceTarget!.Position);
+            return;
+        }
 
         var cur = walker.Position;
 
@@ -286,6 +296,7 @@ internal sealed class Navigator(INavigated walker)
         followTarget = null;
         followForced = false;
         followCooldown = 0f;
+        faceTarget = null;
         Stop();
     }
 

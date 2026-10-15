@@ -46,9 +46,9 @@ internal sealed record ScenarioRunOptions
 
 // From the first player takeover on, the player stops following the AI, as a human who froze there
 // would; knockbacks and forced moves still apply. A bot (`Bot` set) is only put somewhere: its AI
-// moves it on at its next step. `TeleportTo` is scenario-local XZ; `Facing` uses Placement's
-// convention (0 = +Z).
-internal sealed record Takeover(float At, Vector2? TeleportTo, float? Facing = null, PartyRole? Bot = null);
+// moves it on at its next step. `TeleportTo` is scenario-local XZ, at height `Y`; `Facing` uses
+// Placement's convention (0 = +Z).
+internal sealed record Takeover(float At, Vector2? TeleportTo, float? Facing = null, PartyRole? Bot = null, float Y = 0f);
 
 // One headless scenario run: every seat (the player's included) on the strat's AI, on a fresh
 // fake game, ticked at a fixed rate until it ends.
@@ -179,7 +179,7 @@ internal sealed record ScenarioRun(
         if (world.Party.Get(role) is not { } member) return;
         member.StopMoving();
         if (takeover.TeleportTo is { } to)
-            member.SetPosition(new Vector3(to.X, 0f, to.Y));
+            member.SetPosition(new Vector3(to.X, takeover.Y, to.Y));
         if (takeover.Facing is { } facing)
             member.SetRotation(facing);
         log.Add("TEST", $"{(takeover.Bot is null ? "player" : "bot")} {role} taken over"

@@ -43,7 +43,7 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
         world.Events.Add(25.17f, () => state.ScenarioObjects.TetherSortFrom = state.KefkaPosition[0]);
         world.Events.Add(55.70f, () => state.ScenarioObjects.TetherSortFrom = state.KefkaPosition[1]);
         world.Events.Add(89.95f, () => state.ScenarioObjects.TetherSortFrom = state.KefkaPosition[2]);
-        world.Events.Add(123.34f, () => state.ScenarioObjects.TetherSortFrom = state.KefkaPosition[3]);
+        world.Events.Add(123.83f, () => state.ScenarioObjects.TetherSortFrom = state.KefkaPosition[3]);
 
         ai.Move(7f, StackCentreTanksHoldBossesCentred);
         ai.Move(11f, StackCentre);

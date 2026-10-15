@@ -385,6 +385,9 @@ public sealed class SimEnemy : SimNpc
 
     public override bool AnimationLock => Casting.IsBusy;
 
+    // Stays turned toward the target, holding still while casting or animation-locked; null releases it.
+    public void KeepFacing(SimCharacter? target) => motion.KeepFacing(target);
+
     public const float DefaultCorpseFadeDelay = 8f;
     private const float CorpseFadeDuration = 1.7f;
 

@@ -32,6 +32,18 @@ public static class UmadConstants
     {
         public const uint KefkaP3     = 0xBC1726U;
         public const uint GravenImage = 0xBC1727U;
+        public const uint GodKefka    = 0xBC1728U;
+        public const uint KefkaClone  = 0xBC172FU;
+        public const uint KefkaCloneP3 = 0xC2724CU;
+        public const uint ChaosP3     = 0xBC172AU;
+        public const uint KefkaP5     = 0xBC172DU;
+        public const uint Exdeath     = 0xBC172BU;
+        public const uint BlackHole   = 0xBC172EU;
+    }
+
+    public static class BNpcStateId
+    {
+        public const uint KefkaLimitCut = 48;
     }
 
     public static class BNpcNameId
@@ -60,6 +72,9 @@ public static class UmadConstants
         public const uint CelestriadFireTower      = 2015294;
         public const uint CelestriadIceTower       = 2015295;
         public const uint CelestriadLightningTower = 2015296;
+        // Ring positions clockwise from the 20° one; layout and Arg2 index step by one per tower.
+        public const uint CelestriadTowerLayoutId  = 0xBC1A06U;
+        public const uint CelestriadTowerArg2      = 0x00410003U;
 
         // The statue SGBs are pre-placed in the zone, so a spawn must bind to their layout
         // instance; a LayoutId-less spawn loads a detached copy nothing ever activates.
@@ -75,6 +90,14 @@ public static class UmadConstants
         public const uint GazeStatueInvertedAnimLayoutId = 0xBC1796U; // gaze pair
         public const uint GravenStatueLayoutId           = 0xBC7C91U;
         public const uint GravenStatueArg2               = 0x00400003U;
+        public const uint EarthCoreLayoutId              = 0xC0ED54U;
+        public const uint EarthCoreArg2                  = 0x00440003U;
+        // One placement per intercardinal the crystal can land on.
+        public const uint WindCrystalNeLayoutId          = 0xBC1865U;
+        public const uint WindCrystalSeLayoutId          = 0xBC1866U;
+        public const uint WindCrystalSwLayoutId          = 0xBC1867U;
+        public const uint WindCrystalNwLayoutId          = 0xBC1868U;
+        public const uint WindCrystalArg2                = 0x00430003U;
 
         // Hidden state; "appear" (0x0001/0x0002) brings the statue up.
         public const ushort GazeStatueSpawnState = 0x0004;
@@ -87,7 +110,10 @@ public static class UmadConstants
     {
         public const uint TelePortentUsed = 7;
         public const ushort CelestriadTowerDormant = 2;
-        public const ushort CelestriadTowerActive  = 16;
+        public const uint CelestriadTowerLit       = 16;
+        public const uint CelestriadTowerLitMask   = 0x20;
+        public const uint CelestriadTowerSpent     = 1;
+        public const uint CelestriadTowerSpentMask = 0x40;
     }
 
     public static class Spawn
@@ -173,8 +199,11 @@ public static class UmadConstants
         public const uint GrandCross                   = 0xBB14U; // circle r=100, cast 9.0s
         public const uint DeathBomb                    = 0xBB15U; // single-target, instant
         public const uint DeathShriek                  = 0xBB16U; // circle r=100, instant
+        public const uint DeathShriek_Lie              = 0xBB17U; // circle r=100, instant
         public const uint DeathBolt                    = 0xBB18U; // circle r=8, instant
+        public const uint DeathBolt_Lie                = 0xBB19U; // circle r=8, instant
         public const uint DeathWave                    = 0xBB1AU; // circle r=8, instant
+        public const uint DeathWave_Lie                = 0xBB1BU; // circle r=8, instant
         public const uint DeathSurge                   = 0xBB1CU; // circle r=100, instant
         public const uint Inferno                      = 0xBB1EU; // single-target, cast 9.0s
         public const uint Tsunami                      = 0xBB1FU; // single-target, cast 9.0s
@@ -301,6 +330,7 @@ public static class UmadConstants
         public const ushort NeoExdeathShow = (ushort)0x11D1;
         public const ushort KefkaFireLine  = (ushort)0x0C8A;
         public const ushort KefkaP1End     = (ushort)0x1E39;
+        public const ushort KefkaP3Show    = (ushort)0x11D4; // mon_sp/[SKL_ID]/show/mon_sp004
     }
 
     public static class TetherId
