@@ -107,6 +107,62 @@ public class RelayClientTests
         finally { source.Stop(); target.Stop(); }
     }
 
+    // A relay password must never cross the wire unencrypted: an address without a scheme loses
+    // its ws:// fallback, and one typed as ws:// or http:// isn't dialed at all.
+    [TestCase("")]
+    [TestCase("ws://")]
+    [TestCase("http://")]
+    public async Task PasswordIsNeverSentUnencrypted(string scheme)
+    {
+        const string password = "relay-password";
+        var listener = new TcpListener(IPAddress.Loopback, 0);
+        listener.Start();
+        var received = new List<byte[]>();
+        using var stop = new CancellationTokenSource();
+        var recording = RecordConnections(listener, received, stop.Token);
+        try
+        {
+            using var client = new RelayClient(RelayWire.NewSecret());
+            var code = await client.ConnectAndHostAsync($"{scheme}127.0.0.1:{((IPEndPoint)listener.LocalEndpoint).Port}", password)
+                .WaitAsync(TimeSpan.FromSeconds(5));
+            Assert.That(code, Is.Null);
+        }
+        finally
+        {
+            stop.Cancel();
+            listener.Stop();
+            await recording;
+        }
+        Assert.That(received.Select(bytes => Encoding.ASCII.GetString(bytes)), Has.None.Contains(password), "password sent in the clear");
+        Assert.That(received, Has.All.Matches<byte[]>(bytes => bytes.Length > 0 && bytes[0] == 0x16), "nothing but a TLS handshake was sent");
+        Assert.That(received, Has.Count.EqualTo(scheme == "" ? 1 : 0), "only the wss:// attempt is dialed");
+    }
+
+    // Keeps what each connection sends up to the end of its HTTP headers, or only its first read
+    // when that opens a TLS handshake, then hangs up.
+    private static async Task RecordConnections(TcpListener listener, List<byte[]> received, CancellationToken stop)
+    {
+        try
+        {
+            while (true)
+            {
+                using var connection = await listener.AcceptTcpClientAsync(stop);
+                var stream = connection.GetStream();
+                using var bytes = new MemoryStream();
+                var buffer = new byte[4096];
+                int read;
+                while ((read = await stream.ReadAsync(buffer, stop)) > 0)
+                {
+                    bytes.Write(buffer, 0, read);
+                    var soFar = bytes.ToArray();
+                    if (soFar[0] == 0x16 || soFar.AsSpan().IndexOf("\r\n\r\n"u8) >= 0) break;
+                }
+                received.Add(bytes.ToArray());
+            }
+        }
+        catch (Exception) when (stop.IsCancellationRequested) { }
+    }
+
     private static async Task<(WebSocket Socket, string Path, Dictionary<string, string> Headers)> AcceptSocket(TcpListener listener)
     {
         var client = await listener.AcceptTcpClientAsync();

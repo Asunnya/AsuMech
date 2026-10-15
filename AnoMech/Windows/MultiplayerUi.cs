@@ -194,7 +194,7 @@ internal sealed class MultiplayerUi
         var joining = !mp.IsHost && !mp.EverHeardFromHost;
         if (mp.IsHostConnecting || joining)
         {
-            ImGui.TextUnformatted(mp.IsHostConnecting ? "Starting session..." : $"Joining {mp.SessionCode}...");
+            ImGui.TextUnformatted(mp.IsHostConnecting ? "Starting session..." : $"Joining {mp.SessionCode}: {JoinProgress()}");
             ImGui.SameLine();
             if (StripButton("Cancel")) LeaveSession();
             return;
@@ -233,6 +233,15 @@ internal sealed class MultiplayerUi
             ImGui.SetTooltip(mp.IsHost
                 ? "End the session for everyone and go back to solo play."
                 : "Leave the session and go back to solo play. Mid-fight this ends the run for everyone.");
+    }
+
+    // Where the join is, and how long until it gives up.
+    private string JoinProgress()
+    {
+        var step = mp.IsReconnecting ? "can't reach the server, retrying"
+            : mp.IsWaitingForHost ? "waiting for the host to answer"
+            : "connecting to the server";
+        return $"{step}... ({mp.JoinElapsedSeconds:F0}/{MultiplayerManager.JoinDeadlineSeconds:F0}s)";
     }
 
     // One fixed height for every strip button, whatever styling each pushes.
@@ -306,7 +315,12 @@ internal sealed class MultiplayerUi
     // Warnings and errors, between the session strip and Start.
     internal void DrawSessionMessages(ScenarioSelection? selection)
     {
-        if (mp.IsHostConnecting || (!mp.IsHost && !mp.EverHeardFromHost)) return;
+        if (mp.IsHostConnecting) return;
+        if (!mp.IsHost && !mp.EverHeardFromHost)
+        {
+            if (mp.ConnectionError is { } joinError) ImGui.TextColored(WarnColor, $"Last attempt: {joinError}");
+            return;
+        }
 
         if (!mp.IsConnected)
         {

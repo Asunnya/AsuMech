@@ -125,6 +125,17 @@ public sealed partial class MultiplayerManager
         SubscribeGameEventsOnce();
         DrainPendingMessages();
 
+        // Before the IsConnected return below: the join may still be connecting or reconnecting.
+        if (IsJoinTimedOut)
+        {
+            var reason = JoinTimedOutReason();
+            DiagnosticLog.Warn($"[Multiplayer] Gave up joining session {SessionCode} after {JoinDeadlineMs / 1000}s: {reason}");
+            LeaveSession();
+            SessionEndReason = reason;
+            LobbyChanged?.Invoke();
+            return;
+        }
+
         // Before the IsConnected return below: this is the relay-down case.
         if (IsHost && disconnectedSinceMs is { } since && running && Plugin.Game.World.Map.IsInInstance
             && Environment.TickCount64 - since > PeerStaleTimeoutMs)
@@ -181,8 +192,10 @@ public sealed partial class MultiplayerManager
         else if (IsSessionNotFound)
         {
             DiagnosticLog.Warn($"[Multiplayer] No host responded within {NoHostFoundTimeoutMs / 1000}s of joining session {SessionCode} -- session not found.");
+            var reason = $"Reached the server, but no host answered in session {SessionCode}. "
+                         + "Check the code, or ask the host whether their session is still up.";
             LeaveSession();
-            SessionEndReason = "Session not found.";
+            SessionEndReason = reason;
             LobbyChanged?.Invoke();
             return;
         }

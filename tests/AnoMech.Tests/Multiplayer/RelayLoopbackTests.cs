@@ -1,4 +1,7 @@
+using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Net;
+using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Text.Json;
 using AnoMech.Multiplayer;
@@ -78,6 +81,82 @@ public class RelayLoopbackTests
         }
     }
 
+    // An address typed without a scheme dials wss:// first. A plain relay turns that away at once,
+    // so the ws:// fallback doesn't wait out the fallback cap.
+    [Test]
+    public async Task BareAddressJoinDoesNotWaitOutTheFallbackCap()
+    {
+        await using var server = new RelayServer(new RelayOptions { BindAddress = IPAddress.Loopback, Port = 0 }, new QuietLog());
+        server.Start();
+        var url = $"127.0.0.1:{server.LocalEndPoint!.Port}";
+
+        using var host = new RelayClient(RelayWire.NewSecret());
+        var code = await Within(host.ConnectAndHostAsync(url), "host connect");
+        Assert.That(code, Is.Not.Null, "hosted from a bare address");
+        Assert.That(host.FellBackToUnencrypted, "hosted over the ws:// fallback");
+        var helloReceived = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        host.MessageReceived += (message, fromHost, connection, sender) => { if (message is HelloMessage) helloReceived.TrySetResult(true); };
+
+        var peerSecret = RelayWire.NewSecret();
+        using var peer = new RelayClient(peerSecret);
+        var answered = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        peer.MessageReceived += (message, fromHost, connection, sender) => { if (fromHost && message is PingMessage) answered.TrySetResult(true); };
+        var elapsed = Stopwatch.StartNew();
+        await Within(peer.ConnectAsync(url, code!), "peer connect");
+        Assert.That(peer.IsConnected, "joined from a bare address");
+        await peer.SendAsync(new HelloMessage(RelayWire.PeerId(peerSecret), "Test", "1", "test"));
+        await Within(helloReceived.Task, "hello");
+        await host.SendAsync(new PingMessage(1));
+        await Within(answered.Task, "host answer");
+        Assert.That(elapsed.Elapsed, Is.LessThan(peer.FallbackAfter), "host answered before the cap would have run out");
+    }
+
+    // A plain relay older than RelayHttp's TLS check holds a bare address's wss:// attempt for its
+    // 10 s handshake timeout, and a port that silently drops packets holds it until the OS gives
+    // up. The ws:// fallback must still get the join answered before MultiplayerManager abandons
+    // it, 15 s after Join.
+    [Test]
+    public async Task BareAddressJoinGetsPastAnEncryptedAttemptThatNeverAnswers()
+    {
+        await using var server = new RelayServer(new RelayOptions { BindAddress = IPAddress.Loopback, Port = 0 }, new QuietLog());
+        server.Start();
+        await using var front = new RelayFront(server.LocalEndPoint!.Port, holdEncrypted: true, TimeSpan.Zero);
+
+        using var host = new RelayClient(RelayWire.NewSecret());
+        var code = await Within(host.ConnectAndHostAsync($"ws://127.0.0.1:{server.LocalEndPoint.Port}"), "host connect");
+        var helloReceived = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        host.MessageReceived += (message, fromHost, connection, sender) => { if (message is HelloMessage) helloReceived.TrySetResult(true); };
+
+        var peerSecret = RelayWire.NewSecret();
+        using var peer = new RelayClient(peerSecret);
+        var answered = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        peer.MessageReceived += (message, fromHost, connection, sender) => { if (fromHost && message is PingMessage) answered.TrySetResult(true); };
+        var joinDeadline = TimeSpan.FromSeconds(15);
+        var elapsed = Stopwatch.StartNew();
+        await peer.ConnectAsync($"127.0.0.1:{front.Port}", code!).WaitAsync(joinDeadline);
+        Assert.That(front.EncryptedAttempts, Is.EqualTo(1), "the wss:// attempt was made and left unanswered");
+        Assert.That(peer.IsConnected && peer.FellBackToUnencrypted, "joined over the ws:// fallback");
+        await peer.SendAsync(new HelloMessage(RelayWire.PeerId(peerSecret), "Test", "1", "test"));
+        await Within(helloReceived.Task, "hello");
+        await host.SendAsync(new PingMessage(1));
+        await Within(answered.Task, "host answer");
+        Assert.That(elapsed.Elapsed, Is.LessThan(joinDeadline), "host answered before the join is abandoned");
+    }
+
+    // The cap only moves on to a fallback: with none left, a slow relay is waited for, whether the
+    // address names its scheme or the fallback itself is slow.
+    [TestCase("ws://")]
+    [TestCase("")]
+    public async Task SlowRelayIsWaitedForWhenNoFallbackIsLeft(string scheme)
+    {
+        await using var server = new RelayServer(new RelayOptions { BindAddress = IPAddress.Loopback, Port = 0 }, new QuietLog());
+        server.Start();
+        await using var front = new RelayFront(server.LocalEndPoint!.Port, holdEncrypted: false, TimeSpan.FromSeconds(1));
+        using var host = new RelayClient(RelayWire.NewSecret()) { FallbackAfter = TimeSpan.FromMilliseconds(200) };
+        Assert.That(await Within(host.ConnectAndHostAsync($"{scheme}127.0.0.1:{front.Port}"), "host connect"), Is.Not.Null, "hosted through the slow relay");
+        Assert.That(host.FellBackToUnencrypted, Is.EqualTo(scheme == ""));
+    }
+
     [Test]
     public async Task StoppingTheRelayDropsItsConnections()
     {
@@ -96,6 +175,12 @@ public class RelayLoopbackTests
     private static async Task<T> Within<T>(Task<T> task, string what)
     {
         try { return await task.WaitAsync(TimeSpan.FromSeconds(5)); }
+        catch (TimeoutException) { throw new TimeoutException($"Timed out: {what}"); }
+    }
+
+    private static async Task Within(Task task, string what)
+    {
+        try { await task.WaitAsync(TimeSpan.FromSeconds(5)); }
         catch (TimeoutException) { throw new TimeoutException($"Timed out: {what}"); }
     }
 
@@ -126,6 +211,72 @@ public class RelayLoopbackTests
         WebSocketReceiveResult result;
         do { result = await socket.ReceiveAsync(buffer, timeout.Token); output.Write(buffer, 0, result.Count); } while (!result.EndOfMessage);
         return (output.ToArray(), result.MessageType);
+    }
+
+    // Stands in front of the relay at relayPort. A connection that opens with a TLS ClientHello is
+    // left unanswered when holdEncrypted; every other one reaches the relay after delay.
+    private sealed class RelayFront : IAsyncDisposable
+    {
+        private readonly TcpListener listener = new(IPAddress.Loopback, 0);
+        private readonly CancellationTokenSource stop = new();
+        private readonly ConcurrentBag<TcpClient> accepted = [];
+        private readonly Task accepting;
+        private int encryptedAttempts;
+
+        public RelayFront(int relayPort, bool holdEncrypted, TimeSpan delay)
+        {
+            listener.Start();
+            accepting = AcceptAsync(relayPort, holdEncrypted, delay);
+        }
+
+        public int Port => ((IPEndPoint)listener.LocalEndpoint).Port;
+        public int EncryptedAttempts => Volatile.Read(ref encryptedAttempts);
+
+        private async Task AcceptAsync(int relayPort, bool holdEncrypted, TimeSpan delay)
+        {
+            try
+            {
+                while (true)
+                {
+                    var client = await listener.AcceptTcpClientAsync(stop.Token);
+                    accepted.Add(client);
+                    _ = ServeAsync(client, relayPort, holdEncrypted, delay);
+                }
+            }
+            catch (Exception) when (stop.IsCancellationRequested) { }
+        }
+
+        private async Task ServeAsync(TcpClient client, int relayPort, bool holdEncrypted, TimeSpan delay)
+        {
+            try
+            {
+                var stream = client.GetStream();
+                var first = new byte[1];
+                if (await stream.ReadAsync(first, stop.Token) == 0) return;
+                if (first[0] == 0x16)
+                {
+                    Interlocked.Increment(ref encryptedAttempts);
+                    if (holdEncrypted) return;
+                }
+                await Task.Delay(delay, stop.Token);
+                using var relay = new TcpClient();
+                await relay.ConnectAsync(IPAddress.Loopback, relayPort, stop.Token);
+                var upstream = relay.GetStream();
+                await upstream.WriteAsync(first, stop.Token);
+                await Task.WhenAny(stream.CopyToAsync(upstream, stop.Token), upstream.CopyToAsync(stream, stop.Token));
+                client.Dispose();
+            }
+            catch (Exception) { }
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            stop.Cancel();
+            listener.Stop();
+            foreach (var client in accepted) client.Dispose();
+            await accepting;
+            stop.Dispose();
+        }
     }
 
     // A close frame or an abort, after any room traffic already on its way; silence is a failure.
