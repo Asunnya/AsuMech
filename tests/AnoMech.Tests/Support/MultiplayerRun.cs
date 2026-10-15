@@ -68,13 +68,15 @@ internal sealed class MultiplayerRun
     // runs: the fight played again after the host's Reset, in the same stay and on the same rolls,
     // as forced rolls replay it. interrupt: the faults to put on the links, by client (the host 0,
     // then the peers), before anyone connects. inputs: what a client's player does, by client and
-    // seconds into the host's fight.
+    // seconds into the host's fight. configure: each client's own settings, before anyone connects.
     public static MultiplayerRun Play(Type scenarioType, int strat, int seed, PlayerSeat host, IReadOnlyList<PlayerSeat> peers,
         ConnectionProfile? hostLink = null, ConnectionProfile? peerLink = null, double timeout = 600, bool immortal = false, int runs = 1,
-        Action<TestRelay>? interrupt = null, IEnumerable<(double At, int Client, Action<TestClient> Input)>? inputs = null)
+        Action<TestRelay>? interrupt = null, IEnumerable<(double At, int Client, Action<TestClient> Input)>? inputs = null,
+        Action<TestClient>? configure = null)
     {
         var run = new MultiplayerRun(seed, host, peers, hostLink ?? TestRelay.Perfect, peerLink ?? TestRelay.Perfect);
         interrupt?.Invoke(run.Relay);
+        foreach (var client in run.Peers.Prepend(run.Host)) configure?.Invoke(client);
         run.inputs.AddRange((inputs ?? []).OrderBy(i => i.At));
         run.Host.Game.GodMode = immortal;
         run.Host.Game.PartyMemberKilled += (role, cause, actionId) => run.deaths.Add(new Death(role, cause, actionId, run.Host.Game.World.Events.Elapsed, ""));
