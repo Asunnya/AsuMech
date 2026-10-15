@@ -62,7 +62,39 @@ namespace AnoMech.Multiplayer;
 [JsonDerivedType(typeof(PeerAppliedEnemyStatusMessage), "peerAppliedEnemyStatus")]
 [JsonDerivedType(typeof(PeerAppliedRoleStatusMessage), "peerAppliedRoleStatus")]
 [JsonDerivedType(typeof(KickMessage), "kick")]
-public abstract record MpMessage;
+[JsonDerivedType(typeof(StreamStateMessage), "streamState")]
+[JsonDerivedType(typeof(StreamGapMessage), "streamGap")]
+[JsonDerivedType(typeof(StreamLostMessage), "streamLost")]
+public abstract record MpMessage
+{
+    // Its place in the sender's stream (SessionStream); 0 outside it.
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public long Seq { get; init; }
+
+    // On a peer's numbered message, or its StreamLost, which of its streams it's about: each join
+    // starts a new one.
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public long Epoch { get; init; }
+}
+
+// Sent outside the sender's stream: never numbered, kept or sent again. Only the newest one
+// matters (poses, pings, statuses), or it keeps the stream itself in step.
+internal interface IUnsequencedMessage;
+
+// Host -> PeerId, answering the Hello of its stream StreamEpoch: the host's latest message (where
+// a fresh join starts) and the last of that stream's the host has taken.
+public sealed record StreamStateMessage(Guid PeerId, long StreamEpoch, long Sent, long Received) : MpMessage, IHostOnlyMessage, IUnsequencedMessage;
+
+// How far the host has taken one peer's stream, named by its epoch: a peer that joined again only
+// trusts what is about its current one.
+public sealed record StreamCursor(Guid PeerId, long Epoch, long Received);
+
+// The sender lacks the other end's messages from From on. From a peer, PeerId is the sender;
+// from the host, the peer whose stream it is.
+public sealed record StreamGapMessage(Guid PeerId, long From) : MpMessage, IUnsequencedMessage;
+
+// The answer to a StreamGap that can't be filled any more: go on from Next. PeerId as StreamGap's.
+public sealed record StreamLostMessage(Guid PeerId, long Next) : MpMessage, IUnsequencedMessage;
 
 // Only the host legitimately sends these; DispatchCore drops one the relay says came from
 // elsewhere. A relay without "senderIdentity" can't attest, and the tag then defaults to
@@ -73,8 +105,10 @@ internal interface IHostOnlyMessage;
 internal interface IScenarioReplayStateMessage : IHostOnlyMessage;
 internal interface IScenarioMidRunUpdateMessage : IHostOnlyMessage;
 
-// Peer -> host on connect. Version/Checksum catch a build mismatch before it desyncs.
-public sealed record HelloMessage(Guid PeerId, string DisplayName, string Version, string Checksum, byte ClassJob = 0) : MpMessage;
+// Peer -> host on connect. Version/Checksum catch a build mismatch before it desyncs. Stream*: the
+// peer's stream (a new epoch for each join) and how far it has taken the host's, -1 if not yet.
+public sealed record HelloMessage(Guid PeerId, string DisplayName, string Version, string Checksum, byte ClassJob = 0,
+    long StreamEpoch = 0, long StreamSent = 0, long StreamReceived = -1) : MpMessage, IUnsequencedMessage;
 
 public sealed record PeerBuildInfo(string Version, string Checksum)
 {
@@ -129,12 +163,12 @@ public sealed record StartCheckResponseMessage(Guid PeerId, bool Ready, string? 
 public sealed record StartAbortMessage(Guid PeerId, string Reason) : MpMessage;
 
 // Peer -> host. Applied to that peer's SimNetworkPuppet and republished in the next Roles list.
-public sealed record SelfPoseMessage(Guid PeerId, float X, float Y, float Z, float Rotation) : MpMessage;
+public sealed record SelfPoseMessage(Guid PeerId, float X, float Y, float Z, float Rotation) : MpMessage, IUnsequencedMessage;
 
 // The players' seats, the host's own included, where the host has them.
 public sealed record RoleState(PartyRole Role, float X, float Y, float Z, float Rotation);
 
-public sealed record RolesSnapshotMessage(List<RoleState> Roles) : MpMessage, IHostOnlyMessage;
+public sealed record RolesSnapshotMessage(List<RoleState> Roles) : MpMessage, IHostOnlyMessage, IUnsequencedMessage;
 
 // One per Game.PartyMemberKilled; the recipient kills whatever holds that role locally.
 public sealed record RoleKilledMessage(PartyRole Role, string Cause) : MpMessage, IHostOnlyMessage;
@@ -157,14 +191,16 @@ public sealed record FollowMessage(PartyRole Role, PartyRole? TargetRole, uint T
 public sealed record EndMessage(bool ReturnedToInn, string? Reason = null) : MpMessage, IHostOnlyMessage;
 
 // Every PingIntervalSeconds, lobby included. SentAtMs is the host's own clock and only the
-// host compares it.
-public sealed record PingMessage(long SentAtMs) : MpMessage, IHostOnlyMessage;
+// host compares it. StreamSent: the host's latest message; StreamReceived: how far it has taken
+// each peer's. Clock: the run's, while one is up.
+public sealed record PingMessage(long SentAtMs, long StreamSent = 0, List<StreamCursor>? StreamReceived = null, RunClockState? Clock = null)
+    : MpMessage, IHostOnlyMessage, IUnsequencedMessage;
 
-public sealed record PongMessage(Guid PeerId, long SentAtMs) : MpMessage;
+public sealed record PongMessage(Guid PeerId, long SentAtMs, long StreamEpoch = 0, long StreamSent = 0, long StreamReceived = -1) : MpMessage, IUnsequencedMessage;
 
 public sealed record PeerStatusEntry(float? LatencyMs, float SecondsSinceLastSeen);
 
-public sealed record PeerStatusMessage(Dictionary<Guid, PeerStatusEntry> Statuses) : MpMessage, IHostOnlyMessage;
+public sealed record PeerStatusMessage(Dictionary<Guid, PeerStatusEntry> Statuses) : MpMessage, IHostOnlyMessage, IUnsequencedMessage;
 
 // From whoever clicks Leave session. Ends the session for everyone only when
 // PeerId == Session.HostId; a departing peer is just dropped from the roster.

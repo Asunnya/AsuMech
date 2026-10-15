@@ -21,7 +21,7 @@ public sealed partial class MultiplayerManager
         if (pendingSelfPoseSend is not (null or { IsCompleted: true })) return;
         var player = Plugin.Game.World.Party.Player;
         if (player == null) return;
-        pendingSelfPoseSend = relay!.SendAsync(new SelfPoseMessage(MyPeerId, player.Position.X, player.Position.Y, player.Position.Z, player.Rotation));
+        pendingSelfPoseSend = Send(new SelfPoseMessage(MyPeerId, player.Position.X, player.Position.Y, player.Position.Z, player.Rotation));
     }
 
     public void ReportAppliedEnemyStatus(IReadOnlyList<SimEnemy> enemies, ushort statusId, float duration)
@@ -30,14 +30,14 @@ public sealed partial class MultiplayerManager
         var hostIds = enemies.Select(replay.HostActorOf).Where(id => id != PacketActor.None).ToList();
         if (hostIds.Count == 0) return;
         DiagnosticLog.Info($"[Multiplayer] Peer: reporting applied status {statusId} on the host's enemies [{string.Join(",", hostIds.Select(id => $"0x{id:X}"))}].");
-        _ = relay.SendAsync(new PeerAppliedEnemyStatusMessage(MyPeerId, hostIds, statusId, duration));
+        _ = Send(new PeerAppliedEnemyStatusMessage(MyPeerId, hostIds, statusId, duration));
     }
 
     public void ReportAppliedRoleStatus(IReadOnlyList<PartyRole> roles, ushort statusId, float duration, ushort param)
     {
         if (IsHost || relay is not { IsConnected: true } || roles.Count == 0) return;
         DiagnosticLog.Info($"[Multiplayer] Peer: reporting applied status {statusId} on roles [{string.Join(",", roles)}] to host.");
-        _ = relay.SendAsync(new PeerAppliedRoleStatusMessage(MyPeerId, roles.ToList(), statusId, duration, param));
+        _ = Send(new PeerAppliedRoleStatusMessage(MyPeerId, roles.ToList(), statusId, duration, param));
     }
 
     // ---- Host: applying a peer's reported pose to their puppet -------------
@@ -140,7 +140,7 @@ public sealed partial class MultiplayerManager
         DiagnosticLog.Info("[Multiplayer] Peer is in the zone with the party seated -- telling the host.");
         foreach (var packet in earlyPackets) replay?.Apply(packet);
         earlyPackets.Clear();
-        _ = relay?.SendAsync(new EnteredMessage(MyPeerId));
+        _ = Send(new EnteredMessage(MyPeerId));
     }
 
     // Idempotent: a fresh start delivers both LobbyState(Started) and StartMessage. A peer that
@@ -154,6 +154,7 @@ public sealed partial class MultiplayerManager
         hostClockAtStart = clock;
         hostClockReceivedAt = Time.GetTimestamp();
         eventClockSynced = false;
+        pingClock = null;
         if (peerNatives != null) peerNatives.HostOwnsArena = true;
         Plugin.Game.StartScenario(p, OnPeerStartResolved);
     }

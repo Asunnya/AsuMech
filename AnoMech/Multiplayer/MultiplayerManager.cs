@@ -132,14 +132,6 @@ public sealed partial class MultiplayerManager : IDisposable
 
     private bool aiReplayStateSent;
 
-    // EndMessage is resent a few times: a lost one would leave peers waiting out PeerStaleTimeoutMs.
-    private const int EndMessageResendCount = 4;
-    private const float EndMessageResendIntervalSeconds = 1f;
-    private bool? pendingEndResendReturnedToInn;
-    private string? pendingEndResendReason;
-    private int endResendsRemaining;
-    private float endResendTimer;
-
     // The deferred ZoneIn/StartScenario set ActiveScenario frames late; without this Tick() would read the
     // null as "run ended".
     private bool hostScenarioStarted;
@@ -164,6 +156,8 @@ public sealed partial class MultiplayerManager : IDisposable
         { TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(4), TimeSpan.FromSeconds(8), TimeSpan.FromSeconds(15) };
     private CancellationTokenSource? reconnectCts;
     private bool reconnecting;
+    private bool reconnectAttemptInFlight;
+    private long reconnectDueMs;
     public bool IsReconnecting => reconnecting;
     // Host-only; lets Tick() end a run whose peers have all given up (IsHostStale) while the
     // host would otherwise keep retrying.
@@ -260,6 +254,7 @@ public sealed partial class MultiplayerManager : IDisposable
         RelayUrl = relayUrl;
         relayAccessToken = Plugin.Config.TokenForRelay(relayUrl);
         Session = new MultiplayerSession { HostId = MyPeerId };
+        OpenStream(host: true);
         Session.Names[MyPeerId] = DisplayName;
         Session.Jobs[MyPeerId] = LocalClassJob;
         Session.Builds[MyPeerId] = new PeerBuildInfo(PluginBuildInfo.Version, PluginBuildInfo.Checksum);
@@ -300,6 +295,7 @@ public sealed partial class MultiplayerManager : IDisposable
         relayAccessToken = Plugin.Config.TokenForRelay(relayUrl);
         SessionCode = normalized;
         Session = new MultiplayerSession();
+        OpenStream(host: false);
         // Seeded to now, or the host reads as silent since 1970 until its first broadcast.
         lastHostMessageMs = NowMs;
         everHeardFromHost = false;
@@ -329,7 +325,7 @@ public sealed partial class MultiplayerManager : IDisposable
     // or dropped one mustn't start it.
     private async Task SendHelloAsync(IRelayConnection client)
     {
-        await client.SendAsync(new HelloMessage(MyPeerId, DisplayName, PluginBuildInfo.Version, PluginBuildInfo.Checksum, LocalClassJob));
+        await client.SendAsync(NewHello(LocalClassJob));
         if (client != relay || !client.IsConnected) return;
         Interlocked.Exchange(ref helloSentMs, NowMs);
         joinReachedRelay = true;
@@ -364,6 +360,7 @@ public sealed partial class MultiplayerManager : IDisposable
         reconnectCts?.Dispose();
         reconnectCts = null;
         reconnecting = false;
+        reconnectAttemptInFlight = false;
         ReconnectAttempt = 0;
         disconnectedSinceMs = null;
         if (IsHost) Plugin.Game.PartyMemberKilled -= OnPartyMemberKilledHost;
@@ -372,10 +369,15 @@ public sealed partial class MultiplayerManager : IDisposable
         // reaching the wire. notifyOthers is false when reacting to someone else's
         // SessionEnded, to avoid a cascade.
         if (notifyOthers && relay is { IsConnected: true } activeRelay)
-            _ = activeRelay.SendAsync(new SessionEndedMessage(MyPeerId)).ContinueWith(_ => activeRelay.Dispose());
+        {
+            MpMessage ended = new SessionEndedMessage(MyPeerId);
+            if (stream != null) ended = stream.Number(ended);
+            _ = activeRelay.SendAsync(ended).ContinueWith(_ => activeRelay.Dispose());
+        }
         else
             relay?.Dispose();
         relay = null;
+        stream = null;
         Embedded.Stop();
 
         running = false;
@@ -419,7 +421,7 @@ public sealed partial class MultiplayerManager : IDisposable
         startCheckTimer = 0f;
         debugBotControlled = false;
         aiReplayStateSent = false;
-        pendingEndResendReturnedToInn = null;
+        endSentReturnedToInn = false;
         RestoreOwnScenarioSettings();
         StopDebugBotReplay();
     }
@@ -436,72 +438,75 @@ public sealed partial class MultiplayerManager : IDisposable
         reconnecting = true;
         ReconnectAttempt = 0;
         reconnectCts = new CancellationTokenSource();
-        _ = ReconnectLoopAsync(RelayUrl, SessionCode, reconnectCts.Token);
+        reconnectDueMs = NowMs + (long)ReconnectBackoff[0].TotalMilliseconds;
     }
 
-    private async Task ReconnectLoopAsync(string relayUrl, string sessionCode, CancellationToken token)
+    // On Time rather than a timer task, so a test's virtual clock paces it too.
+    private void TickReconnect()
     {
-        while (!token.IsCancellationRequested)
+        if (!reconnecting || reconnectAttemptInFlight || NowMs < reconnectDueMs) return;
+        if (reconnectCts is not { } cts || SessionCode is not { } code || RelayUrl is not { } url) return;
+        reconnectAttemptInFlight = true;
+        DiagnosticLog.Info($"[Multiplayer] Reconnect attempt {ReconnectAttempt + 1}.");
+        _ = AttemptReconnectAsync(url, code, cts.Token);
+    }
+
+    private async Task AttemptReconnectAsync(string relayUrl, string sessionCode, CancellationToken token)
+    {
+        var client = RelayFactory(peerSecret);
+        WireRelay(client);
+        // OnDisconnectedOffThread ignores a client not yet installed as `relay`, so the
+        // failure is captured here.
+        Exception? failure = null;
+        client.Disconnected += e => failure = e;
+        await client.ConnectAsync(relayUrl, sessionCode, relayAccessToken).ConfigureAwait(false);
+        var connected = client.IsConnected;
+        DiagnosticLog.Info($"[Multiplayer] Reconnect attempt {ReconnectAttempt + 1}: {(connected ? "succeeded" : "failed")}.");
+
+        if (!connected && failure is RelaySessionRejectedException rejected)
         {
-            var delay = ReconnectBackoff[Math.Min(ReconnectAttempt, ReconnectBackoff.Length - 1)];
-            DiagnosticLog.Info($"[Multiplayer] Reconnect attempt {ReconnectAttempt + 1} in {delay.TotalSeconds}s.");
-            try { await Task.Delay(delay, token).ConfigureAwait(false); }
-            catch (OperationCanceledException) { return; }
-            if (token.IsCancellationRequested) return;
-
-            var client = RelayFactory(peerSecret);
-            WireRelay(client);
-            // OnDisconnectedOffThread ignores a client not yet installed as `relay`, so the
-            // failure is captured here.
-            Exception? failure = null;
-            client.Disconnected += e => failure = e;
-            await client.ConnectAsync(relayUrl, sessionCode, relayAccessToken).ConfigureAwait(false);
-            var connected = client.IsConnected;
-            DiagnosticLog.Info($"[Multiplayer] Reconnect attempt {ReconnectAttempt + 1}: {(connected ? "succeeded" : "failed")}.");
-
-            if (!connected && failure is RelaySessionRejectedException rejected)
+            // The relay says the session doesn't exist (it most likely restarted); retrying
+            // the same code can never succeed.
+            client.Dispose();
+            DiagnosticLog.Warn($"[Multiplayer] Giving up on session {sessionCode} -- relay says: {rejected.Message}.");
+            var wasHost = IsHost;
+            var wasJoining = !IsHost && !everHeardFromHost;
+            _ = Plugin.Framework.Run(() =>
             {
-                // The relay says the session doesn't exist (it most likely restarted); retrying
-                // the same code can never succeed.
-                client.Dispose();
-                DiagnosticLog.Warn($"[Multiplayer] Giving up on session {sessionCode} -- relay says: {rejected.Message}.");
-                var wasHost = IsHost;
-                var wasJoining = !IsHost && !everHeardFromHost;
-                _ = Plugin.Framework.Run(() =>
-                {
-                    if (token.IsCancellationRequested) return;
-                    // Refused mid-run (a ban, a lost room), this client would otherwise stay in the
-                    // fake instance; every other way a session ends leaves it too.
-                    if (Plugin.Game.World.Map.IsInInstance) Plugin.Game.Leave();
-                    LeaveSessionInternal(notifyOthers: false);
-                    SessionEndReason = rejected.Message == "banned from room"
-                        ? "You were banned from the session by the host."
-                        : wasJoining
-                            ? rejected.Message switch
-                            {
-                                "session not found" => $"There's no session {sessionCode} on this server. Check the code, or ask the host for a new one.",
-                                "session full" => $"Session {sessionCode} is full.",
-                                _ => $"The server refused to join session {sessionCode} ({rejected.Message}).",
-                            }
+                if (token.IsCancellationRequested) return;
+                // Refused mid-run (a ban, a lost room), this client would otherwise stay in the
+                // fake instance; every other way a session ends leaves it too.
+                if (Plugin.Game.World.Map.IsInInstance) Plugin.Game.Leave();
+                LeaveSessionInternal(notifyOthers: false);
+                SessionEndReason = rejected.Message == "banned from room"
+                    ? "You were banned from the session by the host."
+                    : wasJoining
+                        ? rejected.Message switch
+                        {
+                            "session not found" => $"There's no session {sessionCode} on this server. Check the code, or ask the host for a new one.",
+                            "session full" => $"Session {sessionCode} is full.",
+                            _ => $"The server refused to join session {sessionCode} ({rejected.Message}).",
+                        }
                         : wasHost
                             ? $"The relay lost this session ({rejected.Message}) -- start a new one."
                             : $"The relay lost this session ({rejected.Message}) -- ask the host to start a new one.";
-                    LobbyChanged?.Invoke();
-                });
-                return;
-            }
-
-            _ = Plugin.Framework.Run(() => FinishReconnectAttempt(client, connected, token));
-            if (connected) return;
-            ReconnectAttempt++;
+                LobbyChanged?.Invoke();
+            });
+            return;
         }
+
+        _ = Plugin.Framework.Run(() => FinishReconnectAttempt(client, connected, token));
     }
 
     private void FinishReconnectAttempt(IRelayConnection client, bool connected, CancellationToken token)
     {
+        reconnectAttemptInFlight = false;
         if (token.IsCancellationRequested || !connected)
         {
             client.Dispose();
+            if (token.IsCancellationRequested) return;
+            ReconnectAttempt++;
+            reconnectDueMs = NowMs + (long)ReconnectBackoff[Math.Min(ReconnectAttempt, ReconnectBackoff.Length - 1)].TotalMilliseconds;
             return;
         }
         relay = client;
@@ -524,21 +529,21 @@ public sealed partial class MultiplayerManager : IDisposable
     {
         if (relay == null) return;
         if (IsHost) ApplyClaim(MyPeerId, role);
-        else _ = relay.SendAsync(new ClaimRoleMessage(MyPeerId, role));
+        else _ = Send(new ClaimRoleMessage(MyPeerId, role));
     }
 
     public void ReleaseRole()
     {
         if (relay == null) return;
         if (IsHost) ApplyRelease(MyPeerId);
-        else _ = relay.SendAsync(new ReleaseRoleMessage(MyPeerId));
+        else _ = Send(new ReleaseRoleMessage(MyPeerId));
     }
 
     // False unless a connected peer, whose own Game.Reset() would only clear their local view.
     public bool RequestReset()
     {
         if (IsHost || relay is not { IsConnected: true }) return false;
-        _ = relay.SendAsync(new ResetRequestMessage(MyPeerId));
+        _ = Send(new ResetRequestMessage(MyPeerId));
         return true;
     }
 
@@ -548,7 +553,7 @@ public sealed partial class MultiplayerManager : IDisposable
     public bool RequestLeaveInstance()
     {
         if (IsHost || relay is not { IsConnected: true }) return false;
-        _ = relay.SendAsync(new LeaveRequestMessage(MyPeerId));
+        _ = Send(new LeaveRequestMessage(MyPeerId));
         return true;
     }
 
@@ -633,7 +638,7 @@ public sealed partial class MultiplayerManager : IDisposable
         var who = Session.NameOf(peerId);
         DiagnosticLog.Info($"[Multiplayer] Host {(ban ? "banned" : "kicked")} {who} ({peerId}).");
         if (ban) bannedPeers[peerId] = who;
-        _ = relay.SendAsync(new KickMessage(peerId, ban));
+        _ = Send(new KickMessage(peerId, ban));
         // The relay closes their connection too, so a client that ignores the KickMessage is
         // still out, and a banned one can't come back under this identity or address.
         _ = relay.ModerateAsync(ban ? "ban" : "kick", peerId);
@@ -711,6 +716,7 @@ public sealed partial class MultiplayerManager : IDisposable
         foreach (var r in Session.ClaimedBy.Where(kv => kv.Value == peerId).Select(kv => kv.Key).ToList())
             Session.ClaimedBy.Remove(r);
         Session.Names.Remove(peerId);
+        stream?.Forget(peerId);
         Session.Builds.Remove(peerId);
         peerConnectionIds.Remove(peerId);
         peerLastSeenMs.Remove(peerId);
@@ -746,7 +752,7 @@ public sealed partial class MultiplayerManager : IDisposable
             BroadcastLobbyState();
             return;
         }
-        _ = relay?.SendAsync(new HelloMessage(MyPeerId, DisplayName, PluginBuildInfo.Version, PluginBuildInfo.Checksum, job));
+        Transmit(NewHello(job));
     }
 
     // A Hello is the peer's only way into the roster and can be lost; retried until a lobby
@@ -762,7 +768,7 @@ public sealed partial class MultiplayerManager : IDisposable
         if (helloRetryTimer < HelloRetrySeconds) return;
         helloRetryTimer = 0f;
         DiagnosticLog.Info($"[Multiplayer] No lobby state naming us yet -- re-sending Hello to session {SessionCode}.");
-        _ = relay?.SendAsync(new HelloMessage(MyPeerId, DisplayName, PluginBuildInfo.Version, PluginBuildInfo.Checksum, LocalClassJob));
+        Transmit(NewHello(LocalClassJob));
     }
 
     // The host only learns our name from a Hello, so being in the roster is the acknowledgement.
@@ -776,7 +782,7 @@ public sealed partial class MultiplayerManager : IDisposable
     private void BroadcastLobbyState()
     {
         LobbyChanged?.Invoke();
-        _ = relay?.SendAsync(LobbyMessage());
+        _ = Send(LobbyMessage());
     }
 
     private LobbyStateMessage LobbyMessage() => Session.ToMessage() with { Clock = HostRunClock() };
@@ -822,7 +828,7 @@ public sealed partial class MultiplayerManager : IDisposable
     private void AbortStart(string reason)
     {
         DiagnosticLog.Warn($"[Multiplayer] Refusing the host's start: {reason}.");
-        _ = relay?.SendAsync(new StartAbortMessage(MyPeerId, reason));
+        _ = Send(new StartAbortMessage(MyPeerId, reason));
         AnnounceRunEnded($"you couldn't start: {reason}");
     }
 
@@ -922,7 +928,7 @@ public sealed partial class MultiplayerManager : IDisposable
             pendingStartResponses.Remove(peerId);
         }
         DiagnosticLog.Info($"[Multiplayer] Start requested -- waiting on readiness from: {string.Join(", ", pendingStartResponses.Select(Session.NameOf))}.");
-        _ = relay.SendAsync(new StartCheckMessage());
+        _ = Send(new StartCheckMessage());
         LobbyChanged?.Invoke();
 
         if (pendingStartResponses.Count == 0) FinishStartCheck();
@@ -940,7 +946,7 @@ public sealed partial class MultiplayerManager : IDisposable
             return;
         }
         startCheckReplyWaited = null;
-        _ = relay?.SendAsync(new StartCheckResponseMessage(MyPeerId, reason == null, reason));
+        _ = Send(new StartCheckResponseMessage(MyPeerId, reason == null, reason));
     }
 
     private void FinishStartCheck()
@@ -968,11 +974,11 @@ public sealed partial class MultiplayerManager : IDisposable
 
         // Locks the lobby, and gives the peers the run's scenario, strat and waymark before they enter.
         Session.Started = true;
-        _ = relay?.SendAsync(LobbyMessage());
+        _ = Send(LobbyMessage());
 
         warnedStalePeers.Clear();
         aiReplayStateSent = false;
-        pendingEndResendReturnedToInn = null;
+        endSentReturnedToInn = false;
         hostScenarioStarted = false;
         var nowMs = NowMs;
         foreach (var peerId in Session.ClaimedBy.Values)
@@ -993,7 +999,7 @@ public sealed partial class MultiplayerManager : IDisposable
         enterTimer = 0f;
         hostStageSetFor = null;
         recorder ??= PacketRecorder.Install();
-        _ = relay?.SendAsync(new EnterMessage());
+        _ = Send(new EnterMessage());
         var zone = scenario.Phase.Zone;
         if (Plugin.Game.Zone == zone && Plugin.Game.Mode == SessionMode.Host)
             Plugin.Game.PrepareRun(p, OnHostStageSet);
@@ -1035,8 +1041,8 @@ public sealed partial class MultiplayerManager : IDisposable
         }
         recorder?.TagSeats(Plugin.Game.World.Party);
         FlushPackets(force: true);
-        _ = relay?.SendAsync(LobbyMessage());
-        _ = relay?.SendAsync(new StartMessage(HostRunClock()));
+        _ = Send(LobbyMessage());
+        _ = Send(new StartMessage(HostRunClock()));
     }
 
     // Starting from zero would leave this run behind the host's by the host's load time plus the
@@ -1049,16 +1055,38 @@ public sealed partial class MultiplayerManager : IDisposable
         if (hostClockAtStart is not { } clock || eventClockSynced) return;
         eventClockSynced = true;
         var game = Plugin.Game;
-        var eventAtStart = NetGuard.Clamp(clock.EventClock, 0f, 3600f);
+        var (target, oneWay, poseLead) = HostClockTarget(clock, hostClockReceivedAt);
+        var advance = target - game.Events.Elapsed;
+        game.Events.Advance(advance);
+        DiagnosticLog.Info($"[Multiplayer] Peer: run clock {(advance > 0f ? $"moved up {advance * 1000f:F0} ms" : "left as is")}: the host's time plus a {poseLead * 1000f:F0} ms lead (Start sent {clock.EventClock:F3}s into the host's run, {oneWay * 1000f:F0} ms one-way, {clock.FrameSeconds * 1000f:F1} ms host frame).");
+    }
+
+    // A Start that came late, sent again after a link drop, left this run behind the host's;
+    // each ping's clock catches it up. Never back, and never for less than jitter, which would
+    // only creep it forward.
+    private const float ClockCatchUpSeconds = 0.1f;
+    private (RunClockState Clock, long ReceivedAt)? pingClock;
+
+    private void CatchUpClockToHost()
+    {
+        if (pingClock is not { } ping || !eventClockSynced) return;
+        pingClock = null;
+        var game = Plugin.Game;
+        var advance = HostClockTarget(ping.Clock, ping.ReceivedAt).Target - game.Events.Elapsed;
+        if (advance < ClockCatchUpSeconds) return;
+        game.Events.Advance(advance);
+        DiagnosticLog.Info($"[Multiplayer] Peer: run clock caught up {advance * 1000f:F0} ms to the host's.");
+    }
+
+    // The host's run time as this frame's stamp sees it, plus our lead (see SyncClockToHost).
+    private (float Target, float OneWay, float PoseLead) HostClockTarget(RunClockState clock, long receivedAt)
+    {
+        var hostClock = NetGuard.Clamp(clock.EventClock, 0f, 3600f);
         var oneWay = NetGuard.Clamp(peerStatuses.GetValueOrDefault(MyPeerId)?.LatencyMs ?? 0f, 0f, 4000f) / 2000f;
         var hostFrame = NetGuard.Clamp(clock.FrameSeconds, 0f, MaxFrameSampleSeconds);
         var poseLead = oneWay + (hostFrame > 0f ? hostFrame : 1f / 60f);
-        var target = eventAtStart + oneWay + poseLead
-            + (float)Time.GetElapsedTime(hostClockReceivedAt, eventClockStampedAt).TotalSeconds;
-
-        var advance = target - game.Events.Elapsed;
-        game.Events.Advance(advance);
-        DiagnosticLog.Info($"[Multiplayer] Peer: run clock {(advance > 0f ? $"moved up {advance * 1000f:F0} ms" : "left as is")}: the host's time plus a {poseLead * 1000f:F0} ms lead (Start sent {eventAtStart:F3}s into the host's run, {oneWay * 1000f:F0} ms one-way, {hostFrame * 1000f:F1} ms host frame).");
+        var target = hostClock + oneWay + poseLead + (float)Time.GetElapsedTime(receivedAt, eventClockStampedAt).TotalSeconds;
+        return (target, oneWay, poseLead);
     }
 
     // A peer's copy of a host actor as it spawns: its entity id here, and the host's.
