@@ -354,6 +354,7 @@ internal sealed class PacketRecorder
         public bool HasDrawObject => inner.HasDrawObject;
         public bool IsDrawObjectVisible { get => inner.IsDrawObjectVisible; set => inner.IsDrawObjectVisible = value; }
         public byte ModelState => inner.ModelState;
+        public float ModelScale { get => inner.ModelScale; set => inner.ModelScale = value; }
         public bool IsCasting => inner.IsCasting;
         public uint CastActionId => inner.CastActionId;
         public float CurrentCastTime => inner.CurrentCastTime;

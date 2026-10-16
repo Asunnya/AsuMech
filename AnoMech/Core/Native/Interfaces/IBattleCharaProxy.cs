@@ -47,6 +47,9 @@ public interface IBattleCharaProxy
 
     byte ModelState { get; }
 
+    // GameObject.Scale, mirrored onto the DrawObject so the model resizes.
+    float ModelScale { get; set; }
+
     // ── Casting ──────────────────────────────────────────────────────────────
 
     bool IsCasting { get; }

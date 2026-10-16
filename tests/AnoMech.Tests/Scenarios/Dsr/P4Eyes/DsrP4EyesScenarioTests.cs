@@ -1,4 +1,6 @@
+using System.Linq;
 using System.Numerics;
+using AnoMech.Core.SimObjects;
 using AnoMech.Core.Game.Party;
 using AnoMech.Scenarios.Dsr.P4Eyes;
 using static AnoMech.Core.Game.Party.PartyRole;
@@ -33,11 +35,34 @@ public class DsrP4EyesScenarioTests
             .ShouldKill(ActionId.FlareStar, RegenHealer);
 
     [Test]
-    public void LeavingABlueOrbUnpoppedKillsEveryoneAlreadyScorched()
+    public void LeavingABlueOrbToBurstWipes()
         => Negative<DsrP4EyesScenario>(RegenHealer)
             .Overrides<DsrP4EyesStateOverrides>(RightColours)
             .FreezeAt(41f)
-            .ShouldKill(ActionId.FlareStarUnpopped, AllBut(RegenHealer));
+            .ShouldKill(ActionId.FlareStarUnpopped, AllBut());
+
+    [Test]
+    public void PoppingAnOrbBeforeItHasGrownKillsThePopper()
+        => Negative<DsrP4EyesScenario>(MeleeDpsA)
+            .Overrides<DsrP4EyesStateOverrides>(RightColours)
+            .TeleportAt(DsrP4EyesScenario.OrbSpawnTime + 3.5f, to: new Vector2(17f, 0f))
+            .ShouldKill(ActionId.FlareNova, MeleeDpsA);
+
+    [Test]
+    public void OrbsGrowWithEachStep()
+        => Negative<DsrP4EyesScenario>(MeleeDpsA)
+            .Overrides<DsrP4EyesStateOverrides>(RightColours)
+            .At(DsrP4EyesScenario.OrbSpawnTime + 5.0f, p =>
+            {
+                Assert.That(OrbScales(p, BNpcBaseId.GildedPrice), Is.All.EqualTo(1.5f));
+                Assert.That(OrbScales(p, BNpcBaseId.AzurePrice), Is.All.EqualTo(0.5f));
+            })
+            .At(DsrP4EyesScenario.OrbSpawnTime + 12.5f, p => Assert.That(OrbScales(p, BNpcBaseId.AzurePrice), Is.All.EqualTo(1.525f)))
+            .TeleportAt(DsrP4EyesScenario.OrbSpawnTime + 12.6f, to: new Vector2(10f, 7f))
+            .ShouldKill(ActionId.FlareStar, MeleeDpsA);
+
+    private static float[] OrbScales(ScenarioProbe p, uint baseId) =>
+        p.World.Children.OfType<SimEnemy>().Where(e => e.IsActive && e.SpawnConfig.BNpcBaseId == baseId).Select(e => e.Proxy!.ModelScale).ToArray();
 
     // The healers are dived first; the off tank never comes to take the regen healer's red.
     [Test]

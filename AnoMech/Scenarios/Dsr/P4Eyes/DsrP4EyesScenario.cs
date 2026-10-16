@@ -80,6 +80,8 @@ public sealed class DsrP4EyesScenario : IScenario
         public Vector3 At { get; } = at;
         public bool Gilded { get; } = gilded;
         public bool Popped { get; set; }
+        // UNVERIFIED: the model is scaled by the hitbox radius; how the game sizes it was never seen.
+        public float Scale { get; set; }
     }
 
     public void Run(SimWorld worldParam, int? selectedAi)
@@ -289,24 +291,34 @@ public sealed class DsrP4EyesScenario : IScenario
         orbs.Add(new Orb(enemy, at, gilded));
     }
 
-    // Anyone touching an orb pops it, red tether or not.
+    // Anyone touching an orb pops it, red tether or not. The model grows with each hitbox step.
     private void TouchOrbs(float elapsed)
     {
         var age = elapsed - OrbSpawnTime;
         foreach (var orb in orbs.Where(o => !o.Popped).ToList())
         {
-            var reach = Orbs.Radius(orb.Gilded, age) + OrbTouchMargin;
-            if (AliveMembers().Any(m => FlatDistance(m.Position, orb.At) <= reach)) Pop(orb);
+            var radius = Orbs.Radius(orb.Gilded, age);
+            if (radius != orb.Scale)
+            {
+                orb.Scale = radius;
+                orb.Enemy.SetModelScale(radius);
+            }
+            var touchers = AliveMembers().Where(m => FlatDistance(m.Position, orb.At) <= radius + OrbTouchMargin).ToList();
+            if (touchers.Count > 0) Pop(orb, touchers, Orbs.Ripe(orb.Gilded, age));
         }
     }
 
-    private void Pop(Orb orb)
+    // An orb popped before it has grown blasts whoever touched it for far more than they can take.
+    private void Pop(Orb orb, List<SimCharacter> touchers, bool ripe)
     {
         orb.Popped = true;
         var actionId = orb.Gilded ? ActionId.FlareNova : ActionId.FlareStar;
         PlayEffect(orb.Enemy, actionId, 1.1f);
         foreach (var hit in AliveMembers().Where(m => FlatDistance(m.Position, orb.At) <= OrbBlastRadius).ToList())
-            Scorch(hit, actionId, "popped an orb");
+        {
+            if (!ripe && touchers.Contains(hit)) hit.Die(actionId, "popped an orb before it finished growing");
+            else Scorch(hit, actionId, "popped an orb");
+        }
         world.Events.Add(EffectCarrierLinger, orb.Enemy.FadeOut);
     }
 
@@ -319,14 +331,7 @@ public sealed class DsrP4EyesScenario : IScenario
             var actionId = gilded ? ActionId.FlareNovaUnpopped : ActionId.FlareStarUnpopped;
             PlayEffect(orb.Enemy, actionId, 1.1f);
             foreach (var hit in AliveMembers().ToList())
-            {
-                if (hit.HasStatus(StatusId.FireResistanceDownII)) hit.Die(actionId, "an orb was left unpopped");
-                else
-                {
-                    damage.ApplyDamage(hit, OrbDamage, actionId, "unpopped orb", lethal: false);
-                    hit.AddStatus(StatusId.FireResistanceDownII, FireResistanceDownSeconds);
-                }
-            }
+                hit.Die(actionId, "an orb was left to burst (pop it once it has grown)");
             world.Events.Add(EffectCarrierLinger, orb.Enemy.FadeOut);
         }
     }
@@ -473,6 +478,9 @@ public static class Orbs
     private const float Seed = 0.5f;
     private static readonly (float At, float Radius)[] Gilded = [(2.7f, 1.025f), (4.7f, 1.5f), (5.8f, 1.525f), (7.2f, 2f)];
     private static readonly (float At, float Radius)[] Azure = [(5.8f, 1.025f), (7.9f, 1.5f), (11.8f, 1.525f), (13.2f, 2f)];
+
+    // Popping is safe from the third step on; earlier the blast kills whoever touched the orb.
+    public static bool Ripe(bool gilded, float age) => age >= (gilded ? Gilded : Azure)[2].At;
 
     public static float Radius(bool gilded, float age)
     {

@@ -44,6 +44,11 @@ public abstract partial class SimCharacter : ISimObject, IPositioned
 
     public GameObjectId GameObjectId => Proxy?.GameObjectId ?? default;
     public float HitboxRadius => Proxy?.HitboxRadius ?? 0f;
+
+    public void SetModelScale(float scale)
+    {
+        if (Proxy is { } proxy) proxy.ModelScale = scale;
+    }
     public uint EntityId => Proxy?.EntityId ?? 0u;
 
     public virtual void Tick(float deltaSeconds)
