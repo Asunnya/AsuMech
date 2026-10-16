@@ -82,6 +82,7 @@ For upstream AnoMech, see: https://github.com/anomek/MyDalamudPlugins
     - Exaflares
 - Dragonsong's Reprise (Ultimate) _by [Asunnya](https://github.com/Asunnya)_
     - P1 Knights (pull to Thordan: Hyperdimensional Slash, Shining Blade, Playstation, Holiest Hallowing interrupts, Pure of Heart)
+    - P4 The Eyes (Hatebound orbs, Mirage Dive snake swaps)
 - AAC Heavyweight M1 (Savage) — M9S _by [Asunnya](https://github.com/Asunnya)_
     - Vamp Stomp, Hell in a Cell, Aetherletting, Coffinmaker, Undead Deathmatch, Flails, Vamp Stomp 2, Final
 
@@ -115,7 +116,7 @@ Thanks for contributors:
 * [Wydox](https://github.com/Wydox) - core improvements, extra scenarios and strategies
 * [RoarkGit](https://github.com/RoarkGit) - win streaks, extra scenarios
 * [Evernow](https://github.com/Evernow) - multiplayer (WIP), extra sceanrions and strategies
-* [Asunnya](https://github.com/Asunnya) - M9S, UWU P1 Garuda / P2 Ifrit / P3 Titan / Ultimate Annihilation, DSR P1 Knights / P2 Thordan / P3 Nidhogg
+* [Asunnya](https://github.com/Asunnya) - M9S, UWU P1 Garuda / P2 Ifrit / P3 Titan / Ultimate Annihilation, DSR P1 Knights / P2 Thordan / P3 Nidhogg / P4 Eyes
 
 AnoMech leans heavily on the work of other Dalamud plugins. Huge thanks to their authors!  
 Without them, the following would not be possible:

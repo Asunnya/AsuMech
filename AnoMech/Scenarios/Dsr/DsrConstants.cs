@@ -74,6 +74,13 @@ public class DsrConstants
         public const uint AetherialTear = 13071;
         public const uint Nidhogg = 12605;
         public const uint NidhoggDiver = 12606;
+        public const uint AzurePrice = 12607;
+        public const uint GildedPrice = 12608;
+        public const uint LeftEye = 12609;
+        public const uint RightEye = 12610;
+        public const uint Ysayle = 13118;
+        public const uint Estinien = 13119;
+        public const uint Alphinaud = 13769;
     }
 
     public class BNpcNameId
@@ -98,6 +105,13 @@ public class DsrConstants
         public const uint Brightsphere = 4385;
         public const uint AetherialTear = 3293;
         public const uint Nidhogg = 3458;
+        public const uint Alphinaud = 4130;
+        public const uint Estinien = 11312;
+        public const uint Ysayle = 11313;
+        public const uint AzurePrice = 11315;
+        public const uint GildedPrice = 11316;
+        public const uint LeftEye = 11317;
+        public const uint RightEye = 11318;
     }
 
     public class ActionId
@@ -204,6 +218,19 @@ public class DsrConstants
         public const uint NidhoggAttack = 0x6730;
         public const uint RevengeOfTheHorde = 0x7436;
 
+        public const uint Resentment = 0x68BA;
+        public const uint SteepInRage = 0x68BD;
+        public const uint Hatebound = 0x68BE;
+        public const uint FlareStar = 0x68BF;
+        public const uint FlareStarUnpopped = 0x68C0;
+        public const uint FlareNova = 0x68C1;
+        public const uint FlareNovaUnpopped = 0x68C2;
+        public const uint MirageDiveWindup = 0x68C3;
+        public const uint MirageDive = 0x68C4;
+        public const uint SoulOfFriendship = 0x68C5;
+        public const uint SoulOfDevotion = 0x68C6;
+        public const uint EyesDrift = 0x717A;
+
         public const uint Interject = 7538;
         public const uint HeadGraze = 7551;
         public const uint ArmsLength = 7548;
@@ -237,6 +264,13 @@ public class DsrConstants
         public const ushort FirstInLine = 0xBBC;
         public const ushort SecondInLine = 0xBBD;
         public const ushort ThirdInLine = 0xBBE;
+        public const ushort Clawbound = 0xAD7;
+        public const ushort Fangbound = 0xAD8;
+        public const ushort BoundAndDetermined = 0xAD9;
+        public const ushort SoulOfFriendship = 0xABC;
+        public const ushort SoulOfDevotion = 0xABD;
+        public const ushort Bleeding = 0xB87;
+        public const ushort PiercingResistanceDown = 0xC3B;
     }
 
     public class TetherId
@@ -245,6 +279,11 @@ public class DsrConstants
         public const ushort PlanarPrison = 0x35;
         public const ushort HolyShieldBash = 0x54;
         public const ushort SoulTether = 0x54;
+        public const ushort Soul = 0x0C;
+        public const ushort Fangbound = 0x33;
+        public const ushort Clawbound = 0x34;
+        public const ushort LeftEyeToEstinien = 0xB2;
+        public const ushort RightEyeToEstinien = 0xB3;
     }
 
     public class EObjId
@@ -268,6 +307,8 @@ public class DsrConstants
         public const uint FirstInLine = 0x13F;
         public const uint SecondInLine = 0x140;
         public const uint ThirdInLine = 0x141;
+        public const uint SoulOfFriendship = 0x11E;
+        public const uint SoulOfDevotion = 0x11F;
     }
 
     // UNVERIFIED: replayed from the log's director traffic at each phase change; whether they
@@ -284,6 +325,7 @@ public class DsrConstants
         public const uint SanctityLayout = 0x2F;
         public const uint UltimateEndLayout = 0x39;
         public const uint NidhoggLayout = 0x48;
+        public const uint EyesLayout = 0x5A;
         public const uint KnightsMap = 758;
         public const uint ThordanMap = 765;
         public const uint ThordanMusic = 0x1AF3;
@@ -307,6 +349,8 @@ public class DsrConstants
         public const ushort KnightVanish = 0x11DD;
         public const ushort WarpStart = 0x1E39;
         public const ushort WarpEnd = 0x1E43;
+        public const ushort EyeAppear = 0x1E46;
+        public const ushort AllyAppear = 0x1E4C;
     }
 
     public class KnockbackId
