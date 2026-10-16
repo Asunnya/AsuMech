@@ -106,7 +106,7 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
     private void Run_Omega_M_4000A63C()
     {
         SimEnemy? omega_M_4000A63C = null;
-        world.Events.Add(0f, () => omega_M_4000A63C = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.OmegaMDynamis, NameId: BNpcNameId.OmegaMDynamis, Level: 90, Targetable: true, EnemyList: EnemyListMode.Always, Visibility: SpawnVisibility.Visible, LayoutId: 0x91E486, Placement: new Placement(new Vector3(0.000f, 0.000f, 5.000f), MathF.PI), InitialModeAttributeFlags: 0x32)));
+        world.Events.Add(0f, () => omega_M_4000A63C = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.OmegaMDynamis, NameId: BNpcNameId.OmegaMDynamis, Level: 90, Targetable: true, EnemyList: EnemyListMode.Always, Visibility: SpawnVisibility.Visible, LayoutId: BNpcLayoutId.OmegaMDynamis, Placement: new Placement(new Vector3(0.000f, 0.000f, 5.000f), MathF.PI), InitialModeAttributeFlags: 0x32)));
         world.Events.Add(0.1f, () => omega_M_4000A63C?.AddStatus(StatusId.OmegaM));
         world.Events.Add(0.1f, () => omega_M_4000A63C?.SetTarget(party.Get(PartyRole.MainTank), follow: false));
         world.Events.Add(2.46f, () => omega_M_4000A63C?.Cast(ActionId.Teleport7b42, Vector3.Zero, animationLock: 1.1f));
@@ -157,7 +157,7 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
     private void Run_Omega_4000A68F()
     {
         SimEnemy? omega_4000A68F = null;
-        world.Events.Add(3.84f, () => omega_4000A68F = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.BeetleHelper, NameId: BNpcNameId.OmegaBeetle, Level: 90, Targetable: false, EnemyList: EnemyListMode.OnlyWhenVisible, Visibility: SpawnVisibility.HiddenUntilShown, LayoutId: 0x91E489, Placement: state.NewNorthA.Apply(new Placement(new Vector3(0f, 0f, 20f), MathF.PI)))));
+        world.Events.Add(3.84f, () => omega_4000A68F = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.BeetleHelper, NameId: BNpcNameId.OmegaBeetle, Level: 90, Targetable: false, EnemyList: EnemyListMode.OnlyWhenVisible, Visibility: SpawnVisibility.HiddenUntilShown, LayoutId: BNpcLayoutId.BeetleHelper, Placement: state.NewNorthA.Apply(new Placement(new Vector3(0f, 0f, 20f), MathF.PI)))));
         world.Events.Add(19.93f, () => omega_4000A68F?.PlayActionTimeline(ActionTimelineId.WarpEnd));
         world.Events.Add(27.63f, () => omega_4000A68F?.Cast(ActionId.ProgramLoop, animationLock: 3.1f));
         world.Events.Add(30.75f, () => omega_4000A68F?.PlayActionTimeline(ActionTimelineId.WarpStart));
@@ -167,7 +167,7 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
     private void Run_Omega_4000A690()
     {
         SimEnemy? omega_4000A690 = null;
-        world.Events.Add(3.84f, () => omega_4000A690 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.FinalHelper, NameId: BNpcNameId.OmegaFinal, Level: 90, Targetable: false, EnemyList: EnemyListMode.Manual, Visibility: SpawnVisibility.HiddenUntilShown, LayoutId: 0x946F2B, Placement: state.NewNorthA.Apply(new Placement(new Vector3(0.000f, -0.000f, 0.000f), 0)))));
+        world.Events.Add(3.84f, () => omega_4000A690 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.FinalHelper, NameId: BNpcNameId.OmegaFinal, Level: 90, Targetable: false, EnemyList: EnemyListMode.Manual, Visibility: SpawnVisibility.HiddenUntilShown, LayoutId: BNpcLayoutId.FinalHelper, Placement: state.NewNorthA.Apply(new Placement(new Vector3(0.000f, -0.000f, 0.000f), 0)))));
         world.Events.Add(12.27f, () => omega_4000A690?.SetVisibleInEnemyList(true));
         world.Events.Add(16.95f, () => omega_4000A690?.PlayActionTimeline(ActionTimelineId.WarpEnd));
         world.Events.Add(22f, () => omega_4000A690?.Cast(ActionId.WaveCannon, animationLock: 3.1f));
@@ -182,7 +182,7 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
             var offset = i * 2 - 1; // -1, 1
             SimEnemy? unit = null;
             SimTether? tether = null;
-            world.Events.Add(1, () => unit = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.RightArmUnit, NameId: BNpcNameId.RightArmUnit, Level: 90, Targetable: false, EnemyList: EnemyListMode.OnlyWhenVisible, Visibility: SpawnVisibility.HiddenUntilShown, LayoutId: 0x91E422,
+            world.Events.Add(1, () => unit = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.RightArmUnit, NameId: BNpcNameId.RightArmUnit, Level: 90, Targetable: false, EnemyList: EnemyListMode.OnlyWhenVisible, Visibility: SpawnVisibility.HiddenUntilShown, LayoutId: BNpcLayoutId.RightArmUnit,
                                                                   Placement: state.NewNorthA.Apply(new Placement(new Vector3(7.07f * offset, -0.000f, 7.07f), 0f)).Face(Vector3.Zero))));
             world.Events.Add(11.91f, () => unit?.PlayActionTimeline(ActionTimelineId.WarpEnd));
             world.Events.Add(12.53f, () => tether = world.TetherFarestPlayer(unit, TetherId.AutoTarget)
@@ -295,7 +295,7 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
         var fromNorth = ((ring - (int)MathF.Round(state.AdjustedNorthA.RadiansFromNorth / step)) % 8 + 8) % 8;
         return config with
         {
-            LayoutId = EObjId.TowerRingLayoutId + (uint)ring,
+            LayoutId = EObjId.TowerRingLayoutIds[ring],
             EventId = EObjId.TowerEventId,
             TargetableStatus = 5,
             Arg2 = (arg2Base + (uint)fromNorth) << 16 | 3,
@@ -305,7 +305,7 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
     private void Run_Rear_Power_Unit_4000A641()
     {
         SimEnemy? rear_Power_Unit_4000A641 = null;
-        world.Events.Add(1f, () => rear_Power_Unit_4000A641 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.RearPowerUnit, NameId: BNpcNameId.RearPowerUnit, Level: 90, Targetable: false, EnemyList: EnemyListMode.OnlyWhenVisible, Visibility: SpawnVisibility.HiddenUntilShown, LayoutId: 0x91E488, Placement: state.NewNorthB.Apply(new Placement(new Vector3(0.000f, -0.000f, 0.000f), 0f)))));
+        world.Events.Add(1f, () => rear_Power_Unit_4000A641 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.RearPowerUnit, NameId: BNpcNameId.RearPowerUnit, Level: 90, Targetable: false, EnemyList: EnemyListMode.OnlyWhenVisible, Visibility: SpawnVisibility.HiddenUntilShown, LayoutId: BNpcLayoutId.RearPowerUnit, Placement: state.NewNorthB.Apply(new Placement(new Vector3(0.000f, -0.000f, 0.000f), 0f)))));
         world.Events.Add(45.97f, () => rear_Power_Unit_4000A641?.PlayActionTimeline(ActionTimelineId.WarpEnd));
         world.Events.Add(47.88f, () => rear_Power_Unit_4000A641?.AttachLockonVfx(state.SpinnerRotation.LockonId));
         world.Events.Add(54.97f, () => rear_Power_Unit_4000A641?.Cast(Actions.RearLasersCharging, state.NewNorthB.Apply(new Vector3(0f, 0f, -25f))));

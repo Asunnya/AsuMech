@@ -7,7 +7,7 @@ namespace AnoMech.Core.UserActions;
 internal sealed class SprintHandler : IUserActionHandler
 {
     private const uint SprintActionId = 3;
-    private const ushort SprintStatusId = 50;
+    public const ushort SprintStatusId = 50;
     private const float SprintDuration = 10f;
     private const ushort SprintStatusParam = 30; // speed magnitude, carried in Status.Param
 
@@ -21,5 +21,8 @@ internal sealed class SprintHandler : IUserActionHandler
     }
 
     public static void Apply(SimCharacter character, float duration)
-        => character.AddStatus(SprintStatusId, duration, SprintStatusParam);
+    {
+        character.AddStatus(SprintStatusId, duration, SprintStatusParam);
+        if (character is ISimPartyMember member) HostReport.RoleStatus([member.Role], SprintStatusId, duration, SprintStatusParam);
+    }
 }

@@ -55,7 +55,8 @@ public sealed class AiManager
                 var speed = sprinting ? SprintSpeed : RunSpeed;
 
                 if (sprinting) partyMember?.UseSprint(dist / SprintSpeed + 1f);
-                AnoMech.Core.DiagnosticLog.Info($"[AiManager] Move@{time:F1}: {role} ({member.Position.X:F1},{member.Position.Z:F1}) -> ({target.X:F1},{target.Z:F1}) {dist:F1}y{(sprinting ? " sprinting" : "")}{(delay > 0f ? $", leaving in {delay:F2}s" : "")}.");
+                // `for`: the spot before the jitter, which each client rolls on its own stream.
+                AnoMech.Core.DiagnosticLog.Info($"[AiManager] Move@{time:F1}: {role} ({member.Position.X:F1},{member.Position.Z:F1}) -> ({target.X:F1},{target.Z:F1}) for ({local.X:F2},{local.Y:F2}) {dist:F1}y{(sprinting ? " sprinting" : "")}{(delay > 0f ? $", leaving in {delay:F2}s" : "")}.");
                 if (delay > 0f) world.Events.Add(delay, () => member.MoveTo(target, speed: speed), file, line);
                 else member.MoveTo(target, speed: speed);
             }

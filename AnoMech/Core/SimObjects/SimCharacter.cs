@@ -31,7 +31,6 @@ public abstract class SimCharacter : ISimObject, IPositioned
 
     private protected CharacterMotion Motion { get; }
 
-    // The cast packets as sent, for multiplayer to sample on the host and replay on a peer.
     internal SimCast Casting { get; }
 
     protected readonly Coordinates Coordinates;
@@ -296,7 +295,6 @@ public abstract class SimCharacter : ISimObject, IPositioned
 
     public bool HasStatus(ushort statusId) => FindStatus(statusId) != null;
 
-    // Sampled for peers; AddStatus is otherwise entirely local.
     public IReadOnlyList<(ushort StatusId, ushort Stacks, float RemainingTime)> ActiveStatusSnapshot =>
         statusList.Where(s => s.IsActive).Select(s => (s.StatusId, s.Stacks, s.RemainingTime)).ToList();
 

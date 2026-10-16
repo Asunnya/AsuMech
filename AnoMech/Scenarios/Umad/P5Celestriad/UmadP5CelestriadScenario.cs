@@ -137,7 +137,7 @@ public sealed class UmadP5CelestriadScenario : IMultiplayerReplayable
             towers.Add(world.SpawnEventObject(new EventObjectSpawnConfig
             {
                 EObjId = tower.Element.TowerEObjId,
-                LayoutId = EObjId.CelestriadTowerLayoutId + (uint)tower.RingIndex,
+                LayoutId = EObjId.CelestriadTowerLayoutIds[tower.RingIndex],
                 EventId = EObjId.PropEventId,
                 TargetableStatus = 5,
                 Arg2 = EObjId.CelestriadTowerArg2 + ((uint)tower.RingIndex << 16),

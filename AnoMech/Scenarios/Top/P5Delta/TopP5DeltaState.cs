@@ -20,8 +20,8 @@ public sealed record Side(
     ushort ArmUnitWarpStartTimelineId,
     ushort ArmUnitWarpEndTimelineId)
 {
-    public static readonly Side Right = new(ActionId.OversampledWaveCannonRight, ActionId.SwivelCannonR, StatusId.PlayerMonitorRight,  -1, BNpcBaseId.RightArmUnit, BNpcNameId.RightArmUnit, 0x91E422, ActionTimelineId.WarpStart, ActionTimelineId.WarpEnd);
-    public static readonly Side Left = new(ActionId.OversampledWaveCannonLeft, ActionId.SwivelCannonL, StatusId.PlayerMonitorLeft, 1, BNpcBaseId.LeftArmUnit, BNpcNameId.LeftArmUnit, 0x91E421, ActionTimelineId.WarpStart2, ActionTimelineId.WarpEnd2);
+    public static readonly Side Right = new(ActionId.OversampledWaveCannonRight, ActionId.SwivelCannonR, StatusId.PlayerMonitorRight,  -1, BNpcBaseId.RightArmUnit, BNpcNameId.RightArmUnit, BNpcLayoutId.RightArmUnit, ActionTimelineId.WarpStart, ActionTimelineId.WarpEnd);
+    public static readonly Side Left = new(ActionId.OversampledWaveCannonLeft, ActionId.SwivelCannonL, StatusId.PlayerMonitorLeft, 1, BNpcBaseId.LeftArmUnit, BNpcNameId.LeftArmUnit, BNpcLayoutId.LeftArmUnit, ActionTimelineId.WarpStart2, ActionTimelineId.WarpEnd2);
 }
 
 // Which way an arm unit's Hyper Pulse turns; independent of whether it is a Left or Right Arm Unit.

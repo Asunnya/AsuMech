@@ -77,9 +77,6 @@ public class SimNpc : SimCharacter
 
     public void SetModelState(byte value) => ActorControl.SetModelState(value);
 
-    // Sampled for peers.
-    public byte ModelState => proxy?.ModelState ?? 0;
-
     // Which sub-meshes show, e.g. Omega-M's shield.
     public void SetModeAttributeFlags(byte value) => ActorControl.SetModeAttributeFlags(value);
 

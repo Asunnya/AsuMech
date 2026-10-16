@@ -44,8 +44,7 @@ public sealed class UmadP3BlackHoleScenario : IMultiplayerReplayable
     private SimWorld world = null!;
     private SimParty party = null!;
     private List<Vector3>[] BlackHolePositions = null!;
-    // Damage radius is 1.25; small clearance. Also read by MultiplayerManager to rebuild a
-    // peer's obstacle avoidance.
+    // Damage radius is 1.25; small clearance.
     internal const float BlackHoleAvoidRadius = 1.5f;
     // Diagnostic: wider than the hit radius so a dump catches the approach.
     internal const float NearBlackHoleLogRadius = 3f;
@@ -98,19 +97,19 @@ public sealed class UmadP3BlackHoleScenario : IMultiplayerReplayable
     }
 
     // Fixed-time replays of the real director's messages with no dependency on this run's
-    // rolls, so a peer schedules them too; broadcast: false, or the peer gets them twice.
+    // rolls.
     public void RunInstanceEvents(SimWorld world)
     {
         // [5.88s] 33|800375D2|80000027|1B|02|1BDB|40004141|5fbef31e42584d90
-        world.Events.Add(5.88f, () => world.Map.DirectorUpdate(0x80000027U, 0x1BU, 0x2U, 0x1BDBU, 0x40004141U, broadcast: false));
+        world.Events.Add(5.88f, () => world.Map.DirectorUpdate(0x80000027U, 0x1BU, 0x2U, 0x1BDBU, 0x40004141U));
         // [21.34s] 33|800375D2|80000027|1C|02|1BDB|40004141|e71e71b7e76b4bbe
-        world.Events.Add(21.34f, () => world.Map.DirectorUpdate(0x80000027U, 0x1CU, 0x2U, 0x1BDBU, 0x40004141U, broadcast: false));
+        world.Events.Add(21.34f, () => world.Map.DirectorUpdate(0x80000027U, 0x1CU, 0x2U, 0x1BDBU, 0x40004141U));
         // [77.20s] 33|800375D2|80000027|1D|02|1BDB|40004141|86396579207228cc
-        world.Events.Add(77.20f, () => world.Map.DirectorUpdate(0x80000027U, 0x1DU, 0x2U, 0x1BDBU, 0x40004141U, broadcast: false));
+        world.Events.Add(77.20f, () => world.Map.DirectorUpdate(0x80000027U, 0x1DU, 0x2U, 0x1BDBU, 0x40004141U));
         // [145.43s] 33|800375D2|80000027|1E|02|1BDB|40004141|1d765ff16920a4c5
-        world.Events.Add(145.43f, () => world.Map.DirectorUpdate(0x80000027U, 0x1EU, 0x2U, 0x1BDBU, 0x40004141U, broadcast: false));
+        world.Events.Add(145.43f, () => world.Map.DirectorUpdate(0x80000027U, 0x1EU, 0x2U, 0x1BDBU, 0x40004141U));
         // [156.68s] 257|800375D2|00020001|22|||b09b1b24cd776e35
-        world.Events.Add(156.68f, () => world.Map.AddEffect(packetFlags: 0x00020001U, index: (byte)0x22, broadcast: false));
+        world.Events.Add(156.68f, () => world.Map.AddEffect(packetFlags: 0x00020001U, index: (byte)0x22));
     }
 
     private void Run_OtherDebuffs()
@@ -665,5 +664,13 @@ public sealed class UmadP3BlackHoleScenario : IMultiplayerReplayable
         if (shadowStateObj is not UmadP3BlackHoleState shadowState) return;
         shadowState.ScenarioObjects.Chaos ??= peerEnemies.Values.FirstOrDefault(e => e.BNpcBaseId == BNpcBaseId.ChaosP3);
         shadowState.ScenarioObjects.Exdeath ??= peerEnemies.Values.FirstOrDefault(e => e.BNpcBaseId == BNpcBaseId.Exdeath);
+    }
+
+    // A peer's bot steers round the black holes its client shows, while they stand.
+    public void RebuildPeerObstacles(ObstacleField obstacles, IReadOnlyDictionary<int, SimEnemy> peerEnemies, IReadOnlyDictionary<int, SimEventObject> peerEventObjects, SimCharacter? localPlayer)
+    {
+        foreach (var blackHole in peerEnemies.Values)
+            if (blackHole.BNpcBaseId == BNpcBaseId.BlackHole)
+                obstacles.Add(new CircleObstacle(new Vector2(blackHole.Position.X, blackHole.Position.Z), BlackHoleAvoidRadius));
     }
 }

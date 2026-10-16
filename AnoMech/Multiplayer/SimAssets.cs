@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using AnoMech.Core;
+using AnoMech.Core.EnemyActions;
+using AnoMech.Core.UserActions;
 
 namespace AnoMech.Multiplayer;
 
@@ -55,6 +57,16 @@ internal static class SimAssets
             var typeKind = KindFor(type.Name);
             foreach (var field in type.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy))
             {
+                // Every action a scenario defines is one this build casts, whatever its field is called.
+                if (field.FieldType == typeof(EnemyAction))
+                {
+                    try
+                    {
+                        if (field.GetValue(null) is EnemyAction action) numbers[SimAssetKind.Action].Add(action.ActionId);
+                    }
+                    catch (Exception) { }
+                    continue;
+                }
                 var kind = KindFor(field.Name) ?? typeKind;
                 if (kind is not { } k) continue;
                 object? value;
@@ -98,7 +110,19 @@ internal static class SimAssets
         return numbers![kind].Contains(id);
     }
 
-    // Warned once per value: snapshots repeat at the frame rate.
+    // A cast or effect a peer plays: a scenario's own action, or one a party member presses (the
+    // job actions UserActions knows, the limit breaks).
+    private static bool IsPlayable(uint actionId)
+        => IsKnown(SimAssetKind.Action, actionId) || JobActions.Knows(actionId) || LimitBreakHandler.IsLimitBreak(actionId);
+
+    public static bool AllowAction(uint actionId, string context)
+    {
+        if (IsPlayable(actionId)) return true;
+        WarnOnce(SimAssetKind.Action, actionId.ToString(), context, $"0x{actionId:X} ({actionId})");
+        return false;
+    }
+
+    // Warned once per value: a peer sees the same one again and again.
     public static bool Allow(SimAssetKind kind, ulong id, string context)
     {
         if (IsKnown(kind, id)) return true;
@@ -119,5 +143,11 @@ internal static class SimAssets
     {
         if (id == 0 || IsKnown(kind, id)) return;
         WarnOnce(kind, id.ToString(), $"Host: {context}", $"0x{id:X} ({id})");
+    }
+
+    public static void WarnIfUnplayable(uint actionId, string context)
+    {
+        if (actionId == 0 || IsPlayable(actionId)) return;
+        WarnOnce(SimAssetKind.Action, actionId.ToString(), $"Host: {context}", $"0x{actionId:X} ({actionId})");
     }
 }

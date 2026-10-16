@@ -70,16 +70,8 @@ public sealed class MapController
     // Apply weather after a zone load (1-second delayed to let the engine settle).
     public void ApplyWeather(byte weatherId) => Natives.Zone.ApplyWeather(weatherId);
 
-    // Mirrored to peers by MultiplayerManager; scenarios call SetWeather mid-fight for
-    // arena-transform lighting cues that no SimObject carries.
-    public event Action<byte, float>? WeatherChanged;
-
     // Immediately change the active weather (mid-scenario). transition = fade seconds.
-    public void SetWeather(byte weatherId, float transition = 0.5f)
-    {
-        Natives.Zone.SetWeather(weatherId, transition);
-        WeatherChanged?.Invoke(weatherId, transition);
-    }
+    public void SetWeather(byte weatherId, float transition = 0.5f) => Natives.Zone.SetWeather(weatherId, transition);
 
     // After the zone reverted to the inn.
     public void Unload()
@@ -183,22 +175,10 @@ public sealed class MapController
 
     // ── Map effects ───────────────────────────────────────────────────────────
 
-    // Mirrored to peers by MultiplayerManager: these are native, this-client-only calls with no
-    // other replication path.
-    public event Action<uint, byte>? EffectApplied;
-    public event Action<uint, uint, uint, uint, uint, uint, uint>? DirectorUpdated;
-
-    // ProcessDirectorUpdate is where the server's own instance-state packets land, so only the
-    // two categories scenarios actually emit are accepted from the network.
-    private static readonly uint[] ReplayableDirectorCategories = [0x80000004U, 0x80000027U];
-
-    public static bool IsReplayableDirectorCategory(uint category) => ReplayableDirectorCategories.Contains(category);
-
     // Replay a single MapEffect state change (packetFlags as in MapEffects). Queued for
     // retry if the zone isn't ready yet; a peer whose zone load lags the host's would otherwise
-    // silently lose it. broadcast: false for RunInstanceEvents calls, which host and peer both
-    // run locally.
-    public void AddEffect(uint packetFlags, byte index, bool broadcast = true)
+    // silently lose it.
+    public void AddEffect(uint packetFlags, byte index)
     {
         if (!InSim(nameof(AddEffect))) return;
         // Behind a pending call for the same slot, or it would land first and be overwritten.
@@ -208,13 +188,11 @@ public sealed class MapController
             DiagnosticLog.Warn($"[MapEffect] packetFlags=0x{packetFlags:X8} index=0x{index:X} {(behind ? "queued behind an earlier call for the same slot" : "not ready yet -- queued for retry")}.");
             pendingEffects.Add(new PendingMapEffect { PacketFlags = packetFlags, Index = index, FramesLeft = RetryMaxFrames });
         }
-        if (broadcast) EffectApplied?.Invoke(packetFlags, index);
     }
 
     // Every slot's resting state in one packet, as the server sends at zone-in and on each reset
-    // (states[i] = slot i). Plays no timeline, so nothing transitions. Local-only: callers run on
-    // every client (IPhase.RunClientSetup). Replaces a snapshot still waiting for the zone and
-    // drops queued single effects, which it overwrites.
+    // (states[i] = slot i). Plays no timeline, so nothing transitions. Replaces a snapshot still
+    // waiting for the zone and drops queued single effects, which it overwrites.
     public void SetEffectSnapshot(ushort[] states, bool zoneIn = true)
     {
         if (!InSim(nameof(SetEffectSnapshot))) return;
@@ -234,9 +212,9 @@ public sealed class MapController
         DiagnosticLog.Info($"[MapController] {label} live VFX and lights: {Natives.Layout.DescribeLiveEffects()}");
     }
 
-    // Replay a native DirectorUpdate event (instance progress / state sync); same retry and
-    // broadcast rules as AddEffect.
-    public void DirectorUpdate(uint category, uint arg1 = 0, uint arg2 = 0, uint arg3 = 0, uint arg4 = 0, uint arg5 = 0, uint arg6 = 0, bool broadcast = true)
+    // Replay a native DirectorUpdate event (instance progress / state sync); retried like
+    // AddEffect.
+    public void DirectorUpdate(uint category, uint arg1 = 0, uint arg2 = 0, uint arg3 = 0, uint arg4 = 0, uint arg5 = 0, uint arg6 = 0)
     {
         if (!InSim(nameof(DirectorUpdate))) return;
         if (!Natives.Director.ProcessDirectorUpdate(category, arg1, arg2, arg3, arg4, arg5, arg6)
@@ -245,6 +223,5 @@ public sealed class MapController
             DiagnosticLog.Warn($"[MapEffect] DirectorUpdate category=0x{category:X8} not ready yet -- queued for retry.");
             pendingDirectorUpdates.Add(new PendingDirectorUpdate { Category = category, Arg1 = arg1, Arg2 = arg2, Arg3 = arg3, Arg4 = arg4, Arg5 = arg5, Arg6 = arg6, FramesLeft = RetryMaxFrames });
         }
-        if (broadcast) DirectorUpdated?.Invoke(category, arg1, arg2, arg3, arg4, arg5, arg6);
     }
 }

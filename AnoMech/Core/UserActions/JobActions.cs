@@ -691,6 +691,8 @@ internal static unsafe class JobActions
         [3688] = [AnyGcd()],           // Hyperphantasia: one stack per pictomancy GCD
     };
 
+    public static bool Knows(uint actionId) => Actions.ContainsKey(actionId);
+
     public static void ApplyEffects(SimCharacter caster, uint actionId, ulong targetId, System.Random rng)
     {
         if (!Actions.TryGetValue(actionId, out var effects)) return;

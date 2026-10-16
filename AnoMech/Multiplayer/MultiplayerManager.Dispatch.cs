@@ -12,6 +12,7 @@ using AnoMech.Core.Game.Geometry;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.Map;
 using AnoMech.Core.SimObjects;
+using AnoMech.Core.UserActions;
 using AnoMech.Network;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using AnoMech.Scenarios;
@@ -40,16 +41,15 @@ public sealed partial class MultiplayerManager
         pendingMessages.Enqueue((message, isFromHost, senderId, senderPeerId));
     }
 
-    // A snapshot directly followed by another of the same type is skipped: under a bad
-    // connection they back up and would replay as a burst.
+    // A poses snapshot directly followed by another is skipped: under a bad connection they back
+    // up and would replay as a burst. The packets never are: each is an event.
     private void DrainPendingMessages()
     {
         var budget = NetGuard.MaxMessagesPerDrain;
         while (budget-- > 0 && pendingMessages.TryDequeue(out var entry))
         {
             Interlocked.Decrement(ref pendingMessageCount);
-            if ((entry.Message is WorldSnapshotMessage && pendingMessages.TryPeek(out var next) && next.Message is WorldSnapshotMessage)
-                || (entry.Message is RolesSnapshotMessage && pendingMessages.TryPeek(out var next2) && next2.Message is RolesSnapshotMessage))
+            if (entry.Message is RolesSnapshotMessage && pendingMessages.TryPeek(out var next) && next.Message is RolesSnapshotMessage)
                 continue;
             Dispatch(entry.Message, entry.IsFromHost, entry.SenderId, entry.SenderPeerId);
         }
@@ -57,14 +57,14 @@ public sealed partial class MultiplayerManager
 
     // The ReferenceEquals guard drops events from superseded clients, and a manual Leave
     // (which nulls `relay` first) never gets past it.
-    private void OnDisconnectedOffThread(RelayClient source, Exception? failure)
+    private void OnDisconnectedOffThread(IRelayConnection source, Exception? failure)
         => Plugin.Framework.Run(() =>
         {
             if (!ReferenceEquals(relay, source)) return;
             source.Dispose();
             relay = null;
             Interlocked.Exchange(ref helloSentMs, 0);
-            disconnectedSinceMs ??= Environment.TickCount64;
+            disconnectedSinceMs ??= NowMs;
             if (failure != null)
             {
                 DiagnosticLog.Warn($"[Multiplayer] Disconnected: {failure.Message}");
@@ -83,7 +83,7 @@ public sealed partial class MultiplayerManager
     // so it lands after anything they sent before the ban and a late Hello can't re-seat them.
     private sealed record RelayRemovedPeers(IReadOnlyList<Guid> Removed) : MpMessage;
 
-    private void OnPeersRemovedOffThread(RelayClient source, IReadOnlyList<Guid> removed)
+    private void OnPeersRemovedOffThread(IRelayConnection source, IReadOnlyList<Guid> removed)
         => OnMessageReceivedOffThread(new RelayRemovedPeers(removed), false, 0, Guid.Empty);
 
     private void Dispatch(MpMessage message, bool isFromHost, uint senderId, Guid senderPeerId)
@@ -106,11 +106,8 @@ public sealed partial class MultiplayerManager
     // for a network race, not for a player who joins and immediately leaves again.
     private const long RejoinGraceMs = 2000;
 
-    private static readonly Lumina.Excel.ExcelSheet<Lumina.Excel.Sheets.Weather> WeatherSheet =
-        Plugin.DataManager.GetExcelSheet<Lumina.Excel.Sheets.Weather>();
-
-    // Host-driven world state is applied only inside a live run; outside one it would act on
-    // the real inn.
+    // Host-driven state is applied only once this run's zone entry is done; outside one it would
+    // act on the real inn.
     private bool PeerInRun => !IsHost && running && peerEnteredInstance && Plugin.Game.World.Map.IsInInstance;
 
     private static Guid? ClaimedPeerId(MpMessage message) => message switch
@@ -122,6 +119,7 @@ public sealed partial class MultiplayerManager
         PongMessage m => m.PeerId,
         StartCheckResponseMessage m => m.PeerId,
         StartAbortMessage m => m.PeerId,
+        EnteredMessage m => m.PeerId,
         SessionEndedMessage m => m.PeerId,
         ResetRequestMessage m => m.PeerId,
         LeaveRequestMessage m => m.PeerId,
@@ -173,13 +171,12 @@ public sealed partial class MultiplayerManager
         }
         // Host liveness: only types the host itself broadcasts (SessionEnded excluded, any peer
         // can send it). Keep in sync with the `when !IsHost` cases below.
-        if (!IsHost && message is LobbyStateMessage or StartMessage or WorldSnapshotMessage or RolesSnapshotMessage
-            or RoleKilledMessage or KnockbackMessage or TeleportMessage or PushMessage or FollowMessage
-            or EndMessage or PingMessage or PeerStatusMessage
-            or AnnouncementMessage
+        if (!IsHost && message is LobbyStateMessage or EnterMessage or StartMessage or GamePacketsMessage or RolesSnapshotMessage
+            or RoleKilledMessage or KnockbackMessage or TeleportMessage or PushMessage or CarryMessage or FollowMessage
+            or EndMessage or PingMessage or PeerStatusMessage or AnnouncementMessage
             or IScenarioReplayStateMessage or IScenarioMidRunUpdateMessage or KickMessage)
         {
-            lastHostMessageMs = Environment.TickCount64;
+            lastHostMessageMs = NowMs;
             everHeardFromHost = true;
         }
 
@@ -192,8 +189,8 @@ public sealed partial class MultiplayerManager
                     DiagnosticLog.Warn($"[Multiplayer] Ignoring Hello from {hello.PeerId} -- roster already holds {NetGuard.MaxSessionPeers} peers.");
                     break;
                 }
-                peerLastSeenMs[hello.PeerId] = Environment.TickCount64;
-                peerLastHelloMs[hello.PeerId] = Environment.TickCount64;
+                peerLastSeenMs[hello.PeerId] = NowMs;
+                peerLastHelloMs[hello.PeerId] = NowMs;
                 var build = new PeerBuildInfo(NetGuard.Clean(hello.Version), NetGuard.Clean(hello.Checksum));
                 Session.Names[hello.PeerId] = NetGuard.Clean(hello.DisplayName);
                 Session.Builds[hello.PeerId] = build;
@@ -203,7 +200,7 @@ public sealed partial class MultiplayerManager
                 break;
             }
             case ClaimRoleMessage claim when IsHost:
-                peerLastSeenMs[claim.PeerId] = Environment.TickCount64;
+                peerLastSeenMs[claim.PeerId] = NowMs;
                 if (!Enum.IsDefined(claim.Role))
                 {
                     DiagnosticLog.Warn($"[Multiplayer] Dropped a claim for role {(int)claim.Role} from {Session.NameOf(claim.PeerId)} -- no such role.");
@@ -212,15 +209,15 @@ public sealed partial class MultiplayerManager
                 ApplyClaim(claim.PeerId, claim.Role);
                 break;
             case ReleaseRoleMessage release when IsHost:
-                peerLastSeenMs[release.PeerId] = Environment.TickCount64;
+                peerLastSeenMs[release.PeerId] = NowMs;
                 ApplyRelease(release.PeerId);
                 break;
             case SelfPoseMessage pose when IsHost:
-                peerLastSeenMs[pose.PeerId] = Environment.TickCount64;
+                peerLastSeenMs[pose.PeerId] = NowMs;
                 OnSelfPoseReceived(pose);
                 break;
             case PongMessage pong when IsHost:
-                peerLastSeenMs[pong.PeerId] = Environment.TickCount64;
+                peerLastSeenMs[pong.PeerId] = NowMs;
                 peerLatencyMs[pong.PeerId] = PingClockMs() - pong.SentAtMs;
                 break;
             // Mitigation reports put statuses on the host's own characters: seated peers only,
@@ -235,24 +232,25 @@ public sealed partial class MultiplayerManager
                     break;
                 }
                 var duration = NetGuard.Clamp(applied.Duration, 0f, NetGuard.MaxMitigationSeconds);
-                foreach (var netId in NetGuard.Cap(applied.EnemyNetIds, NetGuard.MaxEnemiesPerSnapshot))
+                var enemies = Plugin.Game.World.Children.OfType<SimEnemy>().Where(e => e.IsActive).ToList();
+                foreach (var entityId in NetGuard.Cap(applied.Enemies, NetGuard.MaxReportedEnemies))
                 {
-                    var enemy = hostEnemyNetIds.FirstOrDefault(kv => kv.Value == netId).Key;
-                    if (enemy == null)
+                    if (enemies.FirstOrDefault(e => e.EntityId == entityId) is not { } enemy)
                     {
-                        DiagnosticLog.Warn($"[Multiplayer] Host: {who} reported status {applied.StatusId} on unknown enemy NetId {netId} -- dropping.");
+                        DiagnosticLog.Warn($"[Multiplayer] Host: {who} reported status {applied.StatusId} on unknown enemy 0x{entityId:X} -- dropping.");
                         continue;
                     }
                     enemy.AddStatus(applied.StatusId, duration);
-                    DiagnosticLog.Info($"[Multiplayer] Host: applied {who}'s reported status {applied.StatusId} (duration={duration:F1}) to enemy NetId {netId}.");
+                    DiagnosticLog.Info($"[Multiplayer] Host: applied {who}'s reported status {applied.StatusId} (duration={duration:F1}) to enemy 0x{entityId:X}.");
                 }
                 break;
             }
             case PeerAppliedRoleStatusMessage applied when IsHost:
             {
                 var who = Session.NameOf(applied.PeerId);
-                if (Session.RoleOf(applied.PeerId) is null) break;
-                if (!AnoMech.Core.UserActions.Mitigation.ByStatusId.ContainsKey(applied.StatusId))
+                if (Session.RoleOf(applied.PeerId) is not { } reporter) break;
+                var sprint = applied.StatusId == SprintHandler.SprintStatusId;
+                if (!sprint && !Mitigation.ByStatusId.ContainsKey(applied.StatusId))
                 {
                     DiagnosticLog.Warn($"[Multiplayer] Host: {who} reported role status {applied.StatusId}, which is no known mitigation -- dropping.");
                     break;
@@ -260,14 +258,20 @@ public sealed partial class MultiplayerManager
                 var duration = NetGuard.Clamp(applied.Duration, 0f, NetGuard.MaxMitigationSeconds);
                 foreach (var role in NetGuard.Cap(applied.Roles, 8).Where(Enum.IsDefined))
                 {
+                    // Sprint is only ever a player's own.
+                    if (sprint && role != reporter) continue;
                     if (Plugin.Game.World.Party.Get(role) is not { } member)
                     {
                         DiagnosticLog.Warn($"[Multiplayer] Host: {who} reported status {applied.StatusId} on role {role}, but that slot is empty -- dropping.");
                         continue;
                     }
-                    // A re-press replaces the status, as it does on the peer; AddStatus alone would stack it.
-                    member.RemoveStatus(applied.StatusId);
-                    member.AddStatus(applied.StatusId, duration);
+                    if (sprint) SprintHandler.Apply(member, duration);
+                    else
+                    {
+                        // A re-press replaces the status, as it does on the peer; AddStatus alone would stack it.
+                        member.RemoveStatus(applied.StatusId);
+                        member.AddStatusParam(applied.StatusId, applied.Param, duration);
+                    }
                     DiagnosticLog.Info($"[Multiplayer] Host: applied {who}'s reported status {applied.StatusId} (duration={duration:F1}) to role {role}.");
                 }
                 break;
@@ -278,13 +282,23 @@ public sealed partial class MultiplayerManager
                 NoteHelloAcknowledged();
                 ApplyHostScenarioSettings();
                 LobbyChanged?.Invoke();
-                // A late join or mid-fight rejoin never gets a StartMessage; OnStartReceived is
-                // idempotent, so this is safe on a fresh start too.
+                // A StartMessage lost on the way still starts a peer that has entered;
+                // OnStartReceived is idempotent.
                 if (lobby.Started && MyClaimedRole != null)
                     OnStartReceived(lobby.Clock);
                 break;
+            case EnterMessage enter when !IsHost:
+                OnEnterReceived(enter);
+                break;
+            case EnteredMessage entered when IsHost:
+                if (pendingEntered?.Remove(entered.PeerId) == true)
+                    DiagnosticLog.Info($"[Multiplayer] {Session.NameOf(entered.PeerId)} is in the zone ({pendingEntered.Count} to go).");
+                break;
             case StartMessage start when !IsHost:
                 OnStartReceived(start.Clock);
+                break;
+            case GamePacketsMessage packets when !IsHost:
+                OnGamePacketsReceived(packets);
                 break;
             case StartCheckMessage when !IsHost:
                 startCheckReplyWaited = 0f;
@@ -307,9 +321,6 @@ public sealed partial class MultiplayerManager
                 BroadcastRunEnded(returnedToInn: true, reason);
                 break;
             }
-            case WorldSnapshotMessage snap when !IsHost:
-                OnWorldSnapshotReceived(snap);
-                break;
             case RolesSnapshotMessage rolesSnap when !IsHost:
                 OnRolesSnapshotReceived(rolesSnap);
                 break;
@@ -359,11 +370,11 @@ public sealed partial class MultiplayerManager
             {
                 // A leave sent on the way out can still be in flight when the same peer comes
                 // back. Right after a Hello it is held until the peer's silence confirms it.
-                var sinceHello = Environment.TickCount64 - peerLastHelloMs.GetValueOrDefault(ended.PeerId, long.MinValue / 2);
+                var sinceHello = NowMs - peerLastHelloMs.GetValueOrDefault(ended.PeerId, long.MinValue / 2);
                 if (sinceHello < RejoinGraceMs)
                 {
                     DiagnosticLog.Info($"[Multiplayer] Holding a leave from {Session.NameOf(ended.PeerId)} -- they registered {sinceHello}ms ago, so it may have crossed their rejoin.");
-                    deferredLeaveMs[ended.PeerId] = Environment.TickCount64;
+                    deferredLeaveMs[ended.PeerId] = NowMs;
                     break;
                 }
                 RemovePeer(ended.PeerId);
@@ -391,31 +402,6 @@ public sealed partial class MultiplayerManager
                     Plugin.Game.Leave();
                 // Unconditional, or the requester's own Leave button waits forever.
                 BroadcastRunEnded(returnedToInn: true);
-                break;
-            // Can't loop into a re-broadcast: the map-event handlers gate on IsHost.
-            case MapEffectMessage effect when PeerInRun:
-                DiagnosticLog.Info($"[Multiplayer] Peer: applying MapEffect packetFlags=0x{effect.PacketFlags:X8} index=0x{effect.Index:X}.");
-                Plugin.Game.World.Map.AddEffect(effect.PacketFlags, effect.Index);
-                break;
-            case MapDirectorUpdateMessage directorUpdate when PeerInRun:
-                if (!MapController.IsReplayableDirectorCategory(directorUpdate.Category))
-                {
-                    DiagnosticLog.Warn($"[Multiplayer] Dropped MapDirectorUpdate category=0x{directorUpdate.Category:X8} -- no scenario uses it.");
-                    break;
-                }
-                DiagnosticLog.Info($"[Multiplayer] Peer: applying MapDirectorUpdate category=0x{directorUpdate.Category:X8}.");
-                Plugin.Game.World.Map.DirectorUpdate(
-                    directorUpdate.Category, directorUpdate.Arg1, directorUpdate.Arg2,
-                    directorUpdate.Arg3, directorUpdate.Arg4, directorUpdate.Arg5, directorUpdate.Arg6);
-                break;
-            case SetWeatherMessage weather when PeerInRun:
-                if (!WeatherSheet.HasRow(weather.WeatherId))
-                {
-                    DiagnosticLog.Warn($"[Multiplayer] Dropped SetWeather weatherId={weather.WeatherId} -- no such Weather row.");
-                    break;
-                }
-                DiagnosticLog.Info($"[Multiplayer] Peer: applying SetWeather weatherId={weather.WeatherId} transition={weather.Transition}.");
-                Plugin.Game.World.Map.SetWeather(weather.WeatherId, NetGuard.Clamp(weather.Transition, 0f, 60f, 0.5f));
                 break;
             case AnnouncementMessage announcement when PeerInRun:
                 Plugin.Game.World.Announce(NetGuard.Clean(announcement.Text));
