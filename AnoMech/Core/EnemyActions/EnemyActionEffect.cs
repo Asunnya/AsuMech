@@ -31,8 +31,12 @@ public static class EnemyActionEffects
 
     public static VulnSpec ProtectedBy(ushort statusId) => VulnSpec.None.ProtectedBy(statusId);
 
-    // Survivors only.
-    public static IEnemyActionEffect ApplyStatus(ushort statusId, float duration) => new ApplyStatusEffect(statusId, duration);
+    // Survivors only. delayToEffectResult as EnemyActionContext.AddStatus: retail does this for some
+    // statuses (Damage Down, Sleep, Confused, HP Penalty, long resistance downs) and not others
+    // (vulns, Ruin, Doom, stuns, short resistance downs). It's chosen per status within an action;
+    // neither the packet nor any sheet column tells them apart, so read it off a replay.
+    public static IEnemyActionEffect ApplyStatus(ushort statusId, float duration, bool delayToEffectResult = false, byte entryParam = 0)
+        => new ApplyStatusEffect(statusId, duration, delayToEffectResult, entryParam);
 
     // Survivors only.
     public static IEnemyActionEffect RemoveStatus(ushort statusId) => new RemoveStatusEffect(statusId);
@@ -50,18 +54,19 @@ public static class EnemyActionEffects
         => new FollowUpEffect(followUp, when);
 
     // Away from the caster, by a Knockback sheet row. Survivors only.
-    // `knockbackDelay` is from resolve and used only for bots; null = TimingSpec.DamageDelay.
+    // `knockbackDelay` is from resolve and used only for bots and NPCs; null = TimingSpec.DamageDelay.
     public static IEnemyActionEffect Knockback(uint knockbackId, float? knockbackDelay = null)
         => new KnockbackEffect((_, _) => Natives.Data.Knockback(knockbackId) is { } kb ? (kb.Distance, kb.Speed) : null, knockbackDelay, knockbackId);
 
-    // Away from the caster, for an action with no known Knockback row. Survivors only.
-    public static IEnemyActionEffect Knockback(float distance, float speed, float? knockbackDelay = null)
-        => new KnockbackEffect((_, _) => (distance, speed), knockbackDelay);
+    // A scripted push away from the caster, which no Knockback row describes. Survivors only.
+    // `pushDelay` as Knockback's.
+    public static IEnemyActionEffect Push(float distance, float speed, float? pushDelay = null)
+        => new KnockbackEffect((_, _) => (distance, speed), pushDelay);
 
-    // Away from the caster, as far as `distance` says for each target (read at resolve; null = not
-    // pushed). Survivors only.
-    public static IEnemyActionEffect Knockback(Func<EnemyActionContext, SimCharacter, float?> distance, float speed, float? knockbackDelay = null)
-        => new KnockbackEffect((ctx, target) => distance(ctx, target) is { } d ? (d, speed) : null, knockbackDelay);
+    // A scripted push away from the caster, as far as `distance` says for each target (read at
+    // resolve; null = not pushed). Survivors only.
+    public static IEnemyActionEffect Push(Func<EnemyActionContext, SimCharacter, float?> distance, float speed, float? pushDelay = null)
+        => new KnockbackEffect((ctx, target) => distance(ctx, target) is { } d ? (d, speed) : null, pushDelay);
 
     // Kills by facing alone: with `lookAway`, whoever has the origin in their front 90° arc; without,
     // whoever has it in their back 90° arc.
@@ -83,6 +88,11 @@ public static class EnemyActionEffects
     public static IEnemyActionEffect OnHavingStatus(ushort statusId, IEnemyActionEffect effect)
         => new FilteredEffect(effect, (_, hits) => hits.Where(t => t.HasStatus(statusId)));
 
+    // `effect` applied to the NPCs of `bnpcBaseId` the area caught instead of the party hits (UWU's
+    // Razor Plumes, pushed by Super Cyclone).
+    public static IEnemyActionEffect OnNpcs(uint bnpcBaseId, IEnemyActionEffect effect)
+        => new FilteredEffect(effect, (ctx, _) => ctx.NpcHits.Where(npc => npc.BNpcBaseId == bnpcBaseId));
+
     // `effect` applied to the `count` hit nearest the origin (the front of a wild charge).
     public static IEnemyActionEffect OnFront(int count, IEnemyActionEffect effect)
         => new FilteredEffect(effect, (_, hits) => hits.Take(count));
@@ -90,7 +100,10 @@ public static class EnemyActionEffects
 
 internal sealed class DefeatCasterEffect : IEnemyActionEffect
 {
-    public void Apply(EnemyActionContext ctx, IReadOnlyList<SimCharacter> hits) => ctx.Caster.DefeatByOwnAction(ctx.Action);
+    public void Apply(EnemyActionContext ctx, IReadOnlyList<SimCharacter> hits)
+    {
+        if (ctx.Caster is SimEnemy enemy) enemy.DefeatByOwnAction(ctx.Action);
+    }
 }
 
 internal sealed class FilteredEffect(IEnemyActionEffect effect, Func<EnemyActionContext, IReadOnlyList<SimCharacter>, IEnumerable<SimCharacter>> select) : IEnemyActionEffect
@@ -120,13 +133,13 @@ internal sealed class DamageEffect(VulnSpec vulns, Severity severity, Distributi
         => cause.Length == 0 ? reason : reason is null ? cause : $"{reason}; {cause}";
 }
 
-internal sealed class ApplyStatusEffect(ushort statusId, float duration) : IEnemyActionEffect
+internal sealed class ApplyStatusEffect(ushort statusId, float duration, bool delayToEffectResult, byte entryParam) : IEnemyActionEffect
 {
     public void Apply(EnemyActionContext ctx, IReadOnlyList<SimCharacter> hits)
     {
         foreach (var target in hits)
             if (!ctx.IsKilled(target) && target.IsAlive())
-                ctx.AddStatus(target, statusId, duration);
+                ctx.AddStatus(target, statusId, duration, delayToEffectResult: delayToEffectResult, entryParam: entryParam);
     }
 }
 
@@ -196,7 +209,12 @@ internal sealed class FollowUpEffect(EnemyAction followUp, Func<EnemyActionConte
     {
         if (!when(ctx)) return;
         var caster = ctx.Caster;
-        ctx.AfterResolve(() => caster.Cast(followUp));
+        var party = ctx.Party;
+        ctx.AfterResolve(() =>
+        {
+            if (caster is SimEnemy enemy) enemy.Cast(followUp);
+            else party.Act(caster, followUp);
+        });
     }
 }
 
@@ -206,7 +224,7 @@ internal sealed class KnockbackEffect(Func<EnemyActionContext, SimCharacter, (fl
     {
         foreach (var target in hits)
         {
-            if (ctx.IsKilled(target) || !target.IsAlive() || target is not ISimPartyMember) continue;
+            if (ctx.IsKilled(target) || !target.IsAlive()) continue;
             if (push(ctx, target) is { } p)
                 ctx.Knockback(target, p.Distance, p.Speed, knockbackDelay, knockbackRow);
         }

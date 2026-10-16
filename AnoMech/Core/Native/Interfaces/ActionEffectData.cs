@@ -52,7 +52,7 @@ public readonly record struct ActionEffectEntry(byte Type, byte Param0, byte Par
     // The gain flytext; the status list puts it on the character. Retail's Param0 is the low byte
     // of the status's strength (10 for Battle Litany's 10%); whether the client reads it is
     // UNVERIFIED.
-    public static ActionEffectEntry StatusGain(ushort statusId) => new(StatusGainType, 0, 0, 0, 0, 0, statusId);
+    public static ActionEffectEntry StatusGain(ushort statusId, byte param0 = 0) => new(StatusGainType, param0, 0, 0, 0, 0, statusId);
 
     public static ActionEffectEntry Knockback(uint knockbackRow) => new(KnockbackType, 0, 0, 0, 0, 0, (ushort)knockbackRow);
 

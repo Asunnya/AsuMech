@@ -720,7 +720,7 @@ public sealed class UwuP3TitanScenario : IScenario
         foreach (var member in hit)
         {
             damage.ApplyDamage(member, LandslideDamage, ActionId.LandslideLine, "Landslide", false);
-            (member as ISimPartyMember)?.Knockback(titan.Position, LandslideKnockback, 20f);
+            member.Knockback(titan.Position, LandslideKnockback, 20f);
         }
         foreach (var caster in landslideCasters) world.Events.Add(HelperLifetime, () => DespawnHelper(caster.Caster));
         landslideCasters.Clear();

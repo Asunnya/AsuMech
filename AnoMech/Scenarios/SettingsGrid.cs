@@ -50,7 +50,7 @@ internal static class SettingsGrid
     // say "you". Returns the seat to edit.
     public static PartyRole SeatRow(string id, PartyRole current)
     {
-        var mp = Plugin.MultiplayerInstance;
+        var mp = Plugin.Multiplayer;
         if (!PerRole.SeatsActive || mp == null) return current;
         Row("Editing:");
         var labels = new string[8];

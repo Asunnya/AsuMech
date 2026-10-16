@@ -7,6 +7,7 @@ using AnoMech.Core.Game;
 using AnoMech.Core.Game.Ai;
 using AnoMech.Core.Game.Geometry;
 using AnoMech.Core.Game.Party;
+using AnoMech.Core.Native.Interfaces;
 using AnoMech.Core.SimObjects;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
@@ -123,7 +124,7 @@ public sealed class DsrP1KnightsScenario : IScenario
         hallowingCasting = false;
         playerAntiKnockbackUntil = -1f;
 
-        if (Plugin.PlayerInputHooks is { } hooks)
+        if (Natives.PlayerInput is { } hooks)
         {
             hooks.ActionExecuted -= OnPlayerAction;
             hooks.ActionExecuted += OnPlayerAction;
@@ -513,7 +514,7 @@ public sealed class DsrP1KnightsScenario : IScenario
             damage.ApplyDamage(member, FaithUnmovingDamage, ActionId.FaithUnmoving, "Faith Unmoving", false);
             var bot = party.IsBotDriven(member);
             if (bot ? botsResist : world.Events.Elapsed < playerAntiKnockbackUntil) continue;
-            (member as ISimPartyMember)?.Knockback(grinnaux.Position, distance, speed);
+            member.Knockback(grinnaux.Position, distance, speed);
         }
     }
 
@@ -581,7 +582,7 @@ public sealed class DsrP1KnightsScenario : IScenario
                 continue;
             }
             if (KnockbackLookup.TryGet(KnockbackId.Execution, out var distance, out var speed))
-                (hit as ISimPartyMember)?.Knockback(at, distance, speed);
+                hit.Knockback(at, distance, speed);
             damage.ApplyDamage(hit, 1f, ActionId.Execution, "caught in the main tank's Execution", lethal: true);
         }
     }
@@ -750,7 +751,7 @@ public sealed class DsrP1KnightsScenario : IScenario
             member.AddStatus(StatusId.Stun, 1f);
             member.AddStatus(StatusId.PlanarImprisonment);
             if (FlatDistance(member.Position, DsrP1KnightsState.PrisonCentre) > PrisonRadius - 2f)
-                (member as ISimPartyMember)?.CarryTo(DsrP1KnightsState.PrisonCentre + new Vector3(0f, 0f, 1f));
+                member.CarryTo(DsrP1KnightsState.PrisonCentre + new Vector3(0f, 0f, 1f));
         }
     }
 
@@ -862,7 +863,7 @@ public sealed class DsrP1KnightsScenario : IScenario
 
     private void DespawnAll()
     {
-        if (Plugin.PlayerInputHooks is { } hooks) hooks.ActionExecuted -= OnPlayerAction;
+        if (Natives.PlayerInput is { } hooks) hooks.ActionExecuted -= OnPlayerAction;
         ClosePortals();
         foreach (var chain in burningChains) chain.Despawn();
         burningChains.Clear();

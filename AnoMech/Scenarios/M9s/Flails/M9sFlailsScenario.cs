@@ -70,7 +70,7 @@ public sealed class M9sFlailsScenario : IScenario
         corridorActive = false;
         hazardTime = 0f;
         Array.Clear(doornailDown);
-        if (Plugin.PlayerInputHooks is { } hooks)
+        if (Natives.PlayerInput is { } hooks)
         {
             hooks.ActionExecuted -= OnPlayerAction;
             hooks.ActionExecuted += OnPlayerAction;
@@ -465,7 +465,7 @@ public sealed class M9sFlailsScenario : IScenario
 
     private void DespawnAll()
     {
-        if (Plugin.PlayerInputHooks is { } hooks) hooks.ActionExecuted -= OnPlayerAction;
+        if (Natives.PlayerInput is { } hooks) hooks.ActionExecuted -= OnPlayerAction;
         vamp?.Despawn();
         foreach (var helper in helpers) helper.Despawn();
         helpers.Clear();

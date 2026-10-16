@@ -1,5 +1,4 @@
 using System;
-using System.Numerics;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.Native.Interfaces;
@@ -7,8 +6,8 @@ using AnoMech.Core.Native.Interfaces;
 namespace AnoMech.Core.SimObjects;
 
 // A character occupying one of the 8 party slots: the local player (SimPlayer)
-// or a non-player doppel (SimPartyNpc). Carries the PartyRole, the knockback API,
-// and the death model (only party members are killed/KO'd — bosses despawn).
+// or a non-player doppel (SimPartyNpc). Carries the PartyRole and the death model
+// (only party members are killed/KO'd — bosses despawn).
 // Deliberately NOT implemented by SimEnemy/SimNpc — enemies are not party slots
 // (the reason this is an interface and not a base class). Otherwise thin: the rest
 // of a slot's surface is plain SimCharacter, reached by holding the slot as
@@ -23,34 +22,6 @@ public interface ISimPartyMember : ISimObject, IPositioned
 
     // Game.Kill calls this outside godmode. byEnvironment: no action dealt the death.
     void OnKilled(bool byEnvironment);
-
-    // Default knockback speed (yalms/sec) when the caller doesn't know the
-    // specific action — matches the FFXIV Knockback sheet's most common Speed
-    // for short slides (~25).
-    const float KnockbackSpeed = 25f;
-
-    // No-op when the slot is co-located with `source` (direction undefined). The
-    // 3-arg form is the real one — SimPlayer implements a tick-based slide on the
-    // real player, SimPartyNpc the MoveTo-based default. The 2-arg and actionId
-    // overloads thread through it.
-    void Knockback(Vector3 source, float distance) => Knockback(source, distance, KnockbackSpeed);
-
-    void Knockback(Vector3 source, float distance, float speed);
-
-    // Forced movement in a fixed direction (world heading, same convention as Placement.Rotation)
-    // rather than away from a point -- see Movement.PushInDirection's own doc comment.
-    void PushInDirection(float heading, float distance, float speed);
-
-    // Same as PushInDirection, but eased (ramp up, hold, ramp down) instead of constant-speed
-    // -- see Movement.PushInDirectionEased's own doc comment for why this exists separately.
-    void PushInDirectionEased(float heading, float distance, float durationSeconds);
-
-    // A scripted snap, as opposed to SetPosition's engine-side use; SimNetworkPuppet hands it to
-    // the owning peer.
-    void TeleportTo(Placement placement) => ((SimCharacter)this).SetPosition(placement);
-
-    // SimNetworkPuppet hands it to the owning peer.
-    void CarryTo(Vector3 destination);
 
     // A no-op for humans, who press their own Sprint; only bots cast, including a debug bot in the
     // local player's seat.
@@ -93,7 +64,7 @@ public static class SimCharacterDeathExtensions
 
     private static bool Kill(SimCharacter c, string cause, uint? actionId)
     {
-        if (c is ISimPartyMember pm) return Plugin.GameInstance.Kill(pm, cause, actionId);
+        if (c is ISimPartyMember pm) return Plugin.Game.Kill(pm, cause, actionId);
         Plugin.Log.Warning($"Die() on non-party {c.GetType().Name} ignored: {cause}");
         return false;
     }

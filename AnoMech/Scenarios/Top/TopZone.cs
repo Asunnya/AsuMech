@@ -18,13 +18,11 @@ public sealed class TopZone : IZone
     public string Name => "The Omega Protocol";
     public uint TerritoryId => 1122;
     public Vector3 Origin => new(100f, 0f, 100f);
-    public byte Level => 90;
-    public ushort ItemLevel => 365;
 
     public IReadOnlyList<WaymarkLayout> WaymarkPresets { get; } =
         [new WaymarkLayout("Ring", Core.Game.WaymarkPresets.Ring(13.63f))];
 
-    public EntranceBarrier? EntranceBarrier => new(2007457, 0x91D196, 0x91D193, new Vector3(5f, 0f, 15f));
+    public EntranceBarrier EntranceBarrier => new(2007457, 0x91D196, 0x91D193, new Vector3(5f, 0f, 15f));
 
     public IReadOnlyList<ushort> ArenaMapEffectSnapshot { get; } =
         [1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4];

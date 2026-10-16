@@ -6,10 +6,6 @@ namespace AnoMech.Tests;
 
 internal sealed class FakeLayoutFunctions : ILayoutFunctions
 {
-    public int SuppressLayer(ushort layerKey) => 0;
-    public void ReassertSuppressedLayers() { }
-    public void ClearSuppressedLayers() { }
-
     // Calls that find nothing yet, as while the zone is still streaming in.
     public int ColliderCallsBeforeStreamed { get; set; }
     public List<Vector3> ColliderDropCenters { get; } = [];

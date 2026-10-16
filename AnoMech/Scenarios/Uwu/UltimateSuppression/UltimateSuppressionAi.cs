@@ -25,7 +25,6 @@ public class UltimateSuppressionAi : IScenarioAi<UltimateSuppressionState>
         ai.Move(15f, Eruptions1);
         ai.Move(18.3f, Eruptions2);
         ai.Move(18.8f, Eruptions3);
-        ai.Move(19.3f, TanksInterceptOwnSistersMistralSong);
         ai.Move(21f, Eruptions4);
         ai.Move(23.25f, FeatherRain1);
         ai.Move(23.6f, MainTankFollowsGaol);
@@ -33,7 +32,7 @@ public class UltimateSuppressionAi : IScenarioAi<UltimateSuppressionState>
         ai.Move(27.05f, () => AiMove.Single(((ISimPartyMember)state.PlayerLightPillar!).Role, new(6, -5)));
         ai.Move(29.3f, () => AiMove.Single(((ISimPartyMember)state.PlayerLightPillar!).Role, new(6.25f, 0)));
         ai.Move(31f, () => AiMove.All(new(6.7f, 0)));
-        ai.Move(33f, () => AiMove.Single(PartyRole.MainTank, new(-4, -7)));
+        ai.Move(33f, () => AiMove.Single(PartyRole.MainTank, new(-5, -7.5f)));
         ai.Move(33.25f, Landslide1);
         ai.Move(35.75f, Landslide2);
         ai.Move(42f, () => AiMove.All(new(7, 5)));
@@ -47,8 +46,8 @@ public class UltimateSuppressionAi : IScenarioAi<UltimateSuppressionState>
             .ToArray();
 
         return AiMove.Create(
-            new(-6, 8),  // MT
-            new(-6, 8), // OT
+            new(-5.2f, 8.1f), // MT, Chirada
+            new(-5.8f, 7.6f), // OT, Suparna
             spots[0], // H1
             spots[1], // H2
             spots[2], // M1
@@ -117,19 +116,10 @@ public class UltimateSuppressionAi : IScenarioAi<UltimateSuppressionState>
             ]);
     }
 
-    private IAiMove TanksInterceptOwnSistersMistralSong()
-    {
-        return AiMove.Create(
-            new(-3.5f, 8.7f), // MT, Chirada
-            new(-7.4f, 5f) // OT, Suparna
-            ).NaturalOrder();
-    }
-
     private IAiMove Eruptions4()
     {
         return AiMove.Create(
-            null, // MT
-            new(-6, 8), // OT, out of Garuda's Mistral Song
+            null, null, // Tanks
             null, null, null,
             new(12, -2), new(12, -2), // Eruption
             null

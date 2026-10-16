@@ -40,7 +40,7 @@ internal static unsafe class TimelineDebug
         if (!ticking) return;
         Plugin.Framework.Update -= OnUpdate;
         ticking = false;
-        if (holdFramesLeft > 0) Plugin.GameInstance?.World.Map.HoldSendFirewall(false);
+        if (holdFramesLeft > 0) ZoneControl.Current?.HoldSendFirewall(false);
         holdFramesLeft = 0;
         DiagnosticLog.ForcePersist = false;
     }
@@ -50,7 +50,7 @@ internal static unsafe class TimelineDebug
         if (holdFramesLeft > 0 && --holdFramesLeft == 0)
         {
             DiagnosticLog.ForcePersist = false;
-            Plugin.GameInstance?.World.Map.HoldSendFirewall(false);
+            ZoneControl.Current?.HoldSendFirewall(false);
         }
         if (playerWatchFrames < 0) return;
         var player = Plugin.ObjectTable.LocalPlayer;
@@ -69,7 +69,7 @@ internal static unsafe class TimelineDebug
     {
         EnsureTicking();
         DiagnosticLog.ForcePersist = true;
-        Plugin.GameInstance?.World.Map.HoldSendFirewall(true);
+        ZoneControl.Current?.HoldSendFirewall(true);
         holdFramesLeft = 400;
     }
 
@@ -99,7 +99,7 @@ internal static unsafe class TimelineDebug
 
     public static void SpawnChaosNearPlayer()
     {
-        var game = Plugin.GameInstance;
+        var game = Plugin.Game;
         var player = Plugin.ObjectTable.LocalPlayer;
         if (game == null || player == null)
         {
@@ -136,7 +136,7 @@ internal static unsafe class TimelineDebug
     // (caster = animation target, no targets, lock 1.1, zero target position).
     public static void EffectOnLastSpawn(uint actionId)
     {
-        var game = Plugin.GameInstance;
+        var game = Plugin.Game;
         if (game == null || LastSpawn is not { IsActive: true } enemy)
         {
             Plugin.Log.Warning("[TimelineDebug] no live test spawn -- spawn one first");

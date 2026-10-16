@@ -9,7 +9,6 @@ namespace AnoMech.Scenarios.Dsr;
 public class DsrConstants
 {
     public const byte Level = 90;
-    public const ushort ItemLevel = 605;
 
     public static class Geometry
     {

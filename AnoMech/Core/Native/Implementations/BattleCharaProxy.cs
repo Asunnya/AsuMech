@@ -9,7 +9,6 @@ using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
-using FFXIVClientStructs.FFXIV.Client.Graphics.Vfx;
 using FFXIVClientStructs.FFXIV.Client.Network;
 using FFXIVClientStructs.FFXIV.Client.System.Resource.Handle;
 using InteropGenerator.Runtime;
@@ -28,9 +27,12 @@ internal sealed unsafe class BattleCharaProxy : IBattleCharaProxy
 
     public int Slot { get; }
 
-    internal BattleChara* Ptr => Slot < 0
+    internal BattleChara* Ptr => PtrAt(Slot);
+
+    // By slot, so a proxy wrapped by another IBattleCharaProxy (multiplayer's) reaches it too.
+    internal static BattleChara* PtrAt(int slot) => slot < 0
         ? (BattleChara*)(Plugin.ObjectTable.LocalPlayer?.Address ?? 0)
-        : (BattleChara*)CharacterManager.Instance()->BattleCharas[Slot];
+        : (BattleChara*)CharacterManager.Instance()->BattleCharas[slot];
 
     public bool Exists => Ptr != null;
 
@@ -123,6 +125,21 @@ internal sealed unsafe class BattleCharaProxy : IBattleCharaProxy
         PacketDispatcherPointers.HandleActorMovePacket(obj->EntityId, &packet);
     }
 
+    public void NpcKnockback(Vector3 position, float rotation, float durationSeconds)
+    {
+        var obj = Ptr;
+        if (obj == null || Slot < 0) return;
+        var packet = new NpcKnockbackPacket
+        {
+            RotationInt = MathUtil.QuantizeRotation(MathUtil.NormalizeRotation(rotation)),
+            DurationSeconds = durationSeconds,
+            PositionX = MathUtil.QuantizePosition(position.X),
+            PositionY = MathUtil.QuantizePosition(position.Y),
+            PositionZ = MathUtil.QuantizePosition(position.Z),
+        };
+        PacketDispatcherPointers.HandleNpcKnockbackPacket(obj->EntityId, &packet);
+    }
+
     public float HitboxRadius
     {
         get
@@ -133,27 +150,6 @@ internal sealed unsafe class BattleCharaProxy : IBattleCharaProxy
     }
 
     // ── Model ────────────────────────────────────────────────────────────────
-
-    public bool IsReadyToDraw
-    {
-        get
-        {
-            var obj = Ptr;
-            return obj != null && obj->IsReadyToDraw();
-        }
-    }
-
-    public void EnableDraw()
-    {
-        var obj = Ptr;
-        if (obj != null) obj->EnableDraw();
-    }
-
-    public void DisableDraw()
-    {
-        var obj = Ptr;
-        if (obj != null) obj->DisableDraw();
-    }
 
     public bool HasDrawObject
     {
@@ -186,44 +182,6 @@ internal sealed unsafe class BattleCharaProxy : IBattleCharaProxy
             return obj == null ? (byte)0 : obj->Timeline.ModelState;
         }
     }
-
-    // ── Animation ────────────────────────────────────────────────────────────
-
-    public void SetBaseOverride(ushort timelineId)
-    {
-        var obj = Ptr;
-        if (obj != null) obj->Timeline.BaseOverride = timelineId;
-    }
-
-    public ushort GetSlotTimeline(uint slot)
-    {
-        var obj = Ptr;
-        if (obj == null || obj->Timeline.TimelineSequencer.Parent == null) return 0;
-        return obj->Timeline.TimelineSequencer.GetSlotTimeline(slot);
-    }
-
-    public void SetSlotTimeline(uint slot, ushort timelineId)
-    {
-        var obj = Ptr;
-        if (obj == null || obj->Timeline.TimelineSequencer.Parent == null) return;
-        obj->Timeline.TimelineSequencer.SetSlotTimeline(slot, timelineId);
-    }
-
-    public void PlayTimelineDirect(ushort timelineId)
-    {
-        var obj = Ptr;
-        if (obj == null || obj->Timeline.TimelineSequencer.Parent == null) return;
-        obj->Timeline.TimelineSequencer.PlayTimeline(timelineId);
-    }
-
-    public ulong LoadBaseTimelineResources()
-    {
-        var obj = Ptr;
-        if (obj == null || obj->Timeline.TimelineSequencer.Parent == null) return 0;
-        var scheduler = obj->Timeline.TimelineSequencer.GetSchedulerTimeline(0);
-        return scheduler == null ? 0 : scheduler->LoadTimelineResources();
-    }
-
 
     // ── Casting ──────────────────────────────────────────────────────────────
 
@@ -261,15 +219,6 @@ internal sealed unsafe class BattleCharaProxy : IBattleCharaProxy
             var obj = Ptr;
             return obj == null ? 0f : obj->CastInfo.TotalCastTime;
         }
-    }
-
-    public void ClearCast()
-    {
-        var obj = Ptr;
-        if (obj == null) return;
-        obj->CastInfo.IsCasting = false;
-        obj->CastInfo.ActionId = 0;
-        obj->CastInfo.ActionType = 0;
     }
 
     public void ReceiveActorCast(ActorCastData cast)
@@ -376,6 +325,22 @@ internal sealed unsafe class BattleCharaProxy : IBattleCharaProxy
         PacketDispatcher.HandleActorControlPacket(obj->EntityId, category, arg1, arg2, arg3, arg4, 0, 0, 0, 0, target, false);
     }
 
+    // Within this many yalms of the target the approach counts as arrived. UNVERIFIED: retail's value.
+    private const byte ForcedApproachRange = 1;
+
+    // The controller holds one mode at a time: the face-only follow would replace the walk, so
+    // the approach, which turns the player as it walks, goes out alone. Retail always ends the
+    // previous one before starting the next.
+    public void ForcedFollow(uint? targetEntityId)
+    {
+        PacketDispatcherPointers.HandleForcedFollowEndPacket(0);
+        if (targetEntityId is not { } target) return;
+        var packet = new ForcedApproachPacket { Range = ForcedApproachRange, TargetEntityId = target };
+        PacketDispatcherPointers.HandleForcedApproachPacket(&packet);
+    }
+
+    public void StopForcedMove() => PacketDispatcherPointers.HandleForcedStopPacket(0);
+
     // ── Combat state ─────────────────────────────────────────────────────────
 
     public uint Health
@@ -456,17 +421,6 @@ internal sealed unsafe class BattleCharaProxy : IBattleCharaProxy
     }
 
     // ── Effects ──────────────────────────────────────────────────────────────
-
-    public IActorVfxProxy? AttachVfx(string path)
-    {
-        var obj = Ptr;
-        if (string.IsNullOrEmpty(path) || obj == null) return null;
-        var bytes = System.Text.Encoding.UTF8.GetBytes(path + "\0");
-        VfxData* vfx;
-        fixed (byte* p = bytes)
-            vfx = VfxDataPointers.ActorVfxCreate(p, (GameObject*)obj, (GameObject*)obj, -1f, 0, 0, 0);
-        return vfx == null ? null : new ActorVfxProxy(vfx);
-    }
 
     public ushort GetTetherId(byte slot)
     {

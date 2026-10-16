@@ -6,6 +6,7 @@ using AnoMech.Core;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Ai;
 using AnoMech.Core.Game.Party;
+using AnoMech.Core.Native.Interfaces;
 using AnoMech.Core.SimObjects;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
@@ -172,7 +173,7 @@ public sealed class DsrP2ThordanScenario : IScenario
         sanctityTowerCasters.Clear();
         playerAntiKnockbackUntil = -1f;
 
-        if (Plugin.PlayerInputHooks is { } hooks)
+        if (Natives.PlayerInput is { } hooks)
         {
             hooks.ActionExecuted -= OnPlayerAction;
             hooks.ActionExecuted += OnPlayerAction;
@@ -1211,7 +1212,7 @@ public sealed class DsrP2ThordanScenario : IScenario
             var resists = party.IsBotDriven(member)
                 ? FlatDistance(member.Position, Vector3.Zero) > BotAntiKnockbackRadius
                 : world.Events.Elapsed < playerAntiKnockbackUntil;
-            if (!resists) (member as ISimPartyMember)?.Knockback(grinnaux.Position, distance, speed);
+            if (!resists) member.Knockback(grinnaux.Position, distance, speed);
         }
     }
 
@@ -1307,7 +1308,7 @@ public sealed class DsrP2ThordanScenario : IScenario
         DespawnUltimateEndKnights();
         DespawnComets();
         DespawnPuddles();
-        if (Plugin.PlayerInputHooks is { } hooks) hooks.ActionExecuted -= OnPlayerAction;
+        if (Natives.PlayerInput is { } hooks) hooks.ActionExecuted -= OnPlayerAction;
         thordan?.Despawn();
     }
 }

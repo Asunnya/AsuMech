@@ -72,6 +72,7 @@ public sealed class UmadP2ForsakenScenario : IMultiplayerReplayable
         party = worldParam.Party;
         state = new UmadP2ForsakenState(world.Rng, party, settingsWindow.Overrides);
         LastState = state;
+        lastBroadcastLockonsKey = null;
         if (selectedAi is { } idx && idx >= 0 && idx < AiStrats.Count)
             ((IScenarioAi<UmadP2ForsakenState>)AiStrats[idx]).Run(state, world);
         
@@ -140,19 +141,20 @@ public sealed class UmadP2ForsakenScenario : IMultiplayerReplayable
     
     private void Run_Kefka_40004FD3()
     {
-        SimEnemy? kefka_40004FD3 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.GodKefka, NameId: BNpcNameId.Kefka, Level: 100, Targetable: true, EnemyList: EnemyListMode.Always, Visibility: SpawnVisibility.Visible, Placement: new Placement(new Vector3(0.000f, 0.000f, 0.000f), 0.000f)));
-        foreach (var at in new[] { 1.30f, 11.35f, 14.39f, 17.43f, 20.47f, 23.51f })
+        SimEnemy? kefka_40004FD3 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.GodKefka, NameId: BNpcNameId.Kefka, Level: 100, Targetable: true, EnemyList: EnemyListMode.Always, Visibility: SpawnVisibility.Visible, LayoutId: BNpcLayoutId.GodKefka, Placement: new Placement(new Vector3(0.000f, 0.000f, 0.000f), 0.000f)));
+        foreach (var at in new[] { 1.30f, 11.35f, 14.39f, 17.43f, 20.47f, 24.50f })
             world.Events.Add(at, () => kefka_40004FD3?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.OffTank)));
         world.Events.Add(2.46f, () => kefka_40004FD3?.Cast(UmadActions.Forsaken));
-        world.Events.Add(9.43f, () => world.SetWeather(89));
+        world.Events.Add(10.38f, () => world.Map.SetWeather(89, transition: 2f));
         
         RunKefkaEndAttack(kefka_40004FD3, 0, 25.61f);
-        RunKefkaEndAttack(kefka_40004FD3, 1, 46.52f);
-        RunKefkaEndAttack(kefka_40004FD3, 2, 67.39f);
-        RunKefkaEndAttack(kefka_40004FD3, 3, 88.36f);
+        RunKefkaEndAttack(kefka_40004FD3, 1, 46.75f);
+        RunKefkaEndAttack(kefka_40004FD3, 2, 67.76f);
+        RunKefkaEndAttack(kefka_40004FD3, 3, 88.81f);
         
         world.Events.Add(109.47f, () => kefka_40004FD3?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.OffTank)));
-        world.Events.Add(110.58f, () => kefka_40004FD3?.Cast(UmadActions.LightOfJudgment));
+        world.Events.Add(110.84f, () => kefka_40004FD3?.Cast(UmadActions.LightOfJudgment));
+        world.Events.Add(116.40f, () => world.Map.SetWeather(79, transition: 0f));
     }
     
    private IReadOnlyList<SimCharacter> EndAttackTargets = [];
@@ -169,6 +171,7 @@ public sealed class UmadP2ForsakenScenario : IMultiplayerReplayable
         });
         world.Events.Add(start + 12.8f, () => kefka_40004FD3?.Face(party.Player));
         world.Events.Add(start + 12.9f, () => kefka_40004FD3?.Cast(end.AllThingsEnding));
+        world.Events.Add(start + 18f, () => kefka_40004FD3?.Face(party.Get(PartyRole.OffTank)));
     }
 
     private void RunTower(SimEnemy? enemy1, SimEnemy? enemy2, float start, int index)
@@ -187,7 +190,7 @@ public sealed class UmadP2ForsakenScenario : IMultiplayerReplayable
             ResolveTower(soakers1[1], 1);
             ResolveTower(soakers2[0], 2);
             ResolveTower(soakers2[1], 3);
-            ReapplyLockons([soakers1[0], soakers1[1], soakers2[0], soakers2[1]], index);
+            world.Events.Add(0.6f, () => ReapplyLockons([soakers1[0], soakers1[1], soakers2[0], soakers2[1]], index));
         });
     }
     
@@ -228,18 +231,23 @@ public sealed class UmadP2ForsakenScenario : IMultiplayerReplayable
         var lockon = state.Lockons[((ISimPartyMember)character).Role];
         world.Events.Add(0.6f, () =>
         {
-            var position = character.Placement();
-            var closest = party.Find.Closest(character.Position, character);
-            if (closest != null) position = position.Face(closest.Position);
-            towerHelper[index]?.SetPosition(position);
-            var action = lockon switch
+            var helper = towerHelper[index];
+            switch (lockon)
             {
-                LockonId.ForsakenStack => UmadActions.Spelldriver,
-                LockonId.ForsakenChariot => UmadActions.Spellscatter,
-                LockonId.ForsakenCone => UmadActions.Spellwave,
-                _ => null,
-            };
-            if (action != null) towerHelper[index]?.Cast(action);
+                case LockonId.ForsakenStack:
+                    helper?.Cast(UmadActions.Spelldriver, character);
+                    break;
+                case LockonId.ForsakenChariot:
+                    helper?.Cast(UmadActions.Spellscatter, character);
+                    break;
+                case LockonId.ForsakenCone:
+                    var position = character.Placement();
+                    var closest = party.Find.Closest(character.Position, character);
+                    if (closest != null) position = position.Face(closest.Position);
+                    helper?.SetPosition(position);
+                    helper?.Cast(UmadActions.Spellwave);
+                    break;
+            }
         });
     }
     
@@ -285,11 +293,11 @@ public sealed class UmadP2ForsakenScenario : IMultiplayerReplayable
     {
         for (int i = 0; i < 3; i++)
         {
-            SimEnemy? kefka_40004FD0 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.KefkaClone, NameId: BNpcNameId.Kefka, Level: 100, Targetable: false, EnemyList: EnemyListMode.Never, Visibility: SpawnVisibility.HiddenUntilShown, Placement: new Placement(new Vector3(0.000f, 0.000f, 0.000f), 0.000f)));
+            SimEnemy? kefka_40004FD0 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.KefkaClone, NameId: BNpcNameId.Kefka, Level: 100, Targetable: false, EnemyList: EnemyListMode.Never, Visibility: SpawnVisibility.HiddenUntilShown, LayoutId: BNpcLayoutId.KefkaClone, Placement: new Placement(new Vector3(0.000f, 0.000f, 0.000f), 0.000f)));
             RunCloneEndAttack(kefka_40004FD0, 32.35f, 0, i);
-            RunCloneEndAttack(kefka_40004FD0, 53.36f, 1, i);
-            RunCloneEndAttack(kefka_40004FD0, 74.24f, 2, i);
-            RunCloneEndAttack(kefka_40004FD0, 95.06f, 3, i);
+            RunCloneEndAttack(kefka_40004FD0, 53.59f, 1, i);
+            RunCloneEndAttack(kefka_40004FD0, 74.61f, 2, i);
+            RunCloneEndAttack(kefka_40004FD0, 95.51f, 3, i);
         }
     }
 

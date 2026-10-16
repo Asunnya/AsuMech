@@ -11,6 +11,9 @@ public sealed class SimStatus : ISimObject
 
     public ushort StatusId { get; }
     public GameObjectId SourceObject { get; }
+
+    // Who the client is told applied it; unlike SourceObject, not part of the status's identity.
+    internal GameObjectId? ShownSource { get; set; }
     public bool IsActive { get; private set; }
     public ushort Stacks { get; private set; }
     public float Remaining => duration > 0f ? MathF.Max(0f, duration - elapsed) : float.PositiveInfinity;
@@ -18,15 +21,14 @@ public sealed class SimStatus : ISimObject
     // The StatusManager slot the client shows it in; -1 for a status the client never sees.
     internal int Slot { get; }
 
-    // Distinguishes a re-added status from one refreshed in place: only the add goes through
-    // the engine's gain path, which is what applies a param-driven look.
-    private static int nextInstance;
-    public int Instance { get; } = ++nextInstance;
+    // In effect for the sim but left out of the status list until Reveal, like a status the server
+    // only shows the client with the action's EffectResult.
+    internal bool Hidden { get; private set; }
 
-    // 0 = permanent until removed, so a peer replicating it gets the same behaviour.
+    // 0 = permanent until removed.
     public float RemainingTime => duration > 0f ? Math.Max(0f, duration - elapsed) : 0f;
 
-    internal SimStatus(SimCharacter target, ushort statusId, float duration, ushort stacks, GameObjectId sourceObject, int slot)
+    internal SimStatus(SimCharacter target, ushort statusId, float duration, ushort stacks, GameObjectId sourceObject, int slot, bool hidden)
     {
         this.target = target;
         this.duration = duration;
@@ -35,6 +37,21 @@ public sealed class SimStatus : ISimObject
         IsActive = true;
         Stacks = stacks;
         Slot = slot;
+        Hidden = hidden;
+    }
+
+    // Shows `applier` as the status's source, e.g. a boss's own transformation.
+    public SimStatus ShownAsFrom(SimCharacter applier)
+    {
+        ShownSource = applier.GameObjectId;
+        return this;
+    }
+
+    internal void Reveal()
+    {
+        if (!Hidden) return;
+        Hidden = false;
+        if (IsActive && Slot >= 0) target.StatusListChanged();
     }
 
     public void Reapply(float duration, int stacks)
@@ -59,7 +76,7 @@ public sealed class SimStatus : ISimObject
     {
         if (!IsActive) return;
         IsActive = false;
-        if (Slot < 0) return;
+        if (Slot < 0 || Hidden) return;
         target.StatusListChanged();
         target.ActorControl.LoseEffect(StatusId, Stacks, SourceObject);
     }

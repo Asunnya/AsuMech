@@ -12,14 +12,14 @@ namespace AnoMech.Tests;
 // 0.12s before the waves and kills ~0.5s later, the waves 1s later: tests pull the player out of
 // the stack between the two, or the stack kills the rest first.
 //
-//   0.8    Party converges South.
-//   6.33   Tick 0's stack takes its targets; ticks 1-3 at 7.35, 8.37, 9.39.
-//   6.45   Tick 0, NE-SW from (-10.6,-17.7) and (-24.7,-3.5): hits N and E.
-//   7.47   Tick 1, NW-SE from (10.6,-17.7) and (24.7,-3.5): hits N and W.
-//   7.57   Party rotates counter-clockwise to East.
-//   8.49   Tick 2, NE-SW from (-3.5,-24.7) and (-17.7,-10.6): hits S and W.
-//   8.59   Party rotates to North.
-//   9.51   Tick 3, NW-SE from (3.5,-24.7) and (17.7,-10.6): hits E and S.
+//   5.85   Party converges South.
+//   7.03   Tick 0's stack takes its targets; ticks 1-3 at 8.05, 9.07, 10.09.
+//   7.15   Tick 0, NE-SW from (-10.6,-17.7) and (-24.7,-3.5): hits N and E.
+//   8.17   Tick 1, NW-SE from (10.6,-17.7) and (24.7,-3.5): hits N and W.
+//   8.27   Party rotates counter-clockwise to East.
+//   9.19   Tick 2, NE-SW from (-3.5,-24.7) and (-17.7,-10.6): hits S and W.
+//   9.29   Party rotates to North.
+//  10.21   Tick 3, NW-SE from (3.5,-24.7) and (17.7,-10.6): hits E and S.
 //
 // A run pauses 5s after its first death.
 public class UmadP5FloodScenarioTests
@@ -41,14 +41,14 @@ public class UmadP5FloodScenarioTests
             });
 
     // 8y down the lane from its wall anchor, or 30y (past the centre).
-    [TestCase(6.40f, -4.9f, -12f)]
-    [TestCase(6.40f, 10.6f, 3.5f)]
-    [TestCase(7.42f, 4.9f, -12f)]
-    [TestCase(7.42f, -10.6f, 3.5f)]
-    [TestCase(8.44f, -12f, -4.9f)]
-    [TestCase(8.44f, 3.5f, 10.6f)]
-    [TestCase(9.46f, 12f, -4.9f)]
-    [TestCase(9.46f, -3.5f, 10.6f)]
+    [TestCase(7.10f, -4.9f, -12f)]
+    [TestCase(7.10f, 10.6f, 3.5f)]
+    [TestCase(8.12f, 4.9f, -12f)]
+    [TestCase(8.12f, -10.6f, 3.5f)]
+    [TestCase(9.14f, -12f, -4.9f)]
+    [TestCase(9.14f, 3.5f, 10.6f)]
+    [TestCase(10.16f, 12f, -4.9f)]
+    [TestCase(10.16f, -3.5f, 10.6f)]
     public void StandingInWaveLaneDies(float at, float x, float z)
         => Flood(MainTank)
             .TeleportAt(at, to: new(x, z))
@@ -65,14 +65,14 @@ public class UmadP5FloodScenarioTests
                 o.LineNeSw = neSwReversed ? FloodDirection.Reversed : FloodDirection.Forward;
                 o.LineNwSe = nwSeReversed ? FloodDirection.Reversed : FloodDirection.Forward;
             })
-            .TeleportAt(6.40f, to: new(x, z))
+            .TeleportAt(7.10f, to: new(x, z))
             .ShouldKill(ActionId.FloodAOE, MainTank);
 
     // Back to its South clump spot, after rotating East with the stack.
     [Test]
     public void NotRotatingAfterSecondWaveDies()
         => Flood(MainTank)
-            .TeleportAt(8.44f, to: new(0f, 5.2f))
+            .TeleportAt(9.14f, to: new(0f, 5.2f))
             .ShouldKill(ActionId.FloodAOE, MainTank);
 
     // NE-SW leading rotates the party East, NW-SE leading West; the player goes the other way.
@@ -80,31 +80,31 @@ public class UmadP5FloodScenarioTests
     [TestCase(false, 4f)]
     public void RotatingTheWrongWayDies(bool neSwFirst, float x)
         => Flood(MainTank, o => o.NeSwFirst = neSwFirst)
-            .TeleportAt(8.44f, to: new(x, 0))
+            .TeleportAt(9.14f, to: new(x, 0))
             .ShouldKill(ActionId.FloodAOE, MainTank);
 
     // West, 9y from the stack and clear of tick 0's lanes.
     [Test]
     public void LeavingStackKillsTheRest()
         => Flood(MainTank)
-            .TeleportAt(6.25f, to: new(-8f, 0f))
+            .TeleportAt(6.95f, to: new(-8f, 0f))
             .ShouldKill(ActionId.ChaoticFlood, AllBut(MainTank));
 
     [Test]
     public void StackTargetLeavingStackDies()
         => Flood(RegenHealer)
-            .TeleportAt(6.25f, to: new(-8f, 0f))
+            .TeleportAt(6.95f, to: new(-8f, 0f))
             .ShouldKill(ActionId.ChaoticFlood, RegenHealer);
 
     [Test]
     public void StayingAfterThirdWaveDies()
         => Flood(MainTank)
-            .FreezeAt(8.55f)
+            .FreezeAt(9.25f)
             .ShouldKill(ActionId.FloodAOE, MainTank);
 
     [Test]
     public void DiesWalkingOffArena()
         => Flood(MainTank)
-            .TeleportAt(3f, to: new(0, 20.5f))
+            .DropBelowArenaAt(3f, to: new(0, 20.5f))
             .ShouldKill(TheEnvironment, MainTank);
 }

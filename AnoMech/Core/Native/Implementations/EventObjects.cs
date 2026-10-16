@@ -29,8 +29,11 @@ internal sealed unsafe class EventObjects : IEventObjects
         {
             ObjectIndex = (byte)sbyte.Max(-1, config.ObjectIndex),
             ObjectKind = 7, // EventObject
+            // Retail sends 4 or 5 here, not the 0/1 that IsTargetable assumes.
+#pragma warning disable CS0618
             TargetableStatus = config.TargetableStatus,
-            Visibility = config.VisibilityFlag,
+#pragma warning restore CS0618
+            IsHidden = config.Hidden,
             BaseId = config.EObjId,
             EntityId = config.EntityId,
             LayoutId = config.LayoutId,

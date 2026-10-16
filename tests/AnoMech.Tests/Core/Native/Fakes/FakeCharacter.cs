@@ -25,12 +25,11 @@ internal sealed class FakeCharacter(uint entityId, string name)
     public uint Mana { get; set; }
     public uint MaxMana { get; set; }
     public byte TargetableStatus { get; set; }
-    // The ids in the native status slots, including ones the game put there itself.
-    public HashSet<ushort> Statuses { get; } = [];
     public byte ModelState { get; set; }
     public bool HasDrawObject { get; set; }
     public bool IsDrawObjectVisible { get; set; }
     public Dictionary<byte, ushort> Tethers { get; } = new();
+    public Dictionary<ushort, AnoMech.Core.Native.Interfaces.StatusSlot> Statuses { get; set; } = new();
 
     public bool IsCasting { get; set; }
     public uint CastActionId { get; set; }
@@ -92,9 +91,28 @@ internal sealed class FakeCharacter(uint entityId, string name)
         pushElapsed = 0f;
     }
 
+    // The client walks a forced follow at run speed and stops at the target's hitbox edge.
+    private const float RunSpeed = 6f;
+    private FakeCharacter? forcedFollowTarget;
+
+    public void StartForcedFollow(FakeCharacter? target) => forcedFollowTarget = target;
+
+    private void WalkForcedFollow(float deltaSeconds)
+    {
+        if (forcedFollowTarget is not { } target) return;
+        var away = new Vector2(target.Position.X - Position.X, target.Position.Z - Position.Z);
+        var gap = away.Length() - HitboxRadius - target.HitboxRadius;
+        if (gap <= 0f) return;
+        var dir = away / away.Length();
+        var step = dir * MathF.Min(gap, RunSpeed * deltaSeconds);
+        Position += new Vector3(step.X, 0f, step.Y);
+        Rotation = MathF.Atan2(dir.X, dir.Y);
+    }
+
     // The engine's own per-frame update, which runs after the plugin's.
     public void Tick(float deltaSeconds)
     {
+        WalkForcedFollow(deltaSeconds);
         if (glideRemaining > 0f)
         {
             var dt = MathF.Min(deltaSeconds, glideRemaining);

@@ -11,7 +11,6 @@ opened with `/asumech` (or `/asu`; `/anomech` and `/ano` still work), and only o
  
 Simulate FFXIV raid mechanics client-side for solo practice. Go to any Inn, open the plugin with `/anomech` and start practicing!
 
-
 Thanks to improvemnts by [WorstAquaPlayer](https://github.com/WorstAquaPlayer) plugin is quite stable now! No more 
 crashes after training session.
 
@@ -42,8 +41,9 @@ https://raw.githubusercontent.com/Asunnya/AsuMech/asunnya-release/pluginmaster.j
 
 For upstream AnoMech, see: https://github.com/anomek/MyDalamudPlugins
 
-## Currently implemented:
+## Currently implemented (by default using pf NA strats):
 - Dancing Mad (Ultimate)
+    - P1 Tele-trouncing _by [Evernow](https://github.com/Evernow)_
     - P2 Forsaken
       - NA
         - [Kroxy-Rinon 341 (Center/N Stacks) melee adjust](https://raidplan.io/plan/UATE__aDcw1-bgVv)
@@ -53,8 +53,14 @@ For upstream AnoMech, see: https://github.com/anomek/MyDalamudPlugins
         - [\[LPDU\] Buddies](https://raidplan.io/plan/142oXOZpPc_jh3dd)
         - [\[Old\] p3Z Buddy Meow](https://raidplan.io/plan/lZWqxfxvyhF9sp3Z)
         - [\[Old\] zP6 South adjust](https://raidplan.io/plan/rtc1FcuZFMuyBzP6)
-    - P3 Black Hole _old bh (DSA, single tethers, n/s stomps)_
-    - P4 Kefka Says _kefkabin_
+    - P3 Limit Cut _by [Evernow](https://github.com/Evernow)_
+    - P3 Black Hole _old bh (single tethers, n/s stomps)_
+      - D>S>A
+      - S>D>A _by [Evernow](https://github.com/Evernow)_
+    - P4 Kefka Says
+      - kefkabin
+      - kefkabin, gazes: supports N / DPS S _by [Evernow](https://github.com/Evernow)_
+    - P5 Flood _by [Evernow](https://github.com/Evernow)_
     - P5 Exaflares _by [Wydox](https://github.com/Wydox)_
     - P5 Celestriad _by [RoarkGit](https://github.com/RoarkGit)_
     - P5 Forsaken Null _no ai or damage_
@@ -97,23 +103,25 @@ For upstream AnoMech, see: https://github.com/anomek/MyDalamudPlugins
 
 
 ## Known issues
-* Minor visual and timing issues may occur
+* Visuals should closely match retail, but damage snapshot timings are best guesses
 * In scenarios for Top Omega Protocol (Ultimate):
   * Tether distance threshold are very rough estimations
-  * Line AOE from Optiocal Unit (eye) doesn't render
 * Not all skills will resolve properly
 
 #  Acknowledgments
 
 Thanks for contributors:
 * [WorstAquaPlayer](https://github.com/WorstAquaPlayer) - rewriting core & fixing crashes, scenarios for uwu
-* [Wydox](https://github.com/Wydox) - EU strats for Forsaken, UMAD Exaflares, core improvements
-* [RoarkGit](https://github.com/RoarkGit) - UMAD Celestriad, UCOB exas, win streaks
+* [Wydox](https://github.com/Wydox) - core improvements, extra scenarios and strategies
+* [RoarkGit](https://github.com/RoarkGit) - win streaks, extra scenarios
+* [Evernow](https://github.com/Evernow) - multiplayer (WIP), extra sceanrions and strategies
 * [Asunnya](https://github.com/Asunnya) - M9S, UWU P1 Garuda / P2 Ifrit / P3 Titan / Ultimate Annihilation, DSR P1 Knights / P2 Thordan / P3 Nidhogg
 
 AnoMech leans heavily on the work of other Dalamud plugins. Huge thanks to their authors!  
 Without them, the following would not be possible:
 
-* **Hyperborea** — solo duty arena loading.
-* **FFXIV-RaidsRewritten** — stunning the player on death and playing raid VFX.
-* **bossmod** — mechanics timings and positions.
+AnoMech's zone changes are built on **Hyperborea**, which served as the baseline for loading a solo duty arena.                                                                                                                                                                                   
+[Evernow](https://github.com/Evernow) has since improved that code and made it safer to use.                                                                                                                                                                                                      
+
+**FFXIV-RaidsRewritten** and **bossmod** were the initial inspiration for the project, though neither is part of the                                                                                                                                                                              
+codebase anymore.

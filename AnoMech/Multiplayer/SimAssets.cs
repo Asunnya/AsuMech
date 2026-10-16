@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using AnoMech.Core;
+using AnoMech.Core.EnemyActions;
+using AnoMech.Core.UserActions;
 
 namespace AnoMech.Multiplayer;
 
-internal enum SimAssetKind { Action, BNpcBase, EObj, Lockon, Tether, Timeline, OmenPath, Layout, EventId, ModelChara }
+internal enum SimAssetKind { Action, BNpcBase, EObj, Tether, Layout, EventId, ModelChara }
 
 // A peer rebuilds the world from raw engine ids the host sends and runs no scenario logic, so
 // it cannot judge whether an id belongs to the fight. Handing the engine an id loads that
@@ -15,8 +17,8 @@ internal enum SimAssetKind { Action, BNpcBase, EObj, Lockon, Tether, Timeline, O
 // unconstrained id field would let a malicious host make someone else's client load anything.
 //
 // The allowlist is harvested by reflection: every constant in a class named for an id kind
-// (UmadConstants.ActionId, ...) plus any static field whose own name names one
-// (BlasterLockons). Declaring a constant is registering it; there is no manifest to drift.
+// (UmadConstants.ActionId, ...) plus any static field whose own name names one.
+// Declaring a constant is registering it; there is no manifest to drift.
 //
 // A keyword must be the id-suffixed form, never a bare noun: the field name wins over the class,
 // so a plain word also claims any descriptively-named constant containing it.
@@ -30,24 +32,19 @@ internal static class SimAssets
         [SimAssetKind.Action] = ["ActionId"],
         [SimAssetKind.BNpcBase] = ["BNpcBase"],
         [SimAssetKind.EObj] = ["EObjId"],
-        [SimAssetKind.Lockon] = ["Lockon"],
         [SimAssetKind.Tether] = ["TetherId"],
-        [SimAssetKind.Timeline] = ["TimelineId"],
-        [SimAssetKind.OmenPath] = ["VfxPath", "OmenPath"],
         [SimAssetKind.Layout] = ["LayoutId"],
         [SimAssetKind.EventId] = ["EventId"],
         [SimAssetKind.ModelChara] = ["ModelCharaId"],
     };
 
     private static Dictionary<SimAssetKind, HashSet<ulong>>? numbers;
-    private static HashSet<string>? paths;
     private static readonly HashSet<(SimAssetKind, string)> warned = new();
 
     private static void EnsureHarvested()
     {
         if (numbers != null) return;
         numbers = Keywords.Keys.ToDictionary(k => k, _ => new HashSet<ulong>());
-        paths = new HashSet<string>(StringComparer.Ordinal);
 
         // A type that fails to load must not blank the whole harvest.
         Type?[] types;
@@ -60,6 +57,16 @@ internal static class SimAssets
             var typeKind = KindFor(type.Name);
             foreach (var field in type.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy))
             {
+                // Every action a scenario defines is one this build casts, whatever its field is called.
+                if (field.FieldType == typeof(EnemyAction))
+                {
+                    try
+                    {
+                        if (field.GetValue(null) is EnemyAction action) numbers[SimAssetKind.Action].Add(action.ActionId);
+                    }
+                    catch (Exception) { }
+                    continue;
+                }
                 var kind = KindFor(field.Name) ?? typeKind;
                 if (kind is not { } k) continue;
                 object? value;
@@ -70,8 +77,7 @@ internal static class SimAssets
         }
 
         DiagnosticLog.Info("[SimAssets] Harvested allowlist: "
-            + string.Join(", ", numbers.Select(kv => $"{kv.Key}={kv.Value.Count}"))
-            + $", OmenPath={paths.Count}.");
+            + string.Join(", ", numbers.Select(kv => $"{kv.Key}={kv.Value.Count}")) + ".");
     }
 
     private static SimAssetKind? KindFor(string name)
@@ -87,7 +93,6 @@ internal static class SimAssets
         switch (value)
         {
             case null: return;
-            case string s when kind == SimAssetKind.OmenPath: paths!.Add(s); return;
             case string: return;
             case byte or sbyte or short or ushort or int or uint or long or ulong:
                 var n = Convert.ToInt64(value);
@@ -105,24 +110,23 @@ internal static class SimAssets
         return numbers![kind].Contains(id);
     }
 
-    public static bool IsKnownOmenPath(string path)
+    // A cast or effect a peer plays: a scenario's own action, or one a party member presses (the
+    // job actions UserActions knows, the limit breaks).
+    private static bool IsPlayable(uint actionId)
+        => IsKnown(SimAssetKind.Action, actionId) || JobActions.Knows(actionId) || LimitBreakHandler.IsLimitBreak(actionId);
+
+    public static bool AllowAction(uint actionId, string context)
     {
-        EnsureHarvested();
-        return paths!.Contains(path);
+        if (IsPlayable(actionId)) return true;
+        WarnOnce(SimAssetKind.Action, actionId.ToString(), context, $"0x{actionId:X} ({actionId})");
+        return false;
     }
 
-    // Warned once per value: snapshots repeat at the frame rate.
+    // Warned once per value: a peer sees the same one again and again.
     public static bool Allow(SimAssetKind kind, ulong id, string context)
     {
         if (IsKnown(kind, id)) return true;
         WarnOnce(kind, id.ToString(), context, $"0x{id:X} ({id})");
-        return false;
-    }
-
-    public static bool AllowOmenPath(string path, string context)
-    {
-        if (IsKnownOmenPath(path)) return true;
-        WarnOnce(SimAssetKind.OmenPath, path, context, $"'{path}'");
         return false;
     }
 
@@ -141,9 +145,9 @@ internal static class SimAssets
         WarnOnce(kind, id.ToString(), $"Host: {context}", $"0x{id:X} ({id})");
     }
 
-    public static void WarnIfUnknownPath(string path, string context)
+    public static void WarnIfUnplayable(uint actionId, string context)
     {
-        if (string.IsNullOrEmpty(path) || IsKnownOmenPath(path)) return;
-        WarnOnce(SimAssetKind.OmenPath, path, $"Host: {context}", $"'{path}'");
+        if (actionId == 0 || IsPlayable(actionId)) return;
+        WarnOnce(SimAssetKind.Action, actionId.ToString(), $"Host: {context}", $"0x{actionId:X} ({actionId})");
     }
 }

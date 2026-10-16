@@ -28,6 +28,27 @@ public static class UmadConstants
         public const uint KefkaClone  = 19513;
     }
 
+    public static class BNpcLayoutId
+    {
+        public const uint KefkaP3     = 0xBC1726U;
+        public const uint GravenImage = 0xBC1727U;
+        public const uint GodKefka    = 0xBC1728U;
+        public const uint KefkaClone  = 0xBC172FU;
+        public const uint KefkaCloneP3 = 0xC2724CU;
+        public const uint ChaosP3     = 0xBC172AU;
+        public const uint KefkaP5     = 0xBC172DU;
+        public const uint Exdeath     = 0xBC172BU;
+        public const uint BlackHole   = 0xBC172EU;
+        public const uint KefkaP4     = 0xC2724BU;
+        public const uint NeoExdeath  = 0xBC172CU;
+        public const uint ChaosP4     = 0xC355C3U;
+    }
+
+    public static class BNpcStateId
+    {
+        public const uint KefkaLimitCut = 48;
+    }
+
     public static class BNpcNameId
     {
         public const uint Exdeath     = 6052;
@@ -41,6 +62,10 @@ public static class UmadConstants
     public static class EObjId
     {
         public const uint GravenStatue       = 2015156;
+        // The earlier P1 statues, still standing through Tele-trouncing.
+        public const uint EarlierStatueA     = 2015163;
+        public const uint EarlierStatueB     = 2015164;
+        public const uint EarlierStatueC     = 2015165;
         // Each statue spawns twice per pull; only one of each pair animates the gaze.
         public const uint GazeStatueNormal   = 2015166; // NE, IndolentWill
         public const uint GazeStatueInverted = 2015167; // NW, AveMaria
@@ -50,15 +75,32 @@ public static class UmadConstants
         public const uint CelestriadFireTower      = 2015294;
         public const uint CelestriadIceTower       = 2015295;
         public const uint CelestriadLightningTower = 2015296;
+        // Ring positions clockwise from the 20° one; layout and Arg2 index step by one per tower.
+        public static readonly uint[] CelestriadTowerLayoutIds = [0xBC1A06U, 0xBC1A07U, 0xBC1A08U, 0xBC1A09U, 0xBC1A0AU, 0xBC1A0BU, 0xBC1A0CU, 0xBC1A0DU, 0xBC1A0EU];
+        public const uint CelestriadTowerArg2      = 0x00410003U;
 
         // The statue SGBs are pre-placed in the zone, so a spawn must bind to their layout
         // instance; a LayoutId-less spawn loads a detached copy nothing ever activates.
+        public const uint EarlierStatueA1LayoutId        = 0xBC178DU;
+        public const uint EarlierStatueA2LayoutId        = 0xBC178EU;
+        public const uint EarlierStatueB1LayoutId        = 0xBC178FU;
+        public const uint EarlierStatueC1LayoutId        = 0xBC1790U;
+        public const uint EarlierStatueB2LayoutId        = 0xBC1791U;
+        public const uint EarlierStatueC2LayoutId        = 0xBC1792U;
         public const uint GazeStatueNormalLayoutId       = 0xBC1793U; // tether pair
         public const uint GazeStatueNormalAnimLayoutId   = 0xBC1794U; // gaze pair
         public const uint GazeStatueInvertedLayoutId     = 0xBC1795U; // tether pair
         public const uint GazeStatueInvertedAnimLayoutId = 0xBC1796U; // gaze pair
         public const uint GravenStatueLayoutId           = 0xBC7C91U;
         public const uint GravenStatueArg2               = 0x00400003U;
+        public const uint EarthCoreLayoutId              = 0xC0ED54U;
+        public const uint EarthCoreArg2                  = 0x00440003U;
+        // One placement per intercardinal the crystal can land on.
+        public const uint WindCrystalNeLayoutId          = 0xBC1865U;
+        public const uint WindCrystalSeLayoutId          = 0xBC1866U;
+        public const uint WindCrystalSwLayoutId          = 0xBC1867U;
+        public const uint WindCrystalNwLayoutId          = 0xBC1868U;
+        public const uint WindCrystalArg2                = 0x00430003U;
 
         // Hidden state; "appear" (0x0001/0x0002) brings the statue up.
         public const ushort GazeStatueSpawnState = 0x0004;
@@ -71,19 +113,23 @@ public static class UmadConstants
     {
         public const uint TelePortentUsed = 7;
         public const ushort CelestriadTowerDormant = 2;
-        public const ushort CelestriadTowerActive  = 16;
+        public const uint CelestriadTowerLit       = 16;
+        public const uint CelestriadTowerLitMask   = 0x20;
+        public const uint CelestriadTowerSpent     = 1;
+        public const uint CelestriadTowerSpentMask = 0x40;
     }
 
     public static class Spawn
     {
         public const int TelePortentArg2Serial = 0x50;
+        // Between the gaze props' 0x4000EB80-83 and the colossus's 0x4000EB8A.
+        public const uint EarlierStatueEntityIdBase = 0x4000EB84U;
         // Clear of the statue props' 0x4000EB80-8A.
         public const uint TelePortentEntityIdBase = 0x4000EB90U;
     }
 
     public static class ActionId
     {
-        public const uint ConfusedAttack               = 0x0007U; // the generic "attack" a Confused player swings
         public const uint RingOfFire                   = 0x8E34U;
         public const uint MysteryMagic                 = 0xBA94U; // single-target, cast 5.0s
         public const uint BlizzardIIIBlowout_Cast      = 0xBA95U; // single-target, cast 5.0s
@@ -156,8 +202,11 @@ public static class UmadConstants
         public const uint GrandCross                   = 0xBB14U; // circle r=100, cast 9.0s
         public const uint DeathBomb                    = 0xBB15U; // single-target, instant
         public const uint DeathShriek                  = 0xBB16U; // circle r=100, instant
+        public const uint DeathShriek_Lie              = 0xBB17U; // circle r=100, instant
         public const uint DeathBolt                    = 0xBB18U; // circle r=8, instant
+        public const uint DeathBolt_Lie                = 0xBB19U; // circle r=8, instant
         public const uint DeathWave                    = 0xBB1AU; // circle r=8, instant
+        public const uint DeathWave_Lie                = 0xBB1BU; // circle r=8, instant
         public const uint DeathSurge                   = 0xBB1CU; // circle r=100, instant
         public const uint Inferno                      = 0xBB1EU; // single-target, cast 9.0s
         public const uint Tsunami                      = 0xBB1FU; // single-target, cast 9.0s
@@ -282,6 +331,9 @@ public static class UmadConstants
         // Neo Exdeath's own appear (mon_sp/m0418/show/mon_sp001), which carries his warp sound and
         // VFX; the generic WarpEnd has neither on his model.
         public const ushort NeoExdeathShow = (ushort)0x11D1;
+        public const ushort KefkaFireLine  = (ushort)0x0C8A;
+        public const ushort KefkaP1End     = (ushort)0x1E39;
+        public const ushort KefkaP3Show    = (ushort)0x11D4; // mon_sp/[SKL_ID]/show/mon_sp004
     }
 
     public static class TetherId
@@ -311,29 +363,6 @@ public static class UmadConstants
         public const uint ForsakenStack   = 715;
         public const uint ForsakenChariot = 716;
         public const uint ForsakenCone    = 717;
-    }
-
-    public static class VfxPath
-    {
-        // The statue SGBs' own VFX children: "mari" = AveMaria, "nemu" = IndolentWill.
-        public const string StatueMariaAppear   = "bg/ex2/05_zon_z3/common/vfx/eff/b1328mari2_u.avfx";
-        public const string StatueMariaWindUp   = "bg/ex2/05_zon_z3/common/vfx/eff/b1328mari1_u.avfx";
-        public const string StatueMariaResolve  = "bg/ex2/05_zon_z3/common/vfx/eff/b1328mari3_u.avfx";
-        public const string StatueNemuriAppear  = "bg/ex2/05_zon_z3/common/vfx/eff/b1329nemu2_u.avfx";
-        public const string StatueNemuriWindUp  = "bg/ex2/05_zon_z3/common/vfx/eff/b1329nemu1_u.avfx";
-        public const string StatueNemuriResolve = "bg/ex2/05_zon_z3/common/vfx/eff/b1329nemu3_u.avfx";
-
-        public const string TeleTrouncingArrowSpawnHit = "vfx/monster/gimmick6/eff/z3oy_b0_g05c0c.avfx";
-        public const string DoubleTroubleTrapStackHit  = "vfx/monster/gimmick6/eff/z3oy_b0_g02c0c.avfx";
-        public const string IndulgentWillCasterShoot   = "vfx/monster/gimmick2/eff/shoot_mgc00f.avfx";
-        public const string IndulgentWillCasterBurst   = "vfx/monster/gimmick2/eff/f1d8_b2_g02c0f.avfx";
-        public const string IndulgentWillTarget        = "vfx/monster/gimmick2/eff/f1d8_b2_g02t0f.avfx";
-        public const string IdyllicWillCaster          = "vfx/monster/gimmick6/eff/z3oy_b0_g04c0c.avfx";
-        public const string IdyllicWillTarget          = "vfx/monster/gimmick6/eff/z3oy_b0_g04t0c.avfx";
-        public const string AveMariaHit                = "vfx/monster/gimmick6/eff/z3oy_b0_g29c0c.avfx";
-        public const string IndolentWillHit            = "vfx/monster/gimmick6/eff/z3oy_b0_g30c0c.avfx";
-        // The wind-up packet is identical for both gazes; only which statue glows tells them apart.
-        public const string GazeWindUp                 = "vfx/monster/gimmick6/eff/z3oy_b0_g27c0c.avfx";
     }
 
     public static class Geometry

@@ -12,10 +12,10 @@ namespace AnoMech.Core.SimObjects;
 public sealed partial class SimEnemy
 {
     public void NativeCast(uint actionId, ActionType actionType, float omenDelay, float castTime, bool interruptible, float? rotation = null, Vector3? position = null, GameObjectId? targetId = null, GameObjectId? ballistaId = null)
-        => cast.NativeCast(actionId, actionType, omenDelay, castTime, interruptible, rotation, position, targetId, ballistaId);
+        => Casting.NativeCast(actionId, actionType, omenDelay, castTime, interruptible, rotation, position, targetId, ballistaId);
 
     public void NativeActionEffect(uint actionId, float animationLock, ushort spellId, byte animationVariaton, ActionType actionType, byte flags, float? rotation = null, Vector3? position = null, GameObjectId? animationTargetId = null, GameObjectId? actionTargetId = null, GameObjectId? ballistaId = null)
-        => cast.NativeActionEffect(actionId, animationLock, spellId, animationVariaton, actionType, flags, rotation, position, animationTargetId,
+        => Casting.NativeActionEffect(actionId, animationLock, spellId, animationVariaton, actionType, flags, rotation, position, animationTargetId,
             actionTargetId is { } target ? [new ActionEffectTarget(target)] : null, ballistaId);
 
     // A bar of `castSeconds` (the sheet's when null) whose effect lands as it ends, with no mechanics.
@@ -31,6 +31,8 @@ public sealed partial class SimEnemy
 
     public static SpawnVisibility LegacyVisibility(bool helper, bool visible) =>
         helper ? SpawnVisibility.InvisibleHelper : visible ? SpawnVisibility.Visible : SpawnVisibility.HiddenUntilShown;
+
+    public bool IsMoving => Motion.Destination != null;
 
     private bool? desiredVisible;
 

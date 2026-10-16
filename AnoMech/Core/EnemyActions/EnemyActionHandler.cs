@@ -10,10 +10,17 @@ using FFXIVClientStructs.FFXIV.Client.Game.Object;
 
 namespace AnoMech.Core.EnemyActions;
 
-// Runs EnemyActions for one SimEnemy: the visuals go out as its SimCast's packets, everything
-// mechanical goes on the scenario's EventScheduler.
-internal sealed class EnemyActionHandler(SimEnemy caster, SimCast cast, SimWorld world)
+// Runs EnemyActions for one caster, an enemy or a party member: the visuals go out as its
+// SimCast's packets, everything mechanical goes on the scenario's EventScheduler.
+internal sealed class EnemyActionHandler(SimCharacter caster, SimCast cast, SimWorld world)
 {
+    private string CasterName => caster switch
+    {
+        SimEnemy enemy => enemy.DisplayName,
+        ISimPartyMember member => member.Role.ToString(),
+        _ => caster.GetType().Name,
+    };
+
     private EnemyActionCast? casting;
 
     public EnemyActionCast Start(EnemyAction action, CastTarget at, byte animationVariation)
@@ -27,17 +34,20 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimCast cast, SimWorld
         var id = action.ActionId;
         var target = at.Character;
         var location = at.Location;
-        var sheetCastTime = Natives.Data.Action(id)?.CastSeconds ?? 0f;
+        var sheetRow = Natives.Data.Action(id);
+        var sheetCastTime = sheetRow?.CastSeconds ?? 0f;
         var castTime = action.Cast.CastSecondsOverride ?? MathF.Max(0f, sheetCastTime - CastSpec.ActionEffectOffset);
-        GameObjectId? castTarget = location is null ? (target ?? caster).GameObjectId : null;
+        // Only a ground-target action goes out without a target; any other action aimed at a point
+        // still targets its caster, or the client never applies the effect (no flytext until despawn).
+        GameObjectId? castTarget = location is not null && sheetRow?.TargetArea == true ? null : (target ?? caster).GameObjectId;
         DiagnosticLog.Info(
-            $"[EnemyAction] Cast: {Natives.Data.ActionName(id)} ({id}) by {caster.DisplayName} from ({caster.Position.X:F1},{caster.Position.Z:F1}) castSeconds={castTime:F2}.");
+            $"[EnemyAction] Cast: {Natives.Data.ActionName(id)} ({id}) by {CasterName} from ({caster.Position.X:F1},{caster.Position.Z:F1}) castSeconds={castTime:F2}.");
 
         if (castTime > 0f)
         {
             casting = handle;
             cast.NativeCast(id, ActionType.Action, action.Cast.OmenDelay, castTime, interruptible: false,
-                rotation: caster.Rotation + action.Cast.Rotation, position: location, targetId: castTarget);
+                rotation: CastRotation(action, target, location), position: location, targetId: castTarget);
         }
 
         // Resolve goes first: an instant action runs both inline, and the ActionEffect carries the hits.
@@ -66,15 +76,31 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimCast cast, SimWorld
         cast.Cancel(reason);
     }
 
+    // The server aims a cast on another character at it, whichever way the caster faces.
+    private float CastRotation(EnemyAction action, SimCharacter? target, Vector3? location)
+    {
+        if (location is null && target is not null && target != caster) return caster.Placement().Face(target.Position).Rotation;
+        return caster.Rotation + action.Cast.Rotation;
+    }
+
     // Faces a target first: the packet carries the caster's rotation. A ground location doesn't turn
-    // the caster, since the game aims some lines from behind it. Some actions animate only when
-    // delivered to a target, but one outside CharacterManager null-derefs ApplyAll.
+    // the caster, since the game aims some lines from behind it, and an action with Cast.FaceTarget
+    // off keeps its facing for any target. Some actions animate only when delivered to a target, but one outside
+    // CharacterManager null-derefs ApplyAll.
     private void Release(EnemyAction action, SimCharacter? target, Vector3? location, GameObjectId? castTarget, byte animationVariation, Delivery delivery)
     {
         var id = action.ActionId;
         if (target == caster) target = null;
         var aim = location ?? target?.Position;
-        caster.Face(target?.Position);
+        // The client plays the release along the caster's model facing, not the packet's rotation, and
+        // a turn reaches the model only on the next flush, so an unseen helper snaps to its target.
+        if (action.Cast.FaceTarget && target is not null)
+        {
+            if (caster is SimEnemy { SpawnConfig.Visibility: SpawnVisibility.InvisibleHelper } helper)
+                helper.SetRotation(caster.Placement().Face(target.Position).Rotation);
+            else
+                caster.Face(target.Position);
+        }
         var outcomes = delivery.Outcomes.Where(o => o.Damage is not null || o.Push is not null || o.Dodged || o.StatusGains.Count > 0).ToList();
         var listed = new List<SimCharacter>();
         if (target is not null) listed.Add(target);
@@ -91,13 +117,14 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimCast cast, SimWorld
                 effects.Add(ActionEffectEntry.Damage(damage.Amount, damage.Kind.AttackType()));
                 confirmations.Add((who, (byte)targets.Count));
             }
-            // A push that deals nothing still gets a typeless zero hit, and no EffectResult.
-            else if (outcome?.Push is not null)
+            // A push that deals nothing still gets a typeless zero hit, and no EffectResult; an
+            // NPC's gets only its Knockback entry.
+            else if (outcome?.Push is not null && who is ISimPartyMember)
                 effects.Add(ActionEffectEntry.Damage(0, 0));
             else if (outcome?.Dodged == true)
                 effects.Add(ActionEffectEntry.Dodge());
-            foreach (var statusId in outcome?.StatusGains.Take(MaxEffectsPerTarget - 3) ?? [])
-                effects.Add(ActionEffectEntry.StatusGain(statusId));
+            foreach (var (statusId, entryParam) in outcome?.StatusGains.Take(MaxEffectsPerTarget - 3) ?? [])
+                effects.Add(ActionEffectEntry.StatusGain(statusId, entryParam));
             if (outcome?.Push?.KnockbackRow is { } row)
                 effects.Add(ActionEffectEntry.Knockback(row));
             effects.Add(ActionEffectEntry.ActionMarker(id));
@@ -119,15 +146,19 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimCast cast, SimWorld
               ?? (location is { } at ? new Placement(at, caster.Rotation) : caster.Placement());
         var ctx = new EnemyActionContext(action, caster, target, origin, party);
 
-        var hits = IsSingleTarget(action)
+        // A party member's own action never hits them.
+        IReadOnlyList<SimCharacter> hits = IsSingleTarget(action)
             ? party.ActiveMembers().Where(m => ReferenceEquals(m, target)).ToList()
-            : AreaHits(action, origin, origin.Position == caster.Position ? caster.HitboxRadius : 0f, party);
+            : AreaHits(action, origin, origin.Position == caster.Position ? caster.HitboxRadius : 0f, party)
+                .Where(h => h != caster).ToList();
         if (action.Area.ExcludeCaster
             && hits.MinBy(h => DistanceXZ(h.Position, caster.Position)) is { } baiter
             && DistanceXZ(baiter.Position, caster.Position) <= ExcludeCasterThreshold)
             hits = hits.Where(h => h != baiter).ToList();
         if (action.Area.AdjustTargets is { } adjust) hits = adjust(ctx, hits);
         ctx.Hits = hits;
+        if (!IsSingleTarget(action))
+            ctx.NpcHits = NpcAreaHits(action, origin, origin.Position == caster.Position ? caster.HitboxRadius : 0f);
         var positions = hits.Select(h => h.Position).ToList();
         DiagnosticLog.Info(
             $"[EnemyAction] Resolve: {Natives.Data.ActionName(action.ActionId)} at ({origin.Position.X:F1},{origin.Position.Z:F1}) rot={origin.Rotation:F3} -- {hits.Count} target(s): "
@@ -141,17 +172,22 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimCast cast, SimWorld
         // Ahead of the deaths it shares a time with, so the killing hit lands on a living target.
         if (ctx.Outcomes.Any(o => o.Damage is not null))
             Schedule(action.Timing.DamageDelay, () => ConfirmDamage(delivery));
+        foreach (var status in ctx.HiddenStatuses)
+            Schedule(action.Timing.DamageDelay, status.Reveal);
         foreach (var outcome in ctx.Outcomes)
         {
             var who = outcome.Target;
             if (outcome.Push is { } push)
             {
-                var byClient = who is SimPlayer && push.KnockbackRow is { } r && Natives.Data.Knockback(r) is { ClientApplies: true };
+                // A player's client slides itself by the row; an NPC goes as far as the server lets it.
                 Schedule(push.Delay ?? action.Timing.DamageDelay, () =>
                 {
-                    if (!who.IsAlive()) return;
-                    if (byClient && who is SimPlayer player) player.HoldForClientKnockback(push.Distance / push.Speed);
-                    else if (who is ISimPartyMember member) member.Knockback(push.From, push.Distance, push.Speed);
+                    if (push.KnockbackRow is { } row && who is ISimPartyMember) who.Knockback(push.From, row);
+                    else if (push.Speed > 0f)
+                    {
+                        var distance = who is ISimPartyMember ? push.Distance : world.NpcPushDistance(who.Position, push.From, push.Distance);
+                        who.Push(push.From, distance, distance / push.Speed);
+                    }
                 });
             }
             if (outcome.Killed)
@@ -173,6 +209,12 @@ internal sealed class EnemyActionHandler(SimEnemy caster, SimCast cast, SimWorld
         AnoMech.Windows.DamageDebugWindow.Instance?.Record(query);
 #endif
         return query.Run(party.Find);
+    }
+
+    private IReadOnlyList<SimEnemy> NpcAreaHits(EnemyAction action, Placement origin, float casterHitboxRadius)
+    {
+        var query = new AoeQuery(action.ActionId, origin, action.Cast.Rotation, action.Area.Size, action.Area.CastTypeOverride, casterHitboxRadius);
+        return query.Run(new CharacterFind<SimEnemy>(() => world.Children.OfType<SimEnemy>().Where(e => e != caster && e.IsAlive())));
     }
 
     private static float DistanceXZ(Vector3 a, Vector3 b)

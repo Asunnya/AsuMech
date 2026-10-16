@@ -7,11 +7,11 @@ namespace AnoMech.Scenarios.Ucob;
 public class UcobConstants
 {
     public const byte Level = 70;
-    public const ushort ItemLevel = 345;
 
     public static class Geometry
     {
-        public const float ArenaRadius = 21f;
+        // The edge moves between phases: earlier phases stop knockbacks at ~24.5.
+        public const float P5ArenaRadius = 21.8f;
     }
 
     // "Aether Markers": A/B/C on the rim, D and 1-4 inside. Scenario-local == world here,
@@ -28,6 +28,18 @@ public class UcobConstants
         new(WaymarkSlot.Four,  new Vector3(      0f, 0f,   0.000f)),
     ];
 
+    // The arena's SharedGroup EObjs (UcobZone), by the layout each binds to; the pieces are only
+    // bound, never played.
+    public class ArenaLayoutId
+    {
+        public const uint DeathWall = 0x6C7D48;
+        public const uint P5Arena = 0x6D0C52;
+        public const uint Piece1 = 0x6C641C;
+        public const uint Piece2 = 0x6C0E8A;
+        public const uint Piece3 = 0x6C0D4C;
+        public const uint Piece4 = 0x6C0D4B;
+    }
+
     public class BNpcBaseId
     {
         public const uint BahamutPrime = 0x1FE8;
@@ -36,30 +48,23 @@ public class UcobConstants
         public const uint Helper = 0x18D6;
     }
 
-    public class ModelCharaId
-    {
-        // Model 117 variant 4 is what BNpcBase 8168 ships with (P3 Bahamut Prime); variant 3
-        // is the gold skin the boss wears from the Phoenix rebirth on. No BNpcBase pairs with
-        // it, so retail swaps the variant on the same actor and so do we.
-        public const uint GoldenBahamut = 2112;
-    }
-
     public class BNpcNameId
     {
         public const uint BahamutPrime = 3210;
     }
 
-    public class VfxPath
+    public class StatusId
     {
-        // The eruption flame. The Exaflare actions carry no VFX row and no AnimationStart, so
-        // the action effect alone renders nothing; retail plays it from the gimmick timeline
-        // they declare as AnimationEnd (mon_sp/gimmick/f1bz_boss_gimmick02), whose VFX this is
-        // (g02 = gimmick02). Spawned on the helper directly.
-        public const string ExaflareEruption = "vfx/monster/gimmick2/eff/f1bz_b0_g02c0i.avfx";
+        public const ushort LohsDaih = 1437;
     }
+
+    // Lohs Daih is a Transfiguration status: its param is the Transformation row the boss
+    // takes on, not a stack count (param 1 turns him into a toad).
+    public const int LohsDaihTransformation = 73;
 
     public class ActionId
     {
+        public const uint AutoAttack = 9936;
         public const uint Exaflare = 9967;       // 0x26EF, boss-body cast, no AOE of its own
         public const uint ExaflareFirst = 9968;  // 0x26F0, helper, 4.0s cast, arrow omen, 6y circle
         public const uint ExaflareRest = 9969;   // 0x26F1, helper, instant, 6y circle

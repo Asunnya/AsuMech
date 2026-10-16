@@ -50,6 +50,11 @@ internal static class RelayHttp
     private const string WebSocketGuid = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
     private static readonly byte[] HeaderTerminator = "\r\n\r\n"u8.ToArray();
 
+    // The first byte of a TLS ClientHello: a client that dialed wss:// at this plain port. It
+    // never ends a header block, so it's turned away at once instead of held until the
+    // handshake timeout, letting the client fall back to ws:// right away.
+    private const byte TlsHandshakeRecord = 0x16;
+
     // Null for anything malformed or oversized, which the caller answers with a 400.
     public static async Task<RelayHttpRequest?> ReadRequestAsync(Stream stream, IPAddress remoteAddress, CancellationToken token)
     {
@@ -61,6 +66,7 @@ internal static class RelayHttp
             if (length == buffer.Length) return null;
             var read = await stream.ReadAsync(buffer.AsMemory(length), token);
             if (read == 0) return null;
+            if (length == 0 && buffer[0] == TlsHandshakeRecord) return null;
             length += read;
         }
 

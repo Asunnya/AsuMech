@@ -13,13 +13,14 @@ namespace AnoMech.Scenarios.Ucob.P5Exaflares;
 
 // UCOB P5 "Exaflares": Bahamut Prime lays six parallel lanes across the arena, fired as three
 // pairs 3s apart, each lane erupting six times in 8y steps. Runs solo or with bots
-// (UcobP5ExaflaresAi). The geometry and timings are measured from a clear log; see
-// UcobP5ExaflaresState for the provenance.
+// (UcobP5ExaflaresAi).
 //
 // Each lane's first eruption is the release of its own arrow-omen cast (ExaflareFirst), so the
 // telegraph and hit 1 share one helper and cannot drift apart; the five follow-ups are instant
-// ExaflareRest casts from a helper spawned at each step. The flame itself is spawned by hand
-// (VfxPath.ExaflareEruption) because these actions carry no VFX the action effect could play.
+// ExaflareRest casts from the same helper, teleported to each step. The flame is the actions'
+// AnimationEnd gimmick timeline, played by the action effect on the helper. The helpers exist from
+// the start, as in retail: the engine creates a spawned actor a few frames after its spawn packet
+// and drops a cast or ActionEffect sent to it before then.
 // Lingering flame is decorative: only the snapshot kills.
 public sealed class UcobP5ExaflaresScenario : IMultiplayerReplayable
 {
@@ -34,8 +35,6 @@ public sealed class UcobP5ExaflaresScenario : IMultiplayerReplayable
     public object SettingsOverrides => settingsWindow.Overrides;
     private readonly UcobP5ExaflaresSettingsWindow settingsWindow = new();
 
-    // Keep an eruption's helper alive this long so its flame isn't cut mid-animation.
-    private const float HitVfxSeconds = 3f;
     private const float DespawnAfterLastHit = 4f;
 
     private UcobP5ExaflaresState state = null!;
@@ -44,24 +43,37 @@ public sealed class UcobP5ExaflaresScenario : IMultiplayerReplayable
     public UcobP5ExaflaresState? LastState { get; private set; }
     private SimWorld world = null!;
     private SimEnemy? bahamut;
-    private readonly List<SimEnemy> helpers = new();
+    private readonly List<SimEnemy?> laneHelpers = new();
 
     public void Run(SimWorld worldParam, int? selectedAi)
     {
         world = worldParam;
-        helpers.Clear();
+        laneHelpers.Clear();
 
         state = new UcobP5ExaflaresState(world.Rng, settingsWindow.Overrides);
         LastState = state;
+        var solo = !selectedAi.HasValue;
 
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<UcobP5ExaflaresState>)AiStrats[idx]).Run(state, world);
 
         world.Events.Add(0f, SpawnBahamut);
+        world.Events.Add(0f, SpawnLaneHelpers);
+        world.Events.Add(0.5f, () => bahamut?.AddStatusParam(StatusId.LohsDaih, LohsDaihTransformation));
         world.Events.Add(UcobP5ExaflaresState.BossCastAt,
-            () => bahamut?.Cast(ActionId.Exaflare));
-        foreach (var line in state.Lines) LaunchLine(line);
+            () => bahamut?.Cast(Actions.Exaflare));
+        for (var lane = 0; lane < state.Lines.Count; lane++) LaunchLine(state.Lines[lane], lane);
         world.Events.Add(state.LastHitAt + DespawnAfterLastHit, DespawnAll);
+        
+        if (!solo)
+        {
+            world.Events.Add(5f, () => bahamut?.SetTarget(world.Party.Get(PartyRole.MainTank)));
+            world.Events.Add(8.98f, () => AutoAttackMainTank(1));
+            world.Events.Add(12.00f, () => AutoAttackMainTank(1));
+            world.Events.Add(15.03f, () => AutoAttackMainTank(2));
+            world.Events.Add(18.08f, () => AutoAttackMainTank(1));
+            world.Events.Add(21.11f, () => AutoAttackMainTank(0));
+        }
     }
 
     private void SpawnBahamut()
@@ -73,57 +85,48 @@ public sealed class UcobP5ExaflaresScenario : IMultiplayerReplayable
             Targetable: true,
             EnemyList: EnemyListMode.Always,
             Visibility: SpawnVisibility.Visible,
-            Placement: new Placement(Vector3.Zero, 0f),
-            ModelCharaId: ModelCharaId.GoldenBahamut));
+            Placement: new Placement(Vector3.Zero, 0f)));
     }
+
+    private void AutoAttackMainTank(byte variation)
+        => bahamut?.Cast(Actions.AutoAttack, world.Party.Get(PartyRole.MainTank), variation);
 
     // One lane. The arrow omen rides ExaflareFirst's own cast at the lane's first step and its
-    // release is that step's eruption; every later step is an instant cast from its own helper.
-    private void LaunchLine(ExaflareLine line)
+    // release is that step's eruption; every later step is an instant cast from the same helper.
+    private void LaunchLine(ExaflareLine line, int lane)
     {
-        SimEnemy? head = null;
         world.Events.Add(line.TelegraphAt, () =>
         {
-            head = SpawnHelper(line.Start, line.Rotation);
-            head?.Cast(Actions.ExaflareFirst);
+            laneHelpers[lane]?.SetPosition(new Placement(line.Start, line.Rotation));
+            laneHelpers[lane]?.Cast(Actions.ExaflareFirst);
         });
 
-        for (var i = 0; i < line.Hits.Count; i++)
-        {
-            var hit = line.Hits[i];
-            var isFirst = i == 0;
-            SimEnemy? source = null;
+        foreach (var hit in line.Hits.Skip(1))
             world.Events.Add(hit.Time, () =>
             {
-                source = isFirst ? head : SpawnHelper(hit.Position, line.Rotation);
-                source?.AddVfx(VfxPath.ExaflareEruption, persistent: false);
-                if (!isFirst) source?.Cast(Actions.ExaflareRest);
+                laneHelpers[lane]?.SetPosition(new Placement(hit.Position, line.Rotation));
+                laneHelpers[lane]?.Cast(Actions.ExaflareRest);
             });
-            world.Events.Add(hit.Time + HitVfxSeconds, () => source?.Despawn());
-        }
     }
 
-    private SimEnemy? SpawnHelper(Vector3 position, float rotation)
+    private void SpawnLaneHelpers()
     {
-        var helper = world.SpawnEnemy(new EnemySpawnConfig(
-            BNpcBaseId: BNpcBaseId.Helper,
-            Level: UcobConstants.Level,
-            Targetable: false,
-            EnemyList: EnemyListMode.Never,
-            // Drawn on purpose: the eruption is an ActionTimeline on the helper, and a
-            // DisableDraw'd actor plays none. BNpcBase 0x18D6's ModelChara has no mesh,
-            // so "visible" still shows nothing but the fire.
-            Visibility: SpawnVisibility.InvisibleHelper,
-            Placement: new Placement(position, rotation)));
-        if (helper != null) helpers.Add(helper);
-        return helper;
+        foreach (var _ in state.Lines)
+            laneHelpers.Add(world.SpawnEnemy(new EnemySpawnConfig(
+                BNpcBaseId: BNpcBaseId.Helper,
+                NameId: BNpcNameId.BahamutPrime,
+                Level: UcobConstants.Level,
+                Targetable: false,
+                EnemyList: EnemyListMode.Never,
+                Visibility: SpawnVisibility.InvisibleHelper,
+                Placement: new Placement(Vector3.Zero, 0f))));
     }
 
     private void DespawnAll()
     {
         bahamut?.Despawn();
-        foreach (var helper in helpers) helper.Despawn();
-        helpers.Clear();
+        foreach (var helper in laneHelpers) helper?.Despawn();
+        laneHelpers.Clear();
     }
 
     public MpMessage? BuildReplayStateMessage()

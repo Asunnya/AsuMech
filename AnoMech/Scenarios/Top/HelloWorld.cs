@@ -18,7 +18,7 @@ public sealed class HelloWorld(SimParty party, PartyRole holder, bool near)
     public void SetPosition(SimEnemy? helper)
     {
         if (currentTarget == null || helper == null) return;
-        helper.SetPosition(currentTarget.Position);
+        helper.SetPosition(currentTarget.Placement());
     }
 
     public void CastSpell(SimEnemy? helper)
@@ -40,24 +40,5 @@ public sealed class HelloWorld(SimParty party, PartyRole holder, bool near)
         }
         helper.Cast(near ? TopActions.HelloNearWorldJump : TopActions.HelloDistantWorldJump, nextTarget);
         currentTarget = nextTarget;
-    }
-
-    // A holder dying with the puddle still on them fails it.
-    public static void CheckHolderDeaths(SimWorld world)
-    {
-        foreach (var member in world.Party.AllMembers())
-        {
-            if (member.IsAlive()) continue;
-            var held = member.TakeStatusLostOnDeath(StatusId.HelloNearWorld) | member.TakeStatusLostOnDeath(StatusId.HelloDistantWorld);
-            if (!held) continue;
-            var helper = world.SpawnEnemy(new EnemySpawnConfig(
-                BNpcBaseId: BNpcBaseId.OmegaHelper, Visibility: SpawnVisibility.InvisibleHelper,
-                Targetable: false,
-                EnemyList: EnemyListMode.Never,
-                Placement: new Placement(member.Position, 0f)));
-            if (helper == null) continue;
-            world.Events.Add(Duration.MonitorHelperLifetime, helper.Despawn);
-            helper.Cast(TopActions.HelloWorldFail);
-        }
     }
 }

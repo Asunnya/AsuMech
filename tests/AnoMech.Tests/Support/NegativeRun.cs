@@ -45,6 +45,10 @@ internal sealed class NegativeRun<TScenario>(PartyRole role, int strat) where TS
     public NegativeRun<TScenario> TeleportAt(float time, Vector2 to, float? facing = null)
         => Add(new Takeover(time, to, facing));
 
+    // Below InstanceSession's FallFloor: the client's own fall, which only the local player can take.
+    public NegativeRun<TScenario> DropBelowArenaAt(float time, Vector2 to)
+        => Add(new Takeover(time, to, Y: -10f));
+
     public NegativeRun<TScenario> FreezeAt(float time) => Add(new Takeover(time, null));
 
     // The bot stays on its AI, which moves it on at its next step.

@@ -2,45 +2,77 @@ using AnoMech.Core.Native.Interfaces;
 
 namespace AnoMech.Tests;
 
-// The game client behind Natives for a headless run.
+// The game client behind Natives for a headless run. A multiplayer test runs one per client and
+// Activates whichever it is driving.
 internal sealed class FakeGame
 {
-    public FakeBattleCharas BattleCharas { get; } = new();
-    public FakeEventObjects EventObjects { get; } = new();
+    public SimTimeline Timeline { get; } = new();
+    public FakeBattleCharas BattleCharas { get; }
+    public FakeEventObjects EventObjects { get; }
     public FakeFramework Framework { get; } = FakeFramework.Create();
-    public FakeZoneSession Zone { get; }
-    public FakeMapEffects MapEffects { get; } = new();
+    public FakeZoneControl Zone { get; }
+    public FakeMapEffects MapEffects { get; }
     public FakeUserActions UserActions { get; } = new();
     public FakeLocalPlayerInput PlayerInput { get; } = new();
+    public FakePlayerConditions PlayerConditions { get; }
 
-    private FakeGame() => Zone = new FakeZoneSession(BattleCharas.Player);
+    private readonly FakeRsvFunctions rsv = new();
+    private readonly DataminingGameData data;
+    private readonly FakeActionTimelinePreload timelinePreload = new();
+    private readonly FakeLayoutFunctions layout = new();
+    private readonly FakeInstanceContentDirector director;
+    private readonly FakeRsfFunctions rsf = new();
+    private readonly FakePartyHud partyHud = new();
+    private readonly FakeHaterList haterList;
+    private readonly FakeLimitBreakController limitBreak = new();
+    private readonly FakeWaymarks waymarks = new();
+    private readonly FakeBgm bgm;
+
+    private FakeGame()
+    {
+        data = new DataminingGameData(rsv);
+        BattleCharas = new FakeBattleCharas(Timeline);
+        EventObjects = new FakeEventObjects(Timeline);
+        MapEffects = new FakeMapEffects(Timeline);
+        Zone = new FakeZoneControl(BattleCharas.Player, Timeline);
+        PlayerConditions = new FakePlayerConditions(Timeline);
+        director = new FakeInstanceContentDirector(Zone, Timeline);
+        haterList = new FakeHaterList(Timeline);
+        bgm = new FakeBgm(Timeline);
+    }
 
     public static FakeGame Install()
     {
-        var game = new FakeGame();
-        var rsv = new FakeRsvFunctions();
-        Natives.Data = new DataminingGameData(rsv);
-        Natives.BattleCharas = game.BattleCharas;
-        Natives.EventObjects = game.EventObjects;
-        Natives.HiddenObjects = new FakeHiddenObjects();
-        Natives.PlayerInput = game.PlayerInput;
-        Natives.UserActions = game.UserActions;
-        Natives.Vfx = new FakeVfxFunctions();
-        Natives.TimelinePreload = new FakeActionTimelinePreload();
-        Natives.Zone = game.Zone;
-        Natives.MapEffects = game.MapEffects;
-        Natives.Layout = new FakeLayoutFunctions();
-        Natives.Director = new FakeInstanceContentDirector(game.Zone);
-        Natives.Rsv = rsv;
-        Natives.Rsf = new FakeRsfFunctions();
-        Natives.PartyHud = new FakePartyHud();
-        Natives.HaterList = new FakeHaterList();
-        Natives.LimitBreak = new FakeLimitBreakController();
-        Natives.Waymarks = new FakeWaymarks();
-        Natives.Bgm = new FakeBgm();
-        Natives.VfxSpawnLog = new FakeVfxSpawnLog();
-        DalamudServices.Install(nameof(Plugin.Framework), game.Framework);
+        var game = Create();
+        game.Activate();
         return game;
+    }
+
+    public static FakeGame Create() => new();
+
+    // Points Natives and Plugin.Framework at this client's fakes.
+    public void Activate()
+    {
+        Natives.Data = data;
+        Natives.BattleCharas = BattleCharas;
+        Natives.EventObjects = EventObjects;
+        Natives.PlayerInput = PlayerInput;
+        Natives.UserActions = UserActions;
+        Natives.TimelinePreload = timelinePreload;
+        Natives.Zone = Zone;
+        Natives.MapEffects = MapEffects;
+        Natives.Layout = layout;
+        Natives.Director = director;
+        Natives.Rsv = rsv;
+        Natives.Rsf = rsf;
+        Natives.PartyHud = partyHud;
+        Natives.HaterList = haterList;
+        Natives.PlayerConditions = PlayerConditions;
+        Natives.LimitBreak = limitBreak;
+        Natives.Waymarks = waymarks;
+        Natives.Vfx = new FakeVfxFunctions();
+        Natives.Bgm = bgm;
+        DalamudServices.Install(nameof(Plugin.Framework), Framework);
     }
 
     // One client frame in the real order: Dalamud drains queued Framework.Run work, then raises
@@ -51,7 +83,6 @@ internal sealed class FakeGame
         update(deltaSeconds);
         WalkSteeredPlayer(deltaSeconds);
         BattleCharas.Tick(deltaSeconds);
-        EventObjects.Tick(deltaSeconds);
     }
 
     private void WalkSteeredPlayer(float deltaSeconds)

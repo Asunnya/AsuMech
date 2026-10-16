@@ -1,7 +1,6 @@
 using AnoMech.Core.Game;
 using AnoMech.Core.Native.Interfaces;
 using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
-using Lumina.Excel.Sheets;
 using System;
 using System.Numerics;
 using System.Text;
@@ -47,13 +46,5 @@ internal sealed unsafe class VfxFunctions : IVfxFunctions
             Plugin.Log.Warning($"VfxFunctions: FileExists threw for '{path}': {ex.Message}");
         }
         return false;
-    }
-
-    public string? LockonIconName(uint lockonId)
-    {
-        var sheet = Plugin.DataManager.GetExcelSheet<Lockon>();
-        if (!sheet.TryGetRow(lockonId, out var row)) return null;
-        var iconName = row.IconName.ExtractText();
-        return string.IsNullOrEmpty(iconName) ? null : iconName;
     }
 }

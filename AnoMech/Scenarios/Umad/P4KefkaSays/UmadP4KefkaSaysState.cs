@@ -22,10 +22,10 @@ public sealed record KefkaCast(EnemyAction Damage, uint OmenAction, uint Lockon)
 
 public sealed record MysteryCast(KefkaCast Blizzard, KefkaCast Lightning, int BlizzardOffset, int LightningOffset, float LightningOrientation);
 
-public sealed record ChaosCast(uint Action, uint Visual, ushort Status, float DurationFirst, float DurationSecond, EnemyAction TrueSolution, EnemyAction FakeSolution)
+public sealed record ChaosCast(uint Action, EnemyAction Raidwide, ushort Status, float DurationFirst, float DurationSecond, EnemyAction TrueSolution, EnemyAction FakeSolution)
 {
-    public static ChaosCast Inferno = new(ActionId.Inferno, ActionId.Inferno_Visual, StatusId.Entropy, 60, 45, UmadActions.StrayFlamesChariot, UmadActions.StrayFlamesDonut);
-    public static ChaosCast Tsunami = new(ActionId.Tsunami, ActionId.Tsunami_Visual, StatusId.DynamicFluid, 84, 69, UmadActions.StraySprayDonut, UmadActions.StraySprayChariot);
+    public static ChaosCast Inferno = new(ActionId.Inferno, UmadActions.InfernoRaidwide, StatusId.Entropy, 60, 45, UmadActions.StrayFlamesChariot, UmadActions.StrayFlamesDonut);
+    public static ChaosCast Tsunami = new(ActionId.Tsunami, UmadActions.TsunamiRaidwide, StatusId.DynamicFluid, 84, 69, UmadActions.StraySprayDonut, UmadActions.StraySprayChariot);
 }
 
 

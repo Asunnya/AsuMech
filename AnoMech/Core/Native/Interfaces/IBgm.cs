@@ -1,7 +1,9 @@
+using System;
+
 namespace AnoMech.Core.Native.Interfaces;
 
 // Scenario music in the Content BGM scene.
-public interface IBgm
+public interface IBgm : IDisposable
 {
     // Idempotent for the track already playing.
     void Play(ushort bgmId, float secondsIn = 0f);

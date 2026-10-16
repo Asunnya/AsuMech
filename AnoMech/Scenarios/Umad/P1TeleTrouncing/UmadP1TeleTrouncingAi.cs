@@ -24,7 +24,7 @@ public sealed class UmadP1TeleTrouncingAi : IScenarioAi<UmadP1TeleTrouncingState
 
     // Approximations: the guide says "on the boss ring" and "just outside the teleporter" with
     // no distances; the teleporter square's radius is 12.
-    private const float RingRadius = 7f;
+    private const float RingRadius = 9f;
     private const float OutsideRadius = 15f;
 
     public void Run(UmadP1TeleTrouncingState state, SimWorld world)

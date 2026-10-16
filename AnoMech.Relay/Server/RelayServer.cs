@@ -21,7 +21,7 @@ namespace AnoMech.Relay;
 // plugin, which also does every check on message content.
 //
 // Exists because a Dalamud client is firewalled off from FFXIV's own server traffic during
-// a scenario (see ZoneSession), and most players sit behind NAT, so direct P2P isn't viable.
+// a scenario (see ZoneControl), and most players sit behind NAT, so direct P2P isn't viable.
 //
 // Meant to be runnable as a public service (anyone can point a plugin at it, not just people
 // you've personally shared a URL with) -- see AnoMech.Relay.Host/README.md's Security notes for the full

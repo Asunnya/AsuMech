@@ -171,6 +171,6 @@ public class UmadP3BlackHoleScenarioTests
     [Test]
     public void DiesWalkingOffArena()
         => BlackHole(MainTank)
-            .TeleportAt(3f, to: new(0, 20.5f))
+            .DropBelowArenaAt(3f, to: new(0, 20.5f))
             .ShouldKill(TheEnvironment, MainTank);
 }

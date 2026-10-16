@@ -30,7 +30,7 @@ public sealed record CatastrophicChoice(uint CastActionId, EnemyAction Resolutio
 }
 
 // One of the 9 fixed towers, spawned once for the whole mechanic; position never changes.
-public sealed record CelestriadTower(CelestriadElement Element, int SubIndex, Vector3 Position);
+public sealed record CelestriadTower(CelestriadElement Element, int SubIndex, int RingIndex, Vector3 Position);
 
 // Per-run randomization: the three sectors' elements, each party role's permanent debuff
 // (an element or "free"), which element doubles up on each set, which ring towers are active,
@@ -174,7 +174,7 @@ public sealed class UmadP5CelestriadState
         var towers = new List<CelestriadTower>(Elements.Length * SubTowersPerElement);
         foreach (var element in Elements)
             for (var sub = 0; sub < SubTowersPerElement; sub++)
-                towers.Add(new CelestriadTower(element, sub, TowerPosition(element, sub)));
+                towers.Add(new CelestriadTower(element, sub, RingIndex(element, sub), TowerPosition(element, sub)));
         return towers;
     }
 
@@ -255,8 +255,10 @@ public sealed class UmadP5CelestriadState
     // sub-towers stay intact.
     public Vector3 TowerPosition(CelestriadElement element, int subIndex)
     {
-        var ringIndex = TowerElementOrder.ToList().IndexOf(element) * 3 + subIndex;
-        var angle = MathF.PI / 9f + ringIndex * (MathF.PI * 2f / 9f);
+        var angle = MathF.PI / 9f + RingIndex(element, subIndex) * (MathF.PI * 2f / 9f);
         return new Vector3(MathF.Sin(angle) * 10f, 0f, -MathF.Cos(angle) * 10f);
     }
+
+    private int RingIndex(CelestriadElement element, int subIndex)
+        => TowerElementOrder.ToList().IndexOf(element) * SubTowersPerElement + subIndex;
 }

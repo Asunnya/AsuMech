@@ -137,22 +137,22 @@ public class UmadP4KefkaSaysScenarioTests
     }
 
     [TestCase(70.9f, OffTank, ActionId.DeathWave, MainTank, ShieldHealer)]
-    [TestCase(96.0f, ShieldHealer, ActionId.DeathBolt, MainTank, RegenHealer)]
+    [TestCase(96.0f, ShieldHealer, ActionId.DeathBolt_Lie, MainTank, RegenHealer)]
     public void LeavingElementStackKillsStackers(float at, PartyRole leaver, uint stack, params PartyRole[] stackers)
         => KefkaSays(leaver)
             .TeleportAt(at, to: new(0, 0))
             .ShouldKill(stack, stackers);
 
     // The solo's own hit applies the vuln; the stack's hit, resolving after it, kills.
-    [TestCase(70.9f, RegenHealer, 0f, -12f)]
-    [TestCase(96.0f, OffTank, 0.8f, -12f)]
-    public void SoloMarkerJoiningStackKillsStack(float at, PartyRole solo, float x, float z)
+    [TestCase(70.9f, RegenHealer, 0f, -12f, ActionId.DeathWave)]
+    [TestCase(96.0f, OffTank, 0.8f, -12f, ActionId.DeathWave_Lie)]
+    public void SoloMarkerJoiningStackKillsStack(float at, PartyRole solo, float x, float z, uint killer)
         => KefkaSays(solo)
             .TeleportAt(at, to: new(x, z))
-            .ShouldKill(ActionId.DeathWave, MainTank, OffTank, RegenHealer, ShieldHealer);
+            .ShouldKill(killer, MainTank, OffTank, RegenHealer, ShieldHealer);
 
     [TestCase(70.9f, RegenHealer, 12f, 0f, ActionId.DeathBolt, PhysRangedDps)]
-    [TestCase(96.0f, OffTank, 12.1f, -1.2f, ActionId.DeathWave, MeleeDpsB)]
+    [TestCase(96.0f, OffTank, 12.1f, -1.2f, ActionId.DeathWave_Lie, MeleeDpsB)]
     public void TwoSoloMarkersTogetherKillBoth(float at, PartyRole solo, float x, float z, uint marker, PartyRole otherSolo)
         => KefkaSays(solo)
             .TeleportAt(at, to: new(x, z))
@@ -161,7 +161,7 @@ public class UmadP4KefkaSaysScenarioTests
     // Wave 2 lies, so MT's Bolt is the one that needs three. A bot carries the stack marker: a
     // player SH standing on the solo spot dies first to their own lying Acceleration Bomb at 71.28.
     [TestCase(70.9f, ShieldHealer, -12f, 0f, ActionId.DeathWave, RegenHealer)]
-    [TestCase(96.0f, MainTank, -12.2f, 1.1f, ActionId.DeathBolt, OffTank)]
+    [TestCase(96.0f, MainTank, -12.2f, 1.1f, ActionId.DeathBolt_Lie, OffTank)]
     public void StackMarkerOnSoloSpotKillsBoth(float at, PartyRole stackMarker, float x, float z, uint marker, PartyRole solo)
         => KefkaSays(solo)
             .MoveBotAt(at, stackMarker, to: new(x, z))
@@ -173,7 +173,7 @@ public class UmadP4KefkaSaysScenarioTests
     public void FirstDeathShriekFacingWrongWayDies(bool real, float facing)
         => KefkaSays(CasterDps, o => o.ExdeathCast1Real = real)
             .TeleportAt(80.2f, to: new(-6.5f, 8.3f), facing: facing)
-            .ShouldKill(ActionId.DeathShriek, CasterDps);
+            .ShouldKill(real ? ActionId.DeathShriek : ActionId.DeathShriek_Lie, CasterDps);
 
     // C stands south of both sources.
     [TestCase(true, FacingNorth)]
@@ -181,7 +181,7 @@ public class UmadP4KefkaSaysScenarioTests
     public void SecondDeathShriekFacingWrongWayDies(bool real, float facing)
         => KefkaSays(CasterDps, o => o.ExdeathCast2 = real ? ExdeathCast2Mode.Real : ExdeathCast2Mode.Fake)
             .TeleportAt(104.1f, to: new(1.2f, 6.9f), facing: facing)
-            .ShouldKill(ActionId.DeathShriek, CasterDps);
+            .ShouldKill(real ? ActionId.DeathShriek : ActionId.DeathShriek_Lie, CasterDps);
 
     [TestCase(true, 0f, 0f, ActionId.StrayFlames_Chariot)]
     [TestCase(false, 0f, 10f, ActionId.StrayFlames_Donut)]
@@ -220,6 +220,6 @@ public class UmadP4KefkaSaysScenarioTests
     [Test]
     public void DiesWalkingOffArena()
         => KefkaSays(MainTank)
-            .TeleportAt(3f, to: new(0, 20.5f))
+            .DropBelowArenaAt(3f, to: new(0, 20.5f))
             .ShouldKill(TheEnvironment, MainTank);
 }

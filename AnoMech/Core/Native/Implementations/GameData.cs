@@ -8,6 +8,9 @@ using LuminaModelChara = Lumina.Excel.Sheets.ModelChara;
 using LuminaModelSkeleton = Lumina.Excel.Sheets.ModelSkeleton;
 using LuminaNpcEquip = Lumina.Excel.Sheets.NpcEquip;
 using LuminaStatus = Lumina.Excel.Sheets.Status;
+using LuminaTerritoryType = Lumina.Excel.Sheets.TerritoryType;
+using LuminaContentFinderCondition = Lumina.Excel.Sheets.ContentFinderCondition;
+using LuminaWeather = Lumina.Excel.Sheets.Weather;
 
 namespace AnoMech.Core.Native.Implementations;
 
@@ -28,7 +31,8 @@ internal sealed class GameData : IGameData
             row.ActionCategory.RowId,
             row.CanTargetSelf,
             row.CanTargetParty,
-            (sbyte)row.AttackType.RowId);
+            (sbyte)row.AttackType.RowId,
+            row.TargetArea);
     }
 
     public KnockbackRow? Knockback(uint knockbackId)
@@ -66,17 +70,23 @@ internal sealed class GameData : IGameData
 
     public StatusRow? Status(ushort statusId)
         => Plugin.DataManager.GetExcelSheet<LuminaStatus>().TryGetRow(statusId, out var row)
-            ? new StatusRow(statusId, row.Name.ExtractText(), row.LockMovement, row.LockActions, row.LockControl)
+            ? new StatusRow(statusId, row.Name.ExtractText(), row.LockMovement, row.LockActions, row.LockControl, row.MaxStacks)
+            : null;
+
+    public TerritoryTypeRow? TerritoryType(uint territoryId)
+        => Plugin.DataManager.GetExcelSheet<LuminaTerritoryType>().TryGetRow(territoryId, out var row)
+            ? new TerritoryTypeRow(territoryId, row.ContentFinderCondition.RowId)
+            : null;
+
+    public ContentFinderConditionRow? ContentFinderCondition(uint contentFinderConditionId)
+        => Plugin.DataManager.GetExcelSheet<LuminaContentFinderCondition>().TryGetRow(contentFinderConditionId, out var row)
+            ? new ContentFinderConditionRow(contentFinderConditionId, row.ClassJobLevelSync)
             : null;
 
     public string? BNpcName(uint nameId)
         => Plugin.DataManager.GetExcelSheet<LuminaBNpcName>().TryGetRow(nameId, out var row) ? NonEmpty(row.Singular.ExtractText()) : null;
 
-    public bool StatusLocksMovement(ushort statusId)
-        => Plugin.DataManager.GetExcelSheet<LuminaStatus>().TryGetRow(statusId, out var row) && row.LockMovement;
-
-    public bool StatusLocksActions(ushort statusId)
-        => Plugin.DataManager.GetExcelSheet<LuminaStatus>().TryGetRow(statusId, out var row) && row.LockActions;
+    public bool WeatherExists(byte weatherId) => Plugin.DataManager.GetExcelSheet<LuminaWeather>().HasRow(weatherId);
 
     public bool FileExists(string path) => Plugin.DataManager.FileExists(path);
 

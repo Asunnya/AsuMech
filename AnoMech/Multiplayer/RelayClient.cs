@@ -26,7 +26,7 @@ internal sealed class RelaySessionRejectedException(string reason) : Exception(r
 // Outgoing, the WebSocket message type doubles as the compression flag: Text = raw JSON,
 // Binary = Brotli (from CompressionThresholdBytes up; below that Brotli's framing costs more
 // than it saves).
-public sealed class RelayClient(string peerSecret) : IDisposable
+public sealed class RelayClient(string peerSecret) : IRelayConnection
 {
     private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
     private const int CompressionThresholdBytes = 256;
@@ -37,11 +37,9 @@ public sealed class RelayClient(string peerSecret) : IDisposable
     // Replaced per fallback attempt: a ClientWebSocket can only ConnectAsync once.
     private ClientWebSocket socket = new();
     private readonly CancellationTokenSource cts = new();
-    // Two queues so a large WorldSnapshot can't hog the single send slot ahead of small urgent
-    // messages; bulk is drained only while the priority queue is empty.
+    // One queue: what the host sends is an ordered stream (a run's packets, then the end that
+    // follows them).
     private readonly Channel<(byte[] Bytes, WebSocketMessageType Type, TaskCompletionSource Completion)> sendQueue =
-        Channel.CreateUnbounded<(byte[], WebSocketMessageType, TaskCompletionSource)>();
-    private readonly Channel<(byte[] Bytes, WebSocketMessageType Type, TaskCompletionSource Completion)> bulkSendQueue =
         Channel.CreateUnbounded<(byte[], WebSocketMessageType, TaskCompletionSource)>();
     private bool disposed;
 
@@ -165,6 +163,12 @@ public sealed class RelayClient(string peerSecret) : IDisposable
         return null;
     }
 
+    // While a fallback candidate remains, an attempt still unanswered after this is abandoned for
+    // it: a plain relay older than RelayHttp's TLS check holds a wss:// attempt for its 10 s
+    // handshake timeout, and a port that silently drops packets holds it until the OS gives up.
+    // Far above a normal connect, and leaves most of MultiplayerManager's 15 s join deadline.
+    internal TimeSpan FallbackAfter { get; init; } = TimeSpan.FromSeconds(5);
+
     private async Task<string?> ConnectCoreAsync(string relayUrl, string path, string? accessToken)
     {
         var candidates = ResolveCandidateUris(relayUrl, path);
@@ -198,9 +202,12 @@ public sealed class RelayClient(string peerSecret) : IDisposable
             socket.Options.SetRequestHeader("X-AnoMech-Protocol", RelayWire.Version.ToString());
             var uri = candidates[i];
             IsEncrypted = uri.Scheme == "wss";
+            var fallbackLeft = i < candidates.Count - 1;
             try
             {
-                await socket.ConnectAsync(uri, WebSocketHttp, cts.Token).ConfigureAwait(false);
+                using var attempt = CancellationTokenSource.CreateLinkedTokenSource(cts.Token);
+                if (fallbackLeft) attempt.CancelAfter(FallbackAfter);
+                await socket.ConnectAsync(uri, WebSocketHttp, attempt.Token).ConfigureAwait(false);
                 DiagnosticLog.Info($"[RelayClient] Connected to {uri}.");
                 if (i > 0)
                 {
@@ -212,9 +219,12 @@ public sealed class RelayClient(string peerSecret) : IDisposable
             }
             catch (Exception e)
             {
-                lastFailure = e;
-                DiagnosticLog.Info($"[RelayClient] {uri} failed: {e.Message}"
-                    + (i < candidates.Count - 1 ? " -- trying the next candidate." : ""));
+                // Only the fallback cap cancels while this client is still alive.
+                lastFailure = e is OperationCanceledException && !cts.IsCancellationRequested
+                    ? new TimeoutException($"No answer within {FallbackAfter.TotalSeconds:0.#}s.")
+                    : e;
+                DiagnosticLog.Info($"[RelayClient] {uri} failed: {lastFailure.Message}"
+                    + (fallbackLeft ? " -- trying the next candidate." : ""));
             }
         }
         // A relay that answered but refused or never greeted isn't retried on the next
@@ -293,19 +303,31 @@ public sealed class RelayClient(string peerSecret) : IDisposable
     public async Task SendAsync(MpMessage message)
     {
         if (!IsConnected) return;
+        var (bytes, type) = Encode(message, SupportsCompression);
+        var completion = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        if (!sendQueue.Writer.TryWrite((bytes, type, completion))) return;
+        await completion.Task.ConfigureAwait(false);
+    }
+
+    internal static (byte[] Bytes, WebSocketMessageType Type) Encode(MpMessage message, bool compress)
+    {
         var jsonBytes = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message, JsonOptions));
-        var (bytes, type) = SupportsCompression && jsonBytes.Length >= CompressionThresholdBytes
+        return compress && jsonBytes.Length >= CompressionThresholdBytes
             ? (Compress(jsonBytes), WebSocketMessageType.Binary)
             : (jsonBytes, WebSocketMessageType.Text);
-        var completion = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-        var queue = message is WorldSnapshotMessage ? bulkSendQueue : sendQueue;
-        if (!queue.Writer.TryWrite((bytes, type, completion))) return;
-        await completion.Task.ConfigureAwait(false);
+    }
+
+    // A forwarded body as this client takes it: within its sender's budget, checked, then typed.
+    internal static MpMessage? Read(byte[] body, bool compressed, bool isFromHost, Guid sender, TrafficBudget budget)
+    {
+        var raw = RelayWire.Decode(body, compressed, budget, isFromHost ? RelayWire.MaxMessageBytes : RelayWire.MaxPeerMessageBytes);
+        RelayWire.Validate(raw, isFromHost, sender);
+        return JsonSerializer.Deserialize<MpMessage>(raw, JsonOptions);
     }
 
     // A host's kick, ban or unban, carried out by the relay itself. Always small and
     // uncompressed: it's the one body the relay reads (RelayWire.IsControl).
-    internal async Task ModerateAsync(string operation, Guid peerId)
+    public async Task ModerateAsync(string operation, Guid peerId)
     {
         if (!IsConnected) return;
         var bytes = JsonSerializer.SerializeToUtf8Bytes(new { t = RelayWire.ControlType, Operation = operation, PeerId = peerId });
@@ -330,18 +352,9 @@ public sealed class RelayClient(string peerSecret) : IDisposable
     {
         try
         {
-            while (true)
-            {
-                if (sendQueue.Reader.TryRead(out var entry) || bulkSendQueue.Reader.TryRead(out entry))
-                {
+            while (await sendQueue.Reader.WaitToReadAsync(cts.Token).ConfigureAwait(false))
+                while (sendQueue.Reader.TryRead(out var entry))
                     await SendOneAsync(entry.Bytes, entry.Type, entry.Completion).ConfigureAwait(false);
-                    continue;
-                }
-                var prioritySignal = sendQueue.Reader.WaitToReadAsync(cts.Token).AsTask();
-                var bulkSignal = bulkSendQueue.Reader.WaitToReadAsync(cts.Token).AsTask();
-                await Task.WhenAny(prioritySignal, bulkSignal).ConfigureAwait(false);
-                if (sendQueue.Reader.Completion.IsCompleted && bulkSendQueue.Reader.Completion.IsCompleted) return;
-            }
         }
         catch (OperationCanceledException)
         {
@@ -435,10 +448,7 @@ public sealed class RelayClient(string peerSecret) : IDisposable
                 MpMessage? message;
                 try
                 {
-                    var raw = RelayWire.Decode(frame[RelayWire.PrefixBytes..], frame[21] == 1, budget,
-                                               isFromHost ? RelayWire.MaxMessageBytes : RelayWire.MaxPeerMessageBytes);
-                    RelayWire.Validate(raw, isFromHost, sender);
-                    message = JsonSerializer.Deserialize<MpMessage>(raw, JsonOptions);
+                    message = Read(frame[RelayWire.PrefixBytes..], frame[21] == 1, isFromHost, sender, budget);
                 }
                 catch (TrafficLimitException)
                 {
@@ -496,10 +506,7 @@ public sealed class RelayClient(string peerSecret) : IDisposable
         // Complete before Cancel, so an enqueued SendAsync caller sees a failed send instead
         // of hanging.
         sendQueue.Writer.TryComplete();
-        bulkSendQueue.Writer.TryComplete();
         while (sendQueue.Reader.TryRead(out var pending))
-            pending.Completion.TrySetException(new ObjectDisposedException(nameof(RelayClient)));
-        while (bulkSendQueue.Reader.TryRead(out var pending))
             pending.Completion.TrySetException(new ObjectDisposedException(nameof(RelayClient)));
         cts.Cancel();
         try { socket.Abort(); } catch { /* best-effort */ }

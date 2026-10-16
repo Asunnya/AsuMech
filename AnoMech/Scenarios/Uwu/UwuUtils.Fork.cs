@@ -15,6 +15,8 @@ namespace AnoMech.Scenarios.Uwu;
 // casts through these; upstream moved its own UWU scenarios to EnemyActions.
 public partial class UwuUtils
 {
+    public const byte Level = 70;
+
     // Server-spawned floor EObj; the sky itself comes from the phase weather.
     public SimEventObject? SpawnArenaFloor() => world.SpawnEventObject(new EventObjectSpawnConfig
     {
@@ -329,7 +331,7 @@ public partial class UwuUtils
                 foreach (var character in snapshot)
                 {
                     // TODO: "30" and "50" are from Titan EX, but doubled. Need to find the proper UWU values.
-                    (character as ISimPartyMember)?.Knockback(getEnemy()!.Position, 30, 50);
+                    character.Knockback(getEnemy()!.Position, 30, 50);
                 }
             });
         }

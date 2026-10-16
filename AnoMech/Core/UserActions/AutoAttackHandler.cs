@@ -40,7 +40,7 @@ internal sealed unsafe class AutoAttackHandler : IUserActionHandler
         if (swingCooldown > 0f) return;
         if (!Natives.PlayerInput.IsAutoAttacking) return;
         // Stun and death only hold the swing; autos stay on.
-        if (Plugin.GameInstance is not { } game || game.Player is not { Dead: false, ActionsLocked: false }) return;
+        if (Plugin.Game is not { } game || game.Player is not { Dead: false, ActionsLocked: false }) return;
 
         var player = (BattleChara*)(Plugin.ObjectTable.LocalPlayer?.Address ?? 0);
         if (player == null || player->CastInfo.IsCasting) return;

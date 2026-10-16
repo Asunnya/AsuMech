@@ -23,7 +23,7 @@ public sealed class UmadP5FloodScenario : IMultiplayerReplayable
     public string Name => "Flood";
     public IPhase Phase => UmadZone.P5;
     // The real track starts 39.83s before the Flood cast.
-    public float BgmSecondsAtStart => 39.53f;
+    public float BgmSecondsAtStart => 38.83f;
     public bool SupportsSolo => true;
     public bool SupportsMultiplayer => true;
     public IReadOnlyList<IScenarioAi> AiStrats => [new UmadP5FloodAi()];
@@ -44,19 +44,18 @@ public sealed class UmadP5FloodScenario : IMultiplayerReplayable
     // Indexed per tick: every telegraph lands before any resolve, so a shared buffer clobbered
     // all but the last tick's pair.
     private readonly SimEnemy?[]?[] tickHelpers = new SimEnemy?[]?[TickCount];
-    // Each tick's lane anchors and rotation, for PlaceWaveCarriers.
+    // Each tick's lane anchors and rotation, for ResolveWaves.
     private readonly (Vector3 A, Vector3 B, float Rotation)[] tickLanes = new (Vector3, Vector3, float)[TickCount];
 
-    // Relative to the FloodCast cast start.
-    private const float FloodCastStart = 0.3f;
+    // Kefka and the carriers spawn at t=0; anything they do in their first 0.5s is dropped.
+    private const float FloodCastStart = 1.0f;
     // internal: UmadP5FloodAi schedules against these, and hand-copied duplicates rotted once.
-    internal const float FirstTelegraphAt = 0.4f;      // relative to scenario start
+    internal const float FirstTelegraphAt = 1.1f;
     internal const float TelegraphStagger = 1.02f;
     // Waves land 6.05s after the pair's telegraph cast start; the tick's Chaotic Flood 0.12s
-    // before the waves, and the carriers are teleported to the lane midpoints 0.13s before.
+    // before the waves.
     internal const float ResolveDelayAfterTelegraph = 6.05f;
     private const float StackLeadBeforeWaves = 0.12f;
-    private const float CarrierTeleportLeadBeforeWaves = 0.13f;
     internal const int TickCount = 4;
     // Helpers live until DespawnAll (a wave VFX dies with its actor, and the real helpers
     // persist); this is the last wave's travel-and-fade window, sized generously.
@@ -70,11 +69,12 @@ public sealed class UmadP5FloodScenario : IMultiplayerReplayable
 
     // Each diagonal has a fixed +-45 deg rotation, and its 4 anchors sit at along=-20 (the wall),
     // offset +-5 or +-15 from the centreline, so the near and far rect on one side tile edge to
-    // edge. The 40 x 10 rect (anchor at the back edge) runs straight through the arena. The near
+    // edge. The 40 x 10 rect (anchor at the back edge) runs straight through the arena. Its carrier
+    // stands at the lane's midpoint and casts onto the anchor: the wave VFX plays on the carrier,
+    // and played from the wall half its 40y sweep would fall outside the arena. The near
     // point on one side always resolves with the far point on the other, then the remaining
     // pair; NW-SE mirrors NE-SW in X. Both hit VFX (z5r2_b2_g02/g04_c0v) are action vfx the
-    // native ActionEffectHandler renders on its own once the caster has a real DrawObject; never
-    // AddVfx them manually (a second, mis-bound copy).
+    // native ActionEffectHandler renders on its own once the caster has a real DrawObject.
 
     private const float Along = 20f;
     private const float NearOffset = 5f;
@@ -86,6 +86,9 @@ public sealed class UmadP5FloodScenario : IMultiplayerReplayable
     // Inverse of along=(x+z)*InvSqrt2, perp=(x-z)*InvSqrt2; NW-SE negates X.
     private static Vector3 NeSwPoint(float perp) => new((-Along + perp) * InvSqrt2, 0f, (-Along - perp) * InvSqrt2);
     private static Vector3 NwSePoint(float perp) => new(-(-Along + perp) * InvSqrt2, 0f, (-Along - perp) * InvSqrt2);
+
+    private static Vector3 LaneMiddle(Vector3 anchor, float rotation)
+        => anchor + new Vector3(MathF.Sin(rotation), 0f, MathF.Cos(rotation)) * Along;
 
     // [A, C, B, D] so MarchPairs' Forward (0&2, 1&3) gives the real cross-pairing (A,B) then
     // (C,D); Reversed swaps which goes first. [Near, Far, -Near, -Far] pairs the two near points
@@ -115,6 +118,7 @@ public sealed class UmadP5FloodScenario : IMultiplayerReplayable
         LastState = state;
         chaoticFloodCaster = null;
         for (var i = 0; i < TickCount; i++) tickHelpers[i] = null;
+        var solo = !selectedAi.HasValue;
 
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<UmadP5FloodState>)AiStrats[idx]).Run(state, world);
@@ -136,14 +140,11 @@ public sealed class UmadP5FloodScenario : IMultiplayerReplayable
             (second.pair2.Item1, second.pair2.Item2, secondRot),
         ];
 
-        // Created ~0.4s ahead of the first telegraph: the engine only creates a packet-spawned
-        // carrier a few frames after the spawn call, and spawning on the cast's own frame lost
-        // every cast.
         for (var tick = 0; tick < TickCount; tick++)
         {
             var (a, b, rotation) = ticks[tick];
             tickLanes[tick] = (a, b, rotation);
-            tickHelpers[tick] = [SpawnHelper(a, rotation), SpawnHelper(b, rotation)];
+            tickHelpers[tick] = [SpawnHelper(LaneMiddle(a, rotation), rotation), SpawnHelper(LaneMiddle(b, rotation), rotation)];
         }
 
         for (var tick = 0; tick < TickCount; tick++)
@@ -153,8 +154,7 @@ public sealed class UmadP5FloodScenario : IMultiplayerReplayable
             var (a, b, rotation) = ticks[tick];
             var tickIndex = tick; // for loop's own `tick` is one shared variable -- copy per iteration
             world.Events.Add(tTelegraph, () => TelegraphTick(tickIndex, a, b, rotation));
-            world.Events.Add(tResolve - CarrierTeleportLeadBeforeWaves, () => PlaceWaveCarriers(tickIndex));
-            world.Events.Add(tResolve - StackLeadBeforeWaves, ResolveChaoticFlood);
+            if (!solo) world.Events.Add(tResolve - StackLeadBeforeWaves, ResolveChaoticFlood);
             world.Events.Add(tResolve, () => ResolveWaves(tickIndex));
         }
 
@@ -199,7 +199,8 @@ public sealed class UmadP5FloodScenario : IMultiplayerReplayable
             Targetable: true,
             EnemyList: EnemyListMode.Always,
             Visibility: SpawnVisibility.Visible,
-            Placement: new Placement(Vector3.Zero, MathF.PI)));
+            Placement: new Placement(Vector3.Zero, MathF.PI),
+            LayoutId: BNpcLayoutId.KefkaP5));
 
         // ~6s before its first cast, so its DrawObject is live by then.
         chaoticFloodCaster = SpawnHelper(Vector3.Zero, MathF.PI);
@@ -208,27 +209,14 @@ public sealed class UmadP5FloodScenario : IMultiplayerReplayable
     private void TelegraphTick(int tick, Vector3 a, Vector3 b, float rotation)
     {
         var helpers = tickHelpers[tick] ??= [null, null];
-        EnsureCarrier(ref helpers[0], a, rotation);
-        EnsureCarrier(ref helpers[1], b, rotation);
-        helpers[0]?.Cast(ActionId.FloodTelegraph, animationLock: HelperAnimationLock);
-        helpers[1]?.Cast(ActionId.FloodTelegraph, animationLock: HelperAnimationLock);
+        EnsureCarrier(ref helpers[0], LaneMiddle(a, rotation), rotation);
+        EnsureCarrier(ref helpers[1], LaneMiddle(b, rotation), rotation);
+        helpers[0]?.Cast(ActionId.FloodTelegraph, a, animationLock: HelperAnimationLock);
+        helpers[1]?.Cast(ActionId.FloodTelegraph, b, animationLock: HelperAnimationLock);
         // The cast alone draws the telegraph (the native ActorCastPacket path spawns the sheet
         // omen); an explicit SpawnOmen on top drew a second one.
     }
 
-    // The real casters are teleported from the wall anchor to the lane midpoint right before each
-    // wave; a wave played from the wall put half its 40y sweep outside the arena.
-    private void PlaceWaveCarriers(int tick)
-    {
-        if (tickHelpers[tick] is not { } helpers) return;
-        var (a, b, rotation) = tickLanes[tick];
-        var forward = new Vector3(MathF.Sin(rotation), 0f, MathF.Cos(rotation)) * Along;
-        helpers[0]?.SetPosition(new Placement(a + forward, rotation));
-        helpers[1]?.SetPosition(new Placement(b + forward, rotation));
-    }
-
-    // Cast onto the wall anchor, where the telegraph was: the carrier now stands mid-lane, and the
-    // 40y rect from there would spare the lane's wall half. The wave VFX still plays on the carrier.
     // No per-helper despawn: the wave VFX lives on the caster and outlasts any short grace window,
     // and the real helpers persist through the whole mechanic.
     private void ResolveWaves(int tick)
@@ -256,10 +244,7 @@ public sealed class UmadP5FloodScenario : IMultiplayerReplayable
         chaoticFloodCaster?.Cast(UmadActions.ChaoticFlood, target);
     }
 
-    // Not BNpcBaseId.KefkaHelper on its own: it resolves to ModelChara 480 (Type=0, Model=0), which
-    // loads no model, so an actor-attached VFX has nothing to anchor to while its sound still
-    // plays. The engine builds the real helper from its captured spawn packet instead; the Chaos
-    // carrier stands in if the handler declines.
+    // The Chaos carrier stands in if the handler declines.
     private SimEnemy? SpawnHelper(Vector3 position, float rotation)
     {
         var real = world.SpawnEnemy(new EnemySpawnConfig(
@@ -269,9 +254,7 @@ public sealed class UmadP5FloodScenario : IMultiplayerReplayable
             Targetable: false,
             EnemyList: EnemyListMode.Never,
             Visibility: SpawnVisibility.InvisibleHelper,
-            Placement: new Placement(position, rotation),
-            NpcSpawnTemplate: UmadRealPackets.HelperNpcSpawn,
-            PacketSpawnEnableDraw: true));
+            Placement: new Placement(position, rotation)));
         if (real != null) return real;   // pending until the engine fills the slot (SimEnemy.PacketSpawnPending)
         DiagnosticLog.Warn($"[UmadP5Flood] real-packet helper spawn at {position} was refused -- falling back to the Chaos carrier.");
         return SpawnChaosCarrier(position, rotation);

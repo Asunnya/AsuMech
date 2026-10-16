@@ -10,8 +10,8 @@ namespace AnoMech.Core.Game;
 //
 // The origin is read live on every call (not snapshotted at construction) so a
 // character that outlives a single scenario run — SimPlayer is a permanent
-// fixture on SimWorld, and ScenarioOrigin is reset to default on teardown —
-// always converts against whatever origin the current scenario set.
+// fixture on SimWorld, and ScenarioOrigin is reset to default on leaving the zone —
+// always converts against whatever origin the current zone set.
 public sealed class Coordinates
 {
     private readonly Func<Vector3> origin;

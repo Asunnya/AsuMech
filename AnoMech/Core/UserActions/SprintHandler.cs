@@ -7,7 +7,7 @@ namespace AnoMech.Core.UserActions;
 internal sealed class SprintHandler : IUserActionHandler
 {
     private const uint SprintActionId = 3;
-    private const ushort SprintStatusId = 50;
+    public const ushort SprintStatusId = 50;
     private const float SprintDuration = 10f;
     private const ushort SprintStatusParam = 30; // speed magnitude, carried in Status.Param
 
@@ -17,9 +17,12 @@ internal sealed class SprintHandler : IUserActionHandler
     {
         // Effect lands on the scenario's SimPlayer (null off-scenario, so this no-ops).
         if (actionType == ActionType.Action && actionId == SprintActionId)
-            if (Plugin.GameInstance?.Player is { } player) Apply(player, SprintDuration);
+            if (Plugin.Game?.Player is { } player) Apply(player, SprintDuration);
     }
 
     public static void Apply(SimCharacter character, float duration)
-        => character.AddStatus(SprintStatusId, duration, SprintStatusParam);
+    {
+        character.AddStatus(SprintStatusId, duration, SprintStatusParam);
+        if (character is ISimPartyMember member) HostReport.RoleStatus([member.Role], SprintStatusId, duration, SprintStatusParam);
+    }
 }

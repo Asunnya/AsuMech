@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Numerics;
 using AnoMech.Core.Game;
+using AnoMech.Core.Game.Geometry;
+using AnoMech.Core.Game.Motion;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.Native.Interfaces;
 using AnoMech.Core.UserActions;
@@ -15,7 +16,9 @@ public sealed class SimPartyNpc : SimNpc, ISimPartyMember
     public byte ClassJob { get; }
     public string DisplayName { get; }
 
-    internal SimPartyNpc(IBattleCharaProxy proxy, Coordinates coordinates, PartyRole role, byte classJob, string name) : base(proxy, coordinates, pendingDraw: false)
+    internal SimPartyNpc(IBattleCharaProxy proxy, Coordinates coordinates, PartyRole role, byte classJob, string name, ObstacleField obstacles)
+        : base(proxy, coordinates,
+            self => new SimulatedMotion(() => self.Proxy, coordinates, self.ActorControl, obstacles, turnSpeed: null, npc: false))
     {
         Role = role;
         ClassJob = classJob;
@@ -47,12 +50,6 @@ public sealed class SimPartyNpc : SimNpc, ISimPartyMember
     {
         if (!ActionsLocked) SprintHandler.Apply(this, duration);
     }
-
-    public void Knockback(Vector3 source, float distance, float speed) => Movement.Knockback(source, distance, speed);
-
-    public void PushInDirection(float heading, float distance, float speed) => Movement.PushInDirection(heading, distance, speed);
-
-    public void PushInDirectionEased(float heading, float distance, float durationSeconds) => Movement.PushInDirectionEased(heading, distance, durationSeconds);
 
     public override void Despawn()
     {

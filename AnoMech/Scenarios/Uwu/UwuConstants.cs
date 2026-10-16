@@ -9,9 +9,6 @@ namespace AnoMech.Scenarios.Uwu;
 
 public class UwuConstants
 {
-    public const byte Level = 70;
-    public const ushort ItemLevel = 375;
-
     public static IReadOnlyList<Waymark> NaurWaymarks =>
     [
         new(WaymarkSlot.A, new Vector3(0, 0, -6.7f)),
@@ -52,6 +49,20 @@ public class UwuConstants
         public const uint Aetheroplasm = 8735;
         public const uint Ultimaplasm = 8736;
         public const uint Dummy = 9020;
+    }
+
+    public class BNpcLayoutId
+    {
+        public const uint Garuda = 0x701FBF;
+        public const uint Suparna = 0x70205B;
+        public const uint Chirada = 0x70205C;
+        public const uint RazorPlume = 0x701FC2;
+        public const uint Ifrit = 0x701FC8;
+        public const uint Titan = 0x701FCE;
+        public const uint BombBoulder = 0x701FD1;
+        public const uint GraniteGaol = 0x701FD3;
+        public const uint UltimaWeapon = 0x701FD7;
+        public const uint Dummy = 0x704D3F;
     }
 
     public class BNpcNameId
@@ -213,19 +224,23 @@ public class UwuConstants
         public const ushort FlamingCrush = 117;
     }
 
+    public class KnockbackId
+    {
+        public const uint SuperCyclone = 123;
+    }
+
     public class Duration
     {
-        public const float RazorPlumeRotation = 17.95f;
-        public const float RazorPlumeBack = 1f;
+        public const float RazorPlumeCircling = 16.5f;
     }
 
     public class Geometry
     {
         public const float ArenaRadius = 19.4f;
+        public const float NpcKnockbackStopRadius = 20f;
         public const float WickedTornadoOuterRadius = 20; // 20 is the EffectRange in the Action sheet
 
         public static readonly float RazorPlumeRotation = float.DegreesToRadians(-450);
-        public static readonly float RazorPlumeBackDistance = 3.6f;
         public static readonly FrozenDictionary<DirectionEnum, float> LookAtCenterRotation;
         public static readonly FrozenDictionary<DirectionEnum, Placement> UltimaPlacements;
         public static readonly FrozenDictionary<DirectionEnum, Placement> GarudaPlacements;

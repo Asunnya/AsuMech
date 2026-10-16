@@ -20,12 +20,8 @@ namespace AnoMech.Core.Native.Implementations;
 //
 // Signatures and detour shapes lifted from FFXIV-RaidsRewritten's PlayerMovementOverride.cs /
 // ActionManagerEx.cs (which credit awgil's vnavmesh + bossmod).
-public sealed unsafe class LocalPlayerInputHooks : ILocalPlayerInput, IDisposable
+public sealed unsafe class LocalPlayerInputHooks : ILocalPlayerInput
 {
-    // Raised after the local player successfully executes a real action (the
-    // auto-attack-cancel general action is filtered out). The UserActions module
-    // subscribes to resolve effects the sim firewall blocks; nothing here depends
-    // on a subscriber.
     public event Action<ActionType, uint, ulong>? ActionExecuted;
 
     // --- Player activity signals (read by SimPlayer to drive Party.Player.IsMoving/IsActing) ---
@@ -56,7 +52,7 @@ public sealed unsafe class LocalPlayerInputHooks : ILocalPlayerInput, IDisposabl
     {
         // GeneralAction 1 is the auto-attack engage/re-engage action -- fires constantly, pure noise here.
         if (type == ActionType.GeneralAction && actionId == 1) return;
-        ZoneSession.NoteActionPressed(type, actionId);
+        ZoneControl.NoteActionPressed(type, actionId);
         recentActions.Enqueue((actionId, type));
         while (recentActions.Count > RecentActionsCapacity) recentActions.Dequeue();
         var jobId = Plugin.ObjectTable.LocalPlayer?.ClassJob.RowId;
@@ -154,7 +150,6 @@ public sealed unsafe class LocalPlayerInputHooks : ILocalPlayerInput, IDisposabl
 
     public void Steer(Vector2? direction, float speed)
         => steerDirection = direction is { } d && d.LengthSquared() > 0f ? Vector2.Normalize(d) : null;
-
     private void RMIWalkDetour(void* self, float* sumLeft, float* sumForward, float* sumTurnLeft, byte* haveBackwardOrStrafe, byte* a6, byte bAdditiveUnk)
     {
         rmiWalkHook.Original(self, sumLeft, sumForward, sumTurnLeft, haveBackwardOrStrafe, a6, bAdditiveUnk);

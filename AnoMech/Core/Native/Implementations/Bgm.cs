@@ -16,7 +16,7 @@ namespace AnoMech.Core.Native.Implementations;
 // BGMSystem can't start a track mid-way. Tried and inert: the scene's "disable restart" resume
 // entry (a timer, not a position) and ISoundData.SetSpeed on the music sound (reads back, still
 // plays at 1x). A track that must start mid-way plays on our own output instead.
-internal sealed unsafe class Bgm : IBgm, IDisposable
+internal sealed unsafe class Bgm : IBgm
 {
     private const uint ContentSceneId = 3;
     private const ushort SilentBgmId = 1;

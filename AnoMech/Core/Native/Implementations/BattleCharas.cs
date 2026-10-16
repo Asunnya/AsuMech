@@ -32,8 +32,8 @@ internal sealed unsafe class BattleCharas : IBattleCharas
 
     public IBattleCharaProxy LocalPlayer => BattleCharaProxy.LocalPlayer;
 
-    // Without a template the packet is built from the config. Only per-instance fields are
-    // patched: slot, position/rotation, the English name, and a dangling owner reference.
+    // Only per-instance fields are patched into the built packet: slot, position/rotation, the
+    // English name, and a dangling owner reference.
     public IBattleCharaProxy? SpawnBattleNpcFromPacket(EnemySpawnConfig config, Placement placement, out uint entityId)
     {
         entityId = 0;
@@ -94,7 +94,9 @@ internal sealed unsafe class BattleCharas : IBattleCharas
     private const byte SpawnCharacterDataFlagsHelper = 0x1;
     private const byte SpawnLinkRange = 0x14;
     private const ushort SpawnResourcePoints = 10000;
-    private const byte SpawnBattalion = 4;
+    // Retail sends the BNpcBase row's own Battalion: 4 for every enemy, 0 for allies.
+    private const byte HostileBattalion = 4;
+    private const byte FriendlyBattalion = 0;
 
     private static SpawnNpcPacket? BuildSpawnPacket(EnemySpawnConfig config)
     {
@@ -116,16 +118,19 @@ internal sealed unsafe class BattleCharas : IBattleCharas
         common.TetherTargetId = 0xE0000000;
         common.BaseId = config.BNpcBaseId;
         common.NameId = config.NameId;
+        common.LayoutId = config.LayoutId;
+        // Retail binds every duty BNpc to the duty's director.
+        common.EventId = InstanceContentDirectorHelper.DirectorEventId();
         common.MaxHealthPoints = EnemyMaxHealth;
         common.HealthPoints = EnemyMaxHealth;
-        common.DisplayFlags = (uint)config.Visibility;
+        common.DisplayFlags = config.DisplayFlags ?? (uint)config.Visibility;
         common.MaxResourcePoints = helper ? (ushort)0 : SpawnResourcePoints;
         common.ResourcePoints = common.MaxResourcePoints;
         common.ModelChara = (ushort)modelCharaId;
         common.CharacterMode = CharacterModes.Normal;
         common.ObjectKind = ObjectKind.BattleNpc;
         common.SubKind = (byte)BattleNpcSubKind.Combatant;
-        common.Battalion = SpawnBattalion;
+        common.Battalion = config.IsHostile ? HostileBattalion : FriendlyBattalion;
         common.Level = config.Level;
         common.ModelAttributeFlags = config.InitialModeAttributeFlags ?? 0;
         return packet;
@@ -135,7 +140,7 @@ internal sealed unsafe class BattleCharas : IBattleCharas
     private const uint SpawnPlayerDisplayFlags = 0x40020;
     private const byte SpawnPlayerSubKind = 4;
 
-    public IBattleCharaProxy? SpawnDoppel(PartyMemberPreset preset, Placement placement, out uint entityId)
+    public IBattleCharaProxy? SpawnDoppel(PartyMemberPreset preset, byte level, Placement placement, out uint entityId)
     {
         entityId = 0;
         if (CharacterManager.Instance() == null) return null;
@@ -166,7 +171,7 @@ internal sealed unsafe class BattleCharas : IBattleCharas
         common.CharacterMode = CharacterModes.Normal;
         common.ObjectKind = ObjectKind.Pc;
         common.SubKind = SpawnPlayerSubKind;
-        common.Level = preset.Level;
+        common.Level = level;
         common.ClassJobId = preset.ClassJob;
         common.Position = placement.Position;
         common.Rotation = MathUtil.QuantizeRotation(MathUtil.NormalizeRotation(placement.Rotation));
@@ -176,7 +181,7 @@ internal sealed unsafe class BattleCharas : IBattleCharas
         GameObjectHelper.WriteName((byte*)&packet + 0x20 + 0x232, 32, preset.Name);
 
         var id = DoppelEntityIdBase + (uint)idx;
-        DiagnosticLog.Info($"[BattleCharas.SpawnDoppel] job {preset.ClassJob} level {preset.Level} -> index {idx}, entity 0x{id:X}, pos {placement.Position}, rot {placement.Rotation:F3}.");
+        DiagnosticLog.Info($"[BattleCharas.SpawnDoppel] job {preset.ClassJob} level {level} -> index {idx}, entity 0x{id:X}, pos {placement.Position}, rot {placement.Rotation:F3}.");
         try
         {
             PacketDispatcher.HandleSpawnPlayerPacket(id, &packet);

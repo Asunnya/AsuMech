@@ -22,13 +22,15 @@ public sealed class UwuZone : IZone
     public string Name => "The Weapon's Refrain";
     public uint TerritoryId => 777;
     public Vector3 Origin => new(100f, 0f, 100f);
-    public byte Level => UwuConstants.Level;
-    public ushort ItemLevel => UwuConstants.ItemLevel;
 
     public IReadOnlyList<WaymarkLayout> WaymarkPresets { get; } =
         [new WaymarkLayout("Standard", UwuConstants.StandardWaymarks), new WaymarkLayout("Naur", UwuConstants.NaurWaymarks)];
 
-    public EntranceBarrier? EntranceBarrier => new(2007457, 0x700D77, 0x700D76, new Vector3(0f, 0f, 16f));
+    public EntranceBarrier EntranceBarrier => new(2007457, 0x700D77, 0x700D76, new Vector3(0f, 0f, 16f));
 
-    public void Run(SimWorld world) => world.EnforceArenaBoundary(UwuConstants.Geometry.ArenaRadius);
+    public void Run(SimWorld world)
+    {
+        world.EnforceArenaBoundary(UwuConstants.Geometry.ArenaRadius);
+        world.StopNpcKnockbacksAt(UwuConstants.Geometry.NpcKnockbackStopRadius);
+    }
 }

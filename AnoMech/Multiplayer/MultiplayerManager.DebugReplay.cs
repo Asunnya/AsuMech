@@ -21,17 +21,17 @@ public sealed partial class MultiplayerManager
     private bool IsValidAiIndex(IScenario scenario) =>
         Session.SelectedAi >= 0 && Session.SelectedAi < scenario.AiStrats.Count;
 
-    // Needs both the host's replay message and our own zone entry, which arrive in either
-    // order, so Dispatch and OnPeerStartResolved both call it.
+    // Needs both the host's replay message and our own run, which arrive in either order, so
+    // Dispatch and OnPeerStartResolved both call it.
     private void TryStartDebugBotReplay()
     {
         if (!debugBotControlled || debugBotReplayStarted) return;
         // peerEnteredInstance outlives the run; the AI drives the real character.
-        if (!PeerInRun) return;
+        if (!PeerInRun || !peerRunStarted || Plugin.Game.ActiveScenario is null) return;
         if (MyClaimedRole is not { } myRole) return;
         if (pendingGenericReplayState is not { } msg) return;
         if (TryResolveScenario() is not IMultiplayerReplayable replayable) return;
-        var world = Plugin.GameInstance.World;
+        var world = Plugin.Game.World;
 
         debugBotReplayStarted = true;
         if (!IsValidAiIndex(replayable))
@@ -45,16 +45,20 @@ public sealed partial class MultiplayerManager
         {
             debugShadowStateGeneric = shadowState;
             DebugBotControl.Enabled = true;
-            GiveLocalPlayerObstacles();
         }
     }
 
-    // PartyCreator wires the obstacle field to bot doppels only; a bot-driven real character
-    // steers like one (see IMultiplayerReplayable.RebuildPeerObstacles).
-    private static void GiveLocalPlayerObstacles()
+    // Every frame: the bot reads this client's world, so the handles and the obstacles it steers
+    // around follow the host's actors as they reach this client.
+    private void TickDebugBotReplay(float deltaSeconds)
     {
-        var world = Plugin.GameInstance.World;
-        if (world.Party.Player is { } player) player.Obstacles = world.Obstacles;
+        if (debugShadowStateGeneric is not { } shadow || replay is null || TryResolveScenario() is not IMultiplayerReplayable replayable) return;
+        var world = Plugin.Game.World;
+        var enemies = replay.Enemies;
+        replayable.RefreshLiveHandles(shadow, enemies);
+        world.Obstacles.Clear();
+        replayable.RebuildPeerObstacles(world.Obstacles, enemies, replay.Props, world.Party.Player);
+        if (deltaSeconds > 0f) replayable.TickReplay(shadow, deltaSeconds);
     }
 
     // Clears the run's replay state, not the sticky debugBotControlled toggle.

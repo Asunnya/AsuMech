@@ -24,7 +24,7 @@ public partial class UwuUtils(SimWorld world)
     public void UpdateArena(byte value)
     {
         byte[] unionData = [value];
-        Natives.Director.SetDirectorData(1, 0, unionData, true);
+        Natives.Director.SetDirectorData(1, 0, unionData);
     }
 
     public void Awaken(SimEnemy? enemy, bool isUltima)
@@ -35,13 +35,17 @@ public partial class UwuUtils(SimWorld world)
 
     // Each dummy drops its rain where its target stood at `targetOffset`.
     public void FeatherRain(Func<SimEnemy?>[] getDummies, float targetOffset, float castOffset,
-        IReadOnlyList<PartyRole>? targets = null)
+        IReadOnlyList<PartyRole>? targets = null, Func<SimCharacter?>? getExcluded = null)
     {
         var positions = new List<Vector3>();
 
-        world.Events.Add(targetOffset, () => positions.AddRange(
-            (targets ?? RoleList.Random(world.Rng, world.Party, getDummies.Length).List)
-            .Select(x => world.Party.Get(x)!.Position)));
+        world.Events.Add(targetOffset, () =>
+        {
+            PartyRole[] excluded = getExcluded?.Invoke() is ISimPartyMember { Role: var role } ? [role] : [];
+            positions.AddRange(
+                (targets ?? RoleList.AllExcept(world.Rng, world.Party, excluded).List.Take(getDummies.Length))
+                .Select(x => world.Party.Get(x)!.Position));
+        });
 
         world.Events.Add(castOffset, () =>
         {

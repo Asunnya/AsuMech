@@ -37,16 +37,15 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
     private SimParty party = null!;
     private UmadP1TeleTrouncingState state = null!;
     private SimEnemy? kefka;
-    private SimEnemy? confusedStatue;
-    private SimEnemy? sleepStatue;
-    // The gazes are cast from the statues' eye points, not the tether sources 14.5y / 9y away.
-    private SimEnemy? gazeCasterInverted;
-    private SimEnemy? gazeCasterNormal;
+    // One invisible Graven Image per player, at the statue that tethers them: it holds the tether,
+    // casts that player's Will, and one on the gazing side is moved to the eye point for the gaze.
+    private readonly Dictionary<PartyRole, SimEnemy> tetherStatues = [];
+    private readonly List<SimEventObject> earlierStatues = [];
     // The real gaze-animation props, spawned as real EObjs so the client plays the statue
     // SharedGroup timelines. Two instances of each, as in the real fight: appear and tether-fire
     // play on one pair, the gaze wind-up and resolve on the other instance of the gazing type.
-    // The BNpc doppels still do the mechanical work and the marker "?" stand-in, so a full EObj
-    // pool costs only the model.
+    // The Graven Image helpers still do the mechanical work, so a full EObj pool costs only the
+    // look.
     private SimEventObject? gazeStatueNormal;       // tether pair: appear + tether-fire
     private SimEventObject? gazeStatueInverted;
     private SimEventObject? gazeAnimStatueNormal;   // second instances: wind-up + resolve
@@ -102,21 +101,21 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
     private static readonly (uint State, uint Bitmask) EObjAnimGazeWindUp = (0x0040, 0x0080);
     private static readonly (uint State, uint Bitmask) EObjAnimGazeResolve = (0x0100, 0x0200);
     private static readonly (uint State, uint Bitmask) EObjAnimDespawn = (0x0004, 0x0008);
-    // The colossus's own beats: the two mid-phase stages before Tele-trouncing, and the
-    // collapse/final pair at the P1 end.
-    private static readonly (uint State, uint Bitmask) EObjAnimStatueStage2 = (0x0010, 0x0020);
-    private static readonly (uint State, uint Bitmask) EObjAnimStatueStage3 = (0x0040, 0x0080);
+    // The colossus's own beats: the last stage it reaches before Tele-trouncing (it spawns in
+    // that state), and the collapse at the P1 end.
+    private const ushort StatueStage3State = 0x0040;
     private static readonly (uint State, uint Bitmask) EObjAnimStatueCollapse = (0x0004, 0x0200);
-    // Real offset of the collapse from the Tele-trouncing cast start.
-    private const float StatueCollapseAt = 1.59f + 54.60f;
-    // The colossus's pre-Tele-trouncing beats. Fired at t=0.2/0.4/0.6 they wrote only the static
-    // state: the SharedGroup attaches ~1s after the spawn. TickStatueCatchUp waits for it, fires
-    // them one timeline at a time, then unmutes the prop for its real collapse sounds.
-    private static readonly (uint State, uint Bitmask)[] StatueCatchUpBeats =
-        [EObjAnimAppear, EObjAnimStatueStage2, EObjAnimStatueStage3];
-    private const float StatueCatchUpMaxWait = 8f;
-    private int statueCatchUpStage;
-    private float statueCatchUpReadyAt;
+    // The earlier P1 statues: where they stand and the beat they last played before Tele-trouncing.
+    private static readonly (uint EObjId, uint LayoutId, Vector3 Position, ushort State, uint Arg2)[] EarlierStatues =
+    [
+        (Constants.EObjId.EarlierStatueA, Constants.EObjId.EarlierStatueA1LayoutId, new(0f, 18.5f, -44f), 0x0010, 0x00420003U),
+        (Constants.EObjId.EarlierStatueA, Constants.EObjId.EarlierStatueA2LayoutId, new(0f, 0f, -35f), 0x0100, 0x00410003U),
+        (Constants.EObjId.EarlierStatueB, Constants.EObjId.EarlierStatueB1LayoutId, new(2.5f, 22.5f, -73f), 0x0010, 0x00450003U),
+        (Constants.EObjId.EarlierStatueC, Constants.EObjId.EarlierStatueC1LayoutId, new(26f, 7f, -58.5f), 0x0010, 0x00460003U),
+        (Constants.EObjId.EarlierStatueB, Constants.EObjId.EarlierStatueB2LayoutId, new(-8f, 15f, -73f), Constants.EObjId.GazeStatueSpawnState, 0x00430003U),
+        (Constants.EObjId.EarlierStatueC, Constants.EObjId.EarlierStatueC2LayoutId, new(16f, 6.5f, -57f), 0x0100, 0x00440003U),
+    ];
+    private const float StatueCollapseAt = 55.96f;
 
     public void DrawSettings() => settingsWindow.Draw(FireAppearNow, FireWindUpNow);
 
@@ -126,18 +125,13 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         party = world.Party;
         state = new UmadP1TeleTrouncingState(world.Rng, settingsWindow.Overrides);
         LastState = state;
-        hazeHoldApplied = true;   // what MapController.TryLoad just applied from the phase
 
-        // Game.Scenarios reuses one instance across runs; a stopped run's arrow wrappers still
+        // Game.Catalog reuses one instance across runs; a stopped run's arrow wrappers still
         // hold their frozen positions, and TickArrows would bind someone against them on the
         // first tick.
         foreach (var staleArrow in activeArrows.ToArray()) RemoveArrow(staleArrow);
         arrowPushLock.Clear();
         arrowDwell.Clear();
-        confusedWaitTimer.Clear();
-        meleeDwellTimer.Clear();
-        confusedChaseLastTarget.Clear();
-        confusedChaseLogTimer.Clear();
         pendingArrowPlacements.Clear();
         arrowsPlaced = 0;
         arrowsSoakedByConfused = 0;
@@ -150,13 +144,21 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         DespawnProp(ref gazeAnimStatueNormal);
         DespawnProp(ref gazeAnimStatueInverted);
         DespawnProp(ref gravenStatue);
+        for (var i = 0; i < earlierStatues.Count; i++)
+        {
+            var prop = earlierStatues[i];
+            DespawnProp(ref prop);
+        }
+        earlierStatues.Clear();
+        tetherStatues.Clear();
 
         world.Events.Add(0f, () =>
         {
             kefka = world.SpawnEnemy(new EnemySpawnConfig(
                 BNpcBaseId: Constants.BNpcBaseId.KefkaP3, NameId: Constants.BNpcNameId.Kefka, Level: 100,
                 Targetable: true, EnemyList: EnemyListMode.Always, Visibility: SpawnVisibility.Visible,
-                Placement: new Placement(Vector3.Zero, -float.Pi)));
+                Placement: new Placement(Vector3.Zero, -float.Pi), LayoutId: Constants.BNpcLayoutId.KefkaP3));
+            kefka?.KeepFacing(party.Get(PartyRole.MainTank));
             for (var i = 0; i < helpers.Length; i++) helpers[i] = SpawnHelper();
             // Applied here rather than resolved from the earlier, unmodeled wave, so the
             // duration is what's left until the real expiry (0.09s before the stack lands).
@@ -165,19 +167,20 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
             var dps = party.Get(state.ConfettiStackDps);
             dps?.AddStatus(Constants.StatusId.DoubleTroubleTrap, 22.69f);
 
-            confusedStatue = SpawnGravenImage(ConfusedStatuePos);
-            sleepStatue = SpawnGravenImage(SleepStatuePos);
-            gazeCasterInverted = SpawnGravenImage(GazeStatueInvertedAnimPos);
-            gazeCasterNormal = SpawnGravenImage(GazeStatueNormalAnimPos);
+            foreach (var role in state.Debuffs.Keys)
+            {
+                var confused = UmadP1TeleTrouncingState.IsDps(role) == state.DpsGetsConfused;
+                if (SpawnGravenImage(confused ? ConfusedStatuePos : SleepStatuePos) is { } statue)
+                    tetherStatues[role] = statue;
+            }
 
             // The props, spawned as the real 0x00F5 packets spawn them: EObjId, LayoutId,
             // position, the hidden SharedTimelineState, plus the remaining packet bytes
             // (targetable byte, entity id, Arg2). The LayoutIds resolve to nothing on the client
             // (searched every LGB of this zone and Sigmascape's), so they are carried for
-            // fidelity; EventId is the director link, and the two knobs are the in-game A/B.
+            // fidelity; EventId is the director link, and its knob is the in-game A/B.
             var propEventId = settingsWindow.Overrides.PropsBindDirector ? Constants.EObjId.PropEventId : 0u;
-            var propForceActive = settingsWindow.Overrides.PropsForceActive;
-            DiagnosticLog.Info($"[UmadP1TeleTrouncing] Statue props: EventId=0x{propEventId:X} forceActive={propForceActive} staticVfxTest={settingsWindow.Overrides.PropsStaticVfxTest}.");
+            DiagnosticLog.Info($"[UmadP1TeleTrouncing] Statue props: EventId=0x{propEventId:X}.");
             gazeStatueNormal = world.SpawnEventObject(new EventObjectSpawnConfig
             {
                 EObjId = Constants.EObjId.GazeStatueNormal,
@@ -188,8 +191,6 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
                 Arg2 = 0x004A0003u,
                 Placement = new Placement(GazeStatueNormalPos, 0f),
                 TimelineState = Constants.EObjId.GazeStatueSpawnState,
-                MuteSound = true,
-                ForceSharedGroupActive = propForceActive,
             });
             gazeStatueInverted = world.SpawnEventObject(new EventObjectSpawnConfig
             {
@@ -201,8 +202,6 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
                 Arg2 = 0x00490003u,
                 Placement = new Placement(GazeStatueInvertedPos, 0f),
                 TimelineState = Constants.EObjId.GazeStatueSpawnState,
-                MuteSound = true,
-                ForceSharedGroupActive = propForceActive,
             });
             // The second instances: the real fight plays the gaze wind-up/resolve on these.
             gazeAnimStatueNormal = world.SpawnEventObject(new EventObjectSpawnConfig
@@ -215,8 +214,6 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
                 Arg2 = 0x00480003u,
                 Placement = new Placement(GazeStatueNormalAnimPos, 0f),
                 TimelineState = Constants.EObjId.GazeStatueSpawnState,
-                MuteSound = true,
-                ForceSharedGroupActive = propForceActive,
             });
             gazeAnimStatueInverted = world.SpawnEventObject(new EventObjectSpawnConfig
             {
@@ -228,10 +225,8 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
                 Arg2 = 0x00470003u,
                 Placement = new Placement(GazeStatueInvertedAnimPos, 0f),
                 TimelineState = Constants.EObjId.GazeStatueSpawnState,
-                MuteSound = true,
-                ForceSharedGroupActive = propForceActive,
             });
-            // The colossus, like its real pull-start spawn (state 4 = hidden).
+            // The colossus, already standing in the state its pre-Tele-trouncing beats leave it in.
             gravenStatue = world.SpawnEventObject(new EventObjectSpawnConfig
             {
                 EObjId = Constants.EObjId.GravenStatue,
@@ -241,29 +236,40 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
                 TargetableStatus = 5,
                 Arg2 = Constants.EObjId.GravenStatueArg2,
                 Placement = new Placement(Vector3.Zero, 0f),
-                TimelineState = Constants.EObjId.GazeStatueSpawnState,
-                MuteSound = true,
-                ForceSharedGroupActive = propForceActive,
+                TimelineState = StatueStage3State,
             });
             if (gravenStatue == null)
                 DiagnosticLog.Warn("[UmadP1TeleTrouncing] The colossus (0x1EBFB4) failed to spawn -- EObj pool full?");
-            statueCatchUpStage = 0;
-            statueCatchUpReadyAt = 0f;
+            for (var i = 0; i < EarlierStatues.Length; i++)
+            {
+                var (eobjId, layoutId, position, timelineState, arg2) = EarlierStatues[i];
+                var prop = world.SpawnEventObject(new EventObjectSpawnConfig
+                {
+                    EObjId = eobjId,
+                    LayoutId = layoutId,
+                    EventId = propEventId,
+                    EntityId = Constants.Spawn.EarlierStatueEntityIdBase + (uint)i,
+                    TargetableStatus = 5,
+                    Arg2 = arg2,
+                    Placement = new Placement(position, 0f),
+                    TimelineState = timelineState,
+                });
+                if (prop != null) earlierStatues.Add(prop);
+            }
 
             if (gazeStatueNormal == null || gazeStatueInverted == null
                 || gazeAnimStatueNormal == null || gazeAnimStatueInverted == null)
                 DiagnosticLog.Warn(
                     $"[UmadP1TeleTrouncing] Gaze prop(s) failed to spawn (tether NE={gazeStatueNormal != null}, NW={gazeStatueInverted != null}; "
                     + $"anim NE={gazeAnimStatueNormal != null}, NW={gazeAnimStatueInverted != null}) -- "
-                    + "falling back to the BNpc doppels + marker \"?\" for the gaze tell.");
+                    + "the gaze still resolves, with no statue animation for its tell.");
         });
 
         // [19.35s] Real statue "power up", 16.91s before Mystery Magic's cast start; tether pair
         // only, as in the real EObjAnimation stream.
         world.Events.Add(19.43f, PlayStatueAppear);
 
-        // The colossus's real collapse at the P1 end (its earlier beats are caught up by
-        // TickStatueCatchUp).
+        // The colossus's real collapse at the P1 end.
         world.Events.Add(StatueCollapseAt, () => Beat(gravenStatue, EObjAnimStatueCollapse));
 
         // [1.59s] Tele-trouncing cast start; resolves at 6.58s.
@@ -271,8 +277,8 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
 
         // Auto-attacks on the main tank at their real beats: none through the Confused window
         // and Mystery Magic.
-        foreach (var at in new[] { 0.83f, 8.90f, 11.93f, 19.01f, 44.48f, 48.62f, 51.65f })
-            world.Events.Add(at, () => kefka?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
+        foreach (var at in new[] { 8.90f, 11.93f, 19.01f, 44.48f, 48.62f, 51.65f })
+            world.Events.Add(at, () => kefka?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank), animationVariation: 1));
 
         // [7.34s] Every role gets its 2 debuffs (the EffectResult lands 0.76s after the resolve).
         world.Events.Add(7.34f, ApplyDebuffs);
@@ -285,21 +291,28 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         world.Events.Add(17.43f, () => SpawnArrowBursts(first: false));
         world.Events.Add(18.32f, SpawnArrowObjects);
 
+        world.Events.Add(15.58f, () => PlayKefkaLine(0x3U));
+
         // [15.67s] Graven Image (2.7s bar, resolves 18.66s); the tethers appear as it lands.
         world.Events.Add(15.67f, () => kefka?.Cast(Constants.ActionId.GravenImage, animationLock: 2.1f));
 
         // [19.41s] Tethers land, one role category to each statue.
         world.Events.Add(19.41f, TetherStatues);
 
-        // [20.80s] Unnamed 2.7s cast: its resolve sets Kefka's model state to 4 until Unk2BossP1
-        // resolves.
-        world.Events.Add(20.80f, () => kefka?.Cast(Constants.ActionId.KefkaRest, animationLock: 2.1f));
-        world.Events.Add(23.78f, () => kefka?.SetModelState(4));
+        // [20.80s] Unnamed 2.7s cast: 0.8s after it resolves, Kefka's model state goes to 4 until
+        // Unk2BossP1 resolves.
+        world.Events.Add(20.80f, () =>
+        {
+            kefka?.KeepFacing(null);
+            kefka?.Cast(Constants.ActionId.KefkaRest, animationLock: 2.1f);
+        });
 
         // [22.78s] Confetti-3's stack hit, the one beat that drifts pull to pull (timed off the
         // earlier Double-trouble Trap cast). Pushes the ~3 players within 6y of each holder 14y
         // at 20y/s; the Ai holds its next move until the slide ends.
         world.Events.Add(22.78f, ResolveConfettiKnockback);
+
+        world.Events.Add(24.56f, () => kefka?.SetModelState(4));
 
         // [28.40s] Tethers drop and the props play tether-fire; [28.46s] the Wills land;
         // [29.09s] the Confused/Sleep statuses (the EffectResult trails the hit by 0.63s), 6.00s
@@ -311,13 +324,10 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         // Release the forced chase when Confused's 6.00s runs out (see ReleaseConfusedControl).
         world.Events.Add(ConfusedChaseEnd, ReleaseConfusedControl);
 
-        // [32.78s] Unnamed instant: puts Kefka's model state back to 0. [34.87s] Kefka's
-        // teleport action; he stays at centre, only the animation plays.
-        world.Events.Add(32.78f, () =>
-        {
-            kefka?.Cast(Constants.ActionId.KefkaUnrest, animationLock: 2.1f);
-            kefka?.SetModelState(0);
-        });
+        // [32.78s] Unnamed instant; Kefka's model state goes back to 0 0.8s after it. [34.87s]
+        // Kefka's teleport action; he stays at centre, only the animation plays.
+        world.Events.Add(32.78f, () => kefka?.Cast(Constants.ActionId.KefkaUnrest, animationLock: 2.1f));
+        world.Events.Add(33.56f, () => kefka?.SetModelState(0));
         world.Events.Add(34.87f, () => kefka?.Cast(Constants.ActionId.KefkaPoof, animationLock: 1.1f));
 
         // Every arrow is a steer-around obstacle from its spawn (SpawnArrowObjects) so the Ai's
@@ -326,6 +336,9 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         world.Events.Add(ConfusedChaseStart, () => world.Obstacles.Clear());
 
         // [36.41s] Mystery Magic (4.7s bar), resolves 41.40s with the thunder lines.
+            
+            
+        world.Events.Add(36, () => kefka?.KeepFacing(party.Get(PartyRole.MainTank)));
         world.Events.Add(36.41f, () => kefka?.Cast(Constants.ActionId.MysteryMagic, animationLock: 3.1f));
 
         // Mystery Magic's three resolves land in a ~1s window (thunder 41.40s, gaze 41.49s, fire
@@ -366,22 +379,18 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
 
         // [52.68s] Boss goes untargetable; the P2 actors spawn 2.2s later in the real fight.
         world.Events.Add(52.68f, EndP1);
-        world.Events.Add(54.20f, DespawnGazeProps);
+        world.Events.Add(55.00f, DespawnGazeProps);
 
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<UmadP1TeleTrouncingState>)AiStrats[idx]).Run(state, world);
     }
 
-    // Host and peer alike (see IScenario.RunInstanceEvents), so broadcast: false.
     public void RunInstanceEvents(SimWorld instanceWorld)
     {
         Natives.TimelinePreload.Preload(ThunderFireTimelines, "UmadP1TeleTrouncing");
 
         instanceWorld.Events.Add(3f, () => instanceWorld.Map.LogArena("3s"));
         instanceWorld.Events.Add(10f, () => instanceWorld.Map.LogArena("10s"));
-
-        // Kefka's later lines depend on the arrow outcome, so the host schedules them in Run.
-        instanceWorld.Events.Add(15.58f, () => instanceWorld.Map.DirectorUpdate(0x80000027U, 0x3U, 0x2U, 0x1BDBU, 0x400250DCU, broadcast: false));
     }
 
     public MpMessage? BuildReplayStateMessage()
@@ -411,10 +420,11 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
     }
 
     // The arrows steer a bot's Confetti/Tether moves the same way SpawnArrowObjects does on the
-    // host, and stop doing so once Confused starts, when the chase has to walk into them.
+    // host, and stop doing so once Confused starts, when the chase has to walk into them: the
+    // client's control lock, which the host's Confused puts on it.
     public void RebuildPeerObstacles(ObstacleField obstacles, IReadOnlyDictionary<int, SimEnemy> peerEnemies, IReadOnlyDictionary<int, SimEventObject> peerEventObjects, SimCharacter? localPlayer)
     {
-        if (localPlayer == null || localPlayer.HasStatus(Constants.StatusId.Confused)) return;
+        if (localPlayer == null || Natives.PlayerConditions.ControlAffliction) return;
         foreach (var eo in peerEventObjects.Values)
             if (eo.EObjRowId == Constants.EObjId.TelePortent)
                 obstacles.Add(new CircleObstacle(new Vector2(eo.Position.X, eo.Position.Z), ArrowTriggerRadius));
@@ -439,60 +449,27 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
     private const float ArrowLifespanAfterSpawn = 18.687f;
     private readonly Dictionary<SimEventObject, float> arrowLifespan = [];
 
-    // Confused roles walk toward whoever is closest; the arrows are meant to keep carrying them
-    // away, but that is an outcome the player has to earn, so an unintercepted role reaches and
-    // hits someone (TickConfusedChase). Sleep can't move at all. The window is Confused's own
-    // apply-to-expiry span.
+    // Confused roles walk toward whoever is closest and swing at whoever they reach (SimParty);
+    // the arrows are meant to keep carrying them away, but that is an outcome the player has to
+    // earn. Sleep can't move at all. The window is Confused's own apply-to-expiry span.
     private const float ConfusedChaseStart = 29.09f;
     private const float ConfusedChaseEnd = 29.09f + 6.000f;
-    private const float ConfusedChaseSpeed = 6f;
     private readonly Dictionary<PartyRole, float> arrowPushLock = [];
-
-    // FFXIV's standard melee engagement range; ActionTimeline row 112 is "battle/auto_attack1",
-    // universal like the KO/revive rows Die() plays. public, like every id a peer replays: the
-    // allowlist harvests declared constants (see SimAssets).
-    private const float AutoAttackRange = 2.0f;
-    public const ushort AutoAttackTimelineId = 112;
 
     // UNVERIFIED, from the user's description rather than a capture. The post-carry wait is what
     // keeps a completed chain harmless: its last carry lands with ~1.5s of Confused left.
-    private const float ConfusedWaitDuration = 1.000f;
     private const float PostCarryWaitDuration = 2.000f;
-    private readonly Dictionary<PartyRole, float> confusedWaitTimer = [];
-    private const float MeleeDwellDuration = 1.000f;
-    private readonly Dictionary<PartyRole, float> meleeDwellTimer = [];
 
     public void Tick(float delta, float elapsed)
     {
         TickArrows(delta, elapsed);
-        TickStatueCatchUp(elapsed);
-        TickHazeHold();
-        FaceMainTank();
-        if (elapsed >= ConfusedChaseStart && elapsed <= ConfusedChaseEnd) TickConfusedChase(delta, elapsed);
-    }
-
-    // The real Kefka turns with his enmity target the whole phase (every cast packet's rotation
-    // is the main tank's bearing).
-    private void FaceMainTank()
-    {
-        if (kefka is not { } boss || party.Get(PartyRole.MainTank) is not { } tank || !tank.IsAlive()) return;
-        boss.Face(tank.Position);
     }
 
     private SimEnemy? SpawnHelper()
-    {
-        var real = world.SpawnEnemy(new EnemySpawnConfig(
-            BNpcBaseId: UmadConstants.BNpcBaseId.KefkaHelper, NameId: UmadConstants.BNpcNameId.Kefka,
-            Level: 1, Targetable: false, EnemyList: EnemyListMode.Never, Visibility: SpawnVisibility.InvisibleHelper,
-            Placement: new Placement(Vector3.Zero, 0f),
-            NpcSpawnTemplate: UmadRealPackets.HelperNpcSpawn, PacketSpawnEnableDraw: true));
-        if (real != null) return real;   // pending until the engine fills the slot (SimEnemy.PacketSpawnPending)
-        DiagnosticLog.Warn("[UmadP1TeleTrouncing] real-packet helper spawn was refused -- falling back to the plain KefkaHelper (no action VFX).");
-        return world.SpawnEnemy(new EnemySpawnConfig(
+        => world.SpawnEnemy(new EnemySpawnConfig(
             BNpcBaseId: UmadConstants.BNpcBaseId.KefkaHelper, NameId: UmadConstants.BNpcNameId.Kefka,
             Level: 1, Targetable: false, EnemyList: EnemyListMode.Never, Visibility: SpawnVisibility.InvisibleHelper,
             Placement: new Placement(Vector3.Zero, 0f)));
-    }
 
     // A helper the engine dropped after all (SimEnemy.PacketSpawnFailed) is replaced by the plain
     // KefkaHelper so its casts still land; one still in flight at cast time can't cast this frame.
@@ -524,49 +501,13 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         }
     }
 
-    private void TickStatueCatchUp(float elapsed)
-    {
-        // Stages 0..2 = the beats; stage 3 = unmute once the last timeline has finished.
-        if (gravenStatue == null || statueCatchUpStage > StatueCatchUpBeats.Length) return;
-        if (!gravenStatue.IsSharedGroupAttached || elapsed < statueCatchUpReadyAt) return;
-        var waitedOut = elapsed >= statueCatchUpReadyAt + StatueCatchUpMaxWait;
-        if (statueCatchUpStage > 0 && gravenStatue.IsSharedGroupTimelinePlaying && !waitedOut) return;
-        if (statueCatchUpStage == StatueCatchUpBeats.Length)
-        {
-            gravenStatue.MuteSound = false;
-            statueCatchUpStage++;
-            DiagnosticLog.Info($"[UmadP1TeleTrouncing] Colossus catch-up complete at {elapsed:F2}s -- sounds unmuted for the P1-end collapse.");
-            return;
-        }
-        var beat = StatueCatchUpBeats[statueCatchUpStage];
-        DiagnosticLog.Info($"[UmadP1TeleTrouncing] Colossus catch-up beat {statueCatchUpStage + 1}/{StatueCatchUpBeats.Length} (0x{beat.State:X}/0x{beat.Bitmask:X}) at {elapsed:F2}s{(waitedOut ? " (previous timeline still playing after the max wait)" : "")}.");
-        Beat(gravenStatue, beat);
-        statueCatchUpStage++;
-        statueCatchUpReadyAt = elapsed + 0.5f;   // let the beat's timeline start before polling it
-    }
-
-    private bool hazeHoldApplied;
-
-    private void TickHazeHold()
-    {
-        var want = settingsWindow.Overrides.HoldHaze;
-        if (want == hazeHoldApplied) return;
-        hazeHoldApplied = want;
-        world.Map.SetFogHold(want ? UmadZone.P1Haze : null);
-        DiagnosticLog.Info($"[UmadP1TeleTrouncing] P1 haze hold {(want ? "on" : "off")} (settings window).");
-    }
-
     private void TickArrows(float delta, float elapsed)
     {
-        // Counted down here, unconditionally: a role can pick up this lock before
-        // ConfusedChaseStart, and decrementing it only inside TickConfusedChase never counted an
-        // early lock down.
         foreach (var role in arrowPushLock.Keys.ToArray())
         {
             var remaining = arrowPushLock[role] - delta;
-            if (remaining > 0f) { arrowPushLock[role] = remaining; continue; }
-            arrowPushLock.Remove(role);
-            confusedWaitTimer[role] = PostCarryWaitDuration;
+            if (remaining > 0f) arrowPushLock[role] = remaining;
+            else arrowPushLock.Remove(role);
         }
 
         if (activeArrows.Count == 0) return;
@@ -587,9 +528,6 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
                 if (adx * adx + adz * adz > ArrowCollideDistance * ArrowCollideDistance) continue;
                 DiagnosticLog.Info(
                     $"[UmadP1TeleTrouncing] Two arrows collided at t={elapsed:F2}s -- ({a.Position.X:F1},{a.Position.Z:F1}) and ({b.Position.X:F1},{b.Position.Z:F1}), {MathF.Sqrt(adx * adx + adz * adz):F1}y apart -- poofing both.");
-                // No confirmed real VFX for this: the validated arrow-spawn burst rather than an
-                // unvalidated path, which crashes on the file thread.
-                world.SpawnOmen(Constants.VfxPath.TeleTrouncingArrowSpawnHit, new Placement(a.Position, 0f), Vector3.One, HitVfxDuration);
                 NoteArrowSoakFailure($"two arrows collided and vanished unused at t={elapsed:F2}s -- ({a.Position.X:F1},{a.Position.Z:F1}) and ({b.Position.X:F1},{b.Position.Z:F1})");
                 RemoveArrow(a);
                 RemoveArrow(b);
@@ -631,7 +569,9 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
                 if (dwell < ArrowTriggerDwell || arrowPushLock.GetValueOrDefault(role) > 0f) continue;
                 // Logged unconditionally with positions, so an early trigger can be checked
                 // against the knockback's own logged spots.
-                var confused = member.HasStatus(Constants.StatusId.Confused);
+                // Confused as the 0x52 says: Indulgent Will puts the status on at the hit,
+                // hidden until its EffectResult.
+                var confused = member.ActorControl.Confused;
                 DiagnosticLog.Info(
                     $"[UmadP1TeleTrouncing] {role} used an arrow at t={elapsed:F2}s ({(elapsed < ConfusedChaseStart ? "BEFORE confused-chase start" : "during/after confused-chase")}, {(confused ? "Confused" : "NOT Confused")}) -- "
                     + $"member at ({member.Position.X:F1},{member.Position.Z:F1}), arrow at ({arrow.Position.X:F1},{arrow.Position.Z:F1}).");
@@ -674,17 +614,27 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
 
     private void PlayFireLine()
     {
-        if (!ArrowSoakFailed) world.Map.DirectorUpdate(0x80000027U, 0xCU, 0x2U, 0x1BDBU, 0x400250DCU);
+        if (ArrowSoakFailed) return;
+        PlayKefkaLine(0xCU);
+        kefka?.PlayActionTimeline(Constants.TimelineId.KefkaFireLine);
     }
 
     private void PlayFailedP1EndLine()
     {
-        if (ArrowSoakFailed) world.Map.DirectorUpdate(0x80000027U, 0x5U, 0x2U, 0x1BDBU, 0x400250DCU);
+        if (ArrowSoakFailed) PlayKefkaLine(0x5U);
     }
 
     private void PlayP1EndLine()
     {
-        if (!ArrowSoakFailed) world.Map.DirectorUpdate(0x80000027U, 0xDU, 0x2U, 0x1BDBU, 0x400250DCU);
+        if (ArrowSoakFailed) return;
+        PlayKefkaLine(0xDU);
+        kefka?.PlayActionTimeline(Constants.TimelineId.KefkaP1End);
+    }
+
+    // The battle talk names its speaker by entity id.
+    private void PlayKefkaLine(uint line)
+    {
+        if (kefka is { } boss) world.Map.DirectorUpdate(0x80000027U, line, 0x2U, 0x1BDBU, boss.EntityId);
     }
 
     private void StartArrowSoakPunishment()
@@ -705,127 +655,42 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         kefka?.SetTargetable(false);
     }
 
-    // Collisions and resets only: a used or expired arrow is retired, not removed.
+    // Collisions and resets only: a used or expired arrow is retired first and removed later.
     private void RemoveArrow(SimEventObject arrow)
     {
         UntrackArrow(arrow);
         arrow.Despawn();
     }
 
+    private const float RetiredArrowDespawnDelay = 3.26f;
+
     private void RetireArrow(SimEventObject arrow)
     {
         UntrackArrow(arrow);
-        switch (settingsWindow.Overrides.ArrowSoak)
-        {
-            case ArrowSoakMode.SetSharedTimelineState:
-                arrow.PlayBeat(Constants.EObjState.TelePortentUsed, 0, PropBeatMode.SetSharedTimelineState);
-                break;
-            case ArrowSoakMode.Despawn:
-                arrow.Despawn();
-                break;
-            default:
-                arrow.DirectorEObjMod(Constants.EObjState.TelePortentUsed);
-                break;
-        }
+        arrow.DirectorEObjMod(Constants.EObjState.TelePortentUsed);
+        world.Events.Add(RetiredArrowDespawnDelay, arrow.Despawn);
     }
 
-    // Confused roles chase their live nearest ally every tick (party.Find.Closest excludes the
-    // dead, so a kill retargets on its own), except while arrowPushLock counts down: Follow and
-    // PushInDirection share the destination field. A member killed earlier this tick is
-    // skipped, or its body would keep sliding. The last-target and log-timer maps are
-    // diagnostic only.
-    private readonly Dictionary<PartyRole, SimCharacter> confusedChaseLastTarget = [];
-    private readonly Dictionary<PartyRole, float> confusedChaseLogTimer = [];
-    private const float ConfusedChaseLogInterval = 0.3f;
-
-    private void TickConfusedChase(float delta, float elapsed)
-    {
-        foreach (var role in state.Debuffs.Keys)
-        {
-            if (UmadP1TeleTrouncingState.IsDps(role) != state.DpsGetsConfused) continue;
-            if (party.Get(role) is not { } member || !member.IsAlive()) continue;
-            // Already decremented this tick by TickArrows.
-            if (arrowPushLock.ContainsKey(role)) continue;
-
-            // A full freeze, seeded when Confused first applies and after a kill.
-            var waitRemaining = MathF.Max(0f, confusedWaitTimer.GetValueOrDefault(role) - delta);
-            confusedWaitTimer[role] = waitRemaining;
-            if (waitRemaining > 0f) continue;
-
-            if (party.Find.Closest(member.Position, member) is not { } nearest) continue;
-
-            var dx = member.Position.X - nearest.Position.X;
-            var dz = member.Position.Z - nearest.Position.Z;
-            var distSq = dx * dx + dz * dz;
-
-            // Logged on every retarget, so a log shows whether the chase ever ran near an unused arrow.
-            if (!ReferenceEquals(confusedChaseLastTarget.GetValueOrDefault(role), nearest))
-            {
-                confusedChaseLastTarget[role] = nearest;
-                // Dwell doesn't carry over to a new target.
-                meleeDwellTimer.Remove(role);
-                var nearestRole = (nearest as ISimPartyMember)?.Role.ToString() ?? nearest.GetType().Name;
-                DiagnosticLog.Info(
-                    $"[UmadP1TeleTrouncing] {role} (confused) retargets to {nearestRole} at t={elapsed:F2}s -- "
-                    + $"from ({member.Position.X:F1},{member.Position.Z:F1}) to ({nearest.Position.X:F1},{nearest.Position.Z:F1}), dist={MathF.Sqrt(distSq):F1}y.");
-            }
-
-            if (distSq <= AutoAttackRange * AutoAttackRange)
-            {
-                // A full continuous MeleeDwellDuration first; a chase that closes the gap at the
-                // last moment can run out of time here.
-                var dwell = meleeDwellTimer.GetValueOrDefault(role) + delta;
-                if (dwell < MeleeDwellDuration) { meleeDwellTimer[role] = dwell; continue; }
-
-                // Nothing intercepted this player: they reach and hit whoever's nearest.
-                member.PlayActionTimeline(AutoAttackTimelineId);
-                nearest.Die(Constants.ActionId.ConfusedAttack, $"caught by {role} while Confused");
-                meleeDwellTimer.Remove(role);
-                confusedWaitTimer[role] = ConfusedWaitDuration;
-                continue;
-            }
-
-            meleeDwellTimer.Remove(role);
-            // forced: Confusion takes control in the real fight, so this is the one follow that
-            // may walk a real player's character.
-            member.Follow(nearest, ConfusedChaseSpeed, forced: true);
-
-            var logTimer = confusedChaseLogTimer.GetValueOrDefault(role) - delta;
-            if (logTimer <= 0f)
-            {
-                confusedChaseLogTimer[role] = ConfusedChaseLogInterval;
-                DiagnosticLog.Info(
-                    $"[UmadP1TeleTrouncing] {role} (confused) chasing at t={elapsed:F2}s, "
-                    + $"pos=({member.Position.X:F1},{member.Position.Z:F1}), dist={MathF.Sqrt(distSq):F1}y.");
-            }
-            else
-            {
-                confusedChaseLogTimer[role] = logTimer;
-            }
-        }
-    }
-
-    // The matching release of the forced Follow: TickFollow knows nothing about this window and
-    // would keep walking the character, a real player's included, after Confused expired.
+    // 0x52 off ends the chase (SimParty).
     private void ReleaseConfusedControl()
     {
         foreach (var role in state.Debuffs.Keys)
         {
             if (UmadP1TeleTrouncingState.IsDps(role) != state.DpsGetsConfused) continue;
-            if (party.Get(role) is not { } member || !member.IsAlive()) continue;
-            member.Follow(null);
+            if (party.Get(role) is not { } member) continue;
+            member.ActorControl.SetConfused(false);
         }
     }
 
-    // Follow(null) first, or TickFollow re-issues the chase under the carry.
+    // The carry holds the chase while it flies; the post-carry wait holds it after.
     private void UseArrow(PartyRole role, SimCharacter member, SimEventObject arrow)
     {
-        member.Follow(null);
+        member.HoldConfusedChase(ArrowBindDuration + PostCarryWaitDuration);
         member.AddStatus(Constants.StatusId.Bind, ArrowBindDuration);
         arrowPushLock[role] = ArrowBindDuration;
         var heading = arrow.Rotation;
         var destination = arrow.Position + new Vector3(MathF.Sin(heading), 0f, MathF.Cos(heading)) * ArrowPushDistance;
-        (member as ISimPartyMember)?.CarryTo(destination);
+        member.CarryTo(destination);
     }
 
     // Heading as SimCast's facing calc: south=0, increasing clockwise toward east (north matches
@@ -838,9 +703,6 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         TelePortentDirection.Left => -float.Pi / 2f,
         _ => 0f,
     };
-
-    // Fire-and-forget hit effects only need to outlast the avfx's own animation.
-    private const float HitVfxDuration = 2.0f;
 
     // Resolved by SpawnArrowBursts, consumed by SpawnArrowObjects ~0.8s later; the waves never overlap.
     private readonly Dictionary<PartyRole, Placement> pendingArrowPlacements = [];
@@ -860,14 +722,9 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
             var direction = first ? at7 : at10;
             var placement = new Placement(member.Position, Heading(direction));
             pendingArrowPlacements[role] = placement;
-            world.SpawnOmen(Constants.VfxPath.TeleTrouncingArrowSpawnHit, placement, Vector3.One, HitVfxDuration);
-            // The 0-damage placement tell, cast from a helper on the player as the real 8 are; off
-            // Kefka it played the gimmick timeline at arena centre.
+            // The 0-damage placement tell, from a helper wherever it stands, as the real 8 are.
             if (Helper(helperIndex++) is { } caster)
-            {
-                caster.SetPosition(placement);
-                caster.Cast(Constants.ActionId.TeleTrouncingArrowSpawn, member, 1.1f);
-            }
+                caster.Cast(UmadActions.TeleTrouncingArrowSpawn, member);
         }
     }
 
@@ -884,7 +741,6 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
                 EventId = Constants.EObjId.PropEventId,
                 EntityId = Constants.Spawn.TelePortentEntityIdBase + (uint)arrowsPlaced,
                 Arg2 = ((uint)(Constants.Spawn.TelePortentArg2Serial + arrowsPlaced) << 16) | 0x3U,
-                HideAtState = (ushort)Constants.EObjState.TelePortentUsed,
             });
             if (arrow == null)
             {
@@ -918,26 +774,18 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         CastConfettiStack(state.ConfettiStackDps, 5);
     }
 
-    // The real BAA7 comes from a helper teleported onto the holder. The trap-spring burst is
-    // attached to the holder so it renders at body height, not flat on the floor.
+    // The real BAA7 comes from a helper wherever it stands; the stack and its push centre on the holder.
     private void CastConfettiStack(PartyRole holderRole, int helperIndex)
     {
         if (party.Get(holderRole) is not { } holder) return;
-        if (Helper(helperIndex) is { } caster)
-        {
-            caster.SetPosition(new Placement(holder.Position, 0f));
-            caster.Cast(UmadActions.DoubleTroubleTrapStack, holder);
-        }
-        holder.AddVfx(Constants.VfxPath.DoubleTroubleTrapStackHit, persistent: false);
+        Helper(helperIndex)?.Cast(UmadActions.DoubleTroubleTrapStack, holder);
     }
 
-    // The real Graven Image: the captured NpcSpawn packet through the engine's own handler,
-    // hidden by its display flags, which is what the gaze/tether VFX bind to.
     private SimEnemy? SpawnGravenImage(Vector3 position)
         => world.SpawnEnemy(new EnemySpawnConfig(
             BNpcBaseId: Constants.BNpcBaseId.GravenImage, NameId: Constants.BNpcNameId.GravenImage, Level: 100,
-            Targetable: false, EnemyList: EnemyListMode.Never,
-            Placement: new Placement(position, 0f), NpcSpawnTemplate: UmadRealPackets.GravenImageNpcSpawn));
+            Targetable: false, EnemyList: EnemyListMode.Never, Visibility: SpawnVisibility.InvisibleHelper,
+            Placement: new Placement(position, 0f), LayoutId: Constants.BNpcLayoutId.GravenImage));
 
     private void DespawnProp(ref SimEventObject? prop)
     {
@@ -948,7 +796,7 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
     }
 
     private void Beat(SimEventObject? prop, (uint State, uint Bitmask) beat)
-        => prop?.PlayBeat(beat.State, beat.Bitmask, settingsWindow.Overrides.PropsBeatMode);
+        => prop?.PlayBeat(beat.State, beat.Bitmask);
 
     // Settings-window buttons: the same beats the timeline fires at 19.35 / 31.63, on demand.
     private void FireAppearNow()
@@ -970,28 +818,14 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
     {
         Beat(gazeStatueNormal, EObjAnimAppear);
         Beat(gazeStatueInverted, EObjAnimAppear);
-        if (settingsWindow.Overrides.PropsStaticVfxTest)
-        {
-            // Diagnostic only: the props' VFX files standalone. mari3/nemu3 have emitters of their
-            // own, mari2/nemu2 don't.
-            world.SpawnOmen(Constants.VfxPath.StatueNemuriAppear, new Placement(GazeStatueNormalAnimPos, 0f), Vector3.One, 30f);
-            world.SpawnOmen(Constants.VfxPath.StatueMariaAppear, new Placement(GazeStatueInvertedAnimPos, 0f), Vector3.One, 30f);
-            world.SpawnOmen(Constants.VfxPath.StatueNemuriResolve, new Placement(GazeStatueNormalPos, 0f), Vector3.One, 30f);
-            world.SpawnOmen(Constants.VfxPath.StatueMariaResolve, new Placement(GazeStatueInvertedPos, 0f), Vector3.One, 30f);
-        }
     }
 
     private void TetherStatues()
     {
         foreach (var role in state.Debuffs.Keys)
         {
-            var confused = UmadP1TeleTrouncingState.IsDps(role) == state.DpsGetsConfused;
-            var anchor = confused ? confusedStatue : sleepStatue;
-            var member = party.Get(role);
-            // The member hosts the tether: a character holds one tether per slot, so four
-            // tethers sourced on one statue would overwrite each other.
-            if (anchor != null && member != null)
-                world.Tether(member, anchor, Constants.TetherId.GravenImage, duration: 8.99f);
+            if (tetherStatues.GetValueOrDefault(role) is { } statue && party.Get(role) is { } member)
+                world.Tether(statue, member, Constants.TetherId.GravenImage, duration: 8.99f);
         }
     }
 
@@ -1011,36 +845,18 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         CastGravenWills(confused: true);
     }
 
-    // Cast before AddVfx: the real ability resolves as one packet, so the hit-react lands with the
-    // vfx. Caster-side vfx on the statue once, target-side on every hit player.
     private void CastGravenWills(bool confused)
     {
-        var statue = confused ? confusedStatue : sleepStatue;
-        var statuePlayed = false;
-        foreach (var role in state.Debuffs.Keys)
+        foreach (var (role, statue) in tetherStatues)
         {
             if ((UmadP1TeleTrouncingState.IsDps(role) == state.DpsGetsConfused) != confused) continue;
-            var member = party.Get(role);
-            if (member != null) statue?.Cast(confused ? UmadActions.IndulgentWill : UmadActions.IdyllicWill, member);
-
-            if (!statuePlayed)
-            {
-                statuePlayed = true;
-                if (confused)
-                {
-                    statue?.AddVfx(Constants.VfxPath.IndulgentWillCasterShoot, persistent: false);
-                    statue?.AddVfx(Constants.VfxPath.IndulgentWillCasterBurst, persistent: false);
-                }
-                else
-                {
-                    statue?.AddVfx(Constants.VfxPath.IdyllicWillCaster, persistent: false);
-                }
-            }
-            member?.AddVfx(confused ? Constants.VfxPath.IndulgentWillTarget : Constants.VfxPath.IdyllicWillTarget, persistent: false);
+            if (party.Get(role) is { } member)
+                statue.Cast(confused ? UmadActions.IndulgentWill : UmadActions.IdyllicWill, member);
         }
     }
 
     // 6.00s each, at the real EffectResult time: the chase starts with the status, not the hit.
+    // Confused itself comes from Indulgent Will's hit.
     private void ApplyConfusedAndSleepStatuses()
     {
         foreach (var role in state.Debuffs.Keys)
@@ -1049,7 +865,13 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
             if (party.Get(role) is not { } member || !member.IsAlive()) continue;
             // No freeze on apply: confused players walk at once, and a freeze pushed the last arrow
             // past its expiry.
-            member.AddStatus(confused ? Constants.StatusId.Confused : Constants.StatusId.Sleep, 6.000f);
+            if (confused)
+            {
+                member.ActorControl.SetConfused(true);
+                continue;
+            }
+            var status = member.AddStatus(Constants.StatusId.Sleep, 6.000f);
+            if (tetherStatues.GetValueOrDefault(role) is { } statue) status?.ShownAsFrom(statue);
         }
     }
 
@@ -1057,14 +879,14 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
     // cycle order (primary First + secondary Second, never the reverse), while the 7s/10s split
     // is the independent coin flip (12 real resolves). A matching role's two AddStatus calls
     // share one id, so distinct sourceObject tags keep them from collapsing into one refreshed
-    // stack; Kefka and the statue are just two stable ids.
+    // stack; Kefka and a helper are just two stable ids.
     private void ApplyDebuffs()
     {
         foreach (var (role, (first, second)) in state.Debuffs)
         {
             var member = party.Get(role);
             var firstSource = kefka?.GameObjectId ?? default;
-            var secondSource = confusedStatue?.GameObjectId ?? default;
+            var secondSource = helpers[0]?.GameObjectId ?? default;
             if (first == second)
             {
                 member?.AddStatus(PrimaryStatusId(first), 7.000f, sourceObject: firstSource);
@@ -1136,9 +958,10 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
             + $"-> {lines} telegraph(s).");
     }
 
-    // The doppel that casts and carries the marker, and the real prop that plays the statue
-    // animation: the second instance of the gazing type, matching the real beat routing.
-    private SimEnemy? GazingStatue => state.GazeInverted ? gazeCasterInverted : gazeCasterNormal;
+    // One of the gazing side's tether statues casts the gaze, and the real prop that plays the
+    // statue animation is the second instance of the gazing type, matching the real beat routing.
+    private SimEnemy? GazingStatue => tetherStatues
+        .LastOrDefault(kv => (UmadP1TeleTrouncingState.IsDps(kv.Key) == state.DpsGetsConfused) == state.GazeInverted).Value;
     private SimEventObject? GazingProp => state.GazeInverted ? gazeAnimStatueInverted : gazeAnimStatueNormal;
 
     // The ~10s "eyes light up" wind-up; on the real 0x1EBFBF the prop's animation draws the "?".
@@ -1146,28 +969,18 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
     private void PlayGazeTell()
     {
         Beat(GazingProp, EObjAnimGazeWindUp);
-        if (settingsWindow.Overrides.PropsStaticVfxTest)
-            world.SpawnOmen(
-                state.GazeInverted ? Constants.VfxPath.StatueMariaWindUp : Constants.VfxPath.StatueNemuriWindUp,
-                new Placement(state.GazeInverted ? GazeStatueInvertedAnimPos : GazeStatueNormalAnimPos, 0f),
-                Vector3.One, 15f);
-
-        // Only the caster's own wind-up vfx: the "?" is the prop's timeline. The eye lockon
-        // stand-ins showed as a stray marker once the caster became the model-less actor.
-        GazingStatue?.AddVfx(Constants.VfxPath.GazeWindUp, duration: 10f, persistent: false);
         DiagnosticLog.Info(
             $"[UmadP1TeleTrouncing] Gaze tell: {(state.GazeInverted ? "INVERTED (\"?\" -- look TOWARD the NW confused statue)" : "NORMAL (no \"?\" -- look AWAY from the NE sleep statue)")} "
-            + $"(prop {(GazingProp != null ? "playing wind-up anim" : "absent -- marker only")}).");
+            + $"(prop {(GazingProp != null ? "playing wind-up anim" : "absent -- no tell")}).");
     }
 
     private void ResolveGaze()
     {
         Beat(GazingProp, EObjAnimGazeResolve);
 
-        // The statue stands over its gaze source, so the gaze is cast from where it stands.
-        var statue = GazingStatue;
-        statue?.Cast(state.GazeInverted ? UmadActions.AveMaria : UmadActions.IndolentWill);
-        statue?.AddVfx(state.GazeInverted ? Constants.VfxPath.AveMariaHit : Constants.VfxPath.IndolentWillHit, persistent: false);
+        if (GazingStatue is not { } statue) return;
+        statue.SetPosition(new Placement(state.GazeInverted ? GazeStatueInvertedAnimPos : GazeStatueNormalAnimPos, 0f));
+        statue.Cast(state.GazeInverted ? UmadActions.AveMaria : UmadActions.IndolentWill);
     }
 
     private void ResolveFire()
@@ -1183,9 +996,7 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         {
             var member = party.Get(role);
             if (member == null || !member.IsAlive()) continue;
-            if (Helper(helperIndex++) is not { } helper) continue;
-            helper.SetPosition(new Placement(member.Position, 0f));
-            helper.Cast(UmadActions.FlagrantFireSpread, member);
+            Helper(helperIndex++)?.Cast(UmadActions.FlagrantFireSpread, member);
         }
         DiagnosticLog.Info("[UmadP1TeleTrouncing] Flagrant Fire III: SPREAD resolved.");
     }
@@ -1201,10 +1012,7 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
     private void ResolveOneFireStack(PartyRole holderRole, int helperIndex)
     {
         if (party.Get(holderRole) is not { } holder || !holder.IsAlive()) return;
-        // Helper->players: a helper on the holder so the VFX lands at the stack point.
-        if (Helper(helperIndex) is not { } caster) return;
-        caster.SetPosition(new Placement(holder.Position, 0f));
-        caster.Cast(UmadActions.FlagrantFireStack, holder);
+        Helper(helperIndex)?.Cast(UmadActions.FlagrantFireStack, holder);
     }
 
     private void EndP1()
@@ -1214,18 +1022,12 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         {
             kefka?.SetTargetable(false);
         }
-        // The EObj slots are released a beat later by DespawnGazeProps so the animation plays.
-        Beat(gazeStatueNormal, EObjAnimDespawn);
-        Beat(gazeStatueInverted, EObjAnimDespawn);
-        Beat(gazeAnimStatueNormal, EObjAnimDespawn);
-        Beat(gazeAnimStatueInverted, EObjAnimDespawn);
         world.Obstacles.Clear();
         DiagnosticLog.Info("[UmadP1TeleTrouncing] P1 complete -- boss untargetable, mechanic finished.");
     }
 
     private void DespawnGazeProps()
     {
-        DespawnHelpers();
         gazeStatueNormal?.Despawn();
         gazeStatueNormal = null;
         gazeStatueInverted?.Despawn();
@@ -1234,6 +1036,10 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         gazeAnimStatueNormal = null;
         gazeAnimStatueInverted?.Despawn();
         gazeAnimStatueInverted = null;
+        foreach (var prop in earlierStatues) prop.Despawn();
+        earlierStatues.Clear();
+        foreach (var statue in tetherStatues.Values) statue.Despawn();
+        tetherStatues.Clear();
     }
 
     private static ushort PrimaryStatusId(TelePortentDirection direction) => direction switch

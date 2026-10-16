@@ -17,7 +17,7 @@ public sealed class MultiplayerSession
     public Dictionary<Guid, byte> Jobs { get; private set; } = new();
     public bool Started { get; set; }
 
-    // Indices into Game.Scenarios and that scenario's AiStrats/WaymarkPresets; -1 = the host
+    // Indices into Game.Catalog.Scenarios and that scenario's AiStrats/WaymarkPresets; -1 = the host
     // hasn't picked a scenario yet.
     public int ScenarioIndex { get; set; } = -1;
     public int SelectedAi { get; set; }

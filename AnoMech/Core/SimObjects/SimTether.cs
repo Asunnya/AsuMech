@@ -35,6 +35,7 @@ public sealed class SimTether : ISimObject
     private readonly float duration;
     private readonly ushort debuffStatusId;
     private float elapsed;
+    private float age;
     private bool active;
     private SimCharacter? currentSource;
     private SimCharacter? currentTarget;
@@ -91,6 +92,7 @@ public sealed class SimTether : ISimObject
     public void Tick(float deltaSeconds)
     {
         if (!active) return;
+        age += deltaSeconds;
         if (duration > 0f)
         {
             elapsed += deltaSeconds;
@@ -110,10 +112,12 @@ public sealed class SimTether : ISimObject
         var nextTarget = to.Resolve(currentTarget, currentSource, ctx);
         if (nextTarget != currentTarget)
         {
-            ClearTetherVfxIfOwned();
+            // The source keeps the slot, so the new tether just overwrites it, as the server does.
+            if (nextTarget == null) ClearTetherVfxIfOwned();
             statusB?.Despawn();
             currentTarget = nextTarget;
             CreateVfx();
+            TargetTetheredPlayer();
             if (debuffStatusId != 0 && duration > 0f)
             {
                 statusB = currentTarget?.AddStatus(debuffStatusId, duration);
@@ -133,7 +137,7 @@ public sealed class SimTether : ISimObject
             }
         }
 
-        if (conditionalStatus != null)
+        if (conditionalStatus != null && age >= ConditionalStatusDelay)
         {
             if (conditionalStatus.Condition(this))
             {
@@ -194,11 +198,22 @@ public sealed class SimTether : ISimObject
         return this;
     }
     
+    // The server first checks the condition about a second after the tether goes out.
+    private const float ConditionalStatusDelay = 1f;
+
     private record ConditionalStatus(ushort StatusId, Predicate<SimTether> Condition);
 
+    // A source enemy also targets whoever it is tethered to.
     public SimTether SetAutoFaceTarget(bool value)
     {
         autoFaceTarget = value;
+        TargetTetheredPlayer();
         return this;
+    }
+
+    private void TargetTetheredPlayer()
+    {
+        if (autoFaceTarget && currentSource is SimEnemy enemy && currentTarget != null)
+            enemy.SetTarget(currentTarget, follow: false);
     }
 }

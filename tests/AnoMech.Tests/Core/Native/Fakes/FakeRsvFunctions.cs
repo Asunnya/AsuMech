@@ -1,3 +1,4 @@
+using System.Text;
 using AnoMech.Core.Native.Interfaces;
 
 namespace AnoMech.Tests;
@@ -5,10 +6,16 @@ namespace AnoMech.Tests;
 // Stands in for Dalamud's RsvResolver: once a key is seeded, sheet text reads resolve it.
 internal sealed class FakeRsvFunctions : IRsvFunctions
 {
+    private const int KeyLength = 0x30;
+
     private readonly Dictionary<string, string> resolved = new();
 
-    public void Add(string rsvKey, string resolved) => this.resolved[rsvKey] = resolved;
-    public void AddRaw(string rsvKey, byte[] valueBytes) { }
+    public void Add(byte[] record)
+    {
+        var valueLength = BitConverter.ToInt32(record, 0);
+        var key = Encoding.ASCII.GetString(record, 4, KeyLength).Split('\0')[0];
+        resolved[key] = Encoding.UTF8.GetString(record, 4 + KeyLength, valueLength);
+    }
 
     public string Resolve(string text) => resolved.TryGetValue(text, out var value) ? value : text;
 }

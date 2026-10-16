@@ -10,7 +10,9 @@ public class RngTests
     [Test]
     public void SameSeedSameSequence()
     {
-        Assert.That(Draws(new Rng(42)), Is.EqualTo(Draws(new Rng(42))));
+        var first = Draws(new Rng(42));
+        var second = Draws(new Rng(42));
+        Assert.That(first, Is.EqualTo(second));
     }
 
     [Test]
@@ -23,7 +25,9 @@ public class RngTests
     public void ShuffleFollowsSeed()
     {
         var values = Enumerable.Range(0, 20).ToArray();
-        Assert.That(new Rng(7).Shuffle(values), Is.EqualTo(new Rng(7).Shuffle(values)));
+        var first = new Rng(7).Shuffle(values);
+        var second = new Rng(7).Shuffle(values);
+        Assert.That(first, Is.EqualTo(second));
         Assert.That(new Rng(7).Shuffle(values), Is.EquivalentTo(values));
     }
 

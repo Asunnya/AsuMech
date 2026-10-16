@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Numerics;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Ai;
@@ -13,7 +14,7 @@ public sealed class UmadP5FloodAi : IScenarioAi<UmadP5FloodState>
 {
     public string Name => "Rotate";
 
-    private const float ConvergeAt = 0.8f;   // well before the first telegraph
+    private const float ArriveBeforeFirstWave = 0.5f;
     private const float MoveSpeed = 8.3f;
     private const float QuadrantRadius = 4.0f;
     private const float ClumpRadius = 1.2f;    // spread within the quadrant so bots don't overlap
@@ -33,7 +34,9 @@ public sealed class UmadP5FloodAi : IScenarioAi<UmadP5FloodState>
 
     public void Run(UmadP5FloodState state, SimWorld world)
     {
-        world.Events.Add(ConvergeAt, () => MoveToQuadrant(world, QuadrantAt(state, 0)));
+        var firstWave = UmadP5FloodScenario.FirstTelegraphAt + UmadP5FloodScenario.ResolveDelayAfterTelegraph;
+        new AiManager(world).Move(UmadP5FloodScenario.FirstTelegraphAt, () => ClumpAt(QuadrantAt(state, 0)), jitter: 0f,
+            arrivalTime: firstWave - ArriveBeforeFirstWave);
 
         for (var tick = 1; tick < UmadP5FloodScenario.TickCount; tick++)
         {
@@ -58,15 +61,23 @@ public sealed class UmadP5FloodAi : IScenarioAi<UmadP5FloodState>
 
     private static void MoveToQuadrant(SimWorld world, int quadrant)
     {
-        var centre = Quadrants[quadrant];
         for (var slot = 0; slot < 8; slot++)
         {
             var bot = world.Party.Get(slot);
             if (bot is null || !bot.IsAlive()) continue;
-
-            var angle = slot * MathF.PI / 4f;
-            var offset = new Vector3(MathF.Sin(angle) * ClumpRadius, 0f, MathF.Cos(angle) * ClumpRadius);
-            bot.MoveTo(centre + offset, MoveSpeed);
+            bot.MoveTo(ClumpSpot(quadrant, slot), MoveSpeed);
         }
+    }
+
+    private static IAiMove ClumpAt(int quadrant)
+        => AiMove.Create(Enumerable.Range(0, 8)
+            .Select(slot => ClumpSpot(quadrant, slot))
+            .Select(spot => (Vector2?)new Vector2(spot.X, spot.Z))
+            .ToArray()).NaturalOrder();
+
+    private static Vector3 ClumpSpot(int quadrant, int slot)
+    {
+        var angle = slot * MathF.PI / 4f;
+        return Quadrants[quadrant] + new Vector3(MathF.Sin(angle) * ClumpRadius, 0f, MathF.Cos(angle) * ClumpRadius);
     }
 }

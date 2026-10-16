@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
+using AnoMech.Core.EnemyActions;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.Native.Interfaces;
@@ -19,7 +21,7 @@ namespace AnoMech.Core.SimObjects;
 // HUD mirroring is owned by SimWorld (not SimParty) — see SimWorld.partyHud —
 // so the addon-lifecycle listener has the same lifespan as the plugin and the
 // SimParty.Empty sentinel doesn't accidentally register one at static init.
-public sealed class SimParty : ISimObject
+public sealed partial class SimParty : ISimObject
 {
     public static readonly SimParty Empty = new();
 
@@ -65,11 +67,61 @@ public sealed class SimParty : ISimObject
 
     public SimPlayer? Player => Get(PlayerRole) as SimPlayer;
 
-    internal void SetSlot(PartyRole role, ISimPartyMember slot)
+    private void SetSlot(PartyRole role, ISimPartyMember slot)
     {
         slot.Role = role;
         slots[(int)role] = (SimCharacter)slot;
         if (slot is SimPlayer) PlayerRole = role;
+    }
+
+    // What each seat was last spawned from, so Apply respawns only the seats that changed.
+    private readonly PartySlot?[] seated = new PartySlot?[8];
+    private SimPlayer? player;
+
+    // A kept bot goes back to its spawn-ring spot; puppets stay where their owners stand.
+    internal void Apply(IReadOnlyList<PartySlot?> roster, SimWorld world)
+    {
+        this.world = world;
+        var ring = world.Stream("party-spawn");
+        for (int i = 0; i < slots.Length; i++)
+        {
+            var role = (PartyRole)i;
+            var slot = roster[i];
+            var placement = PartyCreator.RingPlacement(role, slot, ring);
+            if (Equals(slot, seated[i]) && slots[i] is { IsActive: true } kept)
+            {
+                if (slot is BotSlot) kept.SetPosition(placement);
+                continue;
+            }
+            // The player only changes seats.
+            if (slots[i] is { } leaving) actionHandlers.Remove(leaving);
+            if (slots[i] is not SimPlayer) slots[i]?.Despawn();
+            slots[i] = null;
+            seated[i] = slot;
+            if (slot is PlayerSlot)
+            {
+                player ??= new SimPlayer(world.Coordinates, world.Obstacles);
+                SetSlot(role, player);
+            }
+            else if (slot is not null && PartyCreator.Spawn(slot, world, role, placement) is { } member)
+            {
+                SetSlot(role, member);
+            }
+        }
+    }
+
+    private SimWorld? world;
+    private readonly Dictionary<SimCharacter, EnemyActionHandler> actionHandlers = new();
+
+    // A member using an action as an enemy does: its ActionEffect, area hits, damage and deaths.
+    public EnemyActionCast Act(SimCharacter member, EnemyAction action, CastTarget target = default)
+    {
+        if (!actionHandlers.TryGetValue(member, out var handler))
+        {
+            var w = world ?? throw new InvalidOperationException("SimParty.Act before the party was seated.");
+            actionHandlers[member] = handler = new EnemyActionHandler(member, member.Casting, w);
+        }
+        return handler.Start(action, target, 0);
     }
 
     internal void ForEachActive(Action<SimCharacter> action)
@@ -91,35 +143,6 @@ public sealed class SimParty : ISimObject
     // (which drives movement only).
     public bool IsBotDriven(SimCharacter member)
         => (!ReferenceEquals(member, Player) || DebugBotControl.Enabled) && member is not SimNetworkPuppet;
-
-    // Raidwide knockback: pushes every active slot `distance` units away from
-    // `source`. Each slot resolves its own direction from its current position.
-    public void Knockback(Vector3 source, float distance)
-        => ForEachActive(m => (m as ISimPartyMember)?.Knockback(source, distance));
-
-    public void Knockback(Vector3 source, uint knockbackId)
-    {
-        if (Natives.Data.Knockback(knockbackId) is not { } kb) return;
-        ForEachActive(m => (m as ISimPartyMember)?.Knockback(source, kb.Distance, kb.Speed));
-    }
-
-    // Only slots within `radius` of `source` are pushed. `exclude` is the stack holder when
-    // `source` is their own position: Placement.Face keeps a co-located mover's current rotation,
-    // so they would still be flung along whatever they last faced. Movement only; the caller
-    // casts the hit reaction first (its movement plays out over the next 0.7s).
-    public void Knockback(Vector3 source, uint knockbackId, float radius, SimCharacter? exclude = null)
-    {
-        if (Natives.Data.Knockback(knockbackId) is not { } kb) return;
-        var radiusSq = radius * radius;
-        ForEachActive(m =>
-        {
-            if (ReferenceEquals(m, exclude)) return;
-            var dx = m.Position.X - source.X;
-            var dz = m.Position.Z - source.Z;
-            if (dx * dx + dz * dz <= radiusSq)
-                (m as ISimPartyMember)?.Knockback(source, kb.Distance, kb.Speed);
-        });
-    }
 
     internal IEnumerable<SimCharacter> ActiveMembers()
     {
@@ -161,8 +184,44 @@ public sealed class SimParty : ISimObject
     // to IsAlive.
     public bool IsActive => true;
 
+    // Each confused member's current chase target, null while held.
+    private readonly Dictionary<SimCharacter, SimCharacter?> confusedChases = new();
+
+    // The server walks a confused player after their nearest live ally, retargeting as that
+    // changes, for as long as its last ActorControl 0x52 said Confused. Whenever an ally stands in
+    // the swing and nothing locks it, the confused player swings at them.
+    private void TickConfusedChases()
+    {
+        foreach (var member in AllMembers())
+        {
+            if (!member.IsAlive() || !member.ActorControl.Confused)
+            {
+                if (confusedChases.Remove(member)) member.ForceFollow(null);
+                continue;
+            }
+            if (!member.ConfusedChaseHeld && !member.Casting.IsBusy && Find.Closest(member.Position, member) is { } nearest)
+                SwingIfInReach(member, nearest);
+            var target = member.ConfusedChaseHeld ? null : Find.Closest(member.Position, member);
+            if (confusedChases.TryGetValue(member, out var current) && ReferenceEquals(current, target)) continue;
+            confusedChases[member] = target;
+            member.ForceFollow(target);
+        }
+    }
+
+    // The swing aimed at `nearest`, as it would resolve; the chase stands still for its lock.
+    private void SwingIfInReach(SimCharacter member, SimCharacter nearest)
+    {
+        var attack = CommonActions.ConfusedAttack;
+        var aim = member.Placement().Face(nearest.Position);
+        var query = new AoeQuery(attack.ActionId, aim, attack.Cast.Rotation, attack.Area.Size, attack.Area.CastTypeOverride, member.HitboxRadius);
+        if (!query.Run(Find).Any(h => h != member)) return;
+        Act(member, attack, nearest);
+        member.HoldConfusedChase(attack.Cast.AnimationLock);
+    }
+
     public void Tick(float deltaSeconds)
     {
+        TickConfusedChases();
         for (int i = 0; i < slots.Length; i++)
         {
             if (slots[i] is null) continue;
@@ -176,6 +235,7 @@ public sealed class SimParty : ISimObject
                 slots[i] = null;
             }
         }
+        Natives.PartyHud.Refresh(this);
     }
 
     // The whole party, the local player included, is in combat for the whole run.
@@ -184,15 +244,37 @@ public sealed class SimParty : ISimObject
         foreach (var member in AllMembers()) member.ActorControl.SetInCombat(inCombat);
     }
 
+    public void Mark(Sign sign, SimCharacter target) => Player?.ActorControl.Mark(sign, target.GameObjectId);
+
+    public void ClearMark(Sign sign) => Player?.ActorControl.ClearMark(sign);
+
+    public void ClearMarks() => Player?.ActorControl.ClearMarks();
+
+    // Between runs of one zone stay: the members stay spawned, what the run left on them goes.
+    internal void EndRun()
+    {
+        ClearMarks();
+        SetInCombat(false);
+        LimitBreak.Restore();
+        foreach (var member in AllMembers()) member.ClearRunState();
+        confusedChases.Clear();
+    }
+
     public void Despawn()
     {
+        ClearMarks();
         SetInCombat(false);
         LimitBreak.Restore();
         for (int i = 0; i < slots.Length; i++)
         {
             slots[i]?.Despawn();
             slots[i] = null;
+            seated[i] = null;
         }
+        player = null;
+        confusedChases.Clear();
+        actionHandlers.Clear();
+        Natives.PartyHud.Clear();
     }
 
     public SimCharacter? GetRandom(Rng rng)

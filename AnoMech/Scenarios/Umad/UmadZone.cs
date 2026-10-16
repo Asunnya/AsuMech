@@ -10,8 +10,6 @@ public sealed class UmadZone : IZone
 {
     public static readonly UmadZone Instance = new();
 
-    // Deactivating the arena SharedGroups on top of these states was tried: the engine
-    // re-activates them, a visible frame each time.
     public IReadOnlyList<ushort> ArenaMapEffectSnapshot { get; } =
     [
         1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1,
@@ -21,7 +19,6 @@ public sealed class UmadZone : IZone
     private static readonly Dictionary<byte, ushort> P3ArenaMapEffectOverrides = new() { [0x00] = 0x200, [0x13] = 4 };
 
     // 77 is the zone-in weather between pulls; a pull switches to 78.
-    public const float P1Haze = 1000f;
     public static readonly Phase P1 = new(Instance, "P1", 78, 20291,
         arenaMapEffectOverrides: new Dictionary<byte, ushort> { [0x00] = 0x10 });
     public static readonly Phase P2 = new(Instance, "P2", 79, 20292,
@@ -29,6 +26,11 @@ public sealed class UmadZone : IZone
     public static readonly Phase P3 = new(Instance, "P3", 174, 20293, arenaMapEffectOverrides: P3ArenaMapEffectOverrides);
     public static readonly Phase P4 = new(Instance, "P4", 174, 20293, arenaMapEffectOverrides: P3ArenaMapEffectOverrides);
     public static readonly Phase P5 = new(Instance, "P5", 175, 20294,
+        init: world =>
+        {
+            world.Map.DirectorUpdate(0x80000028U, 0x0U, 0x4U, 0x6U);
+            world.Map.DirectorUpdate(0x8000000DU, 0x2U);
+        },
         arenaMapEffectOverrides: new Dictionary<byte, ushort>
         {
             [0x00] = 0x800, [0x13] = 4,
@@ -39,21 +41,22 @@ public sealed class UmadZone : IZone
     public string Name => "Dancing Mad";
     public uint TerritoryId => 1363;
     public Vector3 Origin => new(100f, 0f, 100f);
-    public byte Level => 100;
 
     public IReadOnlyList<WaymarkLayout> WaymarkPresets => Waymarks;
 
-    public EntranceBarrier? EntranceBarrier => new(2000182, 0xBC174E, 0xBC174C, new Vector3(0.41f, 0f, 15.75f));
+    public EntranceBarrier EntranceBarrier => new(2000182, 0xBC174E, 0xBC174C, new Vector3(0.41f, 0f, 15.75f));
 
-    public void Run(SimWorld world) => world.EnforceArenaBoundary(UmadConstants.Geometry.ArenaRadius, "Fell off the arena");
+    public void Run(SimWorld world)
+    {
+        world.Map.DirectorUpdate(0x80000028U, 0x4U);
+        world.Map.DirectorUpdate(0x8000000DU, 0x1U);
+    }
 
-    // Replay-derived RSV/RSF data the server would deliver in a real duty; peers need it too, or
-    // their BgParts point at unseeded paths and render black. Idempotent.
     public void RunClientSetup(SimWorld world) => UmadReplayData.Seed();
 
     private static readonly IReadOnlyList<WaymarkLayout> Waymarks =
     [
-        new WaymarkLayout("Diamond Waymarks", (IReadOnlyList<Waymark>)[
+        new WaymarkLayout("Diamond Waymarks", [
             new(WaymarkSlot.A,     new Vector3(  0, 0, -12)),
             new(WaymarkSlot.B,     new Vector3( 12, 0,   0)),
             new(WaymarkSlot.C,     new Vector3(  0, 0,  12)),

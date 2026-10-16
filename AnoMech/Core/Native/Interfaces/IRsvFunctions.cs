@@ -4,6 +4,6 @@ namespace AnoMech.Core.Native.Interfaces;
 // which the server only sends inside the duty.
 public interface IRsvFunctions
 {
-    void Add(string rsvKey, string resolved);
-    void AddRaw(string rsvKey, byte[] valueBytes);
+    // record = one raw RSV packet payload: [u32 valueLength][0x30-byte key][value].
+    void Add(byte[] record);
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 using AnoMech.Core.Game;
+using AnoMech.Core.Map;
 
 namespace AnoMech.Scenarios.Dsr;
 
@@ -20,8 +21,7 @@ public sealed class DsrZone : IZone
     public string Name => "Dragonsong's Reprise";
     public uint TerritoryId => 968;
     public Vector3 Origin => new(100f, 0f, 100f);
-    public byte Level => DsrConstants.Level;
-    public ushort ItemLevel => DsrConstants.ItemLevel;
+    public EntranceBarrier EntranceBarrier => EntranceBarrier.Unknown;
 
     public IReadOnlyList<WaymarkLayout> WaymarkPresets { get; } =
         [new WaymarkLayout("DSR Phase 1", DsrConstants.Phase1Waymarks), new WaymarkLayout("NAUR", DsrConstants.NaurWaymarks)];

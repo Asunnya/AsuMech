@@ -39,7 +39,7 @@ public sealed class TopP5DeltaAi : IScenarioAi<TopP5DeltaState>
         ai.Move(50f, RescueUnsafe);
         ai.Move(56f, ReturnToMiddle);
         ai.Move(56.5f, TankForward);
-        ai.Move(60.0f, BreakLastTether);
+        ai.Move(61.0f, BreakLastTether);
     }
 
     private void Swap01(IAiRoles s)
@@ -170,7 +170,7 @@ public sealed class TopP5DeltaAi : IScenarioAi<TopP5DeltaState>
             ArmUnitPlacements.Select((placement, i) =>
                                          placement.MoveForward(0.5f)
                                                   .RotateAroundOrigin(
-                                                      0.15f * state.ArmHandedness[i].Mul * state.EyeSpawn.Mul)
+                                                      0.15f * state.ArmRotations[i].Mul * state.EyeSpawn.Mul)
                                                   .Position2)
                              .Prepend(new Vector2(0f, 6f))
                              .Prepend(new Vector2(0f, -6f))

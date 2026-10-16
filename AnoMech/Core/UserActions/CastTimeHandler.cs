@@ -45,7 +45,7 @@ internal sealed class CastTimeHandler : IUserActionHandler
         if (castAction != 0 && actionId == castAction)
         {
             castAction = 0;
-            if (castGrantsDualcast && Plugin.GameInstance?.Player is { } player)
+            if (castGrantsDualcast && Plugin.Game?.Player is { } player)
             {
                 player.RemoveStatus(DualcastStatus);
                 player.AddStatusParam(DualcastStatus, 0, 15f);
@@ -59,7 +59,7 @@ internal sealed class CastTimeHandler : IUserActionHandler
     // completion would grant Dualcast.
     private static bool OnPress(ActionType actionType, uint actionId)
     {
-        var player = Plugin.GameInstance?.Player;
+        var player = Plugin.Game?.Player;
         if (player == null) return false;
 
         // Grant Swiftcast / Triplecast (both abilities → they don't consume Dualcast, so return).

@@ -15,7 +15,7 @@ internal sealed class ResetHandler : IUserActionHandler
     {
         RecastTimes.ClearAll();
         ClearGauge();
-        if (Plugin.GameInstance?.Player is { } player) JobActions.ApplyStartingResources(player, rng);
+        if (Plugin.Game?.Player is { } player) JobActions.ApplyStartingResources(player, rng);
     }
 
     // Its own scope: the seed opens gauge edits of its own.

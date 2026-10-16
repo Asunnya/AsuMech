@@ -12,7 +12,7 @@ namespace AnoMech.Scenarios.Umad.P5Exaflares;
 
 // Bots for UMAD P5 exaflares: all 8 party slots weave the rolling walls, then spread for the final
 // ExaflareSpread. Addresses every slot uniformly, including whichever holds the real player --
-// PlayerMovement.MoveTo is what decides whether that one actually moves (no-op for a real human,
+// PlayerMotion.MoveTo is what decides whether that one actually moves (no-op for a real human,
 // forwarded to MoveTo under DebugBotControl), so a real human dodging themselves works exactly as
 // before and debug-bot testing now also drives that slot instead of leaving it standing still.
 // Spread relaxation runs per-frame from the scenario's Tick via state.SpreadTick.
@@ -129,9 +129,9 @@ public sealed class UmadP5ExaflaresAi : IScenarioAi<UmadP5ExaflaresState>
         if (lanes.Count == 0) return;
 
         // Addresses all 8 slots uniformly, including whichever holds the real player --
-        // PlayerMovement.MoveTo is the one place that decides whether that's safe (no-op
+        // PlayerMotion.MoveTo is the one place that decides whether that's safe (no-op
         // outside DebugBotControl, forwarded to a real MoveTo under it), so this doesn't
-        // need its own player exclusion. See PlayerMovement's own doc comment.
+        // need its own player exclusion.
         var picks = new List<Pick>(8);
         for (int slot = 0; slot < 8; slot++)
         {
@@ -166,7 +166,7 @@ public sealed class UmadP5ExaflaresAi : IScenarioAi<UmadP5ExaflaresState>
             float outer = ResolveInnerRing();                       // max-melee around the boss
             float inner = MathF.Min(NoGoRadius + FanInnerMargin, outer - 0.5f);
 
-            // Uniform over all 8 slots, same reasoning as PlaceWave -- PlayerMovement.MoveTo
+            // Uniform over all 8 slots, same reasoning as PlaceWave -- PlayerMotion.MoveTo
             // is the actual gate on whether the real player's slot moves.
             for (int slot = 0; slot < 8; slot++)
             {
