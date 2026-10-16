@@ -1,8 +1,11 @@
+using System.Globalization;
 using System.Numerics;
+using AnoMech.Core.Native.Interfaces;
 using AnoMech.Core.Game.Party;
 using AnoMech.Scenarios.Umad.P5Exaflares;
 using static AnoMech.Core.Game.Party.PartyRole;
 using static AnoMech.Tests.NegativeRun;
+using BNpcBaseId = AnoMech.Scenarios.Umad.UmadConstants.BNpcBaseId;
 using ActionId = AnoMech.Scenarios.Umad.UmadConstants.ActionId;
 
 namespace AnoMech.Tests;
@@ -107,4 +110,38 @@ public class UmadP5ExaflaresScenarioTests
         => Exaflares(MainTank)
             .DropBelowArenaAt(3f, to: new(0, 20.5f))
             .ShouldKill(TheEnvironment, MainTank);
+
+    // A helper spawned on the tick it acts drops its first packets, so its exaflare never shows
+    // and the party dies to fire it can't see.
+    [Test]
+    public void EveryExaflareHelperExistsBeforeItCasts()
+    {
+        SimTimeline? timeline = null;
+        var run = ScenarioRun.Execute(typeof(UmadP5ExaflaresScenario), 0, 1,
+            new ScenarioRunOptions { Probe = _ => timeline ??= ((FakeBattleCharas)Natives.BattleCharas).Timeline });
+        Assert.That(run.Passed, run.ToString());
+
+        var spawnedAt = new Dictionary<string, float>();
+        var helperActions = new List<(IReadOnlyDictionary<string, string> Row, float SpawnedAt)>();
+        foreach (var row in timeline!.Rows)
+        {
+            if (row["kind"] == "spawn")
+            {
+                if (row["id"] == BNpcBaseId.KefkaHelper.ToString()) spawnedAt[row["actor"]] = Time(row);
+                else spawnedAt.Remove(row["actor"]);
+            }
+            else if (row["kind"] is "cast" or "ability" && spawnedAt.TryGetValue(row["actor"], out var spawn))
+                helperActions.Add((row, spawn));
+        }
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(helperActions.Count(a => a.Row["kind"] == "cast" && a.Row["id"] == ActionId.ExaflareOmen.ToString()), Is.EqualTo(12));
+            Assert.That(helperActions.Count(a => a.Row["id"] == ActionId.ExaflareHit.ToString()), Is.EqualTo(12 * 6));
+            foreach (var (row, spawn) in helperActions)
+                Assert.That(Time(row) - spawn, Is.GreaterThanOrEqualTo(0.5f), $"{row["name"]} at {row["t"]} from helper {row["actor"]}");
+        });
+    }
+
+    private static float Time(IReadOnlyDictionary<string, string> row) => float.Parse(row["t"], CultureInfo.InvariantCulture);
 }
