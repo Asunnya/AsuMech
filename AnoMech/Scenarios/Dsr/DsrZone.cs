@@ -11,6 +11,7 @@ public sealed class DsrZone : IZone
     private const ushort BgmId = 920;
     private const byte FairSkies = 2;
     public const byte Oppression = 45;
+    private const byte DarkThordanWeather = 46;
     private const byte Clouds = 3;
 
     public static readonly DsrZone Instance = new();
@@ -19,8 +20,7 @@ public sealed class DsrZone : IZone
     public static readonly Phase Nidhogg = new(Instance, "P3", Clouds, BgmId);
     // UNVERIFIED: the eyes' weather; P3's is kept.
     public static readonly Phase Eyes = new(Instance, "P4", Clouds, BgmId);
-    // UNVERIFIED: Dark Thordan's weather; P2's is kept.
-    public static readonly Phase DarkThordan = new(Instance, "P5", Oppression, BgmId);
+    public static readonly Phase DarkThordan = new(Instance, "P5", DarkThordanWeather, BgmId);
 
     public string Name => "Dragonsong's Reprise";
     public uint TerritoryId => 968;
