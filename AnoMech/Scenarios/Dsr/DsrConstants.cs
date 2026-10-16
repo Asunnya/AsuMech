@@ -81,6 +81,12 @@ public class DsrConstants
         public const uint Ysayle = 13118;
         public const uint Estinien = 13119;
         public const uint Alphinaud = 13769;
+        public const uint DarkThordan = 12611;
+        public const uint Vedrfolnir = 12646;
+        public const uint Darkscale = 12647;
+        public const uint Vidofnir = 12648;
+        public const uint DarkscaleDiver = 12630;
+        public const uint VidofnirDiver = 12631;
     }
 
     public class BNpcNameId
@@ -112,6 +118,9 @@ public class DsrConstants
         public const uint GildedPrice = 11316;
         public const uint LeftEye = 11317;
         public const uint RightEye = 11318;
+        public const uint Darkscale = 3983;
+        public const uint Vedrfolnir = 3984;
+        public const uint Vidofnir = 11314;
     }
 
     public class ActionId
@@ -231,6 +240,24 @@ public class DsrConstants
         public const uint SoulOfDevotion = 0x68C6;
         public const uint EyesDrift = 0x717A;
 
+        public const uint AscalonsMercyRevealed = 0x63CA;
+        public const uint AscalonsMercyRevealedCone = 0x63CB;
+        public const uint AltarFlare = 0x63E4;
+        public const uint AltarFlareEruption = 0x63E5;
+        public const uint Incarnation = 0x6B86;
+        public const uint DragonsEye = 0x6B87;
+        public const uint WrathOfTheHeavens = 0x6B89;
+        public const uint SpiralPierce = 0x6B8A;
+        public const uint TwistingDive = 0x6B8B;
+        public const uint Twister = 0x6B8C;
+        public const uint CauterizeDarkscale = 0x6B8D;
+        public const uint CauterizeVidofnir = 0x6B8E;
+        public const uint ChainLightning = 0x6B8F;
+        public const uint ChainLightningHit = 0x6B90;
+        public const uint LiquidHeaven = 0x6B91;
+        public const uint DeathOfTheHeavens = 0x6B92;
+        public const uint WrathSkywardLeap = 0x72A2;
+
         public const uint Interject = 7538;
         public const uint HeadGraze = 7551;
         public const uint ArmsLength = 7548;
@@ -271,6 +298,7 @@ public class DsrConstants
         public const ushort SoulOfDevotion = 0xABD;
         public const ushort Bleeding = 0xB87;
         public const ushort PiercingResistanceDown = 0xC3B;
+        public const ushort Thunderstruck = 0xB11;
     }
 
     public class TetherId
@@ -284,6 +312,8 @@ public class DsrConstants
         public const ushort Clawbound = 0x34;
         public const ushort LeftEyeToEstinien = 0xB2;
         public const ushort RightEyeToEstinien = 0xB3;
+        public const ushort SpiralPierce = 0x05;
+        public const ushort DragonToThordan = 0xA5;
     }
 
     public class EObjId
@@ -291,6 +321,8 @@ public class DsrConstants
         public const uint PlanarPrison = 0x1EB681;
         public const uint IcePuddle = 0x1EB682;
         public const uint FirePuddle = 0x1EB686;
+        public const uint Twister = 0x1E8910;
+        public const uint LiquidHeaven = 0x1EB684;
     }
 
     public class LockonId
@@ -309,6 +341,8 @@ public class DsrConstants
         public const uint ThirdInLine = 0x141;
         public const uint SoulOfFriendship = 0x11E;
         public const uint SoulOfDevotion = 0x11F;
+        public const uint WrathDefamation = 0x0E;
+        public const uint Divebomb = 0x14;
     }
 
     // UNVERIFIED: replayed from the log's director traffic at each phase change; whether they
@@ -326,6 +360,7 @@ public class DsrConstants
         public const uint UltimateEndLayout = 0x39;
         public const uint NidhoggLayout = 0x48;
         public const uint EyesLayout = 0x5A;
+        public const uint WrathLayout = 0x64;
         public const uint KnightsMap = 758;
         public const uint ThordanMap = 765;
         public const uint ThordanMusic = 0x1AF3;
@@ -351,6 +386,7 @@ public class DsrConstants
         public const ushort WarpEnd = 0x1E43;
         public const ushort EyeAppear = 0x1E46;
         public const ushort AllyAppear = 0x1E4C;
+        public const ushort DragonAppear = 0x1E44;
     }
 
     public class KnockbackId
