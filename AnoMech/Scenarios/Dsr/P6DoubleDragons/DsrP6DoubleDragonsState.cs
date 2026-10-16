@@ -4,7 +4,7 @@ using System.Linq;
 using System.Numerics;
 using AnoMech.Core.Game.Party;
 
-namespace AnoMech.Scenarios.Dsr.P6Wroth;
+namespace AnoMech.Scenarios.Dsr.P6DoubleDragons;
 
 public enum BreathGlow
 {
@@ -13,7 +13,7 @@ public enum BreathGlow
     Hraesvelgr,
 }
 
-public sealed class DsrP6WrothState
+public sealed class DsrP6DoubleDragonsState
 {
     public const float DiveLaneOffset = 11f;
     public const float DiveStartDistance = 34f;
@@ -41,10 +41,18 @@ public sealed class DsrP6WrothState
     // For each of the three sets, the column offset index of the orb in each row.
     public IReadOnlyList<IReadOnlyList<int>> OrbColumns { get; }
     public bool HotWing { get; }
+    public IReadOnlyCollection<PartyRole> SecondNidhoggTethers { get; }
+    public BreathGlow SecondGlow { get; }
+    public bool SecondHraesvelgrStackOnRegen { get; }
+    public bool SecondWingsNorth { get; }
+    public bool SecondPlumesNear { get; }
+    public bool SecondHotWing { get; }
+    // Nidhogg takes the west half of the north wall for the closing Cauterize, Hraesvelgr the east.
+    public bool NidhoggCauterizesWest { get; }
 
-    public DsrP6WrothState(Rng rng, DsrP6WrothStateOverrides? overrides = null)
+    public DsrP6DoubleDragonsState(Rng rng, DsrP6DoubleDragonsStateOverrides? overrides = null)
     {
-        overrides ??= new DsrP6WrothStateOverrides();
+        overrides ??= new DsrP6DoubleDragonsStateOverrides();
         var nonTanks = Enum.GetValues<PartyRole>().Where(r => !r.IsTank()).ToList();
         var nidhoggTethers = rng.Shuffle(nonTanks).Take(3).ToList();
         NidhoggTethers = overrides.NidhoggTethers ?? nidhoggTethers;
@@ -77,15 +85,38 @@ public sealed class DsrP6WrothState
         OrbColumns = Enumerable.Range(0, 3).Select(_ => (IReadOnlyList<int>)rng.Shuffle(new[] { 0, 1, 2 }).ToList()).ToList();
         var hotWing = rng.NextBool();
         HotWing = overrides.HotWing ?? hotWing;
+        var secondTethers = rng.Shuffle(nonTanks).Take(3).ToList();
+        SecondNidhoggTethers = overrides.SecondNidhoggTethers ?? secondTethers;
+        var secondGlow = (BreathGlow)rng.Next(3);
+        SecondGlow = overrides.SecondGlow ?? secondGlow;
+        var secondStack = rng.NextBool();
+        SecondHraesvelgrStackOnRegen = overrides.SecondHraesvelgrStackOnRegen ?? secondStack;
+        var secondWings = rng.NextBool();
+        SecondWingsNorth = overrides.SecondWingsNorth ?? secondWings;
+        var secondPlumes = rng.NextBool();
+        SecondPlumesNear = overrides.SecondPlumesNear ?? secondPlumes;
+        var secondHotWing = rng.NextBool();
+        SecondHotWing = overrides.SecondHotWing ?? secondHotWing;
+        var nidhoggWest = rng.NextBool();
+        NidhoggCauterizesWest = overrides.NidhoggCauterizesWest ?? nidhoggWest;
     }
 
-    public IEnumerable<PartyRole> HraesvelgrTethers => Enum.GetValues<PartyRole>().Where(r => !r.IsTank() && !NidhoggTethers.Contains(r));
+    public IReadOnlyCollection<PartyRole> NidhoggTethersAt(int wyrmsbreath) => wyrmsbreath == 0 ? NidhoggTethers : SecondNidhoggTethers;
+    public BreathGlow GlowAt(int wyrmsbreath) => wyrmsbreath == 0 ? Glow : SecondGlow;
+    public bool WingsNorthAt(int wings) => wings == 0 ? WingsNorth : SecondWingsNorth;
+    public bool PlumesNearAt(int wings) => wings == 0 ? PlumesNear : SecondPlumesNear;
+    public bool HotWingAt(int hotWing) => hotWing == 0 ? HotWing : SecondHotWing;
 
-    public bool NidhoggGlows => Glow is BreathGlow.Both or BreathGlow.Nidhogg;
-    public bool HraesvelgrGlows => Glow is BreathGlow.Both or BreathGlow.Hraesvelgr;
+    public IEnumerable<PartyRole> HraesvelgrTethersAt(int wyrmsbreath) => Enum.GetValues<PartyRole>().Where(r => !r.IsTank() && !NidhoggTethersAt(wyrmsbreath).Contains(r));
 
-    public PartyRole HraesvelgrStackTarget => HraesvelgrStackOnRegen ? PartyRole.RegenHealer : PartyRole.ShieldHealer;
-    public PartyRole NidhoggStackTarget => HraesvelgrStackOnRegen ? PartyRole.ShieldHealer : PartyRole.RegenHealer;
+    public static bool NidhoggGlows(BreathGlow glow) => glow is BreathGlow.Both or BreathGlow.Nidhogg;
+    public static bool HraesvelgrGlows(BreathGlow glow) => glow is BreathGlow.Both or BreathGlow.Hraesvelgr;
+
+    public PartyRole HraesvelgrStackTarget(int akhAfah) => (akhAfah == 0 ? HraesvelgrStackOnRegen : SecondHraesvelgrStackOnRegen) ? PartyRole.RegenHealer : PartyRole.ShieldHealer;
+    public PartyRole NidhoggStackTarget(int akhAfah) => HraesvelgrStackTarget(akhAfah) == PartyRole.RegenHealer ? PartyRole.ShieldHealer : PartyRole.RegenHealer;
+
+    public Vector3 NidhoggCauterizeStart => new(NidhoggCauterizesWest ? -DiveLaneOffset : DiveLaneOffset, 0f, -DiveStartDistance);
+    public Vector3 HraesvelgrCauterizeStart => new(NidhoggCauterizesWest ? DiveLaneOffset : -DiveLaneOffset, 0f, -DiveStartDistance);
 
     public Vector3 NidhoggDiveStart => new(NidhoggDivesEast ? DiveLaneOffset : -DiveLaneOffset, 0f, NidhoggFromSouth ? DiveStartDistance : -DiveStartDistance);
     public Vector3 HraesvelgrDiveStart => new(HraesvelgrLane * DiveLaneOffset, 0f, HraesvelgrFromSouth ? DiveStartDistance : -DiveStartDistance);

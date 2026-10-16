@@ -7,9 +7,9 @@ using AnoMech.Core.Game.Party;
 using AnoMech.Core.SimObjects;
 using static AnoMech.Core.Game.Party.PartyRole;
 
-namespace AnoMech.Scenarios.Dsr.P6Wroth;
+namespace AnoMech.Scenarios.Dsr.P6DoubleDragons;
 
-public sealed class DsrP6WrothAi : IScenarioAi<DsrP6WrothState>
+public sealed class DsrP6DoubleDragonsAi : IScenarioAi<DsrP6DoubleDragonsState>
 {
     public string Name => "NA PF (Light vs Dark)";
 
@@ -28,34 +28,105 @@ public sealed class DsrP6WrothAi : IScenarioAi<DsrP6WrothState>
     private const float NearStackX = 7.5f;
     private const float WallStackX = 17f;
     private const float HotTailLineZ = 13f;
+    private const float HotWingStripZ = 2f;
+    private static readonly Vector2 SecondWyrmsbreathMainTankSpot = new(-14.8f, -12f);
+    private static readonly Vector2 SecondWyrmsbreathOffTankSpot = new(14.3f, 12.1f);
+    private static readonly Vector2 WaitForTheDivesSpot = new(0f, -8f);
+    private const float DiveLaneStandX = 6.5f;
+    private const float DiveLaneStandZ = -8f;
+    private const float DiveTankX = 8f;
+    private const float DiveTankZ = -20f;
+    private static readonly Vector2 NorthWallSpot = new(0f, -20f);
 
-    private DsrP6WrothState state = null!;
+    private DsrP6DoubleDragonsState state = null!;
     private SimWorld world = null!;
 
-    public void Run(DsrP6WrothState stateParam, SimWorld worldParam)
+    public void Run(DsrP6DoubleDragonsState stateParam, SimWorld worldParam)
     {
         state = stateParam;
         world = worldParam;
         var ai = new AiManager(world);
 
         ai.Move(0.3f, () => AiMove.Create(PrePositionForTethers()).NaturalOrder());
-        ai.Move(DsrP6WrothScenario.TethersOut + 0.4f, () => AiMove.Create(PairUpWithOppositeTethers()).NaturalOrder(), jitter: 0f, sprint: true);
-        ai.Move(DsrP6WrothScenario.BreathsLand + 0.5f, () => AiMove.Create(DpsSpreadForMortalVow()).NaturalOrder(), jitter: 0f);
-        ai.Move(DsrP6WrothScenario.VowApplied + 0.4f, () => AiMove.Create(LightPartiesNorthAndSouth()).NaturalOrder(), jitter: 0f);
-        ai.Move(DsrP6WrothScenario.AkhAfahLands + 0.6f, () => AiMove.Create(Cluster(Vector2.Zero, Enum.GetValues<PartyRole>())).NaturalOrder(), jitter: 0f);
-        ai.Move(DsrP6WrothScenario.HallowedWingsCast + 0.4f, () => AiMove.Create(Cluster(new Vector2(0f, 6f * SafeWingSide), Enum.GetValues<PartyRole>())).NaturalOrder(), jitter: 0f);
-        ai.Move(DsrP6WrothScenario.NidhoggCauterizeCast + 0.3f, () => AiMove.Create(HallowedWingsSpots()).NaturalOrder(), jitter: 0f, sprint: true);
-        ai.Move(DsrP6WrothScenario.HallowedWingsLands + 0.8f, () => AiMove.Create(VowHolderMeetsTank(state.VowTarget, MainTank, new Vector2(0f, 0f), new Vector2(0f, 9f))).NaturalOrder(), jitter: 0f);
-        ai.Move(DsrP6WrothScenario.VowPasses[0] + 0.4f, () => AiMove.Create(Cluster(Vector2.Zero, Enum.GetValues<PartyRole>())).NaturalOrder(), jitter: 0f);
-        ai.Move(DsrP6WrothScenario.HraesvelgrCauterizeCast + 0.25f, () => AiMove.Create(Cluster(AkhMornPath()[0], Enum.GetValues<PartyRole>())).NaturalOrder(), jitter: 0f, sprint: true);
-        for (var i = 0; i < DsrP6WrothScenario.AkhMornHits.Length; i++)
+        ai.Move(DsrP6DoubleDragonsScenario.TethersOut + 0.4f, () => AiMove.Create(PairUpWithOppositeTethers()).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(DsrP6DoubleDragonsScenario.BreathsLand + 0.5f, () => AiMove.Create(DpsSpreadForMortalVow()).NaturalOrder(), jitter: 0f);
+        ai.Move(DsrP6DoubleDragonsScenario.VowApplied + 0.4f, () => AiMove.Create(LightPartiesNorthAndSouth()).NaturalOrder(), jitter: 0f);
+        ai.Move(DsrP6DoubleDragonsScenario.AkhAfahLands + 0.6f, () => AiMove.Create(Cluster(Vector2.Zero, Enum.GetValues<PartyRole>())).NaturalOrder(), jitter: 0f);
+        ai.Move(DsrP6DoubleDragonsScenario.HallowedWingsCast + 0.4f, () => AiMove.Create(Cluster(new Vector2(0f, 6f * SafeWingSide), Enum.GetValues<PartyRole>())).NaturalOrder(), jitter: 0f);
+        ai.Move(DsrP6DoubleDragonsScenario.NidhoggCauterizeCast + 0.3f, () => AiMove.Create(HallowedWingsSpots()).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(DsrP6DoubleDragonsScenario.HallowedWingsLands + 0.8f, () => AiMove.Create(VowHolderMeetsTank(state.VowTarget, MainTank, new Vector2(0f, 0f), new Vector2(0f, 9f))).NaturalOrder(), jitter: 0f);
+        ai.Move(DsrP6DoubleDragonsScenario.VowPasses[0] + 0.4f, () => AiMove.Create(Cluster(Vector2.Zero, Enum.GetValues<PartyRole>())).NaturalOrder(), jitter: 0f);
+        ai.Move(DsrP6DoubleDragonsScenario.HraesvelgrCauterizeCast + 0.25f, () => AiMove.Create(Cluster(AkhMornPath()[0], Enum.GetValues<PartyRole>())).NaturalOrder(), jitter: 0f, sprint: true);
+        for (var i = 0; i < DsrP6DoubleDragonsScenario.AkhMornHits.Length; i++)
         {
             var next = i + 1;
-            ai.Move(DsrP6WrothScenario.AkhMornHits[i] + 0.05f, () => AiMove.Create(Cluster(AkhMornPath()[next], Enum.GetValues<PartyRole>())).NaturalOrder(), jitter: 0f, sprint: true);
+            ai.Move(DsrP6DoubleDragonsScenario.AkhMornHits[i] + 0.05f, () => AiMove.Create(Cluster(AkhMornPath()[next], Enum.GetValues<PartyRole>())).NaturalOrder(), jitter: 0f, sprint: true);
         }
-        ai.Move(DsrP6WrothScenario.FlameBlastCasts[2] + DsrP6WrothScenario.FlameBlastDelay + 0.07f, () => AiMove.Create(LineUpForWrothFlames()).NaturalOrder(), jitter: 0f, sprint: true);
-        ai.Move(DsrP6WrothScenario.FlamesResolve + 0.15f, () => AiMove.Create(VowHolderMeetsTank(MainTank, OffTank, new Vector2(2f, -6f), new Vector2(-2f, 6f))).NaturalOrder(), jitter: 0f, sprint: true);
-        ai.Move(DsrP6WrothScenario.VowPasses[1] + 0.4f, () => AiMove.Create(Cluster(Vector2.Zero, Enum.GetValues<PartyRole>())).NaturalOrder(), jitter: 0f);
+        ai.Move(DsrP6DoubleDragonsScenario.FlameBlastCasts[2] + DsrP6DoubleDragonsScenario.FlameBlastDelay + 0.07f, () => AiMove.Create(LineUpForWrothFlames()).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(DsrP6DoubleDragonsScenario.FlamesResolve + 0.15f, () => AiMove.Create(VowHolderMeetsTank(MainTank, OffTank, new Vector2(2f, -6f), new Vector2(-2f, 6f))).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(DsrP6DoubleDragonsScenario.VowPasses[1] + 0.4f, () => AiMove.Create(Cluster(Vector2.Zero, Enum.GetValues<PartyRole>())).NaturalOrder(), jitter: 0f);
+
+        ai.Move(DsrP6DoubleDragonsScenario.SecondHalfStart + 0.3f, () => AiMove.Create(Cluster(Vector2.Zero, Enum.GetValues<PartyRole>())).NaturalOrder(), jitter: 0f);
+        ai.Move(DsrP6DoubleDragonsScenario.SecondAkhAfahCast + 0.4f, () => AiMove.Create(LightPartiesNorthAndSouth()).NaturalOrder(), jitter: 0f);
+        ai.Move(DsrP6DoubleDragonsScenario.SecondAkhAfahLands + 0.6f, () => AiMove.Create(Cluster(Vector2.Zero, Enum.GetValues<PartyRole>())).NaturalOrder(), jitter: 0f);
+        ai.Move(DsrP6DoubleDragonsScenario.SecondHotWingCast + 0.35f, () => AiMove.Create(SecondHallowedWingsSpots()).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(DsrP6DoubleDragonsScenario.SecondHotWingLands + 0.6f, () => AiMove.Create(VowHolderMeetsTank(OffTank, ThirdVowHolder, Vector2.Zero, new Vector2(0f, 9f))).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(DsrP6DoubleDragonsScenario.VowPasses[2] + 0.4f, () => AiMove.Create(Cluster(new Vector2(0f, -3f), Enum.GetValues<PartyRole>())).NaturalOrder(), jitter: 0f);
+        ai.Move(DsrP6DoubleDragonsScenario.SecondTethersOut + 0.4f, () => AiMove.Create(StaticSecondWyrmsbreathSpots()).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(DsrP6DoubleDragonsScenario.SecondBreathsLand + 0.5f, () => AiMove.Create(WaitNorthForTheDives()).NaturalOrder(), jitter: 0f);
+        ai.Move(DsrP6DoubleDragonsScenario.CauterizeCast + 0.1f, () => AiMove.Create(IntoTheOppositeElementsLane()).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(DsrP6DoubleDragonsScenario.CauterizeLands + 0.4f, () => AiMove.Create(Cluster(NorthWallSpot, Enum.GetValues<PartyRole>())).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(DsrP6DoubleDragonsScenario.RevengeOfTheHorde - 0.6f, () => AiMove.Create(VowHolderMeetsTank(ThirdVowHolder, CasterDps, new Vector2(8f, -19f), new Vector2(-5f, -19f))).NaturalOrder(), jitter: 0f);
+        ai.Move(DsrP6DoubleDragonsScenario.VowPasses[3] + 0.4f, () => AiMove.Create(Cluster(new Vector2(0f, -19f), Enum.GetValues<PartyRole>())).NaturalOrder(), jitter: 0f);
+    }
+
+    private PartyRole ThirdVowHolder => state.VowTarget == MeleeDpsA ? MeleeDpsB : MeleeDpsA;
+
+    private Vector2?[] SecondHallowedWingsSpots()
+    {
+        var sz = state.SecondWingsNorth ? 1f : -1f;
+        var z = sz * (state.SecondHotWing ? HotWingStripZ : HotTailLineZ);
+        var (wallTank, middleTank, party) = state.SecondPlumesNear ? (19.5f, 1.8f, -18f) : (-19.5f, 0.5f, 19f);
+        var spots = Cluster(new Vector2(party, z), [RegenHealer, ShieldHealer, MeleeDpsA, MeleeDpsB, PhysRangedDps, CasterDps]);
+        spots[(int)MainTank] = new Vector2(wallTank, z);
+        spots[(int)OffTank] = new Vector2(middleTank, z);
+        return spots;
+    }
+
+    private Vector2?[] StaticSecondWyrmsbreathSpots()
+    {
+        var spots = new Vector2?[8];
+        spots[(int)RegenHealer] = new Vector2(0f, -19.5f);
+        spots[(int)PhysRangedDps] = new Vector2(7.6f, -17.8f);
+        spots[(int)MeleeDpsA] = new Vector2(2.1f, -9.3f);
+        spots[(int)ShieldHealer] = new Vector2(0.1f, 19f);
+        spots[(int)CasterDps] = new Vector2(-7.5f, 18f);
+        spots[(int)MeleeDpsB] = new Vector2(-2.75f, 9.7f);
+        var sharedBuster = state.SecondGlow == BreathGlow.Both;
+        spots[(int)MainTank] = sharedBuster ? new Vector2(-0.3f, 0f) : SecondWyrmsbreathMainTankSpot;
+        spots[(int)OffTank] = sharedBuster ? new Vector2(0.3f, 0f) : SecondWyrmsbreathOffTankSpot;
+        return spots;
+    }
+
+    private static Vector2?[] WaitNorthForTheDives()
+    {
+        var spots = Cluster(WaitForTheDivesSpot, [RegenHealer, ShieldHealer, MeleeDpsA, MeleeDpsB, PhysRangedDps, CasterDps]);
+        spots[(int)MainTank] = new Vector2(-4f, -14f);
+        spots[(int)OffTank] = new Vector2(4f, -14f);
+        return spots;
+    }
+
+    private Vector2?[] IntoTheOppositeElementsLane()
+    {
+        var nidhoggSide = state.NidhoggCauterizesWest ? -1f : 1f;
+        var frozen = state.HraesvelgrTethersAt(1).ToArray();
+        var burning = state.NidhoggTethersAt(1).ToArray();
+        var spots = Cluster(new Vector2(nidhoggSide * DiveLaneStandX, DiveLaneStandZ), frozen);
+        var hraesvelgrLane = Cluster(new Vector2(-nidhoggSide * DiveLaneStandX, DiveLaneStandZ), burning);
+        foreach (var role in burning) spots[(int)role] = hraesvelgrLane[(int)role];
+        spots[(int)MainTank] = new Vector2(-DiveTankX, DiveTankZ);
+        spots[(int)OffTank] = new Vector2(DiveTankX, DiveTankZ);
+        return spots;
     }
 
     private static Vector2?[] PrePositionForTethers()

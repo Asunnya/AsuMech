@@ -308,6 +308,9 @@ public class DsrConstants
         public const uint AkhMornFollowUp = 0x6D47;
         public const uint FlameBlast = 0x6729;
         public const uint SpreadingFlames = 0x742B;
+        public const uint Touchdown = 0x6D40;
+        public const uint TouchdownHit = 0x70E7;
+        public const uint DragonsRevengeOfTheHorde = 0x6D21;
         public const uint EntangledFlames = 0x742C;
 
         public const uint Interject = 7538;
@@ -357,6 +360,8 @@ public class DsrConstants
         public const ushort Boiling = 0xB52;
         public const ushort Freezing = 0xB53;
         public const ushort SpreadingFlames = 0xAC6;
+        public const ushort Pyretic = 0x3C0;
+        public const ushort DeepFreeze = 0xD98;
         public const ushort EntangledFlames = 0xAC7;
     }
 
@@ -426,6 +431,7 @@ public class DsrConstants
         public const uint EyesLayout = 0x5A;
         public const uint WrathLayout = 0x64;
         public const uint DoubleDragonsLayout = 0x2D;
+        public const uint SecondWyrmsbreathLayout = 0x3C;
         public const uint KnightsMap = 758;
         public const uint ThordanMap = 765;
         public const uint ThordanMusic = 0x1AF3;

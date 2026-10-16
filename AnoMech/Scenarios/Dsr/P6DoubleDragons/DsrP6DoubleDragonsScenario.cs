@@ -12,18 +12,26 @@ using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using static AnoMech.Scenarios.Dsr.DsrConstants;
 
-namespace AnoMech.Scenarios.Dsr.P6Wroth;
+namespace AnoMech.Scenarios.Dsr.P6DoubleDragons;
 
-// Nidhogg and Hraesvelgr from their arrival through Wyrmsbreath, Akh Afah, Hallowed Wings and Wroth
-// Flames, up to the second Mortal Vow pass. The dragons' shared HP check is not simulated.
-public sealed class DsrP6WrothScenario : IScenario
+// Nidhogg and Hraesvelgr from their arrival to Revenge of the Horde, played in two halves: up to the
+// second Mortal Vow pass after Wroth Flames, then from there to the enrage cast. The dragons' shared
+// HP check and the kill are not simulated.
+public sealed class DsrP6DoubleDragonsScenario : IScenario
 {
-    public string Name => "Wyrmsbreath to Wroth Flames";
+    private readonly bool secondHalf;
+
+    public DsrP6DoubleDragonsScenario() : this(secondHalf: false) { }
+
+    internal DsrP6DoubleDragonsScenario(bool secondHalf) => this.secondHalf = secondHalf;
+
+    public string Name => secondHalf ? "Hallowed Wings 2 to Cauterize" : "Wyrmsbreath to Wroth Flames";
+    public float BgmSecondsAtStart => secondHalf ? SecondHalfStart : 0f;
     public IPhase Phase => DsrZone.DoubleDragons;
 
-    public IReadOnlyList<IScenarioAi> AiStrats => [new DsrP6WrothAi()];
+    public IReadOnlyList<IScenarioAi> AiStrats => [new DsrP6DoubleDragonsAi()];
 
-    private readonly DsrP6WrothStateOverrides overrides = new();
+    private readonly DsrP6DoubleDragonsStateOverrides overrides = new();
     public object SettingsOverrides => overrides;
 
     public const float TethersOut = 14.65f;
@@ -34,7 +42,7 @@ public sealed class DsrP6WrothScenario : IScenario
     public const float HallowedWingsCast = 45.98f;
     public const float NidhoggCauterizeCast = 49.53f;
     public const float HallowedWingsLands = 54.26f;
-    public static readonly float[] VowPasses = [62.97f, 97.03f];
+    public static readonly float[] VowPasses = [62.97f, 97.03f, 131.06f, 165.10f];
     public const float WrothFlames = 66.08f;
     public static readonly float[] OrbSpawns = [70.37f, 72.39f, 75.58f];
     public static readonly float[] FlameBlastCasts = [77.69f, 79.69f, 82.68f];
@@ -45,6 +53,22 @@ public sealed class DsrP6WrothScenario : IScenario
     public const float HotWingCast = 85.78f;
     public const float HotWingLands = 92.26f;
     public const float FlamesResolve = 93.27f;
+    public const float FirstHalfEnd = 100.0f;
+    public const float SecondHalfStart = 99.0f;
+    public const float SecondAkhAfahCast = 101.37f;
+    public const float SecondAkhAfahLands = 109.56f;
+    public const float SecondHallowedWingsCast = 114.05f;
+    public const float SecondHotWingCast = 116.05f;
+    public const float SecondHallowedWingsLands = 122.34f;
+    public const float SecondHotWingLands = 122.52f;
+    public const float SecondTethersOut = 135.00f;
+    public const float SecondBreathsLand = 142.17f;
+    public const float ElementsTurn = 153.13f;
+    public const float CauterizeCast = 149.70f;
+    public const float CauterizeLands = 154.70f;
+    public const float TouchdownLands = 161.69f;
+    public const float RevengeOfTheHorde = 162.94f;
+    public const float SecondHalfEnd = 169.0f;
 
     private const uint DragonMaxHp = 4535368;
     private const uint OrbMaxHp = 100000;
@@ -55,8 +79,8 @@ public sealed class DsrP6WrothScenario : IScenario
     private const float AutoAttackDamage = 0.15f;
     // UNVERIFIED: how far a breath tether must stretch; tethered players at 23y were taut, 22.6y slack.
     public const float BreathTautDistance = 21f;
-    // UNVERIFIED: the breath cones' width; tethered pairs 15 degrees apart from a dragon were each hit once.
-    private const float BreathHalfAngle = 10f * MathF.PI / 180f;
+    // UNVERIFIED: the breath cones' width; players 8 degrees apart from a dragon were each hit once.
+    private const float BreathHalfAngle = 6f * MathF.PI / 180f;
     private const float BreathRange = 100f;
     private const float BreathDamage = 0.3f;
     private const float ResistanceDownSeconds = 3f;
@@ -89,12 +113,24 @@ public sealed class DsrP6WrothScenario : IScenario
     public const float SpreadRadius = 5f;
     public const float StackRadius = 4f;
     private const float FlamesDamage = 0.4f;
+    private const float ElementDebuffSeconds = 30f;
+    // UNVERIFIED: how far a Pyretic player may drift before the burn costs too much HP for Cauterize.
+    private const float PyreticDrift = 1f;
+    private const float CauterizeHalfWidth = 11f;
+    private const float CauterizeLength = 80f;
+    private const float CauterizeDamage = 0.5f;
+    private const float CauterizeDotSeconds = 27f;
+    private static readonly Vector3 NidhoggTouchdown = Vector3.Zero;
+    private static readonly Vector3 HraesvelgrTouchdown = new(0f, 0f, 25f);
+    // UNVERIFIED: Touchdown falls off with distance; how close turns lethal was never seen.
+    public const float TouchdownLethalRadius = 10f;
+    private const float TouchdownDamage = 0.3f;
     private const float EffectCarrierLinger = 3f;
 
     private SimWorld world = null!;
     private SimParty party = null!;
     private DamageSolver damage = null!;
-    private DsrP6WrothState state = null!;
+    private DsrP6DoubleDragonsState state = null!;
 
     private SimEnemy? nidhogg;
     private SimEnemy? hraesvelgr;
@@ -104,6 +140,7 @@ public sealed class DsrP6WrothScenario : IScenario
     private readonly List<SimEnemy>[] orbSets = [[], [], []];
     private readonly List<SimEnemy> hotWingCasters = [];
     private readonly List<SimEnemy> spawned = [];
+    private readonly Dictionary<SimCharacter, Vector3> pyretic = [];
 
     private sealed class BreathTether(SimCharacter member, SimEnemy dragon, ushort tautId, uint breathAction)
     {
@@ -120,16 +157,17 @@ public sealed class DsrP6WrothScenario : IScenario
         world = worldParam;
         party = world.Party;
         damage = new DamageSolver(party);
-        state = new DsrP6WrothState(world.Rng, overrides);
+        state = new DsrP6DoubleDragonsState(world.Rng, overrides);
         breathTethers.Clear();
         foreach (var set in orbSets) set.Clear();
         hotWingCasters.Clear();
         spawned.Clear();
+        pyretic.Clear();
         hpLink = null;
         vowHolder = null;
 
         if (selectedAi is { } idx && idx < AiStrats.Count)
-            ((IScenarioAi<DsrP6WrothState>)AiStrats[idx]).Run(state, world);
+            ((IScenarioAi<DsrP6DoubleDragonsState>)AiStrats[idx]).Run(state, world);
 
         world.Events.Add(0f, () => world.EnforceArenaBoundary(new SquareArena(Geometry.ArenaHalfWidth), "Touched the arena wall"));
         world.Events.Add(0f, () => world.PlaceWaymarks(NaurWaymarks));
@@ -140,27 +178,23 @@ public sealed class DsrP6WrothScenario : IScenario
         foreach (var at in NidhoggAutos) world.Events.Add(at, () => AutoAttack(nidhogg, ActionId.NidhoggP6Attack, PartyRole.MainTank));
         foreach (var at in HraesvelgrAutos) world.Events.Add(at, () => AutoAttack(hraesvelgr, ActionId.HraesvelgrAttack, PartyRole.OffTank));
 
-        world.Events.Add(TethersOut, TetherBreaths);
-        world.Events.Add(14.74f, CastWyrmsbreath);
-        world.Events.Add(21.02f, () =>
-        {
-            PlayEffect(nidhogg, state.NidhoggGlows ? ActionId.DreadWyrmsbreathGlowing : ActionId.DreadWyrmsbreath, 1.1f);
-            PlayEffect(hraesvelgr, state.HraesvelgrGlows ? ActionId.GreatWyrmsbreathGlowing : ActionId.GreatWyrmsbreath, 1.1f);
-        });
+        world.Events.Add(TethersOut, () => TetherBreaths(0));
+        world.Events.Add(14.74f, () => CastWyrmsbreath(0));
+        world.Events.Add(21.02f, () => WyrmsbreathEffects(0));
         world.Events.Add(21.74f, SwirlingBlizzard);
-        world.Events.Add(BreathsLand, Breaths);
-        world.Events.Add(BreathsLand, TankBreaths);
+        world.Events.Add(BreathsLand, () => Breaths(cleansedLater: false));
+        world.Events.Add(BreathsLand, () => TankBreaths(0));
 
         world.Events.Add(VowApplied, ApplyMortalVow);
         world.Events.Add(AkhAfahCast, CastAkhAfah);
-        world.Events.Add(40.14f, () => { PlayEffect(nidhogg, ActionId.AkhAfahNidhogg, 1.1f); PlayEffect(hraesvelgr, ActionId.AkhAfahHraesvelgr, 1.1f); });
-        world.Events.Add(AkhAfahLands, AkhAfah);
+        world.Events.Add(40.14f, AkhAfahEffects);
+        world.Events.Add(AkhAfahLands, () => AkhAfah(0));
 
-        world.Events.Add(HallowedWingsCast, () => CastSelf(hraesvelgr, HallowedWingsCastId, 7.2f));
+        world.Events.Add(HallowedWingsCast, () => CastSelf(hraesvelgr, HallowedWingsCastId(0), 7.2f));
         world.Events.Add(47.50f, () => FlyTo(nidhogg, state.NidhoggDiveStart));
         world.Events.Add(NidhoggCauterizeCast, () => CastDive(nidhogg, ActionId.CauterizeNidhogg));
-        world.Events.Add(53.46f, () => PlayEffect(hraesvelgr, HallowedWingsCastId, 1.1f));
-        world.Events.Add(HallowedWingsLands, HallowedWings);
+        world.Events.Add(53.46f, () => PlayEffect(hraesvelgr, HallowedWingsCastId(0), 1.1f));
+        world.Events.Add(HallowedWingsLands, () => HallowedWings(0));
         world.Events.Add(54.53f, () => Dive(nidhogg, ActionId.CauterizeNidhogg));
         // UNVERIFIED: when Nidhogg is back on his side; he autos again at 59.8.
         world.Events.Add(58.00f, () => ReturnHome(nidhogg, NidhoggHome));
@@ -187,14 +221,77 @@ public sealed class DsrP6WrothScenario : IScenario
         world.Events.Add(79.45f, () => Dive(hraesvelgr, ActionId.CauterizeHraesvelgr));
         // UNVERIFIED: when Hraesvelgr is back; he autos again at 95.1.
         world.Events.Add(85.00f, () => ReturnHome(hraesvelgr, HraesvelgrHome));
-        world.Events.Add(HotWingCast, CastHotWingOrTail);
-        world.Events.Add(91.27f, () => PlayEffect(nidhogg, state.HotWing ? ActionId.HotWing : ActionId.HotTail, 1.1f));
-        world.Events.Add(HotWingLands, HotWingOrTail);
+        world.Events.Add(HotWingCast, () => CastHotWingOrTail(0));
+        world.Events.Add(91.27f, () => PlayEffect(nidhogg, state.HotWingAt(0) ? ActionId.HotWing : ActionId.HotTail, 1.1f));
+        world.Events.Add(HotWingLands, () => HotWingOrTail(0));
         world.Events.Add(FlamesResolve, ResolveWrothFlames);
         world.Events.Add(94.00f, () => DespawnOrbs(0));
         world.Events.Add(96.10f, () => DespawnOrbs(1));
         world.Events.Add(99.30f, () => DespawnOrbs(2));
-        world.Events.Add(100.0f, DespawnAll);
+
+        world.Events.Add(SecondAkhAfahCast, CastAkhAfah);
+        world.Events.Add(109.33f, AkhAfahEffects);
+        world.Events.Add(SecondAkhAfahLands, () => AkhAfah(1));
+        world.Events.Add(SecondHallowedWingsCast, () => CastSelf(hraesvelgr, HallowedWingsCastId(1), 7.2f));
+        world.Events.Add(SecondHotWingCast, () => CastHotWingOrTail(1));
+        world.Events.Add(121.54f, () =>
+        {
+            PlayEffect(hraesvelgr, HallowedWingsCastId(1), 1.1f);
+            PlayEffect(nidhogg, state.HotWingAt(1) ? ActionId.HotWing : ActionId.HotTail, 1.1f);
+        });
+        world.Events.Add(SecondHallowedWingsLands, () => HallowedWings(1));
+        world.Events.Add(SecondHotWingLands, () => HotWingOrTail(1));
+        world.Events.Add(134.85f, () => world.Map.DirectorUpdate(ArenaDirector.Layout, 1U, ArenaDirector.SecondWyrmsbreathLayout));
+        world.Events.Add(SecondTethersOut, () => TetherBreaths(1));
+        world.Events.Add(135.08f, () => CastWyrmsbreath(1));
+        world.Events.Add(141.36f, () => WyrmsbreathEffects(1));
+        world.Events.Add(142.08f, SwirlingBlizzard);
+        world.Events.Add(SecondBreathsLand, () => Breaths(cleansedLater: true));
+        world.Events.Add(SecondBreathsLand, () => TankBreaths(1));
+        // UNVERIFIED: when the dragons reach the north wall; they cast from there at 149.7.
+        world.Events.Add(148.50f, () => { FlyTo(nidhogg, state.NidhoggCauterizeStart); FlyTo(hraesvelgr, state.HraesvelgrCauterizeStart); });
+        world.Events.Add(CauterizeCast, () => { CastDive(nidhogg, ActionId.CauterizeNidhogg); CastDive(hraesvelgr, ActionId.CauterizeHraesvelgr); });
+        world.Events.Add(ElementsTurn, TurnElementsIntoPyreticAndDeepFreeze);
+        world.Events.Add(CauterizeLands, CleansingCauterize);
+        world.Events.Add(CauterizeLands + 1.3f, UncleansedElementsKill);
+        // UNVERIFIED: when the dragons land again; Touchdown plays from these spots at 160.8.
+        world.Events.Add(159.50f, () => { ReturnHome(nidhogg, NidhoggTouchdown); ReturnHome(hraesvelgr, HraesvelgrTouchdown); });
+        world.Events.Add(160.80f, () => { PlayEffect(nidhogg, ActionId.Touchdown, 1.1f); PlayEffect(hraesvelgr, ActionId.Touchdown, 1.1f); });
+        world.Events.Add(TouchdownLands, Touchdown);
+        world.Events.Add(RevengeOfTheHorde, () => { CastSelf(nidhogg, ActionId.DragonsRevengeOfTheHorde, 24.7f); CastSelf(hraesvelgr, ActionId.DragonsRevengeOfTheHorde, 24.7f); });
+        world.Events.Add(SecondHalfEnd, DespawnAll);
+
+        if (secondHalf) StartAtTheSecondAkhAfah();
+        else EndAfterWrothFlames();
+    }
+
+    private void EndAfterWrothFlames()
+    {
+        world.Events.KeepWindow(0f, FirstHalfEnd);
+        world.Events.Add(FirstHalfEnd, DespawnAll);
+    }
+
+    // The Vow sits on the off tank as the second half opens; the main tank and the first holder are atoned.
+    private void StartAtTheSecondAkhAfah()
+    {
+        world.Events.KeepWindow(SecondHalfStart, SecondHalfEnd);
+        world.Events.Add(0f, () => world.EnforceArenaBoundary(new SquareArena(Geometry.ArenaHalfWidth), "Touched the arena wall"));
+        world.Events.Add(0f, () => world.PlaceWaymarks(NaurWaymarks));
+        world.Events.Add(0f, () => world.Map.DirectorUpdate(ArenaDirector.Layout, 1U, ArenaDirector.DoubleDragonsLayout));
+        world.Events.Add(0f, () => world.Map.DirectorUpdate(ArenaDirector.MapChange, ArenaDirector.KnightsMap));
+        world.Events.Add(0f, () =>
+        {
+            SpawnDragons();
+            nidhogg?.SetTargetable(true);
+            hraesvelgr?.SetTargetable(true);
+            if (party.Get(PartyRole.OffTank) is { } offTank)
+            {
+                offTank.AddStatus(StatusId.MortalVow, VowPasses[2] - SecondHalfStart + 0.2f);
+                vowHolder = offTank;
+            }
+            party.Get(PartyRole.MainTank)?.AddStatus(StatusId.MortalAtonement, VowPasses[1] + MortalAtonementSeconds - SecondHalfStart);
+            party.Get(state.VowTarget)?.AddStatus(StatusId.MortalAtonement, VowPasses[0] + MortalAtonementSeconds - SecondHalfStart);
+        });
     }
 
     public void Tick(float delta, float elapsed)
@@ -202,7 +299,7 @@ public sealed class DsrP6WrothScenario : IScenario
         if (breathTethers.Count > 0) UpdateBreathTethers();
     }
 
-    private uint HallowedWingsCastId => (state.WingsNorth, state.PlumesNear) switch
+    private uint HallowedWingsCastId(int wings) => (state.WingsNorthAt(wings), state.PlumesNearAt(wings)) switch
     {
         (true, true) => ActionId.HallowedWingsNorthTanksNear,
         (true, false) => ActionId.HallowedWingsNorthTanksFar,
@@ -223,12 +320,12 @@ public sealed class DsrP6WrothScenario : IScenario
         damage.ApplyDamage(tank, AutoAttackDamage, actionId, "auto attack", lethal: false);
     }
 
-    private void TetherBreaths()
+    private void TetherBreaths(int wyrmsbreath)
     {
         foreach (var role in Enum.GetValues<PartyRole>().Where(r => !r.IsTank()))
         {
             if (party.Get(role) is not { } member || !member.IsAlive()) continue;
-            var toNidhogg = state.NidhoggTethers.Contains(role);
+            var toNidhogg = state.NidhoggTethersAt(wyrmsbreath).Contains(role);
             var dragon = toNidhogg ? nidhogg : hraesvelgr;
             if (dragon == null) continue;
             breathTethers.Add(new BreathTether(member, dragon, toNidhogg ? TetherId.NidhoggBreath : TetherId.HraesvelgrBreath, toNidhogg ? ActionId.FlameBreath : ActionId.IceBreath));
@@ -248,10 +345,22 @@ public sealed class DsrP6WrothScenario : IScenario
         }
     }
 
-    private void CastWyrmsbreath()
+    private uint DreadWyrmsbreathId(int wyrmsbreath) =>
+        DsrP6DoubleDragonsState.NidhoggGlows(state.GlowAt(wyrmsbreath)) ? ActionId.DreadWyrmsbreathGlowing : ActionId.DreadWyrmsbreath;
+
+    private uint GreatWyrmsbreathId(int wyrmsbreath) =>
+        DsrP6DoubleDragonsState.HraesvelgrGlows(state.GlowAt(wyrmsbreath)) ? ActionId.GreatWyrmsbreathGlowing : ActionId.GreatWyrmsbreath;
+
+    private void WyrmsbreathEffects(int wyrmsbreath)
     {
-        CastSelf(nidhogg, state.NidhoggGlows ? ActionId.DreadWyrmsbreathGlowing : ActionId.DreadWyrmsbreath, 6.0f);
-        CastSelf(hraesvelgr, state.HraesvelgrGlows ? ActionId.GreatWyrmsbreathGlowing : ActionId.GreatWyrmsbreath, 6.0f);
+        PlayEffect(nidhogg, DreadWyrmsbreathId(wyrmsbreath), 1.1f);
+        PlayEffect(hraesvelgr, GreatWyrmsbreathId(wyrmsbreath), 1.1f);
+    }
+
+    private void CastWyrmsbreath(int wyrmsbreath)
+    {
+        CastSelf(nidhogg, DreadWyrmsbreathId(wyrmsbreath), 6.0f);
+        CastSelf(hraesvelgr, GreatWyrmsbreathId(wyrmsbreath), 6.0f);
         if (SpawnHelper(new Placement(Vector3.Zero, 0f)) is not { } centre) return;
         centre.NativeCast(ActionId.SwirlingBlizzard, ActionType.Action, 0f, 6.7f, false, targetId: centre.GameObjectId, position: Vector3.Zero);
         world.Events.Add(7.1f + EffectCarrierLinger, centre.Despawn);
@@ -264,8 +373,9 @@ public sealed class DsrP6WrothScenario : IScenario
             hit.Die(ActionId.SwirlingBlizzard, "stood in Swirling Blizzard (stay inside the donut)");
     }
 
-    // Every non-tank must take one Flame Breath and one Ice Breath: one alone leaves a lethal debuff, two of one kill.
-    private void Breaths()
+    // Two breaths of one element kill. One alone leaves a debuff: lethal on the first Wyrmsbreath, which
+    // the strat answers by taking one of each, and cleansed by Cauterize after the second.
+    private void Breaths(bool cleansedLater)
     {
         var flame = new Dictionary<SimCharacter, int>();
         var ice = new Dictionary<SimCharacter, int>();
@@ -301,15 +411,16 @@ public sealed class DsrP6WrothScenario : IScenario
                 damage.ApplyDamage(member, BreathDamage * (flames + ices), flames > 0 ? ActionId.FlameBreath : ActionId.IceBreath, "breath", lethal: false);
                 if (flames > 0) member.AddStatus(StatusId.FireResistanceDownII, ResistanceDownSeconds);
                 if (ices > 0) member.AddStatus(StatusId.IceResistanceDownII, ResistanceDownSeconds);
-                if (flames != ices) LeaveElement(member, flames > 0);
+                if (flames != ices) LeaveElement(member, flames > 0, cleansedLater);
             }
         }
     }
 
-    private void LeaveElement(SimCharacter member, bool boiling)
+    private void LeaveElement(SimCharacter member, bool boiling, bool cleansedLater)
     {
         var status = boiling ? StatusId.Boiling : StatusId.Freezing;
         member.AddStatus(status, ElementSeconds);
+        if (cleansedLater) return;
         world.Events.Add(ElementSeconds - 0.05f, () =>
         {
             if (member.IsAlive() && member.HasStatus(status))
@@ -317,15 +428,16 @@ public sealed class DsrP6WrothScenario : IScenario
         });
     }
 
-    private void TankBreaths()
+    private void TankBreaths(int wyrmsbreath)
     {
-        if (state.Glow == BreathGlow.Both)
+        var glow = state.GlowAt(wyrmsbreath);
+        if (glow == BreathGlow.Both)
         {
             SharedOrb(nidhogg, ActionId.DarkOrb, PartyRole.MainTank);
             SharedOrb(hraesvelgr, ActionId.HolyOrb, PartyRole.OffTank);
             return;
         }
-        var (glowing, glowAction, quiet, tankRole) = state.Glow == BreathGlow.Nidhogg
+        var (glowing, glowAction, quiet, tankRole) = glow == BreathGlow.Nidhogg
             ? (nidhogg, ActionId.DarkBreath, hraesvelgr, PartyRole.OffTank)
             : (hraesvelgr, ActionId.HolyBreath, nidhogg, PartyRole.MainTank);
         if (glowing != null)
@@ -408,12 +520,18 @@ public sealed class DsrP6WrothScenario : IScenario
         if (nidhogg != null && hraesvelgr != null) hpLink = world.Tether(nidhogg, hraesvelgr, TetherId.DragonHpLink, duration: 8.2f);
     }
 
+    private void AkhAfahEffects()
+    {
+        PlayEffect(nidhogg, ActionId.AkhAfahNidhogg, 1.1f);
+        PlayEffect(hraesvelgr, ActionId.AkhAfahHraesvelgr, 1.1f);
+    }
+
     // A light party stack on each healer; one player in both, or too few in one, dies.
-    private void AkhAfah()
+    private void AkhAfah(int akhAfah)
     {
         var hits = new Dictionary<SimCharacter, int>();
         var stacks = new List<(uint Action, List<SimCharacter> Hits)>();
-        foreach (var (dragon, action, role) in new[] { (hraesvelgr, ActionId.AkhAfahHraesvelgrStack, state.HraesvelgrStackTarget), (nidhogg, ActionId.AkhAfahNidhoggStack, state.NidhoggStackTarget) })
+        foreach (var (dragon, action, role) in new[] { (hraesvelgr, ActionId.AkhAfahHraesvelgrStack, state.HraesvelgrStackTarget(akhAfah)), (nidhogg, ActionId.AkhAfahNidhoggStack, state.NidhoggStackTarget(akhAfah)) })
         {
             if (party.Get(role) is not { } healer || !healer.IsAlive()) continue;
             PlayEffect(dragon, action, 1.1f, target: healer.GameObjectId, at: healer.Position);
@@ -430,11 +548,13 @@ public sealed class DsrP6WrothScenario : IScenario
             }
     }
 
-    private void HallowedWings()
+    private void HallowedWings(int wings)
     {
         if (hraesvelgr == null) return;
-        var wingAction = state.WingsNorth ? ActionId.HallowedWingsNorth : ActionId.HallowedWingsSouth;
-        var side = state.WingsNorth ? -WingsHalfWidth : WingsHalfWidth;
+        var north = state.WingsNorthAt(wings);
+        var near = state.PlumesNearAt(wings);
+        var wingAction = north ? ActionId.HallowedWingsNorth : ActionId.HallowedWingsSouth;
+        var side = north ? -WingsHalfWidth : WingsHalfWidth;
         var wing = new Placement(new Vector3(HraesvelgrHome.X + 3f, 0f, side), -MathF.PI / 2f);
         if (SpawnHelper(wing) is { } helper)
         {
@@ -445,7 +565,7 @@ public sealed class DsrP6WrothScenario : IScenario
             hit.Die(wingAction, "stood under Hraesvelgr's glowing wing");
 
         var byDistance = AliveMembers().OrderBy(m => FlatDistance(m.Position, hraesvelgr.Position)).ToList();
-        var targets = (state.PlumesNear ? byDistance.Take(2) : byDistance.AsEnumerable().Reverse().Take(2)).ToList();
+        var targets = (near ? byDistance.Take(2) : byDistance.AsEnumerable().Reverse().Take(2)).ToList();
         var plumes = new Dictionary<SimCharacter, int>();
         foreach (var target in targets)
         {
@@ -455,7 +575,7 @@ public sealed class DsrP6WrothScenario : IScenario
         }
         foreach (var (hit, count) in plumes.Where(kv => kv.Key.IsAlive()).ToList())
         {
-            if (!IsTank(hit)) hit.Die(ActionId.HallowedPlume, state.PlumesNear ? "hit by Hallowed Plume (head down: tanks close, party far)" : "hit by Hallowed Plume (head up: tanks far, party close)");
+            if (!IsTank(hit)) hit.Die(ActionId.HallowedPlume, near ? "hit by Hallowed Plume (head down: tanks close, party far)" : "hit by Hallowed Plume (head up: tanks far, party close)");
             else if (count > 1) hit.Die(ActionId.HallowedPlume, "took both Hallowed Plumes (tanks spread)");
             else damage.ApplyDamage(hit, TankBusterDamage, ActionId.HallowedPlume, "tank buster", lethal: false);
         }
@@ -540,22 +660,23 @@ public sealed class DsrP6WrothScenario : IScenario
         }
     }
 
-    private void CastHotWingOrTail()
+    private void CastHotWingOrTail(int hotWing)
     {
         if (nidhogg == null) return;
-        CastSelf(nidhogg, state.HotWing ? ActionId.HotWing : ActionId.HotTail, 5.2f);
-        var lanes = state.HotWing ? new[] { -14.5f, 14.5f } : [0f];
+        var wing = state.HotWingAt(hotWing);
+        CastSelf(nidhogg, wing ? ActionId.HotWing : ActionId.HotTail, 5.2f);
+        var lanes = wing ? new[] { -14.5f, 14.5f } : [0f];
         foreach (var z in lanes)
         {
             if (SpawnHelper(new Placement(new Vector3(NidhoggHome.X, 0f, z), MathF.PI / 2f)) is not { } helper) continue;
-            helper.NativeCast(state.HotWing ? ActionId.HotWingSides : ActionId.HotTailMiddle, ActionType.Action, 0f, 6.2f, false, rotation: helper.Rotation, position: helper.Position);
+            helper.NativeCast(wing ? ActionId.HotWingSides : ActionId.HotTailMiddle, ActionType.Action, 0f, 6.2f, false, rotation: helper.Rotation, position: helper.Position);
             hotWingCasters.Add(helper);
         }
     }
 
-    private void HotWingOrTail()
+    private void HotWingOrTail(int hotWing)
     {
-        var action = state.HotWing ? ActionId.HotWingSides : ActionId.HotTailMiddle;
+        var action = state.HotWingAt(hotWing) ? ActionId.HotWingSides : ActionId.HotTailMiddle;
         foreach (var helper in hotWingCasters)
         {
             PlayEffect(helper, action, 1.1f, helper.Rotation);
@@ -599,6 +720,89 @@ public sealed class DsrP6WrothScenario : IScenario
         {
             damage.ApplyDamage(hit, FlamesDamage, ActionId.EntangledFlames, "Entangled Flames", lethal: false);
             hit.AddStatus(StatusId.FireResistanceDownII, ResistanceDownSeconds);
+        }
+    }
+
+    private void TurnElementsIntoPyreticAndDeepFreeze()
+    {
+        foreach (var member in AliveMembers().ToList())
+        {
+            if (member.HasStatus(StatusId.Boiling))
+            {
+                member.RemoveStatus(StatusId.Boiling);
+                member.AddStatus(StatusId.Pyretic, ElementDebuffSeconds);
+                pyretic[member] = member.Position;
+            }
+            if (member.HasStatus(StatusId.Freezing))
+            {
+                member.RemoveStatus(StatusId.Freezing);
+                member.AddStatus(StatusId.DeepFreeze, ElementDebuffSeconds);
+            }
+        }
+    }
+
+    // Each dragon dives its half; the first player in line takes a tank buster, the rest are cleansed
+    // of the opposite element and killed by their own.
+    private void CleansingCauterize()
+    {
+        foreach (var (dragon, action, cleanses, kills, dot) in new[]
+                 {
+                     (nidhogg, ActionId.CauterizeNidhogg, StatusId.DeepFreeze, StatusId.Pyretic, StatusId.Burns),
+                     (hraesvelgr, ActionId.CauterizeHraesvelgr, StatusId.Pyretic, StatusId.DeepFreeze, StatusId.Frostbite),
+                 })
+        {
+            if (dragon == null) continue;
+            PlayEffect(dragon, action, 1.1f, dragon.Rotation);
+            var lane = new Placement(dragon.Position, dragon.Rotation);
+            var hits = party.Find.InsideRect(lane, CauterizeHalfWidth, CauterizeLength).Where(m => m.IsAlive())
+                .OrderBy(m => FlatDistance(m.Position, dragon.Position)).ToList();
+            for (var i = 0; i < hits.Count; i++)
+            {
+                var hit = hits[i];
+                if (i == 0 && !IsTank(hit))
+                {
+                    hit.Die(action, "first in line for Cauterize (tanks stand in front of the dragons)");
+                    continue;
+                }
+                if (hit.HasStatus(kills))
+                {
+                    hit.Die(action, "dived on by the dragon of your own element (go to the other one)");
+                    continue;
+                }
+                if (pyretic.TryGetValue(hit, out var from) && FlatDistance(from, hit.Position) > PyreticDrift)
+                {
+                    hit.Die(action, "moved with Pyretic before Cauterize");
+                    continue;
+                }
+                hit.RemoveStatus(cleanses);
+                pyretic.Remove(hit);
+                damage.ApplyDamage(hit, CauterizeDamage, action, "Cauterize", lethal: false);
+                if (i == 0) hit.AddStatus(dot, CauterizeDotSeconds);
+            }
+        }
+    }
+
+    // UNVERIFIED: an uncleansed Pyretic or Deep Freeze is taken as lethal.
+    private void UncleansedElementsKill()
+    {
+        foreach (var member in AliveMembers().ToList())
+        {
+            if (member.HasStatus(StatusId.Pyretic)) member.Die(ActionId.CauterizeHraesvelgr, "Pyretic never cleansed (stand in Hraesvelgr's dive)");
+            else if (member.HasStatus(StatusId.DeepFreeze)) member.Die(ActionId.CauterizeNidhogg, "Deep Freeze never cleansed (stand in Nidhogg's dive)");
+        }
+        pyretic.Clear();
+    }
+
+    private void Touchdown()
+    {
+        foreach (var (dragon, at) in new[] { (nidhogg, NidhoggTouchdown), (hraesvelgr, HraesvelgrTouchdown) })
+        {
+            PlayEffect(dragon, ActionId.TouchdownHit, 1.1f, at: at);
+            foreach (var member in AliveMembers().ToList())
+            {
+                if (FlatDistance(member.Position, at) <= TouchdownLethalRadius) member.Die(ActionId.TouchdownHit, "too close to a dragon's Touchdown (wait at the north wall)");
+                else damage.ApplyDamage(member, TouchdownDamage, ActionId.TouchdownHit, "Touchdown", lethal: false);
+            }
         }
     }
 

@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using AnoMech.Core.Game.Party;
 
-namespace AnoMech.Scenarios.Dsr.P6Wroth;
+namespace AnoMech.Scenarios.Dsr.P6DoubleDragons;
 
 // Pins the random rolls; null keeps the roll.
-public sealed class DsrP6WrothStateOverrides
+public sealed class DsrP6DoubleDragonsStateOverrides
 {
     public IReadOnlyCollection<PartyRole>? NidhoggTethers { get; set; }
     public BreathGlow? Glow { get; set; }
@@ -21,4 +21,11 @@ public sealed class DsrP6WrothStateOverrides
     public bool? HraesvelgrFromSouth { get; set; }
     public (int X, int Z)? SecondSetCorner { get; set; }
     public bool? HotWing { get; set; }
+    public IReadOnlyCollection<PartyRole>? SecondNidhoggTethers { get; set; }
+    public BreathGlow? SecondGlow { get; set; }
+    public bool? SecondHraesvelgrStackOnRegen { get; set; }
+    public bool? SecondWingsNorth { get; set; }
+    public bool? SecondPlumesNear { get; set; }
+    public bool? SecondHotWing { get; set; }
+    public bool? NidhoggCauterizesWest { get; set; }
 }
