@@ -87,6 +87,7 @@ public class DsrConstants
         public const uint Vidofnir = 12648;
         public const uint DarkscaleDiver = 12630;
         public const uint VidofnirDiver = 12631;
+        public const uint MeteorCircle = 13920;
     }
 
     public class BNpcNameId
@@ -121,6 +122,7 @@ public class DsrConstants
         public const uint Darkscale = 3983;
         public const uint Vedrfolnir = 3984;
         public const uint Vidofnir = 11314;
+        public const uint MeteorCircle = 4386;
     }
 
     public class ActionId
@@ -257,6 +259,11 @@ public class DsrConstants
         public const uint LiquidHeaven = 0x6B91;
         public const uint DeathOfTheHeavens = 0x6B92;
         public const uint WrathSkywardLeap = 0x72A2;
+        public const uint DeathSpearOfTheFury = 0x6B93;
+        public const uint Deathstorm = 0x6B94;
+        public const uint WingsOfSalvation = 0x6B95;
+        public const uint WingsOfSalvationPuddle = 0x6B96;
+        public const uint HolyMeteor = 0x6B97;
 
         public const uint Interject = 7538;
         public const uint HeadGraze = 7551;
@@ -299,6 +306,7 @@ public class DsrConstants
         public const ushort Bleeding = 0xB87;
         public const ushort PiercingResistanceDown = 0xC3B;
         public const ushort Thunderstruck = 0xB11;
+        public const ushort Doom = 0xBA0;
     }
 
     public class TetherId
@@ -323,6 +331,7 @@ public class DsrConstants
         public const uint FirePuddle = 0x1EB686;
         public const uint Twister = 0x1E8910;
         public const uint LiquidHeaven = 0x1EB684;
+        public const uint WingsOfSalvation = 0x1EB685;
     }
 
     public class LockonId

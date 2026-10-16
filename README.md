@@ -84,6 +84,7 @@ For upstream AnoMech, see: https://github.com/anomek/MyDalamudPlugins
     - P1 Knights (pull to Thordan: Hyperdimensional Slash, Shining Blade, Playstation, Holiest Hallowing interrupts, Pure of Heart)
     - P4 The Eyes (Hatebound orbs, Mirage Dive snake swaps)
     - P5 Wrath of the Heavens (twisters, dragoon tethers, proteans, Eruptions / Liquid Heaven baits, Chain Lightning)
+    - P5 Death of the Heavens (dooms and cleansing puddles, static dives, earthquakes, playstation knockback, gazes)
 - AAC Heavyweight M1 (Savage) — M9S _by [Asunnya](https://github.com/Asunnya)_
     - Vamp Stomp, Hell in a Cell, Aetherletting, Coffinmaker, Undead Deathmatch, Flails, Vamp Stomp 2, Final
 

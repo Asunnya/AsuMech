@@ -5,6 +5,7 @@ using AnoMech.Scenarios.Dsr.P2Thordan;
 using AnoMech.Scenarios.Dsr.P3Nidhogg;
 using AnoMech.Scenarios.Dsr.P4Eyes;
 using AnoMech.Scenarios.Dsr.P5Wrath;
+using AnoMech.Scenarios.Dsr.P5Death;
 using AnoMech.Scenarios.M9s.Aetherletting;
 using AnoMech.Scenarios.M9s.Coffinmaker;
 using AnoMech.Scenarios.M9s.Deathmatch;
@@ -109,6 +110,7 @@ public sealed class ScenarioCatalog
         new DsrP3NidhoggScenario(),
         new DsrP4EyesScenario(),
         new DsrP5WrathScenario(),
+        new DsrP5DeathScenario(),
         new M9sVampStompScenario(),
         new M9sCoffinmakerScenario(),
         new M9sAetherlettingScenario(),
