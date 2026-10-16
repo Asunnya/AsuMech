@@ -15,7 +15,7 @@ public sealed partial class MultiplayerManager
         if (replayable.BuildReplayStateMessage() is not { } msg) return;
         aiReplayStateSent = true;
         DiagnosticLog.Info("[Multiplayer] Host: broadcasting AiReplayState for this run.");
-        _ = relay!.SendAsync(msg);
+        _ = Send(msg);
     }
 
     private bool IsValidAiIndex(IScenario scenario) =>

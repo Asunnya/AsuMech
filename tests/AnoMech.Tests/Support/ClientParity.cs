@@ -4,21 +4,21 @@ using AnoMech.Core.Game.Party;
 
 namespace AnoMech.Tests;
 
-// At: seconds into the host's run.
+// At: seconds into the host's run it came in.
 internal sealed record ParityGap(string Kind, string What, double At, int Count)
 {
     public override string ToString() => $"{Kind}: {What} (first at t={At:F2}{(Count > 1 ? $", {Count} times" : "")})";
 }
 
 // What the host's game client was told against what a peer's was, row for row of their timelines
-// (SimTimeline): every row one client got has to reach the other within Slack, naming the same
-// actors and carrying the same values. Left out is only what each client makes for itself: its
+// (SimTimeline), in each of the host's runs: every row one client got has to reach the other
+// within Slack, naming the same actors and carrying the same values. Left out is only what each client makes for itself: its
 // party's doppels and their ZoneIn, its own player's forced moves and falls, and the players'
 // movement, which goes out as their poses.
 internal static partial class ClientParity
 {
-    // ActorControlSelf a client sends its own player only, and the party-wide ones every client
-    // gets for its own.
+    // ActorControlSelf a player's own client alone gets, and the party-wide ones every client gets
+    // for its own player.
     private static readonly HashSet<uint> OwnSelf = [0x01, 0xED, 0x107];
     private static readonly HashSet<uint> PartySelf = [0xB7, 0x1F9];
     private static readonly HashSet<uint> MotionControls = [0xDC, 0xDF, 0xE1, 0xF1];
@@ -26,23 +26,25 @@ internal static partial class ClientParity
     private const uint Marking = 0x1F6;
     private const string OwnPlayer = "own player";
 
-    // How far apart the two clients may show one thing: the run's worst delivery from the host,
-    // a hitch of the peer's own, its copy of a new actor arriving, and a few frames.
+    // How far apart the two clients may show one thing: the run's worst delivery, a resent
+    // message's included, a hitch of the peer's own, its copy of a new actor arriving, and a few
+    // frames.
     public static double Slack(MultiplayerRun run)
-        => run.Relay.MaxHostDelay + run.PeerLink.PeerHitchMax + MultiplayerRun.PeerSpawnFrames.Max / run.PeerLink.PeerFps + 0.1;
+        => Math.Max(run.Relay.MaxHostDelay, run.MaxStreamDelay()) + run.PeerLink.PeerHitchMax + MultiplayerRun.PeerSpawnFrames.Max / run.PeerLink.PeerFps + 0.1;
 
     public static IReadOnlyList<ParityGap> Compare(MultiplayerRun run, TestClient peer)
     {
         var slack = Slack(run);
         var players = new HashSet<string> { run.Host.Seat.ToString() };
         foreach (var p in run.Peers) players.Add(p.Seat.ToString());
-        var host = Rows(run.Host, players, run.Host.Seat);
-        var other = Rows(peer, players, run.Host.Seat);
+        var host = Rows(run.Host, players, peer.Seat);
+        var other = Rows(peer, players, peer.Seat);
         var matched = new bool[other.Count];
         var gaps = new List<(string Kind, string What, double At)>();
+        bool Within(double at, double from) => run.Fights.Any(f => at >= f.StartedAt + from && at <= f.EndedAt - slack);
         foreach (var (at, key) in host)
         {
-            if (at < run.StartedAt || at > run.EndedAt - slack) continue;
+            if (!Within(at, 0)) continue;
             var index = Match(at, key, other, matched, slack);
             if (index >= 0) matched[index] = true;
             else gaps.Add(("host only", key, at));
@@ -50,11 +52,12 @@ internal static partial class ClientParity
         for (var i = 0; i < other.Count; i++)
         {
             var (at, key) = other[i];
-            if (matched[i] || at < run.StartedAt + slack || at > run.EndedAt - slack) continue;
+            if (matched[i] || !Within(at, slack)) continue;
             gaps.Add(($"{peer.Name} only", key, at));
         }
+        double IntoItsFight(double at) => at - run.Fights.Last(f => f.StartedAt <= at).StartedAt;
         return gaps.GroupBy(g => (g.Kind, Pattern: Numbers().Replace(g.What, "#")))
-            .Select(g => new ParityGap(g.Key.Kind, g.First().What, g.Min(x => x.At) - run.StartedAt, g.Count()))
+            .Select(g => new ParityGap(g.Key.Kind, g.First().What, IntoItsFight(g.Min(x => x.At)), g.Count()))
             .OrderBy(g => g.At).ToList();
     }
 
@@ -69,18 +72,19 @@ internal static partial class ClientParity
         return best;
     }
 
-    public static List<(double At, string Key)> Rows(TestClient client, IReadOnlySet<string> players, PartyRole hostSeat)
+    // peerSeat: the compared peer's, the one player whose own controls both clients have.
+    public static List<(double At, string Key)> Rows(TestClient client, IReadOnlySet<string> players, PartyRole peerSeat)
     {
         var rows = new List<(double, string)>();
         foreach (var row in client.Fake.Timeline.Rows)
         {
             var at = double.Parse(row["t"], CultureInfo.InvariantCulture);
-            if (Key(client, row, at, players, hostSeat.ToString()) is { } key) rows.Add((at, key));
+            if (Key(client, row, at, players, peerSeat.ToString()) is { } key) rows.Add((at, key));
         }
         return rows;
     }
 
-    private static string? Key(TestClient client, Dictionary<string, string> row, double at, IReadOnlySet<string> players, string hostSeat)
+    private static string? Key(TestClient client, Dictionary<string, string> row, double at, IReadOnlySet<string> players, string peerSeat)
     {
         string Name(string column) => row.GetValueOrDefault(column) is { Length: > 0 } hex ? client.NameAt(uint.Parse(hex, NumberStyles.HexNumber), at) : "nobody";
         string Value(string column) => row.GetValueOrDefault(column, "");
@@ -103,7 +107,7 @@ internal static partial class ClientParity
                 var category = Convert.ToUInt32(Value("id"), 16);
                 if (category == ZoneIn && seat) return null;
                 if (MotionControls.Contains(category) && player) return null;
-                if (OwnSelf.Contains(category) && actor == hostSeat) return null;
+                if (OwnSelf.Contains(category) && player && actor != peerSeat) return null;
                 if (PartySelf.Contains(category) && actor == client.Seat.ToString()) actor = OwnPlayer;
                 return $"ac {actor} 0x{category:X} {NamedArgs(client, Value("p"), EntityArgIndex(category), at)}";
             }

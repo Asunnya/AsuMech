@@ -42,14 +42,14 @@ public sealed partial class MultiplayerManager
         {
             if (world.Party.Get(role) is not SimNetworkPuppet puppet) continue;
             foreach (var move in puppet.DrainForcedMoves())
-                _ = relay!.SendAsync(ForcedMoveMessage(world, role, move));
+                _ = Send(ForcedMoveMessage(world, role, move));
         }
     }
 
     private void SendMidRunUpdate()
     {
         if (TryResolveScenario() is IMultiplayerReplayable replayable && replayable.BuildMidRunUpdateMessage() is { } update)
-            _ = relay!.SendAsync(update);
+            _ = Send(update);
     }
 
     private Task? pendingRolesSend;
@@ -62,7 +62,7 @@ public sealed partial class MultiplayerManager
         foreach (var role in Enum.GetValues<PartyRole>())
             if (party.Get(role) is { } member and (SimPlayer or SimNetworkPuppet))
                 roles.Add(new RoleState(role, member.Position.X, member.Position.Y, member.Position.Z, member.Rotation));
-        return relay!.SendAsync(new RolesSnapshotMessage(roles));
+        return Send(new RolesSnapshotMessage(roles));
     }
 
     // An enemy goes by its entity id on the host, as its packets name it.
@@ -76,7 +76,7 @@ public sealed partial class MultiplayerManager
     }
 
     private void OnPartyMemberKilledHost(PartyRole role, string cause, uint? actionId)
-        => _ = relay?.SendAsync(new RoleKilledMessage(role, cause));
+        => _ = Send(new RoleKilledMessage(role, cause));
 
     // The host reads its own bookkeeping; a peer reads what the host relayed (PeerStatusMessage).
     public bool IsPeerStale(Guid peerId) => IsHost
@@ -89,7 +89,8 @@ public sealed partial class MultiplayerManager
     private void SendPingAndRefreshStatuses()
     {
         var nowMs = NowMs;
-        _ = relay!.SendAsync(new PingMessage(PingClockMs()));
+        var (streamSent, streamReceived) = stream?.PingFields() ?? (0, null!);
+        _ = Send(new PingMessage(PingClockMs(), streamSent, streamReceived, HostRunClock()));
 
         peerStatuses.Clear();
         foreach (var peerId in Session.ClaimedBy.Values.Distinct())
@@ -98,7 +99,7 @@ public sealed partial class MultiplayerManager
             var latency = peerLatencyMs.TryGetValue(peerId, out var ms) ? ms : (float?)null;
             peerStatuses[peerId] = new PeerStatusEntry(latency, (nowMs - lastSeen) / 1000f);
         }
-        _ = relay.SendAsync(new PeerStatusMessage(new Dictionary<Guid, PeerStatusEntry>(peerStatuses)));
+        _ = Send(new PeerStatusMessage(new Dictionary<Guid, PeerStatusEntry>(peerStatuses)));
 
         CheckPeerLiveness();
     }
