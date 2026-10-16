@@ -21,6 +21,7 @@ public sealed class DsrZone : IZone
     // UNVERIFIED: the eyes' weather; P3's is kept.
     public static readonly Phase Eyes = new(Instance, "P4", Clouds, BgmId);
     public static readonly Phase DarkThordan = new(Instance, "P5", DarkThordanWeather, BgmId);
+    public static readonly Phase DoubleDragons = new(Instance, "P6", Clouds, BgmId);
 
     public string Name => "Dragonsong's Reprise";
     public uint TerritoryId => 968;

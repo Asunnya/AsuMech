@@ -85,6 +85,7 @@ For upstream AnoMech, see: https://github.com/anomek/MyDalamudPlugins
     - P4 The Eyes (Hatebound orbs, Mirage Dive snake swaps)
     - P5 Wrath of the Heavens (twisters, dragoon tethers, proteans, Eruptions / Liquid Heaven baits, Chain Lightning)
     - P5 Death of the Heavens (dooms and cleansing puddles, static dives, earthquakes, playstation knockback, gazes)
+    - P6 Wyrmsbreath to Wroth Flames (fire/ice tether pairs, tank breaths, Mortal Vow passes, Akh Afah, Hallowed Wings with Nidhogg's dive, orb crosses with Akh Morn and Hraesvelgr's dive, Hot Wing/Tail spreads and stacks)
 - AAC Heavyweight M1 (Savage) — M9S _by [Asunnya](https://github.com/Asunnya)_
     - Vamp Stomp, Hell in a Cell, Aetherletting, Coffinmaker, Undead Deathmatch, Flails, Vamp Stomp 2, Final
 

@@ -88,6 +88,9 @@ public class DsrConstants
         public const uint DarkscaleDiver = 12630;
         public const uint VidofnirDiver = 12631;
         public const uint MeteorCircle = 13920;
+        public const uint NidhoggP6 = 12612;
+        public const uint Hraesvelgr = 12613;
+        public const uint ScarletPrice = 13238;
     }
 
     public class BNpcNameId
@@ -123,6 +126,8 @@ public class DsrConstants
         public const uint Vedrfolnir = 3984;
         public const uint Vidofnir = 11314;
         public const uint MeteorCircle = 4386;
+        public const uint Hraesvelgr = 4954;
+        public const uint ScarletPrice = 3459;
     }
 
     public class ActionId
@@ -264,6 +269,46 @@ public class DsrConstants
         public const uint WingsOfSalvation = 0x6B95;
         public const uint WingsOfSalvationPuddle = 0x6B96;
         public const uint HolyMeteor = 0x6B97;
+        public const uint HraesvelgrAttack = 0x6D22;
+        public const uint HallowedWingsNorthTanksNear = 0x6D26;
+        public const uint HallowedWingsNorthTanksFar = 0x6D27;
+        // UNVERIFIED: the south-wing casts were never seen; assumed to mirror 6D26/6D27.
+        public const uint HallowedWingsSouthTanksNear = 0x6D23;
+        public const uint HallowedWingsSouthTanksFar = 0x6D24;
+        public const uint HallowedWingsSouth = 0x6D25;
+        public const uint HallowedWingsNorth = 0x6D28;
+        public const uint HallowedPlume = 0x6D29;
+        public const uint NidhoggP6Attack = 0x6D2A;
+        public const uint HotWing = 0x6D2B;
+        public const uint HotWingSides = 0x6D2C;
+        public const uint HotTail = 0x6D2D;
+        public const uint HotTailMiddle = 0x6D2E;
+        public const uint MortalVow = 0x6D30;
+        public const uint MortalVowPass = 0x6D31;
+        public const uint DreadWyrmsbreath = 0x6D32;
+        public const uint DreadWyrmsbreathGlowing = 0x6D33;
+        public const uint GreatWyrmsbreath = 0x6D34;
+        public const uint GreatWyrmsbreathGlowing = 0x6D35;
+        public const uint FlameBreath = 0x6D36;
+        public const uint IceBreath = 0x6D37;
+        public const uint SwirlingBlizzard = 0x6D38;
+        public const uint DarkOrb = 0x6D39;
+        public const uint HolyOrb = 0x6D3A;
+        public const uint DarkBreath = 0x6D3B;
+        public const uint HolyBreath = 0x6D3C;
+        public const uint StaggeringBreath = 0x6D3D;
+        public const uint CauterizeNidhogg = 0x6D3E;
+        public const uint CauterizeHraesvelgr = 0x6D3F;
+        public const uint AkhAfahHraesvelgr = 0x6D41;
+        public const uint AkhAfahHraesvelgrStack = 0x6D42;
+        public const uint AkhAfahNidhogg = 0x6D43;
+        public const uint AkhAfahNidhoggStack = 0x6D44;
+        public const uint WrothFlames = 0x6D45;
+        public const uint AkhMorn = 0x6D46;
+        public const uint AkhMornFollowUp = 0x6D47;
+        public const uint FlameBlast = 0x6729;
+        public const uint SpreadingFlames = 0x742B;
+        public const uint EntangledFlames = 0x742C;
 
         public const uint Interject = 7538;
         public const uint HeadGraze = 7551;
@@ -307,6 +352,12 @@ public class DsrConstants
         public const ushort PiercingResistanceDown = 0xC3B;
         public const ushort Thunderstruck = 0xB11;
         public const ushort Doom = 0xBA0;
+        public const ushort MortalVow = 0xB50;
+        public const ushort MortalAtonement = 0xB51;
+        public const ushort Boiling = 0xB52;
+        public const ushort Freezing = 0xB53;
+        public const ushort SpreadingFlames = 0xAC6;
+        public const ushort EntangledFlames = 0xAC7;
     }
 
     public class TetherId
@@ -322,6 +373,10 @@ public class DsrConstants
         public const ushort RightEyeToEstinien = 0xB3;
         public const ushort SpiralPierce = 0x05;
         public const ushort DragonToThordan = 0xA5;
+        public const ushort DragonHpLink = 0x02;
+        public const ushort NidhoggBreath = 0xC2;
+        public const ushort HraesvelgrBreath = 0xC3;
+        public const ushort BreathTooClose = 0xC4;
     }
 
     public class EObjId
@@ -370,6 +425,7 @@ public class DsrConstants
         public const uint NidhoggLayout = 0x48;
         public const uint EyesLayout = 0x5A;
         public const uint WrathLayout = 0x64;
+        public const uint DoubleDragonsLayout = 0x2D;
         public const uint KnightsMap = 758;
         public const uint ThordanMap = 765;
         public const uint ThordanMusic = 0x1AF3;
