@@ -54,6 +54,11 @@ public sealed class DsrP3NidhoggScenario : IScenario
     private static readonly float[] ArrowSeconds = [9f, 19f, 30f];
     // Despawning an effect's caster cuts its VFX short.
     private const float EffectCarrierLinger = 3f;
+    // Divers show only while they dive, stay hidden through their tower's cast and come out as it lands.
+    private const float DiverShownForDive = 0.57f;
+    private const float DiverShownAfterTower = 0.35f;
+    private const float DiverWarpsAfterGeirskogul = 2.1f;
+    private const float DiverHiddenAfterWarp = 0.7f;
 
     private SimWorld world = null!;
     private SimParty party = null!;
@@ -145,6 +150,7 @@ public sealed class DsrP3NidhoggScenario : IScenario
         world.Events.Add(86.68f, CastFourTowerGeirskoguls);
         world.Events.Add(91.10f, ResolveSoulTethers);
         world.Events.Add(91.14f, ResolveGeirskoguls);
+        world.Events.Add(91.14f, WarpOutTheQuietDiver);
         foreach (var auto in new[] { 96.23f, 99.35f, 102.47f, 105.59f, 108.71f })
             world.Events.Add(auto, AutoAttack);
         world.Events.Add(111.97f, CastDrachenlanceSouth);
@@ -249,6 +255,7 @@ public sealed class DsrP3NidhoggScenario : IScenario
             if (!waitingDivers.TryDequeue(out var diver)) continue;
             diver.SetPosition(new Placement(at, member.Rotation));
             diver.SetVisible(true);
+            world.Events.Add(DiverShownForDive, () => diver.SetVisible(false));
             diveTowerCasters[line - 1].Add(diver);
             PlayEffect(diver, DiveAction(arrow), 1.1f, target: member.GameObjectId, at: at);
             foreach (var hit in party.Find.InsideCircle(at, DiveTowerRadius))
@@ -291,6 +298,7 @@ public sealed class DsrP3NidhoggScenario : IScenario
             if (soakers.Count == 0) failed = true;
             SoakTower(soakers, ActionId.DarkdragonDive);
         }
+        ShowAfterTheTowers(casters);
         if (failed) TowerWipe("a Darkdragon Dive tower was left unsoaked");
     }
 
@@ -340,7 +348,7 @@ public sealed class DsrP3NidhoggScenario : IScenario
             PlayEffect(caster, ActionId.Geirskogul, 1.1f, caster.Rotation);
             damage.Resolve(caster, ActionId.Geirskogul, [DamageType.Lethal], []);
         }
-        world.Events.Add(EffectCarrierLinger, () => casters.ForEach(c => c.FadeOut()));
+        WarpOut(casters);
     }
 
     private void CastWheels(int index) => CastSelf(nidhogg, WheelAction(index), 7.3f);
@@ -411,6 +419,7 @@ public sealed class DsrP3NidhoggScenario : IScenario
         {
             var at = DsrP3NidhoggState.FourTowerSpot(i);
             if (SpawnDiver(new Placement(at, RotationTowards(at, Vector3.Zero))) is not { } caster) continue;
+            caster.SetVisible(false);
             fourTowers.Add((caster, at, state.TowerSoakers[i]));
         }
     }
@@ -439,7 +448,22 @@ public sealed class DsrP3NidhoggScenario : IScenario
             if (soakers.Count < needed) failed = true;
             SoakTower(soakers, FourTowerAction(needed));
         }
+        ShowAfterTheTowers(fourTowers.Select(t => t.Caster).ToList());
         if (failed) TowerWipe("a Darkdragon Dive tower had too few soakers");
+    }
+
+    private void ShowAfterTheTowers(List<SimEnemy> casters) =>
+        world.Events.Add(DiverShownAfterTower, () => casters.ForEach(c => c.SetVisible(true)));
+
+    private void WarpOut(List<SimEnemy> divers)
+    {
+        world.Events.Add(DiverWarpsAfterGeirskogul, () => divers.ForEach(d => d.PlayActionTimeline(TimelineId.WarpStart)));
+        world.Events.Add(DiverWarpsAfterGeirskogul + DiverHiddenAfterWarp, () => divers.ForEach(d => d.SetVisible(false)));
+    }
+
+    private void WarpOutTheQuietDiver()
+    {
+        if (fourTowers.Count > state.QuietTower) WarpOut([fourTowers[state.QuietTower].Caster]);
     }
 
     private void CastFourTowerGeirskoguls() =>

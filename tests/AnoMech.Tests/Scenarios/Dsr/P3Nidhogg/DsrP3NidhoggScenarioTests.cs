@@ -1,4 +1,6 @@
+using System.Linq;
 using System.Numerics;
+using AnoMech.Core.SimObjects;
 using AnoMech.Core.Game.Party;
 using AnoMech.Scenarios.Dsr.P3Nidhogg;
 using static AnoMech.Core.Game.Party.PartyRole;
@@ -46,6 +48,23 @@ public class DsrP3NidhoggScenarioTests
             .Overrides<DsrP3NidhoggStateOverrides>(PinnedDives)
             .TeleportAt(39.5f, to: new Vector2(-12f, -12f))
             .ShouldKill(ActionId.LashingWheel, ShieldHealer);
+
+    // The divers only come out once their towers land, then warp away after their Geirskogul.
+    [Test]
+    public void DiversStayHiddenUntilTheirTowersLand()
+        => Negative<DsrP3NidhoggScenario>(ShieldHealer)
+            .Overrides<DsrP3NidhoggStateOverrides>(PinnedDives)
+            .At(42.5f, p => Assert.That(VisibleDivers(p), Is.Zero))
+            .At(44.5f, p => Assert.That(VisibleDivers(p), Is.EqualTo(3)))
+            .At(54.5f, p => Assert.That(VisibleDivers(p), Is.EqualTo(2)))
+            .At(82.0f, p => Assert.That(VisibleDivers(p), Is.Zero))
+            .At(85.0f, p => Assert.That(VisibleDivers(p), Is.EqualTo(4)))
+            .At(94.5f, p => Assert.That(VisibleDivers(p), Is.Zero))
+            .TeleportAt(113f, to: new Vector2(0f, 6f))
+            .ShouldKill(ActionId.Drachenlance, ShieldHealer);
+
+    private static int VisibleDivers(ScenarioProbe p) =>
+        p.World.Children.OfType<SimEnemy>().Count(e => e.IsActive && e.Visible && e.SpawnConfig.BNpcBaseId == BNpcBaseId.NidhoggDiver);
 
     [Test]
     public void StandingBesideATankHoldingSoulTetherIsLethal()
