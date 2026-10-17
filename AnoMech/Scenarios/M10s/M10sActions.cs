@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using AnoMech.Core.EnemyActions;
 using static AnoMech.Core.EnemyActions.Distribution;
 using static AnoMech.Core.EnemyActions.EnemyActionEffects;
@@ -192,6 +193,50 @@ public static class M10sActions
         Effects = [Damage(VulnToFire), ApplyStatus(StatusId.FireResistanceDownII, fireResistanceDown)],
         Timing = new() { DamageDelay = 0.3f },
         DeathExplanation = "only the bait stands where Red Hot lands",
+    };
+
+    // Whoever stands in it is locked in the Watery Grave; nobody in it wipes the party.
+    public static readonly EnemyAction DeepAerialTower = new(ActionId.DeepAerialTower)
+    {
+        Cast = new() { AnimationLock = 0.6f },
+        Effects = [Damage(), ApplyStatus(StatusId.Stun, 2f)],
+        Timing = new() { DamageDelay = 0.3f },
+    };
+
+    // UNVERIFIED: an unsoaked tower kills everyone.
+    public static readonly EnemyAction UnmitigatedExplosion = new(ActionId.UnmitigatedExplosion)
+    {
+        Cast = new() { AnimationLock = 0.6f },
+        Effects = [Damage(Lethal)],
+        DeathExplanation = "two players soak Deep Aerial's tower",
+    };
+
+    private static readonly AreaSpec SparesThePrisoners = new() { AdjustTargets = (_, hits) => hits.Where(h => !h.HasStatus(StatusId.WateryGrave)).ToList() };
+
+    // The wave's damage depends on how far the tether is stretched, and lands on everyone it crosses.
+    // UNVERIFIED: the edge; a 27.8y tether killed, 29.5y did not.
+    public const float XtremeWaveSafeFrom = 28.5f;
+
+    public static readonly EnemyAction XtremeWaveFire = XtremeWave(ActionId.XtremeWaveFire, lethal: false);
+    public static readonly EnemyAction XtremeWaveFireShort = XtremeWave(ActionId.XtremeWaveFire, lethal: true);
+    public static readonly EnemyAction XtremeWaveWater = XtremeWave(ActionId.XtremeWaveWater, lethal: false);
+    public static readonly EnemyAction XtremeWaveWaterShort = XtremeWave(ActionId.XtremeWaveWater, lethal: true);
+
+    private static EnemyAction XtremeWave(uint actionId, bool lethal) => new(actionId)
+    {
+        Cast = new() { AnimationLock = 0.6f },
+        Area = SparesThePrisoners,
+        Effects = lethal ? [Damage(Lethal)] : [Damage(VulnToMagic), ApplyStatus(StatusId.MagicVulnerabilityUp, 0.96f)],
+        Timing = new() { DamageDelay = 0.3f },
+        DeathExplanation = lethal ? "stretch the tether until it changes colour" : "one wave each; stay out of the other lines",
+    };
+
+    public static readonly EnemyAction ScathingSteam = new(ActionId.ScathingSteam)
+    {
+        Cast = new() { AnimationLock = 0.6f },
+        Area = SparesThePrisoners,
+        Effects = [Damage()],
+        Timing = new() { DamageDelay = 0.3f },
     };
 
     // UNVERIFIED: the knockback distance; guides call it small.

@@ -27,6 +27,7 @@ public static class M10sConstants
         public const uint DeepBlue = 19288;
         public const uint SickSwell = 19290;
         public const uint XtremeAether = 19289;
+        public const uint WateryGrave = 19136;
         public const uint Helper = 9020;
     }
 
@@ -36,6 +37,7 @@ public static class M10sConstants
         public const uint DeepBlue = 14369;
         public const uint SickSwell = 14372;
         public const uint XtremeAether = 14371;
+        public const uint WateryGrave = 14373;
     }
 
     public static class EObjId
@@ -118,6 +120,16 @@ public static class M10sConstants
         public const uint HotAerialSecond = 0xB91F;
         public const uint HotAerialThird = 0xB920;
         public const uint HotAerialFourth = 0xB921;
+        public const uint DeepAerial = 0xB5E3;
+        public const uint DeepAerialTower = 0xB5E4;
+        public const uint UnmitigatedExplosion = 0xB5E5;
+        public const uint XtremeWaveRedFirst = 0xB5C5;
+        public const uint XtremeWaveBlueFirst = 0xB5C6;
+        public const uint XtremeWaveRed = 0xB5C7;
+        public const uint XtremeWaveBlue = 0xB5C8;
+        public const uint XtremeWaveFire = 0xB5D1;
+        public const uint XtremeWaveWater = 0xB5D2;
+        public const uint ScathingSteam = 0xADC7;
     }
 
     public static class StatusId
@@ -135,12 +147,16 @@ public static class M10sConstants
         public const ushort DamageDown = 0xB5F;
         public const ushort Firesnaking = 0x136E;
         public const ushort Watersnaking = 0x136F;
+        public const ushort WateryGrave = 0x12DD;
+        public const ushort Stun = 0xA60;
     }
 
     public static class LockonId
     {
         public const uint Spread = 0x294;
         public const uint SharedBuster = 0x103;
+        public const uint FireWave = 0x27C;
+        public const uint WaterWave = 0x27B;
     }
 
     public static class TetherId
@@ -148,6 +164,8 @@ public static class M10sConstants
         public const ushort FloaterSlack = 0x17A;
         public const ushort FloaterTaut = 0x17B;
         public const ushort WaveWall = 0x174;
+        public const ushort WaveSlack = 0x39;
+        public const ushort WaveTaut = 0x11;
     }
 
     public static class TimelineId
@@ -168,6 +186,13 @@ public static class M10sConstants
         public const uint OneOrb = 0x00800040;
         public const uint FourOrbs = 0x08000400;
         public const uint OrbsOff = 0x10000004;
+        public const byte TowerSlot = 0x01;
+        public const uint TowerShows = 0x00200010;
+        public const uint TowerResolves = 0x00800040;
+        public const byte GraveSlot = 0x17;
+        public const uint GraveRises = 0x00020001;
+        public const uint GraveSteams = 0x00080001;
+        public const uint GraveBreaks = 0x00400004;
     }
 
     public static class Geometry
