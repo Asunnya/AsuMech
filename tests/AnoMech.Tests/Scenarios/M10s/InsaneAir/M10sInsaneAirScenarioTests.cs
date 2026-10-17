@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Numerics;
+using AnoMech.Core.Game;
 using AnoMech.Core.Native.Interfaces;
 using AnoMech.Scenarios.M10s.InsaneAir;
 using static AnoMech.Core.Game.Party.PartyRole;
@@ -63,5 +64,29 @@ public class M10sInsaneAirScenarioTests
         }));
         Assert.That(arena[0].T, Is.InRange(Scenario.XtremeCastAt, Scenario.XtremeHitsAt));
         Assert.That(arena[1].T, Is.InRange(Scenario.XtremeHitsAt, Scenario.InsaneAirAt));
+    }
+
+    [Test]
+    public void XtremeSpectacularCoversTheWholeArena()
+    {
+        AoeQuery? xtreme = null;
+        void Capture(AoeQuery q)
+        {
+            if (q.ActionId == ActionId.XtremeSpectacular) xtreme ??= q;
+        }
+        AoeQuery.Evaluated += Capture;
+        try
+        {
+            var run = ScenarioRun.Execute(typeof(Scenario), 0, 1);
+            Assert.That(run.Passed, run.ToString());
+            Assert.That(xtreme, Is.Not.Null);
+            foreach (var corner in new[] { new Vector3(-19.5f, 0f, -19.5f), new Vector3(19.5f, 0f, -19.5f), new Vector3(-19.5f, 0f, 19.5f), new Vector3(19.5f, 0f, 19.5f) })
+                Assert.That(xtreme!.Value.SignedDistance(corner), Is.LessThan(0f), $"corner {corner}");
+            Assert.That(xtreme!.Value.SignedDistance(new Vector3(-30f, 0f, 0f)), Is.GreaterThan(0f), "west of the arena");
+        }
+        finally
+        {
+            AoeQuery.Evaluated -= Capture;
+        }
     }
 }

@@ -36,6 +36,7 @@ public sealed class M10sInsaneAirScenario : IScenario
     public const float DiversDareAt = 78.53f;
 
     private const byte SurfingModelState = 0x2F;
+    private const float XtremeLength = 50f;
 
     private static readonly float[] XtremeFollowUps = [23.92f, 24.94f, 25.75f, 26.28f, 26.82f, 27.22f];
     private static readonly float[] RecastAt = [InsaneAirAt + 9.36f, InsaneAirAt + 16.71f, InsaneAirAt + 24.07f];
@@ -153,7 +154,8 @@ public sealed class M10sInsaneAirScenario : IScenario
         redHot = SpawnBrother(BNpcBaseId.RedHot, BNpcNameId.RedHot, new Vector3(5f, 0f, 0f));
         deepBlue = SpawnBrother(BNpcBaseId.DeepBlue, BNpcNameId.DeepBlue, new Vector3(-5f, 0f, 0f));
         xtremes = SpawnHelper(BNpcNameId.RedHot);
-        xtremes?.SetPosition(new Placement(Vector3.Zero, MathF.PI / 2f));
+        // The duty centres this rectangle on the arena; the sim's rectangles start at the caster.
+        xtremes?.SetPosition(new Placement(new Vector3(-XtremeLength / 2f, 0f, 0f), MathF.PI / 2f));
         for (var i = 0; i < 4; i++)
         {
             redHelpers[i] = SpawnHelper(BNpcNameId.RedHot);
