@@ -24,12 +24,16 @@ public static class M10sConstants
     public static class BNpcBaseId
     {
         public const uint RedHot = 19287;
+        public const uint DeepBlue = 19288;
+        public const uint SickSwell = 19290;
         public const uint Helper = 9020;
     }
 
     public static class BNpcNameId
     {
         public const uint RedHot = 14370;
+        public const uint DeepBlue = 14369;
+        public const uint SickSwell = 14372;
     }
 
     public static class EObjId
@@ -58,6 +62,23 @@ public static class M10sConstants
         public const uint PyrotationStack = 0xB5C3;
         public const uint CutbackBlaze = 0xB5C9;
         public const uint CutbackBlazeCleave = 0xB5CA;
+        public const uint DeepBlueAttack = 0xBE00;
+        public const uint DeepBlueLeap = 0xB579;
+        public const uint SickSwell = 0xB5CB;
+        public const uint SickSwellWave = 0xB5CC;
+        public const uint SickestTakeoff = 0xB5CD;
+        public const uint SickestTakeoffLane = 0xB5CE;
+        public const uint AwesomeSplash = 0xB5CF;
+        public const uint AwesomeSlab = 0xB5D0;
+        public const uint DoubleDip = 0xB5DD;
+        public const uint DoubleDipFirst = 0xB5DE;
+        public const uint DoubleDipSecond = 0xB5DF;
+        public const uint ReverseAlleyOop = 0xB5E0;
+        public const uint ReverseAlleyOopFirst = 0xB5E1;
+        public const uint ReverseAlleyOopSecond = 0xB5E2;
+        public const uint DeepImpact = 0xB5B7;
+        public const uint DeepImpactHit = 0xADC6;
+        public const uint DiversDareBlue = 0xB5B9;
     }
 
     public static class StatusId
@@ -70,12 +91,23 @@ public static class M10sConstants
         public const ushort MagicVulnerabilityUp = 0xB7D;
         public const ushort Burns = 0xBF9;
         public const ushort DirectionalDisregard = 0xEE0;
+        // Its param is the orb count Deep Blue shows: 0x3ED two, 0x3EE eight.
+        public const ushort Orbs = 0x808;
+        public const ushort DamageDown = 0xB5F;
     }
 
     public static class TetherId
     {
         public const ushort FloaterSlack = 0x17A;
         public const ushort FloaterTaut = 0x17B;
+        public const ushort WaveWall = 0x174;
+    }
+
+    public static class TimelineId
+    {
+        public const ushort Leave = 0x11DD;
+        public const ushort Arrive = 0x11D2;
+        public const ushort WaveRises = 0x2487;
     }
 
     public static class Geometry

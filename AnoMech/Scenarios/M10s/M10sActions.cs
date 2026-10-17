@@ -73,4 +73,79 @@ public static class M10sActions
         Timing = new() { DamageDelay = 0.4f },
         DeathExplanation = "stack with the party",
     };
+
+    public static readonly EnemyAction DiversDareBlue = new(ActionId.DiversDareBlue)
+    {
+        Cast = new() { AnimationLock = 2.1f },
+        Effects = [Damage()],
+    };
+
+    public static readonly EnemyAction SickestTakeoffLane = new(ActionId.SickestTakeoffLane)
+    {
+        Cast = new() { AnimationLock = 0.6f },
+        Effects = [Damage(Lethal)],
+        Timing = new() { DamageDelay = 0.5f },
+        DeathExplanation = "stay out of Deep Blue's lane",
+    };
+
+    // Deep Blue's surf: everyone it reaches is carried along by the scenario.
+    public static readonly EnemyAction SickSwellWave = new(ActionId.SickSwellWave)
+    {
+        Cast = new() { AnimationLock = 0.6f },
+        Effects = [Damage()],
+        Timing = new() { DamageDelay = 0.3f },
+    };
+
+    // UNVERIFIED: the minimum; every logged stack held its light party of four.
+    public static readonly EnemyAction AwesomeSlab = new(ActionId.AwesomeSlab)
+    {
+        Cast = new() { AnimationLock = 0.6f },
+        Effects = [Damage(VulnToMagic, split: Stack(4)), ApplyStatus(StatusId.MagicVulnerabilityUp, 1.96f)],
+        Timing = new() { DamageDelay = 0.4f },
+        DeathExplanation = "one light party per stack",
+    };
+
+    public static readonly EnemyAction AwesomeSplash = new(ActionId.AwesomeSplash)
+    {
+        Cast = new() { AnimationLock = 0.6f },
+        Effects = [Damage(VulnToMagic), ApplyStatus(StatusId.MagicVulnerabilityUp, 1.96f)],
+        Timing = new() { DamageDelay = 0.4f },
+        DeathExplanation = "spread out",
+    };
+
+    // UNVERIFIED: the half-angle; eight proteans 45° apart never caught a neighbour.
+    public const float ProteanHalfAngle = MathF.PI * 15f / 180f;
+
+    public static readonly EnemyAction ReverseFirst = Protean(ActionId.ReverseAlleyOopFirst);
+    public static readonly EnemyAction DoubleDipFirst = Protean(ActionId.DoubleDipFirst);
+
+    private static EnemyAction Protean(uint actionId) => new(actionId)
+    {
+        Cast = new() { AnimationLock = 0.6f, FaceTarget = false },
+        Area = new() { Size = ProteanHalfAngle },
+        Effects = [Damage(VulnToMagic), ApplyStatus(StatusId.MagicVulnerabilityUp, 1.96f)],
+        Timing = new() { DamageDelay = 0.3f },
+        DeathExplanation = "one cone each",
+    };
+
+    // The second set only leaves Damage Down on whoever it catches.
+    public static readonly EnemyAction ReverseSecond = Echo(ActionId.ReverseAlleyOopSecond);
+    public static readonly EnemyAction DoubleDipSecond = Echo(ActionId.DoubleDipSecond);
+
+    private static EnemyAction Echo(uint actionId) => new(actionId)
+    {
+        Cast = new() { AnimationLock = 0.6f, FaceTarget = false },
+        Area = new() { Size = ProteanHalfAngle },
+        Effects = [Damage(VulnToMagic), ApplyStatus(StatusId.DamageDown, 30f)],
+        Timing = new() { DamageDelay = 0.3f },
+    };
+
+    // UNVERIFIED: the knockback distance; guides call it small.
+    public static readonly EnemyAction DeepImpactHit = new(ActionId.DeepImpactHit)
+    {
+        Cast = new() { AnimationLock = 0.6f },
+        Effects = [Damage(TankBuster), Push(6f, 12f)],
+        Timing = new() { DamageDelay = 0.4f },
+        DeathExplanation = "a tank stands furthest from Deep Blue",
+    };
 }
