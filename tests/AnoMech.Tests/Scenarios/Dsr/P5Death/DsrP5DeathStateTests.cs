@@ -18,6 +18,33 @@ public class DsrP5DeathStateTests
     }
 
     [Test]
+    public void DoomsNeverAllLandInOneLightParty()
+    {
+        foreach (var state in Rolls())
+        {
+            var first = state.Dooms.Count(DsrP5DeathState.InFirstLightParty);
+            Assert.That(first, Is.InRange(1, 3));
+        }
+    }
+
+    [Test]
+    public void ThePlayerTakesTheirChosenCongaSpot()
+    {
+        Assert.That(DsrP5DeathAi.CongaLineWithThePlayerAt(null, PartyRole.MainTank), Is.EqualTo(new[]
+        {
+            PartyRole.RegenHealer, PartyRole.MeleeDpsA, PartyRole.PhysRangedDps, PartyRole.MainTank,
+            PartyRole.OffTank, PartyRole.CasterDps, PartyRole.MeleeDpsB, PartyRole.ShieldHealer,
+        }));
+        for (var slot = 0; slot < 8; slot++)
+        foreach (var player in Enum.GetValues<PartyRole>())
+        {
+            var line = DsrP5DeathAi.CongaLineWithThePlayerAt(slot, player);
+            Assert.That(line[slot], Is.EqualTo(player));
+            Assert.That(line, Is.EquivalentTo(Enum.GetValues<PartyRole>()));
+        }
+    }
+
+    [Test]
     public void TheWarriorSitsOnACardinal()
     {
         foreach (var state in Rolls())

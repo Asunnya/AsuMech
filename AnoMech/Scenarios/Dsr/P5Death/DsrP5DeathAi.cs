@@ -15,8 +15,8 @@ public sealed class DsrP5DeathAi : IScenarioAi<DsrP5DeathState>
     public string Name => "NAUR (conga, dooms anchor)";
 
     private const float D = DsrP5DeathScenario.Death;
-    private static readonly PartyRole[] CongaLine =
-        [PartyRole.MeleeDpsA, PartyRole.OffTank, PartyRole.RegenHealer, PartyRole.MainTank, PartyRole.MeleeDpsB, PartyRole.CasterDps, PartyRole.ShieldHealer, PartyRole.PhysRangedDps];
+    private static readonly PartyRole[] RoleCongaLine =
+        [PartyRole.RegenHealer, PartyRole.MeleeDpsA, PartyRole.PhysRangedDps, PartyRole.MainTank, PartyRole.OffTank, PartyRole.CasterDps, PartyRole.MeleeDpsB, PartyRole.ShieldHealer];
     private const float CongaSpacing = 1.5f;
     private const float CongaLineA = -2f;
     private const float StepAside = 1.5f;
@@ -29,17 +29,19 @@ public sealed class DsrP5DeathAi : IScenarioAi<DsrP5DeathState>
 
     private DsrP5DeathState state = null!;
     private SimWorld world = null!;
+    private PartyRole[] CongaLine = RoleCongaLine;
 
     public void Run(DsrP5DeathState stateParam, SimWorld worldParam)
     {
         state = stateParam;
         world = worldParam;
+        CongaLine = CongaLineWithThePlayerAt(state.PlayerCongaSlot, world.Party.PlayerRole);
         var ai = new AiManager(world);
 
         ai.Move(0.3f, () => AiMove.Create(MainTankSouthPartyNorth()).NaturalOrder());
         ai.Move(D + 9.0f, () => AiMove.Create(LineUpFacingTheWarrior()).NaturalOrder(), jitter: 0f);
         ai.Move(D + 11.9f, () => AiMove.Create(DoomsStepTowardTheWarrior()).NaturalOrder(), jitter: 0f);
-        ai.Move(D + 12.5f, () => AiMove.Create(SpreadToDiveSafeSpots()).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(D + 13.5f, () => AiMove.Create(SpreadToDiveSafeSpots()).NaturalOrder(), jitter: 0f, sprint: true);
         ai.Move(DsrP5DeathScenario.LightningLands + 0.08f, () => AiMove.Create(StepOffTwistersAfterLightning()).NaturalOrder(), jitter: 0f, sprint: true);
         ai.Move(DsrP5DeathScenario.Earthquakes[2] + 0.1f, () => AiMove.Create(WallNonDoomsInBehindTheThirdQuake()).NaturalOrder(), jitter: 0f, sprint: true);
         ai.Move(DsrP5DeathScenario.Earthquakes[3] + 0.07f, () => AiMove.Create(IntercardNonDoomsInBehindTheFourthQuake()).NaturalOrder(), jitter: 0f, sprint: true);
@@ -48,6 +50,14 @@ public sealed class DsrP5DeathAi : IScenarioAi<DsrP5DeathState>
         world.Events.Add(DsrP5DeathScenario.Knockback - 0.15f, FaceAwayFromBothGazes);
         ai.Move(DsrP5DeathScenario.Knockback + 0.9f, () => AiMove.Create(DoomsIntoPuddles()).NaturalOrder(), jitter: 0f, sprint: true);
         ai.Move(D + 38.5f, () => AiMove.Create(Stacked(Vector2.Zero)).NaturalOrder());
+    }
+
+    public static PartyRole[] CongaLineWithThePlayerAt(int? slot, PartyRole player)
+    {
+        if (slot is not { } at || at is < 0 or > 7) return RoleCongaLine;
+        var line = RoleCongaLine.Where(r => r != player).ToList();
+        line.Insert(at, player);
+        return line.ToArray();
     }
 
     private static Vector2?[] MainTankSouthPartyNorth()

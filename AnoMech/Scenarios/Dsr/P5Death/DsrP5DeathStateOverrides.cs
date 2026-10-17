@@ -13,4 +13,6 @@ public sealed class DsrP5DeathStateOverrides
     public float? EyeBearing { get; set; }
     // The first doom (in party order) without a circle takes the square when true.
     public bool? FirstDoomSquare { get; set; }
+    // Where the player stands in the conga line, 0 = leftmost facing the warrior; null keeps their role's spot.
+    public int? PlayerCongaSlot { get; set; }
 }

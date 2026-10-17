@@ -11,8 +11,8 @@ public class DsrP5DeathScenarioTests
 {
     private const float D = DsrP5DeathScenario.Death;
 
-    // Warrior north. Conga line west to east: M1 OT H1 MT M2 C H2 R; dooms M1 (W), OT (NW), MT (NE), M2 (E);
-    // non-dooms H1 (W wall), C (SW), H2 (SE), R (E wall).
+    // Warrior north. Conga line west to east: H1 M1 R MT OT C M2 H2; dooms M1 (W), MT (NW), OT (NE), M2 (E);
+    // non-dooms H1 (W wall), R (SW), C (SE), H2 (E wall).
     private static void Pinned(DsrP5DeathStateOverrides o)
     {
         o.WarriorBearing = 0f;
@@ -27,6 +27,22 @@ public class DsrP5DeathScenarioTests
     public void DoomStillOnWhenItRunsOutKills()
         => Negative<DsrP5DeathScenario>(MeleeDpsB)
             .Overrides<DsrP5DeathStateOverrides>(Pinned)
+            .At(D + 35.5f, p => p.Member(MeleeDpsB)!.AddStatus(StatusId.Doom, 2.3f))
+            .ShouldKill(ActionId.Deathstorm, MeleeDpsB);
+
+    [Test]
+    public void ThePlayerLinesUpAtTheChosenCongaSpot()
+        => Negative<DsrP5DeathScenario>(MeleeDpsB)
+            .Overrides<DsrP5DeathStateOverrides>(o => { Pinned(o); o.PlayerCongaSlot = 0; })
+            .At(D + 11.5f, p => Assert.That(Enumerable.Range(0, 8).Select(i => p.World.Party.Get(i)!).Where(m => m != p.Member(MeleeDpsB)).Min(m => m.Position.X), Is.GreaterThan(p.Member(MeleeDpsB)!.Position.X)))
+            .At(D + 35.5f, p => p.Member(MeleeDpsB)!.AddStatus(StatusId.Doom, 2.3f))
+            .ShouldKill(ActionId.Deathstorm, MeleeDpsB);
+
+    [Test]
+    public void DoomsHoldTheirStepBeforeSpreading()
+        => Negative<DsrP5DeathScenario>(MeleeDpsB)
+            .Overrides<DsrP5DeathStateOverrides>(Pinned)
+            .At(D + 13.3f, p => Assert.That(MathF.Abs(p.Member(MeleeDpsB)!.Position.Z - p.Member(CasterDps)!.Position.Z), Is.InRange(2.5f, 3.5f)))
             .At(D + 35.5f, p => p.Member(MeleeDpsB)!.AddStatus(StatusId.Doom, 2.3f))
             .ShouldKill(ActionId.Deathstorm, MeleeDpsB);
 

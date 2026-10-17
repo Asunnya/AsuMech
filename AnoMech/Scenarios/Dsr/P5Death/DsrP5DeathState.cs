@@ -27,6 +27,7 @@ public sealed class DsrP5DeathState
     public float ThordanBearing { get; }
     public float EyeBearing { get; }
     public bool FirstDoomSquare { get; }
+    public int? PlayerCongaSlot { get; }
     // Order the non-dooms without a circle take the crosses and the leftover square and triangle.
     public IReadOnlyList<int> NonDoomOrder { get; }
 
@@ -39,7 +40,9 @@ public sealed class DsrP5DeathState
     {
         overrides ??= new DsrP5DeathStateOverrides();
         WarriorBearing = overrides.WarriorBearing ?? 90f * rng.Next(4);
-        var dooms = rng.Shuffle(Enum.GetValues<PartyRole>()).Take(4).ToList();
+        List<PartyRole> dooms;
+        do dooms = rng.Shuffle(Enum.GetValues<PartyRole>()).Take(4).ToList();
+        while (dooms.All(InFirstLightParty) || !dooms.Any(InFirstLightParty));
         Dooms = overrides.Dooms ?? dooms;
         var thordan = 45f * rng.Next(8);
         ThordanBearing = overrides.ThordanBearing ?? thordan;
@@ -48,7 +51,12 @@ public sealed class DsrP5DeathState
         var firstSquare = rng.NextBool();
         FirstDoomSquare = overrides.FirstDoomSquare ?? firstSquare;
         NonDoomOrder = rng.Shuffle(new[] { 0, 1, 2, 3 }).ToList();
+        PlayerCongaSlot = overrides.PlayerCongaSlot;
     }
+
+    // UNVERIFIED: the four dooms never all land in one light party.
+    public static bool InFirstLightParty(PartyRole role) =>
+        role is PartyRole.MainTank or PartyRole.RegenHealer or PartyRole.MeleeDpsA or PartyRole.PhysRangedDps;
 
     public bool IsDoomed(PartyRole role) => Dooms.Contains(role);
 

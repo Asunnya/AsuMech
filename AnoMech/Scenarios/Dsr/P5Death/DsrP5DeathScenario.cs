@@ -24,8 +24,9 @@ public sealed class DsrP5DeathScenario : IScenario
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new DsrP5DeathAi()];
 
-    private readonly DsrP5DeathStateOverrides overrides = new();
-    public object SettingsOverrides => overrides;
+    private readonly DsrP5DeathSettingsWindow settingsWindow = new();
+    public object SettingsOverrides => settingsWindow.Overrides;
+    public void DrawSettings() => settingsWindow.Draw();
 
     public const float Death = 3.0f;
     public const float DoomsMarked = Death + 11.72f;
@@ -96,7 +97,7 @@ public sealed class DsrP5DeathScenario : IScenario
         world = worldParam;
         party = world.Party;
         damage = new DamageSolver(party);
-        state = new DsrP5DeathState(world.Rng, overrides);
+        state = new DsrP5DeathState(world.Rng, settingsWindow.Overrides);
         spawned.Clear();
         carriers.Clear();
         meteors.Clear();
