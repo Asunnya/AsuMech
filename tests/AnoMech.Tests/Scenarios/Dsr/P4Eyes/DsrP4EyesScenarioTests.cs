@@ -35,6 +35,15 @@ public class DsrP4EyesScenarioTests
             .ShouldKill(ActionId.FlareStar, RegenHealer);
 
     [Test]
+    public void WrongColoursWaitBeforeTradingOnEstinien()
+        => Negative<DsrP4EyesScenario>(RegenHealer)
+            .Overrides<DsrP4EyesStateOverrides>(o => { RightColours(o); o.FirstRed = [MainTank, RegenHealer, MeleeDpsA, MeleeDpsB]; })
+            .At(35.4f, p => Assert.That(Vector2.Distance(new Vector2(p.Member(OffTank)!.Position.X, p.Member(OffTank)!.Position.Z), new Vector2(6.5f, -1.7f)), Is.LessThan(0.5f)))
+            .At(38.5f, p => Assert.That(p.Member(OffTank)!.HasStatus(StatusId.Clawbound), Is.True))
+            .FreezeAt(41f)
+            .ShouldKill(ActionId.FlareStarUnpopped, AllBut());
+
+    [Test]
     public void LeavingABlueOrbToBurstWipes()
         => Negative<DsrP4EyesScenario>(RegenHealer)
             .Overrides<DsrP4EyesStateOverrides>(RightColours)

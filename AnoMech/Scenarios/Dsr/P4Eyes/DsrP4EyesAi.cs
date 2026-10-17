@@ -98,7 +98,7 @@ public sealed class DsrP4EyesAi : IScenarioAi<DsrP4EyesState>
 
         ai.Move(0.3f, () => AiMove.Create(Stacked(AlphinaudStack)).NaturalOrder());
         ai.Move(18.0f, () => AiMove.Create(SupportsToRedEyeDpsToBlueEye()).NaturalOrder(), jitter: 0f);
-        Every(ai, 34.0f, 40.5f, TradeWrongColoursOnEstinienThenPreposition);
+        Every(ai, 35.5f, 40.5f, TradeWrongColoursOnEstinienThenPreposition);
         Every(ai, 41.2f, 46.5f, MeleeHandRedToRangedAfterGildedPop);
         Every(ai, 47.0f, 58.5f, RangedToBoxCornersAfterAzurePop);
         for (var dive = 0; dive < DsrP4EyesState.Dives - 1; dive++)
