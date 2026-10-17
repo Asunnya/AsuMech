@@ -20,17 +20,19 @@ While simulating:
   * Ready checks will not pop.
  
 
-### Beta: Advanced Simulation Resolution
-
-The simulator now includes a beta feature that properly resolves most skills, triggers, and gauges during simulation. 
-As this feature is still in beta, some edge cases and less common interactions may not yet resolve correctly.
-
 
 ## Installation
 
 See: https://github.com/anomek/MyDalamudPlugins
 
-## Currently implemented (by default using pf NA strats):
+## Beta: Advanced Simulation Resolution
+
+The simulator now includes a beta feature that properly resolves most skills, triggers, and gauges during simulation.
+As this feature is still in beta, some edge cases and less common interactions may not yet resolve correctly.
+
+
+## Currently implemented 
+All using default NA pf strats unless noted otherwise:
 - Dancing Mad (Ultimate)
     - P1 Tele-trouncing _by [Evernow](https://github.com/Evernow)_
     - P2 Forsaken
@@ -55,8 +57,21 @@ See: https://github.com/anomek/MyDalamudPlugins
     - P5 Exaflares _by [Wydox](https://github.com/Wydox)_
     - P5 Celestriad _by [RoarkGit](https://github.com/RoarkGit)_
     - P5 Forsaken Null _no ai or damage_
-- The Omega Protocol (Ultimate): _NA pf strats_
+- Futures Rewritten (Ultimate) _by [grayparser](https://github.com/grayparser)_
+    - P2 Diamond Dust 
+    - P2 Light Rampant
+    - P3 Ultimate Relativity
+    - P3 Apocalypse 
+    - P4 Darklit Dragonsong
+      - NA
+      - NA, you take Somber Dance
+    - P4 Crystallize Time 
+    - P5 Fulgent Blade
+    - P5 Paradise Regained 
+- The Omega Protocol (Ultimate)
     - P2 Party Synergy
+      - NA pf
+      - LPDU _by [Quantumlyy](https://github.com/Quantumlyy)_
     - P5 Delta
     - P5 Sigma
     - P5 Omega
@@ -93,10 +108,14 @@ See: https://github.com/anomek/MyDalamudPlugins
 #  Acknowledgments
 
 Thanks for contributors:
-* [WorstAquaPlayer](https://github.com/WorstAquaPlayer) - rewriting core & fixing crashes, scenarios for uwu
+* [WorstAquaPlayer](https://github.com/WorstAquaPlayer) - rewriting core & fixing crashes, extra scenarios
 * [Wydox](https://github.com/Wydox) - core improvements, extra scenarios and strategies
+* [Evernow](https://github.com/Evernow) - multiplayer (WIP), core improvements, extra scenarions and strategies
 * [RoarkGit](https://github.com/RoarkGit) - win streaks, extra scenarios
-* [Evernow](https://github.com/Evernow) - multiplayer (WIP), extra sceanrions and strategies
+* [grayparser](https://github.com/grayparser) - core improvements, extra scenarios
+* [altair9x](https://github.com/altair9x) - extra strategies
+* [Quantumlyy](https://github.com/Quantumlyy) - extra strategies
+* [Linqx](https://github.com/Linqx) - success/failure checkmarks
 
 AnoMech leans heavily on the work of other Dalamud plugins. Huge thanks to their authors!  
 Without them, the following would not be possible:
