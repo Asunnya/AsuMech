@@ -264,7 +264,7 @@ public sealed class M10sOpenerScenario : IScenario
         }
     }
 
-    // Red Hot turns to the nearest player and burns everything but the slice in front of it.
+    // Red Hot turns its back to the nearest player and burns everything but the slice behind it.
     private void AimCutback()
     {
         if (redHot is not { } boss) return;
@@ -273,6 +273,7 @@ public sealed class M10sOpenerScenario : IScenario
         if (nearest != null) boss.Face(nearest);
         state.CutbackOrigin = boss.Position;
         state.SafeSliceRotation = boss.Rotation;
+        boss.SetRotation(boss.Rotation + MathF.PI);
     }
 
     private void DropCutbackFire()
@@ -280,7 +281,7 @@ public sealed class M10sOpenerScenario : IScenario
         if (state.SafeSliceRotation is not { } safe) return;
         var direction = new Vector2(MathF.Sin(safe), MathF.Cos(safe));
         fires.Add(new ConeFire(ActionId.CutbackBlaze, CutbackHitAt + 0.6f + FireArmDelay, state.CutbackOrigin, direction, MathF.PI - Actions.CutbackBlazeHalfAngle));
-        ShowFire(EObjId.CutbackFire, new Placement(state.CutbackOrigin, safe));
+        ShowFire(EObjId.CutbackFire, new Placement(state.CutbackOrigin, safe + MathF.PI));
     }
 
     private void PyrotationHit()
