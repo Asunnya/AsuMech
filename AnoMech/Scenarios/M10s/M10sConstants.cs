@@ -130,7 +130,15 @@ public static class M10sConstants
     {
         public const ushort Leave = 0x11DD;
         public const ushort Arrive = 0x11D2;
+        public const ushort RedHotArrive = 0x11D1;
         public const ushort WaveRises = 0x2487;
+    }
+
+    public static class MapEffect
+    {
+        public const byte ArenaSlot = 0x00;
+        public const uint SpectacularOn = 0x00800040;
+        public const uint SpectacularOff = 0x02000100;
     }
 
     public static class Geometry

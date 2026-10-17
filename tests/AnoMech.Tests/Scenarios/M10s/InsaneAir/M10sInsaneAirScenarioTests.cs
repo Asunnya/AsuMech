@@ -1,4 +1,6 @@
+using System.Globalization;
 using System.Numerics;
+using AnoMech.Core.Native.Interfaces;
 using AnoMech.Scenarios.M10s.InsaneAir;
 using static AnoMech.Core.Game.Party.PartyRole;
 using static AnoMech.Scenarios.M10s.M10sConstants;
@@ -34,4 +36,32 @@ public class M10sInsaneAirScenarioTests
             .Overrides<M10sInsaneAirStateOverrides>(Pinned)
             .TeleportAt(Scenario.StopAt[1] + 0.5f, to: new Vector2(13f, -5f))
             .ShouldKill(ActionId.ReentryPlungeCone, MainTank, RegenHealer, MeleeDpsA);
+
+    [Test]
+    public void XtremeSpectacularDressesTheArenaAndClearsItBeforeInsaneAir()
+    {
+        SimTimeline? timeline = null;
+        var run = ScenarioRun.Execute(typeof(Scenario), 0, 1, new ScenarioRunOptions
+        {
+            Probe = _ =>
+            {
+                if (timeline != null) return;
+                timeline = ((FakeBattleCharas)Natives.BattleCharas).Timeline;
+                ((FakeMapEffects)Natives.MapEffects).Loaded = true;
+            },
+        });
+        Assert.That(run.Passed, run.ToString());
+
+        var arena = timeline!.Rows
+            .Where(r => r["kind"] == "map_effect" && r["id"] == MapEffect.ArenaSlot.ToString())
+            .Select(r => (T: float.Parse(r["t"], CultureInfo.InvariantCulture), Detail: r["detail"]))
+            .ToList();
+        Assert.That(arena.Select(a => a.Detail), Is.EqualTo(new[]
+        {
+            $"state={MapEffect.SpectacularOn & 0xFFFF} timeline={MapEffect.SpectacularOn >> 16} flags=0x{MapEffect.SpectacularOn:X}",
+            $"state={MapEffect.SpectacularOff & 0xFFFF} timeline={MapEffect.SpectacularOff >> 16} flags=0x{MapEffect.SpectacularOff:X}",
+        }));
+        Assert.That(arena[0].T, Is.InRange(Scenario.XtremeCastAt, Scenario.XtremeHitsAt));
+        Assert.That(arena[1].T, Is.InRange(Scenario.XtremeHitsAt, Scenario.InsaneAirAt));
+    }
 }

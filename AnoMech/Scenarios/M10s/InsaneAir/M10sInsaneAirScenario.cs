@@ -35,6 +35,8 @@ public sealed class M10sInsaneAirScenario : IScenario
     public const float StopToHit = 1.16f;
     public const float DiversDareAt = 78.53f;
 
+    private const byte SurfingModelState = 0x2F;
+
     private static readonly float[] XtremeFollowUps = [23.92f, 24.94f, 25.75f, 26.28f, 26.82f, 27.22f];
     private static readonly float[] RecastAt = [InsaneAirAt + 9.36f, InsaneAirAt + 16.71f, InsaneAirAt + 24.07f];
 
@@ -61,11 +63,37 @@ public sealed class M10sInsaneAirScenario : IScenario
         {
             redHot?.Cast(ActionId.XtremeSpectacularRed, animationLock: 0.2f);
             deepBlue?.Cast(ActionId.XtremeSpectacularBlue, animationLock: 0.2f);
+            redHot?.SetModelState(SurfingModelState);
+            deepBlue?.SetModelState(SurfingModelState);
         });
         world.Events.Add(15.66f, () => xtremes?.Cast(Actions.XtremeSpectacular));
+        world.Events.Add(16.1f, () =>
+        {
+            redHot?.SetTargetable(false);
+            deepBlue?.SetTargetable(false);
+            world.Map.AddEffect(MapEffect.SpectacularOn, MapEffect.ArenaSlot);
+        });
         foreach (var at in XtremeFollowUps)
             world.Events.Add(at, () => xtremes?.Cast(Actions.XtremeSpectacularHit));
         world.Events.Add(27.62f, () => xtremes?.Cast(Actions.XtremeSpectacularLast));
+        world.Events.Add(27.74f, () =>
+        {
+            world.Map.AddEffect(MapEffect.SpectacularOff, MapEffect.ArenaSlot);
+            redHot?.SetModelState(0);
+            deepBlue?.SetModelState(0);
+            redHot?.SetAnimationState(0, 0);
+            deepBlue?.SetAnimationState(0, 0);
+        });
+        world.Events.Add(31.1f, () => { redHot?.SetVisible(false); deepBlue?.SetVisible(false); });
+        world.Events.Add(31.45f, () =>
+        {
+            redHot?.SetVisible(true);
+            deepBlue?.SetVisible(true);
+            redHot?.SetTargetable(true);
+            deepBlue?.SetTargetable(true);
+            redHot?.PlayActionTimeline(TimelineId.RedHotArrive);
+            deepBlue?.PlayActionTimeline(TimelineId.Arrive);
+        });
         world.Events.Add(32.99f, () =>
         {
             redHot?.Cast(ActionId.EpicBrotherhood, deepBlue, animationLock: 0.2f);
