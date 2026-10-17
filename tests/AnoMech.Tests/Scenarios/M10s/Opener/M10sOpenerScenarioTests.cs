@@ -63,10 +63,10 @@ public class M10sOpenerScenarioTests
             .ShouldKill(ActionId.AlleyOopInfernoSpread, RegenHealer, ShieldHealer);
 
     [Test]
-    public void StayingInFrontOfRedHotDiesToCutbackBlaze()
+    public void LeavingTheStackRedHotFacesDiesToCutbackBlaze()
         => Negative<Scenario>(CasterDps)
             .Overrides<M10sOpenerStateOverrides>(Pinned)
-            .FreezeAt(57f)
+            .TeleportAt(61f, to: new Vector2(-5.5f, 5f))
             .ShouldKill(ActionId.CutbackBlazeCleave, CasterDps);
 
     [Test]

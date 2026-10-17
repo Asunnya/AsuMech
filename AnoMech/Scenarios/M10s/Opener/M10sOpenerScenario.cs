@@ -35,6 +35,7 @@ public sealed class M10sOpenerScenario : IScenario
     public const float InfernoCastAt = 48.08f;
     public const float InfernoHitAt = 53.08f;
     public const float CutbackCastAt = 57.54f;
+    public const float CutbackAimAt = 61.81f;
     public const float CutbackHitAt = 62.71f;
     public static readonly float[] PyrotationHitAt = [69.60f, 71.59f, 73.63f];
     public const float DiversDareAt = 77.41f;
@@ -142,7 +143,8 @@ public sealed class M10sOpenerScenario : IScenario
         world.Events.Add(InfernoCastAt, AlleyOopInferno);
         world.Events.Add(InfernoHitAt, DropInfernoFire);
         world.Events.Add(54.3f, () => redHot?.MoveTo(state.FromWestFrame(CutbackBossSpot)));
-        world.Events.Add(CutbackCastAt, AimCutback);
+        world.Events.Add(CutbackCastAt, () => redHot?.Cast(ActionId.CutbackBlaze, animationLock: 0.2f));
+        world.Events.Add(CutbackAimAt, AimCutback);
         world.Events.Add(CutbackHitAt, () => redHot?.Cast(Actions.CutbackBlazeCleave));
         world.Events.Add(CutbackHitAt + 0.6f, DropCutbackFire);
         world.Events.Add(63.96f, () => redHot?.Cast(ActionId.Pyrotation, animationLock: 0.2f));
@@ -262,16 +264,15 @@ public sealed class M10sOpenerScenario : IScenario
         }
     }
 
-    // Red Hot turns to whoever is furthest and spares only the slice behind itself.
+    // Red Hot turns to the nearest player and burns everything but the slice in front of it.
     private void AimCutback()
     {
         if (redHot is not { } boss) return;
-        boss.Cast(ActionId.CutbackBlaze, animationLock: 0.2f);
-        var furthest = world.Party.ActiveMembers().Where(m => m.IsAlive())
-            .OrderByDescending(m => Vector3.DistanceSquared(m.Position, boss.Position)).FirstOrDefault();
-        if (furthest != null) boss.Face(furthest);
+        var nearest = world.Party.ActiveMembers().Where(m => m.IsAlive())
+            .OrderBy(m => Vector3.DistanceSquared(m.Position, boss.Position)).FirstOrDefault();
+        if (nearest != null) boss.Face(nearest);
         state.CutbackOrigin = boss.Position;
-        state.SafeSliceRotation = boss.Rotation + MathF.PI;
+        state.SafeSliceRotation = boss.Rotation;
     }
 
     private void DropCutbackFire()
@@ -279,7 +280,7 @@ public sealed class M10sOpenerScenario : IScenario
         if (state.SafeSliceRotation is not { } safe) return;
         var direction = new Vector2(MathF.Sin(safe), MathF.Cos(safe));
         fires.Add(new ConeFire(ActionId.CutbackBlaze, CutbackHitAt + 0.6f + FireArmDelay, state.CutbackOrigin, direction, MathF.PI - Actions.CutbackBlazeHalfAngle));
-        ShowFire(EObjId.CutbackFire, new Placement(state.CutbackOrigin, safe + MathF.PI));
+        ShowFire(EObjId.CutbackFire, new Placement(state.CutbackOrigin, safe));
     }
 
     private void PyrotationHit()
