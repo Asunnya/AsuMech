@@ -141,6 +141,8 @@ public sealed class DsrP6DoubleDragonsScenario : IScenario
     private readonly List<SimEnemy> hotWingCasters = [];
     private readonly List<SimEnemy> spawned = [];
     private readonly Dictionary<SimCharacter, Vector3> pyretic = [];
+    private readonly Queue<SimEnemy> helperPool = [];
+    private const int HelperPoolSize = 10;
 
     private sealed class BreathTether(SimCharacter member, SimEnemy dragon, ushort tautId, uint breathAction)
     {
@@ -163,6 +165,7 @@ public sealed class DsrP6DoubleDragonsScenario : IScenario
         hotWingCasters.Clear();
         spawned.Clear();
         pyretic.Clear();
+        helperPool.Clear();
         hpLink = null;
         vowHolder = null;
 
@@ -172,6 +175,7 @@ public sealed class DsrP6DoubleDragonsScenario : IScenario
         world.Events.Add(0f, () => world.EnforceArenaBoundary(new SquareArena(Geometry.ArenaHalfWidth), "Touched the arena wall"));
         world.Events.Add(0f, () => world.PlaceWaymarks(NaurWaymarks));
         world.Events.Add(0f, SpawnDragons);
+        world.Events.Add(0f, FillHelperPool);
         world.Events.Add(0.21f, () => world.Map.DirectorUpdate(ArenaDirector.Layout, 1U, ArenaDirector.DoubleDragonsLayout));
         world.Events.Add(0.21f, () => world.Map.DirectorUpdate(ArenaDirector.MapChange, ArenaDirector.KnightsMap));
         world.Events.Add(3.20f, () => { nidhogg?.SetTargetable(true); hraesvelgr?.SetTargetable(true); });
@@ -279,6 +283,7 @@ public sealed class DsrP6DoubleDragonsScenario : IScenario
         world.Events.Add(0f, () => world.PlaceWaymarks(NaurWaymarks));
         world.Events.Add(0f, () => world.Map.DirectorUpdate(ArenaDirector.Layout, 1U, ArenaDirector.DoubleDragonsLayout));
         world.Events.Add(0f, () => world.Map.DirectorUpdate(ArenaDirector.MapChange, ArenaDirector.KnightsMap));
+        world.Events.Add(0f, FillHelperPool);
         world.Events.Add(0f, () =>
         {
             SpawnDragons();
@@ -361,9 +366,9 @@ public sealed class DsrP6DoubleDragonsScenario : IScenario
     {
         CastSelf(nidhogg, DreadWyrmsbreathId(wyrmsbreath), 6.0f);
         CastSelf(hraesvelgr, GreatWyrmsbreathId(wyrmsbreath), 6.0f);
-        if (SpawnHelper(new Placement(Vector3.Zero, 0f)) is not { } centre) return;
+        if (TakeHelper(new Placement(Vector3.Zero, 0f)) is not { } centre) return;
         centre.NativeCast(ActionId.SwirlingBlizzard, ActionType.Action, 0f, 6.7f, false, targetId: centre.GameObjectId, position: Vector3.Zero);
-        world.Events.Add(7.1f + EffectCarrierLinger, centre.Despawn);
+        world.Events.Add(7.1f + EffectCarrierLinger, () => ReturnHelper(centre));
     }
 
     private void SwirlingBlizzard()
@@ -390,10 +395,10 @@ public sealed class DsrP6DoubleDragonsScenario : IScenario
                 continue;
             }
             var rotation = RotationTowards(breath.Dragon.Position, breath.Member.Position);
-            if (SpawnHelper(new Placement(breath.Dragon.Position, rotation)) is { } helper)
+            if (TakeHelper(new Placement(breath.Dragon.Position, rotation)) is { } helper)
             {
                 PlayEffect(helper, breath.BreathAction, 1.1f, rotation, breath.Member.GameObjectId);
-                world.Events.Add(EffectCarrierLinger, helper.Despawn);
+                world.Events.Add(EffectCarrierLinger, () => ReturnHelper(helper));
             }
             var counts = breath.BreathAction == ActionId.FlameBreath ? flame : ice;
             foreach (var hit in party.Find.InsideCone(new Placement(breath.Dragon.Position, rotation), BreathHalfAngle, BreathRange))
@@ -556,10 +561,10 @@ public sealed class DsrP6DoubleDragonsScenario : IScenario
         var wingAction = north ? ActionId.HallowedWingsNorth : ActionId.HallowedWingsSouth;
         var side = north ? -WingsHalfWidth : WingsHalfWidth;
         var wing = new Placement(new Vector3(HraesvelgrHome.X + 3f, 0f, side), -MathF.PI / 2f);
-        if (SpawnHelper(wing) is { } helper)
+        if (TakeHelper(wing) is { } helper)
         {
             PlayEffect(helper, wingAction, 1.1f, wing.Rotation);
-            world.Events.Add(EffectCarrierLinger, helper.Despawn);
+            world.Events.Add(EffectCarrierLinger, () => ReturnHelper(helper));
         }
         foreach (var hit in party.Find.InsideRect(wing, WingsHalfWidth, WingsLength).Where(m => m.IsAlive()).ToList())
             hit.Die(wingAction, "stood under Hraesvelgr's glowing wing");
@@ -668,7 +673,7 @@ public sealed class DsrP6DoubleDragonsScenario : IScenario
         var lanes = wing ? new[] { -14.5f, 14.5f } : [0f];
         foreach (var z in lanes)
         {
-            if (SpawnHelper(new Placement(new Vector3(NidhoggHome.X, 0f, z), MathF.PI / 2f)) is not { } helper) continue;
+            if (TakeHelper(new Placement(new Vector3(NidhoggHome.X, 0f, z), MathF.PI / 2f)) is not { } helper) continue;
             helper.NativeCast(wing ? ActionId.HotWingSides : ActionId.HotTailMiddle, ActionType.Action, 0f, 6.2f, false, rotation: helper.Rotation, position: helper.Position);
             hotWingCasters.Add(helper);
         }
@@ -681,7 +686,7 @@ public sealed class DsrP6DoubleDragonsScenario : IScenario
         {
             PlayEffect(helper, action, 1.1f, helper.Rotation);
             damage.Resolve(helper, action, [DamageType.Lethal], []);
-            world.Events.Add(EffectCarrierLinger, helper.Despawn);
+            world.Events.Add(EffectCarrierLinger, () => ReturnHelper(helper));
         }
         hotWingCasters.Clear();
     }
@@ -811,7 +816,8 @@ public sealed class DsrP6DoubleDragonsScenario : IScenario
         foreach (var breath in breathTethers) breath.Tether?.Despawn();
         breathTethers.Clear();
         hpLink?.Despawn();
-        foreach (var helper in hotWingCasters) helper.Despawn();
+        foreach (var helper in hotWingCasters.Concat(helperPool)) helper.Despawn();
+        helperPool.Clear();
         hotWingCasters.Clear();
         for (var i = 0; i < orbSets.Length; i++) DespawnOrbs(i);
         foreach (var enemy in spawned) enemy.Despawn();
@@ -831,6 +837,22 @@ public sealed class DsrP6DoubleDragonsScenario : IScenario
         if (enemy != null) spawned.Add(enemy);
         return enemy;
     }
+
+    // A helper spawned in the frame it acts drops the effect or cast, so they wait in a pool.
+    private void FillHelperPool()
+    {
+        for (var i = 0; i < HelperPoolSize; i++)
+            if (SpawnHelper(new Placement(Vector3.Zero, 0f)) is { } helper) helperPool.Enqueue(helper);
+    }
+
+    private SimEnemy? TakeHelper(Placement placement)
+    {
+        if (!helperPool.TryDequeue(out var helper)) return SpawnHelper(placement);
+        helper.SetPosition(placement);
+        return helper;
+    }
+
+    private void ReturnHelper(SimEnemy helper) => helperPool.Enqueue(helper);
 
     private SimEnemy? SpawnHelper(Placement placement) =>
         world.SpawnEnemy(new EnemySpawnConfig(
