@@ -19,6 +19,7 @@ public sealed class M10sOpenerState
     public Vector3 CutbackOrigin { get; set; }
     // Where each Pyrotation stack landed.
     public List<Vector3> PyrotationSpots { get; } = [];
+    public List<Vector3> InfernoPuddles { get; } = [];
 
     public M10sOpenerState(Rng rng, M10sOpenerStateOverrides? overrides = null, PartyRole? player = null)
     {

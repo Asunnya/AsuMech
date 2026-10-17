@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using AnoMech.Scenarios.M10s.Opener;
@@ -85,6 +86,26 @@ public class M10sOpenerScenarioTests
                 .Select(r => Vector2.Distance(new Vector2(p.Member(r)!.Position.X, p.Member(r)!.Position.Z), new Vector2(4f, -4f))), Is.All.LessThan(1.5f)))
             .TeleportAt(71.8f, to: new Vector2(7.5f, -7.5f))
             .ShouldKill(ActionId.Pyrotation, RegenHealer);
+
+    [Test]
+    public void BotsLeaveEachPyrotationPuddle()
+    {
+        var stacks = new List<Vector2>();
+        Vector2 Tank(ScenarioProbe p) => new(p.Member(MainTank)!.Position.X, p.Member(MainTank)!.Position.Z);
+        Negative<Scenario>(CasterDps)
+            .Overrides<M10sOpenerStateOverrides>(Pinned)
+            .At(Scenario.PyrotationHitAt[0] - 0.05f, p => stacks.Add(Tank(p)))
+            .At(Scenario.PyrotationHitAt[1] - 0.05f, p => stacks.Add(Tank(p)))
+            .At(Scenario.PyrotationHitAt[2] - 0.05f, p => stacks.Add(Tank(p)))
+            .At(Scenario.PyrotationHitAt[2] + 1.6f, p =>
+            {
+                stacks.Add(Tank(p));
+                for (var i = 1; i < stacks.Count; i++)
+                    Assert.That(stacks.Take(i).Select(s => Vector2.Distance(s, stacks[i])), Is.All.GreaterThan(Scenario.PuddleRadius + 0.5f));
+            })
+            .TeleportAt(75.5f, to: new Vector2(-4.5f, 4.5f))
+            .ShouldKill(ActionId.CutbackBlaze, CasterDps);
+    }
 
     [Test]
     public void PyrotationTakenAloneKillsTheHealer()

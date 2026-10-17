@@ -55,7 +55,7 @@ public sealed class M10sOpenerScenario : IScenario
     private const float StripLength = 60f;
     private const float StripHalfWidth = 4f;
     // UNVERIFIED: the spread and stack puddles' size; players stood 4.6y from the last one unhurt.
-    private const float PuddleRadius = 4f;
+    public const float PuddleRadius = 4f;
     private const uint FireArg2Base = 0x50;
 
     private SimWorld world = null!;
@@ -109,6 +109,7 @@ public sealed class M10sOpenerScenario : IScenario
         world = worldParam;
         state = new M10sOpenerState(world.Rng, settingsWindow.Overrides, world.Party.PlayerRole);
         state.PyrotationSpots.Clear();
+        state.InfernoPuddles.Clear();
         fires.Clear();
         fireVisuals.Clear();
         exposure.Clear();
@@ -258,6 +259,7 @@ public sealed class M10sOpenerScenario : IScenario
         foreach (var member in world.Party.ActiveMembers().Where(m => m.IsAlive()).ToList())
         {
             var at = member.Position;
+            state.InfernoPuddles.Add(at);
             fires.Add(new PuddleFire(ActionId.AlleyOopInferno, InfernoHitAt + InfernoFireDelay + FireArmDelay, at));
             world.Events.Add(InfernoFireDelay, () => ShowFire(EObjId.InfernoFire, new Placement(at, 0f)));
         }

@@ -16,7 +16,7 @@ public sealed class M10sOpenerAi : IScenarioAi<M10sOpenerState>
     private static readonly Vector2 WaitForCharges = new(-7f, -2f);
     private static readonly Vector2 ThirdLeavesTheCorner = new(-9f, 8.5f);
     private static readonly Vector2 CutbackBait = new(-4.8f, 4.6f);
-    private static readonly float[] PyrotationDepths = [3.5f, 8.5f, 13.5f, 18.5f];
+    private static readonly float[] PyrotationDepths = [3.5f];
     private const float ArenaInner = 18f;
 
     private static readonly PartyRole[] AlongTheFire =
@@ -32,7 +32,10 @@ public sealed class M10sOpenerAi : IScenarioAi<M10sOpenerState>
     ];
 
     private const float FollowStep = 0.3f;
-    private const float StepPastThePuddle = 5f;
+    private const float StepPastThePuddle = 5.5f;
+    private const float PuddleRadius = M10sOpenerScenario.PuddleRadius;
+    private const float PuddleMargin = 1.2f;
+    private const float BaitSliceMargin = 0.15f;
 
     private M10sOpenerState state = null!;
     private SimWorld world = null!;
@@ -82,30 +85,62 @@ public sealed class M10sOpenerAi : IScenarioAi<M10sOpenerState>
     private Vector2? AcrossTheBurntSide(PartyRole role, int hit)
     {
         if (hit > 0 && world.Party.Get(state.PyrotationTarget) is { } target && !world.Party.IsBotDriven(target)) return null;
-        if (state.SafeSliceRotation is not { } safe) return Spot(CutbackBait + StackOffset(role));
+        if (state.SafeSliceRotation is not { } bait) return Spot(CutbackBait + StackOffset(role));
         var origin = new Vector2(state.CutbackOrigin.X, state.CutbackOrigin.Z);
-        var direction = -new Vector2(MathF.Sin(safe), MathF.Cos(safe));
-        var depth = PyrotationDepths[hit];
-        while (depth > 2f && !Inside(origin + direction * depth)) depth -= 0.5f;
-        return origin + direction * depth + StackOffset(role) * 0.5f;
+        var away = -new Vector2(MathF.Sin(bait), MathF.Cos(bait));
+        if (hit == 0 || state.PyrotationSpots.Count == 0) return origin + away * PyrotationDepths[0] + StackOffset(role) * 0.5f;
+        return ClearOfEveryPuddle() + StackOffset(role) * 0.5f;
     }
+
+    private Vector2 ClearOfEveryPuddle()
+    {
+        var last = Flat(state.PyrotationSpots[^1]);
+        var from = state.PyrotationSpots.Count > 1 ? Flat(state.PyrotationSpots[^2]) : new Vector2(state.CutbackOrigin.X, state.CutbackOrigin.Z);
+        var heading = last - from;
+        heading = heading.LengthSquared() > 0.01f ? Vector2.Normalize(heading) : Vector2.UnitX;
+        foreach (var turn in TurnsToTry)
+        {
+            var direction = Rotate(heading, turn * MathF.PI / 180f);
+            for (var step = StepPastThePuddle; step <= StepPastThePuddle + 4f; step += 1f)
+            {
+                var spot = last + direction * step;
+                if (IsClear(spot)) return spot;
+            }
+        }
+        return last + heading * StepPastThePuddle;
+    }
+
+    private static readonly float[] TurnsToTry = [0f, 30f, -30f, 60f, -60f, 90f, -90f, 120f, -120f, 180f];
+
+    private bool IsClear(Vector2 spot)
+    {
+        if (!Inside(spot)) return false;
+        var clearance = PuddleRadius + PuddleMargin;
+        if (state.PyrotationSpots.Any(p => Vector2.Distance(Flat(p), spot) < clearance)) return false;
+        if (state.InfernoPuddles.Any(p => Vector2.Distance(Flat(p), spot) < clearance)) return false;
+        return !InTheBaitSlice(spot);
+    }
+
+    private bool InTheBaitSlice(Vector2 spot)
+    {
+        if (state.SafeSliceRotation is not { } bait) return false;
+        var d = spot - new Vector2(state.CutbackOrigin.X, state.CutbackOrigin.Z);
+        if (d.LengthSquared() < 0.01f) return true;
+        var toward = new Vector2(MathF.Sin(bait), MathF.Cos(bait));
+        return Vector2.Dot(Vector2.Normalize(d), toward) >= MathF.Cos(MathF.PI - M10sActions.CutbackBlazeHalfAngle + BaitSliceMargin);
+    }
+
+    private static Vector2 Rotate(Vector2 v, float radians) =>
+        new(v.X * MathF.Cos(radians) - v.Y * MathF.Sin(radians), v.X * MathF.Sin(radians) + v.Y * MathF.Cos(radians));
+
+    private static Vector2 Flat(Vector3 p) => new(p.X, p.Z);
 
     private Vector2? FollowAPlayerStackTarget(PartyRole role)
     {
         if (world.Party.Get(state.PyrotationTarget) is not { } target || !target.IsAlive() || world.Party.IsBotDriven(target)) return null;
         var at = new Vector2(target.Position.X, target.Position.Z);
-        if (state.PyrotationSpots.Count == PyrotationHitAt.Length)
-        {
-            var last = state.PyrotationSpots[^1];
-            var lastAt = new Vector2(last.X, last.Z);
-            if (Vector2.Distance(at, lastAt) < StepPastThePuddle)
-            {
-                var from = state.PyrotationSpots.Count > 1 ? state.PyrotationSpots[^2] : state.CutbackOrigin;
-                var away = lastAt - new Vector2(from.X, from.Z);
-                at = lastAt + (away.LengthSquared() > 0.01f ? Vector2.Normalize(away) : Vector2.UnitX) * StepPastThePuddle;
-                while (!Inside(at)) at = Vector2.Lerp(at, lastAt, 0.2f);
-            }
-        }
+        if (state.PyrotationSpots.Count == PyrotationHitAt.Length && Vector2.Distance(at, Flat(state.PyrotationSpots[^1])) < PuddleRadius + PuddleMargin)
+            at = ClearOfEveryPuddle();
         return at + StackOffset(role) * 0.5f;
     }
 
