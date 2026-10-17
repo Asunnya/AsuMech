@@ -46,6 +46,7 @@ public sealed class UmadP2ForsakenScenario : IMultiplayerReplayable
         new UmadP2ForsakenLpduBuddiesAi(),
         new UmadP2ForsakenP3ZBuddyMeowAi(),
         new UmadP2ForsakenZP6SouthAdjustAi(),
+        new UmadP2ForsakenYanAi(),
     ];
 
     // NA holds the existing strats; EU holds this branch's new strats — isolated copies
