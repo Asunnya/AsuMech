@@ -17,6 +17,8 @@ public sealed class M10sOpenerState
     // Set once Cutback Blaze aims: the bearing, from Red Hot, of the slice it spares.
     public float? SafeSliceRotation { get; set; }
     public Vector3 CutbackOrigin { get; set; }
+    // Where each Pyrotation stack landed.
+    public List<Vector3> PyrotationSpots { get; } = [];
 
     public M10sOpenerState(Rng rng, M10sOpenerStateOverrides? overrides = null, PartyRole? player = null)
     {

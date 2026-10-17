@@ -108,6 +108,7 @@ public sealed class M10sOpenerScenario : IScenario
     {
         world = worldParam;
         state = new M10sOpenerState(world.Rng, settingsWindow.Overrides, world.Party.PlayerRole);
+        state.PyrotationSpots.Clear();
         fires.Clear();
         fireVisuals.Clear();
         exposure.Clear();
@@ -286,6 +287,7 @@ public sealed class M10sOpenerScenario : IScenario
     {
         if (world.Party.Get(state.PyrotationTarget) is not { } target || !target.IsAlive()) return;
         var at = target.Position;
+        state.PyrotationSpots.Add(at);
         stackHelper?.SetPosition(new Placement(at, 0f));
         stackHelper?.Cast(Actions.PyrotationStack, target);
         fires.Add(new PuddleFire(ActionId.Pyrotation, world.Events.Elapsed + FireArmDelay, at));

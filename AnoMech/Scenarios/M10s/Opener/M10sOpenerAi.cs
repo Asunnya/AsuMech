@@ -31,11 +31,16 @@ public sealed class M10sOpenerAi : IScenarioAi<M10sOpenerState>
         new(-2.5f, 11.5f), new(3f, 13.2f), new(8.8f, 13.2f), new(14.6f, 13.2f),
     ];
 
+    private const float FollowStep = 0.3f;
+    private const float StepPastThePuddle = 5f;
+
     private M10sOpenerState state = null!;
+    private SimWorld world = null!;
 
     public void Run(M10sOpenerState stateParam, SimWorld world)
     {
         state = stateParam;
+        this.world = world;
         var ai = new AiManager(world);
 
         ai.Move(0.3f, () => ByRole(TanksShareTheBusterPartyBehind));
@@ -55,6 +60,8 @@ public sealed class M10sOpenerAi : IScenarioAi<M10sOpenerState>
             var h = hit;
             ai.Move(PyrotationHitAt[h - 1] + 0.1f, () => ByRole(role => AcrossTheBurntSide(role, h)), jitter: 0f, sprint: true);
         }
+        for (var t = CutbackHitAt + 1.2f; t < PyrotationHitAt[^1] + 2f; t += FollowStep)
+            ai.Move(t, () => ByRole(FollowAPlayerStackTarget), jitter: 0f, sprint: true);
         ai.Move(FireFadesAt + 0.5f, () => ByRole(role => new Vector2(0f, 0f) + StackOffset(role)));
     }
 
@@ -74,12 +81,32 @@ public sealed class M10sOpenerAi : IScenarioAi<M10sOpenerState>
 
     private Vector2? AcrossTheBurntSide(PartyRole role, int hit)
     {
+        if (hit > 0 && world.Party.Get(state.PyrotationTarget) is { } target && !world.Party.IsBotDriven(target)) return null;
         if (state.SafeSliceRotation is not { } safe) return Spot(CutbackBait + StackOffset(role));
         var origin = new Vector2(state.CutbackOrigin.X, state.CutbackOrigin.Z);
         var direction = -new Vector2(MathF.Sin(safe), MathF.Cos(safe));
         var depth = PyrotationDepths[hit];
         while (depth > 2f && !Inside(origin + direction * depth)) depth -= 0.5f;
         return origin + direction * depth + StackOffset(role) * 0.5f;
+    }
+
+    private Vector2? FollowAPlayerStackTarget(PartyRole role)
+    {
+        if (world.Party.Get(state.PyrotationTarget) is not { } target || !target.IsAlive() || world.Party.IsBotDriven(target)) return null;
+        var at = new Vector2(target.Position.X, target.Position.Z);
+        if (state.PyrotationSpots.Count == PyrotationHitAt.Length)
+        {
+            var last = state.PyrotationSpots[^1];
+            var lastAt = new Vector2(last.X, last.Z);
+            if (Vector2.Distance(at, lastAt) < StepPastThePuddle)
+            {
+                var from = state.PyrotationSpots.Count > 1 ? state.PyrotationSpots[^2] : state.CutbackOrigin;
+                var away = lastAt - new Vector2(from.X, from.Z);
+                at = lastAt + (away.LengthSquared() > 0.01f ? Vector2.Normalize(away) : Vector2.UnitX) * StepPastThePuddle;
+                while (!Inside(at)) at = Vector2.Lerp(at, lastAt, 0.2f);
+            }
+        }
+        return at + StackOffset(role) * 0.5f;
     }
 
     private static bool Inside(Vector2 p) => MathF.Abs(p.X) <= ArenaInner && MathF.Abs(p.Y) <= ArenaInner;

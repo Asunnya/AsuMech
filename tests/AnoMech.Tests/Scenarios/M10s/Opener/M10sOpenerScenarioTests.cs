@@ -77,6 +77,16 @@ public class M10sOpenerScenarioTests
             .ShouldKill(ActionId.CutbackBlaze, CasterDps);
 
     [Test]
+    public void BotsStackOnAPlayerPyrotationTarget()
+        => Negative<Scenario>(RegenHealer)
+            .Overrides<M10sOpenerStateOverrides>(Pinned)
+            .TeleportAt(70.2f, to: new Vector2(4f, -4f))
+            .At(71.4f, p => Assert.That(new[] { MainTank, OffTank, ShieldHealer, MeleeDpsA, MeleeDpsB, PhysRangedDps, CasterDps }
+                .Select(r => Vector2.Distance(new Vector2(p.Member(r)!.Position.X, p.Member(r)!.Position.Z), new Vector2(4f, -4f))), Is.All.LessThan(1.5f)))
+            .TeleportAt(71.8f, to: new Vector2(7.5f, -7.5f))
+            .ShouldKill(ActionId.Pyrotation, RegenHealer);
+
+    [Test]
     public void PyrotationTakenAloneKillsTheHealer()
         => Negative<Scenario>(RegenHealer)
             .Overrides<M10sOpenerStateOverrides>(Pinned)
