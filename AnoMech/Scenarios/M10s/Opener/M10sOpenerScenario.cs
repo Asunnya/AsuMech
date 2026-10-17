@@ -35,7 +35,6 @@ public sealed class M10sOpenerScenario : IScenario
     public const float InfernoCastAt = 48.08f;
     public const float InfernoHitAt = 53.08f;
     public const float CutbackCastAt = 57.54f;
-    public const float CutbackAimAt = 61.81f;
     public const float CutbackHitAt = 62.71f;
     public static readonly float[] PyrotationHitAt = [69.60f, 71.59f, 73.63f];
     public const float DiversDareAt = 77.41f;
@@ -144,7 +143,7 @@ public sealed class M10sOpenerScenario : IScenario
         world.Events.Add(InfernoHitAt, DropInfernoFire);
         world.Events.Add(54.3f, () => redHot?.MoveTo(state.FromWestFrame(CutbackBossSpot)));
         world.Events.Add(CutbackCastAt, () => redHot?.Cast(ActionId.CutbackBlaze, animationLock: 0.2f));
-        world.Events.Add(CutbackAimAt, AimCutback);
+        world.Events.Add(CutbackCastAt, AimCutback);
         world.Events.Add(CutbackHitAt, () => redHot?.Cast(Actions.CutbackBlazeCleave));
         world.Events.Add(CutbackHitAt + 0.6f, DropCutbackFire);
         world.Events.Add(63.96f, () => redHot?.Cast(ActionId.Pyrotation, animationLock: 0.2f));
@@ -264,7 +263,8 @@ public sealed class M10sOpenerScenario : IScenario
         }
     }
 
-    // Red Hot turns its back to the nearest player and burns everything but the slice behind it.
+    // As the bar starts Red Hot turns to the nearest player, the bait, and burns everything but
+    // the slice behind itself.
     private void AimCutback()
     {
         if (redHot is not { } boss) return;
@@ -272,8 +272,7 @@ public sealed class M10sOpenerScenario : IScenario
             .OrderBy(m => Vector3.DistanceSquared(m.Position, boss.Position)).FirstOrDefault();
         if (nearest != null) boss.Face(nearest);
         state.CutbackOrigin = boss.Position;
-        state.SafeSliceRotation = boss.Rotation;
-        boss.SetRotation(boss.Rotation + MathF.PI);
+        state.SafeSliceRotation = boss.Rotation + MathF.PI;
     }
 
     private void DropCutbackFire()

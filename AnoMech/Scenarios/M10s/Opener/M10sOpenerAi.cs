@@ -15,7 +15,7 @@ public sealed class M10sOpenerAi : IScenarioAi<M10sOpenerState>
     private static readonly Vector2[] FloaterSpots = [new(-18.8f, 18.8f), new(2f, 19f), new(-14.1f, 13.4f), new(-18.6f, -4.9f)];
     private static readonly Vector2 WaitForCharges = new(-7f, -2f);
     private static readonly Vector2 ThirdLeavesTheCorner = new(-9f, 8.5f);
-    private static readonly Vector2 CutbackStack = new(0.5f, -0.5f);
+    private static readonly Vector2 CutbackBait = new(-4.8f, 4.6f);
     private static readonly float[] PyrotationDepths = [3.5f, 8.5f, 13.5f, 18.5f];
     private const float ArenaInner = 18f;
 
@@ -48,8 +48,8 @@ public sealed class M10sOpenerAi : IScenarioAi<M10sOpenerState>
         }
         ai.Move(FloaterHitAt[2] + 1.1f, () => ByRole(role => state.FloaterNumber(role) == 3 ? Spot(WaitForCharges) : null), jitter: 0f, sprint: true);
         ai.Move(FloaterHitAt[3] + 1.5f, () => ByRole(SpreadAlongTheFire), jitter: 0f);
-        ai.Move(InfernoHitAt + 0.12f, () => ByRole(role => Spot(CutbackStack + StackOffset(role))), jitter: 0f, sprint: true);
-        ai.Move(CutbackHitAt + 0.8f, () => ByRole(role => IntoTheSafeSlice(role, 0)), jitter: 0f, sprint: true);
+        ai.Move(InfernoHitAt + 0.12f, () => ByRole(role => Spot(CutbackBait + StackOffset(role))), jitter: 0f, sprint: true);
+        ai.Move(CutbackCastAt + 0.6f, () => ByRole(role => IntoTheSafeSlice(role, 0)), jitter: 0f, sprint: true);
         for (var hit = 1; hit <= PyrotationHitAt.Length; hit++)
         {
             var h = hit;
@@ -74,7 +74,7 @@ public sealed class M10sOpenerAi : IScenarioAi<M10sOpenerState>
 
     private Vector2? IntoTheSafeSlice(PartyRole role, int hit)
     {
-        if (state.SafeSliceRotation is not { } safe) return Spot(CutbackStack + StackOffset(role));
+        if (state.SafeSliceRotation is not { } safe) return Spot(CutbackBait + StackOffset(role));
         var origin = new Vector2(state.CutbackOrigin.X, state.CutbackOrigin.Z);
         var direction = new Vector2(MathF.Sin(safe), MathF.Cos(safe));
         var depth = PyrotationDepths[hit];
