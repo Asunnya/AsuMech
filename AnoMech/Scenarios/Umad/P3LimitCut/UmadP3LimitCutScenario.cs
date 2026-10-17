@@ -151,16 +151,14 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
         });
     }
 
-    // Scheduled by host and peer alike, so broadcast: false; a peer's own clones play the same
-    // materialise timelines, so the preload belongs here too, and so does a tank's LB3 gauge.
     public void RunInstanceEvents(SimWorld instanceWorld)
     {
         Natives.TimelinePreload.Preload(CloneTimelines, "UmadP3LimitCut");
         instanceWorld.Party.LimitBreak.Set(3f);
-        instanceWorld.Events.Add(1.988f, () => instanceWorld.Map.DirectorUpdate(0x80000027U, 0x18U, 0x2U, 0x1BDBU, 0x4000EFB9U, broadcast: false));
-        instanceWorld.Events.Add(8.981f, () => instanceWorld.Map.DirectorUpdate(0x80000027U, 0x2FU, 0x2U, 0x1BDBU, 0x4000EFB9U, broadcast: false));
-        instanceWorld.Events.Add(31.059f, () => instanceWorld.Map.DirectorUpdate(0x80000027U, 0x19U, 0x2U, 0x1BDBU, 0x4000EFB9U, broadcast: false));
-        instanceWorld.Events.Add(52.629f, () => instanceWorld.Map.DirectorUpdate(0x80000027U, 0x1AU, 0x2U, 0x1BDBU, 0x4000EFB9U, broadcast: false));
+        instanceWorld.Events.Add(1.988f, () => instanceWorld.Map.DirectorUpdate(0x80000027U, 0x18U, 0x2U, 0x1BDBU, 0x4000EFB9U));
+        instanceWorld.Events.Add(8.981f, () => instanceWorld.Map.DirectorUpdate(0x80000027U, 0x2FU, 0x2U, 0x1BDBU, 0x4000EFB9U));
+        instanceWorld.Events.Add(31.059f, () => instanceWorld.Map.DirectorUpdate(0x80000027U, 0x19U, 0x2U, 0x1BDBU, 0x4000EFB9U));
+        instanceWorld.Events.Add(52.629f, () => instanceWorld.Map.DirectorUpdate(0x80000027U, 0x1AU, 0x2U, 0x1BDBU, 0x4000EFB9U));
     }
 
     public MpMessage? BuildReplayStateMessage()

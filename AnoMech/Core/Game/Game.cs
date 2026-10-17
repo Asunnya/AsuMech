@@ -49,8 +49,8 @@ public sealed class Game : IDisposable
     private static readonly TimeSpan ZoneInStartDelay = TimeSpan.FromSeconds(2);
 
     // Zones in first unless already staying in the run's zone in `mode`; a stay entered in another
-    // mode refuses the run rather than playing it there. A fresh zone-in applies the phase and
-    // seats the party at once, and waits ZoneInStartDelay before the run starts.
+    // mode refuses the run rather than playing it there. A fresh zone-in prepares the run at once
+    // and waits ZoneInStartDelay before it starts.
     public void EnterAndStart(RunScenarioParams p, SessionMode mode, Action<string?>? resolved = null)
     {
         var zone = p.Scenario.Phase.Zone;
@@ -59,8 +59,6 @@ public sealed class Game : IDisposable
             StartScenario(p, resolved);
             return;
         }
-        // Pinned so the run reseeds to the stream the party was seated from, and its bots keep
-        // their ring spots.
         p = p with { Seed = p.Seed ?? Random.Shared.Next() };
         ZoneIn(zone, mode, refusal =>
         {
@@ -69,14 +67,26 @@ public sealed class Game : IDisposable
                 resolved?.Invoke(refusal);
                 return;
             }
-            instance?.ApplyPhase(p.Scenario.Phase);
-            SeatParty(p);
+            PrepareRunNow(p);
             Plugin.Framework.RunOnTick(() => StartScenario(p, resolved), ZoneInStartDelay);
         });
     }
 
-    private void SeatParty(RunScenarioParams p)
+    // The stage a run starts on, set before it: the phase applied and the party seated, so the
+    // doppels are standing by the time the run talks to them. p.Seed must be set, and passed to
+    // the StartScenario that follows: the run reseeds to the stream the party was seated from, and
+    // its bots keep their ring spots.
+    public void PrepareRun(RunScenarioParams p, Action<string?>? resolved = null)
+        => Deferred(() =>
+        {
+            if (instance is null || instance.Zone != p.Scenario.Phase.Zone) return $"not in {p.Scenario.Phase.Zone.Name}";
+            PrepareRunNow(p);
+            return null;
+        }, resolved);
+
+    private void PrepareRunNow(RunScenarioParams p)
     {
+        instance?.ApplyPhase(p.Scenario.Phase);
         var player = Natives.BattleCharas.LocalPlayer;
         if (!player.Exists) return;
         World.Reseed(p.Seed!.Value);

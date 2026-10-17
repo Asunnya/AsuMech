@@ -28,6 +28,18 @@ public class UcobConstants
         new(WaymarkSlot.Four,  new Vector3(      0f, 0f,   0.000f)),
     ];
 
+    // The arena's SharedGroup EObjs (UcobZone), by the layout each binds to; the pieces are only
+    // bound, never played.
+    public class ArenaLayoutId
+    {
+        public const uint DeathWall = 0x6C7D48;
+        public const uint P5Arena = 0x6D0C52;
+        public const uint Piece1 = 0x6C641C;
+        public const uint Piece2 = 0x6C0E8A;
+        public const uint Piece3 = 0x6C0D4C;
+        public const uint Piece4 = 0x6C0D4B;
+    }
+
     public class BNpcBaseId
     {
         public const uint BahamutPrime = 0x1FE8;

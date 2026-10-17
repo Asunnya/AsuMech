@@ -20,6 +20,7 @@ internal sealed class DataminingGameData(FakeRsvFunctions rsv) : IGameData
     private static readonly Lazy<Sheet> Statuses = Load("Status");
     private static readonly Lazy<Sheet> TerritoryTypes = Load("TerritoryType");
     private static readonly Lazy<Sheet> ContentFinderConditions = Load("ContentFinderCondition");
+    private static readonly Lazy<Sheet> Weathers = Load("Weather");
 
     public ActionRow? Action(uint actionId)
     {
@@ -81,6 +82,8 @@ internal sealed class DataminingGameData(FakeRsvFunctions rsv) : IGameData
             : null;
 
     public string? BNpcName(uint nameId) => NonEmpty(Resolve(BNpcNames.Value.Row(nameId)?.Text("Singular")));
+
+    public bool WeatherExists(byte weatherId) => Weathers.Value.Row(weatherId) is not null;
 
     public bool FileExists(string path) => true;
 

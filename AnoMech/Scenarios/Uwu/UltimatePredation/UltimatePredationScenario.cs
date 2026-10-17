@@ -92,7 +92,7 @@ public class UltimatePredationScenario : IMultiplayerReplayable
                 new EnemySpawnConfig(
                     BNpcBaseId: BNpcBaseId.UltimaWeapon,
                     NameId: BNpcNameId.UltimaWeapon,
-                    LayoutId: 0x701FD7,
+                    LayoutId: BNpcLayoutId.UltimaWeapon,
                     Level: 70,
                     Targetable: true,
                     EnemyList: EnemyListMode.Always,
@@ -107,7 +107,7 @@ public class UltimatePredationScenario : IMultiplayerReplayable
                 new EnemySpawnConfig(
                     BNpcBaseId: BNpcBaseId.Garuda,
                     NameId: BNpcNameId.Garuda,
-                    LayoutId: 0x701FBF,
+                    LayoutId: BNpcLayoutId.Garuda,
                     Level: 70,
                     Targetable: false,
                     EnemyList: EnemyListMode.Never,
@@ -121,7 +121,7 @@ public class UltimatePredationScenario : IMultiplayerReplayable
                 new EnemySpawnConfig(
                     BNpcBaseId: BNpcBaseId.Ifrit,
                     NameId: BNpcNameId.Ifrit,
-                    LayoutId: 0x701FC8,
+                    LayoutId: BNpcLayoutId.Ifrit,
                     Level: 70,
                     Targetable: false,
                     EnemyList: EnemyListMode.Never,
@@ -136,7 +136,7 @@ public class UltimatePredationScenario : IMultiplayerReplayable
                 new EnemySpawnConfig(
                     BNpcBaseId: BNpcBaseId.Titan,
                     NameId: BNpcNameId.Titan,
-                    LayoutId: 0x701FCE,
+                    LayoutId: BNpcLayoutId.Titan,
                     Level: 70,
                     Targetable: false,
                     EnemyList: EnemyListMode.Never,
@@ -155,7 +155,7 @@ public class UltimatePredationScenario : IMultiplayerReplayable
                 new EnemySpawnConfig(
                     BNpcBaseId: BNpcBaseId.Dummy,
                     NameId: BNpcNameId.Dummy,
-                    LayoutId: 0x704D3F,
+                    LayoutId: BNpcLayoutId.Dummy,
                     Level: 1,
                     Targetable: false,
                     EnemyList: EnemyListMode.Never,
@@ -357,12 +357,12 @@ public class UltimatePredationScenario : IMultiplayerReplayable
             new Placement(new Vector3(15, 0, 0), Geometry.LookAtCenterRotation[DirectionEnum.E]),
             new Placement(new Vector3(0, 0, -19.5f), Geometry.LookAtCenterRotation[DirectionEnum.N]),
             BNpcNameId.Chirada,
-            0x70205C);
+            BNpcLayoutId.Chirada);
         GarudaSister(
             new Placement(new Vector3(-15, 0, 0), Geometry.LookAtCenterRotation[DirectionEnum.W]),
             new Placement(new Vector3(-19.5f, 0, 0), Geometry.LookAtCenterRotation[DirectionEnum.W]),
             BNpcNameId.Suparna,
-            0x70205B);
+            BNpcLayoutId.Suparna);
 
         world.Events.Add(64.38f, () =>
         {
@@ -568,7 +568,7 @@ public class UltimatePredationScenario : IMultiplayerReplayable
             new EnemySpawnConfig(
                 BNpcBaseId: BNpcBaseId.BombBoulder,
                 NameId: BNpcNameId.BombBoulder,
-                LayoutId: 0x701FD1,
+                LayoutId: BNpcLayoutId.BombBoulder,
                 Level: 70,
                 Targetable: false,
                 EnemyList: EnemyListMode.Never,

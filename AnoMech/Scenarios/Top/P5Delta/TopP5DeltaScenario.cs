@@ -65,6 +65,7 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
         party = worldParam.Party;
         state = new TopP5DeltaState(world.Rng, settingsWindow.Overrides, party.PlayerRole);
         LastState = state;
+        lastBroadcastBeyondDefenseTarget = null;
         holderDeaths = new HelloWorldHolderDeaths(world);
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<TopP5DeltaState>)AiStrats[idx]).Run(state, world);
@@ -162,7 +163,7 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
             Level: 90,
             Targetable: true,
             InitialModeAttributeFlags: 0x10,
-            LayoutId: 0x91E486,
+            LayoutId: BNpcLayoutId.OmegaMDynamis,
             Placement: new Placement(Vector3.Zero, MathF.PI)));
     }
 
@@ -175,7 +176,7 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
             Targetable: false,
             EnemyList: EnemyListMode.OnlyWhenVisible,
             Visibility: SpawnVisibility.HiddenUntilShown,
-            LayoutId: 0x91E489,
+            LayoutId: BNpcLayoutId.BeetleHelper,
             Placement: new Placement(new Vector3(-20f, 0f, 0f) * state.EyeSpawn.Mul, MathF.PI / 2f * state.EyeSpawn.Mul)));
 
         finalHelper = world.SpawnEnemy(new EnemySpawnConfig(
@@ -185,7 +186,7 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
             Targetable: false,
             EnemyList: EnemyListMode.OnlyWhenVisible,
             Visibility: SpawnVisibility.HiddenUntilShown,
-            LayoutId: 0x946F2B,
+            LayoutId: BNpcLayoutId.FinalHelper,
             Placement: new Placement(new Vector3(20f, 0f, 0f) * state.EyeSpawn.Mul, -MathF.PI / 2f * state.EyeSpawn.Mul)));
     }
 
@@ -203,7 +204,7 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
             Level: 90,
             Targetable: false,
             EnemyList: EnemyListMode.Never,
-            LayoutId: 0x91D42D,
+            LayoutId: BNpcLayoutId.OpticalUnit,
             Placement: new Placement(new Vector3(0f, 0f, -45f) * state.EyeSpawn.Mul, MathF.PI / 2f - MathF.PI / 2 * state.EyeSpawn.Mul)));
     }
 
@@ -233,7 +234,7 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
                                              Targetable: false,
                                              Visibility: SpawnVisibility.HiddenUntilPopIn,
                                              EnemyList: EnemyListMode.Always,
-                                             LayoutId: state.FistColors[i] == BNpcBaseId.RocketPunchYellow ? 0x91D1E8u : 0x91D1E9u,
+                                             LayoutId: state.FistColors[i] == BNpcBaseId.RocketPunchYellow ? BNpcLayoutId.RocketPunchYellow : BNpcLayoutId.RocketPunchBlue,
                                              Placement: placement));
             return punch;
         }).ToList();

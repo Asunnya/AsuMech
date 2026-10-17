@@ -97,6 +97,8 @@ internal sealed class FakeBattleChara(FakeBattleCharas owner, int slot) : IBattl
                 // Raw damage entry Param1 (attack type | element << 4); the comparer names them.
                 ["damage_type"] = string.Join("/", Entries(effect, 0x03, 0x05, 0x06).Select(e => $"0x{e.Param1:X}").Distinct()),
                 ["knockback"] = string.Join("/", Entries(effect, KnockbackEffectType).Select(e => e.Value.ToString()).Distinct()),
+                // Not a replay column: the hits by entity id, for comparing two clients' rows.
+                ["targets"] = string.Join(" ", (effect.Targets ?? []).Select(t => Id(t.Id).ToString("X8"))),
             });
         owner.RecordEffect(sequence, EntityId, effect.ActionId);
         if (Actor is { } caster)

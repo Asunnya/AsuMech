@@ -39,6 +39,9 @@ public static class UmadConstants
         public const uint KefkaP5     = 0xBC172DU;
         public const uint Exdeath     = 0xBC172BU;
         public const uint BlackHole   = 0xBC172EU;
+        public const uint KefkaP4     = 0xC2724BU;
+        public const uint NeoExdeath  = 0xBC172CU;
+        public const uint ChaosP4     = 0xC355C3U;
     }
 
     public static class BNpcStateId
@@ -73,7 +76,7 @@ public static class UmadConstants
         public const uint CelestriadIceTower       = 2015295;
         public const uint CelestriadLightningTower = 2015296;
         // Ring positions clockwise from the 20° one; layout and Arg2 index step by one per tower.
-        public const uint CelestriadTowerLayoutId  = 0xBC1A06U;
+        public static readonly uint[] CelestriadTowerLayoutIds = [0xBC1A06U, 0xBC1A07U, 0xBC1A08U, 0xBC1A09U, 0xBC1A0AU, 0xBC1A0BU, 0xBC1A0CU, 0xBC1A0DU, 0xBC1A0EU];
         public const uint CelestriadTowerArg2      = 0x00410003U;
 
         // The statue SGBs are pre-placed in the zone, so a spawn must bind to their layout

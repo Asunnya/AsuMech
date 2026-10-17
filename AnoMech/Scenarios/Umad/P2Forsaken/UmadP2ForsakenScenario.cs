@@ -72,6 +72,7 @@ public sealed class UmadP2ForsakenScenario : IMultiplayerReplayable
         party = worldParam.Party;
         state = new UmadP2ForsakenState(world.Rng, party, settingsWindow.Overrides);
         LastState = state;
+        lastBroadcastLockonsKey = null;
         if (selectedAi is { } idx && idx >= 0 && idx < AiStrats.Count)
             ((IScenarioAi<UmadP2ForsakenState>)AiStrats[idx]).Run(state, world);
         

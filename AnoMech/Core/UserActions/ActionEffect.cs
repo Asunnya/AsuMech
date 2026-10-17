@@ -57,18 +57,21 @@ internal sealed class StatusEffect(ushort statusId, float duration, int stacks =
     {
         ctx.Caster.RemoveStatus(statusId);
         ctx.Caster.AddStatusParam(statusId, stacks, duration);
-        if (ctx.Caster is ISimPartyMember member) HostReport.RoleStatus([member.Role], statusId, duration);
+        if (ctx.Caster is ISimPartyMember member) HostReport.RoleStatus([member.Role], statusId, duration, stacks);
     }
 }
 
 // A peer runs no scenario logic: the host decides who lives, from the statuses on its own copy
-// of each character. Only mitigation is sent, the one kind of status the host acts on.
+// of each character. Only mitigation, the one kind of status the host acts on, and Sprint, which
+// every other client shows, are sent.
 internal static class HostReport
 {
-    public static void RoleStatus(IReadOnlyList<PartyRole> roles, ushort statusId, float duration)
+    public static bool IsReported(ushort statusId) => Mitigation.ByStatusId.ContainsKey(statusId) || statusId == SprintHandler.SprintStatusId;
+
+    public static void RoleStatus(IReadOnlyList<PartyRole> roles, ushort statusId, float duration, int stacks)
     {
-        if (Mitigation.ByStatusId.ContainsKey(statusId))
-            Plugin.Multiplayer?.ReportAppliedRoleStatus(roles, statusId, duration);
+        if (IsReported(statusId))
+            Plugin.Multiplayer?.ReportAppliedRoleStatus(roles, statusId, duration, (ushort)stacks);
     }
 }
 
@@ -84,7 +87,7 @@ internal sealed class TargetStatusEffect(ushort statusId, float duration, int st
             member.AddStatusParam(statusId, stacks, duration);
             if (member is ISimPartyMember slot) roles.Add(slot.Role);
         }
-        HostReport.RoleStatus(roles, statusId, duration);
+        HostReport.RoleStatus(roles, statusId, duration, stacks);
     }
 }
 

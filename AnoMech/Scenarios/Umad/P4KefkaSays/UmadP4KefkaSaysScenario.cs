@@ -187,7 +187,7 @@ public sealed class UmadP4KefkaSaysScenario : IMultiplayerReplayable
     private void Run_Kefka_40004142()
     {
         SimEnemy? kefka_40004142 = null;
-        world.Events.Add(0f, () => kefka_40004142 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.Kefka, NameId: BNpcNameId.Kefka, Level: 100, Targetable: true, EnemyList: EnemyListMode.Always, Visibility: SpawnVisibility.Visible, LayoutId: 0xC2724B, Placement: new Placement(new Vector3(0.000f, 0.000f, 0.000f), 3.140f))));
+        world.Events.Add(0f, () => kefka_40004142 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.Kefka, NameId: BNpcNameId.Kefka, Level: 100, Targetable: true, EnemyList: EnemyListMode.Always, Visibility: SpawnVisibility.Visible, LayoutId: BNpcLayoutId.KefkaP4, Placement: new Placement(new Vector3(0.000f, 0.000f, 0.000f), 3.140f))));
         world.Events.Add(1.36f, () => kefka_40004142?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(1.45f, () => kefka_40004142?.Cast(ActionId.KefkaSays, animationLock: 3.1f));
         world.Events.Add(9.41f, () => kefka_40004142?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
@@ -248,7 +248,7 @@ public sealed class UmadP4KefkaSaysScenario : IMultiplayerReplayable
     private void Run_Neo_Exdeath_400041A4()
     {
         SimEnemy? neo_Exdeath_400041A4 = null;
-        world.Events.Add(0f, () => neo_Exdeath_400041A4 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.NeoExdeath, NameId: BNpcNameId.NeoExdeath, Level: 100, Targetable: false, EnemyList: EnemyListMode.OnlyWhenVisible, Visibility: SpawnVisibility.HiddenUntilShown, LayoutId: 0xBC172C, Placement: new Placement(new Vector3(20.000f, 0.000f, 0.000f), -1.570f))));
+        world.Events.Add(0f, () => neo_Exdeath_400041A4 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.NeoExdeath, NameId: BNpcNameId.NeoExdeath, Level: 100, Targetable: false, EnemyList: EnemyListMode.OnlyWhenVisible, Visibility: SpawnVisibility.HiddenUntilShown, LayoutId: BNpcLayoutId.NeoExdeath, Placement: new Placement(new Vector3(20.000f, 0.000f, 0.000f), -1.570f))));
         world.Events.Add(6.32f, () => neo_Exdeath_400041A4?.SetPosition(new Placement(new Vector3(14.142f, 0.000f, -14.142f), -0.785f)));
         world.Events.Add(6.46f, () => neo_Exdeath_400041A4?.PlayActionTimeline(TimelineId.NeoExdeathShow));
         
@@ -275,7 +275,7 @@ public sealed class UmadP4KefkaSaysScenario : IMultiplayerReplayable
     private void Run_Chaos_400041A5()
     {
         SimEnemy? chaos_400041A5 = null;
-        world.Events.Add(0f, () => chaos_400041A5 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.Chaos, NameId: BNpcNameId.Chaos, Level: 100, Targetable: false, EnemyList: EnemyListMode.OnlyWhenVisible, Visibility: SpawnVisibility.HiddenUntilShown, LayoutId: 0xC355C3, Placement: new Placement(new Vector3(-18.000f, 0.000f, 0.000f), 1.570f))));
+        world.Events.Add(0f, () => chaos_400041A5 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.Chaos, NameId: BNpcNameId.Chaos, Level: 100, Targetable: false, EnemyList: EnemyListMode.OnlyWhenVisible, Visibility: SpawnVisibility.HiddenUntilShown, LayoutId: BNpcLayoutId.ChaosP4, Placement: new Placement(new Vector3(-18.000f, 0.000f, 0.000f), 1.570f))));
         world.Events.Add(6.37f, () => chaos_400041A5?.SetPosition(new Placement(new Vector3(-12.728f, 0.000f, -12.728f), 0.785f)));
         world.Events.Add(6.46f, () => chaos_400041A5?.PlayActionTimeline(ActionTimelineId.WarpEnd));
         

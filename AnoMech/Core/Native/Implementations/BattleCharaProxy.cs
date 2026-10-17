@@ -27,9 +27,12 @@ internal sealed unsafe class BattleCharaProxy : IBattleCharaProxy
 
     public int Slot { get; }
 
-    internal BattleChara* Ptr => Slot < 0
+    internal BattleChara* Ptr => PtrAt(Slot);
+
+    // By slot, so a proxy wrapped by another IBattleCharaProxy (multiplayer's) reaches it too.
+    internal static BattleChara* PtrAt(int slot) => slot < 0
         ? (BattleChara*)(Plugin.ObjectTable.LocalPlayer?.Address ?? 0)
-        : (BattleChara*)CharacterManager.Instance()->BattleCharas[Slot];
+        : (BattleChara*)CharacterManager.Instance()->BattleCharas[slot];
 
     public bool Exists => Ptr != null;
 

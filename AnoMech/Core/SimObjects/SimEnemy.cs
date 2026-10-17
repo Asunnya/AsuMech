@@ -102,65 +102,6 @@ public sealed class SimEnemy : SimNpc
 
     private readonly SimulatedMotion motion;
 
-    // Peer-only smoothing for ApplyNetworkPosition, same model as SimNetworkPuppet: the
-    // catch-up speed is a floor once the real snapshot interval is known, anything beyond
-    // NetworkSnapThreshold (a scripted teleport, a lag spike) snaps, extrapolation only feeds
-    // the visual glide, and rotation turns at BossTurnSpeed like the host's.
-    private const float NetworkCatchUpSpeed = 20f;
-    private const float NetworkSnapThreshold = 15f;
-
-    private const float NetworkIntervalSmoothingFactor = 0.3f;
-    private const float MinNetworkPacingWindowSeconds = 0.05f;
-    private float timeSinceLastNetworkUpdate;
-    private float estimatedNetworkUpdateInterval = 0.05f;
-
-    private const float MaxNetworkExtrapolationSeconds = 1f;
-    private Vector3 networkVelocity;
-
-    private Vector3? networkTargetPosition;
-    private float networkTargetRotation;
-
-    public void ApplyNetworkPosition(Vector3 position, float rotation)
-    {
-        if (networkTargetPosition is { } previous)
-        {
-            estimatedNetworkUpdateInterval += (timeSinceLastNetworkUpdate - estimatedNetworkUpdateInterval) * NetworkIntervalSmoothingFactor;
-            networkVelocity = timeSinceLastNetworkUpdate > MinNetworkPacingWindowSeconds
-                ? (position - previous) / timeSinceLastNetworkUpdate
-                : Vector3.Zero;
-        }
-        networkTargetPosition = position;
-        networkTargetRotation = rotation;
-        timeSinceLastNetworkUpdate = 0f;
-    }
-
-    private void TickNetworkPosition(float deltaSeconds)
-    {
-        if (networkTargetPosition is not { } rawTarget) return;
-        timeSinceLastNetworkUpdate += deltaSeconds;
-
-        var target = rawTarget + networkVelocity * MathF.Min(timeSinceLastNetworkUpdate, MaxNetworkExtrapolationSeconds);
-        var basePos = Position;
-        var delta = target - basePos;
-        var dist = delta.Length();
-        var remainingWindow = MathF.Max(estimatedNetworkUpdateInterval - timeSinceLastNetworkUpdate, MinNetworkPacingWindowSeconds);
-        var step = MathF.Max(dist / remainingWindow, NetworkCatchUpSpeed) * deltaSeconds;
-        if (dist > NetworkSnapThreshold)
-        {
-            // Logged: position otherwise rides silently in every snapshot.
-            DiagnosticLog.Info($"[SimEnemy.TickNetworkPosition] {DisplayName} (BNpcBase {BNpcBaseId}) snapped {dist:F1}y (> {NetworkSnapThreshold}y threshold): {basePos} -> {target}.");
-            SetPosition(new Placement(target, networkTargetRotation));
-        }
-        else
-        {
-            // The model is aimed where the host's enemy will be ModelSync.LeadSeconds ahead.
-            var glide = target + networkVelocity * ModelSync.LeadSeconds;
-            motion.StepTo(dist <= step ? target : basePos + delta / dist * step, glide,
-                deltaSeconds > 0f ? MathF.Min(dist, step) / deltaSeconds : 0f);
-            TurnTo(networkTargetRotation);
-        }
-    }
-
     // SpawnConfig.Targetable is only the spawn-time default.
     private bool desiredTargetable;
     public bool Targetable => desiredTargetable;
@@ -172,7 +113,6 @@ public sealed class SimEnemy : SimNpc
 
     public uint BNpcBaseId { get; }
 
-    // Lets a peer reconstruct the same doppel via world.SpawnEnemy.
     public EnemySpawnConfig SpawnConfig { get; internal set; }
 
 
@@ -314,24 +254,8 @@ public sealed class SimEnemy : SimNpc
         }
     }
 
-    // The engine-level state below is driven by explicit scenario calls and sampled for peers.
-    // Tracked here rather than read back from native, which the run animation and the cast
-    // pipeline overwrite every frame; each is edge-triggered on its own seq.
-    public (byte Mode, byte Param)? LastMode { get; private set; }
-    public int ModeSeq { get; private set; }
-
-    // Sticky, so an ordinary enemy carries no engine block while a carrier that has been driven
-    // keeps reporting: dropping the block after the last call would strand a peer on it.
-    public bool HasEngineState { get; private set; }
-
     // AnimLock (8) is the mode the client holds an actor in while an action animation plays.
-    public void SetMode(CharacterModes mode, byte param = 0)
-    {
-        LastMode = ((byte)mode, param);
-        ModeSeq++;
-        HasEngineState = true;
-        ActorControl.SetMode(mode, param);
-    }
+    public void SetMode(CharacterModes mode, byte param = 0) => ActorControl.SetMode(mode, param);
 
     private void TickPacketSpawnCheckpoints()
     {
@@ -379,20 +303,11 @@ public sealed class SimEnemy : SimNpc
 
     internal string DescribeDrawState() => Proxy?.DescribeDrawState() ?? "no BattleChara";
 
-    // Sampled for peers; the seq makes a repeat of the same state read as a change.
-    public (byte Slot, byte Value)? AnimationState { get; private set; }
-    public int AnimationStateSeq { get; private set; }
-
     // UNVERIFIED what it does: FRU's dragon heads get 4 at their first catch, when retail shrinks
     // them from their spawn scale.
     public void Activate(uint state) => ActorControl.Activate(state);
 
-    public void SetAnimationState(byte slot, byte value)
-    {
-        AnimationState = (slot, value);
-        AnimationStateSeq++;
-        ActorControl.SetAnimationState(slot, value);
-    }
+    public void SetAnimationState(byte slot, byte value) => ActorControl.SetAnimationState(slot, value);
 
     // Authoritative draw state (DrawObject.Flags bits 0 and 3, set by Enable/DisableDraw).
     // False during the async model-load window where DrawObject is still null.
@@ -460,7 +375,6 @@ public sealed class SimEnemy : SimNpc
     public override void Tick(float deltaSeconds)
     {
         base.Tick(deltaSeconds);
-        TickNetworkPosition(deltaSeconds);
         TickTimelineWatch(deltaSeconds);
         TickPacketSpawnCheckpoints();
 
