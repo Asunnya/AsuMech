@@ -19,16 +19,16 @@ public sealed class DsrP5WrathAi : IScenarioAi<DsrP5WrathState>
     private const float TetherWallRadius = 19f;
     private const float DefamationBearing = -60f;
     private const float DefamationRadius = 20f;
-    private static readonly float[] MarkedProteanAngles = [90f, 135f, 225f];
-    private static readonly float[] PlainProteanAngles = [0f, 45f, 270f, 315f];
-    private const float ProteanRadius = 10f;
-    private const float BeyondWarriorProteanRadius = 15f;
+    private static readonly float[] PlainWallOffsets = [-34.5f, -11.5f, 11.5f, 34.5f];
+    private static readonly float[] MarkedWallOffsets = [-30f, 0f, 30f];
+    private const float ProteanRadius = 15f;
     private const float DivebombAngle = 180f;
+    private const float LiquidHeavenArc = 45f;
+    private static readonly float[] EruptionWalkRadii = [16f, 13.5f, 11f];
+    private const float LiquidHeavenWalkStep = 20f;
+    private const float LiquidHeavenWalkRadius = 17f;
+    private const float EruptionWalkStep = 20f;
     private const float WallRadius = 19f;
-    private const float EruptionStep = 30f;
-    private const float LiquidHeavenStep = 24f;
-    private const float LiquidHeavenWallRadius = 18f;
-    private const float LiquidHeavenMagewardRadius = 13f;
     private const float CentreHuddleRadius = 1.2f;
     private static readonly Vector2[] Huddle = [new(5f, -2.5f), new(5f, 0f), new(5f, 2.5f), new(6f, -1.25f), new(6f, 1.25f), new(4f, 0f)];
     private static readonly Vector2 LightningSpot = new(13.5f, 3.5f);
@@ -69,12 +69,18 @@ public sealed class DsrP5WrathAi : IScenarioAi<DsrP5WrathState>
         ai.Move(W + 37.0f, () => AiMove.Create(MainTankAcrossFromParty()).NaturalOrder(), jitter: 0f);
     }
 
+    private float DragonFromWarrior => state.MageOnDragonSide ? 180f : 0f;
+
+    private float PlainWall => DragonFromWarrior + 90f;
+
+    private float MarkedWall => DragonFromWarrior + 270f;
+
     private void AssignProteanAngles()
     {
         foreach (var (role, i) in state.Marked.Select((r, i) => (r, i)))
-            proteanAngle[role] = MarkedProteanAngles[i];
+            proteanAngle[role] = MarkedWall + MarkedWallOffsets[i];
         foreach (var (role, i) in state.Plain.OrderBy(r => r).Select((r, i) => (r, i)))
-            proteanAngle[role] = PlainProteanAngles[i];
+            proteanAngle[role] = PlainWall + PlainWallOffsets[i];
         proteanAngle[state.Divebomb] = DivebombAngle;
     }
 
@@ -108,7 +114,7 @@ public sealed class DsrP5WrathAi : IScenarioAi<DsrP5WrathState>
     private Vector2 ProteanSpot(PartyRole role, float angle)
     {
         if (role == state.Divebomb) return WarriorFrame(WallRadius, angle);
-        return WarriorFrame(angle == 0f ? BeyondWarriorProteanRadius : ProteanRadius, angle);
+        return WarriorFrame(ProteanRadius, angle);
     }
 
     private Vector2?[] UnbaitedToCentre()
@@ -145,23 +151,24 @@ public sealed class DsrP5WrathAi : IScenarioAi<DsrP5WrathState>
     private List<Vector2> EruptionDrops()
     {
         var start = proteanAngle[state.Eruptions];
-        var towardWarrior = start < 180f ? -1f : 1f;
-        return [ProteanSpot(state.Eruptions, start), WarriorFrame(WallRadius, start),
-            WarriorFrame(WallRadius, start + towardWarrior * EruptionStep), WarriorFrame(WallRadius, start + towardWarrior * 2f * EruptionStep)];
+        var awayFromWarrior = Signed(MarkedWall) > 0f ? 1f : -1f;
+        var spots = new List<Vector2> { ProteanSpot(state.Eruptions, start) };
+        for (var k = 1; k <= EruptionWalkRadii.Length; k++)
+            spots.Add(WarriorFrame(EruptionWalkRadii[k - 1], start + awayFromWarrior * EruptionWalkStep * k));
+        return spots;
     }
 
-    private List<Vector2> LiquidHeavenDrops()
+    private List<Vector2> LiquidHeavenDrops() => WalkTowardTheWarriorEnd(state.LiquidHeaven, PlainWall, LiquidHeavenWalkStep, LiquidHeavenWalkRadius, LiquidHeavenArc, 5);
+
+    private List<Vector2> WalkTowardTheWarriorEnd(PartyRole baiter, float wall, float step, float radius, float arc, int drops)
     {
-        var start = proteanAngle[state.LiquidHeaven];
-        var eruptionFlank = MathF.Sin(proteanAngle[state.Eruptions] * MathF.PI / 180f) > 0f ? 1f : -1f;
-        var sweep = -eruptionFlank;
-        if (state.Lightning.Contains(state.LiquidHeaven) && start != 0f) sweep = Signed(start) > 0f ? -1f : 1f;
-        var mageward = MathF.Abs(Signed(start + sweep * LiquidHeavenStep * 4f)) > MathF.Abs(Signed(start));
-        var radius = mageward ? LiquidHeavenMagewardRadius : LiquidHeavenWallRadius;
-        var drops = new List<Vector2> { ProteanSpot(state.LiquidHeaven, start) };
-        for (var k = 1; k <= 4; k++)
-            drops.Add(WarriorFrame(radius, start + sweep * LiquidHeavenStep * k));
-        return drops;
+        var start = proteanAngle[baiter];
+        var offset = Signed(start - wall);
+        var direction = Signed(wall) > 0f ? -1f : 1f;
+        var spots = new List<Vector2> { ProteanSpot(baiter, start) };
+        for (var k = 1; k < drops; k++)
+            spots.Add(WarriorFrame(radius, wall + Math.Clamp(offset + direction * step * k, -arc, arc)));
+        return spots;
     }
 
     private Vector2 FinalSpot(PartyRole role)

@@ -11,7 +11,8 @@ public class DsrP5WrathScenarioTests
 {
     private const float W = DsrP5WrathScenario.Wrath;
 
-    // Dragon east, warrior east and mage west; protean angles from the warrior: M1 0, M2 45, R 270, C 315.
+    // Dragon east, warrior east and mage west. The plain wall is south: M1 M2 R C from east to west at r15,
+    // 23 degrees apart; the divebomb behind the mage, the tethers and defamation on the north wall.
     private static void Pinned(DsrP5WrathStateOverrides o)
     {
         o.DragonBearing = 90f;
@@ -38,11 +39,30 @@ public class DsrP5WrathScenarioTests
             .TeleportAt(W + 14f, to: Vector2.Zero)
             .ShouldKill(ActionId.TwistingDive, CasterDps);
 
+    // As the cones land: four on the south wall, the divebomb behind the mage.
+    [Test]
+    public void BotsTakeTheirConesOnThePlainWall()
+        => Negative<DsrP5WrathScenario>(CasterDps)
+            .Overrides<DsrP5WrathStateOverrides>(Pinned)
+            .At(W + 22.1f, p =>
+            {
+                foreach (var role in new[] { MeleeDpsA, MeleeDpsB, PhysRangedDps })
+                {
+                    var at = p.Member(role)!.Position;
+                    Assert.That(at.Z, Is.GreaterThan(10f), role.ToString());
+                    Assert.That(new Vector2(at.X, at.Z).Length(), Is.EqualTo(15f).Within(1f), role.ToString());
+                }
+                var divebomb = p.Member(ShieldHealer)!.Position;
+                Assert.That(divebomb.X, Is.LessThan(-17f));
+            })
+            .TeleportAt(W + 28.5f, to: new Vector2(-15f, 0f))
+            .ShouldKill(ActionId.CauterizeDarkscale, CasterDps);
+
     [Test]
     public void SharingAProteanKillsBoth()
         => Negative<DsrP5WrathScenario>(CasterDps)
             .Overrides<DsrP5WrathStateOverrides>(Pinned)
-            .TeleportAt(W + 21.5f, to: new Vector2(0.5f, -10f))
+            .TeleportAt(W + 21.5f, to: new Vector2(-2.5f, 14.7f))
             .ShouldKill(ActionId.AscalonsMercyRevealedCone, CasterDps, PhysRangedDps);
 
     [Test]

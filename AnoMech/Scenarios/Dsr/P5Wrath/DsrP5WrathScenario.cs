@@ -47,7 +47,8 @@ public sealed class DsrP5WrathScenario : IScenario
     public const float TwisterTouchRadius = 1.5f;
     private const float TwisterArms = Wrath + 17.6f;
     private const float TwistersGone = Wrath + 21.8f;
-    private const float MercyConeHalfAngle = MathF.PI / 8f;
+    // UNVERIFIED: the cone's width; players 18.6 degrees apart from Thordan were each hit once.
+    private const float MercyConeHalfAngle = 7.5f * MathF.PI / 180f;
     private const float MercyConeRange = 50f;
     private const float MercyDamage = 0.4f;
     private const float EruptionDelay = 3.96f;
@@ -82,6 +83,8 @@ public sealed class DsrP5WrathScenario : IScenario
     private readonly List<SimEventObject> eventObjects = [];
     private readonly List<(Vector3 At, SimEventObject? Obj)> twisters = [];
     private bool twistersArmed;
+    private readonly List<SimEnemy> mercyCarriers = [];
+    private readonly Queue<SimEnemy> eruptionCarriers = [];
 
     public void Run(SimWorld worldParam, int? selectedAi)
     {
@@ -93,6 +96,8 @@ public sealed class DsrP5WrathScenario : IScenario
         eventObjects.Clear();
         twisters.Clear();
         twistersArmed = false;
+        mercyCarriers.Clear();
+        eruptionCarriers.Clear();
         Array.Clear(dragoons);
         Array.Clear(spiralTethers);
 
@@ -133,6 +138,7 @@ public sealed class DsrP5WrathScenario : IScenario
         world.Events.Add(Wrath + 17.20f, () => { foreach (var (_, obj) in twisters) obj?.SetState(1); });
         world.Events.Add(TwisterArms, () => twistersArmed = true);
         world.Events.Add(Wrath + 18.10f, () => CastSelf(thordan, ActionId.AscalonsMercyRevealed, 3.0f));
+        world.Events.Add(Wrath + 18.10f, SpawnEffectCarriers);
         world.Events.Add(Wrath + 18.50f, () => { foreach (var k in new[] { dragoons[0], dragoons[1], paulecrain }) k?.FadeOut(); });
         world.Events.Add(TwistersGone, ClearTwisters);
         world.Events.Add(MercyLands, MercyCones);
@@ -323,17 +329,31 @@ public sealed class DsrP5WrathScenario : IScenario
         }
     }
 
+    // A helper spawned in the frame it acts drops the effect, so the cones' and eruptions' carriers
+    // arrive a few seconds early.
+    private void SpawnEffectCarriers()
+    {
+        if (thordan == null) return;
+        for (var i = 0; i < 8; i++)
+            if (SpawnHelper(new Placement(thordan.Position, 0f)) is { } helper) mercyCarriers.Add(helper);
+        for (var i = 0; i < EruptionCasts.Length; i++)
+            if (SpawnHelper(new Placement(Vector3.Zero, 0f)) is { } helper) eruptionCarriers.Enqueue(helper);
+    }
+
     // One cone from Thordan at every player; standing in a second one kills.
     private void MercyCones()
     {
         if (thordan == null) return;
         var targets = AliveMembers().ToList();
         var hits = new Dictionary<SimCharacter, int>();
-        foreach (var target in targets)
+        for (var i = 0; i < targets.Count; i++)
         {
+            var target = targets[i];
             var rotation = RotationTowards(thordan.Position, target.Position);
-            if (SpawnHelper(new Placement(thordan.Position, rotation)) is { } helper)
+            if (i < mercyCarriers.Count)
             {
+                var helper = mercyCarriers[i];
+                helper.SetRotation(rotation);
                 PlayEffect(helper, ActionId.AscalonsMercyRevealedCone, 1.1f, rotation);
                 world.Events.Add(EffectCarrierLinger, helper.Despawn);
             }
@@ -352,7 +372,8 @@ public sealed class DsrP5WrathScenario : IScenario
     {
         if (party.Get(state.Eruptions) is not { } target || !target.IsAlive()) return;
         var at = target.Position;
-        if (SpawnHelper(new Placement(at, 0f)) is not { } helper) return;
+        if (!eruptionCarriers.TryDequeue(out var helper)) return;
+        helper.SetPosition(new Placement(at, 0f));
         helper.NativeCast(ActionId.AltarFlareEruption, ActionType.Action, 0f, 3.7f, false, position: at);
         world.Events.Add(EruptionDelay, () =>
         {
@@ -362,17 +383,14 @@ public sealed class DsrP5WrathScenario : IScenario
         });
     }
 
-    // UNVERIFIED: only the drop itself is lethal to others; the puddle it leaves is not modelled.
+    // The drops hurt everyone in reach without killing; UNVERIFIED: the puddle left behind is not modelled.
     private void DropLiquidHeaven()
     {
         if (party.Get(state.LiquidHeaven) is not { } target || !target.IsAlive()) return;
         var at = target.Position;
         PlayEffect(vedrfolnir, ActionId.LiquidHeaven, 1.1f, target: target.GameObjectId, at: at);
         foreach (var hit in party.Find.InsideCircle(at, LiquidHeavenRadius).Where(m => m.IsAlive()).ToList())
-        {
-            if (hit == target) damage.ApplyDamage(hit, LiquidHeavenDamage, ActionId.LiquidHeaven, "Liquid Heaven", lethal: false);
-            else hit.Die(ActionId.LiquidHeaven, "too close to the Liquid Heaven drop");
-        }
+            damage.ApplyDamage(hit, LiquidHeavenDamage, ActionId.LiquidHeaven, "Liquid Heaven", lethal: false);
         world.Events.Add(0.8f, () =>
         {
             if (world.SpawnEventObject(new EventObjectSpawnConfig { EObjId = EObjId.LiquidHeaven, Placement = new Placement(at, 0f) }) is not { } puddle) return;
@@ -470,6 +488,9 @@ public sealed class DsrP5WrathScenario : IScenario
         eventObjects.Clear();
         foreach (var enemy in spawned) enemy.Despawn();
         spawned.Clear();
+        foreach (var helper in mercyCarriers.Concat(eruptionCarriers)) helper.Despawn();
+        mercyCarriers.Clear();
+        eruptionCarriers.Clear();
     }
 
     private SimEnemy? SpawnNpc(uint baseId, uint nameId, uint maxHp, Placement placement, EnemyListMode enemyList)
