@@ -50,7 +50,7 @@ public sealed class UmadP2ForsakenZP6SouthAdjustAiHelper
         ai.Move(47.22f, TowerPositions(3), jitter: .0f, arrivalTime: 53.22f);
         ai.Move(54.35f, AllThingsEndsBait(1, 4), arrivalTime: 57f);
         ai.Move(59.26f, TowerPositions(4), jitter: .0f, arrivalTime: 63.86f);
-        ai.Move(65.4f, TowerPositions(5), jitter: .0f, arrivalTime: 73.27f);
+        ai.Move(66.4f, TowerPositions(5), jitter: .0f, arrivalTime: 73.27f);
         ai.Move(75.4f, AllThingsEndsBait(2, 6), arrivalTime: 78f);
         ai.Move(81.31f, TowerPositions(6), jitter: .0f, arrivalTime: 85.8f);
         ai.Move(90.32f, TowerPositions(7), jitter: .0f, arrivalTime: 94.32f);

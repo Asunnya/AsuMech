@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Text.Json;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.Native.Interfaces;
@@ -25,6 +26,11 @@ internal sealed class TestClient
     public string Name { get; }
     public PartyRole Seat { get; }
     public bool IsHost { get; }
+    public Guid PeerId => Multiplayer.MyPeerId;
+    // Every numbered message as it first left, as it was then, and every one taken from another
+    // client, on the relay's clock.
+    public List<(double At, MpMessage Message, string Json)> StreamSent { get; } = [];
+    public List<(double At, Guid From, MpMessage Message)> StreamTaken { get; } = [];
     public FakeGame Fake { get; }
     public Game Game { get; }
     public MultiplayerManager Multiplayer { get; }
@@ -49,6 +55,8 @@ internal sealed class TestClient
         Game = game = new Game();
         Multiplayer = new MultiplayerManager { RelayFactory = relay.Connect, DisplayName = name, Time = relay.Time, NextSeed = () => seed };
         Multiplayer.ActorReplayed += (local, host) => Remember(local, $"actor 0x{host:X}", relay.Now);
+        Multiplayer.StreamSent += message => StreamSent.Add((relay.Now, message, JsonSerializer.Serialize(message)));
+        Multiplayer.StreamTaken += (from, message) => StreamTaken.Add((relay.Now, from, message));
         Fake.Timeline.Clock = () => (float)relay.Now;
         InstallServices();
         Deactivate();
@@ -64,6 +72,7 @@ internal sealed class TestClient
     // A frame in Plugin.OnFrameworkUpdate's order.
     public void Frame(float deltaSeconds) => Do(() =>
     {
+        relay.RaiseDisconnects(PeerId);
         Fake.Frame(deltaSeconds, delta =>
         {
             Natives.Tick(delta);

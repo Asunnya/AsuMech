@@ -112,7 +112,7 @@ public sealed class M9sFinalScenario : IScenario
         world.Events.Add(81.00f, KillBossUnlessEnrage);
         world.Events.Add(85.20f, CrowdKillIfEnrage);
         world.Events.Add(93.75f, () => { if (state.Enrage) vamp?.LegacyCast(ActionId.FinaleFataleEnrageCast, castSeconds: 9.7f); });
-        world.Events.Add(104.55f, () => { if (state.Enrage) world.Party.WipeAllPlayers("Final Finale Fatale (enrage)"); });
+        world.Events.Add(104.55f, () => { if (state.Enrage) world.Party.WipeAllPlayers(SimCharacterDeathExtensions.Environment, "Final Finale Fatale (enrage)"); });
         world.Events.Add(106f, DespawnAll);
     }
 

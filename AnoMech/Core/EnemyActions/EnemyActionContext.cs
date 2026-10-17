@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using AnoMech.Core.Game;
 using AnoMech.Core.Native.Interfaces;
@@ -12,16 +13,21 @@ public sealed class EnemyActionContext
     // Never removed from, so it enumerates in insertion order.
     private readonly Dictionary<SimCharacter, TargetOutcome> outcomes = [];
     private readonly List<System.Action> afterResolve = [];
-    private readonly List<SimStatus> hiddenStatuses = [];
+    private readonly List<(SimStatus Status, float RevealAt)> hiddenStatuses = [];
+    private readonly List<(SimCharacter, ushort)> impactRemovals = [];
 
-    internal EnemyActionContext(EnemyAction action, SimCharacter caster, SimCharacter? target, Placement origin, SimParty party)
+    internal EnemyActionContext(EnemyAction action, SimCharacter caster, SimCharacter? target, Placement origin, SimParty party, float releaseDelay)
     {
+        this.releaseDelay = releaseDelay;
         Action = action;
         Caster = caster;
         Target = target;
         Origin = origin;
         Party = party;
     }
+
+    // From this resolve to the ActionEffect: a cast's CastSpec.ActionEffectOffset, 0 for an instant action.
+    private readonly float releaseDelay;
 
     public EnemyAction Action { get; }
     // An enemy, or a party member using an action through SimParty.Act.
@@ -58,25 +64,36 @@ public sealed class EnemyActionContext
     // row. The first push wins.
     public void Knockback(SimCharacter who, float distance, float speed, float? delay = null, uint? knockbackRow = null)
     {
-        var awayFromTarget = knockbackRow is { } row && Natives.Data.Knockback(row) is { AwayFromTarget: true } && Target is not null;
-        Outcome(who).Push ??= new Push(awayFromTarget ? Target!.Position : Caster.Position, distance, speed, delay, knockbackRow);
+        var row = knockbackRow is { } id ? Natives.Data.Knockback(id) : null;
+        var from = row switch
+        {
+            { AwayFromTarget: true } when Target is not null => Target.Position,
+            // Pushed along the caster's facing: away from a point right behind the pushed one.
+            { Direction: 3 } => who.Position - new System.Numerics.Vector3(System.MathF.Sin(Caster.Rotation), 0f, System.MathF.Cos(Caster.Rotation)),
+            _ => Caster.Position,
+        };
+        Outcome(who).Push ??= new Push(from, distance, speed, delay, knockbackRow);
     }
 
     // Shown as a dodge, for one who escaped the action, e.g. by facing a gaze correctly.
     public void Dodge(SimCharacter who) => Outcome(who).Dodged = true;
 
     // Applied now, so effects after this one see it, and shown to the client, from the caster, with
-    // the ActionEffect. delayToEffectResult: shown only with the EffectResult at TimingSpec.DamageDelay,
-    // its full duration running from then. entryParam goes in the ActionEffect's gain entry.
+    // the ActionEffect. delayToEffectResult: shown only with the EffectResult at TimingSpec.DamageDelay.
+    // Either way the full duration runs from when it shows. entryParam goes in the ActionEffect's gain entry.
     public void AddStatus(SimCharacter who, ushort statusId, float duration = 0f, int stacks = 1, bool delayToEffectResult = false,
         byte entryParam = 0)
     {
-        var delay = delayToEffectResult && duration > 0f ? Action.Timing.DamageDelay : 0f;
-        if (who.AddStatus(statusId, duration + delay, stacks, broadcastAddEvent: false, hidden: delayToEffectResult) is not { Slot: >= 0 } status) return;
+        var revealAt = delayToEffectResult ? MathF.Max(Action.Timing.DamageDelay, releaseDelay) : releaseDelay;
+        var delay = duration > 0f ? revealAt : 0f;
+        if (who.AddStatus(statusId, duration + delay, stacks, broadcastAddEvent: false, hidden: revealAt > 0f) is not { Slot: >= 0 } status) return;
         status.ShownAsFrom(Caster);
         Outcome(who).StatusGains.Add((statusId, entryParam));
-        if (status.Hidden) hiddenStatuses.Add(status);
+        if (status.Hidden) hiddenStatuses.Add((status, revealAt));
     }
+
+    // Taken off at TimingSpec.DamageDelay, unless the character died meanwhile.
+    public void RemoveStatusAtImpact(SimCharacter who, ushort statusId) => impactRemovals.Add((who, statusId));
 
     // Runs once every effect has applied and the deaths due now have been dealt, so a follow-up
     // cast can't claim this action's kills.
@@ -84,7 +101,8 @@ public sealed class EnemyActionContext
 
     internal IReadOnlyCollection<TargetOutcome> Outcomes => outcomes.Values;
     internal IReadOnlyList<System.Action> AfterResolveActions => afterResolve;
-    internal IReadOnlyList<SimStatus> HiddenStatuses => hiddenStatuses;
+    internal IReadOnlyList<(SimStatus Status, float RevealAt)> HiddenStatuses => hiddenStatuses;
+    internal IReadOnlyList<(SimCharacter Who, ushort StatusId)> ImpactRemovals => impactRemovals;
 
     private TargetOutcome Outcome(SimCharacter who)
     {

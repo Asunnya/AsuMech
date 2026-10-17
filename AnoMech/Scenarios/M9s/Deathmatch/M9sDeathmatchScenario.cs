@@ -156,7 +156,7 @@ public sealed class M9sDeathmatchScenario : IScenario
         {
             var soakers = world.Party.Find.InsideCircle(tower.Position, M9sDeathmatchState.TowerRadius).Count;
             if (soakers == 4) continue;
-            world.Party.WipeAllPlayers($"Bloody Bondage tower took {soakers} instead of four");
+            world.Party.WipeAllPlayers(SimCharacterDeathExtensions.Environment, $"Bloody Bondage tower took {soakers} instead of four");
             return;
         }
     }

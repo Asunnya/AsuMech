@@ -31,18 +31,16 @@ public sealed partial class MultiplayerManager
     {
         FlushPackets(force: true);
         EndHostRunLocally();
-        _ = relay?.SendAsync(LobbyMessage());
+        _ = Send(LobbyMessage());
         DiagnosticLog.Info($"[Multiplayer] Run ended (ReturnedToInn={returnedToInn}) -- broadcasting EndMessage.");
-        _ = relay?.SendAsync(new EndMessage(ReturnedToInn: returnedToInn, Reason: reason));
+        _ = Send(new EndMessage(ReturnedToInn: returnedToInn, Reason: reason));
         if (reason != null) AnnounceRunEnded(reason);
+        endSentReturnedToInn = returnedToInn;
         LobbyChanged?.Invoke();
-
-        // Arms Tick()'s resend loop.
-        pendingEndResendReturnedToInn = returnedToInn;
-        pendingEndResendReason = reason;
-        endResendsRemaining = EndMessageResendCount;
-        endResendTimer = 0f;
     }
+
+    // The stay's last end went out with ReturnedToInn, so the zone going away says nothing new.
+    private bool endSentReturnedToInn;
 
     // The stay is over, however it ended: the natives go back to the real ones. On the host this
     // follows the teardown, which peers still need; a peer's own leave path lifts its natives
@@ -54,7 +52,7 @@ public sealed partial class MultiplayerManager
             FlushPackets(force: true);
             recorder?.Uninstall();
             recorder = null;
-            if (relay is not { IsConnected: true } || pendingEndResendReturnedToInn == true) return;
+            if (endSentReturnedToInn) return;
             BroadcastRunEnded(returnedToInn: true);
             return;
         }
@@ -77,8 +75,8 @@ public sealed partial class MultiplayerManager
         Plugin.Game.InstanceExited += OnInstanceExited;
         Plugin.Game.World.Announced += text =>
         {
-            if (!IsHost || relay is not { IsConnected: true }) return;
-            _ = relay.SendAsync(new AnnouncementMessage(text));
+            if (!IsHost || stream == null) return;
+            _ = Send(new AnnouncementMessage(text));
         };
     }
 
@@ -107,10 +105,10 @@ public sealed partial class MultiplayerManager
 
     private void FlushPackets(bool force = false)
     {
-        if (recorder is not { HasPending: true } r || relay is not { IsConnected: true } client) return;
+        if (recorder is not { HasPending: true } r) return;
         if (!force && sincePacketSend < PacketSendInterval) return;
         sincePacketSend = 0f;
-        _ = client.SendAsync(new GamePacketsMessage(r.Drain()));
+        _ = Send(new GamePacketsMessage(r.Drain()));
     }
 
     // Zone loads take seconds on a slow client; past this the run is called off.
@@ -151,6 +149,7 @@ public sealed partial class MultiplayerManager
         StampEventClock();
         SubscribeGameEventsOnce();
         DrainPendingMessages();
+        TickReconnect();
 
         // Before the IsConnected return below: the join may still be connecting or reconnecting.
         if (IsJoinTimedOut)
@@ -174,8 +173,14 @@ public sealed partial class MultiplayerManager
             LobbyChanged?.Invoke();
         }
 
-        if (relay is not { IsConnected: true }) return;
+        if (relay is { IsConnected: true } && !TickLink(deltaSeconds)) return;
+        TickRun(deltaSeconds);
+    }
 
+    // What needs the link up: the Hello until it's answered, the ping cycle and the liveness it
+    // checks, the lobby's start check. False once the session is over.
+    private bool TickLink(float deltaSeconds)
+    {
         AnnounceOwnJobIfChanged();
         ResendHelloUntilAcknowledged(deltaSeconds);
 
@@ -200,20 +205,6 @@ public sealed partial class MultiplayerManager
                 }
             }
 
-            if (pendingEndResendReturnedToInn is { } returnedToInn)
-            {
-                endResendTimer += deltaSeconds;
-                if (endResendTimer >= EndMessageResendIntervalSeconds)
-                {
-                    endResendTimer = 0f;
-                    endResendsRemaining--;
-                    DiagnosticLog.Info($"[Multiplayer] Re-broadcasting EndMessage (ReturnedToInn={returnedToInn}), {endResendsRemaining} retries left.");
-                    _ = relay?.SendAsync(LobbyMessage());
-                    _ = relay?.SendAsync(new EndMessage(ReturnedToInn: returnedToInn, Reason: pendingEndResendReason));
-                    if (endResendsRemaining <= 0) pendingEndResendReturnedToInn = null;
-                }
-            }
-
             if (deferredLeaveMs.Count > 0) ConfirmDeferredLeaves();
         }
         else if (IsSessionNotFound)
@@ -224,7 +215,7 @@ public sealed partial class MultiplayerManager
             LeaveSession();
             SessionEndReason = reason;
             LobbyChanged?.Invoke();
-            return;
+            return false;
         }
         else if (IsHostStale)
         {
@@ -236,7 +227,7 @@ public sealed partial class MultiplayerManager
             LeaveSession();
             SessionEndReason = "Lost contact with the host.";
             LobbyChanged?.Invoke();
-            return;
+            return false;
         }
 
         if (IsHost)
@@ -244,7 +235,13 @@ public sealed partial class MultiplayerManager
             if (startWait.Tick()) LobbyChanged?.Invoke();
         }
         else AnswerStartCheck(deltaSeconds);
+        return true;
+    }
 
+    // The run goes on whether the link is up or not: what it sends meanwhile goes out once the
+    // link is back (SessionStream).
+    private void TickRun(float deltaSeconds)
+    {
         if (!running) return;
 
         if (IsHost)
@@ -252,7 +249,11 @@ public sealed partial class MultiplayerManager
             TickHostEntry(deltaSeconds);
             if (Plugin.Game.ActiveScenario != null)
             {
-                hostScenarioStarted = true;
+                if (!hostScenarioStarted)
+                {
+                    hostScenarioStarted = true;
+                    AnnounceStart();
+                }
             }
             else if (!hostScenarioStarted)
             {
@@ -286,6 +287,7 @@ public sealed partial class MultiplayerManager
             replay?.Tick();
             TickDebugBotReplay(deltaSeconds);
             SyncClockToHost();
+            CatchUpClockToHost();
             SendSelfPose();
         }
     }

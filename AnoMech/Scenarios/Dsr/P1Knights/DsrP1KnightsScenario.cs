@@ -476,7 +476,7 @@ public sealed class DsrP1KnightsScenario : IScenario
             portals.Add((SpawnEnemy(BNpcBaseId.AetherialTear, BNpcNameId.AetherialTear, new Placement(point, 0f), false, true, EnemyListMode.Never), point));
             if (!clash) continue;
             world.Announce("Two Hyperdimensional Slash portals landed too close together and exploded.");
-            party.WipeAllPlayers("Died to portals linking up");
+            party.WipeAllPlayers(SimCharacterDeathExtensions.Environment, "Died to portals linking up");
             return;
         }
         portalsOpen = true;
@@ -557,7 +557,7 @@ public sealed class DsrP1KnightsScenario : IScenario
         if (portals.Any(p => FlatDistance(p.At, at) < PortalBrightsphereRange))
         {
             world.Announce("A Brightsphere dropped next to a portal and set it off.");
-            party.WipeAllPlayers("Died to a portal exploding");
+            party.WipeAllPlayers(SimCharacterDeathExtensions.Environment, "Died to a portal exploding");
         }
         world.Events.Add(BrightFlareDelay, () =>
         {

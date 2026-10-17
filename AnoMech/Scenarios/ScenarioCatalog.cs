@@ -15,6 +15,14 @@ using AnoMech.Scenarios.M9s.Flails;
 using AnoMech.Scenarios.M9s.HellInACell;
 using AnoMech.Scenarios.M9s.VampStomp;
 using AnoMech.Scenarios.M9s.VampStomp2;
+using AnoMech.Scenarios.Fru.P2DiamondDust;
+using AnoMech.Scenarios.Fru.P2LightRampant;
+using AnoMech.Scenarios.Fru.P3Apocalypse;
+using AnoMech.Scenarios.Fru.P3UltimateRelativity;
+using AnoMech.Scenarios.Fru.P4CrystallizeTime;
+using AnoMech.Scenarios.Fru.P4DarklitDragonsong;
+using AnoMech.Scenarios.Fru.P5FulgentBlade;
+using AnoMech.Scenarios.Fru.P5ParadiseRegained;
 using AnoMech.Scenarios.Top.P2PartySynergy;
 using AnoMech.Scenarios.Top.P5Delta;
 using AnoMech.Scenarios.Top.P5Omega;
@@ -92,6 +100,14 @@ public sealed class ScenarioCatalog
         new UmadP5CelestriadScenario(),
         new UmadP5ExaflaresScenario(),
         new UmadP5ForsakenNull(),
+        new FruP2DiamondDustScenario(),
+        new FruP2LightRampantScenario(),
+        new FruP3UltimateRelativityScenario(),
+        new FruP3ApocalypseScenario(),
+        new FruP4DarklitDragonsongScenario(),
+        new FruP4CrystallizeTimeScenario(),
+        new FruP5FulgentBladeScenario(),
+        new FruP5ParadiseRegainedScenario(),
         new TopP2PartySynergyScenario(),
         new TopP5DeltaScenario(),
         new TopP5SigmaScenario(),

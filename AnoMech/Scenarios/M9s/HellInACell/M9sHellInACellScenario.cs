@@ -161,7 +161,7 @@ public sealed class M9sHellInACellScenario : IScenario
             var soakers = world.Party.Find.InsideCircle(tower.Position, M9sHellInACellState.TowerRadius).ToList();
             if (soakers.Count == 0)
             {
-                world.Party.WipeAllPlayers("Unmitigated Explosion (Hell in a Cell tower left empty)");
+                world.Party.WipeAllPlayers(SimCharacterDeathExtensions.Environment, "Unmitigated Explosion (Hell in a Cell tower left empty)");
                 return;
             }
             var prisoner = soakers[0];

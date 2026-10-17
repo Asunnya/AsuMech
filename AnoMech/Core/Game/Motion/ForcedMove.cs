@@ -21,7 +21,10 @@ internal abstract record ForcedMove
     public sealed record PushAway(Vector3 From, float Distance, float DurationSeconds) : ForcedMove;
 
     // The server carry (ActorControl 0xF1), UMAD P1's arrows.
-    public sealed record Carry(Vector3 To) : ForcedMove;
+    public sealed record Carry(Vector3 To, ushort? Timeline = null) : ForcedMove;
+
+    // The icefloor slide (ActorControl 0xDF), FRU P2 Frost Armor.
+    public sealed record IceSlide(Vector3 To, float DurationSeconds) : ForcedMove;
 
     public sealed record Teleport(Placement To) : ForcedMove;
 

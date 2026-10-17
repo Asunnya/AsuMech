@@ -298,7 +298,7 @@ public sealed class M9sFlailsScenario : IScenario
             var soakers = world.Party.Find.InsideCircle(tower, M9sFlailsState.TowerRadius);
             if (!soakers.Any(IsTank))
             {
-                world.Party.WipeAllPlayers("Massive Impact (tower left untanked)");
+                world.Party.WipeAllPlayers(SimCharacterDeathExtensions.Environment, "Massive Impact (tower left untanked)");
                 return;
             }
             foreach (var soaker in soakers.Where(s => !IsTank(s)).ToList())
@@ -385,7 +385,7 @@ public sealed class M9sFlailsScenario : IScenario
     private void WipeIfDoornailSurvived(int round)
     {
         if (doornailDown[round]) return;
-        world.Party.WipeAllPlayers("Deadly Doornail survived (its puddle overran the arena)");
+        world.Party.WipeAllPlayers(SimCharacterDeathExtensions.Environment, "Deadly Doornail survived (its puddle overran the arena)");
     }
 
     private void ChipDoornailWithBots()

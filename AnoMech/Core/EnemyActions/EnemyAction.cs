@@ -32,7 +32,8 @@ public sealed record CastSpec
     // How long after the bar starts the omen appears. Read it from an in-game replay.
     public float OmenDelay { get; init; }
 
-    // Only for the rare case where the in-game cast time differs from the sheet's.
+    // Only for the rare case where the in-game cast time differs from the sheet's: the bar retail
+    // shows. The ActionEffect still follows it by ActionEffectOffset.
     public float? CastSecondsOverride { get; init; }
 
     // Turns the omen, the animation and the area from the caster's facing, in radians.
@@ -50,6 +51,10 @@ public sealed record AreaSpec
     // Donut: inner safe radius (default 0).
     // Ignored for other shapes.
     public float? Size { get; init; }
+
+    // Turns only the area from the caster's facing, in radians, for an action that hits away from
+    // where it faces and leaves the packet's rotation alone (FRU Twin Stillness' rear half).
+    public float Rotation { get; init; }
 
     // Changes the area's shape; required when the sheet's CastType is Custom.
     public CastType? CastTypeOverride { get; init; }

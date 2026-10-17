@@ -51,6 +51,7 @@ public sealed partial class MultiplayerManager
             Interlocked.Decrement(ref pendingMessageCount);
             if (entry.Message is RolesSnapshotMessage && pendingMessages.TryPeek(out var next) && next.Message is RolesSnapshotMessage)
                 continue;
+            if (!TakeFromStream(entry.Message, entry.SenderPeerId)) continue;
             Dispatch(entry.Message, entry.IsFromHost, entry.SenderId, entry.SenderPeerId);
         }
     }
@@ -125,6 +126,8 @@ public sealed partial class MultiplayerManager
         LeaveRequestMessage m => m.PeerId,
         PeerAppliedEnemyStatusMessage m => m.PeerId,
         PeerAppliedRoleStatusMessage m => m.PeerId,
+        StreamGapMessage m => m.PeerId,
+        StreamLostMessage m => m.PeerId,
         _ => null,
     };
 
@@ -163,7 +166,7 @@ public sealed partial class MultiplayerManager
                 // Repeat the kick and the relay ban for a banned client that rejoins or never got it.
                 if (message is HelloMessage)
                 {
-                    _ = relay?.SendAsync(new KickMessage(claimedId, Banned: true));
+                    _ = Send(new KickMessage(claimedId, Banned: true));
                     _ = relay?.ModerateAsync("ban", claimedId);
                 }
                 return;
@@ -196,6 +199,8 @@ public sealed partial class MultiplayerManager
                 Session.Builds[hello.PeerId] = build;
                 Session.Jobs[hello.PeerId] = NetGuard.ClassJob(hello.ClassJob);
                 DiagnosticLog.Info($"[Multiplayer] Hello from {hello.PeerId} ({Session.NameOf(hello.PeerId)}), build {build.Version} ({build.ShortChecksum}), mismatch={IsVersionMismatched(hello.PeerId)}.");
+                // Before the lobby state, which a fresh join takes as its first message.
+                if (stream != null) Transmit(stream.Hello(hello.PeerId, hello.StreamEpoch, hello.StreamReceived));
                 BroadcastLobbyState();
                 break;
             }
@@ -219,6 +224,23 @@ public sealed partial class MultiplayerManager
             case PongMessage pong when IsHost:
                 peerLastSeenMs[pong.PeerId] = NowMs;
                 peerLatencyMs[pong.PeerId] = PingClockMs() - pong.SentAtMs;
+                if (stream?.Pong(pong.PeerId, pong.StreamEpoch, pong.StreamSent, pong.StreamReceived) is { } askPeer) Transmit(askPeer);
+                break;
+            case StreamGapMessage gap when IsHost:
+                if (stream != null) Transmit(stream.Resend(gap.PeerId, gap.From));
+                break;
+            case StreamGapMessage gap when gap.PeerId == MyPeerId:
+                if (stream != null) Transmit(stream.Resend(senderPeerId, gap.From));
+                break;
+            case StreamLostMessage lost when IsHost:
+                DiagnosticLog.Warn($"[Multiplayer] {Session.NameOf(lost.PeerId)} no longer has the messages this host missed -- going on from #{lost.Next}.");
+                stream?.Lost(lost.PeerId, lost.Next, lost.Epoch);
+                break;
+            case StreamLostMessage lost when lost.PeerId == MyPeerId:
+                OnHostStreamLost(senderPeerId, lost.Next);
+                break;
+            case StreamStateMessage state when !IsHost && state.PeerId == MyPeerId:
+                if (stream != null) Transmit(stream.State(senderPeerId, state.StreamEpoch, state.Sent, state.Received));
                 break;
             // Mitigation reports put statuses on the host's own characters: seated peers only,
             // known ids only, durations clamped.
@@ -346,8 +368,14 @@ public sealed partial class MultiplayerManager
                 OnEndReceived(end);
                 break;
             case PingMessage ping when !IsHost:
-                _ = relay?.SendAsync(new PongMessage(MyPeerId, ping.SentAtMs));
+            {
+                var (epoch, sent, received) = stream?.PongFields(senderPeerId) ?? (0, 0, -1);
+                Transmit(new PongMessage(MyPeerId, ping.SentAtMs, epoch, sent, received));
+                var ours = NetGuard.Cap(ping.StreamReceived, NetGuard.MaxSessionPeers).FirstOrDefault(c => c?.PeerId == MyPeerId);
+                if (stream?.Ping(senderPeerId, ping.StreamSent, ours) is { } askHost) Transmit(askHost);
+                if (peerRunStarted && ping.Clock is { } clock) pingClock = (clock, Time.GetTimestamp());
                 break;
+            }
             case PeerStatusMessage status when !IsHost:
                 peerStatuses.Clear();
                 foreach (var (id, entry) in status.Statuses)
