@@ -110,6 +110,7 @@ All using default NA pf strats unless noted otherwise:
     - Flame Floater to Pyrotation (Hot Impact, Flame Floater tether charges, Alley-oop Inferno spreads, Cutback Blaze, Pyrotation)
     - Sickest Take-off to Deep Impact (Sick Swell wave and Deep Blue's lane, orb stacks or spreads, Reverse/Double-dip proteans, Deep Impact)
     - Xtreme Spectacular to Insane Air (multi-hit raidwide, both surfboards' four stops with proteans, light party stacks and tank busters)
+    - Fire/Watersnaking to Hot Impact (fire/water split by distance, Deep Blue's corner proteans, Alley-oop Inferno spreads, Sick Swell's wave, shared tank buster)
 
 ## Details
 

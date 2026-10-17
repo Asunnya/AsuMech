@@ -19,6 +19,21 @@ public static class M10sActions
         DeathExplanation = "the shared tank buster needs both tanks",
     };
 
+    public static readonly EnemyAction HotImpactOnFire = HotImpact with { ActionId = ActionId.HotImpactOnFire };
+
+    // Each hits only the four players its brother picked.
+    public static readonly EnemyAction Firesnaking = new(ActionId.Firesnaking)
+    {
+        Cast = new() { AnimationLock = 1.2f },
+        Effects = [OnHavingStatus(StatusId.Firesnaking, Damage())],
+    };
+
+    public static readonly EnemyAction Watersnaking = new(ActionId.Watersnaking)
+    {
+        Cast = new() { AnimationLock = 1.2f },
+        Effects = [OnHavingStatus(StatusId.Watersnaking, Damage())],
+    };
+
     public static readonly EnemyAction DiversDare = new(ActionId.DiversDare)
     {
         Cast = new() { AnimationLock = 2.1f },

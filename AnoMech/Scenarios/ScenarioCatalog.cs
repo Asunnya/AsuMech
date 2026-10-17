@@ -10,6 +10,7 @@ using AnoMech.Scenarios.Dsr.P6DoubleDragons;
 using AnoMech.Scenarios.M10s.InsaneAir;
 using AnoMech.Scenarios.M10s.Opener;
 using AnoMech.Scenarios.M10s.SickestTakeoff;
+using AnoMech.Scenarios.M10s.Snaking;
 using AnoMech.Scenarios.M9s.Aetherletting;
 using AnoMech.Scenarios.M9s.Coffinmaker;
 using AnoMech.Scenarios.M9s.Deathmatch;
@@ -144,5 +145,6 @@ public sealed class ScenarioCatalog
         new M10sOpenerScenario(),
         new M10sSickestTakeoffScenario(),
         new M10sInsaneAirScenario(),
+        new M10sSnakingScenario(),
     ]);
 }

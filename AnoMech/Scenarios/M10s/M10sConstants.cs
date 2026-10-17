@@ -102,6 +102,9 @@ public static class M10sConstants
         public const uint VerticalPlunge = 0xB5F8;
         public const uint VerticalBlastHit = 0xB5F9;
         public const uint VerticalPlungeHit = 0xB5FA;
+        public const uint Firesnaking = 0xB381;
+        public const uint Watersnaking = 0xB382;
+        public const uint HotImpactOnFire = 0xB580;
     }
 
     public static class StatusId
@@ -117,6 +120,14 @@ public static class M10sConstants
         // Its param is the orb count Deep Blue shows: 0x3ED two, 0x3EE eight.
         public const ushort Orbs = 0x808;
         public const ushort DamageDown = 0xB5F;
+        public const ushort Firesnaking = 0x136E;
+        public const ushort Watersnaking = 0x136F;
+    }
+
+    public static class LockonId
+    {
+        public const uint Spread = 0x294;
+        public const uint SharedBuster = 0x103;
     }
 
     public static class TetherId
