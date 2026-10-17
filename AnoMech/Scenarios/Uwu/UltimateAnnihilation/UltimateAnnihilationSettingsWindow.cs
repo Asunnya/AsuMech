@@ -15,11 +15,23 @@ public class UltimateAnnihilationSettingsWindow
 
         if (SettingsGrid.Begin("##ultimateannihilation"))
         {
+            DrawIfritCorner();
             DrawSearingWind();
             DrawFlamingCrush();
             DrawUltimaHp();
             SettingsGrid.End();
         }
+    }
+
+    private void DrawIfritCorner()
+    {
+        var v = Overrides.IfritCorner;
+        SettingsGrid.Row("Ifrit:");
+        if (ImGui.RadioButton("Random##ifritcorner", v == IfritCorner.Random)) Overrides.IfritCorner = IfritCorner.Random;
+        ImGui.SameLine();
+        if (ImGui.RadioButton("South-east##ifritcorner", v == IfritCorner.SouthEast)) Overrides.IfritCorner = IfritCorner.SouthEast;
+        ImGui.SameLine();
+        if (ImGui.RadioButton("South-west##ifritcorner", v == IfritCorner.SouthWest)) Overrides.IfritCorner = IfritCorner.SouthWest;
     }
 
     private void DrawSearingWind()
@@ -51,6 +63,7 @@ public class UltimateAnnihilationSettingsWindow
 
     private void ResetAll()
     {
+        Overrides.IfritCorner = IfritCorner.Random;
         Overrides.SearingWindOnPlayer = false;
         Overrides.FlamingCrushOnPlayer = false;
         Overrides.UltimaPushedBelowHalf = false;

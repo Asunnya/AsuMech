@@ -23,6 +23,26 @@ public class UwuP3TitanScenarioTests
             .TeleportAt(34f, to: Vector2.Zero)
             .ShouldKill(ActionId.GeocrushJump, RegenHealer);
 
+    [TestCase(24.6f, ActionId.WeightOfTheLand)]
+    [TestCase(48.7f, ActionId.LandslideLine)]
+    public void HelperCastsShowTheirOmensWhileTheirCastersAreStillArriving(float at, uint actionId)
+    {
+        var casting = 0;
+        ScenarioRun.Execute(typeof(UwuP3TitanScenario), 0, 1234, new ScenarioRunOptions
+        {
+            PacketSpawnFrames = (2, 5),
+            StopAt = at + 0.5f,
+            WriteArtifactsOnFailure = false,
+            Probe = probe =>
+            {
+                if (!probe.Crossed(at)) return;
+                casting = probe.World.Children.OfType<SimEnemy>().Count(e => e.IsCasting && e.CastActionId == actionId);
+            },
+        });
+
+        Assert.That(casting, Is.GreaterThan(0));
+    }
+
     [Test]
     public void TitanFacesTheCentreThroughUpheavalWhereverTheMainTankStands()
     {
