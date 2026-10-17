@@ -13,4 +13,7 @@ public sealed class DsrP3NidhoggStateOverrides
     public IReadOnlyList<int>? TowerSoakers { get; set; }
     public int? QuietTower { get; set; }
     public IReadOnlyList<PartyRole>? SoulTetherTargets { get; set; }
+    // The player's Dive from Grace number (1-3) and arrow; the rest of the party is rolled around them.
+    public int? PlayerLine { get; set; }
+    public DiveArrow? PlayerArrow { get; set; }
 }

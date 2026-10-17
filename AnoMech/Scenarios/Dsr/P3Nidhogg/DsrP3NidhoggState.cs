@@ -42,7 +42,7 @@ public sealed class DsrP3NidhoggState
     // Where each dive's tower landed, per dive; set as the dives land.
     public List<(PartyRole Role, System.Numerics.Vector3 Spot)>[] DiveTowers { get; } = [[], [], []];
 
-    public DsrP3NidhoggState(Rng rng, DsrP3NidhoggStateOverrides? overrides = null)
+    public DsrP3NidhoggState(Rng rng, DsrP3NidhoggStateOverrides? overrides = null, PartyRole? player = null)
     {
         overrides ??= new DsrP3NidhoggStateOverrides();
         var order = rng.Shuffle(Enum.GetValues<PartyRole>()).ToList();
@@ -54,14 +54,27 @@ public sealed class DsrP3NidhoggState
                 lines[role] = line;
             next += LineSizes[line - 1];
         }
+        if (player is { } me && overrides.PlayerLine is { } wantedLine and >= 1 and <= Dives && lines[me] != wantedLine)
+        {
+            var other = order.First(r => lines[r] == wantedLine);
+            (lines[me], lines[other]) = (wantedLine, lines[me]);
+        }
         Lines = overrides.Lines ?? lines;
 
         // One or two of the three dives carry arrows: one up, one down, the rest circles.
-        var arrowedLines = rng.Shuffle(new[] { 1, 2, 3 }).Take(1 + rng.Next(2)).ToHashSet();
+        var arrowedLines = rng.Shuffle(new[] { 1, 2, 3 }).Take(1 + rng.Next(2)).ToList();
+        var wantedArrow = player is null ? null : overrides.PlayerArrow;
+        var playerLine = player is { } inLine ? Lines[inLine] : 0;
+        if (wantedArrow is { } arrowWish) KeepArrowsPossible(arrowedLines, playerLine, arrowWish != DiveArrow.Circle);
         var arrows = new Dictionary<PartyRole, DiveArrow>();
         foreach (var line in Enumerable.Range(1, Dives))
         {
             var members = rng.Shuffle(Lines.Where(kv => kv.Value == line).Select(kv => kv.Key)).ToList();
+            if (wantedArrow is { } wish && line == playerLine && player is { } who)
+            {
+                members.Remove(who);
+                members.Insert(Math.Min(wish switch { DiveArrow.Up => 0, DiveArrow.Down => 1, _ => 2 }, members.Count), who);
+            }
             for (var i = 0; i < members.Count; i++)
                 arrows[members[i]] = !arrowedLines.Contains(line) ? DiveArrow.Circle : i switch { 0 => DiveArrow.Up, 1 => DiveArrow.Down, _ => DiveArrow.Circle };
         }
@@ -75,6 +88,21 @@ public sealed class DsrP3NidhoggState
         var tethered = rng.Shuffle(NonTanks).Take(2).ToList();
         SoulTetherTargets = overrides.SoulTetherTargets ?? tethered;
         EyeTargets = [StackTarget(rng, 1), StackTarget(rng, 3)];
+    }
+
+    // A two-player dive with arrows has no circle, so wanting one moves the arrows to another dive.
+    private static void KeepArrowsPossible(List<int> arrowedLines, int playerLine, bool wantsArrow)
+    {
+        if (wantsArrow && !arrowedLines.Contains(playerLine))
+        {
+            if (arrowedLines.Count == 2) arrowedLines.RemoveAt(1);
+            arrowedLines.Add(playerLine);
+        }
+        else if (!wantsArrow && arrowedLines.Contains(playerLine) && LineSizes[playerLine - 1] < 3)
+        {
+            arrowedLines.Remove(playerLine);
+            if (arrowedLines.Count == 0) arrowedLines.Add(playerLine % Dives + 1);
+        }
     }
 
     // Eye of the Tyrant stacks on someone not diving in that round.

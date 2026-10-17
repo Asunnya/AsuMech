@@ -21,6 +21,25 @@ public class DsrP3NidhoggStateTests
     }
 
     [Test]
+    public void ThePlayerGetsTheDebuffAndArrowTheyPicked()
+    {
+        foreach (var player in Enum.GetValues<PartyRole>())
+        foreach (var line in new int?[] { null, 1, 2, 3 })
+        foreach (var arrow in new DiveArrow?[] { null, DiveArrow.Circle, DiveArrow.Up, DiveArrow.Down })
+        for (var seed = 0; seed < 40; seed++)
+        {
+            var state = new DsrP3NidhoggState(new Rng(seed), new DsrP3NidhoggStateOverrides { PlayerLine = line, PlayerArrow = arrow }, player);
+            if (line is { } l) Assert.That(state.Lines[player], Is.EqualTo(l));
+            if (arrow is { } a) Assert.That(state.Arrows[player], Is.EqualTo(a));
+            Assert.That(new[] { 1, 2, 3 }.Select(n => state.Line(n).Count()), Is.EqualTo(new[] { 3, 2, 3 }));
+            var arrowed = new[] { 1, 2, 3 }.Where(state.LineHasArrows).ToList();
+            Assert.That(arrowed.Count, Is.InRange(1, 2));
+            foreach (var n in arrowed)
+                Assert.That(state.Line(n).Select(r => state.Arrows[r]).Where(x => x != DiveArrow.Circle), Is.EquivalentTo(new[] { DiveArrow.Up, DiveArrow.Down }));
+        }
+    }
+
+    [Test]
     public void OneOrTwoDivesCarryOneUpAndOneDownArrow()
     {
         foreach (var state in Rolls())

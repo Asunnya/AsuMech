@@ -22,8 +22,9 @@ public sealed class DsrP3NidhoggScenario : IScenario
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new DsrP3NidhoggAi()];
 
-    private readonly DsrP3NidhoggStateOverrides overrides = new();
-    public object SettingsOverrides => overrides;
+    private readonly DsrP3NidhoggSettingsWindow settingsWindow = new();
+    public object SettingsOverrides => settingsWindow.Overrides;
+    public void DrawSettings() => settingsWindow.Draw();
 
     private const uint NidhoggMaxHp = 10000000;
     // UNVERIFIED: Nidhogg's hitbox.
@@ -80,7 +81,7 @@ public sealed class DsrP3NidhoggScenario : IScenario
         world = worldParam;
         party = world.Party;
         damage = new DamageSolver(party);
-        state = new DsrP3NidhoggState(world.Rng, overrides);
+        state = new DsrP3NidhoggState(world.Rng, settingsWindow.Overrides, world.Party.PlayerRole);
         divers.Clear();
         waitingDivers.Clear();
         foreach (var casters in diveTowerCasters) casters.Clear();
