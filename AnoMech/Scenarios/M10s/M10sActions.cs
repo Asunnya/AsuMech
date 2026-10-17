@@ -155,6 +155,45 @@ public static class M10sActions
         Timing = new() { DamageDelay = 0.3f },
     };
 
+    public static readonly EnemyAction AwesomeSlabSmallWave = AwesomeSlab with { ActionId = ActionId.AwesomeSlabSmallWave };
+    public static readonly EnemyAction AwesomeSplashSmallWave = AwesomeSplash with { ActionId = ActionId.AwesomeSplashSmallWave };
+
+    // A 120° fan from the wall opposite the big wave; it only leaves Damage Down.
+    public static readonly EnemyAction DeepVarialCone = new(ActionId.DeepVarialCone)
+    {
+        Cast = new() { AnimationLock = 0.6f, FaceTarget = false },
+        Area = new() { Size = MathF.PI / 3f },
+        Effects = [Damage(), ApplyStatus(StatusId.DamageDown, 30f)],
+        Timing = new() { DamageDelay = 0.4f },
+    };
+
+    public static readonly EnemyAction SteamBurst = new(ActionId.SteamBurst)
+    {
+        Cast = new() { AnimationLock = 0.6f },
+        Effects = [Damage(Lethal)],
+        Timing = new() { DamageDelay = 0.4f },
+        DeathExplanation = "the fire puddles burst; stay 9y away",
+    };
+
+    private static readonly VulnSpec VulnToFire = VulnerableTo(StatusId.FireResistanceDownII);
+
+    // Fire Resistance Down is timed so all four run out together; a second landing on anyone kills.
+    public static readonly EnemyAction[] HotAerialLandings =
+    [
+        HotAerialLanding(ActionId.HotAerialFirst, 7.96f),
+        HotAerialLanding(ActionId.HotAerialSecond, 5.95f),
+        HotAerialLanding(ActionId.HotAerialThird, 3.96f),
+        HotAerialLanding(ActionId.HotAerialFourth, 1.96f),
+    ];
+
+    private static EnemyAction HotAerialLanding(uint actionId, float fireResistanceDown) => new(actionId)
+    {
+        Cast = new() { AnimationLock = 0.6f },
+        Effects = [Damage(VulnToFire), ApplyStatus(StatusId.FireResistanceDownII, fireResistanceDown)],
+        Timing = new() { DamageDelay = 0.3f },
+        DeathExplanation = "only the bait stands where Red Hot lands",
+    };
+
     // UNVERIFIED: the knockback distance; guides call it small.
     public static readonly EnemyAction DeepImpactHit = new(ActionId.DeepImpactHit)
     {

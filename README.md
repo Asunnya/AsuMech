@@ -111,6 +111,7 @@ All using default NA pf strats unless noted otherwise:
     - Sickest Take-off to Deep Impact (Sick Swell wave and Deep Blue's lane, orb stacks or spreads, Reverse/Double-dip proteans, Deep Impact)
     - Xtreme Spectacular to Insane Air (multi-hit raidwide, both surfboards' four stops with proteans, light party stacks and tank busters)
     - Fire/Watersnaking to Hot Impact (fire/water split by distance, Deep Blue's corner proteans, Alley-oop Inferno spreads, Sick Swell's wave, shared tank buster)
+    - Deep Varial to Deep Impact (wide fan with small-wave stack or spreads, Alley-oop Inferno, Steam Burst, Hot Aerial's four jumps, Sickest Take-off with the wave's push, Cutback Blaze, Deep Impact)
 
 ## Details
 

@@ -26,6 +26,7 @@ public static class M10sConstants
         public const uint RedHot = 19287;
         public const uint DeepBlue = 19288;
         public const uint SickSwell = 19290;
+        public const uint XtremeAether = 19289;
         public const uint Helper = 9020;
     }
 
@@ -34,6 +35,7 @@ public static class M10sConstants
         public const uint RedHot = 14370;
         public const uint DeepBlue = 14369;
         public const uint SickSwell = 14372;
+        public const uint XtremeAether = 14371;
     }
 
     public static class EObjId
@@ -105,6 +107,17 @@ public static class M10sConstants
         public const uint Firesnaking = 0xB381;
         public const uint Watersnaking = 0xB382;
         public const uint HotImpactOnFire = 0xB580;
+        public const uint DeepVarial = 0xB891;
+        public const uint DeepVarialCone = 0xB5D3;
+        public const uint AwesomeSlabSmallWave = 0xB5D8;
+        public const uint AwesomeSplashSmallWave = 0xB5D7;
+        public const uint SteamBurst = 0xB5FB;
+        public const uint HotAerial = 0xB5C4;
+        public const uint HotAerialJump = 0xB91D;
+        public const uint HotAerialFirst = 0xB91E;
+        public const uint HotAerialSecond = 0xB91F;
+        public const uint HotAerialThird = 0xB920;
+        public const uint HotAerialFourth = 0xB921;
     }
 
     public static class StatusId
@@ -142,6 +155,7 @@ public static class M10sConstants
         public const ushort Leave = 0x11DD;
         public const ushort Arrive = 0x11D2;
         public const ushort RedHotArrive = 0x11D1;
+        public const ushort AetherRises = 0x11D4;
         public const ushort WaveRises = 0x2487;
     }
 
@@ -150,6 +164,10 @@ public static class M10sConstants
         public const byte ArenaSlot = 0x00;
         public const uint SpectacularOn = 0x00800040;
         public const uint SpectacularOff = 0x02000100;
+        public const byte OrbsSlot = 0x04;
+        public const uint OneOrb = 0x00800040;
+        public const uint FourOrbs = 0x08000400;
+        public const uint OrbsOff = 0x10000004;
     }
 
     public static class Geometry

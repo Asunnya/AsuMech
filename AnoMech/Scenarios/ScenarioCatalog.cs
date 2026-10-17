@@ -7,6 +7,7 @@ using AnoMech.Scenarios.Dsr.P4Eyes;
 using AnoMech.Scenarios.Dsr.P5Wrath;
 using AnoMech.Scenarios.Dsr.P5Death;
 using AnoMech.Scenarios.Dsr.P6DoubleDragons;
+using AnoMech.Scenarios.M10s.DeepVarial;
 using AnoMech.Scenarios.M10s.InsaneAir;
 using AnoMech.Scenarios.M10s.Opener;
 using AnoMech.Scenarios.M10s.SickestTakeoff;
@@ -146,5 +147,6 @@ public sealed class ScenarioCatalog
         new M10sSickestTakeoffScenario(),
         new M10sInsaneAirScenario(),
         new M10sSnakingScenario(),
+        new M10sDeepVarialScenario(),
     ]);
 }
