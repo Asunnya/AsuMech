@@ -148,4 +148,64 @@ public static class M10sActions
         Timing = new() { DamageDelay = 0.4f },
         DeathExplanation = "a tank stands furthest from Deep Blue",
     };
+
+    public static readonly EnemyAction XtremeSpectacular = new(ActionId.XtremeSpectacular)
+    {
+        Cast = new() { AnimationLock = 0.6f },
+        Effects = [Damage()],
+    };
+
+    public static readonly EnemyAction XtremeSpectacularHit = new(ActionId.XtremeSpectacularHit)
+    {
+        Cast = new() { AnimationLock = 0.2f },
+        Effects = [Damage()],
+        Timing = new() { DamageDelay = 0.2f },
+    };
+
+    public static readonly EnemyAction XtremeSpectacularLast = new(ActionId.XtremeSpectacularLast)
+    {
+        Cast = new() { AnimationLock = 0.6f },
+        Effects = [Damage()],
+        Timing = new() { DamageDelay = 0.3f },
+    };
+
+    // UNVERIFIED: the half-angle of the surfboards' cones.
+    public const float SurfConeHalfAngle = MathF.PI * 20f / 180f;
+
+    public static readonly EnemyAction BlastingSnapCone = SnapCone(ActionId.BlastingSnapCone);
+    public static readonly EnemyAction PlungingSnapCone = SnapCone(ActionId.PlungingSnapCone);
+
+    private static EnemyAction SnapCone(uint actionId) => new(actionId)
+    {
+        Cast = new() { AnimationLock = 0.3f, FaceTarget = false },
+        Area = new() { Size = SurfConeHalfAngle },
+        Effects = [Damage(VulnToMagic), ApplyStatus(StatusId.MagicVulnerabilityUp, 1.96f)],
+        Timing = new() { DamageDelay = 0.3f },
+        DeathExplanation = "one cone each",
+    };
+
+    // UNVERIFIED: the minimum; each logged one held its light party of four.
+    public static readonly EnemyAction ReentryBlastCone = ReentryCone(ActionId.ReentryBlastCone);
+    public static readonly EnemyAction ReentryPlungeCone = ReentryCone(ActionId.ReentryPlungeCone);
+
+    private static EnemyAction ReentryCone(uint actionId) => new(actionId)
+    {
+        Cast = new() { AnimationLock = 0.3f, FaceTarget = false },
+        Area = new() { Size = SurfConeHalfAngle },
+        Effects = [Damage(split: Stack(4))],
+        Timing = new() { DamageDelay = 0.3f },
+        DeathExplanation = "the light party shares it",
+    };
+
+    public static readonly EnemyAction VerticalBlastHit = VerticalHit(ActionId.VerticalBlastHit);
+    public static readonly EnemyAction VerticalPlungeHit = VerticalHit(ActionId.VerticalPlungeHit);
+
+    private static EnemyAction VerticalHit(uint actionId) => new(actionId)
+    {
+        Cast = new() { AnimationLock = 0.3f },
+        Effects = [Damage(TankBuster)],
+        Timing = new() { DamageDelay = 0.3f },
+        DeathExplanation = "the tank stands nearest the surfboard",
+    };
 }
+

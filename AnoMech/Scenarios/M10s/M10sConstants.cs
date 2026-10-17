@@ -79,6 +79,29 @@ public static class M10sConstants
         public const uint DeepImpact = 0xB5B7;
         public const uint DeepImpactHit = 0xADC6;
         public const uint DiversDareBlue = 0xB5B9;
+        public const uint XtremeSpectacularRed = 0xB5D9;
+        public const uint XtremeSpectacularBlue = 0xB5DA;
+        public const uint XtremeSpectacular = 0xB5A4;
+        public const uint XtremeSpectacularHit = 0xB5DC;
+        public const uint XtremeSpectacularLast = 0xB7CA;
+        public const uint EpicBrotherhood = 0xB57A;
+        public const uint EpicBrotherhoodBlue = 0xB57B;
+        public const uint InsaneAirRedFirst = 0xB897;
+        public const uint InsaneAirBlueFirst = 0xB898;
+        public const uint InsaneAirRed = 0xB899;
+        public const uint InsaneAirBlue = 0xB89A;
+        public const uint BlastingSnap = 0xB5EF;
+        public const uint PlungingSnap = 0xB5F0;
+        public const uint BlastingSnapCone = 0xB5F1;
+        public const uint PlungingSnapCone = 0xB5F2;
+        public const uint ReentryBlast = 0xB5F3;
+        public const uint ReentryPlunge = 0xB5F4;
+        public const uint ReentryBlastCone = 0xB5F5;
+        public const uint ReentryPlungeCone = 0xB5F6;
+        public const uint VerticalBlast = 0xB5F7;
+        public const uint VerticalPlunge = 0xB5F8;
+        public const uint VerticalBlastHit = 0xB5F9;
+        public const uint VerticalPlungeHit = 0xB5FA;
     }
 
     public static class StatusId

@@ -109,6 +109,7 @@ All using default NA pf strats unless noted otherwise:
 - AAC Heavyweight M2 (Savage) — M10S _by [Asunnya](https://github.com/Asunnya)_
     - Flame Floater to Pyrotation (Hot Impact, Flame Floater tether charges, Alley-oop Inferno spreads, Cutback Blaze, Pyrotation)
     - Sickest Take-off to Deep Impact (Sick Swell wave and Deep Blue's lane, orb stacks or spreads, Reverse/Double-dip proteans, Deep Impact)
+    - Xtreme Spectacular to Insane Air (multi-hit raidwide, both surfboards' four stops with proteans, light party stacks and tank busters)
 
 ## Details
 
