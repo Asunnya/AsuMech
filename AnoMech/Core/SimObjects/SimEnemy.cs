@@ -68,7 +68,27 @@ public record struct EnemySpawnConfig(
     uint LayoutId = 0,
     // False for an ally the duty spawns (FRU's Gaia and Ryne): it sends battalion 0, as retail
     // does, so the client treats it as friendly.
-    bool IsHostile = true);
+    bool IsHostile = true,
+    NpcAppearance? Appearance = null,
+    // Statuses retail's spawn packet already carries, for an actor that holds them from the start
+    // (FRU's Visions levitate). Up to 30.
+    IReadOnlyList<SpawnStatus>? Statuses = null,
+    byte ModelState = 0,
+    // ModelScale row; retail sends 0 for most BNpcs.
+    byte ModelScale = 0);
+
+public readonly record struct SpawnStatus(ushort StatusId, ushort Param = 0);
+
+// The weapons, gear and customize bytes retail's spawn packet carries. The client builds human and
+// demihuman models from these parts; a demihuman spawned without them draws nothing.
+public sealed record NpcAppearance(
+    ulong MainHand = 0,
+    ulong OffHand = 0,
+    // Per slot (head, body, hands, legs, feet, ears, neck, wrists, right ring, left ring):
+    // model id | variant << 16 | stain << 24.
+    uint[]? Equipment = null,
+    // The 26 CustomizeData bytes.
+    byte[]? Customize = null);
 
 public sealed class SimEnemy : SimNpc
 {
@@ -222,6 +242,7 @@ public sealed class SimEnemy : SimNpc
         {
             SpawnConfig = config,
         };
+        foreach (var status in config.Statuses ?? []) enemy.AdoptSpawnStatus(status.StatusId, status.Param);
         enemy.BeginPacketSpawn(entityId, config.Placement);
         return enemy;
     }
@@ -362,6 +383,10 @@ public sealed class SimEnemy : SimNpc
     public (byte Slot, byte Value)? AnimationState { get; private set; }
     public int AnimationStateSeq { get; private set; }
 
+    // UNVERIFIED what it does: FRU's dragon heads get 4 at their first catch, when retail shrinks
+    // them from their spawn scale.
+    public void Activate(uint state) => ActorControl.Activate(state);
+
     public void SetAnimationState(byte slot, byte value)
     {
         AnimationState = (slot, value);
@@ -386,7 +411,7 @@ public sealed class SimEnemy : SimNpc
     // Interrupts the cast still on its bar: neither its effect nor its mechanics go out.
     public void CancelCast(CastCancelReason reason) => actions.CancelCast(reason);
 
-    public override bool AnimationLock => Casting.IsBusy;
+    public override bool AnimationLock => Casting.IsBusy || actions.AwaitingRelease;
 
     // Stays turned toward the target, holding still while casting or animation-locked; null releases it.
     public void KeepFacing(SimCharacter? target) => motion.KeepFacing(target);

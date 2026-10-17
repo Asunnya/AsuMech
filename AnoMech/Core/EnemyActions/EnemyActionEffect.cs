@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using AnoMech.Core.Native.Interfaces;
 using AnoMech.Core.SimObjects;
 
@@ -38,8 +39,9 @@ public static class EnemyActionEffects
     public static IEnemyActionEffect ApplyStatus(ushort statusId, float duration, bool delayToEffectResult = false, byte entryParam = 0)
         => new ApplyStatusEffect(statusId, duration, delayToEffectResult, entryParam);
 
-    // Survivors only.
-    public static IEnemyActionEffect RemoveStatus(ushort statusId) => new RemoveStatusEffect(statusId);
+    // Survivors only. atImpact: taken off with the EffectResult at TimingSpec.DamageDelay instead of
+    // with the ActionEffect; read which off a replay.
+    public static IEnemyActionEffect RemoveStatus(ushort statusId, bool atImpact = false) => new RemoveStatusEffect(statusId, atImpact);
 
     // One more stack of the family's `times` status, or the death it completes. Survivors only.
     public static IEnemyActionEffect ApplyRuin(RuinSpec ruin, int times, float duration)
@@ -77,25 +79,34 @@ public static class EnemyActionEffects
     public static IEnemyActionEffect DefeatCaster() => new DefeatCasterEffect();
 
     // `effect` applied to the cast's target alone, when the area caught it.
-    public static IEnemyActionEffect OnTarget(IEnemyActionEffect effect)
+    public static IEnemyActionEffect OnTarget(params IEnemyActionEffect[] effect)
         => new FilteredEffect(effect, (ctx, hits) => hits.Where(t => ReferenceEquals(t, ctx.Target)));
 
     // `effect` applied to everyone hit but the cast's target.
-    public static IEnemyActionEffect OnOthers(IEnemyActionEffect effect)
+    public static IEnemyActionEffect OnOthers(params IEnemyActionEffect[] effect)
         => new FilteredEffect(effect, (ctx, hits) => hits.Where(t => !ReferenceEquals(t, ctx.Target)));
 
+    // `effect` applied to the one hit nearest the action's origin: a line stack's front bait.
+    public static IEnemyActionEffect OnNearest(params IEnemyActionEffect[] effect)
+        => new FilteredEffect(effect, (ctx, hits) => hits.OrderBy(t => Vector3.DistanceSquared(t.Position, ctx.Origin.Position)).Take(1));
+
     // `effect` applied to those hit who carry `statusId` when it runs.
-    public static IEnemyActionEffect OnHavingStatus(ushort statusId, IEnemyActionEffect effect)
+    public static IEnemyActionEffect OnHavingStatus(ushort statusId, params IEnemyActionEffect[] effect)
         => new FilteredEffect(effect, (_, hits) => hits.Where(t => t.HasStatus(statusId)));
 
     // `effect` applied to the NPCs of `bnpcBaseId` the area caught instead of the party hits (UWU's
     // Razor Plumes, pushed by Super Cyclone).
-    public static IEnemyActionEffect OnNpcs(uint bnpcBaseId, IEnemyActionEffect effect)
+    public static IEnemyActionEffect OnNpcs(uint bnpcBaseId, params IEnemyActionEffect[] effect)
         => new FilteredEffect(effect, (ctx, _) => ctx.NpcHits.Where(npc => npc.BNpcBaseId == bnpcBaseId));
 
-    // `effect` applied to the `count` hit nearest the origin (the front of a wild charge).
-    public static IEnemyActionEffect OnFront(int count, IEnemyActionEffect effect)
+    // `effect` applied to the front `count` hit: nearest the origin, or furthest up a line (the
+    // front of a wild charge).
+    public static IEnemyActionEffect OnFront(int count, params IEnemyActionEffect[] effect)
         => new FilteredEffect(effect, (_, hits) => hits.Take(count));
+
+    // `effect` applied to everyone hit behind the front `count`.
+    public static IEnemyActionEffect OnBehindFront(int count, params IEnemyActionEffect[] effect)
+        => new FilteredEffect(effect, (_, hits) => hits.Skip(count));
 }
 
 internal sealed class DefeatCasterEffect : IEnemyActionEffect
@@ -106,9 +117,13 @@ internal sealed class DefeatCasterEffect : IEnemyActionEffect
     }
 }
 
-internal sealed class FilteredEffect(IEnemyActionEffect effect, Func<EnemyActionContext, IReadOnlyList<SimCharacter>, IEnumerable<SimCharacter>> select) : IEnemyActionEffect
+internal sealed class FilteredEffect(IEnemyActionEffect[] effect, Func<EnemyActionContext, IReadOnlyList<SimCharacter>, IEnumerable<SimCharacter>> select) : IEnemyActionEffect
 {
-    public void Apply(EnemyActionContext ctx, IReadOnlyList<SimCharacter> hits) => effect.Apply(ctx, select(ctx, hits).ToList());
+    public void Apply(EnemyActionContext ctx, IReadOnlyList<SimCharacter> hits)
+    {
+        foreach (var e in effect)
+            e.Apply(ctx, select(ctx, hits).ToList());
+    }
 }
 
 // A hit on someone an earlier hit already kills still shows its own number.
@@ -143,13 +158,16 @@ internal sealed class ApplyStatusEffect(ushort statusId, float duration, bool de
     }
 }
 
-internal sealed class RemoveStatusEffect(ushort statusId) : IEnemyActionEffect
+internal sealed class RemoveStatusEffect(ushort statusId, bool atImpact) : IEnemyActionEffect
 {
     public void Apply(EnemyActionContext ctx, IReadOnlyList<SimCharacter> hits)
     {
         foreach (var target in hits)
-            if (!ctx.IsKilled(target) && target.IsAlive())
-                target.RemoveStatus(statusId);
+        {
+            if (ctx.IsKilled(target) || !target.IsAlive()) continue;
+            if (atImpact) ctx.RemoveStatusAtImpact(target, statusId);
+            else target.RemoveStatus(statusId);
+        }
     }
 }
 

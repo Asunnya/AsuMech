@@ -29,7 +29,10 @@ internal sealed class FakeCharacter(uint entityId, string name)
     public bool HasDrawObject { get; set; }
     public bool IsDrawObjectVisible { get; set; }
     public Dictionary<byte, ushort> Tethers { get; } = new();
-    public Dictionary<ushort, AnoMech.Core.Native.Interfaces.StatusSlot> Statuses { get; set; } = new();
+    // By id and source: one id applied by two sources is two entries, as in the status list. The spawn
+    // packet names no source as 0xE0000000, the status list as 0.
+    public static uint StatusSource(uint entityId) => entityId == 0xE0000000 ? 0 : entityId;
+    public Dictionary<(ushort StatusId, uint Source), AnoMech.Core.Native.Interfaces.StatusSlot> Statuses { get; set; } = new();
 
     public bool IsCasting { get; set; }
     public uint CastActionId { get; set; }
@@ -69,6 +72,9 @@ internal sealed class FakeCharacter(uint entityId, string name)
         glideStep = delta / GlideSeconds;
         glideRemaining = GlideSeconds;
     }
+
+    // UNVERIFIED: how long the client slides; the packet carries no duration.
+    public void StartSlide(Vector3 destination, float rotation) => StartGlide(destination, rotation);
 
     public void Teleport(Vector3 position, float rotation)
     {

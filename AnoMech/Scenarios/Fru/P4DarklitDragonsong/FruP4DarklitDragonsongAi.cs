@@ -5,6 +5,7 @@ using AnoMech.Core.Game.Ai;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.SimObjects;
 using static AnoMech.Scenarios.Fru.FruConstants;
+using static AnoMech.Scenarios.Fru.P4DarklitDragonsong.FruP4DarklitDragonsongState;
 
 namespace AnoMech.Scenarios.Fru.P4DarklitDragonsong;
 
@@ -28,19 +29,18 @@ public sealed class FruP4DarklitDragonsongAi(bool playerBaitsSomberDance) : ISce
         swapped = SwapFreeWaterToItsGroup();
         somberTank = ChooseSomberTank();
         var ai = new AiManager(world);
-        ai.Move(2f, () => ByRole(Middle));
-        ai.Move(7.2f, () => ByRole(OpeningSpread));
-        ai.Move(14.5f, () => ByRole(Lineup));
-        ai.Move(25.2f, () => ByRole(role => Bowtie(role, state.LineupOrder.ToArray())));
-        ai.Move(28.2f, () => ByRole(role => Bowtie(role, swapped)));
-        ai.Move(33.3f, () => ByRole(SpiritTakerSpread));
-        ai.Move(36.9f, () => ByRole(WaterStack));
+        ai.Move(2f, () => ByRole(Middle), arrivalTime: 6.6f);
+        ai.Move(6.65f, () => ByRole(OpeningSpread), arrivalTime: 8.8f);
+        ai.Move(14.5f, () => ByRole(Lineup), arrivalTime: 24.2f);
+        ai.Move(24.2f, () => ByRole(role => Bowtie(role, state.LineupOrder.ToArray())), arrivalTime: 28.2f);
+        ai.Move(28.2f, () => ByRole(role => Bowtie(role, swapped)), arrivalTime: TowersAt);
+        ai.Move(33.1f, () => ByRole(SpiritTakerSpread), arrivalTime: 35.6f);
+        ai.Move(35.65f, () => ByRole(WaterStack), arrivalTime: 40f);
         world.Events.Add(40.5f, BaitSomberDanceAwayFromOracle);
-        ai.Move(40.6f, () => ByRole(role => role == somberTank ? FromSim(North(role) ? 17.3f : -17.3f, baitEast ? 7.2f : -7.2f) : null));
-        ai.Move(41.8f, () => ByRole(role => role == somberTank ? FromSim(0, baitEast ? 36 : -36) : null));
-        ai.Move(42.4f, () => ByRole(role => role == somberTank ? null : DanceParty(role)));
-        ai.Move(45.5f, () => ByRole(role => role == somberTank ? OraclePosition() : null), jitter: 0f);
-        ai.Move(50f, () => ByRole(AkhMorn));
+        ai.Move(40.6f, () => ByRole(role => role == somberTank ? FromSim(0, baitEast ? 43 : -43) : null), arrivalTime: 43.8f);
+        ai.Move(42.4f, () => ByRole(role => role == somberTank ? null : DanceParty(role)), arrivalTime: 43.8f);
+        ai.Move(45f, () => ByRole(role => role == somberTank ? JustPastOracleFromCenter() : null), jitter: 0f, arrivalTime: 47f);
+        ai.Move(50.15f, () => ByRole(AkhMorn), arrivalTime: 57.7f);
     }
 
     private PartyRole[] SwapFreeWaterToItsGroup()
@@ -60,6 +60,12 @@ public sealed class FruP4DarklitDragonsongAi(bool playerBaitsSomberDance) : ISce
 
     private Vector3 OraclePosition()
         => world.Children.OfType<SimEnemy>().FirstOrDefault(e => e.BNpcBaseId == BNpcBaseId.OracleP4)?.Position ?? Vector3.Zero;
+
+    private Vector3 JustPastOracleFromCenter()
+    {
+        var oracle = OraclePosition();
+        return oracle.LengthSquared() > 0.01f ? oracle + Vector3.Normalize(oracle) * 2f : oracle;
+    }
 
     private void BaitSomberDanceAwayFromOracle()
     {
@@ -120,7 +126,7 @@ public sealed class FruP4DarklitDragonsongAi(bool playerBaitsSomberDance) : ISce
 
     private Vector3? DanceParty(PartyRole role) => FromSim(North(role) ? 15 : -15, 0) + Middle(role)!.Value * 0.3f;
 
-    private static Vector3? AkhMorn(PartyRole role) => FromSim(role == PartyRole.OffTank ? -13 : 13, 0) + Middle(role)!.Value * 0.3f;
+    private static Vector3? AkhMorn(PartyRole role) => role == PartyRole.MainTank ? new Vector3(-9.3f, 0, 0) : Vector3.Zero;
 
     private static IAiMove ByRole(Func<PartyRole, Vector3?> at)
         => AiMove.Create(Enum.GetValues<PartyRole>().Select(role => at(role) is { } p ? new Vector2(p.X, p.Z) : (Vector2?)null).ToArray()).NaturalOrder();

@@ -17,14 +17,17 @@ public enum RelativityDebuff { ShortDps, ShortSupport, MediumDps, MediumSupport,
 // Shadoweye (long), Dark Eruption (short, medium support) or Dark Water (medium DPS).
 public sealed class FruP3UltimateRelativityState
 {
-    public static float FireAt(int wave) => wave switch { 0 => 22.9f, 1 => 32.8f, _ => 42.8f };
-    public static float LaserStartAt(int wave) => wave switch { 0 => 23.9f, 1 => 34f, _ => 45f };
-    public static float LaserHitAt(int wave, int shot) => (wave switch { 0 => 27.7f, 1 => 37.7f, _ => 48.7f }) + (shot == 0 ? 0f : shot + 1.1f);
+    public static float FireAt(int wave) => wave switch { 0 => 22.8f, 1 => 32.8f, _ => 42.8f };
+    public static float LaserStartAt(int wave) => wave switch { 0 => 23.9f, 1 => 34f, _ => 44.95f };
+    public static float HourglassFlowAt(int wave) => wave switch { 0 => 21.8f, 1 => 26.9f, _ => 31.8f };
+    public static float LaserHitAt(int wave, int shot) => (wave switch { 0 => 27.95f, 1 => 38f, _ => 49f }) + (shot == 0 ? 0f : 2.04f + (shot - 1) * 1.075f);
     public const int LaserShots = 10;
+    public static float ReturnAt(bool earlyReturn) => earlyReturn ? 27.8f : 37.8f;
     public const float AssignAt = 11.8f;
-    public const float StunAt = 51.9f;
-    public const float RewindAt = 53.3f;
+    public const float StunAt = 51.75f;
+    public const float RewindAt = 52.83f;
     public const float FinalAt = 54.8f;
+    public const float StunEndAt = 55.8f;
 
     private readonly Dictionary<PartyRole, RelativityDebuff> debuffs = new();
     private readonly PartyRole[] darkness = new PartyRole[3];

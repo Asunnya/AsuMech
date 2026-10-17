@@ -6,6 +6,7 @@ using AnoMech.Core.EnemyActions;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Ai;
 using AnoMech.Core.Game.Party;
+using AnoMech.Core.Map;
 using AnoMech.Core.SimObjects;
 using static AnoMech.Scenarios.Fru.FruConstants;
 using static AnoMech.Scenarios.Fru.P2LightRampant.FruP2LightRampantState;
@@ -21,66 +22,99 @@ public sealed class FruP2LightRampantScenario : IScenario
     public IReadOnlyList<IScenarioAi> AiStrats => [new FruP2LightRampantAi()];
 
     public void DrawSettings() => settingsWindow.Draw();
+    public void DrawPerPlayerSettings() => settingsWindow.DrawPerPlayer();
     public object SettingsOverrides => settingsWindow.Overrides;
+    public IReadOnlyList<string> SettingsConflicts => settingsWindow.Overrides.Validate().Problems;
     private readonly FruP2LightRampantSettingsWindow settingsWindow = new();
 
-    private const float PuddleRadius = 6f;
-    private const float PuddleGrace = 1.2f;
-    private const float PuddleLifetime = 11f;
+    private const float PuddleShowsAfterHammer = 0.95f;
+    private const float PuddleArmsAfterShowing = 1.5f;
+    private const float PuddleFadesAfterShowing = 9.7f;
+    private const float PuddleLastsAfterShowing = 12.85f;
     // Curse chains stretched shorter than this snap.
     private const float CurseMinLength = 25f;
+
+    // Where Diamond Dust leaves the helpers.
+    private static readonly Placement[] HelperRests =
+    [
+        new(new(14.14f, 0, 14.14f), -2.79f), new(new(14.14f, 0, 14.14f), -2.07f),
+        new(new(14.14f, 0, 14.14f), 2.83f), new(new(14.14f, 0, 14.14f), -1.06f),
+        new(new(-14.14f, 0, 14.14f), 1.57f), new(new(-14.14f, 0, 14.14f), -3.10f),
+        new(new(-14.14f, 0, 14.14f), 3.09f), new(new(-14.14f, 0, 14.14f), 2.19f),
+    ];
+    // The tower each of the first six helpers takes for Bright Hunger.
+    private static readonly int[] HelperTowers = [0, 3, 1, 5, 2, 4];
+    // Each tower's MapEffect slot, counted clockwise from the north one.
+    private static readonly byte[] TowerSlotOffsets = [5, 3, 1, 4, 0, 2];
+    private const int HammerHelper = 6;
 
     private SimWorld world = null!;
     private FruP2LightRampantState state = null!;
     private SimEnemy? usurper;
     private readonly SimEnemy?[] helpers = new SimEnemy?[8];
-    private readonly List<SimTether> chains = [];
-    private readonly List<(Vector3 Position, float ArmedAt, float EndsAt, SimEventObject? Visual)> puddles = [];
-    private readonly Dictionary<SimCharacter, Vector3> previousPositions = new();
-    private bool cursed;
-    private bool wiped;
+    private readonly List<SimEnemy?>[] orbs = [[], []];
+    private readonly List<SimTether> links = [];
+    private readonly List<SimTether> curses = [];
+    private readonly FruHolyPuddles puddles = new();
+    private readonly List<MapEffectTower> towers = [];
+    private MapEffectTower? centerTower;
 
     public void Run(SimWorld worldParam, int? selectedAi)
     {
         world = worldParam;
-        state = new FruP2LightRampantState(world.Rng, settingsWindow.Overrides);
-        chains.Clear();
+        state = new FruP2LightRampantState(world.Rng, world.Party.PlayerRole, settingsWindow.Overrides);
+        foreach (var wave in orbs) wave.Clear();
+        links.Clear();
+        curses.Clear();
         puddles.Clear();
-        previousPositions.Clear();
-        cursed = false;
-        wiped = false;
+        towers.Clear();
+        centerTower = null;
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<FruP2LightRampantState>)AiStrats[idx]).Run(state, world);
 
-        world.OnDeathWithStatus(StatusId.ChainsOfEverlastingLight, _ => InescapableIllumination());
-        world.OnDeathWithStatus(StatusId.CurseOfEverlastingLight, _ => InescapableIllumination());
+        world.OnDeathWithStatus(StatusId.ChainsOfEverlastingLight, _ => BreakChains());
+        world.OnDeathWithStatus(StatusId.CurseOfEverlastingLight, _ => BreakChains());
 
         world.Events.Add(0f, SpawnActors);
+        world.Events.Add(0.6f, () => usurper?.SetModelState(4));
+        world.Events.Add(0.6f, () => usurper?.AddStatusParam(TransfigurationStatus, UsurperLightTransformation));
+        world.Events.Add(1.73f, () => usurper?.Cast(ActionId.Unnamed, Vector3.Zero, animationLock: 1.1f));
+        world.Events.Add(2.79f, () => usurper?.SetPosition(new Placement(Vector3.Zero, MathF.PI)));
         world.Events.Add(3f, () => usurper?.Cast(Actions.LightRampant));
+        world.Events.Add(3f, () => usurper?.VoiceLine(VoiceLineId.LightRampant));
         world.Events.Add(8.75f, AssignDebuffs);
-        world.Events.Add(8.75f, () => Chain(StatusId.ChainsOfEverlastingLight, TetherId.ChainsOfEverlastingLight, TowerAt - 8.75f));
-        world.Events.Add(11f, () => usurper?.PlayActionTimeline(ActionTimelineId.WarpStart));
+        world.Events.Add(8.75f, () => Chain(StatusId.ChainsOfEverlastingLight, TetherId.ChainsOfEverlastingLight, CursesAt - 8.75f));
         world.Events.Add(11f, () => usurper?.SetTargetable(false));
         world.Events.Add(11f, ShowTowers);
+        world.Events.Add(11.1f, () => usurper?.PlayActionTimeline(TimelineId.UsurperHide));
         for (var wave = 0; wave < HammerWaves; wave++)
         {
             var w = wave;
-            world.Events.Add(HammerAt(w), () => LuminousHammer(HammerAt(w)));
+            var showsAt = HammerAt(w) + PuddleShowsAfterHammer;
+            world.Events.Add(HammerAt(w) - FruHolyPuddles.SnapshotBeforeHit, SnapshotHammerTargets);
+            world.Events.Add(HammerAt(w), () => LuminousHammer(w));
+            world.Events.Add(showsAt, () => puddles.Show(world, w));
+            world.Events.Add(showsAt + PuddleFadesAfterShowing, () => puddles.Fade(w));
+            world.Events.Add(showsAt + PuddleLastsAfterShowing, () => puddles.Remove(w));
         }
+        world.Events.Add(CursesAt, () => curses.AddRange(Chain(StatusId.CurseOfEverlastingLight, TetherId.CurseOfEverlastingLight, CursesEndAt - CursesAt)));
         world.Events.Add(TowerAt, BrightHunger);
-        world.Events.Add(TowerAt, () => Chain(StatusId.CurseOfEverlastingLight, TetherId.CurseOfEverlastingLight, CursesEndAt - TowerAt));
-        world.Events.Add(20f, () => HolyLights(first: true));
-        world.Events.Add(23f, () => HolyLights(first: false));
+        world.Events.Add(19.6f, () => SpawnOrbs(first: true));
+        world.Events.Add(22.43f, () => SpawnOrbs(first: false));
+        world.Events.Add(22.43f, () => Burst(first: true));
         world.Events.Add(PowerfulLightAt, PowerfulLight);
-        world.Events.Add(PowerfulLightAt, () => world.Map.AddEffect(MapEffect.Show, MapEffect.LightRampantCenterTower));
-        world.Events.Add(CursesEndAt, ClearChains);
-        world.Events.Add(29.6f, () => usurper?.PlayActionTimeline(ActionTimelineId.WarpEnd));
-        world.Events.Add(29.6f, () => usurper?.SetTargetable(true));
-        world.Events.Add(32f, () => usurper?.Cast(state.Pairs ? Actions.BanishPairsCast : Actions.BanishSpreadCast));
-        world.Events.Add(33.7f, CenterTower);
+        world.Events.Add(25.4f, () => Burst(first: false));
+        world.Events.Add(25.7f, ShowCenterTower);
+        world.Events.Add(29.58f, () => RemoveOrbs(first: true));
+        world.Events.Add(29.93f, () => usurper?.PlayActionTimeline(ActionTimelineId.WarpEnd));
+        world.Events.Add(32f, () => usurper?.Cast(state.Pairs ? ActionId.BanishPairsCast : ActionId.BanishSpreadCast, animationLock: 3.1f));
+        world.Events.Add(32f, () => usurper?.VoiceLine(VoiceLineId.Banish));
+        world.Events.Add(32.76f, () => RemoveOrbs(first: false));
+        world.Events.Add(33.8f, CenterTower);
         world.Events.Add(37.1f, Banish);
-        world.Events.Add(40f, () => usurper?.Cast(Actions.HouseOfLightCast));
-        world.Events.Add(45f, HouseOfLight);
+        world.Events.Add(40.08f, () => usurper?.SetTargetable(true));
+        world.Events.Add(40.23f, () => usurper?.Cast(ActionId.HouseOfLightCast, animationLock: 3.1f));
+        world.Events.Add(45.95f, HouseOfLight);
     }
 
     private void SpawnActors()
@@ -90,135 +124,159 @@ public sealed class FruP2LightRampantScenario : IScenario
             NameId: BNpcNameId.Usurper,
             Level: Level,
             Targetable: true,
-            EnemyList: EnemyListMode.OnlyWhenVisible,
-            Placement: new Placement(Vector3.Zero, MathF.PI),
-            ModelCharaId: ModelCharaId.UsurperLight));
-        for (var i = 0; i < helpers.Length; i++) helpers[i] = SpawnHelper(BNpcBaseId.Helper, Vector3.Zero);
+            Placement: new Placement(new Vector3(8.66f, 0, 10.06f), -2.43f),
+            ModelCharaId: ModelCharaId.UsurperLight,
+            InitialModeAttributeFlags: 0xFC,
+            LayoutId: LayoutId.UsurperP2));
+        for (var i = 0; i < helpers.Length; i++)
+            helpers[i] = world.SpawnEnemy(new EnemySpawnConfig(
+                BNpcBaseId: BNpcBaseId.Helper,
+                NameId: BNpcNameId.Usurper,
+                Level: 1,
+                EnemyList: EnemyListMode.Never,
+                Visibility: SpawnVisibility.InvisibleHelper,
+                Placement: HelperRests[i]));
     }
-
-    private SimEnemy? SpawnHelper(uint bnpcBaseId, Vector3 position) => world.SpawnEnemy(new EnemySpawnConfig(
-        BNpcBaseId: bnpcBaseId,
-        NameId: BNpcNameId.Usurper,
-        Level: Level,
-        EnemyList: EnemyListMode.Never,
-        Visibility: bnpcBaseId == BNpcBaseId.Helper ? SpawnVisibility.InvisibleHelper : SpawnVisibility.Visible,
-        Placement: new Placement(position, 0f)));
 
     private void AssignDebuffs()
     {
         foreach (var role in Enum.GetValues<PartyRole>())
         {
             if (world.Party.Get(role) is not { } member || !member.IsAlive()) continue;
-            if (state.InitialStacks(role) is > 0 and var stacks)
-                member.AddStatus(StatusId.Lightsteeped, 39.25f, stacks, overrideStacks: true);
+            if (state.InitialStacks(role) is > 0 and var stacks && usurper is not null)
+                member.AddStatus(StatusId.Lightsteeped, 36f, stacks, overrideStacks: true)?.ShownAsFrom(usurper);
             if (state.BaitsHammer(role)) member.AttachLockonVfx(LockonId.LuminousHammer);
         }
         foreach (var role in state.Weights)
-            world.Party.Get(role)?.AddStatus(StatusId.WeightOfLight, PowerfulLightAt - 8.75f);
+            world.Party.Get(role)?.AddStatus(StatusId.WeightOfLight, 16f);
     }
 
-    private void Chain(ushort statusId, ushort tetherId, float duration)
+    private List<SimTether> Chain(ushort statusId, ushort tetherId, float duration)
     {
-        ClearChains();
-        cursed = statusId == StatusId.CurseOfEverlastingLight;
+        var chain = new List<SimTether>();
         for (var i = 0; i < 6; i++)
         {
             var (from, to) = state.ChainLink(i);
             world.Party.Get(from)?.AddStatus(statusId, duration);
-            chains.Add(world.Tether(world.Party.Get(from), world.Party.Get(to), tetherId));
+            chain.Add(world.Tether(world.Party.Get(from), world.Party.Get(to), tetherId, duration));
         }
+        links.AddRange(chain);
+        return chain;
     }
 
-    private void ClearChains()
+    // Clearing every link and debuff first keeps Refulgent Fate's own deaths from breaking them again.
+    private void BreakChains()
     {
-        cursed = false;
-        chains.ForEach(chain => chain.Despawn());
-        chains.Clear();
+        foreach (var link in links) link.Despawn();
+        links.Clear();
+        curses.Clear();
+        foreach (var member in world.Party.AllMembers())
+        {
+            member.RemoveStatus(StatusId.ChainsOfEverlastingLight);
+            member.RemoveStatus(StatusId.CurseOfEverlastingLight);
+        }
+        helpers[0]?.Cast(Actions.RefulgentFate);
     }
 
-    private void InescapableIllumination() => Wipe(ActionId.InescapableIllumination, "a chained player died");
-
-    // Once: the wipe's own deaths would otherwise set it off again.
-    private void Wipe(uint actionId, string explanation)
-    {
-        if (wiped) return;
-        wiped = true;
-        world.Party.WipeAllPlayers(actionId, explanation);
-    }
+    private static byte TowerSlot(int tower) => (byte)(MapEffect.LightRampantNorthTower + TowerSlotOffsets[tower]);
 
     private void ShowTowers()
     {
-        for (var i = 0; i < 6; i++) world.Map.AddEffect(MapEffect.Show, (byte)(MapEffect.LightRampantFirstTower + i));
+        for (var i = 0; i < 6; i++)
+        {
+            world.Map.AddEffect(MapEffect.TowerShow, TowerSlot(i));
+            world.Map.AddEffect(MapEffect.TowerBase, (byte)(MapEffect.LightRampantNorthTowerBase + TowerSlotOffsets[i]));
+            towers.Add(new MapEffectTower(world.Map, TowerSlot(i), Tower(i), TowerRadius, [MapEffect.TowerOccupied[0]], MapEffect.TowerEmpty));
+        }
     }
 
-    private void LuminousHammer(float at)
+    private void SnapshotHammerTargets()
     {
-        var i = 0;
+        foreach (var role in state.HammerBaiters)
+            if (world.Party.Get(role) is { } target && target.IsAlive()) puddles.Snapshot(target);
+    }
+
+    private void LuminousHammer(int wave)
+    {
+        var i = HammerHelper;
         foreach (var role in state.HammerBaiters)
         {
             if (world.Party.Get(role) is not { } target || !target.IsAlive()) continue;
-            CastAt(helpers[i++], Actions.LuminousHammer, target);
-            var visual = world.SpawnEventObject(new EventObjectSpawnConfig
-            {
-                EObjId = EObjId.HolyPuddle,
-                Placement = new Placement(target.Position, 0f),
-                TimelineState = 1,
-            });
-            puddles.Add((target.Position, at + PuddleGrace, at + PuddleLifetime, visual));
+            helpers[i++]?.Cast(Actions.LuminousHammer, target);
+            puddles.Drop(wave, target, HammerAt(wave) + PuddleShowsAfterHammer + PuddleArmsAfterShowing);
         }
     }
 
-    // Each of the six towers wants exactly one; anything else wipes.
     private void BrightHunger()
     {
-        for (var i = 0; i < 6; i++)
+        towers.Clear();
+        for (var i = 0; i < 6; i++) world.Map.AddEffect(MapEffect.TowerHide, TowerSlot(i));
+        for (var h = 0; h < 6; h++)
         {
-            world.Map.AddEffect(MapEffect.Hide, (byte)(MapEffect.LightRampantFirstTower + i));
-            var soakers = world.Party.Find.InsideCircle(Tower(i), TowerRadius).Count;
-            if (soakers != 1)
-            {
-                Wipe(ActionId.BrightHunger, $"{soakers}/1 in a tower");
-                return;
-            }
-            helpers[i]?.SetPosition(Tower(i));
-            helpers[i]?.Cast(Actions.BrightHunger, Tower(i));
+            var tower = Tower(HelperTowers[h]);
+            helpers[h]?.SetPosition(new Placement(tower, 0f));
+            if (world.Party.Find.InsideCircle(tower, TowerRadius).Count == 0)
+                helpers[h]?.Cast(Actions.InescapableIllumination);
+            else
+                helpers[h]?.Cast(Actions.BrightHunger, tower);
         }
     }
 
-    private void HolyLights(bool first)
+    private void SpawnOrbs(bool first)
     {
         foreach (var position in state.Orbs(first))
-        {
-            var orb = SpawnHelper(BNpcBaseId.HolyLight, position);
-            world.Events.Add(1.7f, () => orb?.Cast(Actions.Burst));
-            world.Events.Add(7.5f, () => orb?.FadeOut());
-        }
+            orbs[first ? 0 : 1].Add(world.SpawnEnemy(new EnemySpawnConfig(
+                BNpcBaseId: BNpcBaseId.HolyLight,
+                NameId: BNpcNameId.HolyLight,
+                Level: Level,
+                Placement: new Placement(position, 0f),
+                LayoutId: LayoutId.HolyLight)));
+    }
+
+    private void Burst(bool first)
+    {
+        foreach (var orb in orbs[first ? 0 : 1]) orb?.Cast(Actions.Burst);
+    }
+
+    private void RemoveOrbs(bool first)
+    {
+        foreach (var orb in orbs[first ? 0 : 1]) orb?.Despawn();
+        orbs[first ? 0 : 1].Clear();
     }
 
     private void PowerfulLight()
     {
-        var i = 0;
+        var i = HammerHelper;
         foreach (var role in state.Weights)
             if (world.Party.Get(role) is { } target && target.IsAlive())
-                CastAt(helpers[i++], Actions.PowerfulLight, target);
+                helpers[i++]?.Cast(Actions.PowerfulLight, target);
+    }
+
+    private void ShowCenterTower()
+    {
+        world.Map.AddEffect(MapEffect.TowerShow, MapEffect.LightRampantCenterTower);
+        world.Map.AddEffect(MapEffect.TowerBase, MapEffect.LightRampantCenterTowerBase);
+        // UNVERIFIED what retail shows as players leave it: pulls only show it filling.
+        centerTower = new MapEffectTower(world.Map, MapEffect.LightRampantCenterTower, Vector3.Zero, TowerRadius, MapEffect.TowerOccupied, null);
     }
 
     private void CenterTower()
     {
-        world.Map.AddEffect(MapEffect.Hide, MapEffect.LightRampantCenterTower);
-        helpers[0]?.SetPosition(Vector3.Zero);
-        helpers[0]?.Cast(Actions.BrightHungerCenter, Vector3.Zero);
+        centerTower = null;
+        world.Map.AddEffect(MapEffect.TowerHide, MapEffect.LightRampantCenterTower);
+        helpers[7]?.SetPosition(new Placement(Vector3.Zero, 0f));
+        helpers[7]?.Cast(Actions.BrightHungerCenter, Vector3.Zero);
     }
 
     // Pairs go on all supports or all DPS; spreads on everyone.
     private void Banish()
     {
-        var targets = state.Pairs
+        var targets = (state.Pairs
             ? world.Party.ActiveMembers().Where(m => m is ISimPartyMember p && p.Role.IsDps() != state.SupportPairs)
-            : world.Party.ActiveMembers();
-        var i = 0;
-        foreach (var target in targets.ToList())
-            CastAt(helpers[i++], state.Pairs ? Actions.BanishPairs : Actions.BanishSpread, target);
+            : world.Party.ActiveMembers()).ToList();
+        var i = helpers.Length - targets.Count;
+        foreach (var target in targets)
+            helpers[i++]?.Cast(state.Pairs ? Actions.BanishPairs : Actions.BanishSpread, target);
     }
 
     private void HouseOfLight()
@@ -226,47 +284,17 @@ public sealed class FruP2LightRampantScenario : IScenario
         var i = 0;
         foreach (var target in world.Party.ActiveMembers().ToList())
         {
-            helpers[i]?.SetPosition(Vector3.Zero);
-            helpers[i++]?.Cast(Actions.HouseOfLight, target);
+            helpers[i]?.SetPosition(new Placement(Vector3.Zero, 0f).Face(target.Position));
+            helpers[i++]?.Cast(Actions.HouseOfLight);
         }
-    }
-
-    private static void CastAt(SimEnemy? helper, EnemyAction action, SimCharacter target)
-    {
-        helper?.SetPosition(target.Position);
-        helper?.Cast(action, target);
     }
 
     public void Tick(float delta, float elapsed)
     {
-        foreach (var puddle in puddles.Where(p => elapsed >= p.EndsAt)) puddle.Visual?.Despawn();
-        puddles.RemoveAll(p => elapsed >= p.EndsAt);
-        foreach (var member in world.Party.ActiveMembers().ToList())
-        {
-            var previous = previousPositions.GetValueOrDefault(member, member.Position);
-            previousPositions[member] = member.Position;
-            if (puddles.Any(p => elapsed >= p.ArmedAt && DistanceToSegment(p.Position, previous, member.Position) <= PuddleRadius))
-                member.Die(ActionId.LuminousHammer, "stepped in a Luminous Hammer puddle");
-        }
-        if (cursed && ChainTooShort())
-            Wipe(ActionId.RefulgentFate, "a Curse of Everlasting Light chain was too short");
-    }
-
-    private bool ChainTooShort()
-    {
-        for (var i = 0; i < 6; i++)
-        {
-            var (from, to) = state.ChainLink(i);
-            if (world.Party.Get(from) is { } a && world.Party.Get(to) is { } b && Vector3.Distance(a.Position, b.Position) < CurseMinLength)
-                return true;
-        }
-        return false;
-    }
-
-    private static float DistanceToSegment(Vector3 point, Vector3 from, Vector3 to)
-    {
-        var line = to - from;
-        var t = line.LengthSquared() > 0 ? Math.Clamp(Vector3.Dot(point - from, line) / line.LengthSquared(), 0, 1) : 0;
-        return Vector3.Distance(point, from + t * line);
+        foreach (var tower in towers) tower.Tick(world.Party);
+        centerTower?.Tick(world.Party);
+        puddles.KillWhoeverStandsIn(world.Party, elapsed, ActionId.LuminousHammer, "stepped in a Luminous Hammer puddle");
+        if (curses.Any(curse => curse.IsActive && curse.StretchLt(CurseMinLength)))
+            BreakChains();
     }
 }

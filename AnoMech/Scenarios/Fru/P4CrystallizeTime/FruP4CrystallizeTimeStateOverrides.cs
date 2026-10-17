@@ -7,4 +7,7 @@ public sealed class FruP4CrystallizeTimeStateOverrides
 {
     // The player gets one of these.
     public IReadOnlyList<CrystallizeDebuff>? PlayerDebuffs { get; set; }
+
+    public bool? SlowNorthwest { get; set; }
+    public CrystallizeCorner? Corner { get; set; }
 }

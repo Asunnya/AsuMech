@@ -18,10 +18,14 @@ public sealed class FruP2DiamondDustAi : IScenarioAi<FruP2DiamondDustState>
     private const float SlideDistance = 32f;
     private const float SlideSeconds = 1f;
     private const float PuddleRadius = 6f;
+    private const float NeedleCircleRadius = 5f;
+    private const float NeedleLineHalfWidth = 2.5f;
+    private const float EdgeRadius = 19f;
+    private const float EdgeSearchOctants = 25f / 45f;
 
     private FruP2DiamondDustState state = null!;
     private SimWorld world = null!;
-    private readonly List<Vector3> puddles = [];
+    private readonly List<(int Wave, Vector3 Position)> puddles = [];
 
     public void Run(FruP2DiamondDustState stateParam, SimWorld worldParam)
     {
@@ -29,21 +33,22 @@ public sealed class FruP2DiamondDustAi : IScenarioAi<FruP2DiamondDustState>
         world = worldParam;
         puddles.Clear();
         var ai = new AiManager(world);
-        ai.Move(15.3f, () => ByRole(KickSpot));
-        ai.Move(21f, () => ByRole(StoneSpot));
-        ai.Move(23.4f, () => ByRole(KnockbackSpot));
-        if (Cursed) ai.Move(30.5f, () => ByRole(role => HolySpot(role, 0)));
+        ai.Move(15.3f, () => ByRole(KickSpot), arrivalTime: 20.6f);
+        ai.Move(20.7f, () => ByRole(StoneSpot), arrivalTime: 23.3f);
+        ai.Move(23.35f, () => ByRole(KnockbackSpot), jitter: 0f, arrivalTime: 27.4f);
+        ai.Move(29.05f, () => ByRole(NeedleSafeEdgeSpot), jitter: 0f, arrivalTime: 30.05f);
+        ai.Move(30.1f, () => ByRole(role => HolySpot(role, 0)), arrivalTime: 31.4f);
         for (var wave = 0; wave < HolyWaves; wave++)
         {
-            var step = wave + 1;
-            world.Events.Add(HolyAt(wave), RememberHolyPuddles);
-            ai.Move(HolyAt(wave) + 0.1f, () => ByRole(role => HolySpot(role, step)));
+            var w = wave;
+            world.Events.Add(HolyAt(w) - FruHolyPuddles.SnapshotBeforeHit, () => RememberHolyPuddles(w));
+            ai.Move(HolyAt(w), () => ByRole(role => HolySpot(role, w + 1)), arrivalTime: HolyAt(w + 1));
         }
-        ai.Move(37.9f, () => ByRole(IceSpot));
+        ai.Move(HolyAt(HolyWaves), () => ByRole(IceSpot), arrivalTime: 39.9f);
         world.Events.Add(39.9f, FaceAwayFromGaze);
         world.Events.Add(IceStart + 0.2f, () => SlideBots(behind: false, recovery: true));
-        world.Events.Add(43.2f, () => SlideBots(behind: state.Stillness));
-        world.Events.Add(46.7f, () => SlideBots(behind: !state.Stillness));
+        world.Events.Add(45.05f, () => SlideBots(behind: state.Stillness));
+        world.Events.Add(47.4f, () => SlideBots(behind: !state.Stillness));
         world.Events.Add(IceEnd, puddles.Clear);
         ai.Move(IceEnd + 0.3f, () => ByRole(_ => new Vector3(0, 0, 4)));
     }
@@ -70,7 +75,37 @@ public sealed class FruP2DiamondDustAi : IScenarioAi<FruP2DiamondDustState>
         return (groupOne + (GroupOne(role) ? 0 : 4)) % 8;
     }
 
-    private Vector3? KnockbackSpot(PartyRole role) => Point(KnockbackOctant(role), 6);
+    private Vector3? KnockbackSpot(PartyRole role) => Point(NeedleSafeEdgeOctant(role), 3);
+
+    private Vector3? NeedleSafeEdgeSpot(PartyRole role) => Point(NeedleSafeEdgeOctant(role), EdgeRadius);
+
+    private float NeedleSafeEdgeOctant(PartyRole role)
+    {
+        var holyOctant = KnockbackOctant(role) + (Cursed ? 1f / 3 : 0);
+        var stars = Enum.GetValues<PartyRole>().Where(state.Marked).Select(r => StoneSpot(r)!.Value).ToList();
+        return Enumerable.Range(-50, 101)
+            .Select(step => holyOctant + step / 50f * EdgeSearchOctants)
+            .OrderByDescending(octant => NeedleClearance(Point(octant, EdgeRadius), stars))
+            .ThenBy(octant => MathF.Abs(octant - holyOctant))
+            .First();
+    }
+
+    private static float NeedleClearance(Vector3 spot, List<Vector3> stars)
+    {
+        var clearance = float.PositiveInfinity;
+        foreach (var star in stars)
+        {
+            var offset = spot - star;
+            clearance = MathF.Min(clearance, offset.Length() - NeedleCircleRadius);
+            for (var line = 0; line < 4; line++)
+            {
+                var along = Point(line, 1);
+                var across = MathF.Abs(offset.X * along.Z - offset.Z * along.X);
+                clearance = MathF.Min(clearance, across - NeedleLineHalfWidth);
+            }
+        }
+        return clearance;
+    }
 
     private int RotationAroundRim(PartyRole role)
     {
@@ -84,11 +119,14 @@ public sealed class FruP2DiamondDustAi : IScenarioAi<FruP2DiamondDustState>
 
     private Vector3? IceSpot(PartyRole role) => HolySpot(role, Cursed ? 5 : 4) * (17f / 18);
 
-    private void RememberHolyPuddles()
+    private void RememberHolyPuddles(int wave)
     {
         foreach (var healer in new[] { PartyRole.RegenHealer, PartyRole.ShieldHealer })
-            if (world.Party.Get(healer) is { } member && member.IsAlive()) puddles.Add(member.Position);
+            if (world.Party.Get(healer) is { } member && member.IsAlive()) puddles.Add((wave, member.Position));
     }
+
+    private IEnumerable<Vector3> LivePuddles()
+        => puddles.Where(p => PuddleFadesAt(p.Wave) > world.Events.Elapsed).Select(p => p.Position);
 
     private IEnumerable<SimCharacter> Bots()
         => world.Party.ActiveMembers().Where(world.Party.IsBotDriven).ToList();
@@ -110,8 +148,7 @@ public sealed class FruP2DiamondDustAi : IScenarioAi<FruP2DiamondDustState>
                 ? !Cursed || Vector3.Dot(bot.Position, state.MirrorPosition) <= 0
                 : BehindMirror(bot.Position) == behind;
             if (skip || SlideDestination(bot.Position, behind, prepareNextSlide: recovery) is not { } destination) continue;
-            var direction = destination - bot.Position;
-            bot.Push(MathF.Atan2(direction.X, direction.Z), SlideDistance, SlideSeconds);
+            bot.IceSlideTo(destination, SlideSeconds);
         }
     }
 
@@ -126,11 +163,12 @@ public sealed class FruP2DiamondDustAi : IScenarioAi<FruP2DiamondDustState>
     {
         Vector3? best = null;
         var bestMargin = float.NegativeInfinity;
+        var live = LivePuddles().ToList();
         for (var degree = 0; degree < 720; degree++)
         {
             var end = from + Point(degree / 90f, SlideDistance);
             if (end.Length() > 19 || BehindMirror(end) != behind) continue;
-            var clearance = puddles.Count == 0 ? 20 : puddles.Min(p => DistanceToSegment(p, from, end) - PuddleRadius);
+            var clearance = live.Select(p => DistanceToSegment(p, from, end) - PuddleRadius).DefaultIfEmpty(20).Min();
             if (clearance < 0.35f) continue;
             var relative = end - state.MirrorPosition;
             var backDot = Vector3.Dot(Vector3.Normalize(relative), Vector3.Normalize(state.MirrorPosition));

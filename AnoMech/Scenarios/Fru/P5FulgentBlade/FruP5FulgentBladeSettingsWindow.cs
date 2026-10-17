@@ -15,7 +15,7 @@ public sealed class FruP5FulgentBladeSettingsWindow
         {
             SettingsGrid.FightOnlyNote();
             DrawPocket();
-            DrawFirstSide();
+            DrawMirrored();
             SettingsGrid.End();
         }
     }
@@ -24,7 +24,7 @@ public sealed class FruP5FulgentBladeSettingsWindow
     {
         Overrides.PositionIndex = null;
         Overrides.RotationIndex = null;
-        Overrides.EastFirst = null;
+        Overrides.Mirrored = null;
     }
 
     private void DrawPocket()
@@ -38,14 +38,14 @@ public sealed class FruP5FulgentBladeSettingsWindow
         }
     }
 
-    private void DrawFirstSide()
+    private void DrawMirrored()
     {
-        var v = Overrides.EastFirst;
-        SettingsGrid.Row("First train:");
-        if (ImGui.RadioButton("Auto##fbfirst", v == null)) Overrides.EastFirst = null;
+        var v = Overrides.Mirrored;
+        SettingsGrid.Row("Mirrored:");
+        if (ImGui.RadioButton("Auto##fbmirror", v == null)) Overrides.Mirrored = null;
         ImGui.SameLine();
-        if (ImGui.RadioButton("East##fbfirst", v == true)) Overrides.EastFirst = true;
+        if (ImGui.RadioButton("No##fbmirror", v == false)) Overrides.Mirrored = false;
         ImGui.SameLine();
-        if (ImGui.RadioButton("West##fbfirst", v == false)) Overrides.EastFirst = false;
+        if (ImGui.RadioButton("Yes##fbmirror", v == true)) Overrides.Mirrored = true;
     }
 }

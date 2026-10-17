@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.Native.Interfaces;
@@ -75,8 +78,32 @@ internal sealed class FakeBattleCharas : IBattleCharas
             rotation: placement.Rotation,
             detail: $"bnpcname={config.NameId} visibility={config.Visibility} display_flags=0x{config.DisplayFlags ?? (uint)config.Visibility:X} layout=0x{config.LayoutId:X} model={config.ModelCharaId} sheet_model={bnpc.ModelChara} "
                     + $"level={config.Level} battalion={(config.IsHostile ? 4 : 0)} targetable={(config.Targetable ? 1 : 0)} enemy_list={config.EnemyList}"
-                    + (config.InitialModeAttributeFlags is { } flags ? $" mode_attr=0x{flags:X}" : ""));
+                    + (config.InitialModeAttributeFlags is { } flags ? $" mode_attr=0x{flags:X}" : "")
+                    + (config.ModelState != 0 ? $" model_state=0x{config.ModelState:X}" : "")
+                    + (config.ModelScale != 0 ? $" model_scale={config.ModelScale}" : "")
+                    + (AppearanceText(config.Appearance) is { Length: > 0 } appearance ? $" appearance={appearance}" : ""));
+        foreach (var status in config.Statuses ?? [])
+        {
+            actor.Statuses[(status.StatusId, FakeCharacter.StatusSource(0xE0000000))] = new StatusSlot(status.StatusId, status.Param, 0f, 0xE0000000);
+            Timeline.Add("status_gain", entityId, name, status.StatusId.ToString(), "", detail: $"dur=0.0 param={status.Param} on_spawn");
+        }
         return new FakeBattleChara(this, slot);
+    }
+
+    // The form replay_timeline.py's npc_appearance_text writes, so spawn rows compare as text.
+    private static string AppearanceText(NpcAppearance? appearance)
+    {
+        if (appearance is null) return "";
+        var parts = new List<string>();
+        if (appearance.MainHand != 0) parts.Add($"mh:0x{appearance.MainHand:X}");
+        if (appearance.OffHand != 0) parts.Add($"oh:0x{appearance.OffHand:X}");
+        var equipment = appearance.Equipment ?? [];
+        for (var i = 0; i < Math.Min(equipment.Length, 10); i++)
+            if (equipment[i] != 0) parts.Add($"eq{i}:0x{equipment[i]:X}");
+        var customize = new byte[26];
+        (appearance.Customize ?? []).AsSpan(0, Math.Min(appearance.Customize?.Length ?? 0, 26)).CopyTo(customize);
+        if (customize.Any(c => c != 0)) parts.Add($"cust:{Convert.ToHexString(customize)}");
+        return string.Join("/", parts);
     }
 
     public IBattleCharaProxy? SpawnDoppel(PartyMemberPreset preset, byte level, Placement placement, out uint entityId)

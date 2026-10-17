@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.Native.Implementations.Interop;
@@ -121,7 +122,39 @@ internal sealed unsafe class BattleCharas : IBattleCharas
         common.Battalion = config.IsHostile ? HostileBattalion : FriendlyBattalion;
         common.Level = config.Level;
         common.ModelAttributeFlags = config.InitialModeAttributeFlags ?? 0;
+        common.ModelState = config.ModelState;
+        common.ModelScaleId = config.ModelScale;
+        if (config.Appearance is { } appearance) WriteAppearance(&packet.Common, appearance);
+        if (config.Statuses is { } statuses) WriteStatuses(&packet.Common, statuses);
         return packet;
+    }
+
+    private const int SpawnStatusSlots = 30;
+
+    private static void WriteStatuses(CommonSpawnData* common, IReadOnlyList<SpawnStatus> statuses)
+    {
+        var slots = (CommonSpawnData.StatusEffect*)((byte*)common + 0x88);
+        for (var i = 0; i < Math.Min(SpawnStatusSlots, statuses.Count); i++)
+        {
+            slots[i].StatusId = statuses[i].StatusId;
+            slots[i].Param = statuses[i].Param;
+            slots[i].SourceObjectId = 0xE0000000;
+        }
+    }
+
+    private const int EquipmentSlotCount = 10;
+    private const int CustomizeLength = 26;
+
+    private static void WriteAppearance(CommonSpawnData* common, NpcAppearance appearance)
+    {
+        common->MainhandWeaponModel.Value = appearance.MainHand;
+        common->OffhandWeaponModel.Value = appearance.OffHand;
+        var equipment = (uint*)((byte*)common + 0x1FC);
+        for (var i = 0; i < Math.Min(EquipmentSlotCount, appearance.Equipment?.Length ?? 0); i++)
+            equipment[i] = appearance.Equipment![i];
+        var customize = (byte*)common + 0x252;
+        for (var i = 0; i < Math.Min(CustomizeLength, appearance.Customize?.Length ?? 0); i++)
+            customize[i] = appearance.Customize![i];
     }
 
     // The values every captured server spawn of another player carries.

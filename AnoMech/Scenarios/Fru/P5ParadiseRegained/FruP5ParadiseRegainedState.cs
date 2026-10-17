@@ -6,18 +6,17 @@ namespace AnoMech.Scenarios.Fru.P5ParadiseRegained;
 
 // Three two-person towers 3.5s apart, the first two resolving with a wing: a cleave on the boss's
 // target and a buster on the nearest (dark) or farthest (light) player. Polarizing Strikes
-// follows on the same clock: four rounds of a light and a dark line stack, each baited by the
-// nearest player on its side of Pandora.
+// follows on the same clock: four rounds of a light and a dark line stack, one on each of the
+// two players nearest Pandora, split by which of them stands further to each side.
 public sealed class FruP5ParadiseRegainedState
 {
     public const float TowerRadius = 3f;
     public static float TowerShowAt(int tower) => 6f + 3.5f * tower;
     public static float TowerHitAt(int tower) => 15.7f + 3.5f * tower;
 
-    public const float PolarizingStart = 25f;
-    public static float StrikeAt(int round) => PolarizingStart + 10.3f + 4.7f * round;
-    public static float EchoAt(int round) => round == 3 ? PolarizingStart + 26.7f : StrikeAt(round) + 2.1f;
-    public static float PathsCastAt(int round) => StrikeAt(round) + 1.9f;
+    public static float LinesAt(int round) => 36.9f + 4.6f * round;
+    public static float PathsCastAt(int round) => LinesAt(round) + 2.05f;
+    public static float EchoAt(int round) => LinesAt(round) + 2.6f;
 
     // Which third the towers turn to, whether the east tower is second, and the wing order.
     public int Rotation { get; }

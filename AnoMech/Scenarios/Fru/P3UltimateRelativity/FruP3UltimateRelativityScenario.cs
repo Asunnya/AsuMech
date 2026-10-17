@@ -44,29 +44,45 @@ public sealed class FruP3UltimateRelativityScenario : IScenario
             ((IScenarioAi<FruP3UltimateRelativityState>)AiStrats[idx]).Run(state, world);
 
         world.Events.Add(0f, SpawnOracleAndHelpers);
+        world.Events.Add(0.87f, StopTime);
         world.Events.Add(1f, () => oracle?.Cast(Actions.UltimateRelativity));
+        world.Events.Add(5.9f, OracleBattleTalk);
         world.Events.Add(AssignAt, AssignDebuffs);
         world.Events.Add(AssignAt, SpawnHourglasses);
         world.Events.Add(15f, TetherHourglasses);
-        world.Events.Add(20.3f, SpeedUpAndSlowDownHourglasses);
+        world.Events.Add(19.8f, () => SetHourglasses(MapEffect.RelativityHourglassFlowing, _ => true));
+        world.Events.Add(20.65f, SpeedUpAndSlowDownHourglasses);
         for (var wave = 0; wave < 3; wave++)
         {
             var w = wave;
+            world.Events.Add(HourglassFlowAt(w), () => SetHourglasses(MapEffect.RelativityHourglassDraining, clock => Wave(clock) == w));
             world.Events.Add(FireAt(w), () => ResolveFire(w));
             world.Events.Add(LaserStartAt(w), () => StartLasers(w));
+            if (w < 2) world.Events.Add(ReturnAt(earlyReturn: w == 0), () => SaveReturns(earlyReturn: w == 0));
             world.Events.Add(LaserHitAt(w, 0), () => FireFirstLasers(w));
-            if (w < 2) world.Events.Add(LaserHitAt(w, 0), () => SaveReturns(earlyReturn: w == 0));
+            world.Events.Add(LaserHitAt(w, 0) + 0.35f, () => TurnLasersToFirstSweep(w));
             for (var shot = 1; shot < LaserShots; shot++)
             {
                 var s = shot;
                 world.Events.Add(LaserHitAt(w, s), () => SweepLasers(w, s));
             }
         }
-        world.Events.Add(StunAt, () => world.Party.ActiveMembers().ToList().ForEach(m => m.AddStatus(StatusId.Stun, FinalAt - StunAt)));
+        world.Events.Add(StunAt, () => world.Party.ActiveMembers().ToList().ForEach(m => m.AddStatus(StatusId.Stun, StunEndAt - StunAt)));
         world.Events.Add(RewindAt, Rewind);
         world.Events.Add(FinalAt, ResolveReturnDebuffs);
-        world.Events.Add(55.8f, () => oracle?.Cast(Actions.ShellCrusherCast, world.Party.Get(state.ShellCrusherTarget)));
-        world.Events.Add(58.5f, () => CastOn(debuffHelpers[0], Actions.ShellCrusher, state.ShellCrusherTarget));
+        world.Events.Add(55.7f, () => oracle?.Cast(ActionId.ShellCrusherCast, animationLock: 0.2f));
+        world.Events.Add(59.2f, ShellCrusher);
+    }
+
+    private void StopTime()
+    {
+        world.Map.SetWeather(WeatherId.TimeStop, 0f);
+        world.Map.AddEffect(MapEffect.FreezeFloor, MapEffect.OracleStage);
+    }
+
+    private void OracleBattleTalk()
+    {
+        if (oracle is { } boss) world.Map.DirectorUpdate(0x80000027U, 0xDU, 0x2U, BNpcNameId.Oracle, boss.EntityId);
     }
 
     private void SpawnOracleAndHelpers()
@@ -77,20 +93,21 @@ public sealed class FruP3UltimateRelativityScenario : IScenario
             Level: Level,
             Targetable: true,
             EnemyList: EnemyListMode.Always,
-            Placement: new Placement(Vector3.Zero, MathF.PI)));
-        for (var i = 0; i < debuffHelpers.Length; i++) debuffHelpers[i] = SpawnHelper(Vector3.Zero);
+            Placement: new Placement(Vector3.Zero, MathF.PI),
+            LayoutId: LayoutId.OracleP3,
+            Appearance: Appearance.Oracle));
+        for (var i = 0; i < debuffHelpers.Length; i++) debuffHelpers[i] = SpawnHelper(BNpcNameId.Oracle);
+        for (var i = 0; i < lasers.Length; i++) lasers[i] = SpawnHelper(BNpcNameId.DelightsHourglass);
     }
 
-    private SimEnemy? SpawnHelper(Vector3 position) => world.SpawnEnemy(new EnemySpawnConfig(
+    private SimEnemy? SpawnHelper(uint nameId) => world.SpawnEnemy(new EnemySpawnConfig(
         BNpcBaseId: BNpcBaseId.Helper,
-        NameId: BNpcNameId.Oracle,
-        Level: Level,
+        NameId: nameId,
+        Level: 1,
         EnemyList: EnemyListMode.Never,
         Visibility: SpawnVisibility.InvisibleHelper,
-        Placement: new Placement(position, 0f)));
+        Placement: new Placement(Vector3.Zero, MathF.PI)));
 
-    // TODO: retail also shows an actor-bound clock (VFX 1001, d1049_stlp_b0k1) over each player
-    // until their Return is saved; there's no way to attach a VFX sheet row to an actor.
     private void AssignDebuffs()
     {
         foreach (var role in Enum.GetValues<PartyRole>())
@@ -101,7 +118,8 @@ public sealed class FruP3UltimateRelativityScenario : IScenario
             var finalDebuff = state.Shadoweye(role) ? StatusId.ShadoweyeWaiting
                 : state.DarkWater(role) ? StatusId.DarkWaterWaiting : StatusId.DarkEruptionWaiting;
             member.AddStatus(finalDebuff, FinalAt - AssignAt);
-            member.AddStatus(StatusId.ReturnWaiting, LaserHitAt(state.EarlyReturn(role) ? 0 : 1, 0) - AssignAt);
+            member.AddStatus(StatusId.ReturnWaiting, ReturnAt(state.EarlyReturn(role)) - AssignAt);
+            member.AddStatus(StatusId.RelativityClock, 42f);
         }
         for (var wave = 0; wave < 3; wave++)
             world.Party.Get(state.Darkness(wave))?.AddStatus(StatusId.UnholyDarknessWaiting, FireAt(wave) - AssignAt);
@@ -113,21 +131,29 @@ public sealed class FruP3UltimateRelativityScenario : IScenario
         {
             hourglasses[clock] = world.SpawnEnemy(new EnemySpawnConfig(
                 BNpcBaseId: BNpcBaseId.SorrowsHourglassP3,
-                NameId: BNpcNameId.SorrowsHourglass,
+                NameId: BNpcNameId.DelightsHourglass,
                 Level: Level,
-                EnemyList: EnemyListMode.Never,
-                Placement: new Placement(state.Hourglass(clock), MathF.PI)));
-            lasers[clock] = SpawnHelper(state.Hourglass(clock));
-            world.Map.AddEffect(MapEffect.Show, state.HourglassSlot(clock));
+                EnemyList: EnemyListMode.Always,
+                Placement: new Placement(state.Hourglass(clock), Facing(-state.Direction(clock))),
+                LayoutId: LayoutId.RelativityHourglass));
         }
+        SetHourglasses(MapEffect.RelativityHourglassShow, _ => true);
     }
+
+    private void SetHourglasses(uint effect, Func<int, bool> clocks)
+    {
+        for (var clock = 0; clock < 8; clock++)
+            if (clocks(clock)) world.Map.AddEffect(effect, state.HourglassSlot(clock));
+    }
+
+    private static float Facing(Vector3 direction) => MathF.Atan2(direction.X, direction.Z);
 
     private static bool Quickened(int clock) => Wave(clock) == 0;
     private static bool Slowed(int clock) => Wave(clock) == 2;
 
     private void TetherHourglasses()
     {
-        oracle?.Cast(Actions.Speed);
+        oracle?.Cast(ActionId.Speed, animationLock: 3.1f);
         for (var clock = 0; clock < 8; clock++)
             if (Quickened(clock) || Slowed(clock))
                 speedTethers.Add(world.Tether(hourglasses[clock], oracle, Quickened(clock) ? TetherId.Quicken : TetherId.Slow));
@@ -137,9 +163,10 @@ public sealed class FruP3UltimateRelativityScenario : IScenario
     {
         speedTethers.ForEach(tether => tether.Despawn());
         speedTethers.Clear();
+        var helper = 0;
         for (var clock = 0; clock < 8; clock++)
             if (Quickened(clock) || Slowed(clock))
-                lasers[clock]?.Cast(Quickened(clock) ? Actions.Quicken : Actions.Slow, hourglasses[clock]);
+                debuffHelpers[helper++]?.Cast(Quickened(clock) ? Actions.Quicken : Actions.Slow, hourglasses[clock]);
     }
 
     private void ResolveFire(int wave)
@@ -153,9 +180,7 @@ public sealed class FruP3UltimateRelativityScenario : IScenario
 
     private void CastOn(SimEnemy? helper, EnemyAction action, PartyRole role)
     {
-        if (world.Party.Get(role) is not { } target || !target.IsAlive()) return;
-        helper?.SetPosition(target.Position);
-        helper?.Cast(action, target);
+        if (world.Party.Get(role) is { } target && target.IsAlive()) helper?.Cast(action, target);
     }
 
     private void StartLasers(int wave)
@@ -164,9 +189,10 @@ public sealed class FruP3UltimateRelativityScenario : IScenario
         {
             if (Wave(clock) != wave) continue;
             var param = state.Clockwise(clock) ? HourglassClockwiseParam : HourglassCounterclockwiseParam;
-            hourglasses[clock]?.AddStatusParam(StatusId.HourglassRotation, param, LaserHitAt(wave, 0) - LaserStartAt(wave));
-            hourglasses[clock]?.Cast(Actions.SinboundMeltdownCast);
+            hourglasses[clock]?.AddStatusParam(StatusId.HourglassRotation, param, 4f);
+            hourglasses[clock]?.Cast(ActionId.SinboundMeltdownCast, animationLock: 0.2f);
         }
+        SetHourglasses(MapEffect.RelativityHourglassEmptying, clock => Wave(clock) == wave);
     }
 
     // The first shot goes at whoever stands nearest the hourglass; the rest sweep on from there.
@@ -179,9 +205,15 @@ public sealed class FruP3UltimateRelativityScenario : IScenario
             var bait = world.Party.ActiveMembers().MinBy(m => Vector3.DistanceSquared(m.Position, origin));
             var offset = bait is null ? Vector3.Zero : bait.Position - origin;
             laserDirections[clock] = offset.LengthSquared() > 0.0001f ? Vector3.Normalize(offset) : -state.Direction(clock);
-            lasers[clock]?.SetPosition(new Placement(origin, MathF.Atan2(laserDirections[clock].X, laserDirections[clock].Z)));
-            lasers[clock]?.Cast(Actions.SinboundMeltdownFirst, bait);
+            lasers[clock]?.SetPosition(new Placement(origin, Facing(laserDirections[clock])));
+            lasers[clock]?.Cast(Actions.SinboundMeltdownFirst);
         }
+    }
+
+    private void TurnLasersToFirstSweep(int wave)
+    {
+        for (var clock = 0; clock < 8; clock++)
+            if (Wave(clock) == wave) lasers[clock]?.TurnTo(SweepFacing(clock, 1));
     }
 
     private void SweepLasers(int wave, int shot)
@@ -189,12 +221,16 @@ public sealed class FruP3UltimateRelativityScenario : IScenario
         for (var clock = 0; clock < 8; clock++)
         {
             if (Wave(clock) != wave) continue;
-            var angle = (state.Clockwise(clock) ? 1 : -1) * shot * MathF.PI / 12f;
-            var d = laserDirections[clock];
-            var direction = new Vector3(d.X * MathF.Cos(angle) - d.Z * MathF.Sin(angle), 0f, d.X * MathF.Sin(angle) + d.Z * MathF.Cos(angle));
-            lasers[clock]?.SetRotation(MathF.Atan2(direction.X, direction.Z));
+            if (shot > 1) lasers[clock]?.SetRotation(SweepFacing(clock, shot));
             lasers[clock]?.Cast(Actions.SinboundMeltdownRest);
         }
+    }
+
+    private float SweepFacing(int clock, int shot)
+    {
+        var angle = (state.Clockwise(clock) ? 1 : -1) * shot * MathF.PI / 12f;
+        var d = laserDirections[clock];
+        return Facing(new Vector3(d.X * MathF.Cos(angle) - d.Z * MathF.Sin(angle), 0f, d.X * MathF.Sin(angle) + d.Z * MathF.Cos(angle)));
     }
 
     private void SaveReturns(bool earlyReturn)
@@ -203,23 +239,17 @@ public sealed class FruP3UltimateRelativityScenario : IScenario
         {
             if (world.Party.Get(role) is not { } member || !member.IsAlive()) continue;
             returns[role] = member.Position;
-            member.AddStatus(StatusId.Return, StunAt - LaserHitAt(earlyReturn ? 0 : 1, 0));
-            member.PlayAction(ActionId.Return);
+            member.AddStatus(StatusId.Return, StunAt - ReturnAt(earlyReturn));
             world.PlaceGroundVfx(VfxId.ReturnMarker, member.Position);
         }
     }
 
+    // Players keep the facing they have now, not the one they had when the Return was saved.
     private void Rewind()
     {
         foreach (var (role, position) in returns)
-        {
-            if (world.Party.Get(role) is not { } member || !member.IsAlive()) continue;
-            member.RemoveStatus(StatusId.Return);
-            member.PlayAction(ActionId.ReturnIV);
-            var offset = position - member.Position;
-            if (offset.LengthSquared() < 0.0001f) continue;
-            member.Push(member.Position - offset, offset.Length(), 0.4f);
-        }
+            if (world.Party.Get(role) is { } member && member.IsAlive())
+                member.CarryTo(position, TimelineId.Rewind);
     }
 
     private void ResolveReturnDebuffs()
@@ -227,8 +257,18 @@ public sealed class FruP3UltimateRelativityScenario : IScenario
         var helper = 0;
         foreach (var role in Enum.GetValues<PartyRole>())
         {
-            var action = state.Shadoweye(role) ? Actions.Shadoweye : state.DarkWater(role) ? Actions.DarkWater : Actions.DarkEruption;
-            CastOn(debuffHelpers[helper++], action, role);
+            if (!state.Shadoweye(role))
+                CastOn(debuffHelpers[helper++], state.DarkWater(role) ? Actions.DarkWater : Actions.DarkEruption, role);
+            else if (world.Party.Get(role) is { } holder && holder.IsAlive() && debuffHelpers[helper++] is { } helperOnHolder)
+            {
+                helperOnHolder.SetPosition(holder.Placement());
+                helperOnHolder.Cast(Actions.Shadoweye);
+            }
         }
+    }
+
+    private void ShellCrusher()
+    {
+        if (world.Party.Get(state.ShellCrusherTarget) is { } target && target.IsAlive()) oracle?.Cast(Actions.ShellCrusher, target);
     }
 }

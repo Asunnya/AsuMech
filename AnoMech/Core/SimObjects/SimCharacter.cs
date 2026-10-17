@@ -149,7 +149,12 @@ public abstract class SimCharacter : ISimObject, IPositioned
     // Replay: ActorControl 0xF1 on the carried character, p1/p2 the quantized destination (UMAD P1
     // arrows); chained carries ~1s apart, each after the first following 0xE5 WarpEnd.
     // Sim: 0xF1 for player and bot alike; no ActorMove while it plays.
-    public void CarryTo(Vector3 destination) => Force(new ForcedMove.Carry(destination));
+    public void CarryTo(Vector3 destination, ushort? timeline = null) => Force(new ForcedMove.Carry(destination, timeline));
+
+    // Replay (FRU P2 Frost Armor): ActorControl 0xDF on every sliding player, p1/p2 the quantized
+    // destination and the slide's heading, p4 ActionTimeline icefloor_short.
+    // Sim: 0xDF for player and bot alike; no ActorMove while it plays.
+    public void IceSlideTo(Vector3 destination, float durationSeconds) => Force(new ForcedMove.IceSlide(destination, durationSeconds));
 
     // A mechanic's snap, which a remote player's own client has to make; SetPosition is the
     // engine-side one. Replay and sim: ActorSetPos.
@@ -219,6 +224,10 @@ public abstract class SimCharacter : ISimObject, IPositioned
 
     public SimStatus AddStatusParam(ushort statusId, int param, float duration = 0f)
         => SpawnStatus(statusId, duration, (ushort)param, default, broadcastAddEvent: true, hidden: false);
+
+    // One the spawn packet already carried: tracked like any other, with nothing sent for it.
+    internal void AdoptSpawnStatus(ushort statusId, ushort param)
+        => statusList.Add(new SimStatus(this, statusId, 0f, param, default, FreeStatusSlot(statusId), hidden: false));
 
     private SimStatus SpawnStatus(ushort statusId, float duration, ushort param, GameObjectId sourceObject, bool broadcastAddEvent, bool hidden)
     {

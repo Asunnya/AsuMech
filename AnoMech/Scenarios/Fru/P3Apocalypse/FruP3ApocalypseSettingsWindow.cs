@@ -16,6 +16,7 @@ public sealed class FruP3ApocalypseSettingsWindow
             SettingsGrid.FightOnlyNote();
             DrawStart();
             DrawRotation();
+            DrawSpiritTaker();
             SettingsGrid.End();
         }
     }
@@ -24,6 +25,7 @@ public sealed class FruP3ApocalypseSettingsWindow
     {
         Overrides.Rotation = null;
         Overrides.Clockwise = null;
+        Overrides.SpiritTakerTarget = null;
     }
 
     private void DrawStart()
@@ -46,5 +48,17 @@ public sealed class FruP3ApocalypseSettingsWindow
         if (ImGui.RadioButton("CW##apocrot", v == true)) Overrides.Clockwise = true;
         ImGui.SameLine();
         if (ImGui.RadioButton("CCW##apocrot", v == false)) Overrides.Clockwise = false;
+    }
+
+    private void DrawSpiritTaker()
+    {
+        SettingsGrid.Row("Spirit Taker:");
+        if (ImGui.RadioButton("Auto##apocspirit", Overrides.SpiritTakerTarget == null)) Overrides.SpiritTakerTarget = null;
+        foreach (var role in PerRole.All)
+        {
+            ImGui.SameLine();
+            if (ImGui.RadioButton($"{SettingsGrid.RoleLabel(role)}##apocspirit", Overrides.SpiritTakerTarget == role))
+                Overrides.SpiritTakerTarget = role;
+        }
     }
 }

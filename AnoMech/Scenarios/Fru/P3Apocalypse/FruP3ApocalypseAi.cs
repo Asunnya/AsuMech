@@ -5,6 +5,7 @@ using AnoMech.Core.Game.Ai;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.SimObjects;
 using static AnoMech.Scenarios.Fru.FruConstants;
+using static AnoMech.Scenarios.Fru.P3Apocalypse.FruP3ApocalypseState;
 
 namespace AnoMech.Scenarios.Fru.P3Apocalypse;
 
@@ -25,17 +26,18 @@ public sealed class FruP3ApocalypseAi : IScenarioAi<FruP3ApocalypseState>
         world = worldParam;
         AdjustWaterGroups();
         var ai = new AiManager(world);
-        ai.Move(2.2f, () => ByRole(role => Setup(role, adjusted: false)));
-        ai.Move(16.9f, () => ByRole(role => Setup(role)));
-        ai.Move(20.2f, () => ByRole(FirstStack));
-        ai.Move(23.8f, () => ByRole(role => Setup(role, spread: true)));
-        ai.Move(26.5f, () => ByRole(role => Setup(role, adjusted: false, spread: true)));
-        ai.Move(28f, () => ByRole(Spread));
-        ai.Move(36.2f, () => ByRole(PostEruption));
-        ai.Move(37f, () => ByRole(SecondStack));
+        ai.Move(2.2f, () => ByRole(role => Setup(role, adjusted: false)), arrivalTime: 12.3f);
+        ai.Move(16.9f, () => ByRole(role => Setup(role)), arrivalTime: 20.2f);
+        ai.Move(20.2f, () => ByRole(FirstStack), arrivalTime: WaterAt(1));
+        ai.Move(22.85f, () => ByRole(role => Setup(role, spread: true)), arrivalTime: 24.8f);
+        ai.Move(24.85f, () => ByRole(role => Setup(role, adjusted: false, spread: true)), arrivalTime: 28f);
+        ai.Move(28f, () => ByRole(Spread), arrivalTime: WaveAt(0));
+        ai.Move(36.05f, () => ByRole(PostEruption));
+        ai.Move(37f, () => ByRole(SecondStack), arrivalTime: WaveAt(3));
         ai.Move(41.7f, () => ByRole(role => role == PartyRole.OffTank ? TankBait(near: true) : null));
-        ai.Move(42f, () => ByRole(role => role == PartyRole.OffTank ? TankBait(near: false) : Vector3.Zero));
-        ai.Move(45.4f, () => ByRole(KnockbackStack), jitter: 0f);
+        ai.Move(42f, () => ByRole(role => role == PartyRole.OffTank ? TankBait(near: false) : null));
+        ai.Move(42f, () => ByRole(role => role == PartyRole.OffTank ? null : Vector3.Zero), arrivalTime: 44f);
+        ai.Move(45.15f, () => ByRole(KnockbackStack), jitter: 0f);
         ai.Move(48.4f, () => ByRole(ReturnStack), jitter: 0f);
     }
 

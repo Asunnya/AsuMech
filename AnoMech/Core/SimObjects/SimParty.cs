@@ -135,10 +135,6 @@ public sealed class SimParty : ISimObject
     public void WipeAllPlayers(uint actionId, string? explanation = null)
         => ForEachActive(m => { if (m.IsAlive()) m.Die(actionId, explanation); });
 
-    [Obsolete("Name the action: WipeAllPlayers(actionId, explanation).")]
-    public void WipeAllPlayers(string cause)
-        => ForEachActive(m => { if (m.IsAlive()) m.Die(cause); });
-
     // Slots nothing real presses buttons for: a bot, or the local player under DebugBotControl
     // (which drives movement only).
     public bool IsBotDriven(SimCharacter member)

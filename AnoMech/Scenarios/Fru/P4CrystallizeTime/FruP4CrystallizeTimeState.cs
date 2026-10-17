@@ -17,14 +17,14 @@ public enum CrystallizeCorner { NW, NE, SE, SW }
 // three Quietus carriers and the Spirit Taker target.
 public sealed class FruP4CrystallizeTimeState
 {
-    public const float DebuffsAt = 6.5f;
-    public const float DragonsSpawnAt = 14.3f;
-    public const float DragonsMoveAt = 15.3f;
-    public const float RedIceCleanseBy = 23.5f;
-    public const float CleanseBy = 46.5f;
-    public const float ReturnSavedAt = 39.6f;
-    public const float StunAt = 46.6f;
-    public const float StunEndsAt = 55.5f;
+    public const float DebuffsAt = 11.8f;
+    public const float DragonsSpawnAt = 15.3f;
+    public const float DragonsMoveAt = 20.2f;
+    public const float RedIceCleanseBy = 28.8f;
+    public const float CleanseBy = 51.8f;
+    public const float ReturnSavedAt = 44.8f;
+    public const float StunAt = 51.8f;
+    public const float StunEndsAt = 60.8f;
     public const float DragonInitialContactRadius = 2f;
     public const float DragonContactRadius = 1f;
     public const float DragonHitCooldown = 2f;
@@ -51,6 +51,8 @@ public sealed class FruP4CrystallizeTimeState
         foreach (var role in Enum.GetValues<PartyRole>()) debuffs[role] = deck[(int)role];
         SlowNorthwest = rng.NextBool();
         Corner = (CrystallizeCorner)rng.Next(4);
+        if (overrides.SlowNorthwest is { } slowNorthwest) SlowNorthwest = slowNorthwest;
+        if (overrides.Corner is { } corner) Corner = corner;
         Quietus = rng.Shuffle(Enum.GetValues<PartyRole>()).Take(3).ToList();
         SpiritTakerTarget = rng.NextRole();
     }
@@ -78,14 +80,17 @@ public sealed class FruP4CrystallizeTimeState
 
     public Vector3 WaveDirection(bool second) => second ? new(0, 0, North ? 1 : -1) : new(East ? -1 : 1, 0, 0);
 
-    // Each head circles the arena from the north, one either side.
+    // Each head flies half a circle from the north to the south, one either side.
     public static Vector3 DragonPosition(int side, float time)
     {
-        var angle = MathF.Max(0, time - DragonsMoveAt) * 0.245f + 0.22f;
+        var angle = MathF.Min(MathF.PI, MathF.Max(0, time - DragonsMoveAt) * DragonAngularSpeed + DragonStartAngle);
         return new((side == 0 ? -1 : 1) * 12.6f * MathF.Sin(angle), 0, -12.6f * MathF.Cos(angle));
     }
 
-    public const float DragonSpeed = 12.6f * 0.245f;
+    private const float DragonStartAngle = 0.1526f;
+    private const float DragonAngularSpeed = 0.237f;
+    public const float DragonSpeed = 12.6f * DragonAngularSpeed;
+    public const float DragonsReachSouthAt = DragonsMoveAt + (3.1415927f - DragonStartAngle) / DragonAngularSpeed;
 
     // Live: where each head dropped the puddle of the player it caught, as the scenario spawns them.
     public IReadOnlyDictionary<PartyRole, Vector3> DragonPuddles => dragonPuddles;

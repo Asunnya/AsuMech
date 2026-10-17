@@ -16,10 +16,11 @@ namespace AnoMech.Scenarios.Fru.P2LightRampant;
 // alike.
 public sealed class FruP2LightRampantState
 {
+    public const float CursesAt = 18.75f;
     public const float TowerAt = 19f;
     public const float PowerfulLightAt = 25f;
-    public const float CursesEndAt = 27f;
-    public static float HammerAt(int wave) => 15.6f + 1.6f * wave;
+    public const float CursesEndAt = 27.8f;
+    public static float HammerAt(int wave) => 15.85f + 1.58f * wave;
     public const int HammerWaves = 5;
     public const float TowerRadius = 4f;
 
@@ -36,10 +37,14 @@ public sealed class FruP2LightRampantState
     public bool Pairs { get; }
     public bool SupportPairs { get; }
 
-    public FruP2LightRampantState(Rng rng, FruP2LightRampantStateOverrides overrides)
+    public FruP2LightRampantState(Rng rng, PartyRole playerRole, FruP2LightRampantStateOverrides overrides)
     {
         var roles = rng.Shuffle(Enum.GetValues<PartyRole>());
-        var puddles = new[] { roles[0], roles[1] }.OrderBy(r => Array.IndexOf(PuddlePriority, r)).ToArray();
+        var duties = overrides.Duty.Resolve(playerRole);
+        var baits = duties.Where(d => d.Value == LightRampantDuty.Bait).Select(d => d.Role);
+        var tethers = duties.Where(d => d.Value == LightRampantDuty.Tether).Select(d => d.Role).ToList();
+        var puddles = baits.Concat(roles.Where(r => !tethers.Contains(r))).Concat(roles).Distinct().Take(2)
+                           .OrderBy(r => Array.IndexOf(PuddlePriority, r)).ToArray();
         InitiallySteeped = rng.Shuffle(Enum.GetValues<PartyRole>()).Take(4).ToList();
         WeightSlot = rng.Next(6);
         NorthOrbsFirst = overrides.NorthOrbsFirst ?? rng.NextBool();

@@ -1,71 +1,93 @@
 using System;
 using System.Numerics;
 using AnoMech.Core.Game;
-using AnoMech.Core.Game.Party;
+using static AnoMech.Scenarios.Fru.FruConstants;
 
 namespace AnoMech.Scenarios.Fru.P5FulgentBlade;
 
-// Three trains of four exalines each, rolling 5y every 2s across the arena from three of the
-// pattern's edges. Their layout comes from FRU-Sim's exawave scenes, whose 11.855 units are the
-// game's 5y step.
+// Three groups of two seams, a cardinal one and a diagonal one crossing at a corner of the safe
+// path. Each seam splits into a light and a dark strip rolling apart 5y every 2s until they leave
+// the arena. The corners sit a 90° turn apart around a pocket 7y off centre; the pattern is any
+// rotation or mirror image of that layout.
 public sealed class FruP5FulgentBladeState
 {
     public const int GroupCount = 3;
-    public const int WavesPerGroup = 4;
-    public const int HitCount = 7;
+    public const int SeamsPerGroup = 2;
+    public const int MaxHitCount = 8;
     public const float Step = 5f;
-    public const float ReferenceScale = Step / 11.855f;
+    // A strip stops rolling once its helper would stand further out than this.
+    private const float RollLimit = Geometry.ArenaRadius + Step / 2f;
+    private const float PocketDistance = 7f;
 
-    public static float HitAt(int group, int hit) => 20.5f + group * 4f + hit * 2f;
+    public static float HitAt(int group, int hit) => 18.6f + group * 4f + hit * 2.05f;
 
-    // Which of the four cardinal pockets the safe path starts in, and how the trains turn around it.
+    // Which cardinal the pocket sits at, before the mirror: 0 = south, 1 = north, 2 = east, 3 = west.
     public int PositionIndex { get; }
     public int RotationIndex { get; }
-    public bool EastFirst { get; }
+    public bool Mirrored { get; }
+    // Per group: whether the cardinal seam's dark strip rolls towards the centre; the diagonal's
+    // dark strip always rolls the other way.
+    private readonly bool[] cardinalDarkInward = new bool[GroupCount];
 
-    // One random member of each light party: MT/H1/M1/R1 and OT/H2/M2/R2.
-    public PartyRole AkhMornFirstLightParty { get; }
-    public PartyRole AkhMornSecondLightParty { get; }
+    // Which of the four furthest to Pandora's left / right each Akh Morn stack picks, counted from
+    // that side.
+    public int AkhMornLeftPick { get; }
+    public int AkhMornRightPick { get; }
 
     public FruP5FulgentBladeState(Rng rng, FruP5FulgentBladeStateOverrides overrides)
     {
         PositionIndex = overrides.PositionIndex ?? rng.Next(4);
         RotationIndex = overrides.RotationIndex ?? rng.Next(4);
-        EastFirst = overrides.EastFirst ?? rng.NextBool();
-        AkhMornFirstLightParty = (PartyRole)(2 * rng.Next(4));
-        AkhMornSecondLightParty = (PartyRole)(2 * rng.Next(4) + 1);
+        Mirrored = overrides.Mirrored ?? rng.NextBool();
+        for (var group = 0; group < GroupCount; group++)
+            cardinalDarkInward[group] = overrides.CardinalDarkInward?[group] ?? rng.NextBool();
+        AkhMornLeftPick = rng.Next(4);
+        AkhMornRightPick = rng.Next(4);
     }
-
-    public Vector3 Origin => (PositionIndex switch
-    {
-        0 => new Vector3(0f, 0f, 17f),
-        1 => new Vector3(0f, 0f, -17f),
-        2 => new Vector3(17f, 0f, 0f),
-        _ => new Vector3(-17f, 0f, 0f),
-    }) * ReferenceScale;
 
     public float Rotation => RotationIndex * MathF.PI / 2f;
 
-    // Odd waves are light, even ones dark; each strip is Step deep and spans the arena.
-    public (Placement Placement, bool IsLight) Wave(int group, int wave, int hit = 0)
+    public Vector3 Pocket => PositionIndex switch
     {
-        var emitter = group == 1 ? 2 : (group == 0) == EastFirst ? 0 : 1;
-        var (position, yaw) = emitter switch
+        0 => new Vector3(0f, 0f, PocketDistance),
+        1 => new Vector3(0f, 0f, -PocketDistance),
+        2 => new Vector3(PocketDistance, 0f, 0f),
+        _ => new Vector3(-PocketDistance, 0f, 0f),
+    };
+
+    public Vector3 Origin => Place(Pocket);
+
+    // Maps a point of the unmirrored layout into the arena.
+    public Vector3 Place(Vector3 layout) => Mirrored ? new Vector3(-layout.X, layout.Y, layout.Z) : layout;
+
+    private float Place(float yaw) => Mirrored ? -yaw : yaw;
+
+    // The seam's spot closest to the centre, facing the way its light strip rolls.
+    public Placement Seam(int group, int seam)
+    {
+        var (corner, cardinalYaw) = group switch
         {
-            0 => (new Vector3(9.821f, 0f, 23.710f), 0f),
-            1 => (new Vector3(-9.821f, 0f, -23.710f), MathF.PI),
-            _ => (new Vector3(23.710f, 0f, -9.821f), MathF.PI / 2f),
+            0 => (new Vector3(4.2f, 0f, 10f), MathF.PI),
+            1 => (new Vector3(10f, 0f, -4.2f), 3f * MathF.PI / 2f),
+            _ => (new Vector3(-4.2f, 0f, -10f), 0f),
         };
-        var localYaw = wave switch
-        {
-            0 => 0f,
-            1 => MathF.PI,
-            2 => 5f * MathF.PI / 4f,
-            _ => MathF.PI / 4f,
-        };
-        var origin = Origin + Vector3.Transform(position * ReferenceScale, Quaternion.CreateFromAxisAngle(Vector3.UnitY, Rotation));
-        var facing = Rotation + yaw + localYaw + MathF.PI;
+        var position = Place(Pocket + Vector3.Transform(corner, Quaternion.CreateFromAxisAngle(Vector3.UnitY, Rotation)));
+        var normal = Place(Rotation + cardinalYaw + (seam == 0 ? 0f : 5f * MathF.PI / 4f));
+        var forward = new Vector3(MathF.Sin(normal), 0f, MathF.Cos(normal));
+        var distance = Vector3.Dot(position, forward);
+        var darkInward = cardinalDarkInward[group] == (seam == 0);
+        var lightForward = (distance < 0f) == darkInward ? -forward : forward;
+        return new Placement(lightForward * Vector3.Dot(position, lightForward), MathF.Atan2(lightForward.X, lightForward.Z));
+    }
+
+    // Where a strip stands on its nth hit, or null once it has rolled out of the arena.
+    public Placement? Strip(int group, int seam, bool isLight, int hit)
+    {
+        var seamPlacement = Seam(group, seam);
+        var facing = isLight ? seamPlacement.Rotation : seamPlacement.Rotation + MathF.PI;
         var forward = new Vector3(MathF.Sin(facing), 0f, MathF.Cos(facing));
-        return (new Placement(origin + forward * (hit * Step), facing), wave % 2 == 1);
+        var position = seamPlacement.Position + forward * (hit * Step);
+        if (MathF.Abs(Vector3.Dot(position, forward)) > RollLimit) return null;
+        return new Placement(position, facing);
     }
 }

@@ -14,11 +14,11 @@ namespace AnoMech.Scenarios.Fru.P4DarklitDragonsong;
 // (NW, NE, SE, SW), 4-7 free.
 public sealed class FruP4DarklitDragonsongState
 {
-    public const float ChainsAt = 22.3f;
-    public const float CursesAt = 29.2f;
-    public const float CursesEndAt = 43.5f;
-    public const float TowersAt = 32.3f;
-    public const float DarkWaterAt = 40.5f;
+    public const float ChainsAt = 21.9f;
+    public const float CursesAt = 28.9f;
+    public const float CursesEndAt = 42.9f;
+    public const float TowersAt = 32.2f;
+    public const float DarkWaterAt = 40.15f;
     public const float TowerRadius = 4f;
 
     private static readonly PartyRole[] LineupDps = [PartyRole.PhysRangedDps, PartyRole.CasterDps, PartyRole.MeleeDpsA, PartyRole.MeleeDpsB];

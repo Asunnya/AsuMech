@@ -24,23 +24,28 @@ public sealed class FruP2LightRampantAi : IScenarioAi<FruP2LightRampantState>
         state = stateParam;
         world = worldParam;
         var ai = new AiManager(world);
-        ai.Move(3f, () => ByRole(Preposition));
-        ai.Move(9.75f, () => ByRole(role => state.BaitsHammer(role) ? Lineup(role) : null));
-        ai.Move(10.75f, () => ByRole(Lineup));
-        ai.Move(12.3f, () => ByRole(role => state.BaitsHammer(role) ? null : Tower(state.Index(role))), jitter: 0f);
-        for (var wave = 0; wave < HammerWaves; wave++)
+        ai.Move(3f, () => ByRole(Preposition), arrivalTime: 8.75f);
+        ai.Move(9.75f, () => ByRole(role => state.BaitsHammer(role) ? Lineup(role) : null), arrivalTime: HammerSnapshotAt(0));
+        ai.Move(10.75f, () => ByRole(role => state.BaitsHammer(role) ? null : Lineup(role)), arrivalTime: 12.3f);
+        ai.Move(12.3f, () => ByRole(role => state.BaitsHammer(role) ? null : Tower(state.Index(role))), jitter: 0f, arrivalTime: CursesAt);
+        for (var wave = 0; wave < HammerWaves - 1; wave++)
         {
             var dropped = wave + 1;
-            ai.Move(HammerAt(wave) + 0.1f, () => ByRole(role => state.BaitsHammer(role) ? HammerSpot(role, dropped) : null), jitter: 0f);
+            ai.Move(HammerSnapshotAt(wave) + 0.05f, () => ByRole(role => state.BaitsHammer(role) ? HammerSpot(role, dropped) : null), jitter: 0f,
+                arrivalTime: HammerSnapshotAt(wave + 1));
         }
-        ai.Move(19.1f, () => ByRole(role => state.BaitsHammer(role) ? null : GroupSpot(role)));
-        ai.Move(23.3f, () => ByRole(Intermediate));
-        ai.Move(24.5f, () => ByRole(role => OrbSafeSpot(role, first: true)));
-        ai.Move(27f, () => ByRole(role => OrbSafeSpot(role, first: false)));
-        ai.Move(29.7f, () => ByRole(role => Stacks(role) == 2 ? Vector3.Zero : MiddleWait(role)));
-        ai.Move(34.4f, () => ByRole(BanishSpot));
-        ai.Move(38f, () => ByRole(ClockSpot));
+        ai.Move(HammerSnapshotAt(HammerWaves - 1) + 0.05f, () => ByRole(role => state.BaitsHammer(role) ? Intermediate(role) : null),
+            arrivalTime: PowerfulLightAt);
+        ai.Move(19.1f, () => ByRole(role => state.BaitsHammer(role) ? null : GroupSpot(role)), arrivalTime: 23.3f);
+        ai.Move(23.3f, () => ByRole(role => state.BaitsHammer(role) ? null : Intermediate(role)), arrivalTime: PowerfulLightAt);
+        ai.Move(PowerfulLightAt + 0.05f, () => ByRole(role => OrbSafeSpot(role, first: true)), jitter: 0f, arrivalTime: 27.1f);
+        ai.Move(27.2f, () => ByRole(role => OrbSafeSpot(role, first: false)), jitter: 0f, arrivalTime: 30.1f);
+        ai.Move(30.15f, () => ByRole(role => Stacks(role) == 2 ? Vector3.Zero : MiddleWait(role)), arrivalTime: 33.8f);
+        ai.Move(33.85f, () => ByRole(BanishSpot), arrivalTime: 37.1f);
+        ai.Move(37.15f, () => ByRole(ClockSpot), arrivalTime: 45.9f);
     }
+
+    private static float HammerSnapshotAt(int wave) => HammerAt(wave) - FruHolyPuddles.SnapshotBeforeHit;
 
     private int Stacks(PartyRole role) => world.Party.Get(role)?.FindStatus(StatusId.Lightsteeped)?.Stacks ?? 0;
 
@@ -77,8 +82,7 @@ public sealed class FruP2LightRampantAi : IScenarioAi<FruP2LightRampantState>
             1 => FromSim(0, -30),
             2 => FromSim(0, -15),
             3 => FromSim(15, -15),
-            4 => FromSim(30, -15),
-            _ => FromSim(45, 0),
+            _ => FromSim(30, -15),
         };
         return state.Index(role) == 6 ? spot : -spot;
     }
