@@ -36,6 +36,10 @@ public sealed class ScenarioSession
     public const uint MechanicSuccessActionId = 9450;
     public const uint MechanicFailureActionId = 9451;
 
+    // The dungeon's invisible helper, which casts both marks at the player.
+    private static readonly EnemySpawnConfig MarkHelper = new(BNpcBaseId: 0x18D6, Level: 1,
+        EnemyList: EnemyListMode.Never, Visibility: SpawnVisibility.InvisibleHelper);
+
     private readonly SimWorld world;
     private readonly InstanceSession instance;
     private readonly RunScenarioParams run;
@@ -50,6 +54,7 @@ public sealed class ScenarioSession
     private float? lastMistakeElapsed;
     // The source of truth for "did this run fail": a queue running dry says nothing about deaths.
     private bool deathOccurred;
+    private SimEnemy? markHelper;
 
     public IScenario Scenario => run.Scenario;
     public SessionMode Mode { get; }
@@ -155,6 +160,7 @@ public sealed class ScenarioSession
                 DiagnosticLog.Warn($"[ScenarioSession.Start] zone/phase/scenario.Run threw -- scenario load aborted here: {e}");
                 throw;
             }
+            if (Plugin.Config.EnableMechanicResultMarks) markHelper = world.SpawnEnemy(MarkHelper);
         }
         // Both host and peer: RunInstanceEvents carries no RNG/AI/damage-check dependency.
         Scenario.RunInstanceEvents(world);
@@ -187,8 +193,7 @@ public sealed class ScenarioSession
         resultReported = true;
         if (deathOccurred) return;
         var clean = lastMistakeElapsed is null;
-        if (clean && Plugin.Config.EnableMechanicResultMarks)
-            world.Party.Player?.PlayAction(MechanicSuccessActionId, animationLock: 0f);
+        if (clean) PlayMark(MechanicSuccessActionId);
         Finished?.Invoke(clean);
     }
 
@@ -203,9 +208,14 @@ public sealed class ScenarioSession
         if (lastMistakeElapsed is not { } last || elapsed - last > MistakeMarkCooldownSeconds)
         {
             lastMistakeElapsed = elapsed;
-            if (Plugin.Config.EnableMechanicResultMarks)
-                world.Party.Player?.PlayAction(MechanicFailureActionId, animationLock: 0f);
+            PlayMark(MechanicFailureActionId);
         }
+    }
+
+    private void PlayMark(uint actionId)
+    {
+        if (Plugin.Config.EnableMechanicResultMarks && markHelper is { IsActive: true } helper && world.Party.Player is { } player)
+            helper.Cast(actionId, player, animationLock: 0f);
     }
 
     // A death that took a member down; the first one freezes the run 5s later.

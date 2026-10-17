@@ -6,7 +6,6 @@ using AnoMech.Core.Game;
 using AnoMech.Core.Game.Motion;
 using AnoMech.Core.Native.Interfaces;
 using AnoMech.Core.UserActions;
-using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 
@@ -330,16 +329,6 @@ public abstract class SimCharacter : ISimObject, IPositioned
     // -------------------------
 
     public void PlayActionTimeline(ushort timelineId) => ActorControl.PlayActionTimeline(timelineId);
-
-    // Plays an action's own animation and VFX on this character through the same synthetic
-    // ActionEffect a boss cast fires, with itself as the target -- a bot tank's LB3 in Umad P3
-    // Limit Cut, the player's mechanic result mark. Effects (statuses, damage) stay the caller's
-    // job, exactly as for an enemy Cast.
-    public void PlayAction(uint actionId, float animationLock = 0.6f)
-    {
-        Casting.NativeActionEffect(actionId, animationLock, (ushort)actionId, 0, ActionType.Action, 0,
-            animationTargetId: GameObjectId, targets: [new ActionEffectTarget(GameObjectId)]);
-    }
 
     public void VoiceLine(uint voiceLineId) => ActorControl.PlayVoiceLine(voiceLineId);
 
