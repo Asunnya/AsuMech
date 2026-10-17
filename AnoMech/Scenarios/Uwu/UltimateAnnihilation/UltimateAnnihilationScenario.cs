@@ -57,17 +57,16 @@ public sealed class UltimateAnnihilationScenario : IScenario
     private static readonly Vector3 OrbSpawn = new(2f, 0f, -4f);
     private static readonly Placement UltimaNorth = new(new Vector3(0f, 0f, -10f), 0f);
     private static readonly Placement GarudaSouth = new(new Vector3(0f, 0f, 19.5f), MathF.PI);
-    private static readonly Placement IfritSouthEast = new(new Vector3(13.7f, 0f, 13.7f), float.DegreesToRadians(-135f));
-    private static readonly Placement TitanSouthWest = new(new Vector3(-13.7f, 0f, 13.7f), float.DegreesToRadians(135f));
+    private static readonly Placement SouthEastCorner = new(new Vector3(13.7f, 0f, 13.7f), float.DegreesToRadians(-135f));
+    private static readonly Placement SouthWestCorner = new(new Vector3(-13.7f, 0f, 13.7f), float.DegreesToRadians(135f));
     private static readonly Vector3[] RadiantPlumeSpots =
     [
         new(0f, 0f, 7f), new(7f, 0f, 0f), new(-7f, 0f, 0f), new(0f, 0f, -7f),
     ];
-    private static readonly Placement[] CrimsonCycloneAwakenFrom =
-    [
-        new(new Vector3(0f, 0f, 19.3747f), MathF.PI),
-        new(new Vector3(19.3747f, 0f, 0f), float.DegreesToRadians(-90f)),
-    ];
+    // The second awakened dash comes from Ifrit's side.
+    private static readonly Placement CrimsonCycloneAwakenFromSouth = new(new Vector3(0f, 0f, 19.3747f), MathF.PI);
+    private static readonly Placement CrimsonCycloneAwakenFromEast = new(new Vector3(19.3747f, 0f, 0f), float.DegreesToRadians(-90f));
+    private static readonly Placement CrimsonCycloneAwakenFromWest = new(new Vector3(-19.3747f, 0f, 0f), float.DegreesToRadians(90f));
 
     private readonly UltimateAnnihilationSettingsWindow settingsWindow = new();
 
@@ -154,6 +153,7 @@ public sealed class UltimateAnnihilationScenario : IScenario
         utils.FeatherRain(FeatherRainDummyGetters(), 25.95f, 26.11f, 27.10f, at => AddPuddle(at, FeatherRainRadius, 26.81f), KillFeatherRain);
         world.Events.Add(26.52f, SpawnOrb);
         world.Events.Add(27.10f, () => titan?.PlayActionTimeline(ActionTimelineId.WarpEnd));
+        world.Events.Add(28.65f, () => ifrit?.SetPosition(IfritCorner));
         world.Events.Add(28.65f, () => CastSelf(ifrit, ActionId.CrimsonCyclone, 2.7f));
         world.Events.Add(29.36f, SearingWindPulse);
         world.Events.Add(30.25f, () => CastSelf(titan, ActionId.LandslideTitan, 1.9f));
@@ -284,12 +284,14 @@ public sealed class UltimateAnnihilationScenario : IScenario
 
     private void UltimaTargetsMainTank() => ultima?.SetTarget(Get(PartyRole.MainTank), follow: false);
 
+    private Placement IfritCorner => state.IfritSouthWest ? SouthWestCorner : SouthEastCorner;
+
     private void PlaceBosses()
     {
         ultima?.SetPosition(UltimaNorth);
         garuda?.SetPosition(GarudaSouth);
-        ifrit?.SetPosition(IfritSouthEast);
-        titan?.SetPosition(TitanSouthWest);
+        ifrit?.SetPosition(IfritCorner);
+        titan?.SetPosition(state.IfritSouthWest ? SouthEastCorner : SouthWestCorner);
     }
 
     private void WarpInBosses()
@@ -428,9 +430,10 @@ public sealed class UltimateAnnihilationScenario : IScenario
 
     private void ResolveCrimsonCycloneAwaken()
     {
-        for (var i = 0; i < CrimsonCycloneAwakenFrom.Length; i++)
+        Placement[] froms = [CrimsonCycloneAwakenFromSouth, state.IfritSouthWest ? CrimsonCycloneAwakenFromWest : CrimsonCycloneAwakenFromEast];
+        for (var i = 0; i < froms.Length; i++)
         {
-            var from = CrimsonCycloneAwakenFrom[i];
+            var from = froms[i];
             var dummy = Dummy(CrimsonCycloneAwakenDummies + i);
             dummy?.SetPosition(from);
             PlayEffect(dummy, ActionId.CrimsonCycloneAwaken, 2.1f, from.Rotation);
