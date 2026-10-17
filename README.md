@@ -106,6 +106,8 @@ All using default NA pf strats unless noted otherwise:
     - P6 Hallowed Wings 2 to Cauterize (second Akh Afah, Hallowed Wings with Hot Wing/Tail, static Wyrmsbreath 2, Pyretic/Deep Freeze cleansed by the dragons' dives, Touchdown, last Mortal Vow passes)
 - AAC Heavyweight M1 (Savage) — M9S _by [Asunnya](https://github.com/Asunnya)_
     - Vamp Stomp, Hell in a Cell, Aetherletting, Coffinmaker, Undead Deathmatch, Flails, Vamp Stomp 2, Final
+- AAC Heavyweight M2 (Savage) — M10S _by [Asunnya](https://github.com/Asunnya)_
+    - Flame Floater to Pyrotation (Hot Impact, Flame Floater tether charges, Alley-oop Inferno spreads, Cutback Blaze, Pyrotation)
 
 ## Details
 
@@ -141,7 +143,7 @@ Thanks for contributors:
 * [altair9x](https://github.com/altair9x) - extra strategies
 * [Quantumlyy](https://github.com/Quantumlyy) - extra strategies
 * [Linqx](https://github.com/Linqx) - success/failure checkmarks
-* [Asunnya](https://github.com/Asunnya) - M9S, UWU P1 Garuda / P2 Ifrit / P3 Titan / Ultimate Annihilation, DSR P1 Knights / P2 Thordan / P3 Nidhogg / P4 Eyes / P5 Wrath / P5 Death / P6 Double Dragons
+* [Asunnya](https://github.com/Asunnya) - M9S, M10S, UWU P1 Garuda / P2 Ifrit / P3 Titan / Ultimate Annihilation, DSR P1 Knights / P2 Thordan / P3 Nidhogg / P4 Eyes / P5 Wrath / P5 Death / P6 Double Dragons
 
 AnoMech leans heavily on the work of other Dalamud plugins. Huge thanks to their authors!  
 Without them, the following would not be possible:
