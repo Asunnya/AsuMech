@@ -30,6 +30,8 @@ internal sealed class PacketRecorder
     private readonly List<GamePacket> pending = [];
     // Host entity ids of the actors spawned while recording: the only ones peers have.
     private readonly HashSet<uint> spawned = [];
+    // Those despawned since, which a status still names as its applier.
+    private readonly HashSet<uint> gone = [];
     private readonly Dictionary<IBattleCharaProxy, (PartyRole Role, SeatKind Kind)> seats = new();
     private readonly Dictionary<PartyRole, (bool Status, bool Control)> afflictions = new();
     private readonly RecordingBattleChara localPlayer;
@@ -205,6 +207,13 @@ internal sealed class PacketRecorder
 
     private uint ActorOf(GameObjectId? id) => id is { } objectId ? ActorOf(objectId.ObjectId) : PacketActor.None;
 
+    // The server's status list keeps naming an applier that has since despawned.
+    private uint SourceOf(uint entityId)
+    {
+        var actor = ActorOf(entityId);
+        return actor == PacketActor.None && gone.Contains(entityId) ? entityId : actor;
+    }
+
     // An unknown entity goes out as no target rather than as an id that means nothing elsewhere.
     private (uint[] Args, int Index, uint Actor) WithEntityArg(uint[] args, int index)
     {
@@ -267,7 +276,7 @@ internal sealed class PacketRecorder
             var slots = new List<StatusSlotPacket>();
             for (var i = 0; i < statuses.Count; i++)
                 if (statuses[i] is { StatusId: not 0 } s)
-                    slots.Add(new StatusSlotPacket((byte)i, s.StatusId, s.Param, s.RemainingTime, ActorOf(s.SourceEntityId)));
+                    slots.Add(new StatusSlotPacket((byte)i, s.StatusId, s.Param, s.RemainingTime, SourceOf(s.SourceEntityId)));
             return new StatusListPacket(actor, slots, health, proxy.MaxHealth, mana, shield);
         });
 
@@ -276,6 +285,7 @@ internal sealed class PacketRecorder
     private void RecordDespawn(uint entityId)
     {
         if (!spawned.Remove(entityId)) return;
+        gone.Add(entityId);
         Add(new DespawnPacket(entityId));
     }
 
