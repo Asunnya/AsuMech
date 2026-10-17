@@ -5,10 +5,15 @@ using AnoMech.Core.Map;
 
 namespace AnoMech.Scenarios.Dsr;
 
-// The territory's BGM is a null track; the fight's music is InstanceContent 30106's.
+// The territory's BGM is a null track; P1 plays InstanceContent 30106's and the director switches it each phase.
 public sealed class DsrZone : IZone
 {
     private const ushort BgmId = 920;
+    private const ushort ThordanBgm = 921;
+    private const ushort NidhoggBgm = 922;
+    private const ushort EyesBgm = 923;
+    private const ushort DarkThordanBgm = 925;
+    private const ushort DoubleDragonsBgm = 926;
     private const byte FairSkies = 2;
     public const byte Oppression = 45;
     private const byte DarkThordanWeather = 46;
@@ -16,12 +21,12 @@ public sealed class DsrZone : IZone
 
     public static readonly DsrZone Instance = new();
     public static readonly Phase Knights = new(Instance, "P1", FairSkies, BgmId);
-    public static readonly Phase Thordan = new(Instance, "P2", Oppression, BgmId);
-    public static readonly Phase Nidhogg = new(Instance, "P3", Clouds, BgmId);
+    public static readonly Phase Thordan = new(Instance, "P2", Oppression, ThordanBgm);
+    public static readonly Phase Nidhogg = new(Instance, "P3", Clouds, NidhoggBgm);
     // UNVERIFIED: the eyes' weather; P3's is kept.
-    public static readonly Phase Eyes = new(Instance, "P4", Clouds, BgmId);
-    public static readonly Phase DarkThordan = new(Instance, "P5", DarkThordanWeather, BgmId);
-    public static readonly Phase DoubleDragons = new(Instance, "P6", Clouds, BgmId);
+    public static readonly Phase Eyes = new(Instance, "P4", Clouds, EyesBgm);
+    public static readonly Phase DarkThordan = new(Instance, "P5", DarkThordanWeather, DarkThordanBgm);
+    public static readonly Phase DoubleDragons = new(Instance, "P6", Clouds, DoubleDragonsBgm);
 
     public string Name => "Dragonsong's Reprise";
     public uint TerritoryId => 968;
