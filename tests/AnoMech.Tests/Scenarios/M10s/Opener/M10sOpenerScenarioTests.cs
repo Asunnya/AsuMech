@@ -63,11 +63,18 @@ public class M10sOpenerScenarioTests
             .ShouldKill(ActionId.AlleyOopInfernoSpread, RegenHealer, ShieldHealer);
 
     [Test]
-    public void StayingOnTheBaitDiesToCutbackBlaze()
+    public void LeavingTheBaitBeforeTheSwingDiesToCutbackBlaze()
         => Negative<Scenario>(CasterDps)
             .Overrides<M10sOpenerStateOverrides>(Pinned)
-            .FreezeAt(58f)
+            .TeleportAt(60f, to: new Vector2(0.5f, -0.5f))
             .ShouldKill(ActionId.CutbackBlazeCleave, CasterDps);
+
+    [Test]
+    public void StayingOnTheBaitAfterTheSwingBurns()
+        => Negative<Scenario>(CasterDps)
+            .Overrides<M10sOpenerStateOverrides>(Pinned)
+            .FreezeAt(60f)
+            .ShouldKill(ActionId.CutbackBlaze, CasterDps);
 
     [Test]
     public void PyrotationTakenAloneKillsTheHealer()

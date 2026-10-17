@@ -94,14 +94,13 @@ public sealed class M10sOpenerScenario : IScenario
         public override bool Contains(Vector3 p) => Vector2.Distance(new Vector2(p.X, p.Z), new Vector2(centre.X, centre.Z)) <= PuddleRadius;
     }
 
-    private sealed class ConeFire(uint actionId, float armedAt, Vector3 origin, Vector2 safeDirection, float safeHalfAngle) : Fire(actionId, armedAt)
+    private sealed class SliceFire(uint actionId, float armedAt, Vector3 origin, Vector2 direction, float halfAngle) : Fire(actionId, armedAt)
     {
         public override bool Contains(Vector3 p)
         {
             var d = new Vector2(p.X - origin.X, p.Z - origin.Z);
             if (d.LengthSquared() < 0.01f) return false;
-            var cos = Vector2.Dot(Vector2.Normalize(d), safeDirection);
-            return cos < MathF.Cos(safeHalfAngle);
+            return Vector2.Dot(Vector2.Normalize(d), direction) >= MathF.Cos(halfAngle);
         }
     }
 
@@ -263,8 +262,8 @@ public sealed class M10sOpenerScenario : IScenario
         }
     }
 
-    // As the bar starts Red Hot turns to the nearest player, the bait, and burns everything but
-    // the slice behind itself.
+    // As the bar starts Red Hot turns to the nearest player, the bait. The swing spares the slice
+    // it faces and burns the rest; once it lands that slice catches fire and the burnt side is clear.
     private void AimCutback()
     {
         if (redHot is not { } boss) return;
@@ -272,15 +271,15 @@ public sealed class M10sOpenerScenario : IScenario
             .OrderBy(m => Vector3.DistanceSquared(m.Position, boss.Position)).FirstOrDefault();
         if (nearest != null) boss.Face(nearest);
         state.CutbackOrigin = boss.Position;
-        state.SafeSliceRotation = boss.Rotation + MathF.PI;
+        state.SafeSliceRotation = boss.Rotation;
     }
 
     private void DropCutbackFire()
     {
-        if (state.SafeSliceRotation is not { } safe) return;
-        var direction = new Vector2(MathF.Sin(safe), MathF.Cos(safe));
-        fires.Add(new ConeFire(ActionId.CutbackBlaze, CutbackHitAt + 0.6f + FireArmDelay, state.CutbackOrigin, direction, MathF.PI - Actions.CutbackBlazeHalfAngle));
-        ShowFire(EObjId.CutbackFire, new Placement(state.CutbackOrigin, safe + MathF.PI));
+        if (state.SafeSliceRotation is not { } bait) return;
+        var direction = new Vector2(MathF.Sin(bait), MathF.Cos(bait));
+        fires.Add(new SliceFire(ActionId.CutbackBlaze, CutbackHitAt + 0.6f + FireArmDelay, state.CutbackOrigin, direction, MathF.PI - Actions.CutbackBlazeHalfAngle));
+        ShowFire(EObjId.CutbackFire, new Placement(state.CutbackOrigin, bait));
     }
 
     private void PyrotationHit()

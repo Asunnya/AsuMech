@@ -49,11 +49,11 @@ public sealed class M10sOpenerAi : IScenarioAi<M10sOpenerState>
         ai.Move(FloaterHitAt[2] + 1.1f, () => ByRole(role => state.FloaterNumber(role) == 3 ? Spot(WaitForCharges) : null), jitter: 0f, sprint: true);
         ai.Move(FloaterHitAt[3] + 1.5f, () => ByRole(SpreadAlongTheFire), jitter: 0f);
         ai.Move(InfernoHitAt + 0.12f, () => ByRole(role => Spot(CutbackBait + StackOffset(role))), jitter: 0f, sprint: true);
-        ai.Move(CutbackCastAt + 0.6f, () => ByRole(role => IntoTheSafeSlice(role, 0)), jitter: 0f, sprint: true);
+        ai.Move(CutbackHitAt + 0.7f, () => ByRole(role => AcrossTheBurntSide(role, 0)), jitter: 0f, sprint: true);
         for (var hit = 1; hit <= PyrotationHitAt.Length; hit++)
         {
             var h = hit;
-            ai.Move(PyrotationHitAt[h - 1] + 0.1f, () => ByRole(role => IntoTheSafeSlice(role, h)), jitter: 0f, sprint: true);
+            ai.Move(PyrotationHitAt[h - 1] + 0.1f, () => ByRole(role => AcrossTheBurntSide(role, h)), jitter: 0f, sprint: true);
         }
         ai.Move(FireFadesAt + 0.5f, () => ByRole(role => new Vector2(0f, 0f) + StackOffset(role)));
     }
@@ -72,11 +72,11 @@ public sealed class M10sOpenerAi : IScenarioAi<M10sOpenerState>
 
     private Vector2? SpreadAlongTheFire(PartyRole role) => Spot(InfernoSpots[Array.IndexOf(AlongTheFire, role)]);
 
-    private Vector2? IntoTheSafeSlice(PartyRole role, int hit)
+    private Vector2? AcrossTheBurntSide(PartyRole role, int hit)
     {
         if (state.SafeSliceRotation is not { } safe) return Spot(CutbackBait + StackOffset(role));
         var origin = new Vector2(state.CutbackOrigin.X, state.CutbackOrigin.Z);
-        var direction = new Vector2(MathF.Sin(safe), MathF.Cos(safe));
+        var direction = -new Vector2(MathF.Sin(safe), MathF.Cos(safe));
         var depth = PyrotationDepths[hit];
         while (depth > 2f && !Inside(origin + direction * depth)) depth -= 0.5f;
         return origin + direction * depth + StackOffset(role) * 0.5f;

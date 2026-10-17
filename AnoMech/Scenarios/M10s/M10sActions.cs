@@ -52,17 +52,17 @@ public static class M10sActions
         DeathExplanation = "spread out",
     };
 
-    // Burns everything in front of and beside Red Hot; only the slice behind it is spared.
+    // Burns everything behind and beside Red Hot; the slice it faces, the bait's, is spared.
     // UNVERIFIED: the half-angle; guides draw it as ~320°.
     public const float CutbackBlazeHalfAngle = MathF.PI * 160f / 180f;
 
     public static readonly EnemyAction CutbackBlazeCleave = new(ActionId.CutbackBlazeCleave)
     {
         Cast = new() { AnimationLock = 1.2f, FaceTarget = false },
-        Area = new() { Size = CutbackBlazeHalfAngle },
+        Area = new() { Size = CutbackBlazeHalfAngle, Rotation = MathF.PI },
         Effects = [Damage(Lethal)],
         Timing = new() { DamageDelay = 0.6f },
-        DeathExplanation = "only the slice behind Red Hot is safe",
+        DeathExplanation = "stay on the bait until it swings",
     };
 
     // UNVERIFIED: the minimum; stacks of three or four died in the logs.
