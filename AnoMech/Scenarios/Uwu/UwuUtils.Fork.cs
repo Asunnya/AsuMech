@@ -68,7 +68,7 @@ public partial class UwuUtils
             damage.ApplyDamage(hit, 1f, actionId, context, lethal: true);
     }
 
-    public void ResolveSnapshot(IReadOnlyList<SimCharacter> snapshot, string dieCause)
+    public void ResolveSnapshot(IReadOnlyList<SimCharacter> snapshot, uint actionId)
     {
         foreach (var character in snapshot)
         {
@@ -77,7 +77,7 @@ public partial class UwuUtils
                 continue;
             }
 
-            character.Die(dieCause);
+            character.Die(actionId);
         }
     }
 
@@ -209,7 +209,7 @@ public partial class UwuUtils
                         ));
             });
 
-            Cast(getDummy, castOffset, castInfo, effectOffset, actionEffectInfo, dynamicInfo, 0.2f, resolve ?? (snapshot => ResolveSnapshot(snapshot, "Feather Rain")));
+            Cast(getDummy, castOffset, castInfo, effectOffset, actionEffectInfo, dynamicInfo, 0.2f, resolve ?? (snapshot => ResolveSnapshot(snapshot, ActionId.FeatherRain)));
         }
     }
 
@@ -252,7 +252,7 @@ public partial class UwuUtils
             ActionEffectPosition = getBaitPosition,
         };
 
-        Cast(getDummy, castOffset, castInfo, effectOffset, actionEffectInfo, dynamicInfo, 0.66f, snapshot => ResolveSnapshot(snapshot, "Eruption"));
+        Cast(getDummy, castOffset, castInfo, effectOffset, actionEffectInfo, dynamicInfo, 0.66f, snapshot => ResolveSnapshot(snapshot, ActionId.EruptionPuddle));
     }
 
     public void LandslideLines(Func<SimEnemy?> getEnemy, Func<SimEnemy?>[] getDummies, float castOffset, float effectOffset, LandslideType type)
