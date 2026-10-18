@@ -393,7 +393,7 @@ internal sealed class PacketReplay(PeerNatives natives, SimWorld world, PartyRol
         if (Character(p.Actor) is not { } caster) return;
         var targets = NetGuard.Cap(p.Targets, MaxEffectTargets)
             .Select(t => new ActionEffectTarget(ObjectIdOf(t.Target) ?? new GameObjectId { ObjectId = NoTarget, Type = 0 },
-                NetGuard.Cap(t.Effects, MaxEntriesPerTarget).ToList()))
+                t.Effects == null ? null : NetGuard.Cap(t.Effects, MaxEntriesPerTarget).ToList()))
             .ToList();
         var sequence = caster.ReceiveActionEffect(new ActionEffectData(p.ActionId, p.ActionType, NetGuard.Clamp(p.AnimationLock, 0f, 60f),
             p.SpellId, p.AnimationVariation, p.Flags, NetGuard.Rotation(p.Rotation), position, ObjectIdOf(p.AnimationTarget),
