@@ -5,6 +5,7 @@ using AnoMech.Core.Game;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.Native.Interfaces;
 using AnoMech.Core.SimObjects;
+using AnoMech.Core.UserActions;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 
@@ -38,6 +39,10 @@ public sealed partial class MultiplayerManager
         if (Session.RoleOf(acted.PeerId) is not { } seat || !running || !hostScenarioStarted) return;
         if (!Enum.IsDefined(acted.Step) || acted.ActionType != ActionType.Action || !SimAssets.AllowAction(acted.ActionId, "a player's action")) return;
         ShowAction(seat, acted.Step, acted.ActionId, HostObjectOf(acted.Target), NetGuard.Clamp(acted.CastSeconds, 0f, NetGuard.MaxPlayerCastSeconds));
+        // The party has one gauge, the host's, which every client shows: a peer's own client only
+        // emptied its copy.
+        if (acted.Step == PlayerActionStep.Resolved && LimitBreakHandler.IsLimitBreak(acted.ActionId))
+            Plugin.Game.World.Party.LimitBreak.Spend();
     }
 
     // As the server shows a seat's own action to the party: its cast bar, the cast's cancel, the
