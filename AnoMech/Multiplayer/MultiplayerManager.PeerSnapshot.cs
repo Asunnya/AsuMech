@@ -151,6 +151,7 @@ public sealed partial class MultiplayerManager
         if (IsHost || peerRunStarted || clock is null) return;
         if (!running || !peerEnteredInstance || peerRunParams is not { } p) return;
         peerRunStarted = true;
+        peerRunStartPending = true;
         var receivedAt = Time.GetTimestamp();
         if (peerNatives != null) peerNatives.HostOwnsArena = true;
         Plugin.Game.StartScenario(p, refusal => OnPeerStartResolved(refusal, clock, receivedAt));
@@ -159,6 +160,7 @@ public sealed partial class MultiplayerManager
     // The clock syncs to the host's once the run is up: starting it sets it to zero.
     private void OnPeerStartResolved(string? refusal, RunClockState clock, long receivedAt)
     {
+        peerRunStartPending = false;
         if (!running) return;
         if (refusal != null)
         {

@@ -57,6 +57,10 @@ public sealed partial class MultiplayerManager : IDisposable
     private bool peerEnteredInstance;
     private bool peerEntryQueued;
     private bool peerRunStarted;
+    // From our run's start until it is up, nothing more is taken from the host: the host set its
+    // own run up before sending any of it, and its packets need that setup here too (the run's
+    // strings and files, its preloads).
+    private bool peerRunStartPending;
     private RunScenarioParams? peerRunParams;
     // The host's packets that came before our entry completed.
     private readonly List<GamePacket> earlyPackets = new();
@@ -408,6 +412,7 @@ public sealed partial class MultiplayerManager : IDisposable
         peerRunParams = null;
         peerEnteredInstance = false;
         peerRunStarted = false;
+        peerRunStartPending = false;
         earlyPackets.Clear();
         peerLastSeenMs.Clear();
         peerLastHelloMs.Clear();
@@ -1036,7 +1041,7 @@ public sealed partial class MultiplayerManager : IDisposable
         hostStageSetFor = 0f;
     }
 
-    // Peers only hear Start once the host's own run exists, after its first packets.
+    // Peers only hear Start once the host's own run exists.
     private void OnHostStartResolved(string? refusal)
     {
         // Ended while the start was queued.
@@ -1053,12 +1058,13 @@ public sealed partial class MultiplayerManager : IDisposable
         recorder?.TagSeats(Plugin.Game.World.Party);
     }
 
-    // On the run's first tick, when its clock reads what a peer syncs to.
+    // On the run's first tick, when its clock reads what a peer syncs to. Ahead of the run's
+    // packets: a peer sets its own run up first, as this host did before sending them.
     private void AnnounceStart()
     {
-        FlushPackets(force: true);
         _ = Send(LobbyMessage());
         _ = Send(new StartMessage(HostRunClock()));
+        FlushPackets(force: true);
     }
 
     // Starting from zero would leave this run behind the host's by the host's load time plus the

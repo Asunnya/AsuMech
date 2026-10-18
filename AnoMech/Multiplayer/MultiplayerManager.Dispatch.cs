@@ -46,7 +46,7 @@ public sealed partial class MultiplayerManager
     private void DrainPendingMessages()
     {
         var budget = NetGuard.MaxMessagesPerDrain;
-        while (budget-- > 0 && pendingMessages.TryDequeue(out var entry))
+        while (budget-- > 0 && !peerRunStartPending && pendingMessages.TryDequeue(out var entry))
         {
             Interlocked.Decrement(ref pendingMessageCount);
             if (entry.Message is RolesSnapshotMessage && pendingMessages.TryPeek(out var next) && next.Message is RolesSnapshotMessage)
