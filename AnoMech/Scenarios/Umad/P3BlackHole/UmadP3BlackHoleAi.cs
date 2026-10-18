@@ -35,6 +35,7 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
         state = stateParam;
         world = worldParam;
         assignedHole.Clear();
+        setHoles.Clear();
         implosionChaos = null;
         implosionSpots = null;
         var ai = new AiManager(world);
@@ -52,11 +53,11 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
         ai.Move(18f, () => DodgeSlap(slapIndex: 0, kefkaIndex: 0));
         // A full second before GrabTether, or StackCentre's deferred MoveTo cancels the Intercept.
         ai.Move(25f, StackCentre);
-        world.Events.Add(26.2f, () => GrabTether(tetherIndex: 0, playerIndex: 4));
+        world.Events.Add(26.2f, () => GrabNewTether(tetherIndex: 0, playerIndex: 4));
         ScheduleTetherRegrab(26.6f, 28.2f, tetherIndex: 0, playerIndex: 4);
         world.Events.Add(28.2f, () => PullTether(playerIndex: 4));
-        world.Events.Add(32.4f, () => GrabTether(tetherIndex: 0, playerIndex: 4));
-        world.Events.Add(32.4f, () => GrabTether(tetherIndex: 1, playerIndex: 0));
+        world.Events.Add(32.4f, () => GrabNewTether(tetherIndex: 0, playerIndex: 4));
+        world.Events.Add(32.4f, () => GrabNewTether(tetherIndex: 1, playerIndex: 0));
         world.Events.Add(34.4f, () => PullTether(playerIndex: 4));
         world.Events.Add(34.4f, () => PullTether(playerIndex: 0));
         // Follow self-sustains, so no AiMove. Right after the 39.33 Nothingness: MT's pull spot can
@@ -73,9 +74,9 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
         // in the ~1.7s available.
         ai.Move(50.6f, () => DodgeSlap(slapIndex: 1, kefkaIndex: 1), sprint: true);
         ai.Move(56f, StackCentre);
-        world.Events.Add(58.1f, () => GrabTether(tetherIndex: 0, playerIndex: 4));
-        world.Events.Add(58.1f, () => GrabTether(tetherIndex: 1, playerIndex: 0));
-        world.Events.Add(58.1f, () => GrabTether(tetherIndex: 2, playerIndex: 3));
+        world.Events.Add(58.1f, () => GrabNewTether(tetherIndex: 0, playerIndex: 4));
+        world.Events.Add(58.1f, () => GrabNewTether(tetherIndex: 1, playerIndex: 0));
+        world.Events.Add(58.1f, () => GrabNewTether(tetherIndex: 2, playerIndex: 3));
         world.Events.Add(60.1f, () => PullTether(playerIndex: 4));
         world.Events.Add(60.1f, () => PullTether(playerIndex: 0));
         world.Events.Add(60.1f, () => PullTether(playerIndex: 3));
@@ -93,9 +94,9 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
             ScheduleThunderClearance(80.5f, 84.5f, 84.9f, 87.5f, set2First, set2Second);
         }
         ai.Move(88f, StackCentre);
-        world.Events.Add(92.3f, () => GrabTether(tetherIndex: 0, playerIndex: 5));
-        world.Events.Add(92.3f, () => GrabTether(tetherIndex: 1, playerIndex: 1));
-        world.Events.Add(92.3f, () => GrabTether(tetherIndex: 2, playerIndex: 7));
+        world.Events.Add(92.3f, () => GrabNewTether(tetherIndex: 0, playerIndex: 5));
+        world.Events.Add(92.3f, () => GrabNewTether(tetherIndex: 1, playerIndex: 1));
+        world.Events.Add(92.3f, () => GrabNewTether(tetherIndex: 2, playerIndex: 7));
         world.Events.Add(94.3f, () => PullTether(playerIndex: 5));
         world.Events.Add(94.3f, () => PullTether(playerIndex: 1));
         world.Events.Add(94.3f, () => PullTether(playerIndex: 7));
@@ -116,8 +117,8 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
         ai.Move(119.2f, () => DodgeImplosion(shockwaveIndex: 1, slapIndex: 2, slapKefkaIndex: 3), jitter: 0f, arrivalTime: 121.11f);
         ai.Move(121.3f, () => DodgeSlap(slapIndex: 2, kefkaIndex: 3), sprint: true);
         ai.Move(124f, StackCentre);
-        world.Events.Add(125.9f, () => GrabTether(tetherIndex: 0, playerIndex: 6));
-        world.Events.Add(125.9f, () => GrabTether(tetherIndex: 1, playerIndex: 2));
+        world.Events.Add(125.9f, () => GrabNewTether(tetherIndex: 0, playerIndex: 6));
+        world.Events.Add(125.9f, () => GrabNewTether(tetherIndex: 1, playerIndex: 2));
         world.Events.Add(127.9f, () => PullTether(playerIndex: 6));
         world.Events.Add(127.9f, () => PullTether(playerIndex: 2));
         world.Events.Add(130.8f, () => GrabTether(tetherIndex: 0, playerIndex: 2));
@@ -535,7 +536,47 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
     // peer recreates its local SimTether on every endpoint change.
     private readonly Dictionary<int, SimCharacter?> assignedHole = new();
 
-    private void GrabTether(int tetherIndex, int playerIndex, float intercept = 3f)
+    // The hole each new set's grab took, by when that grab was due. The host swaps one set for the
+    // next in a frame, but a peer's client shows the swap about a round trip after the clock that
+    // times its grab, still showing the last set's tethers until then.
+    private readonly Dictionary<SimCharacter, float> setHoles = new();
+
+    private const float NewSetPollSeconds = 0.05f;
+    private const float NewSetMaxWaitSeconds = 3f;
+
+    // A new set's tether, grabbed once this client shows the set: a tether at tetherIndex, and none
+    // of a hole an earlier set's grab took.
+    private void GrabNewTether(int tetherIndex, int playerIndex) => GrabNewTether(tetherIndex, playerIndex, world.Events.Elapsed, 0f);
+
+    private void GrabNewTether(int tetherIndex, int playerIndex, float dueAt, float waited)
+    {
+        var tethers = state.ScenarioObjects.Tethers;
+        var shown = tetherIndex < tethers.Count
+                    && !tethers.Any(t => t.A is { } hole && setHoles.TryGetValue(hole, out var at) && at < dueAt);
+        if (!shown && waited < NewSetMaxWaitSeconds)
+        {
+            world.Events.Add(NewSetPollSeconds, () => GrabNewTether(tetherIndex, playerIndex, dueAt, waited + NewSetPollSeconds));
+            return;
+        }
+        if (waited > 0f)
+            AnoMech.Core.DiagnosticLog.Info($"[UmadP3BlackHoleAi] GrabTether: the new set showed {waited:F2}s after the grab was due{(shown ? "" : " -- gave up waiting")}.");
+        if (GrabTether(tetherIndex, playerIndex)?.A is not { } hole) return;
+        setHoles.TryAdd(hole, dueAt);
+        world.Events.Add(TetherRegrabInterval, () => HoldOnTo(hole, playerIndex, dueAt + NewSetMaxWaitSeconds));
+    }
+
+    // Back into the hole's tether line, as a player keeps stepping in, until this client shows the
+    // tether on them: over a slow link the walk can end beside a line that has since moved.
+    private void HoldOnTo(SimCharacter hole, int playerIndex, float until)
+    {
+        var player = state.Roles.Get(TetherSeat(playerIndex));
+        var tether = state.ScenarioObjects.Tethers.FirstOrDefault(t => ReferenceEquals(t.A, hole));
+        if (player is null || tether is null || ReferenceEquals(tether.B, player) || world.Events.Elapsed >= until) return;
+        if (!player.IsIntercepting) player.Intercept(tether, 3f);
+        world.Events.Add(TetherRegrabInterval, () => HoldOnTo(hole, playerIndex, until));
+    }
+
+    private SimTether? GrabTether(int tetherIndex, int playerIndex, float intercept = 3f)
     {
         var seat = TetherSeat(playerIndex);
         var player = state.Roles.Get(seat);
@@ -545,12 +586,13 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
         if (tether is null)
         {
             AnoMech.Core.DiagnosticLog.Warn($"[UmadP3BlackHoleAi] GrabTether: tetherIndex {tetherIndex} not found in ScenarioObjects.Tethers ({state.ScenarioObjects.Tethers.Count} known) -- {role} sent nowhere.");
-            return;
+            return null;
         }
         var bh = tether.A is { } a ? new Vector2(a.Position.X, a.Position.Z) : Vector2.Zero;
         var from = player is null ? "(no player)" : $"({player.Position.X:F1},{player.Position.Z:F1})";
         AnoMech.Core.DiagnosticLog.Info($"[UmadP3BlackHoleAi] GrabTether: {role} intercepting tetherIndex {tetherIndex} (black hole at ({bh.X:F1},{bh.Y:F1})) from {from}, margin={intercept}.");
         player?.Intercept(tether, intercept);
+        return tether;
     }
 
     // Grab only starts the walk, and a black hole can be ~17y out; a Pull that lands before
