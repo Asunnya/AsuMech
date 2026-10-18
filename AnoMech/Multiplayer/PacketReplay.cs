@@ -24,7 +24,6 @@ internal sealed class PacketReplay(PeerNatives natives, SimWorld world, PartyRol
     private const uint NoTarget = 0xE0000000;
     private const uint SetTetherCategory = 0x23;
     private const uint ClearTetherCategory = 0x2F;
-    private const uint TargetCategory = 0x32;
     private const uint MarkingCategory = 0x1F6;
     private const int StatusSlots = 60;
     private const int SignCount = 17;
@@ -434,7 +433,7 @@ internal sealed class PacketReplay(PeerNatives natives, SimWorld world, PartyRol
 
     private void ControlTarget(ControlTargetPacket p)
     {
-        if (p.Args.Length != 4 || p.Category is not (TargetCategory or MarkingCategory)) return;
+        if (p.Args.Length != 4 || !PacketRules.TargetControls.ContainsKey(p.Category)) return;
         if (p.Category == MarkingCategory && p.Args[0] >= SignCount) return;
         var args = p.Args.ToArray();
         if (p.ArgIndex is >= 0 and < 4) args[p.ArgIndex] = EntityOf(p.ArgActor);

@@ -34,6 +34,7 @@ internal sealed class PacketRecorder
     private readonly HashSet<uint> gone = [];
     private readonly Dictionary<IBattleCharaProxy, (PartyRole Role, SeatKind Kind)> seats = new();
     private readonly Dictionary<PartyRole, (bool Status, bool Control)> afflictions = new();
+    private readonly HashSet<uint> unruled = [];
     private readonly RecordingBattleChara localPlayer;
     private PartyRole? shownBy;
 
@@ -137,34 +138,9 @@ internal sealed class PacketRecorder
 
     private enum SeatKind { Bot, Remote, LocalPlayer }
 
-    // What a call is to the peers: a party seat's or the host's own player's movement goes out as
-    // their poses, never as packets, and each client makes its own seats' spawn-time ZoneIn.
-    // ActorControlSelf only reaches a player's own client; the party-wide ones (gauge, signs,
-    // ground marker) go to every client's own player.
-    private enum CallKind { State, Motion, Lifecycle, OwnSelf, PartySelf }
-
-    private static CallKind KindOf(uint category) => category switch
-    {
-        0xDC or 0xDF or 0xE1 or 0xF1 => CallKind.Motion,
-        0xC8 => CallKind.Lifecycle,
-        0x01 or 0xED or 0x107 => CallKind.OwnSelf,
-        0xB7 or 0x1F9 => CallKind.PartySelf,
-        _ => CallKind.State,
-    };
-
-    private const uint MarkingCategory = 0x1F6;
     private const uint SetTetherCategory = 0x23;
 
-    // The argument a category carries an actor's entity id in.
-    private static int EntityArgIndex(uint category) => category switch
-    {
-        0x15 or 0x23 => 2,
-        0x22 => 1,
-        0x25F => 0,
-        _ => -1,
-    };
-
-    private bool TryAddress(IBattleCharaProxy proxy, CallKind kind, out uint actor, out bool ownerOnly)
+    private bool TryAddress(IBattleCharaProxy proxy, Delivery delivery, out uint actor, out bool ownerOnly)
     {
         actor = PacketActor.None;
         ownerOnly = false;
@@ -173,17 +149,17 @@ internal sealed class PacketRecorder
         {
             switch (seat.Kind)
             {
-                case SeatKind.Bot when kind != CallKind.Lifecycle:
+                case SeatKind.Bot when delivery != Delivery.ZoneIn:
                     actor = PacketActor.Seat(seat.Role);
                     return true;
-                case SeatKind.Remote when kind is CallKind.State or CallKind.OwnSelf or CallKind.PartySelf:
+                case SeatKind.Remote when delivery is Delivery.Everyone or Delivery.SeatOwner or Delivery.EachOwnPlayer:
                     actor = PacketActor.Seat(seat.Role);
-                    ownerOnly = kind != CallKind.State;
+                    ownerOnly = delivery != Delivery.Everyone;
                     return true;
-                case SeatKind.LocalPlayer when kind == CallKind.State:
+                case SeatKind.LocalPlayer when delivery == Delivery.Everyone:
                     actor = PacketActor.Seat(seat.Role);
                     return true;
-                case SeatKind.LocalPlayer when kind == CallKind.PartySelf:
+                case SeatKind.LocalPlayer when delivery == Delivery.EachOwnPlayer:
                     actor = PacketActor.Self;
                     return true;
                 default:
@@ -227,31 +203,41 @@ internal sealed class PacketRecorder
 
     // A call to an actor the host's own client doesn't have yet does nothing there; peers get
     // only what that client got.
-    private void Record(IBattleCharaProxy proxy, CallKind kind, Func<uint, bool, GamePacket> packet)
+    private void Record(IBattleCharaProxy proxy, Delivery delivery, Func<uint, bool, GamePacket> packet)
     {
-        if (!proxy.Exists || !TryAddress(proxy, kind, out var actor, out var ownerOnly)) return;
+        if (!proxy.Exists || !TryAddress(proxy, delivery, out var actor, out var ownerOnly)) return;
         Add(packet(actor, ownerOnly));
+    }
+
+    // No peer would take a category without a rule.
+    private ControlRule? Rule(IReadOnlyDictionary<uint, ControlRule> rules, uint category, string what)
+    {
+        if (rules.TryGetValue(category, out var rule)) return rule;
+        if (Recording && unruled.Add(category))
+            DiagnosticLog.Warn($"[Multiplayer] Host: {what} category 0x{category:X} has no PacketRules entry -- peers won't see it.");
+        return null;
     }
 
     private void RecordControl(IBattleCharaProxy proxy, uint category, uint[] args)
     {
-        if (!proxy.Exists || !TryAddress(proxy, KindOf(category), out var actor, out var ownerOnly)) return;
+        if (Rule(PacketRules.Controls, category, "ActorControl") is not { } rule) return;
+        if (!proxy.Exists || !TryAddress(proxy, rule.Delivery, out var actor, out var ownerOnly)) return;
         if (category == SetTetherCategory) SimAssets.WarnIfUnknown(SimAssetKind.Tether, args[1], "tether");
-        var (sent, index, argActor) = WithEntityArg(args, EntityArgIndex(category));
+        var (sent, index, argActor) = WithEntityArg(args, rule.ActorArg);
         Add(new ControlPacket(actor, category, sent, index, argActor, ownerOnly));
     }
 
     private void RecordControlTarget(IBattleCharaProxy proxy, uint category, GameObjectId target, uint[] args)
     {
-        var kind = category == MarkingCategory ? CallKind.PartySelf : CallKind.State;
-        if (!proxy.Exists || !TryAddress(proxy, kind, out var actor, out var ownerOnly)) return;
+        if (Rule(PacketRules.TargetControls, category, "ActorControlTarget") is not { } rule) return;
+        if (!proxy.Exists || !TryAddress(proxy, rule.Delivery, out var actor, out var ownerOnly)) return;
         if (ownerOnly) return;
-        var (sent, index, argActor) = WithEntityArg(args, category == MarkingCategory ? 1 : -1);
+        var (sent, index, argActor) = WithEntityArg(args, rule.ActorArg);
         Add(new ControlTargetPacket(actor, category, ActorOf(target), sent, index, argActor));
     }
 
     private void RecordCast(IBattleCharaProxy proxy, ActorCastData cast)
-        => Record(proxy, CallKind.State, (actor, _) =>
+        => Record(proxy, Delivery.Everyone, (actor, _) =>
         {
             SimAssets.WarnIfUnplayable(cast.ActionId, "cast");
             return new CastPacket(actor, cast.ActionId, cast.ActionType, cast.CastTime, cast.OmenDelay,
@@ -260,7 +246,7 @@ internal sealed class PacketRecorder
 
     // The client answers an effect naming its own request (SourceSequence) only on the host.
     private void RecordEffect(IBattleCharaProxy proxy, uint sequence, ActionEffectData effect)
-        => Record(proxy, CallKind.State, (actor, _) =>
+        => Record(proxy, Delivery.Everyone, (actor, _) =>
         {
             SimAssets.WarnIfUnplayable(effect.ActionId, "effect");
             return new EffectPacket(actor, sequence, effect.ActionId, effect.ActionType, effect.AnimationLock,
@@ -271,7 +257,7 @@ internal sealed class PacketRecorder
         });
 
     private void RecordStatusList(IBattleCharaProxy proxy, IReadOnlyList<StatusSlot> statuses, uint health, uint mana, byte shield)
-        => Record(proxy, CallKind.State, (actor, _) =>
+        => Record(proxy, Delivery.Everyone, (actor, _) =>
         {
             var slots = new List<StatusSlotPacket>();
             for (var i = 0; i < statuses.Count; i++)
@@ -327,8 +313,8 @@ internal sealed class PacketRecorder
     private void RecordObjectControl(IEventObjectProxy obj, uint category, uint[] args)
     {
         var entityId = obj.EntityId;
-        if (!Recording || !spawned.Contains(entityId)) return;
-        var (sent, index, argActor) = WithEntityArg(args, EntityArgIndex(category));
+        if (!Recording || !spawned.Contains(entityId) || Rule(PacketRules.Controls, category, "ActorControl") is not { } rule) return;
+        var (sent, index, argActor) = WithEntityArg(args, rule.ActorArg);
         Add(new ControlPacket(entityId, category, sent, index, argActor));
     }
 
@@ -393,19 +379,19 @@ internal sealed class PacketRecorder
 
         public void SetPos(Vector3 position, float rotation)
         {
-            recorder.Record(this, CallKind.Motion, (actor, _) => new SetPosPacket(actor, position.X, position.Y, position.Z, rotation));
+            recorder.Record(this, Delivery.Movement, (actor, _) => new SetPosPacket(actor, position.X, position.Y, position.Z, rotation));
             inner.SetPos(position, rotation);
         }
 
         public void Move(Vector3 position, float rotation, ActorMoveFlags flags, float speed)
         {
-            recorder.Record(this, CallKind.Motion, (actor, _) => new MovePacket(actor, position.X, position.Y, position.Z, rotation, flags, speed));
+            recorder.Record(this, Delivery.Movement, (actor, _) => new MovePacket(actor, position.X, position.Y, position.Z, rotation, flags, speed));
             inner.Move(position, rotation, flags, speed);
         }
 
         public void NpcKnockback(Vector3 position, float rotation, float durationSeconds)
         {
-            recorder.Record(this, CallKind.Motion, (actor, _) => new NpcKnockbackPacket(actor, position.X, position.Y, position.Z, rotation, durationSeconds));
+            recorder.Record(this, Delivery.Movement, (actor, _) => new NpcKnockbackPacket(actor, position.X, position.Y, position.Z, rotation, durationSeconds));
             inner.NpcKnockback(position, rotation, durationSeconds);
         }
 
@@ -424,7 +410,7 @@ internal sealed class PacketRecorder
 
         public void ReceiveEffectResult(uint globalSequence, byte targetIndex, uint health)
         {
-            recorder.Record(this, CallKind.State, (actor, _) => new EffectResultPacket(actor, globalSequence, targetIndex, health, inner.MaxHealth));
+            recorder.Record(this, Delivery.Everyone, (actor, _) => new EffectResultPacket(actor, globalSequence, targetIndex, health, inner.MaxHealth));
             inner.ReceiveEffectResult(globalSequence, targetIndex, health);
         }
 

@@ -240,13 +240,8 @@ internal sealed class PeerNatives
 internal sealed class PeerProxy(IBattleCharaProxy inner, PeerSeat seat) : IBattleCharaProxy
 {
     private const int StatusSlots = 60;
-    private const uint ZoneInCategory = 0xC8;
     private const uint GainEffectCategory = 0x14;
     private const uint LoseEffectCategory = 0x15;
-
-    // Our player's own: cast bars and their cancel, status announcements and the limit break
-    // ActorControls of its own presses, its movement, forced moves and falls.
-    private static readonly HashSet<uint> OwnPlayerCategories = [0x0F, 0x14, 0x15, 0x47, 0x48, 0xC8, 0xDC, 0xDF, 0xE1, 0xED, 0xF1, 0x107];
 
     public IBattleCharaProxy Inner => inner;
     public PeerSeat Seat { get; set; } = seat;
@@ -301,11 +296,11 @@ internal sealed class PeerProxy(IBattleCharaProxy inner, PeerSeat seat) : IBattl
 
     public void ActorControl(uint category, uint arg1 = 0, uint arg2 = 0, uint arg3 = 0, uint arg4 = 0, uint arg5 = 0, uint arg6 = 0, uint arg7 = 0, uint arg8 = 0)
     {
-        var passes = Seat switch
+        var passes = PacketRules.Controls.TryGetValue(category, out var rule) && Seat switch
         {
-            PeerSeat.Bot or PeerSeat.Remote => category == ZoneInCategory,
+            PeerSeat.Bot or PeerSeat.Remote => rule.Delivery == Delivery.ZoneIn,
             // A status reported to the host is the host's to show (see WriteStatuses), and to announce.
-            PeerSeat.LocalPlayer => OwnPlayerCategories.Contains(category)
+            PeerSeat.LocalPlayer => rule.OwnPlayer
                                     && !(category is GainEffectCategory or LoseEffectCategory && HostReport.IsReported((ushort)arg1)),
             _ => false,
         };

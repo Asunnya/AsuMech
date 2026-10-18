@@ -71,25 +71,13 @@ internal static class NetGuard
 
     public static bool InRange(int index, int count) => index >= 0 && index < count;
 
-    // ProcessDirectorUpdate is where the server's own instance-state packets land, so only the
-    // categories scenarios send are taken from the host.
-    private static readonly uint[] ReplayableDirectorCategories = [0x80000004U, 0x8000000DU, 0x80000027U, 0x80000028U];
-
-    public static bool IsReplayableDirectorCategory(uint category) => Array.IndexOf(ReplayableDirectorCategories, category) >= 0;
-
-    // Every ActorControl category this build's sim sends (ActorControl, SimEventObject, the spawn
-    // wall): a peer hands its client no other.
-    private static readonly HashSet<uint> ReplayableActorControls =
-    [
-        0x00, 0x01, 0x02, 0x04, 0x0E, 0x0F, 0x14, 0x15, 0x22, 0x23, 0x24, 0x27, 0x2F, 0x31, 0x36, 0x3C, 0x3E, 0x3F, 0x46, 0x47,
-        0x48, 0x50, 0x52, 0x6A, 0xB7, 0xC8, 0xDC, 0xDF, 0xE1, 0xED, 0xF1, 0x107, 0x197, 0x199, 0x19D, 0x1F9, 0x25F, 0x5F9, 0x5FB,
-    ];
+    public static bool IsReplayableDirectorCategory(uint category) => PacketRules.DirectorCategories.Contains(category);
 
     private static readonly HashSet<uint> warnedActorControls = [];
 
     public static bool IsReplayableActorControl(uint category)
     {
-        if (ReplayableActorControls.Contains(category)) return true;
+        if (PacketRules.Controls.ContainsKey(category)) return true;
         if (warnedActorControls.Add(category))
             Core.DiagnosticLog.Warn($"[Multiplayer] Dropped ActorControl category 0x{category:X} from the host -- this build never sends it.");
         return false;
