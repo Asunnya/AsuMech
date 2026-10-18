@@ -243,7 +243,8 @@ public sealed partial class MultiplayerManager
                         DiagnosticLog.Warn($"[Multiplayer] Host: {who} reported status {applied.StatusId} on unknown enemy 0x{entityId:X} -- dropping.");
                         continue;
                     }
-                    enemy.AddStatus(applied.StatusId, duration);
+                    enemy.RemoveStatus(applied.StatusId);
+                    enemy.AddStatusParam(applied.StatusId, applied.Param, duration);
                     DiagnosticLog.Info($"[Multiplayer] Host: applied {who}'s reported status {applied.StatusId} (duration={duration:F1}) to enemy 0x{entityId:X}.");
                 }
                 break;

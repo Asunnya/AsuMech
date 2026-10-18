@@ -24,13 +24,13 @@ public sealed partial class MultiplayerManager
         pendingSelfPoseSend = Send(new SelfPoseMessage(MyPeerId, player.Position.X, player.Position.Y, player.Position.Z, player.Rotation));
     }
 
-    public void ReportAppliedEnemyStatus(IReadOnlyList<SimEnemy> enemies, ushort statusId, float duration)
+    public void ReportAppliedEnemyStatus(IReadOnlyList<SimEnemy> enemies, ushort statusId, float duration, ushort param)
     {
         if (IsHost || relay is not { IsConnected: true } || replay is null || enemies.Count == 0) return;
         var hostIds = enemies.Select(replay.HostActorOf).Where(id => id != PacketActor.None).ToList();
         if (hostIds.Count == 0) return;
         DiagnosticLog.Info($"[Multiplayer] Peer: reporting applied status {statusId} on the host's enemies [{string.Join(",", hostIds.Select(id => $"0x{id:X}"))}].");
-        _ = Send(new PeerAppliedEnemyStatusMessage(MyPeerId, hostIds, statusId, duration));
+        _ = Send(new PeerAppliedEnemyStatusMessage(MyPeerId, hostIds, statusId, duration, param));
     }
 
     public void ReportAppliedRoleStatus(IReadOnlyList<PartyRole> roles, ushort statusId, float duration, ushort param)

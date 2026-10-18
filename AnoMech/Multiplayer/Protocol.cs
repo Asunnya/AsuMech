@@ -344,7 +344,7 @@ public sealed record UltimatePredationAiReplayStateMessage(
 
 // Peer -> host: an enemy debuff (Reprisal) applied locally; the peer's enemy doppels
 // are cosmetic, so this is how the host's enemy gets the debuff. Enemies by host entity id.
-public sealed record PeerAppliedEnemyStatusMessage(Guid PeerId, List<uint> Enemies, ushort StatusId, float Duration) : MpMessage, IPeerMessage;
+public sealed record PeerAppliedEnemyStatusMessage(Guid PeerId, List<uint> Enemies, ushort StatusId, float Duration, ushort Param = 0) : MpMessage, IPeerMessage;
 
 // Party counterpart, the peer's own role included: a peer's presses land only on its own
 // client, and the host decides who lives from the statuses on its own copies.
