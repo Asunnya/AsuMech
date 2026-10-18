@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Threading.Tasks;
 using AnoMech.Core;
 using AnoMech.Core.Game;
@@ -11,6 +12,24 @@ namespace AnoMech.Multiplayer;
 
 public sealed partial class MultiplayerManager
 {
+    // ---- Our own player, as the peer's SelfPose and the host's Roles give it -
+
+    // Our player's velocity over the ground. The client walks them after the plugin's update, so a
+    // tick sees the walk of the frame before, made in that frame's time.
+    private Vector3 ownVelocity;
+    private Vector3? ownLastPosition;
+    private float ownLastDelta;
+
+    private void TrackOwnVelocity(float deltaSeconds)
+    {
+        var position = Plugin.Game.World.Party.Player?.Position;
+        ownVelocity = position is { } now && ownLastPosition is { } last && ownLastDelta > 0f
+            ? new Vector3(now.X - last.X, 0f, now.Z - last.Z) / ownLastDelta
+            : Vector3.Zero;
+        ownLastPosition = position;
+        ownLastDelta = deltaSeconds;
+    }
+
     // ---- Peer: reporting our own pose --------------------------------------
 
     // Backpressure-gated: one in flight at a time.
@@ -21,7 +40,8 @@ public sealed partial class MultiplayerManager
         if (pendingSelfPoseSend is not (null or { IsCompleted: true })) return;
         var player = Plugin.Game.World.Party.Player;
         if (player == null) return;
-        pendingSelfPoseSend = Send(new SelfPoseMessage(MyPeerId, player.Position.X, player.Position.Y, player.Position.Z, player.Rotation));
+        pendingSelfPoseSend = Send(new SelfPoseMessage(MyPeerId, player.Position.X, player.Position.Y, player.Position.Z, player.Rotation,
+            ownVelocity.X, ownVelocity.Z));
     }
 
     public void ReportAppliedEnemyStatus(IReadOnlyList<SimEnemy> enemies, ushort statusId, float duration, ushort param)
@@ -52,7 +72,7 @@ public sealed partial class MultiplayerManager
         }
         if (!NetGuard.TryPosition(msg.X, msg.Y, msg.Z, out var pose)) return;
         if (Plugin.Game.World.Party.Get(role) is SimNetworkPuppet puppet)
-            puppet.ApplyNetworkPose(pose, NetGuard.Rotation(msg.Rotation));
+            puppet.ApplyNetworkPose(pose, NetGuard.Rotation(msg.Rotation), NetGuard.Velocity(msg.VX, msg.VZ));
         else
             DiagnosticLog.Debug($"[Multiplayer] SelfPose from {Session.NameOf(msg.PeerId)} ({role}) but that slot isn't a SimNetworkPuppet -- dropping.");
     }
@@ -213,7 +233,7 @@ public sealed partial class MultiplayerManager
         foreach (var r in NetGuard.Cap(snap.Roles, Enum.GetValues<PartyRole>().Length))
             if (r.Role != MyClaimedRole && Plugin.Game.World.Party.Get(r.Role) is SimNetworkPuppet puppet
                 && NetGuard.TryPosition(r.X, r.Y, r.Z, out var position))
-                puppet.ApplyNetworkPose(position, NetGuard.Rotation(r.Rotation));
+                puppet.ApplyNetworkPose(position, NetGuard.Rotation(r.Rotation), NetGuard.Velocity(r.VX, r.VZ));
     }
 
     // Forced moves land on our own character only: every other slot is a puppet the host's

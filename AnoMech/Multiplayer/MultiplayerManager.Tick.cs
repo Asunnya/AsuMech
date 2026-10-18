@@ -248,6 +248,7 @@ public sealed partial class MultiplayerManager
     private void TickRun(float deltaSeconds)
     {
         if (!running) return;
+        TrackOwnVelocity(deltaSeconds);
 
         if (IsHost)
         {

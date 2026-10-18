@@ -33,7 +33,9 @@ public sealed class SimNetworkPuppet : SimNpc, ISimPartyMember
         DisplayName = name;
     }
 
-    public void ApplyNetworkPose(Vector3 position, float rotation) => motion.ApplyPose(position, rotation);
+    public void ApplyNetworkPose(Vector3 position, float rotation, Vector3 velocity) => motion.ApplyPose(position, rotation, velocity);
+
+    public Vector3 PoseVelocity => motion.PoseVelocity;
 
     // A forced move here only moves the host's copy through the owner's poses; MultiplayerManager
     // drains these to tell the owning peer to apply them to their real character.

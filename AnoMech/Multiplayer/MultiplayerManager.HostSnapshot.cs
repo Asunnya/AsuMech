@@ -61,7 +61,10 @@ public sealed partial class MultiplayerManager
         var roles = new List<RoleState>(8);
         foreach (var role in Enum.GetValues<PartyRole>())
             if (party.Get(role) is { } member and (SimPlayer or SimNetworkPuppet))
-                roles.Add(new RoleState(role, member.Position.X, member.Position.Y, member.Position.Z, member.Rotation));
+            {
+                var velocity = member is SimNetworkPuppet puppet ? puppet.PoseVelocity : ownVelocity;
+                roles.Add(new RoleState(role, member.Position.X, member.Position.Y, member.Position.Z, member.Rotation, velocity.X, velocity.Z));
+            }
         return Send(new RolesSnapshotMessage(roles));
     }
 

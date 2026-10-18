@@ -8,31 +8,37 @@ namespace AnoMech.Core.Game.Motion;
 
 // A real remote player's seat: their own client moves them, and the poses they report are the
 // position. Orders are dropped; forced moves are queued for the owner to apply to their character,
-// and this copy shows them the way a replay shows another player's, by following the poses.
+// and this copy shows them the way retail relays another player: an ActorMove aimed where they are
+// now, walked at their own pace.
 internal sealed class RemoteMotion(Func<IBattleCharaProxy?> proxy, Coordinates coordinates) : CharacterMotion
 {
-    // The catch-up speed is a floor once the real pose interval is known, anything beyond
-    // SnapThreshold (spawn, lag spike, teleport) snaps instead of gliding, and extrapolation only
-    // feeds the visual glide.
-    private const float CatchUpSpeed = 20f;
+    // Anything beyond SnapThreshold (spawn, lag spike, teleport) snaps instead of walking, and
+    // extrapolation only feeds the walk.
     private const float SnapThreshold = 15f;
     private const float AngularCatchUpSpeed = MathF.PI * 20f;
-    private const float IntervalSmoothingFactor = 0.3f;
-    private const float MinPacingWindowSeconds = 0.05f;
     private const float MaxPoseExtrapolationSeconds = 1f;
+    // Faster than any run: a forced move or a teleport, which carrying on would overshoot.
+    private const float FastestRun = 10f;
+    // An ActorMove's speed byte holds tenths of a y/s, up to this.
+    private const float MaxWalkSpeed = 25.5f;
 
     private readonly ModelSync model = new(proxy, coordinates, turnSpeed: null);
 
-    // Where this copy's model is being walked, trailing the reported pose.
+    // Where the client has this copy, if its ground controller walks as ModelSync says: to the last
+    // ActorMove's spot at that packet's speed.
     private Vector3 modelPosition;
+    private Vector3 walkTarget;
+    private float walkSpeed;
+    // What this tick's ActorMove carries, if ModelSync sends one.
+    private Vector3 aim;
+    private float aimSpeed;
     private float rotation;
     private bool placed;
 
     private Vector3? targetPosition;
     private float targetRotation;
-    private float timeSinceLastPose;
-    private float estimatedPoseInterval = 0.05f;
     private Vector3 poseVelocity;
+    private float timeSinceLastPose;
 
     private readonly List<ForcedMove> outbox = [];
 
@@ -44,16 +50,17 @@ internal sealed class RemoteMotion(Func<IBattleCharaProxy?> proxy, Coordinates c
     public override float Rotation => rotation;
     public override bool IsMoving => false;
 
-    // The position moves in Tick, which steps toward the pose.
-    public void ApplyPose(Vector3 position, float poseRotation)
+    // As the owner's client reported it.
+    public Vector3 PoseVelocity => poseVelocity;
+
+    // The model walks toward the pose in Tick. Only a new spot or velocity starts the
+    // extrapolation over: a repeat, or a turn on its own, says nothing new about where they are.
+    public void ApplyPose(Vector3 position, float poseRotation, Vector3 velocity)
     {
-        if (targetPosition is { } previous)
-        {
-            estimatedPoseInterval += (timeSinceLastPose - estimatedPoseInterval) * IntervalSmoothingFactor;
-            poseVelocity = timeSinceLastPose > MinPacingWindowSeconds ? (position - previous) / timeSinceLastPose : Vector3.Zero;
-        }
-        targetPosition = position;
         targetRotation = poseRotation;
+        if (position == targetPosition && velocity == poseVelocity) return;
+        targetPosition = position;
+        poseVelocity = velocity;
         timeSinceLastPose = 0f;
     }
 
@@ -68,28 +75,37 @@ internal sealed class RemoteMotion(Func<IBattleCharaProxy?> proxy, Coordinates c
 
     public override void SetPosition(Vector3 position)
     {
-        placed = true;
-        modelPosition = position;
+        Place(position);
         model.SetPos(position);
     }
 
     public override void SetPlacement(Placement placement)
     {
-        placed = true;
-        modelPosition = placement.Position;
+        Place(placement.Position);
         rotation = placement.Rotation;
         model.SetPos(placement.Position, placement.Rotation);
     }
 
     public override void Seed(Placement placement)
     {
-        placed = true;
-        modelPosition = placement.Position;
+        Place(placement.Position);
         rotation = placement.Rotation;
         model.Assume(placement.Position, placement.Rotation);
     }
 
-    public override void ResendTransform() => model.SetPos(modelPosition);
+    public override void ResendTransform()
+    {
+        Place(modelPosition);
+        model.SetPos(modelPosition);
+    }
+
+    // The model stands there, with no walk under way.
+    private void Place(Vector3 position)
+    {
+        placed = true;
+        modelPosition = walkTarget = aim = position;
+        walkSpeed = aimSpeed = 0f;
+    }
 
     public override void TurnTo(float newRotation) { }
     public override void Face(Vector3 target) { }
@@ -133,6 +149,7 @@ internal sealed class RemoteMotion(Func<IBattleCharaProxy?> proxy, Coordinates c
             case ForcedMove.Teleport teleport:
                 SetPlacement(teleport.To);
                 if (targetPosition != null) targetPosition = teleport.To.Position;
+                poseVelocity = Vector3.Zero;
                 break;
         }
         outbox.Add(move);
@@ -148,35 +165,43 @@ internal sealed class RemoteMotion(Func<IBattleCharaProxy?> proxy, Coordinates c
     {
         if (!placed && proxy() is { Exists: true } native)
         {
-            modelPosition = coordinates.ToLocal(native.Position);
+            Place(coordinates.ToLocal(native.Position));
             rotation = native.Rotation;
             model.Assume(modelPosition, rotation);
-            placed = true;
         }
 
-        if (gates.Alive && targetPosition is { } rawTarget) FollowPose(deltaSeconds, rawTarget);
-        model.Flush(deltaSeconds);
+        if (gates.Alive && targetPosition is { } pose) FollowPose(deltaSeconds, pose);
+        if (model.Flush(deltaSeconds)) (walkTarget, walkSpeed) = (aim, aimSpeed);
+        Walk(deltaSeconds);
     }
 
-    private void FollowPose(float deltaSeconds, Vector3 rawTarget)
+    // The client's own walk, which runs after the packets of its frame.
+    private void Walk(float deltaSeconds)
+    {
+        var away = walkTarget - modelPosition;
+        var distance = away.Length();
+        var step = walkSpeed * deltaSeconds;
+        modelPosition = distance <= step ? walkTarget : modelPosition + away / distance * step;
+    }
+
+    private void FollowPose(float deltaSeconds, Vector3 pose)
     {
         timeSinceLastPose += deltaSeconds;
-        var target = rawTarget + poseVelocity * MathF.Min(timeSinceLastPose, MaxPoseExtrapolationSeconds);
-        var delta = target - modelPosition;
-        var dist = delta.Length();
-        var remainingWindow = MathF.Max(estimatedPoseInterval - timeSinceLastPose, MinPacingWindowSeconds);
-        var step = MathF.Max(dist / remainingWindow, CatchUpSpeed) * deltaSeconds;
-        var nextRotation = MathUtil.StepRotation(rotation, targetRotation, AngularCatchUpSpeed * deltaSeconds);
-        if (dist > SnapThreshold)
+        var velocity = poseVelocity.Length() <= FastestRun ? poseVelocity : Vector3.Zero;
+        var target = pose + velocity * MathF.Min(timeSinceLastPose, MaxPoseExtrapolationSeconds);
+        rotation = MathUtil.StepRotation(rotation, targetRotation, AngularCatchUpSpeed * deltaSeconds);
+        if (Vector3.Distance(target, modelPosition) > SnapThreshold)
         {
-            SetPlacement(new Placement(target, nextRotation));
+            SetPlacement(new Placement(target, rotation));
             return;
         }
-        modelPosition = dist <= step ? target : modelPosition + delta / dist * step;
-        rotation = nextRotation;
-        model.Face(nextRotation);
-        // The model is aimed where the peer will be ModelSync.LeadSeconds ahead.
-        var glideSpeed = deltaSeconds > 0f ? MathF.Min(dist, step) / deltaSeconds : 0f;
-        model.Glide(target + poseVelocity * ModelSync.LeadSeconds, ActorMoveFlags.None, glideSpeed);
+        // The player's own pace while the copy keeps up with them, slow enough that it's still
+        // walking when the next packet comes: the client walks this frame's time on top of the
+        // interval. In the byte's tenths, rounded down for the same reason.
+        aim = target + velocity * ModelSync.LeadSeconds;
+        var walkSeconds = ModelSync.SendInterval + deltaSeconds;
+        aimSpeed = MathF.Floor(MathF.Min(Vector3.Distance(aim, modelPosition) / walkSeconds, MaxWalkSpeed) * 10f) / 10f;
+        model.Face(rotation);
+        model.Glide(aim, ActorMoveFlags.None, aimSpeed);
     }
 }

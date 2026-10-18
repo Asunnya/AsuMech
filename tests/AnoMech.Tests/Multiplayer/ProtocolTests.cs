@@ -28,7 +28,7 @@ public class ProtocolTests
     public void FullEightPlayerSnapshotIsAccepted()
     {
         var id = RelayWire.PeerId(RelayWire.NewSecret());
-        var role = new RoleState(default, 0, 0, 0, 0);
+        var role = new RoleState(default, 0, 0, 0, 0, 0, 0);
         var message = new RolesSnapshotMessage(Enumerable.Repeat(role, 8).ToList());
         Assert.That(RelayWire.Validate(JsonSerializer.SerializeToUtf8Bytes<MpMessage>(message), true, id), Is.EqualTo("rolesSnapshot"));
     }

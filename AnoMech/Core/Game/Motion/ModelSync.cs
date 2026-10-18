@@ -109,8 +109,8 @@ internal sealed class ModelSync(Func<IBattleCharaProxy?> proxy, Coordinates coor
         movePending = true;
     }
 
-    // Once per tick, after the sim moved.
-    public void Flush(float deltaSeconds)
+    // Once per tick, after the sim moved. True when an ActorMove went out.
+    public bool Flush(float deltaSeconds)
     {
         sinceSend += deltaSeconds;
         if (turnTarget is { } target && turnSpeed is { } speed)
@@ -120,15 +120,16 @@ internal sealed class ModelSync(Func<IBattleCharaProxy?> proxy, Coordinates coor
             if (modelRotation == target) turnTarget = null;
         }
 
-        if (!movePending || (!sendNow && sinceSend < SendInterval)) return;
+        if (!movePending || (!sendNow && sinceSend < SendInterval)) return false;
         movePending = false;
         sendNow = false;
         sinceSend = 0f;
-        if (glideTarget != lastSentTarget || modelRotation != lastSentRotation)
-            proxy()?.Move(coordinates.ToGlobal(glideTarget), modelRotation, moveFlags, moveSpeed);
+        var changed = glideTarget != lastSentTarget || modelRotation != lastSentRotation;
+        if (changed) proxy()?.Move(coordinates.ToGlobal(glideTarget), modelRotation, moveFlags, moveSpeed);
         lastSentTarget = glideTarget;
         lastSentRotation = modelRotation;
         moveFlags = ActorMoveFlags.None;
         moveSpeed = 0f;
+        return changed;
     }
 }

@@ -23,6 +23,7 @@ internal static class NetGuard
     public const float MaxMitigationSeconds = 120f;
 
     private const float MaxCoordinate = 4096f;
+    private const float MaxSpeed = 100f;
 
     // Control characters would corrupt the diagnostic log's line format, and an unbounded
     // string is a per-frame ImGui hang.
@@ -55,6 +56,8 @@ internal static class NetGuard
         => x is { } px && y is { } py && z is { } pz && TryPosition(px, py, pz, out var position) ? position : null;
 
     public static float Rotation(float value) => IsFinite(value) ? value : 0f;
+
+    public static Vector3 Velocity(float x, float z) => new(Clamp(x, -MaxSpeed, MaxSpeed), 0f, Clamp(z, -MaxSpeed, MaxSpeed));
 
     public static IReadOnlyList<T> Cap<T>(IReadOnlyList<T>? items, int max)
     {

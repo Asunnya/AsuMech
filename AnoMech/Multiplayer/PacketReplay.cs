@@ -376,7 +376,7 @@ internal sealed class PacketReplay(PeerNatives natives, SimWorld world, PartyRol
         if (spawned.GetValueOrDefault(actor)?.Enemy is { } enemy)
             enemy.SetPosition(new Placement(local, rotation));
         else if (PacketActor.IsSeat(actor, out var role) && role != myRole && world.Party.Get(role) is SimNetworkPuppet puppet)
-            puppet.ApplyNetworkPose(local, rotation);
+            puppet.ApplyNetworkPose(local, rotation, Vector3.Zero);
     }
 
     private void Cast(CastPacket p)
