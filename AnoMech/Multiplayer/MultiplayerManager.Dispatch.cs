@@ -152,12 +152,7 @@ public sealed partial class MultiplayerManager
                 return;
             }
         }
-        // Host liveness: only types the host itself broadcasts (SessionEnded excluded, any peer
-        // can send it). Keep in sync with the `when !IsHost` cases below.
-        if (!IsHost && message is LobbyStateMessage or EnterMessage or StartMessage or GamePacketsMessage or RolesSnapshotMessage
-            or RoleKilledMessage or KnockbackMessage or TeleportMessage or PushMessage or CarryMessage or FollowMessage
-            or EndMessage or PingMessage or PeerStatusMessage or AnnouncementMessage
-            or IScenarioReplayStateMessage or IScenarioMidRunUpdateMessage or KickMessage)
+        if (!IsHost && isFromHost)
         {
             lastHostMessageMs = NowMs;
             everHeardFromHost = true;
