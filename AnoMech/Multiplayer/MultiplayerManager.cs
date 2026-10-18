@@ -546,6 +546,9 @@ public sealed partial class MultiplayerManager : IDisposable
         DiagnosticLog.Info($"[Multiplayer] Reconnected to session {SessionCode}.");
         lastHostMessageMs = NowMs;
         ConnectionError = null;
+        // The poses sent meanwhile went with the link.
+        lastSelfPose = null;
+        lastRoles = null;
         // Re-registering with the host resumes a running scenario the same way a late join does.
         if (!IsHost) _ = SendHelloAsync(relay);
         else
@@ -1087,6 +1090,7 @@ public sealed partial class MultiplayerManager : IDisposable
     // packets: a peer sets its own run up first, as this host did before sending them.
     private void AnnounceStart()
     {
+        lastRoles = null;
         _ = Send(LobbyMessage());
         _ = Send(new StartMessage(HostRunClock()));
         FlushPackets(force: true);

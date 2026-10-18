@@ -179,6 +179,7 @@ public sealed partial class MultiplayerManager
                 // Before the lobby state, which a fresh join takes as its first message.
                 if (stream != null) Transmit(stream.Hello(hello.PeerId, hello.StreamEpoch, hello.StreamReceived));
                 BroadcastLobbyState();
+                lastRoles = null;
                 break;
             }
             case ClaimRoleMessage claim when IsHost:

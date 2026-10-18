@@ -52,11 +52,15 @@ public sealed partial class MultiplayerManager
             _ = Send(update);
     }
 
+    // Backpressure-gated like SelfPose, and sent when any seat in it changes.
     private Task? pendingRolesSend;
+    private List<RoleState>? lastRoles;
+    private long lastRolesMs;
 
     // The players' seats; a bot's goes out as its own movement packets.
-    private Task SampleAndBroadcastRoles()
+    private void BroadcastRoles()
     {
+        if (pendingRolesSend is not (null or { IsCompleted: true })) return;
         var party = Plugin.Game.World.Party;
         var roles = new List<RoleState>(8);
         foreach (var role in Enum.GetValues<PartyRole>())
@@ -65,7 +69,10 @@ public sealed partial class MultiplayerManager
                 var velocity = member is SimNetworkPuppet puppet ? puppet.PoseVelocity : ownVelocity;
                 roles.Add(new RoleState(role, member.Position.X, member.Position.Y, member.Position.Z, member.Rotation, velocity.X, velocity.Z));
             }
-        return Send(new RolesSnapshotMessage(roles));
+        if (lastRoles != null && roles.SequenceEqual(lastRoles) && NowMs - lastRolesMs < PoseRefreshMs) return;
+        lastRoles = roles;
+        lastRolesMs = NowMs;
+        pendingRolesSend = Send(new RolesSnapshotMessage(roles));
     }
 
     // An enemy goes by its entity id on the host, as its packets name it.

@@ -30,18 +30,28 @@ public sealed partial class MultiplayerManager
         ownLastDelta = deltaSeconds;
     }
 
+    // A pose that hasn't changed goes out again this often, for whoever missed it.
+    private const long PoseRefreshMs = 1000;
+
     // ---- Peer: reporting our own pose --------------------------------------
 
-    // Backpressure-gated: one in flight at a time.
+    // Backpressure-gated: one in flight at a time. Sent when it changes; a stop changes the
+    // velocity, so the others' copies stop with it.
     private Task? pendingSelfPoseSend;
+    private SelfPoseMessage? lastSelfPose;
+    private long lastSelfPoseMs;
 
     private void SendSelfPose()
     {
         if (pendingSelfPoseSend is not (null or { IsCompleted: true })) return;
         var player = Plugin.Game.World.Party.Player;
         if (player == null) return;
-        pendingSelfPoseSend = Send(new SelfPoseMessage(MyPeerId, player.Position.X, player.Position.Y, player.Position.Z, player.Rotation,
-            ownVelocity.X, ownVelocity.Z));
+        var pose = new SelfPoseMessage(MyPeerId, player.Position.X, player.Position.Y, player.Position.Z, player.Rotation,
+            ownVelocity.X, ownVelocity.Z);
+        if (pose == lastSelfPose && NowMs - lastSelfPoseMs < PoseRefreshMs) return;
+        lastSelfPose = pose;
+        lastSelfPoseMs = NowMs;
+        pendingSelfPoseSend = Send(pose);
     }
 
     public void ReportAppliedEnemyStatus(IReadOnlyList<SimEnemy> enemies, ushort statusId, float duration, ushort param)
@@ -158,6 +168,7 @@ public sealed partial class MultiplayerManager
         peerNatives?.TagSeats(Plugin.Game.World.Party, RemoteSeats());
         TagBotSeats();
         peerEnteredInstance = true;
+        lastSelfPose = null;
         DiagnosticLog.Info("[Multiplayer] Peer is in the zone with the party seated -- telling the host.");
         foreach (var packet in earlyPackets) replay?.Apply(packet);
         earlyPackets.Clear();
@@ -194,6 +205,7 @@ public sealed partial class MultiplayerManager
         eventClockSynced = false;
         pingClock = null;
         DiagnosticLog.Info("[Multiplayer] Peer's run is up -- applying the host's packets and sending SelfPose.");
+        lastSelfPose = null;
         peerNatives?.TagSeats(Plugin.Game.World.Party, RemoteSeats());
         TagBotSeats();
         TryStartDebugBotReplay();

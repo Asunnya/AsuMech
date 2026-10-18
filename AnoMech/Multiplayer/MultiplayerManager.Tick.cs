@@ -277,8 +277,7 @@ public sealed partial class MultiplayerManager
             if (!aiReplayStateSent) TrySendAiReplayState();
             SendMidRunUpdate();
             SendForcedMoves();
-            if (pendingRolesSend is null or { IsCompleted: true })
-                pendingRolesSend = SampleAndBroadcastRoles();
+            BroadcastRoles();
         }
         else
         {
