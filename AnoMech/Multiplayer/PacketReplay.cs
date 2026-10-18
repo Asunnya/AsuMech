@@ -26,6 +26,8 @@ internal sealed class PacketReplay(PeerNatives natives, SimWorld world, PartyRol
     private const uint ClearTetherCategory = 0x2F;
     private const uint MarkingCategory = 0x1F6;
     private const int StatusSlots = 60;
+    // As many as a spawn packet carries.
+    private const int SpawnStatuses = 30;
     private const int SignCount = 17;
     private const int MaxEffectTargets = 64;
     private const int MaxEntriesPerTarget = 8;
@@ -275,7 +277,8 @@ internal sealed class PacketReplay(PeerNatives natives, SimWorld world, PartyRol
         if (spawned.ContainsKey(p.Actor)) Despawn(p.Actor);
         var placement = new Placement(position, NetGuard.Rotation(p.Rotation));
         var config = new EnemySpawnConfig(p.BNpcBaseId, p.NameId, p.Level, p.Targetable, p.EnemyList, p.Visibility,
-            world.Coordinates.ToLocal(placement), p.ModelCharaId, p.InitialModeAttributeFlags, p.DisplayFlags, p.Engaged, p.LayoutId, p.IsHostile);
+            world.Coordinates.ToLocal(placement), p.ModelCharaId, p.InitialModeAttributeFlags, p.DisplayFlags, p.Engaged, p.LayoutId, p.IsHostile,
+            p.Appearance, p.Statuses is { } statuses ? NetGuard.Cap(statuses, SpawnStatuses).ToList() : null, p.ModelState, p.ModelScale);
         if (natives.RealCharas.SpawnBattleNpcFromPacket(config, placement, out var entityId) is not { } chara)
         {
             DiagnosticLog.Warn($"[Multiplayer] Peer: the host's BNpcBase {p.BNpcBaseId} (0x{p.Actor:X}) didn't spawn here -- its packets will be dropped.");
