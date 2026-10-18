@@ -20,6 +20,10 @@ public sealed class SimNetworkPuppet : SimNpc, ISimPartyMember
     public byte ClassJob { get; }
     public string DisplayName { get; }
 
+    // The seat's own client plays it with a bot: its player's debug bot, or the host's bot as a
+    // peer sees it. Multiplayer keeps it current.
+    public bool BotDriven { get; internal set; }
+
     internal SimNetworkPuppet(IBattleCharaProxy proxy, Coordinates coordinates, PartyRole role, byte classJob, string name)
         : base(proxy, coordinates, self => new RemoteMotion(() => self.Proxy, coordinates))
     {

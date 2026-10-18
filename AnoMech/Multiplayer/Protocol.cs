@@ -117,8 +117,9 @@ internal interface IScenarioMidRunUpdateMessage : IHostOnlyMessage;
 
 // Peer -> host on connect. Version/Checksum catch a build mismatch before it desyncs. Stream*: the
 // peer's stream (a new epoch for each join) and how far it has taken the host's, -1 if not yet.
+// DebugBot: the peer's own debug bot plays its seat.
 public sealed record HelloMessage(Guid PeerId, string DisplayName, string Version, string Checksum, byte ClassJob = 0,
-    long StreamEpoch = 0, long StreamSent = 0, long StreamReceived = -1) : MpMessage, IPeerMessage, IUnsequencedMessage;
+    long StreamEpoch = 0, long StreamSent = 0, long StreamReceived = -1, bool DebugBot = false) : MpMessage, IPeerMessage, IUnsequencedMessage;
 
 public sealed record PeerBuildInfo(string Version, string Checksum)
 {
@@ -127,7 +128,8 @@ public sealed record PeerBuildInfo(string Version, string Checksum)
 
 // Full state, so a client that missed an update self-heals and a late joiner resolves the same
 // scenario/strat/waymark and clock. ScenarioSettings is the display summary; ScenarioSettingsJson
-// is the same overrides for a peer to actually apply (see ScenarioSettingsSync).
+// is the same overrides for a peer to actually apply (see ScenarioSettingsSync). DebugBots: the
+// players, the host included, whose own debug bot plays their seat.
 public sealed record LobbyStateMessage(
     Guid HostId,
     Dictionary<PartyRole, Guid> ClaimedBy,
@@ -140,7 +142,8 @@ public sealed record LobbyStateMessage(
     int SelectedWaymark,
     List<string>? ScenarioSettings = null,
     string? ScenarioSettingsJson = null,
-    RunClockState? Clock = null) : MpMessage, IHostOnlyMessage;
+    RunClockState? Clock = null,
+    List<Guid>? DebugBots = null) : MpMessage, IHostOnlyMessage;
 
 // The host's event clock when the message left. A peer starts its run from it instead of from
 // zero, which would leave it behind by the host's load time plus the travel time. FrameSeconds is

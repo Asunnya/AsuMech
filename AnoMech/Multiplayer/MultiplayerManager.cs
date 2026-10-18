@@ -149,11 +149,31 @@ public sealed partial class MultiplayerManager : IDisposable
     private object? debugShadowStateGeneric;
     private bool debugBotReplayStarted;
 
+    // Every client judges a seat its debug bot plays as a bot (SimParty.IsBotDriven), so the roster
+    // carries it: a peer's Hello goes again until a lobby state shows it.
     public bool SetDebugBotControlled(bool value)
     {
         if (running) return false;
+        if (debugBotControlled == value) return true;
         debugBotControlled = value;
+        if (IsHost)
+        {
+            SetDebugBot(MyPeerId, value);
+            if (relay != null) BroadcastLobbyState();
+        }
+        else if (SessionCode != null)
+        {
+            helloAcknowledged = false;
+            helloRetryTimer = 0f;
+            Transmit(NewHello(LocalClassJob));
+        }
         return true;
+    }
+
+    private void SetDebugBot(Guid peerId, bool debugBot)
+    {
+        if (debugBot) Session.DebugBots.Add(peerId);
+        else Session.DebugBots.Remove(peerId);
     }
 
     // ---- Reconnection --------------------------------------------------------
@@ -733,6 +753,7 @@ public sealed partial class MultiplayerManager : IDisposable
         Session.Names.Remove(peerId);
         stream?.Forget(peerId);
         Session.Builds.Remove(peerId);
+        Session.DebugBots.Remove(peerId);
         peerConnectionIds.Remove(peerId);
         peerLastSeenMs.Remove(peerId);
         peerLastHelloMs.Remove(peerId);
@@ -783,20 +804,22 @@ public sealed partial class MultiplayerManager : IDisposable
         helloRetryTimer += deltaSeconds;
         if (helloRetryTimer < HelloRetrySeconds) return;
         helloRetryTimer = 0f;
-        DiagnosticLog.Info($"[Multiplayer] No lobby state naming us yet -- re-sending Hello to session {SessionCode}.");
+        DiagnosticLog.Info($"[Multiplayer] No lobby state with our Hello yet -- re-sending Hello to session {SessionCode}.");
         Transmit(NewHello(LocalClassJob));
     }
 
-    // The host only learns our name from a Hello, so being in the roster is the acknowledgement.
+    // The host only learns our name and debug-bot mode from a Hello, so a roster with both is the
+    // acknowledgement.
     private void NoteHelloAcknowledged()
     {
-        if (helloAcknowledged || !Session.Names.ContainsKey(MyPeerId)) return;
+        if (helloAcknowledged || !Session.Names.ContainsKey(MyPeerId) || Session.DebugBots.Contains(MyPeerId) != debugBotControlled) return;
         helloAcknowledged = true;
         DiagnosticLog.Info("[Multiplayer] Host's lobby state now names us -- Hello acknowledged.");
     }
 
     private void BroadcastLobbyState()
     {
+        TagBotSeats();
         LobbyChanged?.Invoke();
         _ = Send(LobbyMessage());
     }
@@ -1038,6 +1061,7 @@ public sealed partial class MultiplayerManager : IDisposable
             return;
         }
         recorder?.TagSeats(Plugin.Game.World.Party);
+        TagBotSeats();
         hostStageSetFor = 0f;
     }
 
@@ -1056,6 +1080,7 @@ public sealed partial class MultiplayerManager : IDisposable
             return;
         }
         recorder?.TagSeats(Plugin.Game.World.Party);
+        TagBotSeats();
     }
 
     // On the run's first tick, when its clock reads what a peer syncs to. Ahead of the run's
@@ -1119,6 +1144,15 @@ public sealed partial class MultiplayerManager : IDisposable
     internal Dictionary<PartyRole, NetworkSeat> ClaimedRoleSeats() =>
         Session.ClaimedBy.Where(kv => kv.Value != MyPeerId)
             .ToDictionary(kv => kv.Key, kv => new NetworkSeat(Session.NameOf(kv.Value), Session.JobOf(kv.Value)));
+
+    // After every seating and roster change. A seat nobody claimed is the host's bot.
+    private void TagBotSeats()
+    {
+        var party = Plugin.Game.World.Party;
+        foreach (var role in Enum.GetValues<PartyRole>())
+            if (party.Get(role) is SimNetworkPuppet puppet)
+                puppet.BotDriven = Session.ClaimedBy.TryGetValue(role, out var player) ? Session.DebugBots.Contains(player) : !IsHost;
+    }
 
     private static byte LocalClassJob => Natives.BattleCharas.LocalPlayer.ClassJob;
 

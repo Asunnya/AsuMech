@@ -174,7 +174,8 @@ public sealed partial class MultiplayerManager
                 Session.Names[hello.PeerId] = NetGuard.Clean(hello.DisplayName);
                 Session.Builds[hello.PeerId] = build;
                 Session.Jobs[hello.PeerId] = NetGuard.ClassJob(hello.ClassJob);
-                DiagnosticLog.Info($"[Multiplayer] Hello from {hello.PeerId} ({Session.NameOf(hello.PeerId)}), build {build.Version} ({build.ShortChecksum}), mismatch={IsVersionMismatched(hello.PeerId)}.");
+                SetDebugBot(hello.PeerId, hello.DebugBot);
+                DiagnosticLog.Info($"[Multiplayer] Hello from {hello.PeerId} ({Session.NameOf(hello.PeerId)}), build {build.Version} ({build.ShortChecksum}), mismatch={IsVersionMismatched(hello.PeerId)}, debug bot={hello.DebugBot}.");
                 // Before the lobby state, which a fresh join takes as its first message.
                 if (stream != null) Transmit(stream.Hello(hello.PeerId, hello.StreamEpoch, hello.StreamReceived));
                 BroadcastLobbyState();
@@ -281,6 +282,7 @@ public sealed partial class MultiplayerManager
 
             case LobbyStateMessage lobby when !IsHost:
                 Session.ApplyLobbyState(lobby);
+                TagBotSeats();
                 NoteHelloAcknowledged();
                 ApplyHostScenarioSettings();
                 LobbyChanged?.Invoke();

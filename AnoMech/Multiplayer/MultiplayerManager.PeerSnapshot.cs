@@ -136,6 +136,7 @@ public sealed partial class MultiplayerManager
             return;
         }
         peerNatives?.TagSeats(Plugin.Game.World.Party, RemoteSeats());
+        TagBotSeats();
         peerEnteredInstance = true;
         DiagnosticLog.Info("[Multiplayer] Peer is in the zone with the party seated -- telling the host.");
         foreach (var packet in earlyPackets) replay?.Apply(packet);
@@ -174,6 +175,7 @@ public sealed partial class MultiplayerManager
         pingClock = null;
         DiagnosticLog.Info("[Multiplayer] Peer's run is up -- applying the host's packets and sending SelfPose.");
         peerNatives?.TagSeats(Plugin.Game.World.Party, RemoteSeats());
+        TagBotSeats();
         TryStartDebugBotReplay();
     }
 
