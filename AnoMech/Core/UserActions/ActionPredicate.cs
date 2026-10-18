@@ -1,3 +1,5 @@
+using AnoMech.Core.Native.Interfaces;
+
 namespace AnoMech.Core.UserActions;
 
 // A condition on the action just used — drives status removal (JobActions.StatusClearedOnAction).
@@ -14,19 +16,11 @@ internal sealed class ActionIdPredicate(uint id) : IActionPredicate
 
 internal sealed class AnyWeaponskillPredicate : IActionPredicate
 {
-    public bool Matches(uint actionId)
-    {
-        var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.Sheets.Action>();
-        return sheet.TryGetRow(actionId, out var row) && row.ActionCategory.RowId == 3;
-    }
+    public bool Matches(uint actionId) => Natives.Data.Action(actionId)?.ActionCategory == 3;
 }
 
 // Any GCD — Weaponskill (3) or Spell (2). For procs consumed by the "next spell/GCD".
 internal sealed class AnyGcdPredicate : IActionPredicate
 {
-    public bool Matches(uint actionId)
-    {
-        var sheet = Plugin.DataManager.GetExcelSheet<Lumina.Excel.Sheets.Action>();
-        return sheet.TryGetRow(actionId, out var row) && row.ActionCategory.RowId is 2 or 3;
-    }
+    public bool Matches(uint actionId) => Natives.Data.Action(actionId)?.ActionCategory is 2 or 3;
 }

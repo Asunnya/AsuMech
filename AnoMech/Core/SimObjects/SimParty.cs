@@ -37,12 +37,15 @@ public sealed class SimParty : ISimObject
 
     public LimitBreakGauge LimitBreak { get; }
 
-    // The bot in `role` casts its job's limit break at the level the gauge allows, emptying it.
-    // False if the slot is not a live bot (humans press their own), no bar is filled, or the job
+    // An order to the seat in `role` to use its job's limit break: a bot casts it at the level the
+    // gauge allows, the debug bot presses the local player's LB3 through the client, and a human,
+    // here or remote, is left to press their own. False if refused, no bar is filled, or the job
     // has none at that level.
     public bool UseLimitBreak(PartyRole role)
     {
-        if (Get(role) is not SimPartyNpc bot) return false;
+        var member = Get(role);
+        if (member is SimPlayer player) return DebugBotControl.Enabled && player.PressLimitBreakThree();
+        if (member is not SimPartyNpc bot) return false;
         var level = LimitBreak.FilledBars;
         if (level == 0)
         {

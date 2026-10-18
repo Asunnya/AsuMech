@@ -29,6 +29,13 @@ public sealed class SimPlayer : SimCharacter, ISimPartyMember
         if (DebugBotControl.Enabled && !Dead && !ActionsLocked) SprintHandler.Apply(this, duration);
     }
 
+    // The debug bot's LB3, pressed through the client; false when the client refuses it.
+    internal bool PressLimitBreakThree()
+    {
+        if (Dead || ActionsLocked || LimitBreakHandler.ActionId(Proxy.ClassJob, 3) == 0) return false;
+        return Natives.PlayerInput.PressLimitBreakThree((ulong)GameObjectId);
+    }
+
     public override void Tick(float deltaSeconds)
     {
         base.Tick(deltaSeconds);

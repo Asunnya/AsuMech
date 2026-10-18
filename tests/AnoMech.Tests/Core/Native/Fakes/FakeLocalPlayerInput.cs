@@ -15,6 +15,7 @@ internal sealed class FakeLocalPlayerInput : ILocalPlayerInput
     public bool IsAutoAttacking => false;
     public bool PollActionUsed() => false;
     public bool PollCancelCast() => false;
+    public bool PressLimitBreakThree(ulong targetId) => false;
     public IReadOnlyCollection<(uint ActionId, ActionType Type)> RecentActions => [];
 
     public System.Numerics.Vector2? SteerDirection { get; private set; }

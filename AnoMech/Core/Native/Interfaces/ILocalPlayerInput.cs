@@ -27,4 +27,8 @@ public interface ILocalPlayerInput : IDisposable
     // null lets go. The game moves them at its own speed; `speed` is the run
     // or sprint speed the sim expects, which a headless client moves them at.
     void Steer(System.Numerics.Vector2? direction, float speed);
+
+    // The job's LB3, pressed through the client as its player would, used on targetId. False when
+    // the client refuses it.
+    bool PressLimitBreakThree(ulong targetId);
 }

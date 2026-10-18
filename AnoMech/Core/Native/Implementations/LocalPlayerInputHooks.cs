@@ -12,6 +12,7 @@ using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using FFXIVClientStructs.FFXIV.Client.System.Input;
 using AnoMech.Core.Native.Interfaces;
+using NativeLimitBreakController = FFXIVClientStructs.FFXIV.Client.Game.UI.LimitBreakController;
 
 namespace AnoMech.Core.Native.Implementations;
 
@@ -207,5 +208,15 @@ public sealed unsafe class LocalPlayerInputHooks : ILocalPlayerInput
             ActionExecuted?.Invoke(actionType, actionId, targetId);
         }
         return result;
+    }
+
+    public bool PressLimitBreakThree(ulong targetId)
+    {
+        if (Plugin.ObjectTable.LocalPlayer is not { } local) return false;
+        var limitBreak = NativeLimitBreakController.Instance();
+        var actions = ActionManager.Instance();
+        if (limitBreak == null || actions == null) return false;
+        var actionId = limitBreak->GetActionId((Character*)local.Address, 2);
+        return actionId != 0 && actions->UseAction(ActionType.Action, actionId, targetId);
     }
 }
