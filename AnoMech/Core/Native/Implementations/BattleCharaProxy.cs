@@ -116,6 +116,7 @@ internal sealed unsafe class BattleCharaProxy : IBattleCharaProxy
         {
             RotationInt = MathUtil.QuantizeRotation(MathUtil.NormalizeRotation(rotation)),
             MoveFlags = (byte)flags,
+            State = (byte)((ushort)flags >> 8),
             // Tenths of a y/s, wrapping past 25.5 the way a knockback's does.
             Speed = (byte)((int)MathF.Round(speed * 10f) & 0xFF),
             PositionX = MathUtil.QuantizePosition(position.X),

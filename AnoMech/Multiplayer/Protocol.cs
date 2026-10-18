@@ -177,11 +177,11 @@ public sealed record StartAbortMessage(Guid PeerId, string Reason) : MpMessage, 
 
 // Peer -> host. Applied to that peer's SimNetworkPuppet and republished in the next Roles list.
 // VX/VZ: the player's own velocity over the ground, so the others' copies carry on at their pace
-// between poses and know when they stopped.
-public sealed record SelfPoseMessage(Guid PeerId, float X, float Y, float Z, float Rotation, float VX, float VZ) : MpMessage, IPeerMessage, IUnsequencedMessage;
+// between poses and know when they stopped. Jumping: their own client has them in a jump.
+public sealed record SelfPoseMessage(Guid PeerId, float X, float Y, float Z, float Rotation, float VX, float VZ, bool Jumping) : MpMessage, IPeerMessage, IUnsequencedMessage;
 
 // The players' seats, the host's own included, where the host has them.
-public sealed record RoleState(PartyRole Role, float X, float Y, float Z, float Rotation, float VX, float VZ);
+public sealed record RoleState(PartyRole Role, float X, float Y, float Z, float Rotation, float VX, float VZ, bool Jumping);
 
 public sealed record RolesSnapshotMessage(List<RoleState> Roles) : MpMessage, IHostOnlyMessage, IUnsequencedMessage;
 

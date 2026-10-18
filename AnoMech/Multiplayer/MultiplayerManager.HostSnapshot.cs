@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AnoMech.Core;
 using AnoMech.Core.Game.Motion;
 using AnoMech.Core.Game.Party;
+using AnoMech.Core.Native.Interfaces;
 using AnoMech.Core.SimObjects;
 
 namespace AnoMech.Multiplayer;
@@ -66,8 +67,8 @@ public sealed partial class MultiplayerManager
         foreach (var role in Enum.GetValues<PartyRole>())
             if (party.Get(role) is { } member and (SimPlayer or SimNetworkPuppet))
             {
-                var velocity = member is SimNetworkPuppet puppet ? puppet.PoseVelocity : ownVelocity;
-                roles.Add(new RoleState(role, member.Position.X, member.Position.Y, member.Position.Z, member.Rotation, velocity.X, velocity.Z));
+                var (velocity, jumping) = member is SimNetworkPuppet puppet ? (puppet.PoseVelocity, puppet.PoseJumping) : (ownVelocity, Natives.PlayerInput.IsJumping);
+                roles.Add(new RoleState(role, member.Position.X, member.Position.Y, member.Position.Z, member.Rotation, velocity.X, velocity.Z, jumping));
             }
         if (lastRoles != null && roles.SequenceEqual(lastRoles) && NowMs - lastRolesMs < PoseRefreshMs) return;
         lastRoles = roles;

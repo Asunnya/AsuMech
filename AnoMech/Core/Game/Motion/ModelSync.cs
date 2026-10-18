@@ -32,8 +32,10 @@ internal sealed class ModelSync(Func<IBattleCharaProxy?> proxy, Coordinates coor
     private float sinceSend = SendInterval;
 
     // A repeat restarts the client's glide from the model's spot and slows it, so it's not resent.
+    // New flags are news, though.
     private Vector3 lastSentTarget;
     private float lastSentRotation;
+    private ActorMoveFlags lastSentFlags;
 
     // Teleport: an ActorSetPos. A null rotation keeps the model's facing and any turn in progress.
     public void SetPos(Vector3 position, float? rotation = null)
@@ -48,6 +50,7 @@ internal sealed class ModelSync(Func<IBattleCharaProxy?> proxy, Coordinates coor
         glideTarget = position;
         lastSentTarget = position;
         lastSentRotation = modelRotation;
+        lastSentFlags = ActorMoveFlags.None;
         proxy()?.SetPos(coordinates.ToGlobal(position), modelRotation);
     }
 
@@ -63,6 +66,7 @@ internal sealed class ModelSync(Func<IBattleCharaProxy?> proxy, Coordinates coor
         glideTarget = position;
         lastSentTarget = position;
         lastSentRotation = modelRotation;
+        lastSentFlags = ActorMoveFlags.None;
     }
 
     // One step of a walk (or a slide, with ActorMoveFlags.Knockback): Flush aims the model at
@@ -84,6 +88,7 @@ internal sealed class ModelSync(Func<IBattleCharaProxy?> proxy, Coordinates coor
         glideTarget = position;
         lastSentTarget = position;
         lastSentRotation = modelRotation;
+        lastSentFlags = ActorMoveFlags.None;
         proxy()?.NpcKnockback(coordinates.ToGlobal(position), modelRotation, durationSeconds);
     }
 
@@ -124,10 +129,11 @@ internal sealed class ModelSync(Func<IBattleCharaProxy?> proxy, Coordinates coor
         movePending = false;
         sendNow = false;
         sinceSend = 0f;
-        var changed = glideTarget != lastSentTarget || modelRotation != lastSentRotation;
+        var changed = glideTarget != lastSentTarget || modelRotation != lastSentRotation || moveFlags != lastSentFlags;
         if (changed) proxy()?.Move(coordinates.ToGlobal(glideTarget), modelRotation, moveFlags, moveSpeed);
         lastSentTarget = glideTarget;
         lastSentRotation = modelRotation;
+        lastSentFlags = moveFlags;
         moveFlags = ActorMoveFlags.None;
         moveSpeed = 0f;
         return changed;

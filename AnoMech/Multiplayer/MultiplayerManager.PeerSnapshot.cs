@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AnoMech.Core;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Party;
+using AnoMech.Core.Native.Interfaces;
 using AnoMech.Core.SimObjects;
 
 namespace AnoMech.Multiplayer;
@@ -47,7 +48,7 @@ public sealed partial class MultiplayerManager
         var player = Plugin.Game.World.Party.Player;
         if (player == null) return;
         var pose = new SelfPoseMessage(MyPeerId, player.Position.X, player.Position.Y, player.Position.Z, player.Rotation,
-            ownVelocity.X, ownVelocity.Z);
+            ownVelocity.X, ownVelocity.Z, Natives.PlayerInput.IsJumping);
         if (pose == lastSelfPose && NowMs - lastSelfPoseMs < PoseRefreshMs) return;
         lastSelfPose = pose;
         lastSelfPoseMs = NowMs;
@@ -82,7 +83,7 @@ public sealed partial class MultiplayerManager
         }
         if (!NetGuard.TryPosition(msg.X, msg.Y, msg.Z, out var pose)) return;
         if (Plugin.Game.World.Party.Get(role) is SimNetworkPuppet puppet)
-            puppet.ApplyNetworkPose(pose, NetGuard.Rotation(msg.Rotation), NetGuard.Velocity(msg.VX, msg.VZ));
+            puppet.ApplyNetworkPose(pose, NetGuard.Rotation(msg.Rotation), NetGuard.Velocity(msg.VX, msg.VZ), msg.Jumping);
         else
             DiagnosticLog.Debug($"[Multiplayer] SelfPose from {Session.NameOf(msg.PeerId)} ({role}) but that slot isn't a SimNetworkPuppet -- dropping.");
     }
@@ -245,7 +246,7 @@ public sealed partial class MultiplayerManager
         foreach (var r in NetGuard.Cap(snap.Roles, Enum.GetValues<PartyRole>().Length))
             if (r.Role != MyClaimedRole && Plugin.Game.World.Party.Get(r.Role) is SimNetworkPuppet puppet
                 && NetGuard.TryPosition(r.X, r.Y, r.Z, out var position))
-                puppet.ApplyNetworkPose(position, NetGuard.Rotation(r.Rotation), NetGuard.Velocity(r.VX, r.VZ));
+                puppet.ApplyNetworkPose(position, NetGuard.Rotation(r.Rotation), NetGuard.Velocity(r.VX, r.VZ), r.Jumping);
     }
 
     // Forced moves land on our own character only: every other slot is a puppet the host's

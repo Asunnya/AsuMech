@@ -34,6 +34,17 @@ internal sealed class RemoteMotion(Func<IBattleCharaProxy?> proxy, Coordinates c
     private float aimSpeed;
     private float rotation;
     private bool placed;
+    // In a jump the client flies the copy itself, so it only walks it over the ground.
+    // UNVERIFIED in game, like the jump flags.
+    private bool aimInAir;
+    private bool walkInAir;
+
+    // The owner's jump as their poses show it. Retail marks its stages with packets of their own,
+    // sent the moment they happen at that stage's height: each goes out at once, in order.
+    private bool poseJumping;
+    private bool poseFalling;
+    private float jumpPeak;
+    private readonly Queue<(ActorMoveFlags Flags, float Y)> jumpStages = new();
 
     private Vector3? targetPosition;
     private float targetRotation;
@@ -52,16 +63,41 @@ internal sealed class RemoteMotion(Func<IBattleCharaProxy?> proxy, Coordinates c
 
     // As the owner's client reported it.
     public Vector3 PoseVelocity => poseVelocity;
+    public bool PoseJumping => poseJumping;
 
     // The model walks toward the pose in Tick. Only a new spot or velocity starts the
     // extrapolation over: a repeat, or a turn on its own, says nothing new about where they are.
-    public void ApplyPose(Vector3 position, float poseRotation, Vector3 velocity)
+    public void ApplyPose(Vector3 position, float poseRotation, Vector3 velocity, bool jumping)
     {
         targetRotation = poseRotation;
+        TrackJump(position.Y, jumping);
         if (position == targetPosition && velocity == poseVelocity) return;
         targetPosition = position;
         poseVelocity = velocity;
         timeSinceLastPose = 0f;
+    }
+
+    // Takes off from the last pose's height and peaks where the poses start coming down.
+    private void TrackJump(float y, bool jumping)
+    {
+        if (jumping && !poseJumping)
+        {
+            poseFalling = false;
+            jumpPeak = y;
+            jumpStages.Enqueue((ActorMoveFlags.JumpStart | ActorMoveFlags.InAir, targetPosition?.Y ?? y));
+        }
+        else if (jumping && !poseFalling)
+        {
+            if (y >= jumpPeak) jumpPeak = y;
+            else
+            {
+                poseFalling = true;
+                jumpStages.Enqueue((ActorMoveFlags.Apex | ActorMoveFlags.InAir | ActorMoveFlags.Falling, jumpPeak));
+            }
+        }
+        else if (!jumping && poseJumping)
+            jumpStages.Enqueue((ActorMoveFlags.Landed, y));
+        poseJumping = jumping;
     }
 
     // In the order the mechanic made them.
@@ -105,6 +141,7 @@ internal sealed class RemoteMotion(Func<IBattleCharaProxy?> proxy, Coordinates c
         placed = true;
         modelPosition = walkTarget = aim = position;
         walkSpeed = aimSpeed = 0f;
+        walkInAir = aimInAir = false;
     }
 
     public override void TurnTo(float newRotation) { }
@@ -170,8 +207,10 @@ internal sealed class RemoteMotion(Func<IBattleCharaProxy?> proxy, Coordinates c
             model.Assume(modelPosition, rotation);
         }
 
+        // A jump the copy died in is over.
+        if (!gates.Alive) jumpStages.Clear();
         if (gates.Alive && targetPosition is { } pose) FollowPose(deltaSeconds, pose);
-        if (model.Flush(deltaSeconds)) (walkTarget, walkSpeed) = (aim, aimSpeed);
+        if (model.Flush(deltaSeconds)) (walkTarget, walkSpeed, walkInAir) = (aim, aimSpeed, aimInAir);
         Walk(deltaSeconds);
     }
 
@@ -179,9 +218,11 @@ internal sealed class RemoteMotion(Func<IBattleCharaProxy?> proxy, Coordinates c
     private void Walk(float deltaSeconds)
     {
         var away = walkTarget - modelPosition;
+        if (walkInAir) away.Y = 0f;
         var distance = away.Length();
         var step = walkSpeed * deltaSeconds;
         modelPosition = distance <= step ? walkTarget : modelPosition + away / distance * step;
+        if (walkInAir) modelPosition.Y = walkTarget.Y;
     }
 
     private void FollowPose(float deltaSeconds, Vector3 pose)
@@ -195,13 +236,22 @@ internal sealed class RemoteMotion(Func<IBattleCharaProxy?> proxy, Coordinates c
             SetPlacement(new Placement(target, rotation));
             return;
         }
+        var stage = jumpStages.TryDequeue(out var next);
+        var flags = stage ? next.Flags
+            : !poseJumping ? ActorMoveFlags.None
+            : poseFalling ? ActorMoveFlags.InAir | ActorMoveFlags.Falling
+            : ActorMoveFlags.InAir;
+        aim = target + velocity * ModelSync.LeadSeconds;
+        if (stage) aim.Y = next.Y;
+        aimInAir = flags != ActorMoveFlags.None;
         // The player's own pace while the copy keeps up with them, slow enough that it's still
         // walking when the next packet comes: the client walks this frame's time on top of the
         // interval. In the byte's tenths, rounded down for the same reason.
-        aim = target + velocity * ModelSync.LeadSeconds;
+        var away = aim - modelPosition;
+        if (aimInAir) away.Y = 0f;
         var walkSeconds = ModelSync.SendInterval + deltaSeconds;
-        aimSpeed = MathF.Floor(MathF.Min(Vector3.Distance(aim, modelPosition) / walkSeconds, MaxWalkSpeed) * 10f) / 10f;
+        aimSpeed = MathF.Floor(MathF.Min(away.Length() / walkSeconds, MaxWalkSpeed) * 10f) / 10f;
         model.Face(rotation);
-        model.Glide(aim, ActorMoveFlags.None, aimSpeed);
+        model.Glide(aim, flags, aimSpeed, now: stage);
     }
 }
