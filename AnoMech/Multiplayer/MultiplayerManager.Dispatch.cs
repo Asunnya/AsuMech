@@ -111,27 +111,6 @@ public sealed partial class MultiplayerManager
     // act on the real inn.
     private bool PeerInRun => !IsHost && running && peerEnteredInstance && Plugin.Game.World.Map.IsInInstance;
 
-    private static Guid? ClaimedPeerId(MpMessage message) => message switch
-    {
-        HelloMessage m => m.PeerId,
-        ClaimRoleMessage m => m.PeerId,
-        ReleaseRoleMessage m => m.PeerId,
-        SelfPoseMessage m => m.PeerId,
-        PongMessage m => m.PeerId,
-        StartCheckResponseMessage m => m.PeerId,
-        StartAbortMessage m => m.PeerId,
-        EnteredMessage m => m.PeerId,
-        SessionEndedMessage m => m.PeerId,
-        ResetRequestMessage m => m.PeerId,
-        LeaveRequestMessage m => m.PeerId,
-        PeerAppliedEnemyStatusMessage m => m.PeerId,
-        PeerAppliedRoleStatusMessage m => m.PeerId,
-        StreamGapMessage m => m.PeerId,
-        StreamLostMessage m => m.PeerId,
-        ActedMessage m => m.PeerId,
-        _ => null,
-    };
-
     private void DispatchCore(MpMessage message, bool isFromHost, uint senderId, Guid senderPeerId)
     {
         if (message is RelayRemovedPeers notice)
@@ -150,7 +129,7 @@ public sealed partial class MultiplayerManager
             DiagnosticLog.Warn($"[Multiplayer] Dropped {message.GetType().Name} -- relay says it wasn't from the host.");
             return;
         }
-        if (IsHost && ClaimedPeerId(message) is { } claimedId)
+        if (IsHost && message is IPeerMessage { PeerId: var claimedId })
         {
             // The relay stamps each message with the identity it derived from the sender's
             // secret, and RelayWire.Validate already refused a mismatch; checked again here.
