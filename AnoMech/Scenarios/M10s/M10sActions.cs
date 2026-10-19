@@ -314,6 +314,40 @@ public static class M10sActions
         DeathExplanation = "the light party shares it",
     };
 
+    // Insane Air with Xtreme snaking: a hit of the other element washes the snake off.
+    public static readonly EnemyAction BlastingSnapConeWashing = Washing(SnapCone(ActionId.BlastingSnapCone) with { Effects = [Damage(VulnToMagic), ApplyStatus(StatusId.MagicVulnerabilityUp, 0.96f)] }, StatusId.XtremeWatersnaking);
+    public static readonly EnemyAction PlungingSnapConeWashing = Washing(SnapCone(ActionId.PlungingSnapCone) with { Effects = [Damage(VulnToMagic), ApplyStatus(StatusId.MagicVulnerabilityUp, 0.96f)] }, StatusId.XtremeFiresnaking);
+    public static readonly EnemyAction ReentryBlastConeWashing = Washing(ReentryCone(ActionId.ReentryBlastCone), StatusId.XtremeWatersnaking);
+    public static readonly EnemyAction ReentryPlungeConeWashing = Washing(ReentryCone(ActionId.ReentryPlungeCone), StatusId.XtremeFiresnaking);
+    public static readonly EnemyAction VerticalBlastHitWashing = Washing(VerticalHit(ActionId.VerticalBlastHit), StatusId.XtremeWatersnaking);
+    public static readonly EnemyAction VerticalPlungeHitWashing = Washing(VerticalHit(ActionId.VerticalPlungeHit), StatusId.XtremeFiresnaking);
+
+    private static EnemyAction Washing(EnemyAction move, ushort snake) =>
+        move with { Effects = [.. move.Effects, OnHavingStatus(snake, RemoveStatus(snake))] };
+
+    public static readonly EnemyAction XtremeFiresnaking = new(ActionId.XtremeFiresnaking)
+    {
+        Cast = new() { AnimationLock = 1.2f },
+        Effects = [OnHavingStatus(StatusId.XtremeFiresnaking, Damage())],
+    };
+
+    public static readonly EnemyAction XtremeWatersnaking = new(ActionId.XtremeWatersnaking)
+    {
+        Cast = new() { AnimationLock = 1.2f },
+        Effects = [OnHavingStatus(StatusId.XtremeWatersnaking, Damage())],
+    };
+
+    // The washed-off snake bursts around its player and catches their whole group.
+    public static readonly EnemyAction BailoutFire = Bailout(ActionId.BailoutFire);
+    public static readonly EnemyAction BailoutWater = Bailout(ActionId.BailoutWater);
+
+    private static EnemyAction Bailout(uint actionId) => new(actionId)
+    {
+        Cast = new() { AnimationLock = 0.6f, CastSecondsOverride = 0.7f },
+        Effects = [Damage(), ApplyStatus(StatusId.MagicVulnerabilityUp, 2f)],
+        Timing = new() { DamageDelay = 0.3f },
+    };
+
     public static readonly EnemyAction VerticalBlastHit = VerticalHit(ActionId.VerticalBlastHit);
     public static readonly EnemyAction VerticalPlungeHit = VerticalHit(ActionId.VerticalPlungeHit);
 

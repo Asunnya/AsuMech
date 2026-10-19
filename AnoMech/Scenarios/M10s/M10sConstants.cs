@@ -134,6 +134,14 @@ public static class M10sConstants
         public const uint FlameFloaterSplitLine = 0xB5BF;
         public const uint FreakyPyrotation = 0xB596;
         public const uint FreakyPyrotationStack = 0xB597;
+        public const uint XtremeFiresnaking = 0xB5AE;
+        public const uint XtremeWatersnaking = 0xB5AF;
+        public const uint InsaneAirTwoRedFirst = 0xB5E6;
+        public const uint InsaneAirTwoBlueFirst = 0xB5E7;
+        public const uint InsaneAirTwoRed = 0xB5E8;
+        public const uint InsaneAirTwoBlue = 0xB5E9;
+        public const uint BailoutFire = 0xB5B0;
+        public const uint BailoutWater = 0xB5B1;
     }
 
     public static class StatusId
@@ -153,6 +161,8 @@ public static class M10sConstants
         public const ushort Watersnaking = 0x136F;
         public const ushort WateryGrave = 0x12DD;
         public const ushort Stun = 0xA60;
+        public const ushort XtremeFiresnaking = 0x12DB;
+        public const ushort XtremeWatersnaking = 0x12DC;
     }
 
     public static class LockonId
