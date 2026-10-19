@@ -1,4 +1,7 @@
+using System;
+using System.Linq;
 using System.Numerics;
+using AnoMech.Core.SimObjects;
 using AnoMech.Scenarios.Dsr.P6DoubleDragons;
 using static AnoMech.Core.Game.Party.PartyRole;
 using static AnoMech.Scenarios.Dsr.DsrConstants;
@@ -109,8 +112,83 @@ public class DsrP6DoubleDragonsScenarioTests
     public void StandingNextToTheVowTargetKills()
         => Negative<DsrP6DoubleDragonsScenario>(MeleeDpsA)
             .Overrides<DsrP6DoubleDragonsStateOverrides>(Pinned)
-            .TeleportAt(28f, to: new Vector2(-6f, 6f))
+            .TeleportAt(28f, to: new Vector2(-6f, -3f))
             .ShouldKill(ActionId.MortalVow, MeleeDpsA);
+
+    [Test]
+    public void EveryoneSpreadsBeforeTheVow()
+    {
+        var checkedIt = false;
+        var run = ScenarioRun.Execute(typeof(DsrP6DoubleDragonsScenario), 0, 3, new ScenarioRunOptions
+        {
+            Overrides = o => Pinned((DsrP6DoubleDragonsStateOverrides)o),
+            Probe = p =>
+            {
+                if (!p.Crossed(DsrP6DoubleDragonsScenario.VowApplied - 0.05f)) return;
+                var members = p.World.Party.ActiveMembers().ToList();
+                foreach (var a in members)
+                foreach (var b in members.Where(b => b != a))
+                    Assert.That(DsrP6DoubleDragonsScenario.FlatDistance(a.Position, b.Position), Is.GreaterThan(5f));
+                checkedIt = true;
+            },
+        });
+        Assert.That(run.Passed, run.ToString());
+        Assert.That(checkedIt, Is.True);
+    }
+
+    // Facing Nidhogg, the party goes the other way from the second set, on his side unless Hraesvelgr
+    // dives through him.
+    [TestCase(-1, 1, 0, -1, -1)]
+    [TestCase(1, 1, 0, -1, -1)]
+    [TestCase(-1, -1, 1, -1, 1)]
+    [TestCase(-1, 1, -1, 1, -1)]
+    [TestCase(1, -1, -1, 1, 1)]
+    public void AkhMornStartsInTheCornerAwayFromTheSecondSet(int secondX, int secondZ, int lane, int startX, int startZ)
+    {
+        var checkedIt = false;
+        var run = ScenarioRun.Execute(typeof(DsrP6DoubleDragonsScenario), 0, 5, new ScenarioRunOptions
+        {
+            Overrides = o =>
+            {
+                var overrides = (DsrP6DoubleDragonsStateOverrides)o;
+                Pinned(overrides);
+                overrides.SecondSetCorner = (secondX, secondZ);
+                overrides.HraesvelgrLane = lane;
+            },
+            Probe = p =>
+            {
+                if (!p.Crossed(DsrP6DoubleDragonsScenario.AkhMornHits[0] - 0.05f)) return;
+                foreach (var member in p.World.Party.ActiveMembers())
+                {
+                    Assert.That(MathF.Sign(member.Position.X), Is.EqualTo(startX));
+                    Assert.That(MathF.Sign(member.Position.Z), Is.EqualTo(startZ));
+                    Assert.That(MathF.Abs(member.Position.X), Is.GreaterThan(15f));
+                }
+                checkedIt = true;
+            },
+        });
+        Assert.That(run.Passed, run.ToString());
+        Assert.That(checkedIt, Is.True);
+    }
+
+    [Test]
+    public void NidhoggIsInSightForWrothFlames()
+    {
+        var checkedIt = false;
+        var run = ScenarioRun.Execute(typeof(DsrP6DoubleDragonsScenario), 0, 7, new ScenarioRunOptions
+        {
+            Overrides = o => Pinned((DsrP6DoubleDragonsStateOverrides)o),
+            Probe = p =>
+            {
+                if (!p.Crossed(DsrP6DoubleDragonsScenario.WrothFlames)) return;
+                var nidhogg = p.World.Children.OfType<SimEnemy>().Single(e => e.SpawnConfig.BNpcBaseId == BNpcBaseId.NidhoggP6);
+                Assert.That(nidhogg.Visible, Is.True);
+                checkedIt = true;
+            },
+        });
+        Assert.That(run.Passed, run.ToString());
+        Assert.That(checkedIt, Is.True);
+    }
 
     [Test]
     public void TakingAkhAfahAloneKills()

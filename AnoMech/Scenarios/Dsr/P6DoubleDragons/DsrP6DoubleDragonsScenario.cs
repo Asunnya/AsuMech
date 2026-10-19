@@ -126,6 +126,8 @@ public sealed class DsrP6DoubleDragonsScenario : IScenario
     public const float TouchdownLethalRadius = 10f;
     private const float TouchdownDamage = 0.3f;
     private const float EffectCarrierLinger = 3f;
+    // UNVERIFIED: when a diving dragon is out of sight; it is untargetable until it is back home.
+    private const float DiveOutOfSight = 2f;
 
     private SimWorld world = null!;
     private SimParty party = null!;
@@ -494,8 +496,9 @@ public sealed class DsrP6DoubleDragonsScenario : IScenario
         vowHolder = null;
         holder.RemoveStatus(StatusId.MortalVow);
         if (holder.IsAlive()) holder.AddStatus(StatusId.MortalAtonement, MortalAtonementSeconds);
-        PlayEffect(nidhogg, ActionId.MortalVowPass, 1.1f, target: holder.GameObjectId, at: holder.Position);
         var hits = party.Find.InsideCircle(holder.Position, MortalVowRadius).Where(m => m.IsAlive() && m != holder).ToList();
+        var shownOn = hits.Count == 1 ? hits[0] : holder;
+        PlayEffect(nidhogg, ActionId.MortalVowPass, 1.1f, RotationTowards(holder.Position, shownOn.Position), shownOn.GameObjectId, holder.Position);
         if (hits.Count == 0)
         {
             foreach (var member in AliveMembers().ToList())
@@ -597,6 +600,7 @@ public sealed class DsrP6DoubleDragonsScenario : IScenario
     {
         if (dragon == null) return;
         dragon.SetPosition(new Placement(home, RotationTowards(home, Vector3.Zero)));
+        dragon.SetVisible(true);
         dragon.SetTargetable(true);
     }
 
@@ -608,6 +612,7 @@ public sealed class DsrP6DoubleDragonsScenario : IScenario
         if (dragon == null) return;
         PlayEffect(dragon, actionId, 1.1f, dragon.Rotation);
         damage.Resolve(dragon, actionId, [DamageType.Lethal], []);
+        world.Events.Add(DiveOutOfSight, () => dragon.SetVisible(false));
     }
 
     private void MarkWrothFlames()

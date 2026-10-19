@@ -23,7 +23,8 @@ public sealed class DsrP6DoubleDragonsAi : IScenarioAi<DsrP6DoubleDragonsState>
     private static readonly Vector2 MainTankCornerSpot = new(-12.5f, -14.5f);
     private static readonly Vector2 OffTankCornerSpot = new(12.5f, -14.5f);
     private static readonly Vector2 SharedBusterSpot = new(0f, -9f);
-    private const float VowSpreadOffset = 7f;
+    private const float VowSpreadRadius = 8f;
+    private static readonly PartyRole[] VowSpreadClockwiseFromNorthNorthEast = [MainTank, RegenHealer, ShieldHealer, OffTank, MeleeDpsB, CasterDps, PhysRangedDps, MeleeDpsA];
     private static readonly float[] SpreadLineX = [-20f, -13.5f, -7f, -0.5f];
     private const float NearStackX = 7.5f;
     private const float WallStackX = 17f;
@@ -49,7 +50,7 @@ public sealed class DsrP6DoubleDragonsAi : IScenarioAi<DsrP6DoubleDragonsState>
 
         ai.Move(0.3f, () => AiMove.Create(PrePositionForTethers()).NaturalOrder());
         ai.Move(DsrP6DoubleDragonsScenario.TethersOut + 0.4f, () => AiMove.Create(PairUpWithOppositeTethers()).NaturalOrder(), jitter: 0f, sprint: true);
-        ai.Move(DsrP6DoubleDragonsScenario.BreathsLand + 0.5f, () => AiMove.Create(DpsSpreadForMortalVow()).NaturalOrder(), jitter: 0f);
+        ai.Move(DsrP6DoubleDragonsScenario.BreathsLand + 0.5f, () => AiMove.Create(EveryoneSpreadsForMortalVow()).NaturalOrder(), jitter: 0f);
         ai.Move(DsrP6DoubleDragonsScenario.VowApplied + 0.4f, () => AiMove.Create(LightPartiesNorthAndSouth()).NaturalOrder(), jitter: 0f);
         ai.Move(DsrP6DoubleDragonsScenario.AkhAfahLands + 0.6f, () => AiMove.Create(Cluster(Vector2.Zero, Enum.GetValues<PartyRole>())).NaturalOrder(), jitter: 0f);
         ai.Move(DsrP6DoubleDragonsScenario.HallowedWingsCast + 0.4f, () => AiMove.Create(Cluster(new Vector2(0f, 6f * SafeWingSide), Enum.GetValues<PartyRole>())).NaturalOrder(), jitter: 0f);
@@ -175,13 +176,14 @@ public sealed class DsrP6DoubleDragonsAi : IScenarioAi<DsrP6DoubleDragonsState>
 
     private float StandAwayFromYourDragon(PartyRole role) => state.NidhoggTethers.Contains(role) ? PairOffset : -PairOffset;
 
-    private static Vector2?[] DpsSpreadForMortalVow()
+    private static Vector2?[] EveryoneSpreadsForMortalVow()
     {
-        var spots = Cluster(Vector2.Zero, [MainTank, OffTank, RegenHealer, ShieldHealer]);
-        spots[(int)MeleeDpsA] = new Vector2(-VowSpreadOffset, -VowSpreadOffset);
-        spots[(int)MeleeDpsB] = new Vector2(VowSpreadOffset, -VowSpreadOffset);
-        spots[(int)PhysRangedDps] = new Vector2(-VowSpreadOffset, VowSpreadOffset);
-        spots[(int)CasterDps] = new Vector2(VowSpreadOffset, VowSpreadOffset);
+        var spots = new Vector2?[8];
+        for (var i = 0; i < VowSpreadClockwiseFromNorthNorthEast.Length; i++)
+        {
+            var bearing = MathF.PI / 8f + i * MathF.PI / 4f;
+            spots[(int)VowSpreadClockwiseFromNorthNorthEast[i]] = VowSpreadRadius * new Vector2(MathF.Sin(bearing), -MathF.Cos(bearing));
+        }
         return spots;
     }
 
@@ -223,20 +225,14 @@ public sealed class DsrP6DoubleDragonsAi : IScenarioAi<DsrP6DoubleDragonsState>
         return spots;
     }
 
-    private (int X, int Z) StartCorner()
-    {
-        var second = state.SecondSetCorner;
-        var westFree = second.X < 0 ? (second.X, -second.Z) : (-second.X, second.Z);
-        var eastFree = (-westFree.Item1, -westFree.Item2);
-        return state.HraesvelgrLane < 0 ? eastFree : westFree;
-    }
+    private (int X, int Z) StartCorner() => (HraesvelgrDivesThroughNidhogg ? 1 : -1, -state.SecondSetCorner.Z);
+
+    private bool HraesvelgrDivesThroughNidhogg => state.HraesvelgrLane < 0;
 
     private List<Vector2> AkhMornPath()
     {
         var (cx, cz) = StartCorner();
-        var alongNorthOrSouthWall = cx == state.SecondSetCorner.X;
-        Vector2 At(float acrossWall, float alongWall) =>
-            alongNorthOrSouthWall ? new Vector2(cx * acrossWall, cz * alongWall) : new Vector2(cx * alongWall, cz * acrossWall);
+        Vector2 At(float x, float z) => new(cx * x, cz * z);
         return [At(19.5f, 14f), At(17f, 14f), At(11.5f, 14f), At(3f, 12.5f), Vector2.Zero];
     }
 
