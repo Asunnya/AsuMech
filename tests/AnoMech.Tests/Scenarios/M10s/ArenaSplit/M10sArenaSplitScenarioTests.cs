@@ -73,6 +73,33 @@ public class M10sArenaSplitScenarioTests
     }
 
     [Test]
+    public void TheStratClearsBothConeSetsFromEitherSide()
+    {
+        foreach (var doubleDip in new[] { true, false })
+        foreach (var west in new[] { true, false })
+        {
+            var checkedIt = false;
+            var run = ScenarioRun.Execute(typeof(Scenario), 0, 11, new ScenarioRunOptions
+            {
+                Overrides = o =>
+                {
+                    var overrides = (M10sArenaSplitStateOverrides)o;
+                    overrides.DoubleDip = doubleDip;
+                    overrides.DeepBlueWest = west;
+                },
+                Probe = p =>
+                {
+                    if (!p.Crossed(Scenario.SecondConesAt + 1f)) return;
+                    Assert.That(p.World.Party.ActiveMembers().Where(m => m.HasStatus(StatusId.DamageDown)), Is.Empty, $"double-dip {doubleDip}, west {west}");
+                    checkedIt = true;
+                },
+            });
+            Assert.That(run.Passed, run.ToString());
+            Assert.That(checkedIt, Is.True);
+        }
+    }
+
+    [Test]
     public void WaterCrossingTheFireBurstsWhereItCrosses()
     {
         Assert.That(Scenario.StripCrossing(new Vector3(-12f, 0f, 0f), MathF.PI / 2f)!.Value.Z, Is.EqualTo(0f).Within(1e-3f));

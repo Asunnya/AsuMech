@@ -147,8 +147,8 @@ public static class M10sActions
         DeathExplanation = "spread out",
     };
 
-    // UNVERIFIED: the half-angle; eight proteans 45° apart never caught a neighbour.
-    public const float ProteanHalfAngle = MathF.PI * 15f / 180f;
+    // UNVERIFIED: narrower than 9.6°, the gap Reverse leaves on the cardinal between two players.
+    public const float ProteanHalfAngle = MathF.PI * 7.5f / 180f;
 
     public static readonly EnemyAction ReverseFirst = Protean(ActionId.ReverseAlleyOopFirst);
     public static readonly EnemyAction DoubleDipFirst = Protean(ActionId.DoubleDipFirst);

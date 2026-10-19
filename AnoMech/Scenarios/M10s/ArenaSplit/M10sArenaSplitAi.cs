@@ -20,7 +20,7 @@ public sealed class M10sArenaSplitAi : IScenarioAi<M10sArenaSplitState>
     private const float InsideTheWalls = 19f;
     private const float AroundDeepBlue = 5f;
     private const float FarNorthernmost = 18.9f;
-    private const float FarMiddle = 4.9f;
+    private const float FarMiddle = 3.8f;
     private const float SteamClearance = 10f;
     private const float ReachBeforeTheSteam = 8f;
     private const float PairX = 10f;
@@ -29,7 +29,7 @@ public sealed class M10sArenaSplitAi : IScenarioAi<M10sArenaSplitState>
     private const float StackX = 10f;
     private const float DodgeReach = 12f;
     private const float OwnHalfOverlap = 2f;
-    private const float ConeMargin = 2f * MathF.PI / 180f;
+    private const float ConeMargin = 1.5f * MathF.PI / 180f;
     private const float SearchStep = 0.5f;
 
     private M10sArenaSplitState state = null!;

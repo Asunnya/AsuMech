@@ -52,7 +52,7 @@ public sealed class M10sSickestTakeoffScenario : IScenario
     private SimEnemy? waveWall;
     private SimEnemy? laneHelper;
     private SimEnemy? waveHelper;
-    private readonly SimEnemy?[] helpers = new SimEnemy?[8];
+    private readonly SimEnemy?[] helpers = new SimEnemy?[16];
     private SimTether? waveTether;
 
     public void Run(SimWorld worldParam, int? selectedAi)
@@ -88,9 +88,9 @@ public sealed class M10sSickestTakeoffScenario : IScenario
         world.Events.Add(34.4f, () => { wave?.SetVisible(false); deepBlue?.RemoveStatus(StatusId.Orbs); });
         world.Events.Add(AlleyOopCastAt, () => deepBlue?.Cast(state.DoubleDip ? ActionId.DoubleDip : ActionId.ReverseAlleyOop, animationLock: 0.2f));
         world.Events.Add(FirstConesAt - 0.04f, AimFirstCones);
-        world.Events.Add(FirstConesAt, () => CastCones(state.DoubleDip ? Actions.DoubleDipFirst : Actions.ReverseFirst));
+        world.Events.Add(FirstConesAt, () => CastCones(state.DoubleDip ? Actions.DoubleDipFirst : Actions.ReverseFirst, state.FirstCones.Count));
         world.Events.Add(SecondConesAt - 0.04f, AimSecondCones);
-        world.Events.Add(SecondConesAt, () => CastCones(state.DoubleDip ? Actions.DoubleDipSecond : Actions.ReverseSecond));
+        world.Events.Add(SecondConesAt, () => CastCones(state.DoubleDip ? Actions.DoubleDipSecond : Actions.ReverseSecond, SecondCones().Count));
         world.Events.Add(DeepImpactCastAt, () => deepBlue?.Cast(ActionId.DeepImpact, animationLock: 0.2f));
         world.Events.Add(DeepImpactHitAt, DeepImpact);
         world.Events.Add(DiversDareAt, () => deepBlue?.Cast(Actions.DiversDareBlue));
@@ -204,17 +204,22 @@ public sealed class M10sSickestTakeoffScenario : IScenario
         }
     }
 
-    // Reverse turns every cone half a gap; Double-dip fires the same cones again.
+    // Double-dip fires the same cones again; Reverse fires two, half a gap either side of each.
+    private List<float> SecondCones() => state.DoubleDip
+        ? [.. state.FirstCones]
+        : [.. state.FirstCones.SelectMany(aim => new[] { aim + ReverseTurn, aim - ReverseTurn })];
+
     private void AimSecondCones()
     {
         if (deepBlue is not { } boss) return;
-        for (var i = 0; i < state.FirstCones.Count; i++)
-            helpers[i]?.SetPosition(new Placement(boss.Position, state.FirstCones[i] + (state.DoubleDip ? 0f : ReverseTurn)));
+        var aims = SecondCones();
+        for (var i = 0; i < aims.Count && i < helpers.Length; i++)
+            helpers[i]?.SetPosition(new Placement(boss.Position, aims[i]));
     }
 
-    private void CastCones(Core.EnemyActions.EnemyAction cone)
+    private void CastCones(Core.EnemyActions.EnemyAction cone, int count)
     {
-        for (var i = 0; i < state.FirstCones.Count; i++)
+        for (var i = 0; i < count && i < helpers.Length; i++)
             helpers[i]?.Cast(cone);
     }
 
