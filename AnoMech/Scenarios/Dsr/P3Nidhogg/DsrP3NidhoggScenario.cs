@@ -59,6 +59,8 @@ public sealed class DsrP3NidhoggScenario : IScenario
     private const float DiverShownForDive = 0.57f;
     private const float DiverShownAfterTower = 0.35f;
     private const float DiverWarpsAfterGeirskogul = 2.1f;
+    // UNVERIFIED: the line only shows near the end of the cast in game; the log can't time an omen.
+    private const float GeirskogulOmenDelay = 3.6f;
     private const float DiverHiddenAfterWarp = 0.7f;
 
     private SimWorld world = null!;
@@ -335,7 +337,7 @@ public sealed class DsrP3NidhoggScenario : IScenario
             if (ClosestMember(caster.Position) is not { } target) continue;
             var rotation = RotationTowards(caster.Position, target.Position);
             caster.SetRotation(rotation);
-            caster.NativeCast(ActionId.Geirskogul, ActionType.Action, 0f, 4.2f, false, rotation: rotation, position: caster.Position);
+            caster.NativeCast(ActionId.Geirskogul, ActionType.Action, GeirskogulOmenDelay, 4.2f, false, rotation: rotation, position: caster.Position);
             geirskogulCasters.Add(caster);
         }
     }

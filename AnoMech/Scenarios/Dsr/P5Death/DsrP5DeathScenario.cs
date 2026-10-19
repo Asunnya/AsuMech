@@ -50,7 +50,8 @@ public sealed class DsrP5DeathScenario : IScenario
     private const float LightningStormDamage = 0.3f;
     // UNVERIFIED: how close to a twister sets it off.
     private const float TwisterTouchRadius = 1.5f;
-    private const float TwisterArms = Death + 22.7f;
+    // UNVERIFIED: when a twister starts to bite; it rises first, as in Wrath of the Heavens.
+    private const float TwisterArms = Death + 23.1f;
     private const float TwistersGone = Death + 26.9f;
     private const float PuddleRadius = 4f;
     private const float PuddleOpens = Death + 31.30f;

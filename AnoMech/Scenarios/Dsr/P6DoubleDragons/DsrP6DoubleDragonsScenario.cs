@@ -126,6 +126,8 @@ public sealed class DsrP6DoubleDragonsScenario : IScenario
     public const float TouchdownLethalRadius = 10f;
     private const float TouchdownDamage = 0.3f;
     private const float EffectCarrierLinger = 3f;
+    // UNVERIFIED: Hot Wing and Hot Tail only show near the end of the cast in game; the log can't time an omen.
+    private const float HotWingOmenDelay = 5.3f;
     // UNVERIFIED: when a diving dragon is out of sight; it is untargetable until it is back home.
     private const float DiveOutOfSight = 2f;
 
@@ -679,7 +681,7 @@ public sealed class DsrP6DoubleDragonsScenario : IScenario
         foreach (var z in lanes)
         {
             if (TakeHelper(new Placement(new Vector3(NidhoggHome.X, 0f, z), MathF.PI / 2f)) is not { } helper) continue;
-            helper.NativeCast(wing ? ActionId.HotWingSides : ActionId.HotTailMiddle, ActionType.Action, 0f, 6.2f, false, rotation: helper.Rotation, position: helper.Position);
+            helper.NativeCast(wing ? ActionId.HotWingSides : ActionId.HotTailMiddle, ActionType.Action, HotWingOmenDelay, 6.2f, false, rotation: helper.Rotation, position: helper.Position);
             hotWingCasters.Add(helper);
         }
     }

@@ -171,6 +171,26 @@ public class DsrP6DoubleDragonsScenarioTests
         Assert.That(checkedIt, Is.True);
     }
 
+    // The party reads its stack and spread spots off both dragons as Wroth Flames resolves.
+    [Test]
+    public void BothDragonsAreBackInSightAsWrothFlamesResolves()
+    {
+        var checkedIt = false;
+        var run = ScenarioRun.Execute(typeof(DsrP6DoubleDragonsScenario), 0, 7, new ScenarioRunOptions
+        {
+            Overrides = o => Pinned((DsrP6DoubleDragonsStateOverrides)o),
+            Probe = p =>
+            {
+                if (!p.Crossed(DsrP6DoubleDragonsScenario.FlamesResolve)) return;
+                foreach (var baseId in new[] { BNpcBaseId.NidhoggP6, BNpcBaseId.Hraesvelgr })
+                    Assert.That(p.World.Children.OfType<SimEnemy>().Single(e => e.SpawnConfig.BNpcBaseId == baseId).Visible, Is.True, baseId.ToString());
+                checkedIt = true;
+            },
+        });
+        Assert.That(run.Passed, run.ToString());
+        Assert.That(checkedIt, Is.True);
+    }
+
     [Test]
     public void NidhoggIsInSightForWrothFlames()
     {
