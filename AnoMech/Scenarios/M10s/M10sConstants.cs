@@ -130,6 +130,10 @@ public static class M10sConstants
         public const uint XtremeWaveFire = 0xB5D1;
         public const uint XtremeWaveWater = 0xB5D2;
         public const uint ScathingSteam = 0xADC7;
+        public const uint FlameFloaterSplit = 0xB5D4;
+        public const uint FlameFloaterSplitLine = 0xB5BF;
+        public const uint FreakyPyrotation = 0xB596;
+        public const uint FreakyPyrotationStack = 0xB597;
     }
 
     public static class StatusId
@@ -157,6 +161,7 @@ public static class M10sConstants
         public const uint SharedBuster = 0x103;
         public const uint FireWave = 0x27C;
         public const uint WaterWave = 0x27B;
+        public const uint FreakyPyrotation = 0x293;
     }
 
     public static class TetherId

@@ -60,6 +60,24 @@ public static class M10sActions
         DeathExplanation = "stretch the tether before the charge",
     };
 
+    // UNVERIFIED: the damage of the line that splits the arena.
+    public static readonly EnemyAction FlameFloaterSplitLine = new(ActionId.FlameFloaterSplitLine)
+    {
+        Cast = new() { AnimationLock = 1.2f, FaceTarget = false },
+        Effects = [Damage(Lethal)],
+        Timing = new() { DamageDelay = 0.4f },
+        DeathExplanation = "stay off the line Red Hot charges down",
+    };
+
+    // UNVERIFIED: the minimum.
+    public static readonly EnemyAction FreakyPyrotationStack = new(ActionId.FreakyPyrotationStack)
+    {
+        Cast = new() { AnimationLock = 0.6f },
+        Effects = [Damage(split: Stack(2))],
+        Timing = new() { DamageDelay = 0.4f },
+        DeathExplanation = "pair up with your partner",
+    };
+
     public static readonly EnemyAction AlleyOopInfernoSpread = new(ActionId.AlleyOopInfernoSpread)
     {
         Cast = new() { AnimationLock = 0.6f },

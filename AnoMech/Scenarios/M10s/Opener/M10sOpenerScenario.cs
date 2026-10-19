@@ -66,43 +66,9 @@ public sealed class M10sOpenerScenario : IScenario
     private readonly SimEnemy?[] tetherAnchors = new SimEnemy?[M10sOpenerState.Floaters];
     private readonly SimTether?[] tethers = new SimTether?[M10sOpenerState.Floaters];
     private readonly SimCharacter?[] tetherSources = new SimCharacter?[M10sOpenerState.Floaters];
-    private readonly List<Fire> fires = [];
+    private BurningGround ground = null!;
     private readonly List<SimEventObject> fireVisuals = [];
-    private readonly Dictionary<SimCharacter, float> exposure = [];
     private uint nextFireArg;
-
-    private abstract class Fire(uint actionId, float armedAt)
-    {
-        public uint ActionId { get; } = actionId;
-        public float ArmedAt { get; } = armedAt;
-        public abstract bool Contains(Vector3 p);
-    }
-
-    private sealed class StripFire(uint actionId, float armedAt, Vector3 start, Vector2 direction) : Fire(actionId, armedAt)
-    {
-        public override bool Contains(Vector3 p)
-        {
-            var d = new Vector2(p.X - start.X, p.Z - start.Z);
-            var along = Vector2.Dot(d, direction);
-            var across = MathF.Abs(d.X * direction.Y - d.Y * direction.X);
-            return along >= 0f && along <= StripLength && across <= StripHalfWidth;
-        }
-    }
-
-    private sealed class PuddleFire(uint actionId, float armedAt, Vector3 centre) : Fire(actionId, armedAt)
-    {
-        public override bool Contains(Vector3 p) => Vector2.Distance(new Vector2(p.X, p.Z), new Vector2(centre.X, centre.Z)) <= PuddleRadius;
-    }
-
-    private sealed class SliceFire(uint actionId, float armedAt, Vector3 origin, Vector2 direction, float halfAngle) : Fire(actionId, armedAt)
-    {
-        public override bool Contains(Vector3 p)
-        {
-            var d = new Vector2(p.X - origin.X, p.Z - origin.Z);
-            if (d.LengthSquared() < 0.01f) return false;
-            return Vector2.Dot(Vector2.Normalize(d), direction) >= MathF.Cos(halfAngle);
-        }
-    }
 
     public void Run(SimWorld worldParam, int? selectedAi)
     {
@@ -110,9 +76,8 @@ public sealed class M10sOpenerScenario : IScenario
         state = new M10sOpenerState(world.Rng, settingsWindow.Overrides, world.Party.PlayerRole);
         state.PyrotationSpots.Clear();
         state.InfernoPuddles.Clear();
-        fires.Clear();
+        ground = new BurningGround(StatusId.Burns, BurnToDeath, "stood in its lingering fire");
         fireVisuals.Clear();
-        exposure.Clear();
         Array.Clear(tethers);
         Array.Clear(tetherSources);
         nextFireArg = 0;
@@ -158,7 +123,7 @@ public sealed class M10sOpenerScenario : IScenario
     public void Tick(float delta, float elapsed)
     {
         UpdateTethers();
-        Burn(delta, elapsed);
+        ground.Tick(world.Party, delta, elapsed);
     }
 
     private void SpawnActors()
@@ -230,7 +195,7 @@ public sealed class M10sOpenerScenario : IScenario
         var direction = new Vector2(landing.X - start.X, landing.Z - start.Z);
         direction = direction.LengthSquared() > 0.01f ? Vector2.Normalize(direction) : new Vector2(MathF.Sin(boss.Rotation), MathF.Cos(boss.Rotation));
         var hitAt = FloaterHitAt[n];
-        fires.Add(new StripFire(ActionId.FlameFloater, hitAt + FireSpawnDelay + FireArmDelay, start, direction));
+        ground.AddStrip(ActionId.FlameFloater, hitAt + FireSpawnDelay + FireArmDelay, start, direction, StripLength, StripHalfWidth);
         world.Events.Add(FireSpawnDelay, () => ShowFire(EObjId.FloaterFire, new Placement(start, MathF.Atan2(direction.X, direction.Y))));
         world.Events.Add(FloaterDashDelay, () => redHot?.MoveTo(landing, FloaterDashSpeed));
         if (n + 1 < tethers.Length && tethers[n + 1] is { } next)
@@ -260,7 +225,7 @@ public sealed class M10sOpenerScenario : IScenario
         {
             var at = member.Position;
             state.InfernoPuddles.Add(at);
-            fires.Add(new PuddleFire(ActionId.AlleyOopInferno, InfernoHitAt + InfernoFireDelay + FireArmDelay, at));
+            ground.AddCircle(ActionId.AlleyOopInferno, InfernoHitAt + InfernoFireDelay + FireArmDelay, at, PuddleRadius);
             world.Events.Add(InfernoFireDelay, () => ShowFire(EObjId.InfernoFire, new Placement(at, 0f)));
         }
     }
@@ -281,7 +246,7 @@ public sealed class M10sOpenerScenario : IScenario
     {
         if (state.SafeSliceRotation is not { } bait) return;
         var direction = new Vector2(MathF.Sin(bait), MathF.Cos(bait));
-        fires.Add(new SliceFire(ActionId.CutbackBlaze, CutbackHitAt + 0.6f + FireArmDelay, state.CutbackOrigin, direction, MathF.PI - Actions.CutbackBlazeHalfAngle));
+        ground.AddSlice(ActionId.CutbackBlaze, CutbackHitAt + 0.6f + FireArmDelay, state.CutbackOrigin, direction, MathF.PI - Actions.CutbackBlazeHalfAngle);
         ShowFire(EObjId.CutbackFire, new Placement(state.CutbackOrigin, bait));
     }
 
@@ -292,7 +257,7 @@ public sealed class M10sOpenerScenario : IScenario
         state.PyrotationSpots.Add(at);
         stackHelper?.SetPosition(new Placement(at, 0f));
         stackHelper?.Cast(Actions.PyrotationStack, target);
-        fires.Add(new PuddleFire(ActionId.Pyrotation, world.Events.Elapsed + FireArmDelay, at));
+        ground.AddCircle(ActionId.Pyrotation, world.Events.Elapsed + FireArmDelay, at, PuddleRadius);
         ShowFire(EObjId.PyrotationFire, new Placement(at, 0f));
     }
 
@@ -311,29 +276,9 @@ public sealed class M10sOpenerScenario : IScenario
         world.Events.Add(0.15f, () => fire.SetState(1));
     }
 
-    private void Burn(float delta, float elapsed)
-    {
-        if (fires.Count == 0) return;
-        foreach (var member in world.Party.ActiveMembers().ToList())
-        {
-            if (!member.IsAlive()) continue;
-            var fire = fires.FirstOrDefault(f => elapsed >= f.ArmedAt && f.Contains(member.Position));
-            if (fire == null)
-            {
-                exposure.Remove(member);
-                continue;
-            }
-            var burnt = exposure.GetValueOrDefault(member) + delta;
-            exposure[member] = burnt;
-            if (!member.HasStatus(StatusId.Burns)) member.AddStatus(StatusId.Burns);
-            if (burnt >= BurnToDeath) member.Die(fire.ActionId, "stood in its lingering fire");
-        }
-    }
-
     private void FadeFire()
     {
-        fires.Clear();
-        foreach (var member in world.Party.ActiveMembers()) member.RemoveStatus(StatusId.Burns);
+        ground.PutOut(world.Party);
         foreach (var fire in fireVisuals) fire.SetState(0);
     }
 
