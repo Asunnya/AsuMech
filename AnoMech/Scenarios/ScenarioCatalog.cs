@@ -7,6 +7,15 @@ using AnoMech.Scenarios.Dsr.P4Eyes;
 using AnoMech.Scenarios.Dsr.P5Wrath;
 using AnoMech.Scenarios.Dsr.P5Death;
 using AnoMech.Scenarios.Dsr.P6DoubleDragons;
+using AnoMech.Scenarios.M10s.AlleyOopTwo;
+using AnoMech.Scenarios.M10s.ArenaSplit;
+using AnoMech.Scenarios.M10s.DeepAerial;
+using AnoMech.Scenarios.M10s.DeepVarial;
+using AnoMech.Scenarios.M10s.InsaneAir;
+using AnoMech.Scenarios.M10s.Opener;
+using AnoMech.Scenarios.M10s.SickestTakeoff;
+using AnoMech.Scenarios.M10s.Snaking;
+using AnoMech.Scenarios.M10s.XtremeSnaking;
 using AnoMech.Scenarios.M9s.Aetherletting;
 using AnoMech.Scenarios.M9s.Coffinmaker;
 using AnoMech.Scenarios.M9s.Deathmatch;
@@ -138,5 +147,14 @@ public sealed class ScenarioCatalog
         new M9sHellInACellScenario(),
         new M9sDeathmatchScenario(),
         new M9sFinalScenario(),
+        new M10sOpenerScenario(),
+        new M10sSickestTakeoffScenario(),
+        new M10sInsaneAirScenario(),
+        new M10sSnakingScenario(),
+        new M10sDeepVarialScenario(),
+        new M10sDeepAerialScenario(),
+        new M10sArenaSplitScenario(),
+        new M10sXtremeSnakingScenario(),
+        new M10sAlleyOopTwoScenario(),
     ]);
 }
