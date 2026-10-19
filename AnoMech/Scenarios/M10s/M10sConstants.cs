@@ -172,6 +172,7 @@ public static class M10sConstants
         public const uint FireWave = 0x27C;
         public const uint WaterWave = 0x27B;
         public const uint FreakyPyrotation = 0x293;
+        public const uint Pyrotation = 0x29A;
     }
 
     public static class TetherId
