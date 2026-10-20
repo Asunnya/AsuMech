@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using AnoMech.Core.Native.Implementations;
 using AnoMech.Core.Native.Implementations.Pointers;
 using AnoMech.Core.Native.Interfaces;
@@ -74,6 +75,9 @@ public sealed unsafe class UserActions : IUserActions
     {
         this.hooks = hooks;
         hooks.ActionExecuted += OnActionExecuted;
+        // The server shows a swing to the party as it would any action.
+        foreach (var autoAttacks in handlers.OfType<AutoAttackHandler>())
+            autoAttacks.Swung += (actionId, targetId) => Acted?.Invoke(new PlayerAction(PlayerActionStep.Resolved, ActionType.Action, actionId, targetId));
     }
 
     private bool Runs(IUserActionHandler handler) => Enabled || handler.RunsWhenDisabled;

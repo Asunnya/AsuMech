@@ -59,7 +59,8 @@ public sealed partial class MultiplayerManager
                     break;
                 case PlayerActionStep.Resolved:
                     var at = target ?? member.GameObjectId;
-                    member.Casting.NativeActionEffect(actionId, ActionAnimationLock, (ushort)actionId, 0, ActionType.Action, 0,
+                    var animationLock = AutoAttackHandler.IsAutoAttack(actionId) ? AutoAttackHandler.SwingLock : ActionAnimationLock;
+                    member.Casting.NativeActionEffect(actionId, animationLock, (ushort)actionId, 0, ActionType.Action, 0,
                         animationTargetId: at, targets: [new ActionEffectTarget(at)]);
                     break;
                 case PlayerActionStep.Interrupted:

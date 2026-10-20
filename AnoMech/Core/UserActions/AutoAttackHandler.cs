@@ -15,8 +15,9 @@ namespace AnoMech.Core.UserActions;
 // replays each swing at the player's target. Animation only: no damage, no flytext.
 internal sealed unsafe class AutoAttackHandler : IUserActionHandler
 {
-    private const uint AttackActionId = 7;
-    private const uint ShotActionId = 8;
+    public const uint AttackActionId = 7;
+    public const uint ShotActionId = 8;
+    public const float SwingLock = 0.1f;
     // UNVERIFIED: the auto reach past both hitboxes.
     private const float MeleeRange = 2.1f;
     private const float RangedRange = 25f;
@@ -27,6 +28,11 @@ internal sealed unsafe class AutoAttackHandler : IUserActionHandler
     private float swingCooldown;
     private byte swingCount;
     private readonly System.Random rng = new();
+
+    // Each swing, by its action and the enemy it went at.
+    public event System.Action<uint, ulong>? Swung;
+
+    public static bool IsAutoAttack(uint actionId) => actionId is AttackActionId or ShotActionId;
 
     public void OnScenarioStart()
     {
@@ -52,6 +58,7 @@ internal sealed unsafe class AutoAttackHandler : IUserActionHandler
         var actionId = ActionIdOf(job);
         swingCooldown = WeaponDelay();
         Swing(actionId, enemy);
+        Swung?.Invoke(actionId, (ulong)enemy.GameObjectId);
         JobActions.ApplyAutoAttack(game.Player, actionId, enemy.GameObjectId, rng);
     }
 
@@ -61,7 +68,7 @@ internal sealed unsafe class AutoAttackHandler : IUserActionHandler
     {
         var player = BattleCharaProxy.LocalPlayer;
         player.ReceiveActionEffect(new ActionEffectData(
-            actionId, ActionType.Action, 0.1f, (ushort)actionId, (byte)(swingCount++ % 3), 0, player.Rotation, player.Position,
+            actionId, ActionType.Action, SwingLock, (ushort)actionId, (byte)(swingCount++ % 3), 0, player.Rotation, player.Position,
             AnimationTarget: enemy.GameObjectId,
             Targets: [new ActionEffectTarget(enemy.GameObjectId)]));
     }
