@@ -153,7 +153,7 @@ public sealed class InstanceSession
         world.ScenarioOrigin = default;
     }
 
-    // Plugin unload: the native zone reverts itself on its own dispose.
+    // Plugin unload: the native zone's own dispose stops the game while a stay is up.
     public void Dispose()
     {
         SettleFall();

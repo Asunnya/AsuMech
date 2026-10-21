@@ -96,7 +96,13 @@ public sealed unsafe class UserActions : IUserActions
     // Called by Game when the sim zone first loads (a true session start, not a restart within
     // an already-loaded zone). Snapshots unconditionally, so the restore stays correct even if the
     // module is enabled/disabled part-way through the session.
-    public void OnSessionStart() => gaugeSnapshot = JobGaugeEdit.Capture();
+    public void OnSessionStart()
+    {
+        // The lift rewinds the sequence to here, so a number the last session processed comes again.
+        var am = ActionManager.Instance();
+        if (am != null) processedSeq = am->LastUsedActionSequence;
+        gaugeSnapshot = JobGaugeEdit.Capture();
+    }
 
     // Called by Game when the player leaves the sim zone.
     public void OnSessionEnd()
