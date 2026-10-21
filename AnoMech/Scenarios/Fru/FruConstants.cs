@@ -47,10 +47,6 @@ public static class FruConstants
     // ContentDirectorManagedSG 181. Packet flags: low16 = state, high16 = timeline mask.
     public static class MapEffect
     {
-        public const byte SlotCount = 54;
-        public const uint Show = 0x00010001;
-        public const uint Hide = 0x00040004;
-
         public const byte P2Platform = 23;
         // The P3/P4 stage controller.
         public const byte OracleStage = 40;

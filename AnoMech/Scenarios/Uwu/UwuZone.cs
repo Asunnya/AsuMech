@@ -19,7 +19,7 @@ public sealed class UwuZone : IZone
     public IReadOnlyList<WaymarkLayout> WaymarkPresets { get; } =
         [new WaymarkLayout("Default", UwuConstants.NaurWaymarks)];
 
-    public EntranceBarrier EntranceBarrier => new(2007457, 0x700D77, 0x700D76, new Vector3(0f, 0f, 16f));
+    public DutyInitData DutyInitData => UwuReplayData.DutyInitData;
 
     public void Run(SimWorld world)
     {

@@ -121,6 +121,7 @@ public sealed class Game : IDisposable
             return $"already in {instance.Zone.Name}";
         }
         instance = InstanceSession.Enter(World, zone, mode, out var refusal);
+        if (refusal is not null) Plugin.Log.Warning($"InstanceSession: not entering {zone.Name} -- {refusal}.");
         return refusal;
     }
 
