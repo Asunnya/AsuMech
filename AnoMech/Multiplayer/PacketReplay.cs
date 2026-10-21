@@ -24,9 +24,10 @@ internal sealed class PacketReplay(PeerNatives natives, SimWorld world, PartyRol
     private const uint NoTarget = 0xE0000000;
     private const uint SetTetherCategory = 0x23;
     private const uint ClearTetherCategory = 0x2F;
-    private const uint TargetCategory = 0x32;
     private const uint MarkingCategory = 0x1F6;
     private const int StatusSlots = 60;
+    // As many as a spawn packet carries.
+    private const int SpawnStatuses = 30;
     private const int SignCount = 17;
     private const int MaxEffectTargets = 64;
     private const int MaxEntriesPerTarget = 8;
@@ -276,7 +277,8 @@ internal sealed class PacketReplay(PeerNatives natives, SimWorld world, PartyRol
         if (spawned.ContainsKey(p.Actor)) Despawn(p.Actor);
         var placement = new Placement(position, NetGuard.Rotation(p.Rotation));
         var config = new EnemySpawnConfig(p.BNpcBaseId, p.NameId, p.Level, p.Targetable, p.EnemyList, p.Visibility,
-            world.Coordinates.ToLocal(placement), p.ModelCharaId, p.InitialModeAttributeFlags, p.DisplayFlags, p.Engaged, p.LayoutId, p.IsHostile);
+            world.Coordinates.ToLocal(placement), p.ModelCharaId, p.InitialModeAttributeFlags, p.DisplayFlags, p.Engaged, p.LayoutId, p.IsHostile,
+            p.Appearance, p.Statuses is { } statuses ? NetGuard.Cap(statuses, SpawnStatuses).ToList() : null, p.ModelState, p.ModelScale);
         if (natives.RealCharas.SpawnBattleNpcFromPacket(config, placement, out var entityId) is not { } chara)
         {
             DiagnosticLog.Warn($"[Multiplayer] Peer: the host's BNpcBase {p.BNpcBaseId} (0x{p.Actor:X}) didn't spawn here -- its packets will be dropped.");
@@ -374,7 +376,7 @@ internal sealed class PacketReplay(PeerNatives natives, SimWorld world, PartyRol
         if (spawned.GetValueOrDefault(actor)?.Enemy is { } enemy)
             enemy.SetPosition(new Placement(local, rotation));
         else if (PacketActor.IsSeat(actor, out var role) && role != myRole && world.Party.Get(role) is SimNetworkPuppet puppet)
-            puppet.ApplyNetworkPose(local, rotation);
+            puppet.ApplyNetworkPose(local, rotation, Vector3.Zero, jumping: false);
     }
 
     private void Cast(CastPacket p)
@@ -394,7 +396,7 @@ internal sealed class PacketReplay(PeerNatives natives, SimWorld world, PartyRol
         if (Character(p.Actor) is not { } caster) return;
         var targets = NetGuard.Cap(p.Targets, MaxEffectTargets)
             .Select(t => new ActionEffectTarget(ObjectIdOf(t.Target) ?? new GameObjectId { ObjectId = NoTarget, Type = 0 },
-                NetGuard.Cap(t.Effects, MaxEntriesPerTarget).ToList()))
+                t.Effects == null ? null : NetGuard.Cap(t.Effects, MaxEntriesPerTarget).ToList()))
             .ToList();
         var sequence = caster.ReceiveActionEffect(new ActionEffectData(p.ActionId, p.ActionType, NetGuard.Clamp(p.AnimationLock, 0f, 60f),
             p.SpellId, p.AnimationVariation, p.Flags, NetGuard.Rotation(p.Rotation), position, ObjectIdOf(p.AnimationTarget),
@@ -434,7 +436,7 @@ internal sealed class PacketReplay(PeerNatives natives, SimWorld world, PartyRol
 
     private void ControlTarget(ControlTargetPacket p)
     {
-        if (p.Args.Length != 4 || p.Category is not (TargetCategory or MarkingCategory)) return;
+        if (p.Args.Length != 4 || !PacketRules.TargetControls.ContainsKey(p.Category)) return;
         if (p.Category == MarkingCategory && p.Args[0] >= SignCount) return;
         var args = p.Args.ToArray();
         if (p.ArgIndex is >= 0 and < 4) args[p.ArgIndex] = EntityOf(p.ArgActor);

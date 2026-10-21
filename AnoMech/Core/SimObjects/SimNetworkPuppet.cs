@@ -20,6 +20,10 @@ public sealed class SimNetworkPuppet : SimNpc, ISimPartyMember
     public byte ClassJob { get; }
     public string DisplayName { get; }
 
+    // The seat's own client plays it with a bot: its player's debug bot, or the host's bot as a
+    // peer sees it. Multiplayer keeps it current.
+    public bool BotDriven { get; internal set; }
+
     internal SimNetworkPuppet(IBattleCharaProxy proxy, Coordinates coordinates, PartyRole role, byte classJob, string name)
         : base(proxy, coordinates, self => new RemoteMotion(() => self.Proxy, coordinates))
     {
@@ -29,7 +33,10 @@ public sealed class SimNetworkPuppet : SimNpc, ISimPartyMember
         DisplayName = name;
     }
 
-    public void ApplyNetworkPose(Vector3 position, float rotation) => motion.ApplyPose(position, rotation);
+    public void ApplyNetworkPose(Vector3 position, float rotation, Vector3 velocity, bool jumping) => motion.ApplyPose(position, rotation, velocity, jumping);
+
+    public Vector3 PoseVelocity => motion.PoseVelocity;
+    public bool PoseJumping => motion.PoseJumping;
 
     // A forced move here only moves the host's copy through the owner's poses; MultiplayerManager
     // drains these to tell the owning peer to apply them to their real character.

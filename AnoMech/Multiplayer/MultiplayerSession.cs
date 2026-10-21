@@ -15,6 +15,8 @@ public sealed class MultiplayerSession
     public Dictionary<Guid, PeerBuildInfo> Builds { get; private set; } = new();
     // Each player's real job; their puppet carries it instead of the seat preset's.
     public Dictionary<Guid, byte> Jobs { get; private set; } = new();
+    // The players whose own debug bot plays their seat.
+    public HashSet<Guid> DebugBots { get; private set; } = new();
     public bool Started { get; set; }
 
     // Indices into Game.Catalog.Scenarios and that scenario's AiStrats/WaymarkPresets; -1 = the host
@@ -42,6 +44,7 @@ public sealed class MultiplayerSession
         Builds = msg.Builds.Take(NetGuard.MaxSessionPeers).ToDictionary(kv => kv.Key,
             kv => new PeerBuildInfo(NetGuard.Clean(kv.Value.Version), NetGuard.Clean(kv.Value.Checksum)));
         Jobs = msg.Jobs.Take(NetGuard.MaxSessionPeers).ToDictionary(kv => kv.Key, kv => NetGuard.ClassJob(kv.Value));
+        DebugBots = NetGuard.Cap(msg.DebugBots, NetGuard.MaxSessionPeers).ToHashSet();
         Started = msg.Started;
         ScenarioIndex = msg.ScenarioIndex;
         SelectedAi = msg.SelectedAi;
@@ -53,7 +56,7 @@ public sealed class MultiplayerSession
     public LobbyStateMessage ToMessage() => new(
         HostId, new Dictionary<PartyRole, Guid>(ClaimedBy), new Dictionary<Guid, string>(Names),
         new Dictionary<Guid, PeerBuildInfo>(Builds), new Dictionary<Guid, byte>(Jobs), Started, ScenarioIndex, SelectedAi, SelectedWaymark,
-        new List<string>(ScenarioSettings), ScenarioSettingsJson);
+        new List<string>(ScenarioSettings), ScenarioSettingsJson, DebugBots: DebugBots.ToList());
 
     public PartyRole? RoleOf(Guid peerId) =>
         ClaimedBy.Where(kv => kv.Value == peerId).Select(kv => (PartyRole?)kv.Key).FirstOrDefault();

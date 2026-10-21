@@ -124,11 +124,12 @@ public static class RelayWire
         return output.ToArray();
     }
 
-    // Peer message types; anything else must come from the host. Keep in step with
-    // MultiplayerManager.ClaimedPeerId.
-    private static bool IsPeerMessage(string type) => type is "hello" or "claim" or "release" or "pose" or "pong"
-        or "startCheckResponse" or "startAbort" or "entered" or "sessionEnded" or "resetRequest" or "leaveRequest"
-        or "selfMitigation" or "peerAppliedEnemyStatus" or "peerAppliedRoleStatus" or "streamGap" or "streamLost" or "acted";
+    // The plugin's IPeerMessage types; anything else must come from the host.
+    public static readonly IReadOnlySet<string> PeerMessageTypes = new HashSet<string>
+    {
+        "hello", "claim", "release", "pose", "pong", "startCheckResponse", "startAbort", "entered", "sessionEnded",
+        "resetRequest", "leaveRequest", "peerAppliedEnemyStatus", "peerAppliedRoleStatus", "streamGap", "streamLost", "acted",
+    };
 
     // Before typed deserialization. A host message only needs its type here: the host already
     // runs the whole simulation, and deserialization refuses anything malformed. A peer message
@@ -144,7 +145,7 @@ public static class RelayWire
             throw new InvalidDataException("Missing message type.");
         var type = reader.GetString()!;
         if (fromHost) return type;
-        if (!IsPeerMessage(type)) throw new InvalidDataException("Host message sent by a peer.");
+        if (!PeerMessageTypes.Contains(type)) throw new InvalidDataException("Host message sent by a peer.");
 
         var names = new List<string>(8) { "t" };
         Guid? claimed = null;

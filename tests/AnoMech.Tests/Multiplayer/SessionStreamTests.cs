@@ -139,7 +139,7 @@ public class SessionStreamTests
                     ? new AnnouncementMessage($"{end.Stream.Sent + 1}")
                     : new ClaimRoleMessage(end.Id, (PartyRole)rng.Next(8)));
             // Never numbered, never kept: it rides along and must not disturb anything.
-            if (!end.IsHost && rng.NextDouble() < 0.02) Transmit(end, new SelfPoseMessage(end.Id, 0, 0, 0, 0));
+            if (!end.IsHost && rng.NextDouble() < 0.02) Transmit(end, new SelfPoseMessage(end.Id, 0, 0, 0, 0, 0, 0, false));
         }
 
         // ── Interruptions ────────────────────────────────────────────────────

@@ -66,6 +66,48 @@ public class PlayerActionTests
         Assert.That(problems, Is.Empty, $"{problems.Count} of {presses.Count} presses not shown as they should be");
     }
 
+    // A player's auto-attack swings reach the party as its other actions do, each with a swing's
+    // 0.1s lock, and never come back to the player's own client.
+    [Test]
+    public void EveryOtherClientShowsEveryPlayersAutoAttackSwings()
+    {
+        uint[] swings = [AttackActionId, ShotActionId];
+        var presses = Enumerable.Range(0, 3)
+            .SelectMany(client => swings.Select((id, k) => new Press(client, id, Kind.Instant, Aim.Spawned, FirstPress + (client * swings.Length + k) * PressEvery)))
+            .ToList();
+        var inputs = presses.SelectMany(p => Steps(p, new Dictionary<Press, string>())).ToList();
+        var scenario = ScenarioCatalog.Create().Scenarios.First(s => s.SupportsMultiplayer).GetType();
+        var run = MultiplayerRun.Play(scenario, 0, 1, Host, Peers, immortal: true, inputs: inputs);
+        Assert.That(run.Failure, Is.Null);
+        Assert.That(run.InputsLeft, Is.Zero, "swings the fight ended before");
+
+        var clients = run.Peers.Prepend(run.Host).ToList();
+        var problems = new List<string>();
+        foreach (var press in presses)
+        {
+            var presser = clients[press.Client];
+            foreach (var client in clients)
+            {
+                var locks = client.Fake.Timeline.Rows
+                    .Where(r => r["kind"] == "ability" && r["id"] == press.ActionId.ToString(CultureInfo.InvariantCulture)
+                                && Name(client, r, "actor", double.Parse(r["t"], CultureInfo.InvariantCulture)) == presser.Seat.ToString())
+                    .Select(r => r["anim_lock"])
+                    .ToList();
+                if (ReferenceEquals(client, presser))
+                {
+                    if (locks.Count > 0) problems.Add($"{presser.Name}'s own {press} came back to it");
+                }
+                else if (!locks.SequenceEqual(["0.10"]))
+                    problems.Add($"{client.Name} showed {presser.Name}'s {press} with locks [{string.Join(", ", locks)}]");
+            }
+        }
+        var refused = clients.SelectMany(c => c.Log.Warnings).Where(w => w.Contains("[SimAssets]")).Distinct().ToList();
+        Assert.That(refused, Is.Empty, "swings a client refused");
+        Assert.That(problems, Is.Empty);
+    }
+
+    private const uint AttackActionId = 7, ShotActionId = 8;
+
     // What the player's game reports of a press (IUserActions.Acted): a cast's start, then its end.
     private static IEnumerable<(double At, int Client, Action<TestClient> Input)> Steps(Press p, Dictionary<Press, string> targets)
     {

@@ -138,6 +138,8 @@ public sealed partial class MultiplayerManager
         if (hostStageSetFor < StageSettleSeconds) return;
         pendingEntered = null;
         hostStageSetFor = null;
+        // What the stage sent goes ahead of the Start; everything after it is the run's.
+        FlushPackets(force: true);
         recorder!.Recording = true;
         DiagnosticLog.Info("[Multiplayer] Host: everyone is in -- starting the run.");
         Plugin.Game.StartScenario(p, OnHostStartResolved);
@@ -246,6 +248,7 @@ public sealed partial class MultiplayerManager
     private void TickRun(float deltaSeconds)
     {
         if (!running) return;
+        TrackOwnVelocity(deltaSeconds);
 
         if (IsHost)
         {
@@ -274,8 +277,7 @@ public sealed partial class MultiplayerManager
             if (!aiReplayStateSent) TrySendAiReplayState();
             SendMidRunUpdate();
             SendForcedMoves();
-            if (pendingRolesSend is null or { IsCompleted: true })
-                pendingRolesSend = SampleAndBroadcastRoles();
+            BroadcastRoles();
         }
         else
         {

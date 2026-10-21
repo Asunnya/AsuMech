@@ -138,10 +138,10 @@ public sealed class SimParty : ISimObject
     // The seats people play: this client's own, and the other players' puppets.
     internal IEnumerable<SimCharacter> Players() => AllMembers().Where(m => m is SimPlayer or SimNetworkPuppet);
 
-    // Slots nothing real presses buttons for: a bot, or the local player under DebugBotControl
-    // (which drives movement only).
+    // Slots nothing real presses buttons for: a bot, the local player under DebugBotControl (which
+    // drives movement only), or a remote seat a bot plays on its own client.
     public bool IsBotDriven(SimCharacter member)
-        => (!ReferenceEquals(member, Player) || DebugBotControl.Enabled) && member is not SimNetworkPuppet;
+        => member is SimNetworkPuppet puppet ? puppet.BotDriven : !ReferenceEquals(member, Player) || DebugBotControl.Enabled;
 
     internal IEnumerable<SimCharacter> ActiveMembers()
     {
