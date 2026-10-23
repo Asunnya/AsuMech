@@ -76,6 +76,6 @@ public class M11sOpenerScenarioTests
     public void OverlappingCometSpreadsKillBoth()
         => Negative<Scenario>(MeleeDpsA)
             .Overrides<M11sOpenerStateOverrides>(o => { Pinned(o); o.StackFirst = false; })
-            .TeleportAt(Scenario.CometCastAt[0] + 4.5f, to: new Vector2(0f, -14f))
+            .TeleportAt(Scenario.CometCastAt[0] + 4.5f, to: new Vector2(-5f, -6f))
             .ShouldKill(ActionId.Comet, MeleeDpsA, MainTank);
 }

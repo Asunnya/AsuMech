@@ -20,7 +20,7 @@ public sealed class M11sOpenerAi : IScenarioAi<M11sOpenerState>
     private const float AcrossFromTheAxe = 2f;
     private const float AwayFromTheSword = 8.5f;
     private const float CometRing = 7f;
-    private const float SpreadRing = 15f;
+    private const float PuddleClearance = 7.5f;
     private const float QuarterTurn = MathF.PI / 2f;
 
     private M11sOpenerState state = null!;
@@ -55,7 +55,8 @@ public sealed class M11sOpenerAi : IScenarioAi<M11sOpenerState>
             ai.Move(startAt, () => ByRole(role => CometStop(role, set, 0, chooseStart: true)), jitter: 0f, sprint: true);
             ai.Move(waves[0] + 0.05f, () => ByRole(role => CometStop(role, set, 1)), jitter: 0f, sprint: true);
             ai.Move(waves[1] + 0.05f, () => ByRole(role => CometStop(role, set, 2)), jitter: 0f, sprint: true);
-            ai.Move(waves[1] + CometiteResolves + 0.05f, () => ByRole(role => StackOrSpread(role, set)), jitter: 0f, sprint: true);
+            ai.Move(waves[1] + CometiteResolves + 0.05f, () => ByRole(role => StackOrSpreadClearOfTheLastPuddle(role, set)), jitter: 0f, sprint: true);
+            ai.Move(waves[2] + CometiteResolves + 0.05f, () => ByRole(role => StackOrSpread(role, set)), jitter: 0f, sprint: true);
         }
         ai.Move(CometCastAt[1] + CometResolves + 0.3f, () => ByRole(role => StackOffset(role)));
     }
@@ -120,11 +121,30 @@ public sealed class M11sOpenerAi : IScenarioAi<M11sOpenerState>
         return CometRing * Toward(firstCometStop[set] - stop * QuarterTurn) + StackOffset(role);
     }
 
-    private Vector2? StackOrSpread(PartyRole role, int set)
+    private Vector2? StackOrSpreadClearOfTheLastPuddle(PartyRole role, int set)
     {
-        if (state.StackOnSet(set)) return CometStop(role, set, 3);
-        return SpreadRing * Toward(MathF.PI + ProteanTurn(role));
+        var spot = StackOrSpread(role, set);
+        var lastPuddle = CometRing * Toward(firstCometStop[set] - 2 * QuarterTurn);
+        var away = spot - lastPuddle;
+        return away.Length() >= PuddleClearance ? spot : lastPuddle + PuddleClearance * Vector2.Normalize(away);
     }
+
+    private Vector2 StackOrSpread(PartyRole role, int set)
+    {
+        if (state.StackOnSet(set)) return CometStop(role, set, 3)!.Value;
+        return CometSpread(role, set == 0 ? Vector2.Zero : Flat(state.WeaponSpot(1, 2)));
+    }
+
+    public static Vector2 CometSpread(PartyRole role, Vector2 boss)
+    {
+        var spot = role.IsTank() ? ScytheSplit(role) : AxeSpreads(role);
+        var awayFromTheBoss = boss.LengthSquared() < 0.01f ? 0f : MathF.Atan2(-boss.X, -boss.Y);
+        var turned = Turn(spot, awayFromTheBoss);
+        return role.IsTank() || role is PartyRole.MeleeDpsA or PartyRole.MeleeDpsB ? boss + turned : turned;
+    }
+
+    private static Vector2 Turn(Vector2 v, float bearing)
+        => new(v.X * MathF.Cos(bearing) + v.Y * MathF.Sin(bearing), -v.X * MathF.Sin(bearing) + v.Y * MathF.Cos(bearing));
 
     private float NearestCardinalToTheParty()
     {
