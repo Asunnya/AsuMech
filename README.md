@@ -115,6 +115,7 @@ All using default NA pf strats unless noted otherwise:
     - Deep Aerial (tower into the Watery Grave, six rounds of fire and water wave tethers that must stretch, fire through the prison and water around it, Scathing Steam)
 - AAC Heavyweight M3 (Savage) — M11S _by [Asunnya](https://github.com/Asunnya)_
     - Raw Steel Trophy to Void Stardust (axe or scythe Raw Steel, Trophy Weapons into Assault Evolved twice, Void Stardust comets ending in a stack or spreads)
+    - Dance of Domination to One and Only (raidwides into pair stacks between six lines, second Raw Steel Trophy, Charybdistopia, Ultimate Trophy Weapons' six strikes leaving Maelstroms, tornado gust baits)
 
 ## Details
 

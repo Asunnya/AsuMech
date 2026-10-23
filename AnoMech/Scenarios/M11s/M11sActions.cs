@@ -138,4 +138,62 @@ public static class M11sActions
         Timing = new() { DamageDelay = 0.4f },
         DeathExplanation = "stack with the party",
     };
+
+    public static readonly EnemyAction DanceOfDominationFirst = new(ActionId.DanceOfDominationFirst)
+    {
+        Cast = new() { AnimationLock = 0.2f, FaceTarget = false },
+        Effects = [Damage()],
+        Timing = new() { DamageDelay = 0.3f },
+    };
+
+    public static readonly EnemyAction DanceOfDominationRepeat = DanceOfDominationFirst with { ActionId = ActionId.DanceOfDominationRepeat };
+    public static readonly EnemyAction DanceOfDominationLast = DanceOfDominationFirst with { ActionId = ActionId.DanceOfDominationLast };
+
+    public static readonly EnemyAction EyeOfTheHurricane = new(ActionId.EyeOfTheHurricane)
+    {
+        Cast = new() { AnimationLock = 0.6f },
+        Effects = [Damage(VulnToMagic, split: Stack(2)), ApplyStatus(StatusId.MagicVulnerabilityUp, MagicVulnSeconds)],
+        Timing = new() { DamageDelay = 0.4f },
+        DeathExplanation = "pair up with your partner, apart from the other pairs",
+    };
+
+    // Not lethal on its own: it leaves Damage Down, and kills through the pair stack's vuln.
+    public static readonly EnemyAction HurricaneExplosion = new(ActionId.HurricaneExplosion)
+    {
+        Cast = new() { AnimationLock = 0.6f, FaceTarget = false },
+        Effects = [Damage(VulnToMagic), ApplyStatus(StatusId.DamageDown, 30f, delayToEffectResult: true)],
+        Timing = new() { DamageDelay = 0.5f },
+        DeathExplanation = "stand in a gap between the lines",
+    };
+
+    public static readonly EnemyAction Charybdistopia = new(ActionId.Charybdistopia)
+    {
+        Cast = new() { AnimationLock = 2.1f },
+        Effects = [Damage()],
+    };
+
+    // UNVERIFIED: how often a tornado hits someone standing in it.
+    public static readonly EnemyAction Charybdis = new(ActionId.Charybdis)
+    {
+        Cast = new() { AnimationLock = 0.2f, FaceTarget = false },
+        Effects = [Damage(), ApplyStatus(StatusId.DamageDown, 30f)],
+        Timing = new() { DamageDelay = 0.2f },
+    };
+
+    public const float PowerfulGustHalfAngle = MathF.PI / 4f;
+
+    public static readonly EnemyAction PowerfulGust = new(ActionId.PowerfulGust)
+    {
+        Cast = new() { AnimationLock = 0.6f },
+        Area = new() { Size = PowerfulGustHalfAngle },
+        Effects = [Damage(VulnToMagic), ApplyStatus(StatusId.MagicVulnerabilityUp, 2.96f)],
+        Timing = new() { DamageDelay = 0.4f },
+        DeathExplanation = "two players per tornado, one gust each",
+    };
+
+    public static readonly EnemyAction OneAndOnlyRaidwide = new(ActionId.OneAndOnlyRaidwide)
+    {
+        Cast = new() { AnimationLock = 0.6f, FaceTarget = false },
+        Effects = [Damage()],
+    };
 }

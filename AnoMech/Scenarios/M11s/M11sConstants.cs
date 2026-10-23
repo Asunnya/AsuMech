@@ -35,12 +35,14 @@ public static class M11sConstants
         public const uint Axe = 19184;
         public const uint Scythe = 19185;
         public const uint Sword = 19186;
+        public const uint Maelstrom = 19183;
         public const uint Helper = 9020;
     }
 
     public static class BNpcNameId
     {
         public const uint Tyrant = 14305;
+        public const uint Maelstrom = 14307;
     }
 
     public static class ActionId
@@ -72,12 +74,29 @@ public static class M11sConstants
         public const uint Cometite = 0xB413;
         public const uint Comet = 0xB414;
         public const uint CrushingComet = 0xB415;
+        public const uint DanceOfDominationTrophy = 0xB7BB;
+        public const uint DanceOfDomination = 0xB41E;
+        public const uint DanceOfDominationFirst = 0xB41F;
+        public const uint DanceOfDominationRepeat = 0xB421;
+        public const uint DanceOfDominationLast = 0xB7EA;
+        public const uint EyeOfTheHurricane = 0xB424;
+        public const uint HurricaneExplosion = 0xB420;
+        public const uint HurricaneExplosionVisual = 0xB7BC;
+        public const uint Charybdistopia = 0xB425;
+        public const uint Charybdis = 0xB426;
+        public const uint PowerfulGust = 0xB427;
+        public const uint UltimateTrophyWeapons = 0xB7ED;
+        public const uint AssaultApex = 0xB7EE;
+        public const uint ImmortalReign = 0xB428;
+        public const uint OneAndOnly = 0xB429;
+        public const uint OneAndOnlyRaidwide = 0xB42A;
     }
 
     public static class StatusId
     {
         public const ushort PhysicalVulnerabilityUp = 0xB7C;
         public const ushort MagicVulnerabilityUp = 0xB7D;
+        public const ushort DamageDown = 0xB5F;
     }
 
     public static class LockonId
