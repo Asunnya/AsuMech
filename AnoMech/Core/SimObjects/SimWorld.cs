@@ -88,7 +88,7 @@ public sealed class SimWorld : ISimObject, IDisposable
 
     private SimTether CreateTether(ITetherEnd from, ITetherEnd to, ushort tetherId, float duration, ushort debuffStatusId)
     {
-        var tether = new SimTether(from, to, new TetherContext(Party.Find, tetherId, Rng), debuffStatusId, duration);
+        var tether = new SimTether(from, to, new TetherContext(Party.Find, tetherId, Rng), debuffStatusId, duration, SimEvents);
         children.Add(tether);
         return tether;
     }
@@ -170,22 +170,15 @@ public sealed class SimWorld : ISimObject, IDisposable
         Plugin.ChatGui.Print(new XivChatEntry { Type = XivChatType.SystemMessage, Message = $"[AnoMech] {text}" });
         Announced?.Invoke(text);
     }
-    
 
-    private readonly List<(ushort StatusId, Action<SimCharacter> Handler)> deathRules = [];
+    // The run failed without anyone dying, e.g. a puzzle retail only punishes minutes later. Play
+    // the mechanic out as retail does; `freeze` when the scenario can't go on from here, which
+    // freezes the run 5s later as a death does.
+    public event Action<string, bool>? Failed;
 
-    // For the rest of the run, `handler` runs whenever a party member holding `statusId` goes down,
-    // e.g. a debuff that detonates on its holder's corpse. A death godmode spares doesn't count.
-    public void OnDeathWithStatus(ushort statusId, Action<SimCharacter> handler)
-        => deathRules.Add((statusId, handler));
+    public void Fail(string reason, bool freeze = false) => Failed?.Invoke(reason, freeze);
 
-    // Takes the statuses held before death, since going down wipes them.
-    internal void RunDeathRules(SimCharacter member, IReadOnlyList<SimStatus> heldStatuses)
-    {
-        foreach (var (statusId, handler) in deathRules.ToList())
-            if (heldStatuses.Any(s => s.StatusId == statusId))
-                handler(member);
-    }
+    internal SimEvents SimEvents { get; } = new();
 
     // A one-shot VFX sheet row at a scenario-local point, e.g. FRU's Return marker (1013) under each
     // player. Shown on this client only.
@@ -209,15 +202,16 @@ public sealed class SimWorld : ISimObject, IDisposable
         Party.Tick(deltaSeconds);
         children.Update(deltaSeconds);
         enemyList.Tick(children.OfType<SimEnemy>(), deltaSeconds);
+        SimEvents.Dispatch();
     }
 
-    // The run's teardown; the party stays.
+    // The run's teardown; the party stays. The listener goes first, so the teardown raises nothing.
     public void Despawn()
     {
+        SimEvents.Clear();
         children.Despawn();
         enemyList.Clear();
         Obstacles.Clear();
-        deathRules.Clear();
         NpcKnockbackStopRadius = null;
         Party.EndRun();
     }

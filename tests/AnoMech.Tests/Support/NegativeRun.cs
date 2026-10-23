@@ -74,16 +74,31 @@ internal sealed class NegativeRun<TScenario>(PartyRole role, int strat) where TS
         return this;
     }
 
-    // The run starts at the first ShouldKill; each call judges the next group of deaths. Groups go in
-    // frame order, but within one frame the calls can come in any order. Deaths no call judges are
+    // The run starts at the first ShouldKill or ShouldFail; each ShouldKill judges the next group of
+    // deaths. Groups go in frame order, but within one frame the calls can come in any order. Deaths no call judges are
     // consequences (a stack one short, a tether partner left alone), not what the test broke.
     // Matched on the action the death names, so only Die(actionId, ...) counts.
     public NegativeRun<TScenario> ShouldKill(uint actionId, params PartyRole[] roles)
-        => Judge(() => $"{string.Join(", ", roles)} to die to {NameOf(actionId)}", actionId, roles, roles);
+        => Judge(() => $"{string.Join(", ", roles)} to die to {NameOf(actionId)}", d => d.ActionId == actionId, roles, roles);
 
     // When the roll decides who is hit.
     public NegativeRun<TScenario> ShouldKillSomeone(uint actionId)
-        => Judge(() => $"someone to die to {NameOf(actionId)}", actionId, PerRole.All, []);
+        => Judge(() => $"someone to die to {NameOf(actionId)}", d => d.ActionId == actionId, PerRole.All, []);
+
+    // A death no action deals, only DieOfStatus.
+    public NegativeRun<TScenario> ShouldDieOfStatus(ushort statusId, params PartyRole[] roles)
+        => Judge(() => $"{string.Join(", ", roles)} to die of {Natives.Data.StatusName(statusId)} ({statusId})", d => d.StatusId == statusId, roles, roles);
+
+    // A failed mechanic nobody dies to (world.Fail).
+    public NegativeRun<TScenario> ShouldFail()
+    {
+        EnsureRun();
+        if (run!.Failure is null && run.MechanicFailures.Count > 0) return this;
+        var problem = run.Failure is not null ? "expected a mechanic failure, but the run failed." : "expected a mechanic failure, but none was reported.";
+        var detailed = ScenarioRun.Execute(typeof(TScenario), strat, runSeed, options with { AlwaysWriteArtifacts = true });
+        Assert.Fail($"{problem}{Environment.NewLine}{detailed}{Environment.NewLine}  replay: .Seed({runSeed})");
+        return this;
+    }
 
     private static string NameOf(uint actionId)
         => actionId == NegativeRun.TheEnvironment ? "the environment" : $"{Natives.Data.ActionName(actionId)} ({actionId})";
@@ -93,15 +108,18 @@ internal sealed class NegativeRun<TScenario>(PartyRole role, int strat) where TS
     private readonly HashSet<int> judged = [];
 
     // `expected` is lazy: names resolve only once the run has installed the game data.
-    private NegativeRun<TScenario> Judge(Func<string> expected, uint actionId, PartyRole[] allowed, PartyRole[] mustDie)
+    private void EnsureRun()
     {
-        if (run is null)
-        {
-            runSeed = seed ?? Random.Shared.Next();
-            run = ScenarioRun.Execute(typeof(TScenario), strat, runSeed, options);
-        }
+        if (run is not null) return;
+        runSeed = seed ?? Random.Shared.Next();
+        run = ScenarioRun.Execute(typeof(TScenario), strat, runSeed, options);
+    }
+
+    private NegativeRun<TScenario> Judge(Func<string> expected, Func<Death, bool> matches, PartyRole[] allowed, PartyRole[] mustDie)
+    {
+        EnsureRun();
         var message = (judged.Count == 0 ? "expected " : "then expected ") + expected();
-        if (GroupMismatch(run, judged, message, actionId, allowed, mustDie, out var group) is not { } problem)
+        if (GroupMismatch(run!, judged, message, matches, allowed, mustDie, out var group) is not { } problem)
         {
             judged.UnionWith(group);
             return this;
@@ -117,7 +135,7 @@ internal sealed class NegativeRun<TScenario>(PartyRole role, int strat) where TS
     // A raidwide they set off (a tether partner gone, a Hello World holder down) can land in that
     // same frame; it stays unjudged.
     private static string? GroupMismatch(
-        ScenarioRun run, IReadOnlySet<int> judged, string expected, uint actionId, PartyRole[] allowed, PartyRole[] mustDie,
+        ScenarioRun run, IReadOnlySet<int> judged, string expected, Func<Death, bool> matches, PartyRole[] allowed, PartyRole[] mustDie,
         out List<int> group)
     {
         group = [];
@@ -126,7 +144,7 @@ internal sealed class NegativeRun<TScenario>(PartyRole role, int strat) where TS
         if (unjudged.Count == 0) return $"{expected}, but nobody {(judged.Count == 0 ? "" : "else ")}died.";
         var first = run.Deaths[unjudged[0]];
         group = unjudged.Where(i => run.Deaths[i].Time <= first.Time + ScenarioRun.FrameSeconds / 2
-                                    && run.Deaths[i].ActionId == actionId)
+                                    && matches(run.Deaths[i]))
                         .ToList();
         var deaths = group.Select(i => run.Deaths[i]).ToList();
         if (deaths.Count == 0) return $"{expected}, but {Describe([first])} first.";
@@ -138,5 +156,5 @@ internal sealed class NegativeRun<TScenario>(PartyRole role, int strat) where TS
     }
 
     private static string Describe(IEnumerable<Death> deaths)
-        => string.Join("; ", deaths.Select(d => $"{d.Role} died to \"{d.Cause}\" ({(d.ActionId is { } id ? $"action {id}" : "no action")}) at t={d.Time:F2}"));
+        => string.Join("; ", deaths.Select(d => $"{d.Role} died to \"{d.Cause}\" ({(d.ActionId is { } id ? $"action {id}" : d.StatusId is { } status ? $"status {status}" : "no action")}) at t={d.Time:F2}"));
 }

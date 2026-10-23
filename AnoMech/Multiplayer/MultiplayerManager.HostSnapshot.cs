@@ -86,7 +86,7 @@ public sealed partial class MultiplayerManager
         return (PacketActor.None, null);
     }
 
-    private void OnPartyMemberKilledHost(PartyRole role, string cause, uint? actionId)
+    private void OnPartyMemberKilledHost(PartyRole role, string cause, uint? actionId, ushort? statusId)
         => _ = Send(new RoleKilledMessage(role, cause));
 
     // The host reads its own bookkeeping; a peer reads what the host relayed (PeerStatusMessage).

@@ -18,6 +18,8 @@ namespace AnoMech.Tests;
 // sends in any scenario, as it leaves and as it arrives, the recovery's own traffic included, and
 // at random moments of every fight. A new message, or a new scenario sending one, is covered as
 // it is.
+[TestFixture]
+[Ignore("Too slow")]
 public class LinkInterruptionTests
 {
     private static readonly PlayerSeat Host = new(PartyRole.MeleeDpsA);

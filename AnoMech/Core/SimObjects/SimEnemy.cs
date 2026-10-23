@@ -160,6 +160,7 @@ public sealed class SimEnemy : SimNpc
         EnemyListMode = enemyListMode;
         actions = new EnemyActionHandler(this, Casting, world);
         events = world.Events;
+        SimEvents = world.SimEvents;
     }
 
     // Spawns the BattleChara through the engine's own NpcSpawn handler (see
@@ -315,12 +316,12 @@ public sealed class SimEnemy : SimNpc
 
     // A purely visual cast: just the action's bar and animation, hitting no one. For an action that
     // has effects or needs more configuration, define an EnemyAction and use the overload taking it.
-    public EnemyActionCast Cast(uint actionId, CastTarget target = default, float animationLock = 0.6f, byte animationVariation = 0) =>
+    public void Cast(uint actionId, CastTarget target = default, float animationLock = 0.6f, byte animationVariation = 0) =>
         actions.Start(new EnemyAction(actionId) { Cast = new() { AnimationLock = animationLock } }, target, animationVariation);
 
     // An action with effects (area, damage, statuses, ...) or configuration beyond the sheet's; a
     // purely visual one needs no EnemyAction, use Cast(actionId).
-    public EnemyActionCast Cast(EnemyAction action, CastTarget target = default, byte animationVariation = 0) =>
+    public void Cast(EnemyAction action, CastTarget target = default, byte animationVariation = 0) =>
         actions.Start(action, target, animationVariation);
 
     // Interrupts the cast still on its bar: neither its effect nor its mechanics go out.

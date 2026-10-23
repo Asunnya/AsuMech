@@ -38,6 +38,7 @@ public sealed class ScenarioSession
 
     // The dungeon's invisible helper, which casts both marks at each player.
     public const uint MarkHelperBNpcBase = 0x18D6;
+    private const float FreezeDelaySeconds = 5f;
     private static readonly EnemySpawnConfig MarkHelper = new(BNpcBaseId: MarkHelperBNpcBase, Level: 1,
         EnemyList: EnemyListMode.Never, Visibility: SpawnVisibility.InvisibleHelper);
 
@@ -53,8 +54,11 @@ public sealed class ScenarioSession
     private bool freezeScheduled;
     // Godmode deaths never set deathOccurred, so this is the only mistake signal spanning both modes.
     private float? lastMistakeElapsed;
-    // The source of truth for "did this run fail": a queue running dry says nothing about deaths.
+    // With mechanicFailed, the source of truth for "did this run fail": a queue running dry says
+    // nothing about either.
     private bool deathOccurred;
+    private bool mechanicFailed;
+    private readonly List<RunIssue> issues = [];
     private SimEnemy? markHelper;
 
     public IScenario Scenario => run.Scenario;
@@ -63,16 +67,23 @@ public sealed class ScenarioSession
     // Set once the post-first-death freeze timer fires; Game stops ticking the sim while true.
     public bool Paused { get; private set; }
 
+    // Deaths (godmode's too) and failed mechanics, in the order they happened.
+    public IReadOnlyList<RunIssue> Issues => issues;
+    public bool Ended { get; private set; }
+
+    private bool HasFailed => deathOccurred || mechanicFailed;
+
     public SessionStatus Status =>
         Paused ? SessionStatus.Frozen
-        : deathOccurred ? SessionStatus.Failed
+        : HasFailed ? (resultReported ? SessionStatus.CompletedFailed : SessionStatus.Failed)
         : resultReported ? (lastMistakeElapsed is null ? SessionStatus.Succeeded : SessionStatus.CompletedWithMistake)
         : lastMistakeElapsed is null ? SessionStatus.Running
         : SessionStatus.RunningWithMistake;
 
-    // Raised once, when the timeline ran dry and stayed so with nobody dead. clean: no mistake
-    // marked either.
+    // Raised once, when the timeline ran dry and stayed so with the run not failed. clean: no
+    // mistake marked either.
     public event Action<bool>? Finished;
+    public event Action<string>? MechanicFailed;
 
     private ScenarioSession(SimWorld world, InstanceSession instance, RunScenarioParams run, IReadOnlyList<PartySlot?> roster)
     {
@@ -138,6 +149,7 @@ public sealed class ScenarioSession
         // Before ApplyParty: the spawn ring draws from the run's party-spawn stream.
         var seed = run.Seed ?? Random.Shared.Next();
         world.Reseed(seed);
+        world.Failed += OnMechanicFailed;
         Plugin.Log.Info($"Game: {Scenario.Name} seed {seed}");
         world.ApplyParty(roster);
         instance.ApplyPhase(phase);
@@ -147,6 +159,7 @@ public sealed class ScenarioSession
         if (Mode != SessionMode.Peer)
         {
             // Log-and-rethrow, so the exception reaches our own log too.
+            world.SimEvents.Listener = Scenario;
             try
             {
                 zone.Run(world);
@@ -189,7 +202,11 @@ public sealed class ScenarioSession
         finishedElapsed = (finishedElapsed ?? 0f) + deltaSeconds;
         if (finishedElapsed < MechanicResultSettleSeconds) return;
         resultReported = true;
-        if (deathOccurred) return;
+        if (HasFailed)
+        {
+            PrintFailureSummary();
+            return;
+        }
         var clean = lastMistakeElapsed is null;
         if (clean) PlayMark(MechanicSuccessActionId);
         Finished?.Invoke(clean);
@@ -198,16 +215,37 @@ public sealed class ScenarioSession
     // A death reported in this run, godmode or not: the first one's overlay, and the mistake mark.
     public void OnDeathReported(string describedTarget, string cause)
     {
+        issues.Add(new RunIssue(elapsed, $"{describedTarget} died: {cause}"));
         if (!firstDeathShown)
         {
             firstDeathShown = true;
             Plugin.ToastGui.ShowError($"{describedTarget} died: {cause}");
         }
-        if (lastMistakeElapsed is not { } last || elapsed - last > MistakeMarkCooldownSeconds)
-        {
-            lastMistakeElapsed = elapsed;
-            PlayMark(MechanicFailureActionId);
-        }
+        MarkMistake();
+    }
+
+    private void OnMechanicFailed(string reason, bool freeze)
+    {
+        mechanicFailed = true;
+        issues.Add(new RunIssue(elapsed, reason));
+        DiagnosticLog.Warn($"[ScenarioSession] Mechanic failed at t={elapsed:F2}: {reason}");
+        Plugin.ChatGui.Print(new XivChatEntry { Type = XivChatType.SystemMessage, Message = $"[AnoMech] Mechanic failed: {reason}" });
+        MarkMistake();
+        MechanicFailed?.Invoke(reason);
+        if (freeze) ScheduleFreeze();
+    }
+
+    private void MarkMistake()
+    {
+        if (lastMistakeElapsed is { } last && elapsed - last <= MistakeMarkCooldownSeconds) return;
+        lastMistakeElapsed = elapsed;
+        PlayMark(MechanicFailureActionId);
+    }
+
+    private void PrintFailureSummary()
+    {
+        var lines = string.Join("; ", issues.Select(i => $"{i.Description} ({i.Time:F1}s)"));
+        Plugin.ChatGui.Print(new XivChatEntry { Type = XivChatType.SystemMessage, Message = $"[AnoMech] Run failed: {lines}" });
     }
 
     private void PlayMark(uint actionId)
@@ -220,16 +258,27 @@ public sealed class ScenarioSession
     public void OnKilled()
     {
         deathOccurred = true;
+        ScheduleFreeze();
+    }
+
+    private void ScheduleFreeze()
+    {
         if (freezeScheduled) return;
         freezeScheduled = true;
 #if DEBUG
         AnoMech.Windows.DamageDebugWindow.Instance?.Freeze();
 #endif
-        world.Events.Add(5f, () => Paused = true);
+        world.Events.Add(FreezeDelaySeconds, () =>
+        {
+            Paused = true;
+            PrintFailureSummary();
+        });
     }
 
     public void End()
     {
+        Ended = true;
+        world.Failed -= OnMechanicFailed;
         world.Events.Clear();
         world.Despawn();
 #if DEBUG
@@ -254,3 +303,5 @@ public sealed class ScenarioSession
         return presets[0].Markers;
     }
 }
+
+public sealed record RunIssue(float Time, string Description);

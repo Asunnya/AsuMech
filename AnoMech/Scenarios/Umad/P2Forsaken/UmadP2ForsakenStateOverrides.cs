@@ -15,5 +15,7 @@ public sealed class UmadP2ForsakenStateOverrides
     public PartyRole? SupportStackRole { get; set; }   // null = random support gets Stack
     public PartyRole? DpsStackRole { get; set; }       // null = random dps gets Stack
     public int? Rotation { get; set; }                 // null = random; else +1 / -1 eighths per tower
-    public bool ReassignLockonsInRoleOrder { get; set; } // false = shuffle; true = each tower's lockons go to its soakers in PartyRole order
+    // [round * 2] the tower toward GetTowers' first direction, [round * 2 + 1] the second; null = from
+    // the round's four shuffled; else that tower's two new lockons, dealt to its soakers in PartyRole order.
+    public uint[]?[] TowerLockons { get; } = new uint[]?[UmadP2ForsakenState.TowerRounds * 2];
 }

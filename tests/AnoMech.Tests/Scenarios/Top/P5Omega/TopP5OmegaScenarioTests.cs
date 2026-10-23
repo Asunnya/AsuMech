@@ -216,6 +216,5 @@ public class TopP5OmegaScenarioTests
                 o.BlasterTethers = [MainTank, ShieldHealer];
                 o.HelloWorld2 = [MeleeDpsA, MeleeDpsB, MainTank, ShieldHealer, OffTank, RegenHealer, PhysRangedDps, CasterDps];
             })
-            .ShouldKill(ActionId.HelloDistantWorldJump, OffTank)
-            .ShouldKill(ActionId.HelloWorldFail, AllBut(OffTank));
+            .ShouldKill(ActionId.HelloWorldFail, PerRole.All);
 }

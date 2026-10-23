@@ -52,12 +52,13 @@ public sealed class SimTower : SimEventObject
         return tower;
     }
 
+    public int Occupants => party.Find.InsideCircle(Position, radius).Count;
+
     public override void Tick(float deltaSeconds)
     {
         base.Tick(deltaSeconds);
         if (!IsAlive) return;
-        var count = party.Find.InsideCircle(Position, radius).Count;
-        var shown = Math.Min(count, states.Length - 1);
+        var shown = Math.Min(Occupants, states.Length - 1);
         if (shown == lastCount) return;
         lastCount = shown;
         EObjSetState(states[shown], stateUnk);

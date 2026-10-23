@@ -22,14 +22,7 @@ public static class FruActions
         DeathExplanation = "a fifth Lightsteeped stack exploded",
     };
 
-    // Declared after Lightsteep: static fields initialize in order.
-    private static readonly IEnemyActionEffect[] AddLightsteeped = LightsteepedStack(36f, delayToEffectResult: true);
-
-    private static IEnemyActionEffect[] LightsteepedStack(float duration, bool delayToEffectResult) =>
-    [
-        ApplyStatus(StatusId.Lightsteeped, duration, delayToEffectResult),
-        FollowUp(Lightsteep, ctx => ctx.Hits.Any(h => !ctx.IsKilled(h) && h.FindStatus(StatusId.Lightsteeped)?.Stacks >= 5)),
-    ];
+    private static readonly IEnemyActionEffect AddLightsteeped = ApplyStatus(StatusId.Lightsteeped, 36f, delayToEffectResult: true);
 
     // -- P2 Diamond Dust --
 
@@ -143,13 +136,13 @@ public static class FruActions
     public static readonly EnemyAction BrightHunger = new(ActionId.BrightHunger)
     {
         Cast = new() { AnimationLock = 2.1f },
-        Effects = [Damage(), .. AddLightsteeped],
+        Effects = [Damage(), AddLightsteeped],
         Timing = new() { DamageDelay = 0.65f },
     };
 
     public static readonly EnemyAction BrightHungerCenter = BrightHunger with
     {
-        Effects = [Damage(split: Stack(4)), .. AddLightsteeped],
+        Effects = [Damage(split: Stack(4)), AddLightsteeped],
     };
 
     public static readonly EnemyAction LuminousHammer = new(ActionId.LuminousHammer)
@@ -162,7 +155,7 @@ public static class FruActions
     public static readonly EnemyAction PowerfulLight = new(ActionId.PowerfulLight)
     {
         Cast = new() { AnimationLock = 2.1f, FaceTarget = false },
-        Effects = [Damage(split: Stack(4)), .. AddLightsteeped],
+        Effects = [Damage(split: Stack(4)), AddLightsteeped],
         Timing = new() { DamageDelay = 0.65f },
     };
 
@@ -185,8 +178,7 @@ public static class FruActions
     {
         Cast = new() { AnimationLock = 2.1f },
         Effects = [Damage(Lethal)],
-        // UNVERIFIED: no recorded hit; Refulgent Fate's.
-        Timing = new() { DamageDelay = 0.66f },
+        Timing = new() { DamageDelay = 0.63f },
         DeathExplanation = "a tower went unsoaked",
     };
 
@@ -207,7 +199,7 @@ public static class FruActions
     public static readonly EnemyAction HouseOfLight = new(ActionId.HouseOfLight)
     {
         Cast = new() { AnimationLock = 2.1f },
-        Effects = [Damage(VulnToMagic), ApplyStatus(StatusId.MagicVulnerabilityUp, 1.96f), .. AddLightsteeped],
+        Effects = [Damage(VulnToMagic), ApplyStatus(StatusId.MagicVulnerabilityUp, 1.96f), AddLightsteeped],
         Timing = new() { DamageDelay = 0.64f },
     };
 
@@ -350,13 +342,13 @@ public static class FruActions
     public static readonly EnemyAction PathOfLight = new(ActionId.PathOfLight)
     {
         Cast = new() { AnimationLock = 2.1f },
-        Effects = [Damage(), ApplyStatus(StatusId.MagicVulnerabilityUp, 1.96f), .. LightsteepedStack(12f, delayToEffectResult: true)],
+        Effects = [Damage(), ApplyStatus(StatusId.MagicVulnerabilityUp, 1.96f), ApplyStatus(StatusId.Lightsteeped, 12f, delayToEffectResult: true)],
         Timing = new() { DamageDelay = 0.67f },
     };
 
     public static readonly EnemyAction BrightHungerDarklit = BrightHunger with
     {
-        Effects = [Damage(split: Stack(2)), .. AddLightsteeped],
+        Effects = [Damage(split: Stack(2)), AddLightsteeped],
     };
 
     private static EnemyAction HallowedWings(uint actionId) => new(actionId)
@@ -580,7 +572,7 @@ public static class FruActions
     {
         Cast = new() { AnimationLock = 2.1f },
         Effects = [Damage(Lethal)],
-        DeathExplanation = "tower not soaked by exactly two",
+        DeathExplanation = "tower soaked by fewer than two",
     };
 
     // A line stack; only its front bait takes the resistance down. A second hit of the same colour

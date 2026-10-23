@@ -76,8 +76,6 @@ public sealed class UmadP2ForsakenScenario : IMultiplayerReplayable
         lastBroadcastLockonsKey = null;
         if (selectedAi is { } idx && idx >= 0 && idx < AiStrats.Count)
             ((IScenarioAi<UmadP2ForsakenState>)AiStrats[idx]).Run(state, world);
-        
-        
         Run_Kefka_40004FD3();
         Run_Kefka_40004FAC();
         Run_Kefka_40004FD0();
@@ -138,6 +136,12 @@ public sealed class UmadP2ForsakenScenario : IMultiplayerReplayable
         world.Events.Add(11.04f, () => party.ForEachActive(c => c.AttachLockonVfx(state.Lockons[((ISimPartyMember)c).Role]))); 
     }
 
+    public void OnActionResolved(ActionResolved resolved)
+    {
+        Towers.ResolveTower(world, resolved, ActionId.ThePathOfLight, UmadActions.TheRiverOfLight, minSoakers: 2);
+        ResolveSoakers(resolved);
+    }
+
     public void Tick(float delta, float elapsed) { }
     
     private void Run_Kefka_40004FD3()
@@ -183,48 +187,33 @@ public sealed class UmadP2ForsakenScenario : IMultiplayerReplayable
         world.Events.Add(start - 1f, () => enemy2?.SetPosition(d2.Apply(new Placement(new Vector3(0.000f, 0.000f, -8.000f), 0))));
         world.Events.Add(start, () =>
         {
-            if (enemy1 == null || enemy2 == null) return;
-            var soakers1 = enemy1.Cast(UmadActions.ThePathOfLight).Hits.Select(h => h.Who).ToList();
-            var soakers2 = enemy2.Cast(UmadActions.ThePathOfLight).Hits.Select(h => h.Who).ToList();
-            if (soakers1.Count != 2 || soakers2.Count != 2) return;
-            ResolveTower(soakers1[0], 0);
-            ResolveTower(soakers1[1], 1);
-            ResolveTower(soakers2[0], 2);
-            ResolveTower(soakers2[1], 3);
-            world.Events.Add(0.6f, () => ReapplyLockons([soakers1[0], soakers1[1], soakers2[0], soakers2[1]], index));
+            towerRound = index;
+            enemy1?.Cast(UmadActions.ThePathOfLight);
+            enemy2?.Cast(UmadActions.ThePathOfLight);
         });
     }
-    
-    private void ReapplyLockons(SimCharacter[] characters, int index)
+
+    // The round whose towers resolve next: each tower's soakers take its lockons from the state.
+    private int towerRound;
+
+    // UNVERIFIED: a tower resolves whatever its pair does; no pull fails one tower alone.
+    private void ResolveSoakers(ActionResolved resolved)
     {
-       var list = state.ReassignLockonsInRoleOrder
-           ? characters.OrderBy(c => ((ISimPartyMember)c).Role).ToList()
-           : world.Rng.Shuffle(characters).ToList();
-       uint[] lockons = index switch
-       {
-           6 => [LockonId.ForsakenStack, LockonId.ForsakenStack, LockonId.ForsakenCone, LockonId.ForsakenStack],
-           _ when index % 2 == 0 => [LockonId.ForsakenCone, LockonId.ForsakenCone, LockonId.ForsakenChariot, LockonId.ForsakenChariot], 
-           _ when index % 2 == 1 => [LockonId.ForsakenStack, LockonId.ForsakenStack, LockonId.ForsakenCone, LockonId.ForsakenChariot],
-           _ => throw new ArgumentOutOfRangeException(nameof(index), index, null)
-       };
-       String s = "";
-       for (int i = 0; i < 4; i++)
-       {
-           list[i].AddStatus(StatusId.SpellsTrouble, duration: 999f, stacks: -1);
-           var role = (list[i] as ISimPartyMember)!.Role;
-           if (list[i].HasStatus(StatusId.SpellsTrouble))
-           {
-               list[i].AttachLockonVfx(lockons[i]);
-               state.Lockons[role] = lockons[i];
-               s += $"{role}={lockons[i]},";
-           }
-           else 
-           {
-               state.Lockons[role] = 0;
-               s += $"{role}=0,";
-           }
-       }
-       DiagnosticLog.Info($"Lockons reassignment {s}");
+        if (resolved.Action.ActionId != ActionId.ThePathOfLight || resolved.Hits.Count != 2) return;
+        var tower = resolved.Caster == firstTower ? 0 : 1;
+        for (var i = 0; i < resolved.Hits.Count; i++) ResolveTower(resolved.Hits[i], tower * 2 + i);
+        var lockons = state.TowerLockons[towerRound * 2 + tower];
+        foreach (var (soaker, lockon) in resolved.Hits.OrderBy(h => ((ISimPartyMember)h).Role).Zip(lockons))
+            world.Events.Add(0.6f, () => ReassignLockon(soaker, lockon));
+    }
+
+    private void ReassignLockon(SimCharacter soaker, uint lockon)
+    {
+        var role = ((ISimPartyMember)soaker).Role;
+        soaker.AddStatus(StatusId.SpellsTrouble, duration: 999f, stacks: -1);
+        state.Lockons[role] = soaker.HasStatus(StatusId.SpellsTrouble) ? lockon : 0;
+        if (state.Lockons[role] != 0) soaker.AttachLockonVfx(lockon);
+        DiagnosticLog.Info($"Lockon reassignment {role}={state.Lockons[role]}");
     }
     
     private void ResolveTower(SimCharacter character, int index)
@@ -254,18 +243,20 @@ public sealed class UmadP2ForsakenScenario : IMultiplayerReplayable
     
    private readonly List<SimEnemy?> towerHelper = [];
     
+    private SimEnemy? firstTower, secondTower;
+
     private void Run_Kefka_40004FAC()
     {
-        SimEnemy? towerHelper1 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.KefkaHelper, NameId: BNpcNameId.Kefka, Level: 1, Targetable: false, EnemyList: EnemyListMode.Never, Visibility: SpawnVisibility.InvisibleHelper, Placement: new Placement(new Vector3(0.000f, 0.000f, -10.000f), 0.000f)));
-        SimEnemy? towerHelper2 = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.KefkaHelper, NameId: BNpcNameId.Kefka, Level: 1, Targetable: false, EnemyList: EnemyListMode.Never, Visibility: SpawnVisibility.InvisibleHelper, Placement: new Placement(new Vector3(0.000f, 0.000f, -10.000f), 0.000f)));
-        RunTower(towerHelper1, towerHelper2, 22.66f, 0);
-        RunTower(towerHelper1, towerHelper2, 32.67f, 1);
-        RunTower(towerHelper1, towerHelper2, 43.71f, 2);
-        RunTower(towerHelper1, towerHelper2, 53.72f, 3);
-        RunTower(towerHelper1, towerHelper2, 64.76f, 4);
-        RunTower(towerHelper1, towerHelper2, 74.77f, 5);
-        RunTower(towerHelper1, towerHelper2, 85.81f, 6);
-        RunTower(towerHelper1, towerHelper2, 95.82f, 7);
+        firstTower = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.KefkaHelper, NameId: BNpcNameId.Kefka, Level: 1, Targetable: false, EnemyList: EnemyListMode.Never, Visibility: SpawnVisibility.InvisibleHelper, Placement: new Placement(new Vector3(0.000f, 0.000f, -10.000f), 0.000f)));
+        secondTower = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.KefkaHelper, NameId: BNpcNameId.Kefka, Level: 1, Targetable: false, EnemyList: EnemyListMode.Never, Visibility: SpawnVisibility.InvisibleHelper, Placement: new Placement(new Vector3(0.000f, 0.000f, -10.000f), 0.000f)));
+        RunTower(firstTower, secondTower, 22.66f, 0);
+        RunTower(firstTower, secondTower, 32.67f, 1);
+        RunTower(firstTower, secondTower, 43.71f, 2);
+        RunTower(firstTower, secondTower, 53.72f, 3);
+        RunTower(firstTower, secondTower, 64.76f, 4);
+        RunTower(firstTower, secondTower, 74.77f, 5);
+        RunTower(firstTower, secondTower, 85.81f, 6);
+        RunTower(firstTower, secondTower, 95.82f, 7);
         
         towerHelper.Clear();
         for (int i = 0; i < 4; i++)

@@ -47,14 +47,6 @@ public static class EnemyActionEffects
     public static IEnemyActionEffect ApplyRuin(RuinSpec ruin, int times, float duration)
         => new ApplyRuinEffect(ruin, ruin.StatusId(times), times, duration);
 
-    // ApplyStatus, except whoever already holds `maxStacks` dies instead. Survivors only.
-    public static IEnemyActionEffect ApplyStatusOrOverload(ushort statusId, int maxStacks, float duration = 0f)
-        => new ApplyStatusOrOverloadEffect(statusId, maxStacks, duration);
-
-    // `followUp` cast by the same caster once this resolve's deaths are dealt, when `when` holds.
-    public static IEnemyActionEffect FollowUp(EnemyAction followUp, Func<EnemyActionContext, bool> when)
-        => new FollowUpEffect(followUp, when);
-
     // Away from the caster, by a Knockback sheet row. Survivors only.
     // `knockbackDelay` is from resolve and used only for bots and NPCs; null = TimingSpec.DamageDelay.
     public static IEnemyActionEffect Knockback(uint knockbackId, float? knockbackDelay = null)
@@ -186,21 +178,6 @@ internal sealed class ApplyRuinEffect(RuinSpec ruin, ushort statusId, int times,
     }
 }
 
-internal sealed class ApplyStatusOrOverloadEffect(ushort statusId, int maxStacks, float duration) : IEnemyActionEffect
-{
-    public void Apply(EnemyActionContext ctx, IReadOnlyList<SimCharacter> hits)
-    {
-        foreach (var target in hits)
-        {
-            if (ctx.IsKilled(target) || !target.IsAlive()) continue;
-            if (target.FindStatus(statusId) is { } status && status.Stacks >= maxStacks)
-                ctx.Kill(target, $"already at {maxStacks} {Natives.Data.StatusName(statusId)}");
-            else
-                ctx.AddStatus(target, statusId, duration);
-        }
-    }
-}
-
 internal sealed class GazeEffect(bool lookAway) : IEnemyActionEffect
 {
     public void Apply(EnemyActionContext ctx, IReadOnlyList<SimCharacter> hits)
@@ -218,21 +195,6 @@ internal sealed class GazeEffect(bool lookAway) : IEnemyActionEffect
             else
                 ctx.Dodge(target);
         }
-    }
-}
-
-internal sealed class FollowUpEffect(EnemyAction followUp, Func<EnemyActionContext, bool> when) : IEnemyActionEffect
-{
-    public void Apply(EnemyActionContext ctx, IReadOnlyList<SimCharacter> hits)
-    {
-        if (!when(ctx)) return;
-        var caster = ctx.Caster;
-        var party = ctx.Party;
-        ctx.AfterResolve(() =>
-        {
-            if (caster is SimEnemy enemy) enemy.Cast(followUp);
-            else party.Act(caster, followUp);
-        });
     }
 }
 

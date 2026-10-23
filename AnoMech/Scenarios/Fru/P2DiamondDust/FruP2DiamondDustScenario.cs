@@ -35,14 +35,12 @@ public sealed class FruP2DiamondDustScenario : IScenario
     private readonly SimEnemy?[] needleHelpers = new SimEnemy?[12];
     private readonly SimEnemy?[] spreadHelpers = new SimEnemy?[4];
     private readonly SimEnemy?[] reflectionHelpers = new SimEnemy?[2];
-    private readonly List<Vector3> stars = [];
     private readonly FruHolyPuddles puddles = new();
 
     public void Run(SimWorld worldParam, int? selectedAi)
     {
         world = worldParam;
         state = new FruP2DiamondDustState(world.Rng, settingsWindow.Overrides);
-        stars.Clear();
         puddles.Clear();
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<FruP2DiamondDustState>)AiStrats[idx]).Run(state, world);
@@ -74,7 +72,6 @@ public sealed class FruP2DiamondDustScenario : IScenario
         world.Events.Add(24.48f, () => DashStart(mirror, state.MirrorPosition));
         world.Events.Add(25.15f, () => DashArrive(mirror, state.MirrorPosition));
         world.Events.Add(25.33f, () => usurper?.SetPosition(new Placement(Vector3.Zero, 0f)));
-        world.Events.Add(25.33f, FrigidNeedles);
         world.Events.Add(25.46f, () => usurper?.PlayActionTimeline(ActionTimelineId.WarpEnd));
         world.Events.Add(25.6f, () => mirror?.Face(Vector3.Zero));
         world.Events.Add(25.8f, () => mirror?.Cast(ActionId.SinboundHolyCast, animationLock: 3.1f));
@@ -189,7 +186,6 @@ public sealed class FruP2DiamondDustScenario : IScenario
         foreach (var role in Enum.GetValues<PartyRole>())
         {
             if (!state.Marked(role) || world.Party.Get(role) is not { } target || !target.IsAlive()) continue;
-            stars.Add(target.Position);
             spreadHelpers[i]?.SetPosition(new Placement(target.Position, 0f));
             spreadHelpers[i]?.Cast(Actions.FrigidStone, target.Position);
             i++;
@@ -210,19 +206,27 @@ public sealed class FruP2DiamondDustScenario : IScenario
     private static void DashArrive(SimEnemy? who, Vector3 destination)
         => who?.SetPosition(new Placement(destination, who.Rotation));
 
+    private const float NeedlesAfterStone = 2.03f;
+
+    private void LeaveStarWhereFrigidStoneLanded(ActionResolved resolved)
+    {
+        if (resolved.Action.ActionId != ActionId.FrigidStone || resolved.Caster is not SimEnemy caster) return;
+        var stone = Array.IndexOf(spreadHelpers, caster);
+        if (stone < 0) return;
+        var star = resolved.Origin.Position;
+        world.Events.Add(NeedlesAfterStone, () => FrigidNeedles(stone, star));
+    }
+
     // Each stone leaves a star: a circle and an eight-way cross, the cross's diagonals cast by a
     // helper turned 45°.
-    private void FrigidNeedles()
+    private void FrigidNeedles(int stone, Vector3 star)
     {
-        var helper = 0;
-        foreach (var star in stars)
+        var helper = stone * 3;
+        foreach (var (action, rotation) in new[] { (Actions.FrigidNeedleCross, -MathF.PI / 4f), (Actions.FrigidNeedleCross, 0f), (Actions.FrigidNeedleCircle, 0f) })
         {
-            foreach (var (action, rotation) in new[] { (Actions.FrigidNeedleCross, -MathF.PI / 4f), (Actions.FrigidNeedleCross, 0f), (Actions.FrigidNeedleCircle, 0f) })
-            {
-                needleHelpers[helper]?.SetPosition(new Placement(star, rotation));
-                needleHelpers[helper]?.Cast(action);
-                helper++;
-            }
+            needleHelpers[helper]?.SetPosition(new Placement(star, rotation));
+            needleHelpers[helper]?.Cast(action);
+            helper++;
         }
     }
 
@@ -274,6 +278,8 @@ public sealed class FruP2DiamondDustScenario : IScenario
         foreach (var member in world.Party.ActiveMembers())
             member.AddStatusParam(StatusId.ThinIce, ThinIceSlideParam, IceEnd - IceStart);
     }
+
+    public void OnActionResolved(ActionResolved resolved) => LeaveStarWhereFrigidStoneLanded(resolved);
 
     public void Tick(float delta, float elapsed)
     {

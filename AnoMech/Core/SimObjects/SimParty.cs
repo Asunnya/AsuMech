@@ -108,20 +108,22 @@ public sealed class SimParty : ISimObject
                 SetSlot(role, member);
             }
         }
+        foreach (var member in slots)
+            if (member is not null) member.SimEvents = world.SimEvents;
     }
 
     private SimWorld? world;
     private readonly Dictionary<SimCharacter, EnemyActionHandler> actionHandlers = new();
 
     // A member using an action as an enemy does: its ActionEffect, area hits, damage and deaths.
-    public EnemyActionCast Act(SimCharacter member, EnemyAction action, CastTarget target = default)
+    public void Act(SimCharacter member, EnemyAction action, CastTarget target = default)
     {
         if (!actionHandlers.TryGetValue(member, out var handler))
         {
             var w = world ?? throw new InvalidOperationException("SimParty.Act before the party was seated.");
             actionHandlers[member] = handler = new EnemyActionHandler(member, member.Casting, w);
         }
-        return handler.Start(action, target, 0);
+        handler.Start(action, target, 0);
     }
 
     internal void ForEachActive(Action<SimCharacter> action)

@@ -135,11 +135,12 @@ public sealed class FruP5ParadiseRegainedScenario : IScenario
     {
         towers[tower] = null;
         world.Map.AddEffect(MapEffect.TowerHide, state.TowerSlot(tower));
-        var position = state.TowerPosition(tower);
-        var soakers = world.Party.Find.InsideCircle(position, TowerRadius).Count;
-        towerHelper?.SetPosition(new Placement(position, 0f).Face(Vector3.Zero));
-        towerHelper?.Cast(soakers == 2 ? Actions.ParadiseTowerExplosion : Actions.ParadiseTowerFailure);
+        towerHelper?.SetPosition(new Placement(state.TowerPosition(tower), 0f).Face(Vector3.Zero));
+        towerHelper?.Cast(Actions.ParadiseTowerExplosion);
     }
+
+    public void OnActionResolved(ActionResolved resolved)
+        => Towers.ResolveTower(world, resolved, ActionId.ParadiseTowerExplosion, Actions.ParadiseTowerFailure, minSoakers: 2);
 
     // The buster goes to whoever the tether holds: the nearest player for dark, the farthest for light.
     private void TetherWingBait(int wing)

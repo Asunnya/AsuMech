@@ -56,6 +56,7 @@ public sealed class Plugin : IDalamudPlugin
     internal static LogManager LogManager { get; private set; } = null!;
     private ConfigWindow ConfigWindow { get; init; }
     private MainWindow MainWindow { get; init; }
+    private FailureBanner? FailureBanner { get; init; }
 #if DEBUG
     private DamageDebugWindow DamageDebugWindow { get; init; }
 #endif
@@ -87,6 +88,8 @@ public sealed class Plugin : IDalamudPlugin
             windowSystem.AddWindow(MainWindow);
             windowSystem.AddWindow(MainWindow.ScenarioPanel);
             windowSystem.AddWindow(MainWindow.PartyPanel);
+            FailureBanner = new FailureBanner();
+            windowSystem.AddWindow(FailureBanner);
 #if DEBUG
             DamageDebugWindow = new DamageDebugWindow(this);
             windowSystem.AddWindow(DamageDebugWindow);
@@ -186,6 +189,7 @@ public sealed class Plugin : IDalamudPlugin
         LogManager?.Dispose();
         ConfigWindow?.Dispose();
         MainWindow?.Dispose();
+        FailureBanner?.Dispose();
 #if DEBUG
         DamageDebugWindow?.Dispose();
 #endif

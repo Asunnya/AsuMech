@@ -510,16 +510,15 @@ public sealed class UmadP4KefkaSaysAi(UmadP4KefkaSaysAi.GazeLayout gazeLayout) :
     // side, off the centre line.
     //
     // Each side carries one resolved colour (White/Black, always opposite); a player's
-    // wound (White/Black) plus whether the cast is a lie (Wave4True) decides which
-    // colour is lethal. The antilight cleanses iff the player holds BeyondDeathState
-    // AND takes the *opposite* colour to their wound; a matching colour kills them.
-    // So the only players who *can* live in an antilight are the BeyondDeathState
-    // holders, and they must mismatch — everyone else takes the matching (lethal) one.
+    // wound (White/Black) plus whether Wave 3 is a lie (Wave3True) decides which
+    // colour is lethal. A lethal colour kills unless the player holds BeyondDeathStatus,
+    // which it then cleanses.
     //
     // Player debuffs come from Wave3 (scenario applies at 51.67s): position parity →
     // BeyondDeath (even) / AllaganField (odd); Wounds[i] → White / Black wound.
-    // BeyondDeathState = Wave4True ? BeyondDeath : AllaganField, so the "must-cleanse"
-    // parity flips with the lie — that's the "fake cast" dependency.
+    // BeyondDeathStatus = Wave3True ? BeyondDeath : AllaganField. A lie flips both the
+    // must-cleanse parity and the lethal colour, so they cancel and the side each slot
+    // takes doesn't depend on Wave3True.
     private const float AntilightLocalX = 8f; // off the Edge of Death, inside the side rect
     private static IAiMove FloodOfNaught(UmadP4KefkaSaysState state)
     {

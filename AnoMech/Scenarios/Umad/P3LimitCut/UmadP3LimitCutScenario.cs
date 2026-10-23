@@ -42,7 +42,6 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
     private SimEnemy? thunderHelper;
     private SimEventObject? windCrystal;
     private Vector3 umbraImpact;
-    private EnemyActionCast? vacuumWave;
 
     // Clone k is teleported to its spot, then fires its appearance ~0.1s later, ~2.0s apart.
     private static readonly float[] PlaceCloneAt = [8.803f, 10.808f, 12.815f, 14.821f, 16.830f, 18.836f, 20.840f, 22.846f];
@@ -57,13 +56,14 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
 
     public UmadP3LimitCutState? LastState { get; private set; }
 
+    public void OnActionResolved(ActionResolved resolved) => QueueCyclonesForWinds(resolved);
+
     public void Run(SimWorld worldParam, int? selectedAi)
     {
         world = worldParam;
         party = world.Party;
         state = new UmadP3LimitCutState(world.Rng, party, settingsWindow.Overrides);
         LastState = state;
-        vacuumWave = null;
         DiagnosticLog.Info(
             $"[UmadP3LimitCut] Roll: clones start {SpotName(state.StartSpot)} going {(state.Clockwise ? "clockwise" : "counter-clockwise")}, "
             + $"bosses held {SpotName(state.BossSpot)}, bait {state.BaitRole}, numbers "
@@ -99,7 +99,7 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
         world.Events.Add(7.8f, () => state.Objects.Chaos?.Follow());
         world.Events.Add(7.928f, () => state.Objects.Exdeath?.Follow());
         world.Events.Add(8.0f, StartUmbraSmash);
-        world.Events.Add(8.128f, () => vacuumWave = state.Objects.Exdeath?.Cast(UmadActions.VacuumWave));
+        world.Events.Add(8.128f, () => state.Objects.Exdeath?.Cast(UmadActions.VacuumWave));
         for (var k = 0; k < 8; k++)
         {
             var clone = k;
@@ -109,7 +109,6 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
         world.Events.Add(14.799f, ChaosLands);
         world.Events.Add(17.56f, () => state.Objects.Exdeath?.Follow(party.Get(PartyRole.OffTank)));
         world.Events.Add(NumbersAt, AttachNumbers);
-        world.Events.Add(19.967f, ResolveCyclones);
         world.Events.Add(20.934f, () => windCrystal?.Despawn());
         world.Events.Add(21.379f, () =>
         {
@@ -325,14 +324,20 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
         }
     }
 
-    // One Cyclone per player the Vacuum Wave reached: everyone carries a wind into it.
-    private void ResolveCyclones()
+    // Vacuum Wave's winds feed the crystal, which fires one Cyclone per wind at the players nearest it.
+    private void QueueCyclonesForWinds(ActionResolved resolved)
+    {
+        if (resolved.Action.ActionId != ActionId.VacuumWave) return;
+        var winds = resolved.Hits.Count(h => h.HasStatus(StatusId.Headwind) || h.HasStatus(StatusId.Tailwind));
+        world.Events.Add(4.14f, () => FireCyclones(winds));
+    }
+
+    private void FireCyclones(int count)
     {
         windCrystal?.FadeOut();
-        if (vacuumWave is null) return;
-        var centres = vacuumWave.Hits.Select(h => h.Who).Where(t => t.IsAlive()).ToList();
-        for (var i = 0; i < centres.Count; i++)
-            cycloneHelpers[i % cycloneHelpers.Length]?.Cast(UmadActions.Cyclone, centres[i]);
+        var targets = party.Find.ClosestN(WindCrystalPos, count);
+        for (var i = 0; i < targets.Count; i++)
+            cycloneHelpers[i % cycloneHelpers.Length]?.Cast(UmadActions.Cyclone, targets[i]);
     }
 
     // A dead number's clone still charges someone; none of the 8 real retargets fit a rule

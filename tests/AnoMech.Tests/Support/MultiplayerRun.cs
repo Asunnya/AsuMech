@@ -79,7 +79,7 @@ internal sealed class MultiplayerRun
         foreach (var client in run.Peers.Prepend(run.Host)) configure?.Invoke(client);
         run.inputs.AddRange((inputs ?? []).OrderBy(i => i.At));
         run.Host.Game.GodMode = immortal;
-        run.Host.Game.PartyMemberKilled += (role, cause, actionId) => run.deaths.Add(new Death(role, cause, actionId, run.Host.Game.World.Events.Elapsed, ""));
+        run.Host.Game.PartyMemberKilled += (role, cause, actionId, statusId) => run.deaths.Add(new Death(role, cause, actionId, statusId, run.Host.Game.World.Events.Elapsed, ""));
         try
         {
             run.Lobby(host, peers);
@@ -141,7 +141,7 @@ internal sealed class MultiplayerRun
         StartedAt = Relay.Now;
         RunUntil(() => Peers.All(p => p.Game.ActiveScenario != null) || Refused(), StartSeconds, "everyone entering the fight");
         if ((Host.Multiplayer.StartCheckFailureReason ?? Host.Multiplayer.RunEndReason) is { } refused) throw new InvalidOperationException(refused);
-        RunUntil(() => Host.Game.Status is SessionStatus.Succeeded or SessionStatus.CompletedWithMistake or SessionStatus.Frozen
+        RunUntil(() => Host.Game.Status is SessionStatus.Succeeded or SessionStatus.CompletedWithMistake or SessionStatus.CompletedFailed or SessionStatus.Frozen
                        || Host.Game.ActiveScenario == null, timeout, "the fight to end");
         HostOutcome = Host.Game.ActiveScenario != null ? Host.Game.Status : null;
         EndedAt = Relay.Now;

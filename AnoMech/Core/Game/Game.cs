@@ -23,16 +23,21 @@ public sealed class Game : IDisposable
     public IScenario? ActiveScenario => run?.Scenario;
     public bool Paused => run?.Paused ?? false;
     public SessionStatus Status => run?.Status ?? (instance is null ? SessionStatus.Offline : SessionStatus.InZone);
+    // The current run, else the one that ended last, so its result outlives a Stop.
+    public ScenarioSession? LastRun => run ?? endedRun;
     
     // bool: a local run, not a multiplayer one.
     public event Action<RunScenarioParams, bool>? RunStarted;
     public event Action<bool>? RunFinished;
-    public event Action<PartyRole, string, uint?>? PartyMemberKilled;
+    public event Action<string>? MechanicFailed;
+    // statusId names the status that killed, for a death no action dealt (DieOfStatus).
+    public event Action<PartyRole, string, uint?, ushort?>? PartyMemberKilled;
     // Back in the inn: a Leave, or the native zone going away under the stay.
     public event Action? InstanceExited;
 
     private InstanceSession? instance;
     private ScenarioSession? run;
+    private ScenarioSession? endedRun;
 
     public Game()
     {
@@ -138,6 +143,7 @@ public sealed class Game : IDisposable
         EndRun();
         run = next;
         run.Finished += OnRunFinished;
+        run.MechanicFailed += OnMechanicFailed;
         run.Start();
         RunStarted?.Invoke(p, instance.Mode == SessionMode.Local);
         return null;
@@ -148,7 +154,9 @@ public sealed class Game : IDisposable
         if (run is { } ending)
         {
             run = null;
+            endedRun = ending;
             ending.Finished -= OnRunFinished;
+            ending.MechanicFailed -= OnMechanicFailed;
             ending.End();
         }
     }
@@ -182,7 +190,7 @@ public sealed class Game : IDisposable
     // Reports the death even in godmode, so the user learns what would have killed them; only the
     // actual kill is skipped. Returns false if nothing died (already dead or godmode), so callers
     // gate their own on-death logic on it.
-    public bool Kill(ISimPartyMember target, string cause, uint? actionId = null)
+    public bool Kill(ISimPartyMember target, string cause, uint? actionId = null, ushort? statusId = null)
     {
         if (target == null) return false;
         if (target.Dead) return false;
@@ -197,12 +205,9 @@ public sealed class Game : IDisposable
             // TODO: don't kill player but indicate damage was fatal
             return false;
         }
-        var character = target as SimCharacter;
-        var heldStatuses = character?.ActiveStatuses ?? [];
         target.OnKilled(byEnvironment: actionId == SimCharacterDeathExtensions.Environment);
-        PartyMemberKilled?.Invoke(target.Role, cause, actionId);
+        PartyMemberKilled?.Invoke(target.Role, cause, actionId, statusId);
         run?.OnKilled();
-        if (character != null) World.RunDeathRules(character, heldStatuses);
         return true;
     }
 
@@ -219,6 +224,7 @@ public sealed class Game : IDisposable
     }
     
     private void OnRunFinished(bool clean) => RunFinished?.Invoke(clean);
+    private void OnMechanicFailed(string reason) => MechanicFailed?.Invoke(reason);
     
 
     private static string DescribeName(ISimPartyMember target) => target switch

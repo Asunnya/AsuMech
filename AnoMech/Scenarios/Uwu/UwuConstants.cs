@@ -131,6 +131,7 @@ public class UwuConstants
         public const ushort ThermalLow = 1525;
         public const ushort AccursedFlame = 1527;
         public const ushort Woken = 1529;
+        public const ushort ViscousAetheroplasm = 1532;
     }
 
     public class TetherId

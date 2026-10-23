@@ -54,7 +54,6 @@ public sealed class FruP2LightRampantScenario : IScenario
     private readonly SimEnemy?[] helpers = new SimEnemy?[8];
     private readonly List<SimEnemy?>[] orbs = [[], []];
     private readonly List<SimTether> links = [];
-    private readonly List<SimTether> curses = [];
     private readonly FruHolyPuddles puddles = new();
     private readonly List<MapEffectTower> towers = [];
     private MapEffectTower? centerTower;
@@ -65,15 +64,11 @@ public sealed class FruP2LightRampantScenario : IScenario
         state = new FruP2LightRampantState(world.Rng, world.Party.PlayerRole, settingsWindow.Overrides);
         foreach (var wave in orbs) wave.Clear();
         links.Clear();
-        curses.Clear();
         puddles.Clear();
         towers.Clear();
         centerTower = null;
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<FruP2LightRampantState>)AiStrats[idx]).Run(state, world);
-
-        world.OnDeathWithStatus(StatusId.ChainsOfEverlastingLight, _ => BreakChains());
-        world.OnDeathWithStatus(StatusId.CurseOfEverlastingLight, _ => BreakChains());
 
         world.Events.Add(0f, SpawnActors);
         world.Events.Add(0.6f, () => usurper?.SetModelState(4));
@@ -97,7 +92,8 @@ public sealed class FruP2LightRampantScenario : IScenario
             world.Events.Add(showsAt + PuddleFadesAfterShowing, () => puddles.Fade(w));
             world.Events.Add(showsAt + PuddleLastsAfterShowing, () => puddles.Remove(w));
         }
-        world.Events.Add(CursesAt, () => curses.AddRange(Chain(StatusId.CurseOfEverlastingLight, TetherId.CurseOfEverlastingLight, CursesEndAt - CursesAt)));
+        world.Events.Add(CursesAt, () => Chain(StatusId.CurseOfEverlastingLight, TetherId.CurseOfEverlastingLight, CursesEndAt - CursesAt)
+            .ForEach(curse => curse.BreaksWhen(t => t.StretchLt(CurseMinLength))));
         world.Events.Add(TowerAt, BrightHunger);
         world.Events.Add(19.6f, () => SpawnOrbs(first: true));
         world.Events.Add(22.43f, () => SpawnOrbs(first: false));
@@ -164,12 +160,16 @@ public sealed class FruP2LightRampantScenario : IScenario
         return chain;
     }
 
+    private void BreakChainsOnSnappedLink(TetherEnded ended)
+    {
+        if (ended.Reason != TetherEndReason.Expired && links.Contains(ended.Tether)) BreakChains();
+    }
+
     // Clearing every link and debuff first keeps Refulgent Fate's own deaths from breaking them again.
     private void BreakChains()
     {
         foreach (var link in links) link.Despawn();
         links.Clear();
-        curses.Clear();
         foreach (var member in world.Party.AllMembers())
         {
             member.RemoveStatus(StatusId.ChainsOfEverlastingLight);
@@ -215,10 +215,7 @@ public sealed class FruP2LightRampantScenario : IScenario
         {
             var tower = Tower(HelperTowers[h]);
             helpers[h]?.SetPosition(new Placement(tower, 0f));
-            if (world.Party.Find.InsideCircle(tower, TowerRadius).Count == 0)
-                helpers[h]?.Cast(Actions.InescapableIllumination);
-            else
-                helpers[h]?.Cast(Actions.BrightHunger, tower);
+            helpers[h]?.Cast(Actions.BrightHunger, tower);
         }
     }
 
@@ -289,12 +286,18 @@ public sealed class FruP2LightRampantScenario : IScenario
         }
     }
 
+    public void OnActionResolved(ActionResolved resolved) => PunishUnsoakedTowers(resolved);
+    public void OnTetherEnded(TetherEnded ended) => BreakChainsOnSnappedLink(ended);
+    public void OnStatusAdded(StatusAdded added) => Lightsteeped.ExplodeFifthStack(added);
+
+    private void PunishUnsoakedTowers(ActionResolved resolved)
+        => Towers.ResolveTower(world, resolved, ActionId.BrightHunger, Actions.InescapableIllumination,
+            minSoakers: resolved.Action == Actions.BrightHungerCenter ? 4 : 1);
+
     public void Tick(float delta, float elapsed)
     {
         foreach (var tower in towers) tower.Tick(world.Party);
         centerTower?.Tick(world.Party);
         puddles.KillWhoeverStandsIn(world.Party, elapsed, ActionId.LuminousHammer, "stepped in a Luminous Hammer puddle");
-        if (curses.Any(curse => curse.IsActive && curse.StretchLt(CurseMinLength)))
-            BreakChains();
     }
 }
