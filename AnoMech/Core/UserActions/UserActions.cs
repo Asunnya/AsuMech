@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using AnoMech.Core.Native.Implementations;
 using AnoMech.Core.Native.Implementations.Pointers;
 using AnoMech.Core.Native.Interfaces;
@@ -63,6 +64,8 @@ public sealed unsafe class UserActions : IUserActions
 
     public bool Enabled { get; private set; }
 
+    public event Action<PlayerAction>? Acted;
+
     // The module only acts while the sim zone is loaded — never in a real duty / open
     // world, where the client is server-connected and our synthetic packets/writes
     // would be harmful.
@@ -72,6 +75,9 @@ public sealed unsafe class UserActions : IUserActions
     {
         this.hooks = hooks;
         hooks.ActionExecuted += OnActionExecuted;
+        // The server shows a swing to the party as it would any action.
+        foreach (var autoAttacks in handlers.OfType<AutoAttackHandler>())
+            autoAttacks.Swung += (actionId, targetId) => Acted?.Invoke(new PlayerAction(PlayerActionStep.Resolved, ActionType.Action, actionId, targetId));
     }
 
     private bool Runs(IUserActionHandler handler) => Enabled || handler.RunsWhenDisabled;
@@ -90,7 +96,13 @@ public sealed unsafe class UserActions : IUserActions
     // Called by Game when the sim zone first loads (a true session start, not a restart within
     // an already-loaded zone). Snapshots unconditionally, so the restore stays correct even if the
     // module is enabled/disabled part-way through the session.
-    public void OnSessionStart() => gaugeSnapshot = JobGaugeEdit.Capture();
+    public void OnSessionStart()
+    {
+        // The lift rewinds the sequence to here, so a number the last session processed comes again.
+        var am = ActionManager.Instance();
+        if (am != null) processedSeq = am->LastUsedActionSequence;
+        gaugeSnapshot = JobGaugeEdit.Capture();
+    }
 
     // Called by Game when the player leaves the sim zone.
     public void OnSessionEnd()
@@ -130,10 +142,12 @@ public sealed unsafe class UserActions : IUserActions
             pendingTarget = targetId;
             pendingTotal = bc->CastInfo.TotalCastTime;
             pendingMax = bc->CastInfo.CurrentCastTime;
+            Acted?.Invoke(new PlayerAction(PlayerActionStep.CastStarted, actionType, actionId, targetId, pendingTotal));
             foreach (var handler in handlers) if (Runs(handler)) handler.OnCastStart(actionType, actionId);
         }
         else
         {
+            Acted?.Invoke(new PlayerAction(PlayerActionStep.Resolved, actionType, actionId, targetId));
             foreach (var handler in handlers) if (Runs(handler)) handler.OnAction(actionType, actionId, targetId);
         }
     }
@@ -156,10 +170,12 @@ public sealed unsafe class UserActions : IUserActions
         {
             var am = ActionManager.Instance();
             if (am != null) processedSeq = am->LastUsedActionSequence; // dedup any re-entrant combo fire during dispatch
+            Acted?.Invoke(new PlayerAction(PlayerActionStep.Resolved, pendingType, pendingAction, pendingTarget));
             foreach (var handler in handlers) if (Runs(handler)) handler.OnAction(pendingType, pendingAction, pendingTarget);
         }
         else
         {
+            Acted?.Invoke(new PlayerAction(PlayerActionStep.Interrupted, pendingType, pendingAction, pendingTarget));
             foreach (var handler in handlers) if (Runs(handler)) handler.OnCastInterrupted(pendingType, pendingAction);
         }
         pendingResolve = false;

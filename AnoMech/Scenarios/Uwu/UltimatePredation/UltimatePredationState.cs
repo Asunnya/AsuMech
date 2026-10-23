@@ -36,7 +36,6 @@ public class UltimatePredationState
     public Placement? ResolvedSafeFirstSet;
     public Placement? ResolvedSafeSecondSet;
 
-    public EnemyActionCast? ViscousAetheroplasmUltima;
 
     public UltimatePredationState(Rng rng, UltimatePredationStateOverrides overrides)
     {

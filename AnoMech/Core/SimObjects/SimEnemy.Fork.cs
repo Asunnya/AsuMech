@@ -19,14 +19,14 @@ public sealed partial class SimEnemy
             actionTargetId is { } target ? [new ActionEffectTarget(target)] : null, ballistaId);
 
     // A bar of `castSeconds` (the sheet's when null) whose effect lands as it ends, with no mechanics.
-    public EnemyActionCast LegacyCast(uint actionId, Vector3? targetLocation = null, float? castSeconds = null, SimCharacter? target = null,
+    public void LegacyCast(uint actionId, Vector3? targetLocation = null, float? castSeconds = null, SimCharacter? target = null,
         float omenDelay = 0f, float omenRotate = 0f, byte animationVariation = 0, float animationLock = 0.6f)
     {
         var action = new EnemyAction(actionId)
         {
             Cast = new() { AnimationLock = animationLock, OmenDelay = omenDelay, CastSecondsOverride = castSeconds, Rotation = omenRotate },
         };
-        return actions.Start(action, targetLocation is { } at ? (CastTarget)at : target, animationVariation);
+        actions.Start(action, targetLocation is { } at ? (CastTarget)at : target, animationVariation);
     }
 
     public static SpawnVisibility LegacyVisibility(bool helper, bool visible) =>

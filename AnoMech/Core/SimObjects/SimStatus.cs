@@ -1,4 +1,5 @@
 using System;
+using AnoMech.Core.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 
 namespace AnoMech.Core.SimObjects;
@@ -69,15 +70,21 @@ public sealed class SimStatus : ISimObject
     {
         if (!IsActive || duration <= 0f) return;
         elapsed += deltaSeconds;
-        if (elapsed >= duration) Despawn();
+        if (elapsed >= duration) End(StatusLossReason.Expired);
     }
 
-    public void Despawn()
+    public void Despawn() => End(StatusLossReason.Removed);
+
+    // A null reason raises nothing: the character itself is going away, or leaving the run.
+    internal void End(StatusLossReason? reason)
     {
         if (!IsActive) return;
         IsActive = false;
-        if (Slot < 0 || Hidden) return;
-        target.StatusListChanged();
-        target.ActorControl.LoseEffect(StatusId, Stacks, SourceObject);
+        if (Slot >= 0 && !Hidden)
+        {
+            target.StatusListChanged();
+            target.ActorControl.LoseEffect(StatusId, Stacks, SourceObject);
+        }
+        if (reason is { } why) target.SimEvents?.Raise(new StatusLost(target, StatusId, Stacks, why));
     }
 }

@@ -6,6 +6,7 @@ using AnoMech.Core.EnemyActions;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Ai;
 using AnoMech.Core.Game.Party;
+using AnoMech.Core.Native.Interfaces;
 using AnoMech.Core.Map;
 using AnoMech.Core.SimObjects;
 using static AnoMech.Scenarios.Fru.FruConstants;
@@ -31,6 +32,8 @@ public sealed class FruP4DarklitDragonsongScenario : IScenario
     private const float ChainMax = 61f * S;
     // The Oracle's jumps land this short of their target, and don't move her when it's closer.
     private const float JumpLandingShort = 7.5f;
+    // It takes every one of these and breaks on any other hit.
+    private static readonly uint[] FragmentSurvives = [ActionId.DarklitDragonsong, ActionId.HallowedWingsLeft, ActionId.HallowedWingsRight];
 
     private static readonly Vector3 OracleCenterSpot = new(0, 0, 5);
     private static readonly Vector3 UsurperAkhMornSpot = new(-3.55f, 0, 0);
@@ -45,7 +48,7 @@ public sealed class FruP4DarklitDragonsongScenario : IScenario
     private int akhRhaiPuddles;
     private int pathOfLightBaits;
     private readonly List<SimTether> links = [];
-    private readonly List<SimTether> curses = [];
+    private bool fragmentBroken;
     private readonly List<MapEffectTower> towers = [];
 
     public void Run(SimWorld worldParam, int? selectedAi)
@@ -53,15 +56,12 @@ public sealed class FruP4DarklitDragonsongScenario : IScenario
         world = worldParam;
         state = new FruP4DarklitDragonsongState(world.Rng, settingsWindow.Overrides);
         links.Clear();
-        curses.Clear();
+        fragmentBroken = false;
         towers.Clear();
         akhRhaiPuddles = 0;
         pathOfLightBaits = 0;
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<FruP4DarklitDragonsongState>)AiStrats[idx]).Run(state, world);
-
-        world.OnDeathWithStatus(StatusId.RefulgentChain, _ => BreakChains());
-        world.OnDeathWithStatus(StatusId.RefulgentFate, _ => BreakChains());
 
         world.Events.Add(0f, SpawnActors);
         world.Events.Add(1f, () => usurper?.SetTarget(world.Party.Get(PartyRole.MainTank), follow: false));
@@ -98,7 +98,8 @@ public sealed class FruP4DarklitDragonsongScenario : IScenario
         world.Events.Add(24.1f, ShowTowers);
         world.Events.Add(24.1f, () => BattleTalk(gaia, 0x7, BNpcNameId.Gaia));
         world.Events.Add(24.2f, () => usurper?.Cast(ActionId.PathOfLightCast, animationLock: 2.1f));
-        world.Events.Add(CursesAt, () => curses.AddRange(Chain(StatusId.RefulgentFate, TetherId.CurseOfEverlastingLight, CursesEndAt - CursesAt)));
+        world.Events.Add(CursesAt, () => Chain(StatusId.RefulgentFate, TetherId.CurseOfEverlastingLight, CursesEndAt - CursesAt)
+            .ForEach(curse => curse.BreaksWhen(t => t.StretchLt(ChainMin) || t.StretchGt(ChainMax))));
         world.Events.Add(29.1f, () => BattleTalk(ryne, 0x8, BNpcNameId.Ryne));
         world.Events.Add(TowersAt, BrightHunger);
         world.Events.Add(32.2f, () => oracle?.Cast(ActionId.SpiritTakerCast, animationLock: 0.2f));
@@ -220,12 +221,11 @@ public sealed class FruP4DarklitDragonsongScenario : IScenario
         helpers[0]?.Cast(ActionId.DrachenArmor, animationLock: 2.1f);
     }
 
-    // Wipes when an attack about to land at `position` reaches the Fragment of Fate.
-    private bool BreaksFragment(Vector3 position, float radius, uint actionId)
+    private void BreakFragmentOnAvoidableHit(ActionResolved resolved)
     {
-        if (Vector3.Distance(position, FragmentPosition) > radius) return false;
-        world.Party.WipeAllPlayers(actionId, "the Fragment of Fate was hit");
-        return true;
+        if (fragmentBroken || fragment is null || !resolved.NpcHits.Contains(fragment) || FragmentSurvives.Contains(resolved.Action.ActionId)) return;
+        fragmentBroken = true;
+        world.Fail($"{Natives.Data.ActionName(resolved.Action.ActionId)} hit the Fragment of Fate");
     }
 
     private List<SimCharacter> Waters()
@@ -240,7 +240,6 @@ public sealed class FruP4DarklitDragonsongScenario : IScenario
         for (var i = 0; i < members.Count; i++)
         {
             var position = members[i].Position;
-            if (BreaksFragment(position, 4f, ActionId.AkhRhai)) return;
             akhRhaiHelpers[i]?.SetPosition(position);
             akhRhaiHelpers[i]?.Cast(Actions.AkhRhaiCast, position);
         }
@@ -265,12 +264,16 @@ public sealed class FruP4DarklitDragonsongScenario : IScenario
         return chain;
     }
 
+    private void BreakChainsOnSnappedLink(TetherEnded ended)
+    {
+        if (ended.Reason != TetherEndReason.Expired && links.Contains(ended.Tether)) BreakChains();
+    }
+
     // Clearing every link and debuff first keeps Refulgent Fate's own deaths from breaking them again.
     private void BreakChains()
     {
         foreach (var link in links) link.Despawn();
         links.Clear();
-        curses.Clear();
         foreach (var member in world.Party.AllMembers())
         {
             member.RemoveStatus(StatusId.RefulgentChain);
@@ -305,10 +308,7 @@ public sealed class FruP4DarklitDragonsongScenario : IScenario
     private void BrightHunger(SimEnemy? helper, Vector3 tower)
     {
         helper?.SetPosition(tower);
-        if (world.Party.Find.InsideCircle(tower, TowerRadius).Count == 0)
-            helper?.Cast(Actions.InescapableIllumination);
-        else
-            helper?.Cast(Actions.BrightHungerDarklit, tower);
+        helper?.Cast(Actions.BrightHungerDarklit, tower);
     }
 
     // Path of Light's four cones go to whoever stands nearest the center.
@@ -337,7 +337,6 @@ public sealed class FruP4DarklitDragonsongScenario : IScenario
     private void SpiritTaker()
     {
         if (oracle is not { } boss || world.Party.Get(state.SpiritTakerTarget) is not { } target || !target.IsAlive()) return;
-        if (BreaksFragment(target.Position, 5f, ActionId.SpiritTaker)) return;
         boss.Cast(Actions.SpiritTaker, target);
         JumpTowards(target.Position, 0.67f);
     }
@@ -356,7 +355,6 @@ public sealed class FruP4DarklitDragonsongScenario : IScenario
         var i = 0;
         foreach (var holder in Waters())
         {
-            if (BreaksFragment(holder.Position, 6f, ActionId.DarkWater)) return;
             casters[i]?.SetPosition(holder.Position);
             casters[i++]?.Cast(Actions.DarkWater, holder);
         }
@@ -368,7 +366,6 @@ public sealed class FruP4DarklitDragonsongScenario : IScenario
         var byDistance = world.Party.ActiveMembers().OrderBy(m => Vector3.DistanceSquared(m.Position, boss.Position)).ToList();
         if (byDistance.Count == 0) return;
         var target = farthest ? byDistance[^1] : byDistance[0];
-        if (BreaksFragment(target.Position, 8f, action.ActionId)) return;
         boss.Cast(action, target);
         JumpTowards(target.Position, 1.1f);
     }
@@ -382,15 +379,21 @@ public sealed class FruP4DarklitDragonsongScenario : IScenario
     private void CastAkhMorn(SimEnemy? helper, EnemyAction action, PartyRole role)
     {
         if (world.Party.Get(role) is not { } tank || !tank.IsAlive()) return;
-        if (BreaksFragment(tank.Position, 4f, action.ActionId)) return;
         helper?.SetPosition(tank.Position);
         helper?.Cast(action, tank);
     }
 
+    public void OnActionResolved(ActionResolved resolved)
+    {
+        BreakFragmentOnAvoidableHit(resolved);
+        // UNVERIFIED: no pull leaves a Darklit tower unsoaked; Light Rampant's punishment.
+        Towers.ResolveTower(world, resolved, ActionId.BrightHunger, Actions.InescapableIllumination, minSoakers: 2);
+    }
+    public void OnTetherEnded(TetherEnded ended) => BreakChainsOnSnappedLink(ended);
+    public void OnStatusAdded(StatusAdded added) => Lightsteeped.ExplodeFifthStack(added);
+
     public void Tick(float delta, float elapsed)
     {
-        if (curses.Any(curse => curse.IsActive && (curse.StretchLt(ChainMin) || curse.StretchGt(ChainMax))))
-            BreakChains();
         foreach (var tower in towers) tower.Tick(world.Party);
     }
 }

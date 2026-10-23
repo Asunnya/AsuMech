@@ -57,7 +57,7 @@ public sealed partial class MultiplayerManager
     private HelloMessage NewHello(byte classJob)
     {
         var (epoch, sent, received) = stream?.HelloFields(Session.HostId) ?? (0, 0, -1);
-        return new HelloMessage(MyPeerId, DisplayName, PluginBuildInfo.Version, PluginBuildInfo.Checksum, classJob, epoch, sent, received);
+        return new HelloMessage(MyPeerId, DisplayName, PluginBuildInfo.Version, PluginBuildInfo.Checksum, classJob, epoch, sent, received, debugBotControlled);
     }
 
     // Behind the host's stream for good: what this client shows of the run can't be trusted any

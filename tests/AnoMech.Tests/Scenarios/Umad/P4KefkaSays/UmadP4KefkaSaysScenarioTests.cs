@@ -4,6 +4,7 @@ using AnoMech.Scenarios.Umad.P4KefkaSays;
 using static AnoMech.Core.Game.Party.PartyRole;
 using static AnoMech.Tests.NegativeRun;
 using ActionId = AnoMech.Scenarios.Umad.UmadConstants.ActionId;
+using StatusId = AnoMech.Scenarios.Umad.UmadConstants.StatusId;
 
 namespace AnoMech.Tests;
 
@@ -113,7 +114,7 @@ public class UmadP4KefkaSaysScenarioTests
     public void BeyondDeathOutsideItsWoundColourDies(bool debuffsReal, bool floodReal, PartyRole holder, bool whiteWound, float x)
         => KefkaSays(holder, o => Antilights(o, debuffsReal, floodReal, holder, whiteWound))
             .TeleportAt(62.4f, to: new(x, 1))
-            .ShouldKill(TheEnvironment, holder);
+            .ShouldDieOfStatus(debuffsReal ? StatusId.BeyondDeath : StatusId.AllaganField, holder);
 
     [TestCase(true, true, OffTank, false, 8f, ActionId.BlackAntilight)]
     [TestCase(true, false, OffTank, false, 8f, ActionId.BlackAntilight)]

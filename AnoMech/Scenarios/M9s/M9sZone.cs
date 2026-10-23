@@ -20,7 +20,7 @@ public sealed class M9sZone : IZone
     public string? Expansion => "Dawntrail";
     public uint TerritoryId => 1321;
     public Vector3 Origin => new(100f, 0f, 100f);
-    public EntranceBarrier EntranceBarrier => EntranceBarrier.Unknown;
+    public DutyInitData DutyInitData => DutyInitData.Unknown(Origin);
 
     public IReadOnlyList<WaymarkLayout> WaymarkPresets { get; } =
         [new WaymarkLayout("NAUR", M9sConstants.NaurWaymarks)];

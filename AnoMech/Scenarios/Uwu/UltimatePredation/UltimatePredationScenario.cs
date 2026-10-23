@@ -46,6 +46,8 @@ public class UltimatePredationScenario : IMultiplayerReplayable
     private SimEnemy? titan => state.ScenarioObjects.Titan;
     private Func<SimEnemy?>[] featherRainDummies => [() => dummies[8], () => dummies[9], () => dummies[10], () => dummies[11], () => dummies[12]];
 
+    public void OnStatusLost(StatusLost lost) => ExplodeViscousAetheroplasm(lost);
+
     public void Run(SimWorld world, int? selectedAi)
     {
         this.world = world;
@@ -179,6 +181,12 @@ public class UltimatePredationScenario : IMultiplayerReplayable
         });
     }
 
+    private void ExplodeViscousAetheroplasm(StatusLost lost)
+    {
+        if (lost is not { StatusId: StatusId.ViscousAetheroplasm, Reason: StatusLossReason.Expired, Holder: ISimPartyMember holder }) return;
+        dummies[^(1 + (int)holder.Role)]?.Cast(Actions.ViscousAetheroplasm, lost.Holder);
+    }
+
     private void Arena()
     {
         world.Events.Add(0, () =>
@@ -282,7 +290,7 @@ public class UltimatePredationScenario : IMultiplayerReplayable
 
         world.Events.Add(63.37f, () => ultima?.Cast(Actions.UltimaAttack, mt, animationVariation: 2));
 
-        world.Events.Add(64.38f, () => state.ViscousAetheroplasmUltima = ultima?.Cast(Actions.ViscousAetheroplasmUltima, mt));
+        world.Events.Add(64.38f, () => ultima?.Cast(Actions.ViscousAetheroplasmUltima, mt));
 
         world.Events.Add(66.40f, () => ultima?.Cast(Actions.UltimaAttack, mt, animationVariation: 2));
 
@@ -299,13 +307,6 @@ public class UltimatePredationScenario : IMultiplayerReplayable
         world.Events.Add(72.47f, () => ultima?.Cast(Actions.UltimaAttack, ot, animationVariation: 0));
 
         world.Events.Add(73.64f, () => ultima?.Cast(Actions.HomingLasers, mt));
-
-        world.Events.Add(75.57f, () =>
-        {
-            var targets = (state.ViscousAetheroplasmUltima?.Hits ?? []).Select(h => h.Who).Where(w => w.IsAlive());
-            foreach (var (who, dummy) in targets.Zip(dummies.Reverse()))
-                dummy?.Cast(Actions.ViscousAetheroplasm, who);
-        });
 
         world.Events.Add(77.34f, () =>
         {

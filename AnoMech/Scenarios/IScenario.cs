@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using AnoMech.Core.Game;
 using AnoMech.Core.Game.Ai;
 using AnoMech.Core.SimObjects;
 
@@ -6,7 +7,7 @@ namespace AnoMech.Scenarios;
 
 // The mechanic timeline for one encounter fragment. Shared identity lives on the owning
 // IZone (via Phase.Zone) and IPhase; a scenario declares only what is its own.
-public interface IScenario
+public interface IScenario : IWorldEventListener
 {
     string Name { get; }
 

@@ -9,8 +9,9 @@ using LockonId = AnoMech.Scenarios.Umad.UmadConstants.LockonId;
 namespace AnoMech.Tests;
 
 // Every roll is pinned: north N turning clockwise one eighth per tower, supports Chariot and DPS
-// Cone with the stacks on MT and M1, Future Past Future Past, and each tower's new lockons dealt
-// in role order. MT RH M1 R soak towers 0 1 2 7, OT SH M2 C towers 3 to 6.
+// Cone with the stacks on MT and M1, Future Past Future Past, and each tower's new lockons dealt to
+// its soakers in role order: Cone and Chariot to each tower 0 pair, then each later round's four
+// unshuffled, the first two to the first tower and the last two to the second. MT RH M1 R soak towers 0 1 2 7, OT SH M2 C towers 3 to 6.
 //
 //   22.66  Tower 0 at (-5.7,-5.7) RH M1 and (5.7,-5.7) MT R; 23.26 RH's chariot at (-5.4,-8.5),
 //          M1's stack at (-5.4,-2.4) with M2 C, MT's at (4.8,-4.8) with OT R, R's cone onto SH.
@@ -36,7 +37,13 @@ public class UmadP2ForsakenScenarioTests
         o.EndAttacks[1] = EndAttack.PastsEnd;
         o.EndAttacks[2] = EndAttack.FuturesEnd;
         o.EndAttacks[3] = EndAttack.PastsEnd;
-        o.ReassignLockonsInRoleOrder = true;
+        for (var round = 0; round < UmadP2ForsakenState.TowerRounds; round++)
+        {
+            var lockons = UmadP2ForsakenState.RoundLockons(round);
+            o.TowerLockons[round * 2] = lockons[..2];
+            o.TowerLockons[round * 2 + 1] = lockons[2..];
+        }
+        o.TowerLockons[0] = o.TowerLockons[1] = [LockonId.ForsakenCone, LockonId.ForsakenChariot];
     }
 
     private static NegativeRun<UmadP2ForsakenScenario> Forsaken(PartyRole player, Action<UmadP2ForsakenStateOverrides>? tweak = null)
@@ -50,23 +57,24 @@ public class UmadP2ForsakenScenarioTests
     // A soaker steps out to Kefka just before its tower resolves, after any All Things Ending
     // snapshot just ahead of it, which would catch anyone standing on Kefka.
     [TestCase(22.66f, MainTank)]
-    [TestCase(32.67f, MainTank)]
     [TestCase(43.71f, MainTank)]
-    [TestCase(53.72f, OffTank)]
     [TestCase(64.76f, OffTank)]
-    [TestCase(74.77f, OffTank)]
     [TestCase(85.81f, OffTank)]
-    [TestCase(95.82f, MainTank)]
     public void UnderfilledTowerWipes(float tower, PartyRole soaker)
         => Forsaken(soaker)
             .TeleportAt(tower - 0.04f, to: new(0, 0))
             .ShouldKill(ActionId.TheRiverOfLight, PerRole.All);
 
-    [Test]
-    public void OverfilledTowerWipes()
-        => Forsaken(OffTank)
-            .TeleportAt(22f, to: new(5, -6))
-            .ShouldKill(ActionId.TheRiverOfLight, PerRole.All);
+    // The other tower still resolves, and its Spellwave lands before the River of Light.
+    [TestCase(32.67f, MainTank, new[] { MainTank, MeleeDpsB })]
+    [TestCase(53.72f, OffTank, new[] { MeleeDpsA, CasterDps })]
+    [TestCase(74.77f, OffTank, new[] { MeleeDpsA, CasterDps })]
+    [TestCase(95.82f, MainTank, new[] { MeleeDpsB, PhysRangedDps })]
+    public void UnderfilledTowerWipesAfterTheOtherTowersSpells(float tower, PartyRole soaker, PartyRole[] spellwaveVictims)
+        => Forsaken(soaker)
+            .TeleportAt(tower - 0.04f, to: new(0, 0))
+            .ShouldKill(ActionId.Spellwave, spellwaveVictims)
+            .ShouldKill(ActionId.TheRiverOfLight, AllBut(spellwaveVictims));
 
     [Test]
     public void EmptyTowerWipes()

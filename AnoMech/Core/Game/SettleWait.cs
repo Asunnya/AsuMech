@@ -28,6 +28,7 @@ public sealed class SettleWait
     public bool Tick()
     {
         if (start is not { } pending) return false;
+        Natives.Zone.EndSpeedBuffs();
         if (Natives.Zone.StartBlockedReason(out var settling) != null && settling != null)
         {
             if (settling == WaitingOn) return false;

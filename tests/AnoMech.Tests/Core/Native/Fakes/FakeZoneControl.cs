@@ -19,6 +19,8 @@ internal sealed class FakeZoneControl(FakeCharacter player, SimTimeline timeline
         return null;
     }
 
+    public void EndSpeedBuffs() { }
+
     public bool Enter(uint territoryId, Vector3 playerSpawn)
     {
         innPosition = player.Position;

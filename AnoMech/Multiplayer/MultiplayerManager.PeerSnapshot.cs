@@ -1,36 +1,67 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Threading.Tasks;
 using AnoMech.Core;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Party;
+using AnoMech.Core.Native.Interfaces;
 using AnoMech.Core.SimObjects;
 
 namespace AnoMech.Multiplayer;
 
 public sealed partial class MultiplayerManager
 {
+    // ---- Our own player, as the peer's SelfPose and the host's Roles give it -
+
+    // Our player's velocity over the ground. The client walks them after the plugin's update, so a
+    // tick sees the walk of the frame before, made in that frame's time.
+    private Vector3 ownVelocity;
+    private Vector3? ownLastPosition;
+    private float ownLastDelta;
+
+    private void TrackOwnVelocity(float deltaSeconds)
+    {
+        var position = Plugin.Game.World.Party.Player?.Position;
+        ownVelocity = position is { } now && ownLastPosition is { } last && ownLastDelta > 0f
+            ? new Vector3(now.X - last.X, 0f, now.Z - last.Z) / ownLastDelta
+            : Vector3.Zero;
+        ownLastPosition = position;
+        ownLastDelta = deltaSeconds;
+    }
+
+    // A pose that hasn't changed goes out again this often, for whoever missed it.
+    private const long PoseRefreshMs = 1000;
+
     // ---- Peer: reporting our own pose --------------------------------------
 
-    // Backpressure-gated: one in flight at a time.
+    // Backpressure-gated: one in flight at a time. Sent when it changes; a stop changes the
+    // velocity, so the others' copies stop with it.
     private Task? pendingSelfPoseSend;
+    private SelfPoseMessage? lastSelfPose;
+    private long lastSelfPoseMs;
 
     private void SendSelfPose()
     {
         if (pendingSelfPoseSend is not (null or { IsCompleted: true })) return;
         var player = Plugin.Game.World.Party.Player;
         if (player == null) return;
-        pendingSelfPoseSend = Send(new SelfPoseMessage(MyPeerId, player.Position.X, player.Position.Y, player.Position.Z, player.Rotation));
+        var pose = new SelfPoseMessage(MyPeerId, player.Position.X, player.Position.Y, player.Position.Z, player.Rotation,
+            ownVelocity.X, ownVelocity.Z, Natives.PlayerInput.IsJumping);
+        if (pose == lastSelfPose && NowMs - lastSelfPoseMs < PoseRefreshMs) return;
+        lastSelfPose = pose;
+        lastSelfPoseMs = NowMs;
+        pendingSelfPoseSend = Send(pose);
     }
 
-    public void ReportAppliedEnemyStatus(IReadOnlyList<SimEnemy> enemies, ushort statusId, float duration)
+    public void ReportAppliedEnemyStatus(IReadOnlyList<SimEnemy> enemies, ushort statusId, float duration, ushort param)
     {
         if (IsHost || relay is not { IsConnected: true } || replay is null || enemies.Count == 0) return;
         var hostIds = enemies.Select(replay.HostActorOf).Where(id => id != PacketActor.None).ToList();
         if (hostIds.Count == 0) return;
         DiagnosticLog.Info($"[Multiplayer] Peer: reporting applied status {statusId} on the host's enemies [{string.Join(",", hostIds.Select(id => $"0x{id:X}"))}].");
-        _ = Send(new PeerAppliedEnemyStatusMessage(MyPeerId, hostIds, statusId, duration));
+        _ = Send(new PeerAppliedEnemyStatusMessage(MyPeerId, hostIds, statusId, duration, param));
     }
 
     public void ReportAppliedRoleStatus(IReadOnlyList<PartyRole> roles, ushort statusId, float duration, ushort param)
@@ -52,7 +83,7 @@ public sealed partial class MultiplayerManager
         }
         if (!NetGuard.TryPosition(msg.X, msg.Y, msg.Z, out var pose)) return;
         if (Plugin.Game.World.Party.Get(role) is SimNetworkPuppet puppet)
-            puppet.ApplyNetworkPose(pose, NetGuard.Rotation(msg.Rotation));
+            puppet.ApplyNetworkPose(pose, NetGuard.Rotation(msg.Rotation), NetGuard.Velocity(msg.VX, msg.VZ), msg.Jumping);
         else
             DiagnosticLog.Debug($"[Multiplayer] SelfPose from {Session.NameOf(msg.PeerId)} ({role}) but that slot isn't a SimNetworkPuppet -- dropping.");
     }
@@ -136,7 +167,9 @@ public sealed partial class MultiplayerManager
             return;
         }
         peerNatives?.TagSeats(Plugin.Game.World.Party, RemoteSeats());
+        TagBotSeats();
         peerEnteredInstance = true;
+        lastSelfPose = null;
         DiagnosticLog.Info("[Multiplayer] Peer is in the zone with the party seated -- telling the host.");
         foreach (var packet in earlyPackets) replay?.Apply(packet);
         earlyPackets.Clear();
@@ -151,6 +184,7 @@ public sealed partial class MultiplayerManager
         if (IsHost || peerRunStarted || clock is null) return;
         if (!running || !peerEnteredInstance || peerRunParams is not { } p) return;
         peerRunStarted = true;
+        peerRunStartPending = true;
         var receivedAt = Time.GetTimestamp();
         if (peerNatives != null) peerNatives.HostOwnsArena = true;
         Plugin.Game.StartScenario(p, refusal => OnPeerStartResolved(refusal, clock, receivedAt));
@@ -159,6 +193,7 @@ public sealed partial class MultiplayerManager
     // The clock syncs to the host's once the run is up: starting it sets it to zero.
     private void OnPeerStartResolved(string? refusal, RunClockState clock, long receivedAt)
     {
+        peerRunStartPending = false;
         if (!running) return;
         if (refusal != null)
         {
@@ -171,7 +206,9 @@ public sealed partial class MultiplayerManager
         eventClockSynced = false;
         pingClock = null;
         DiagnosticLog.Info("[Multiplayer] Peer's run is up -- applying the host's packets and sending SelfPose.");
+        lastSelfPose = null;
         peerNatives?.TagSeats(Plugin.Game.World.Party, RemoteSeats());
+        TagBotSeats();
         TryStartDebugBotReplay();
     }
 
@@ -209,7 +246,7 @@ public sealed partial class MultiplayerManager
         foreach (var r in NetGuard.Cap(snap.Roles, Enum.GetValues<PartyRole>().Length))
             if (r.Role != MyClaimedRole && Plugin.Game.World.Party.Get(r.Role) is SimNetworkPuppet puppet
                 && NetGuard.TryPosition(r.X, r.Y, r.Z, out var position))
-                puppet.ApplyNetworkPose(position, NetGuard.Rotation(r.Rotation));
+                puppet.ApplyNetworkPose(position, NetGuard.Rotation(r.Rotation), NetGuard.Velocity(r.VX, r.VZ), r.Jumping);
     }
 
     // Forced moves land on our own character only: every other slot is a puppet the host's

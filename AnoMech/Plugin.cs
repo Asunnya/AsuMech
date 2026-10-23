@@ -58,6 +58,7 @@ public sealed class Plugin : IDalamudPlugin
     internal static LogManager LogManager { get; private set; } = null!;
     private ConfigWindow ConfigWindow { get; init; }
     private MainWindow MainWindow { get; init; }
+    private FailureBanner? FailureBanner { get; init; }
 #if DEBUG
     private DamageDebugWindow DamageDebugWindow { get; init; }
 #endif
@@ -89,6 +90,8 @@ public sealed class Plugin : IDalamudPlugin
             windowSystem.AddWindow(MainWindow);
             windowSystem.AddWindow(MainWindow.ScenarioPanel);
             windowSystem.AddWindow(MainWindow.PartyPanel);
+            FailureBanner = new FailureBanner();
+            windowSystem.AddWindow(FailureBanner);
 #if DEBUG
             DamageDebugWindow = new DamageDebugWindow(this);
             windowSystem.AddWindow(DamageDebugWindow);
@@ -166,8 +169,8 @@ public sealed class Plugin : IDalamudPlugin
         }
         finally
         {
-            // Dalamud disposes this plugin's hooks once Dispose returns or throws, so a sim must be
-            // reverted by then even when a step above threw. A no-op after a clean Game.Dispose.
+            // Dalamud disposes this plugin's hooks once Dispose returns or throws, so a run must be
+            // stopped or lifted by then even when a step above threw. A no-op after a clean Game.Dispose.
             ZoneControl.Current?.Dispose();
         }
 
@@ -197,6 +200,7 @@ public sealed class Plugin : IDalamudPlugin
         LogManager?.Dispose();
         ConfigWindow?.Dispose();
         MainWindow?.Dispose();
+        FailureBanner?.Dispose();
 #if DEBUG
         DamageDebugWindow?.Dispose();
 #endif
@@ -305,4 +309,10 @@ public sealed class Plugin : IDalamudPlugin
 
     public void ToggleConfigUi() => ConfigWindow.Toggle();
     public void ToggleMainUi() => MainWindow.Toggle();
+
+    public void OpenSettings()
+    {
+        ConfigWindow.IsOpen = true;
+        ConfigWindow.BringToFront();
+    }
 }

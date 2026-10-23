@@ -12,7 +12,6 @@ public sealed class EnemyActionContext
 {
     // Never removed from, so it enumerates in insertion order.
     private readonly Dictionary<SimCharacter, TargetOutcome> outcomes = [];
-    private readonly List<System.Action> afterResolve = [];
     private readonly List<(SimStatus Status, float RevealAt)> hiddenStatuses = [];
     private readonly List<(SimCharacter, ushort)> impactRemovals = [];
 
@@ -86,7 +85,8 @@ public sealed class EnemyActionContext
     {
         var revealAt = delayToEffectResult ? MathF.Max(Action.Timing.DamageDelay, releaseDelay) : releaseDelay;
         var delay = duration > 0f ? revealAt : 0f;
-        if (who.AddStatus(statusId, duration + delay, stacks, broadcastAddEvent: false, hidden: revealAt > 0f) is not { Slot: >= 0 } status) return;
+        if (who.AddStatus(statusId, duration + delay, stacks, overrideStacks: false, sourceObject: default, broadcastAddEvent: false, hidden: revealAt > 0f,
+                appliedBy: (Action, Caster)) is not { Slot: >= 0 } status) return;
         status.ShownAsFrom(Caster);
         Outcome(who).StatusGains.Add((statusId, entryParam));
         if (status.Hidden) hiddenStatuses.Add((status, revealAt));
@@ -95,12 +95,7 @@ public sealed class EnemyActionContext
     // Taken off at TimingSpec.DamageDelay, unless the character died meanwhile.
     public void RemoveStatusAtImpact(SimCharacter who, ushort statusId) => impactRemovals.Add((who, statusId));
 
-    // Runs once every effect has applied and the deaths due now have been dealt, so a follow-up
-    // cast can't claim this action's kills.
-    public void AfterResolve(System.Action run) => afterResolve.Add(run);
-
     internal IReadOnlyCollection<TargetOutcome> Outcomes => outcomes.Values;
-    internal IReadOnlyList<System.Action> AfterResolveActions => afterResolve;
     internal IReadOnlyList<(SimStatus Status, float RevealAt)> HiddenStatuses => hiddenStatuses;
     internal IReadOnlyList<(SimCharacter Who, ushort StatusId)> ImpactRemovals => impactRemovals;
 

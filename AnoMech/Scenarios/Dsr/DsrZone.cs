@@ -31,7 +31,7 @@ public sealed class DsrZone : IZone
     public string Name => "Dragonsong's Reprise";
     public uint TerritoryId => 968;
     public Vector3 Origin => new(100f, 0f, 100f);
-    public EntranceBarrier EntranceBarrier => EntranceBarrier.Unknown;
+    public DutyInitData DutyInitData => DutyInitData.Unknown(Origin);
 
     public IReadOnlyList<WaymarkLayout> WaymarkPresets { get; } =
         [new WaymarkLayout("DSR Phase 1", DsrConstants.Phase1Waymarks), new WaymarkLayout("NAUR", DsrConstants.NaurWaymarks)];

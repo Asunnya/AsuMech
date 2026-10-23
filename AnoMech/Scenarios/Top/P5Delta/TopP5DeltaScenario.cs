@@ -49,15 +49,13 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
     private List<SimEnemy?>? rocketPunches;
     private List<Vector3>? punchSpots;
     private List<SimEnemy?>? armUnits;
-    private List<SimTether> tethersShort = [];
-    private List<SimTether> tethersLong = [];
     private HelloWorld? nearSolver;
     private HelloWorld? farSolver;
     private readonly Dictionary<SimCharacter, SimEnemy?> tetherHelpers = [];
     private List<SimEnemy?> monitorHelpers = [];
     private SimEnemy? nearHelloHelper;
     private SimEnemy? farHelloHelper;
-    private HelloWorldHolderDeaths holderDeaths = null!;
+    private HelloWorldFailures helloWorldFailures = null!;
 
     public void Run(SimWorld worldParam, int? selectedAi)
     {
@@ -66,7 +64,7 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
         state = new TopP5DeltaState(world.Rng, settingsWindow.Overrides, party.PlayerRole);
         LastState = state;
         lastBroadcastBeyondDefenseTarget = null;
-        holderDeaths = new HelloWorldHolderDeaths(world);
+        helloWorldFailures = new HelloWorldFailures(world);
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<TopP5DeltaState>)AiStrats[idx]).Run(state, world);
 
@@ -116,7 +114,6 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
         world.Events.Add(44.1f, () => omega?.PlayActionTimeline(ActionTimelineId.WarpStart));
         world.Events.Add(43.5f, () => finalHelper?.PlayActionTimeline(ActionTimelineId.WarpStart));
         world.Events.Add(45.5f, () => finalHelper?.Despawn());  // despawn signal t=43.591s
-        world.Events.Add(47.5f, () => CheckTethersExpired(tethersShort));             // tethers applied t=30.2, 18s life → expire 48.2
         world.Events.Add(54f, OmegaFaceNorth);
         world.Events.Add(54.1f, () => DropHelloPuddle(state.NearWorldRole, true));
         world.Events.Add(54.1f, () => DropHelloPuddle(state.FarWorldRole, false));
@@ -128,30 +125,31 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
         world.Events.Add(56.6f, () => beetle?.PlayActionTimeline(ActionTimelineId.WarpStart));
         world.Events.Add(58.6f, () => beetle?.Despawn());
         world.Events.Add(58.2f, () => omega?.SetTargetable(true));
-        world.Events.Add(65.1f, () => CheckTethersExpired(tethersLong));             // tethers expire t=30.2+36=66.2
+        // Keeps the run open past the long tethers' expiry (66.2); the session ends once Events runs dry.
+        world.Events.Add(67f, () => { });
     }
     
+    public void OnTetherEnded(TetherEnded ended) => ResolveHwTether(ended);
+    public void OnActionResolved(ActionResolved resolved) => helloWorldFailures.OnActionResolved(resolved);
+    public void OnStatusLost(StatusLost lost) => helloWorldFailures.OnStatusLost(lost);
+    public void OnStatusAdded(StatusAdded added) => helloWorldFailures.OnStatusAdded(added);
+
     public void Tick(float delta, float elapsed)
     {
-        TickTethers(tethersLong, tether => tether.StretchLt(Geometry.HwTetherBreakDistance));
-        TickTethers(tethersShort, tether => tether.StretchGt(Geometry.HwTetherBreakDistance));
     }
 
-
-    private void TickTethers(List<SimTether> tethers, Predicate<SimTether> breakCondition)
+    // UNVERIFIED for Expired: no pull lets a tether run out; every fail follows a holder's death.
+    // A prep tether runs out into its real one, so only a death fails it.
+    private void ResolveHwTether(TetherEnded ended)
     {
-        var dead = tethers.Where(SimTether.IsAnyDead).ToList();
-        dead.ForEach(OnTetherFailed);
-        dead.ForEach(tether => tethers.Remove(tether));
-               
-        
-        var broken = tethers.Where(breakCondition.Invoke).ToList();
-        broken.ForEach(OnTetherBroken);
-        broken.ForEach(tether =>
+        var tetherId = ended.Tether.TetherId;
+        if (tetherId is TetherId.HWPrepRemote or TetherId.HWPrepLocal)
         {
-            var a= tethers.Remove(tether);
-            Plugin.Log.Info($"Removed {a} tether");
-        });
+            if (ended.Reason == TetherEndReason.EndDied) ExplodeHwTether(ended.Tether, Actions.HwTetherFail);
+            return;
+        }
+        if (tetherId is not (TetherId.HWRemote or TetherId.HWLocal)) return;
+        ExplodeHwTether(ended.Tether, ended.Reason == TetherEndReason.Stretched ? Actions.HwTetherBreak : Actions.HwTetherFail);
     }
 
 
@@ -269,38 +267,22 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
         var targets = new SimCharacter[8];
         for (int i = 0; i < 8; i++) targets[i] = party.Get(state.TetherOrder[i])!;
 
-        tethersShort =
-        [
-            world.Tether(targets[0], targets[1], TetherId.HWRemote, 18f, StatusId.HWRemoteTether),
-            world.Tether(targets[2], targets[3], TetherId.HWRemote, 18f, StatusId.HWRemoteTether)
-        ];
-        tethersLong =
-        [
-            world.Tether(targets[4], targets[5], TetherId.HWLocal,  36f, StatusId.HWLocalTether),
-            world.Tether(targets[6], targets[7], TetherId.HWLocal,  36f, StatusId.HWLocalTether)
-        ];
+        world.Tether(targets[0], targets[1], TetherId.HWRemote, 18f, StatusId.HWRemoteTether)
+            .BreaksWhen(t => t.StretchGt(Geometry.HwTetherBreakDistance));
+        world.Tether(targets[2], targets[3], TetherId.HWRemote, 18f, StatusId.HWRemoteTether)
+            .BreaksWhen(t => t.StretchGt(Geometry.HwTetherBreakDistance));
+        world.Tether(targets[4], targets[5], TetherId.HWLocal,  36f, StatusId.HWLocalTether)
+            .BreaksWhen(t => t.StretchLt(Geometry.HwTetherBreakDistance));
+        world.Tether(targets[6], targets[7], TetherId.HWLocal,  36f, StatusId.HWLocalTether)
+            .BreaksWhen(t => t.StretchLt(Geometry.HwTetherBreakDistance));
     }
 
-    private void OnTetherBroken(SimTether tether)
+    private void ExplodeHwTether(SimTether tether, EnemyAction explosion)
     {
-        if (tether.Resolved) return;
-        if (tether.A is not { } a || tether.B is not { } b) return;
-        Plugin.Log.Info($"Tether broken {tether.TetherId}");
-        tether.Resolved = true;
-        SpawnHwTetherHelper(a, Actions.HwTetherBreak);
-        SpawnHwTetherHelper(b, Actions.HwTetherBreak);
         tether.Despawn();
-    }
-
-    private void OnTetherFailed(SimTether tether)
-    {
-        if (tether.Resolved) return;
         if (tether.A is not { } a || tether.B is not { } b) return;
-        Plugin.Log.Info($"Tether failed {tether.TetherId}");
-        tether.Resolved = true;
-        SpawnHwTetherHelper(a, Actions.HwTetherFail);
-        SpawnHwTetherHelper(b, Actions.HwTetherFail);
-        tether.Despawn();
+        SpawnHwTetherHelper(a, explosion);
+        SpawnHwTetherHelper(b, explosion);
     }
 
     // Casts on a helper spawned the same frame play no animation, so every helper exists well
@@ -312,7 +294,7 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
         monitorHelpers = Enumerable.Range(0, 4).Select(_ => SpawnHelper()).ToList();
         nearHelloHelper = SpawnHelper();
         farHelloHelper = SpawnHelper();
-        holderDeaths.SpawnHelpers();
+        helloWorldFailures.SpawnHelpers();
     }
 
     private SimEnemy? SpawnHelper()
@@ -470,12 +452,6 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
         omega?.SetModeAttributeFlags(0x32);
         omega?.SetModelState(0x00);
         omega?.SetRotation(MathF.PI);
-    }
-
-    private void CheckTethersExpired(List<SimTether> tethers)
-    {
-        foreach (var t in tethers)
-            if (!t.Resolved) OnTetherFailed(t);
     }
 
     private void DropHelloPuddle(PartyRole role, bool near)

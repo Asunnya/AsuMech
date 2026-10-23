@@ -89,6 +89,9 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
         Titan();
     }
 
+    public void OnActionResolved(ActionResolved resolved) => LeaveWhirlwindBehindMistralSong(resolved);
+    public void OnStatusLost(StatusLost lost) => SuperCyclone.FollowMesohigh(world, lost, dummies[0]);
+
     public void Tick(float delta, float elapsed)
     {
         if (razorPlumesCircling is { } circling)
@@ -387,8 +390,8 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
 
         world.Events.Add(20.47f, () =>
         {
-            state.ChiradaMistralSong = chirada?.Cast(Actions.MistralSongSuparnaChirada, state.PlayerMistralSongs[0]);
-            state.SuparnaMistralSong = suparna?.Cast(Actions.MistralSongSuparnaChirada, state.PlayerMistralSongs[1]);
+            chirada?.Cast(Actions.MistralSongSuparnaChirada, state.PlayerMistralSongs[0]);
+            suparna?.Cast(Actions.MistralSongSuparnaChirada, state.PlayerMistralSongs[1]);
         });
 
         world.Events.Add(20.60f, () =>
@@ -407,12 +410,6 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
 
         world.Events.Add(22.60f, () => razorPlumesCircling = 0f);
 
-        world.Events.Add(23.57f, () =>
-        {
-            if (state.ChiradaMistralSong?.Hits is [var chiradaHit, ..]) dummies[11]?.Cast(Actions.GreatWhirlwind, chiradaHit.At);
-            if (state.SuparnaMistralSong?.Hits is [var suparnaHit, ..]) dummies[12]?.Cast(Actions.GreatWhirlwind, suparnaHit.At);
-        });
-
         world.Events.Add(24.47f, () => garuda?.PlayActionTimeline(ActionTimelineId.WarpStart2));
 
         utils.FeatherRain([() => dummies[0], () => dummies[1], () => dummies[2], () => dummies[3], () => dummies[5]], 24.47f, 26.00f, state.FeatherRainTargets, () => state.PlayerGaol);
@@ -423,30 +420,8 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
 
         world.Events.Add(37.72f, () =>
         {
-            state.MesohighTether!.Resolved = true;
-            var holder = state.MesohighTether.B;
-            state.MesohighHolder = holder;
-            garuda?.Cast(Actions.Mesohigh, holder);
+            garuda?.Cast(Actions.Mesohigh, state.MesohighTether!.B);
             state.MesohighTether.Despawn();
-
-            // After the cast: Mesohigh checks Thermal Low as it resolves, inside Cast().
-            if (holder?.FindStatus(StatusId.ThermalLow) is { Stacks: var thermalLowStacks and > 0 })
-            {
-                holder.RemoveStatus(StatusId.ThermalLow);
-                state.MesohighThermalLowStacks = thermalLowStacks;
-            }
-        });
-
-        world.Events.Add(38.75f, () =>
-        {
-            if (state.MesohighThermalLowStacks > 0 && state.MesohighHolder is { } holder)
-                dummies[0]?.SetPosition(holder.Position);
-        });
-
-        world.Events.Add(38.82f, () =>
-        {
-            if (state.MesohighThermalLowStacks > 0)
-                dummies[0]?.Cast(Actions.SuperCyclone(state.MesohighThermalLowStacks));
         });
 
         world.Events.Add(40.88f, () =>
@@ -625,6 +600,14 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
             );
 
         return enemy;
+    }
+
+    private void LeaveWhirlwindBehindMistralSong(ActionResolved resolved)
+    {
+        if (resolved.Action.ActionId != ActionId.MistralSongSuparnaChirada || resolved.Hits is not [var front, ..]) return;
+        var whirlwind = resolved.Caster == chirada ? dummies[11] : resolved.Caster == suparna ? dummies[12] : null;
+        var at = front.Position;
+        world.Events.Add(3.1f, () => whirlwind?.Cast(Actions.GreatWhirlwind, at));
     }
 
     private void DespawnRazorPlumes()

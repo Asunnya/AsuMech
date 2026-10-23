@@ -112,17 +112,17 @@ public static class UmadActions
         Timing = new() { DamageDelay = 1.1f },
     };
 
-    private static readonly EnemyAction TheRiverOfLight = new(UmadConstants.ActionId.TheRiverOfLight)
+    public static readonly EnemyAction TheRiverOfLight = new(UmadConstants.ActionId.TheRiverOfLight)
     {
         Cast = new() { AnimationLock = 1.1f },
         Effects = [Damage(MagicVulns, Lethal)],
-        DeathExplanation = "a tower not taken by exactly two",
+        DeathExplanation = "a tower taken by fewer than two",
     };
 
     public static readonly EnemyAction ThePathOfLight = new(UmadConstants.ActionId.ThePathOfLight)
     {
         Cast = new() { AnimationLock = 1.1f },
-        Effects = [FollowUp(TheRiverOfLight, ctx => ctx.Hits.Count != 2)],
+        Effects = [Damage(Harmless)],
         Timing = new() { DamageDelay = 0.64f },
     };
 
@@ -232,7 +232,7 @@ public static class UmadActions
         Timing = new() { DamageDelay = 0.48f },
     };
 
-    private static readonly EnemyAction UnmitigatedImpact = new(UmadConstants.ActionId.UnmitigatedImpact)
+    public static readonly EnemyAction UnmitigatedImpact = new(UmadConstants.ActionId.UnmitigatedImpact)
     {
         Cast = new() { AnimationLock = 1.1f },
         Effects = [Damage(MagicVulns, Lethal)],
@@ -246,7 +246,6 @@ public static class UmadActions
         [
             Damage(MagicVulns, split: Stack(2)),
             ApplyStatus(UmadConstants.StatusId.MagicVulnerabilityUp, 3f),
-            FollowUp(UnmitigatedImpact, ctx => ctx.Hits.Count == 0),
         ],
         Timing = new() { DamageDelay = 0.17f },
     };
@@ -292,8 +291,8 @@ public static class UmadActions
         Effects =
         [
             Push(VacuumWavePush, 40f, pushDelay: 1.06f),
-            RemoveStatus(UmadConstants.StatusId.Headwind),
-            RemoveStatus(UmadConstants.StatusId.Tailwind),
+            RemoveStatus(UmadConstants.StatusId.Headwind, atImpact: true),
+            RemoveStatus(UmadConstants.StatusId.Tailwind, atImpact: true),
         ],
         Timing = new() { DamageDelay = 1.14f },
     };
@@ -478,22 +477,25 @@ public static class UmadActions
     // -- P5 Celestriad --
 
     public static readonly EnemyAction CelestriadFireTower = CelestriadTower(
-        UmadConstants.ActionId.CelestriadFireIII, UmadConstants.ActionId.StardustFireIII, UmadConstants.StatusId.FireResistanceDownII);
+        UmadConstants.ActionId.CelestriadFireIII, UmadConstants.StatusId.FireResistanceDownII);
 
     public static readonly EnemyAction CelestriadIceTower = CelestriadTower(
-        UmadConstants.ActionId.CelestriadBlizzardIII, UmadConstants.ActionId.StardustBlizzardIII, UmadConstants.StatusId.IceResistanceDownII);
+        UmadConstants.ActionId.CelestriadBlizzardIII, UmadConstants.StatusId.IceResistanceDownII);
 
     public static readonly EnemyAction CelestriadLightningTower = CelestriadTower(
-        UmadConstants.ActionId.CelestriadThunderIII, UmadConstants.ActionId.StardustThunderIII, UmadConstants.StatusId.LightningResistanceDownII);
+        UmadConstants.ActionId.CelestriadThunderIII, UmadConstants.StatusId.LightningResistanceDownII);
 
-    private static EnemyAction CelestriadTower(uint actionId, uint stardustId, ushort resistanceDown) => new(actionId)
+    public static readonly EnemyAction StardustFireIII = Stardust(UmadConstants.ActionId.StardustFireIII);
+    public static readonly EnemyAction StardustBlizzardIII = Stardust(UmadConstants.ActionId.StardustBlizzardIII);
+    public static readonly EnemyAction StardustThunderIII = Stardust(UmadConstants.ActionId.StardustThunderIII);
+
+    private static EnemyAction CelestriadTower(uint actionId, ushort resistanceDown) => new(actionId)
     {
         Cast = new() { AnimationLock = 1.1f },
         Effects =
         [
             Damage(VulnerableTo(resistanceDown), split: Stack(2)),
             ApplyStatus(resistanceDown, 20f, delayToEffectResult: true),
-            FollowUp(Stardust(stardustId), ctx => ctx.Hits.Count == 0),
         ],
         Timing = new() { DamageDelay = 0.64f },
     };

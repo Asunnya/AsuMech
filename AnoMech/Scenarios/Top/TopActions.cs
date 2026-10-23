@@ -234,7 +234,6 @@ public static class TopActions
     };
 
     // -- Hello World --
-    // Above the soaks, whose FollowUp captures it at initialization.
     public static readonly EnemyAction HelloWorldFail = new(ActionId.HelloWorldFail)
     {
         Cast = new() { AnimationLock = 1.1f },
@@ -254,9 +253,8 @@ public static class TopActions
         Effects =
         [
             Damage(MagicVulns),
-            ApplyStatusOrOverload(StatusId.QuickeningDynamis, maxStacks: 3),
+            ApplyStatus(StatusId.QuickeningDynamis, 0f),
             ApplyStatus(StatusId.MagicVulnerabilityUp, 4.96f),
-            FollowUp(HelloWorldFail, when: ctx => ctx.Hits.Count != 1 || ctx.Hits.Any(ctx.IsKilled)),
         ],
     };
 

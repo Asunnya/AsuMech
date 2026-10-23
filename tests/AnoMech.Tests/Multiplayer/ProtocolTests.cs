@@ -11,7 +11,7 @@ public class ProtocolTests
 {
     // The peer types a relay passes from peers to the host; the rest are the host's alone.
     private static readonly string[] PeerTypes = ["hello", "claim", "release", "pose", "pong", "startCheckResponse", "startAbort", "entered",
-        "sessionEnded", "resetRequest", "leaveRequest", "peerAppliedEnemyStatus", "peerAppliedRoleStatus", "streamGap", "streamLost"];
+        "sessionEnded", "resetRequest", "leaveRequest", "peerAppliedEnemyStatus", "peerAppliedRoleStatus", "streamGap", "streamLost", "acted"];
 
     // Host messages are only typed by RelayWire; the rest falls to deserialization.
     [Test]
@@ -28,7 +28,7 @@ public class ProtocolTests
     public void FullEightPlayerSnapshotIsAccepted()
     {
         var id = RelayWire.PeerId(RelayWire.NewSecret());
-        var role = new RoleState(default, 0, 0, 0, 0);
+        var role = new RoleState(default, 0, 0, 0, 0, 0, 0, false);
         var message = new RolesSnapshotMessage(Enumerable.Repeat(role, 8).ToList());
         Assert.That(RelayWire.Validate(JsonSerializer.SerializeToUtf8Bytes<MpMessage>(message), true, id), Is.EqualTo("rolesSnapshot"));
     }

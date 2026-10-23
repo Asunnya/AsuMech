@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AnoMech.Core;
+using AnoMech.Core.Native.Interfaces;
 using AnoMech.Core.SimObjects;
 
 namespace AnoMech.Multiplayer;
@@ -73,6 +74,7 @@ public sealed partial class MultiplayerManager
         if (gameEventsSubscribed) return;
         gameEventsSubscribed = true;
         Plugin.Game.InstanceExited += OnInstanceExited;
+        Natives.UserActions.Acted += OnActed;
         Plugin.Game.World.Announced += text =>
         {
             if (!IsHost || stream == null) return;
@@ -136,6 +138,8 @@ public sealed partial class MultiplayerManager
         if (hostStageSetFor < StageSettleSeconds) return;
         pendingEntered = null;
         hostStageSetFor = null;
+        // What the stage sent goes ahead of the Start; everything after it is the run's.
+        FlushPackets(force: true);
         recorder!.Recording = true;
         DiagnosticLog.Info("[Multiplayer] Host: everyone is in -- starting the run.");
         Plugin.Game.StartScenario(p, OnHostStartResolved);
@@ -206,6 +210,7 @@ public sealed partial class MultiplayerManager
             }
 
             if (deferredLeaveMs.Count > 0) ConfirmDeferredLeaves();
+            if (running && Plugin.Game.World.Map.IsInInstance) EndRunIfBehind();
         }
         else if (IsSessionNotFound)
         {
@@ -243,6 +248,7 @@ public sealed partial class MultiplayerManager
     private void TickRun(float deltaSeconds)
     {
         if (!running) return;
+        TrackOwnVelocity(deltaSeconds);
 
         if (IsHost)
         {
@@ -271,8 +277,7 @@ public sealed partial class MultiplayerManager
             if (!aiReplayStateSent) TrySendAiReplayState();
             SendMidRunUpdate();
             SendForcedMoves();
-            if (pendingRolesSend is null or { IsCompleted: true })
-                pendingRolesSend = SampleAndBroadcastRoles();
+            BroadcastRoles();
         }
         else
         {

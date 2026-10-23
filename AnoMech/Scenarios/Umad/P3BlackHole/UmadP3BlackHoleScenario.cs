@@ -68,7 +68,7 @@ public sealed class UmadP3BlackHoleScenario : IMultiplayerReplayable
         LastState = state;
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<UmadP3BlackHoleState>)AiStrats[idx]).Run(state, world);
-        
+
         PrimodialCrustsToResolve = 0;
 
        
@@ -150,6 +150,13 @@ public sealed class UmadP3BlackHoleScenario : IMultiplayerReplayable
     {
         world.Events.Add(147.09f, () => state.StackTargets.Get(0)?.AttachLockonVfx(LockonId.Stack));
         world.Events.Add(152.58f, () => state.StackTargets.Get(1)?.AttachLockonVfx(LockonId.Stack));
+    }
+
+    public void OnActionResolved(ActionResolved resolved)
+    {
+        // UNVERIFIED delay: no pull leaves a Stomp-a-Mole unsoaked.
+        Towers.ResolveTower(world, resolved, ActionId.StompAMole, UmadActions.UnmitigatedImpact, minSoakers: 1);
+        QueueCleansesForSpentCrusts(resolved);
     }
 
     public void Tick(float delta, float elapsed)
@@ -528,12 +535,14 @@ public sealed class UmadP3BlackHoleScenario : IMultiplayerReplayable
     // shot. Whoever it left at Meanest Existence without a crust, and didn't kill, spent theirs.
     private const float CleanseDelayAfterSpentCrust = 1.55f;
 
-    private void ShootNothingness(SimEnemy? hole, SimCharacter? target)
+    private static void ShootNothingness(SimEnemy? hole, SimCharacter? target) => hole?.Cast(UmadActions.Nothingness, target);
+
+    private void QueueCleansesForSpentCrusts(ActionResolved resolved)
     {
-        if (hole?.Cast(UmadActions.Nothingness, target) is not { } shot) return;
-        var spent = shot.Hits.Count(h => h.Who.HasStatus(StatusId.MeanestExistence)
-                                         && !h.Who.HasStatus(StatusId.PrimordialCrust)
-                                         && !h.Killed);
+        if (resolved.Action.ActionId != ActionId.Nothingness) return;
+        var spent = resolved.Hits.Count(h => h.HasStatus(StatusId.MeanestExistence)
+                                             && !h.HasStatus(StatusId.PrimordialCrust)
+                                             && !resolved.Killed.Contains(h));
         if (spent > 0)
             world.Events.Add(CleanseDelayAfterSpentCrust, () => PrimodialCrustsToResolve += spent);
     }

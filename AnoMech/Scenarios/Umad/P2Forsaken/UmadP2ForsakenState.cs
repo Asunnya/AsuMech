@@ -69,7 +69,11 @@ public sealed class UmadP2ForsakenState
 
     public int Rotation { get; }
 
-    public bool ReassignLockonsInRoleOrder { get; }
+    public const int TowerRounds = 8;
+
+    // Each tower's two new lockons, dealt to its soakers in PartyRole order; indexed as
+    // UmadP2ForsakenStateOverrides.TowerLockons.
+    public uint[][] TowerLockons { get; } = [];
     
     public Dictionary<PartyRole, uint> Lockons = [];
 
@@ -79,7 +83,6 @@ public sealed class UmadP2ForsakenState
         EndAttacks = overrides.EndAttacks.Select(e => e ?? NextEnd()).ToArray();
         NewNorth = overrides.NewNorth ?? rng.NextDirection();
         Rotation = overrides.Rotation ?? rng.NextSign();
-        ReassignLockonsInRoleOrder = overrides.ReassignLockonsInRoleOrder;
 
         var supportLockon = overrides.SupportLockon ?? rng.NextObj(LockonId.ForsakenChariot, LockonId.ForsakenCone);
         var dpsLockon = supportLockon == LockonId.ForsakenChariot ? LockonId.ForsakenCone : LockonId.ForsakenChariot;
@@ -91,7 +94,20 @@ public sealed class UmadP2ForsakenState
         Lockons[overrides.SupportStackRole ?? rng.NextObj(supports.ToArray())] = LockonId.ForsakenStack;
         Lockons[overrides.DpsStackRole ?? rng.NextObj(dps.ToArray())] = LockonId.ForsakenStack;
         DiagnosticLog.Info($"Lockon assigments: {string.Join(",", Enum.GetValues<PartyRole>().Select(r => Lockons[r]))}");
+
+        TowerLockons = Enumerable.Range(0, TowerRounds)
+            .SelectMany(round => rng.Shuffle(RoundLockons(round)).Chunk(2))
+            .Select((dealt, tower) => overrides.TowerLockons[tower] ?? dealt)
+            .ToArray();
     }
+
+    // The four lockons a round's towers hand out between them.
+    public static uint[] RoundLockons(int round) => round switch
+    {
+        6 => [LockonId.ForsakenStack, LockonId.ForsakenStack, LockonId.ForsakenCone, LockonId.ForsakenStack],
+        _ when round % 2 == 0 => [LockonId.ForsakenCone, LockonId.ForsakenCone, LockonId.ForsakenChariot, LockonId.ForsakenChariot],
+        _ => [LockonId.ForsakenStack, LockonId.ForsakenStack, LockonId.ForsakenCone, LockonId.ForsakenChariot],
+    };
 
     // Network-replay constructor: reconstructs the full state from values the
     // host already rolled and broadcast, instead of drawing fresh RNG. Used

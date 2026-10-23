@@ -21,6 +21,7 @@ public sealed class FruP4CrystallizeTimeAi : IScenarioAi<FruP4CrystallizeTimeSta
     private const float RunSpeed = 6f;
     private const float ReferenceScale = 10f / 23.74f;
     private const float SpreadClearance = 6f;
+    private const float FragmentClearance = 9f;
     private const float AeroKnockbackEndsAt = 27.45f;
     private const float StopCleansingAt = 41.1f;
     private const float ArrivalMargin = 0.25f;
@@ -235,7 +236,7 @@ public sealed class FruP4CrystallizeTimeAi : IScenarioAi<FruP4CrystallizeTimeSta
             for (var z = -18; z <= 18; z += 6)
             {
                 var spot = new Vector3(x, 0, z);
-                if (spot.Length() <= 18.5f && Vector3.Distance(spot, FragmentPosition) >= SpreadClearance) spots.Add(spot);
+                if (spot.Length() <= 18.5f && Vector3.Distance(spot, FragmentPosition) >= FragmentClearance) spots.Add(spot);
             }
         return spots.ToArray();
     }

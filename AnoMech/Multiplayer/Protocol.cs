@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using AnoMech.Core.Game.Party;
+using AnoMech.Core.Native.Interfaces;
 using AnoMech.Core.SimObjects;
 using AnoMech.Scenarios.Top;
 using AnoMech.Scenarios.Umad.P1TeleTrouncing;
 using AnoMech.Scenarios.Umad.P2Forsaken;
 using AnoMech.Scenarios.Umad.P3BlackHole;
+using FFXIVClientStructs.FFXIV.Client.Game;
 
 namespace AnoMech.Multiplayer;
 
@@ -62,6 +64,7 @@ namespace AnoMech.Multiplayer;
 [JsonDerivedType(typeof(PeerAppliedEnemyStatusMessage), "peerAppliedEnemyStatus")]
 [JsonDerivedType(typeof(PeerAppliedRoleStatusMessage), "peerAppliedRoleStatus")]
 [JsonDerivedType(typeof(KickMessage), "kick")]
+[JsonDerivedType(typeof(ActedMessage), "acted")]
 [JsonDerivedType(typeof(StreamStateMessage), "streamState")]
 [JsonDerivedType(typeof(StreamGapMessage), "streamGap")]
 [JsonDerivedType(typeof(StreamLostMessage), "streamLost")]
@@ -91,15 +94,22 @@ public sealed record StreamCursor(Guid PeerId, long Epoch, long Received);
 
 // The sender lacks the other end's messages from From on. From a peer, PeerId is the sender;
 // from the host, the peer whose stream it is.
-public sealed record StreamGapMessage(Guid PeerId, long From) : MpMessage, IUnsequencedMessage;
+public sealed record StreamGapMessage(Guid PeerId, long From) : MpMessage, IPeerMessage, IUnsequencedMessage;
 
 // The answer to a StreamGap that can't be filled any more: go on from Next. PeerId as StreamGap's.
-public sealed record StreamLostMessage(Guid PeerId, long Next) : MpMessage, IUnsequencedMessage;
+public sealed record StreamLostMessage(Guid PeerId, long Next) : MpMessage, IPeerMessage, IUnsequencedMessage;
 
 // Only the host legitimately sends these; DispatchCore drops one the relay says came from
 // elsewhere. A relay without "senderIdentity" can't attest, and the tag then defaults to
 // trusted.
 internal interface IHostOnlyMessage;
+
+// A peer may send these, naming itself: the only types RelayWire.PeerMessageTypes takes from a
+// peer, and the host drops one whose PeerId isn't its sender.
+internal interface IPeerMessage
+{
+    Guid PeerId { get; }
+}
 
 // One generic Dispatch case per interface instead of one per scenario (see IMultiplayerReplayable).
 internal interface IScenarioReplayStateMessage : IHostOnlyMessage;
@@ -107,8 +117,9 @@ internal interface IScenarioMidRunUpdateMessage : IHostOnlyMessage;
 
 // Peer -> host on connect. Version/Checksum catch a build mismatch before it desyncs. Stream*: the
 // peer's stream (a new epoch for each join) and how far it has taken the host's, -1 if not yet.
+// DebugBot: the peer's own debug bot plays its seat.
 public sealed record HelloMessage(Guid PeerId, string DisplayName, string Version, string Checksum, byte ClassJob = 0,
-    long StreamEpoch = 0, long StreamSent = 0, long StreamReceived = -1) : MpMessage, IUnsequencedMessage;
+    long StreamEpoch = 0, long StreamSent = 0, long StreamReceived = -1, bool DebugBot = false) : MpMessage, IPeerMessage, IUnsequencedMessage;
 
 public sealed record PeerBuildInfo(string Version, string Checksum)
 {
@@ -117,7 +128,8 @@ public sealed record PeerBuildInfo(string Version, string Checksum)
 
 // Full state, so a client that missed an update self-heals and a late joiner resolves the same
 // scenario/strat/waymark and clock. ScenarioSettings is the display summary; ScenarioSettingsJson
-// is the same overrides for a peer to actually apply (see ScenarioSettingsSync).
+// is the same overrides for a peer to actually apply (see ScenarioSettingsSync). DebugBots: the
+// players, the host included, whose own debug bot plays their seat.
 public sealed record LobbyStateMessage(
     Guid HostId,
     Dictionary<PartyRole, Guid> ClaimedBy,
@@ -130,15 +142,16 @@ public sealed record LobbyStateMessage(
     int SelectedWaymark,
     List<string>? ScenarioSettings = null,
     string? ScenarioSettingsJson = null,
-    RunClockState? Clock = null) : MpMessage, IHostOnlyMessage;
+    RunClockState? Clock = null,
+    List<Guid>? DebugBots = null) : MpMessage, IHostOnlyMessage;
 
 // The host's event clock when the message left. A peer starts its run from it instead of from
 // zero, which would leave it behind by the host's load time plus the travel time. FrameSeconds is
 // the host's average frame, part of the lead the peer takes on top.
 public sealed record RunClockState(float EventClock, float FrameSeconds);
 
-public sealed record ClaimRoleMessage(Guid PeerId, PartyRole Role) : MpMessage;
-public sealed record ReleaseRoleMessage(Guid PeerId) : MpMessage;
+public sealed record ClaimRoleMessage(Guid PeerId, PartyRole Role) : MpMessage, IPeerMessage;
+public sealed record ReleaseRoleMessage(Guid PeerId) : MpMessage, IPeerMessage;
 
 // The named peer leaves on receipt. Banned: the host also drops everything it sends afterwards,
 // a fresh Hello included, until unbanned.
@@ -148,7 +161,7 @@ public sealed record KickMessage(Guid PeerId, bool Banned = false) : MpMessage, 
 // with EnteredMessage; the host starts once all have.
 public sealed record EnterMessage : MpMessage, IHostOnlyMessage;
 
-public sealed record EnteredMessage(Guid PeerId) : MpMessage;
+public sealed record EnteredMessage(Guid PeerId) : MpMessage, IPeerMessage;
 
 public sealed record StartMessage(RunClockState? Clock = null) : MpMessage, IHostOnlyMessage;
 
@@ -156,17 +169,19 @@ public sealed record StartMessage(RunClockState? Clock = null) : MpMessage, IHos
 // instead of the peer's own start refusing it unseen.
 public sealed record StartCheckMessage : MpMessage, IHostOnlyMessage;
 
-public sealed record StartCheckResponseMessage(Guid PeerId, bool Ready, string? Reason) : MpMessage;
+public sealed record StartCheckResponseMessage(Guid PeerId, bool Ready, string? Reason) : MpMessage, IPeerMessage;
 
 // The start check is advisory (a host can skip it, and state changes in between), so the
 // receiver re-checks on Start; the host then ends the run for everyone and names the reason.
-public sealed record StartAbortMessage(Guid PeerId, string Reason) : MpMessage;
+public sealed record StartAbortMessage(Guid PeerId, string Reason) : MpMessage, IPeerMessage;
 
 // Peer -> host. Applied to that peer's SimNetworkPuppet and republished in the next Roles list.
-public sealed record SelfPoseMessage(Guid PeerId, float X, float Y, float Z, float Rotation) : MpMessage, IUnsequencedMessage;
+// VX/VZ: the player's own velocity over the ground, so the others' copies carry on at their pace
+// between poses and know when they stopped. Jumping: their own client has them in a jump.
+public sealed record SelfPoseMessage(Guid PeerId, float X, float Y, float Z, float Rotation, float VX, float VZ, bool Jumping) : MpMessage, IPeerMessage, IUnsequencedMessage;
 
 // The players' seats, the host's own included, where the host has them.
-public sealed record RoleState(PartyRole Role, float X, float Y, float Z, float Rotation);
+public sealed record RoleState(PartyRole Role, float X, float Y, float Z, float Rotation, float VX, float VZ, bool Jumping);
 
 public sealed record RolesSnapshotMessage(List<RoleState> Roles) : MpMessage, IHostOnlyMessage, IUnsequencedMessage;
 
@@ -196,7 +211,7 @@ public sealed record EndMessage(bool ReturnedToInn, string? Reason = null) : MpM
 public sealed record PingMessage(long SentAtMs, long StreamSent = 0, List<StreamCursor>? StreamReceived = null, RunClockState? Clock = null)
     : MpMessage, IHostOnlyMessage, IUnsequencedMessage;
 
-public sealed record PongMessage(Guid PeerId, long SentAtMs, long StreamEpoch = 0, long StreamSent = 0, long StreamReceived = -1) : MpMessage, IUnsequencedMessage;
+public sealed record PongMessage(Guid PeerId, long SentAtMs, long StreamEpoch = 0, long StreamSent = 0, long StreamReceived = -1) : MpMessage, IPeerMessage, IUnsequencedMessage;
 
 public sealed record PeerStatusEntry(float? LatencyMs, float SecondsSinceLastSeen);
 
@@ -204,14 +219,14 @@ public sealed record PeerStatusMessage(Dictionary<Guid, PeerStatusEntry> Statuse
 
 // From whoever clicks Leave session. Ends the session for everyone only when
 // PeerId == Session.HostId; a departing peer is just dropped from the roster.
-public sealed record SessionEndedMessage(Guid PeerId) : MpMessage;
+public sealed record SessionEndedMessage(Guid PeerId) : MpMessage, IPeerMessage;
 
 // Peer -> host. The host resets its authoritative run, which reaches everyone via EndMessage.
-public sealed record ResetRequestMessage(Guid PeerId) : MpMessage;
+public sealed record ResetRequestMessage(Guid PeerId) : MpMessage, IPeerMessage;
 
 // Peer -> host: end the run for everyone; the session stays up. SessionEndedMessage instead
 // disconnects the sender.
-public sealed record LeaveRequestMessage(Guid PeerId) : MpMessage;
+public sealed record LeaveRequestMessage(Guid PeerId) : MpMessage, IPeerMessage;
 
 // The host's per-run rolls, the subset UmadP3BlackHoleAi reads (UmadP3BlackHoleState
 // .FromNetworkReplay). ThunderSet1/2 carry the host's real plan so a debug-bot peer
@@ -331,8 +346,12 @@ public sealed record UltimatePredationAiReplayStateMessage(
 
 // Peer -> host: an enemy debuff (Reprisal) applied locally; the peer's enemy doppels
 // are cosmetic, so this is how the host's enemy gets the debuff. Enemies by host entity id.
-public sealed record PeerAppliedEnemyStatusMessage(Guid PeerId, List<uint> Enemies, ushort StatusId, float Duration) : MpMessage;
+public sealed record PeerAppliedEnemyStatusMessage(Guid PeerId, List<uint> Enemies, ushort StatusId, float Duration, ushort Param = 0) : MpMessage, IPeerMessage;
 
 // Party counterpart, the peer's own role included: a peer's presses land only on its own
 // client, and the host decides who lives from the statuses on its own copies.
-public sealed record PeerAppliedRoleStatusMessage(Guid PeerId, List<PartyRole> Roles, ushort StatusId, float Duration, ushort Param = 0) : MpMessage;
+public sealed record PeerAppliedRoleStatusMessage(Guid PeerId, List<PartyRole> Roles, ushort StatusId, float Duration, ushort Param = 0) : MpMessage, IPeerMessage;
+
+// Peer -> host: a step of this player's own action (IUserActions.Acted), which the host shows on
+// the peer's seat for the rest of the party. Target names an actor as a GamePacket does.
+public sealed record ActedMessage(Guid PeerId, PlayerActionStep Step, ActionType ActionType, uint ActionId, uint Target, float CastSeconds) : MpMessage, IPeerMessage;
