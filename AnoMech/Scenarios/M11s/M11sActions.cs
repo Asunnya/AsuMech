@@ -322,8 +322,8 @@ public static class M11sActions
         DeathExplanation = "stay out of the portal's meteor line",
     };
 
-    // UNVERIFIED: how far the tether must stretch; closer and its line kills its target.
-    public const float MeteowrathStretch = 48f;
+    // The tether shows stretched from about 47y; closer and its line kills its target.
+    public const float MeteowrathStretch = 47f;
 
     public static readonly EnemyAction MajesticMeteowrath = new(ActionId.MajesticMeteowrath)
     {
@@ -380,8 +380,8 @@ public static class M11sActions
         DeathExplanation = "only the far corner of the safe platform survives",
     };
 
-    // UNVERIFIED: how close is lethal.
-    public const float MammothLethalWithin = 15f;
+    // UNVERIFIED: how close is lethal; 21y from it only hurts.
+    public const float MammothLethalWithin = 18f;
 
     public static readonly EnemyAction MammothMeteor = new(ActionId.MammothMeteor)
     {
@@ -417,7 +417,7 @@ public static class M11sActions
 
     public static readonly EnemyAction EclipticUnmitigatedExplosion = UnmitigatedTowerExplosion with { ActionId = ActionId.EclipticUnmitigatedExplosion };
 
-    // UNVERIFIED: how far the tether must stretch.
+    // The tether shows stretched from about 40y.
     public const float EclipticWrathStretch = 40f;
 
     public static readonly EnemyAction EclipticMeteowrath = MajesticMeteowrath with
@@ -440,11 +440,11 @@ public static class M11sActions
         DeathExplanation = "four in each line",
     };
 
-    // UNVERIFIED: never reached in the logs; the minimum.
+    // UNVERIFIED: never reached in the logs; all eight must stand in it.
     public static readonly EnemyAction HeartbreakKickTower = new(ActionId.HeartbreakKickTower)
     {
         Cast = new() { AnimationLock = 0.2f, FaceTarget = false },
-        Effects = [Damage(split: Stack(6))],
+        Effects = [Damage(split: Stack(8))],
         Timing = new() { DamageDelay = 0.3f },
         DeathExplanation = "everyone in the tower for every kick",
     };

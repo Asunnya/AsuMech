@@ -54,9 +54,7 @@ public class M11sEclipticScenarioTests
     public void LeavingTheKickTowerShortKillsThoseInIt()
         => Negative<Scenario>(MeleeDpsA)
             .TeleportAt(Scenario.KickCastAt[0] + 1f, to: new Vector2(15f, 15f))
-            .MoveBotAt(Scenario.KickCastAt[0] + 1f, MeleeDpsB, new Vector2(-15f, 15f))
-            .MoveBotAt(Scenario.KickCastAt[0] + 1f, CasterDps, new Vector2(15f, -15f))
-            .ShouldKill(ActionId.HeartbreakKickTower, MainTank, OffTank, RegenHealer, ShieldHealer, PhysRangedDps);
+            .ShouldKill(ActionId.HeartbreakKickTower, MainTank, OffTank, RegenHealer, ShieldHealer, MeleeDpsB, PhysRangedDps, CasterDps);
 
     private static IEnumerable<int> Seeds() => Enumerable.Range(0, 40);
 
