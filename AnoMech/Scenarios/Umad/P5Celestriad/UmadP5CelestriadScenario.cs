@@ -89,6 +89,14 @@ public sealed class UmadP5CelestriadScenario : IMultiplayerReplayable
         world.Events.Add(29.44f, DespawnAll);
     }
 
+    // UNVERIFIED delay: no pull leaves a Celestriad tower unsoaked.
+    public void OnActionResolved(ActionResolved resolved)
+    {
+        Towers.ResolveTower(world, resolved, ActionId.CelestriadFireIII, UmadActions.StardustFireIII, minSoakers: 1);
+        Towers.ResolveTower(world, resolved, ActionId.CelestriadBlizzardIII, UmadActions.StardustBlizzardIII, minSoakers: 1);
+        Towers.ResolveTower(world, resolved, ActionId.CelestriadThunderIII, UmadActions.StardustThunderIII, minSoakers: 1);
+    }
+
     public void Tick(float delta, float elapsed) { }
 
     private void SpawnKefka()

@@ -32,7 +32,7 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
     private TopP5SigmaState state = null!;
     private SimWorld world = null!;
     private SimParty party = null!;
-    private HelloWorldHolderDeaths holderDeaths = null!;
+    private HelloWorldFailures helloWorldFailures = null!;
     private SimEnemy?[] helpers = null!;
 
     // Exposed so MultiplayerManager can read the AI-relevant subset after a host Start and
@@ -45,7 +45,7 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
         party = worldParam.Party;
         state = new TopP5SigmaState(world.Rng, party, settingsWindow.Overrides);
         LastState = state;
-        holderDeaths = new HelloWorldHolderDeaths(world);
+        helloWorldFailures = new HelloWorldFailures(world);
         helpers = new SimEnemy?[6];
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<TopP5SigmaState>)AiStrats[idx]).Run(state, world);
@@ -66,6 +66,10 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
         Run_PlayerLockons();
     }
     
+    public void OnActionResolved(ActionResolved resolved) => helloWorldFailures.OnActionResolved(resolved);
+    public void OnStatusLost(StatusLost lost) => helloWorldFailures.OnStatusLost(lost);
+    public void OnStatusAdded(StatusAdded added) => helloWorldFailures.OnStatusAdded(added);
+
     public void Tick(float delta, float elapsed)
     {
     }
@@ -86,7 +90,7 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
     private void Run_OtherDebuffs()
     {
         state.DynamisTargets.ForEach(p => p.AddStatus(StatusId.QuickeningDynamis, stacks: 1));
-        world.Events.Add(0f, holderDeaths.SpawnHelpers);
+        world.Events.Add(0f, helloWorldFailures.SpawnHelpers);
         world.Events.Add(11.82f, () => state.HelloWorldTargets.Get(0)?.AddStatus(StatusId.HelloNearWorld, 56.000f));
         world.Events.Add(11.82f, () => state.HelloWorldTargets.Get(1)?.AddStatus(StatusId.HelloDistantWorld, 56.000f));
         world.Events.Add(28.39f, () => party.ForEachActive(member => member.AddStatus(StatusId.Looper, 18.000f)));
@@ -211,7 +215,6 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
         {
             var i = index;
             var target = state.WaveCannonTargets.Get(i);
-            var tower = state.Towers[i];
             var towerLocation = state.Towers[i]?.Position;
             var helloWorldOffset = i / 2;
             var solverId = i % 2;
@@ -219,17 +222,6 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
             world.Events.Add(1f, () => helpers[i] = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.OmegaHelper, NameId: BNpcNameId.OmegaBeetle, Level: 1, Targetable: false, EnemyList: EnemyListMode.Never, Visibility: SpawnVisibility.InvisibleHelper, Placement: new Placement(new Vector3(0.000f, 0.000f, 0.000f), -0.000f))));
             world.Events.Add(31.02f, () => FireWaveCannon(helpers[i], target));
             world.Events.Add(43.60f, () => helpers[i]?.SetPosition(new Placement(towerLocation ?? default, 0f)));
-            world.Events.Add(43.69f, () =>
-            {
-                if (towerLocation != null)
-                {
-                    var inTower = party.Find.InsideCircle(towerLocation.Value, Geometry.TowerRadius);
-                    helpers[i]?.Cast(tower?.MinPlayers == 1 ? Actions.StorageViolationSolo : Actions.StorageViolationPair);
-                    if (inTower.Count < tower?.MinPlayers)
-                        helpers[i]?.Cast(Actions.StorageViolationObliteration);
-                }
-            });
-        
             world.Events.Add(67.7f + helloWorldOffset, () => solvers[solverId].SetPosition(helpers[i]));
             world.Events.Add(67.8f + helloWorldOffset, () => solvers[solverId].CastSpell(helpers[i]));
         }
@@ -275,11 +267,23 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
             if (tower == null) continue;
             var eObjId = tower.MinPlayers == 1 ? EObjId.TowerSolo : EObjId.TowerPair;
             ushort[] stateIds = tower.MinPlayers == 1 ? [0x8, 0x10] : [0x8, 0x10, 0x20];
-            SimEventObject? eventObj_1EB83E_4000A6E8 = null;
+            SimTower? towerObject = null;
             var config = new EventObjectSpawnConfig { EObjId = eObjId, Placement = new Placement(tower.Position, -0.000f) };
-            world.Events.Add(33.64f, () => eventObj_1EB83E_4000A6E8 = world.SpawnTower(BindTowerLayout(config, 0x48), stateIds, EObjId.TowerStateUnk, Geometry.TowerRadius));
-            world.Events.Add(43.68f, () => eventObj_1EB83E_4000A6E8?.Despawn());
+            world.Events.Add(33.64f, () => towerObject = world.SpawnTower(BindTowerLayout(config, 0x48), stateIds, EObjId.TowerStateUnk, Geometry.TowerRadius));
+            world.Events.Add(43.68f, () =>
+            {
+                StorageViolation(helpers[i], towerObject, tower.MinPlayers);
+                towerObject?.Despawn();
+            });
         }
+    }
+
+    // An underfilled tower casts Obliteration in place of its Storage Violation.
+    private static void StorageViolation(SimEnemy? helper, SimTower? tower, int minPlayers)
+    {
+        if (tower is null) return;
+        helper?.Cast(tower.Occupants < minPlayers ? Actions.StorageViolationObliteration
+            : minPlayers == 1 ? Actions.StorageViolationSolo : Actions.StorageViolationPair);
     }
 
     // A tower on the 22.5°-offset ring is that spot's layout EObj, bound to the director. Its Arg2

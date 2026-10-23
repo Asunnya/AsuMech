@@ -46,11 +46,12 @@ public sealed partial class MultiplayerManager
     private void DrainPendingMessages()
     {
         var budget = NetGuard.MaxMessagesPerDrain;
-        while (budget-- > 0 && pendingMessages.TryDequeue(out var entry))
+        while (budget-- > 0 && !peerRunStartPending && pendingMessages.TryDequeue(out var entry))
         {
             Interlocked.Decrement(ref pendingMessageCount);
             if (entry.Message is RolesSnapshotMessage && pendingMessages.TryPeek(out var next) && next.Message is RolesSnapshotMessage)
                 continue;
+            if (!TakeFromStream(entry.Message, entry.SenderPeerId)) continue;
             Dispatch(entry.Message, entry.IsFromHost, entry.SenderId, entry.SenderPeerId);
         }
     }
@@ -64,6 +65,19 @@ public sealed partial class MultiplayerManager
             source.Dispose();
             relay = null;
             Interlocked.Exchange(ref helloSentMs, 0);
+            if (IsHost && SessionCode == null && hostFallbacks.TryDequeue(out var next))
+            {
+                DiagnosticLog.Warn($"[Multiplayer] Couldn't host at {RelayUrl} ({failure?.Message}) -- trying {next}.");
+                HostSessionCore(next);
+                return;
+            }
+            if (!IsHost && !everHeardFromHost && !joinRedirected && SessionCode != null
+                && failure is RelaySessionRejectedException { MovedTo: { } movedTo } && RelayGroup.IsRelayAddress(movedTo))
+            {
+                DiagnosticLog.Info($"[Multiplayer] Session {SessionCode} is at {movedTo} -- joining there.");
+                JoinSessionCore(movedTo, SessionCode, redirected: true);
+                return;
+            }
             disconnectedSinceMs ??= NowMs;
             if (failure != null)
             {
@@ -110,24 +124,6 @@ public sealed partial class MultiplayerManager
     // act on the real inn.
     private bool PeerInRun => !IsHost && running && peerEnteredInstance && Plugin.Game.World.Map.IsInInstance;
 
-    private static Guid? ClaimedPeerId(MpMessage message) => message switch
-    {
-        HelloMessage m => m.PeerId,
-        ClaimRoleMessage m => m.PeerId,
-        ReleaseRoleMessage m => m.PeerId,
-        SelfPoseMessage m => m.PeerId,
-        PongMessage m => m.PeerId,
-        StartCheckResponseMessage m => m.PeerId,
-        StartAbortMessage m => m.PeerId,
-        EnteredMessage m => m.PeerId,
-        SessionEndedMessage m => m.PeerId,
-        ResetRequestMessage m => m.PeerId,
-        LeaveRequestMessage m => m.PeerId,
-        PeerAppliedEnemyStatusMessage m => m.PeerId,
-        PeerAppliedRoleStatusMessage m => m.PeerId,
-        _ => null,
-    };
-
     private void DispatchCore(MpMessage message, bool isFromHost, uint senderId, Guid senderPeerId)
     {
         if (message is RelayRemovedPeers notice)
@@ -146,7 +142,7 @@ public sealed partial class MultiplayerManager
             DiagnosticLog.Warn($"[Multiplayer] Dropped {message.GetType().Name} -- relay says it wasn't from the host.");
             return;
         }
-        if (IsHost && ClaimedPeerId(message) is { } claimedId)
+        if (IsHost && message is IPeerMessage { PeerId: var claimedId })
         {
             // The relay stamps each message with the identity it derived from the sender's
             // secret, and RelayWire.Validate already refused a mismatch; checked again here.
@@ -163,18 +159,13 @@ public sealed partial class MultiplayerManager
                 // Repeat the kick and the relay ban for a banned client that rejoins or never got it.
                 if (message is HelloMessage)
                 {
-                    _ = relay?.SendAsync(new KickMessage(claimedId, Banned: true));
+                    _ = Send(new KickMessage(claimedId, Banned: true));
                     _ = relay?.ModerateAsync("ban", claimedId);
                 }
                 return;
             }
         }
-        // Host liveness: only types the host itself broadcasts (SessionEnded excluded, any peer
-        // can send it). Keep in sync with the `when !IsHost` cases below.
-        if (!IsHost && message is LobbyStateMessage or EnterMessage or StartMessage or GamePacketsMessage or RolesSnapshotMessage
-            or RoleKilledMessage or KnockbackMessage or TeleportMessage or PushMessage or CarryMessage or FollowMessage
-            or EndMessage or PingMessage or PeerStatusMessage or AnnouncementMessage
-            or IScenarioReplayStateMessage or IScenarioMidRunUpdateMessage or KickMessage)
+        if (!IsHost && isFromHost)
         {
             lastHostMessageMs = NowMs;
             everHeardFromHost = true;
@@ -191,12 +182,17 @@ public sealed partial class MultiplayerManager
                 }
                 peerLastSeenMs[hello.PeerId] = NowMs;
                 peerLastHelloMs[hello.PeerId] = NowMs;
+                answeredPingMs[hello.PeerId] = PingClockMs();
                 var build = new PeerBuildInfo(NetGuard.Clean(hello.Version), NetGuard.Clean(hello.Checksum));
                 Session.Names[hello.PeerId] = NetGuard.Clean(hello.DisplayName);
                 Session.Builds[hello.PeerId] = build;
                 Session.Jobs[hello.PeerId] = NetGuard.ClassJob(hello.ClassJob);
-                DiagnosticLog.Info($"[Multiplayer] Hello from {hello.PeerId} ({Session.NameOf(hello.PeerId)}), build {build.Version} ({build.ShortChecksum}), mismatch={IsVersionMismatched(hello.PeerId)}.");
+                SetDebugBot(hello.PeerId, hello.DebugBot);
+                DiagnosticLog.Info($"[Multiplayer] Hello from {hello.PeerId} ({Session.NameOf(hello.PeerId)}), build {build.Version} ({build.ShortChecksum}), mismatch={IsVersionMismatched(hello.PeerId)}, debug bot={hello.DebugBot}.");
+                // Before the lobby state, which a fresh join takes as its first message.
+                if (stream != null) Transmit(stream.Hello(hello.PeerId, hello.StreamEpoch, hello.StreamReceived));
                 BroadcastLobbyState();
+                lastRoles = null;
                 break;
             }
             case ClaimRoleMessage claim when IsHost:
@@ -219,6 +215,27 @@ public sealed partial class MultiplayerManager
             case PongMessage pong when IsHost:
                 peerLastSeenMs[pong.PeerId] = NowMs;
                 peerLatencyMs[pong.PeerId] = PingClockMs() - pong.SentAtMs;
+                answeredPingMs[pong.PeerId] = Math.Max(answeredPingMs.GetValueOrDefault(pong.PeerId), Math.Min(pong.SentAtMs, PingClockMs()));
+                if (stream?.Pong(pong.PeerId, pong.StreamEpoch, pong.StreamSent, pong.StreamReceived) is { } askPeer) Transmit(askPeer);
+                break;
+            case StreamGapMessage gap when IsHost:
+                if (stream != null) Transmit(stream.Resend(gap.PeerId, gap.From));
+                break;
+            case StreamGapMessage gap when gap.PeerId == MyPeerId:
+                if (stream != null) Transmit(stream.Resend(senderPeerId, gap.From));
+                break;
+            case StreamLostMessage lost when IsHost:
+                DiagnosticLog.Warn($"[Multiplayer] {Session.NameOf(lost.PeerId)} no longer has the messages this host missed -- going on from #{lost.Next}.");
+                stream?.Lost(lost.PeerId, lost.Next, lost.Epoch);
+                break;
+            case StreamLostMessage lost when lost.PeerId == MyPeerId:
+                OnHostStreamLost(senderPeerId, lost.Next);
+                break;
+            case StreamStateMessage state when !IsHost && state.PeerId == MyPeerId:
+                if (stream != null) Transmit(stream.State(senderPeerId, state.StreamEpoch, state.Sent, state.Received));
+                break;
+            case ActedMessage acted when IsHost:
+                OnPeerActed(acted);
                 break;
             // Mitigation reports put statuses on the host's own characters: seated peers only,
             // known ids only, durations clamped.
@@ -240,7 +257,8 @@ public sealed partial class MultiplayerManager
                         DiagnosticLog.Warn($"[Multiplayer] Host: {who} reported status {applied.StatusId} on unknown enemy 0x{entityId:X} -- dropping.");
                         continue;
                     }
-                    enemy.AddStatus(applied.StatusId, duration);
+                    enemy.RemoveStatus(applied.StatusId);
+                    enemy.AddStatusParam(applied.StatusId, applied.Param, duration);
                     DiagnosticLog.Info($"[Multiplayer] Host: applied {who}'s reported status {applied.StatusId} (duration={duration:F1}) to enemy 0x{entityId:X}.");
                 }
                 break;
@@ -279,6 +297,7 @@ public sealed partial class MultiplayerManager
 
             case LobbyStateMessage lobby when !IsHost:
                 Session.ApplyLobbyState(lobby);
+                TagBotSeats();
                 NoteHelloAcknowledged();
                 ApplyHostScenarioSettings();
                 LobbyChanged?.Invoke();
@@ -346,8 +365,14 @@ public sealed partial class MultiplayerManager
                 OnEndReceived(end);
                 break;
             case PingMessage ping when !IsHost:
-                _ = relay?.SendAsync(new PongMessage(MyPeerId, ping.SentAtMs));
+            {
+                var (epoch, sent, received) = stream?.PongFields(senderPeerId) ?? (0, 0, -1);
+                Transmit(new PongMessage(MyPeerId, ping.SentAtMs, epoch, sent, received));
+                var ours = NetGuard.Cap(ping.StreamReceived, NetGuard.MaxSessionPeers).FirstOrDefault(c => c?.PeerId == MyPeerId);
+                if (stream?.Ping(senderPeerId, ping.StreamSent, ours) is { } askHost) Transmit(askHost);
+                if (peerRunStarted && ping.Clock is { } clock) pingClock = (clock, Time.GetTimestamp());
                 break;
+            }
             case PeerStatusMessage status when !IsHost:
                 peerStatuses.Clear();
                 foreach (var (id, entry) in status.Statuses)

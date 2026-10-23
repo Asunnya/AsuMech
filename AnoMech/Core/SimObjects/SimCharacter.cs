@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using AnoMech.Core.EnemyActions;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Motion;
 using AnoMech.Core.Native.Interfaces;
 using AnoMech.Core.UserActions;
-using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 
@@ -66,8 +66,17 @@ public abstract partial class SimCharacter : ISimObject, IPositioned
 
     public virtual void Despawn()
     {
-        statusList.Despawn();
+        EndStatuses(null);
         Motion.Clear();
+    }
+
+    // Set by whoever seats or spawns the character in a world.
+    internal SimEvents? SimEvents { get; set; }
+
+    private void EndStatuses(StatusLossReason? reason)
+    {
+        foreach (var status in statusList) status.End(reason);
+        statusList.Clear();
     }
 
     // -------------------------
@@ -148,7 +157,12 @@ public abstract partial class SimCharacter : ISimObject, IPositioned
     // Replay: ActorControl 0xF1 on the carried character, p1/p2 the quantized destination (UMAD P1
     // arrows); chained carries ~1s apart, each after the first following 0xE5 WarpEnd.
     // Sim: 0xF1 for player and bot alike; no ActorMove while it plays.
-    public void CarryTo(Vector3 destination) => Force(new ForcedMove.Carry(destination));
+    public void CarryTo(Vector3 destination, ushort? timeline = null) => Force(new ForcedMove.Carry(destination, timeline));
+
+    // Replay (FRU P2 Frost Armor): ActorControl 0xDF on every sliding player, p1/p2 the quantized
+    // destination and the slide's heading, p4 ActionTimeline icefloor_short.
+    // Sim: 0xDF for player and bot alike; no ActorMove while it plays.
+    public void IceSlideTo(Vector3 destination, float durationSeconds) => Force(new ForcedMove.IceSlide(destination, durationSeconds));
 
     // A mechanic's snap, which a remote player's own client has to make; SetPosition is the
     // engine-side one. Replay and sim: ActorSetPos.
@@ -188,10 +202,16 @@ public abstract partial class SimCharacter : ISimObject, IPositioned
     // gain flytext to the caller, e.g. an ActionEffect's status entry. hidden keeps a new status out
     // of the status list until SimStatus.Reveal; refreshing one the client already shows ignores it.
     public SimStatus? AddStatus(ushort statusId, float duration = 0f, int stacks = 1, bool overrideStacks = false, GameObjectId sourceObject = default, bool broadcastAddEvent = true, bool hidden = false)
+        => AddStatus(statusId, duration, stacks, overrideStacks, sourceObject, broadcastAddEvent, hidden, appliedBy: null);
+
+    // appliedBy: the action whose effect applies it, for StatusAdded.
+    internal SimStatus? AddStatus(ushort statusId, float duration, int stacks, bool overrideStacks, GameObjectId sourceObject, bool broadcastAddEvent,
+        bool hidden, (EnemyAction Action, SimCharacter Caster)? appliedBy)
     {
         Core.DiagnosticLog.Info($"[SimCharacter] AddStatus: {DiagnosticName} gets status {statusId} (duration={duration:F1}, stacks={stacks}, overrideStacks={overrideStacks}, source=0x{sourceObject.ObjectId:X}).");
         if (FindStatus(statusId, sourceObject) is {} status)
         {
+            var previous = status.Stacks;
             // overrideStacks: stacks is the absolute target; otherwise it's a
             // relative delta (negative consumes stacks).
             int delta = overrideStacks ? stacks - status.Stacks : stacks;
@@ -205,19 +225,34 @@ public abstract partial class SimCharacter : ISimObject, IPositioned
                 return null;
             }
             if (status.Slot >= 0 && !status.Hidden) statusListChanged = true;
+            // Consuming a stack or holding an override where it is applies nothing.
+            if (overrideStacks ? status.Stacks > previous : stacks > 0) RaiseStatusAdded(status, previous, appliedBy);
             return status;
         }
 
         // No existing status: a non-positive request has nothing to remove.
         if (stacks <= 0) return null;
-        return SpawnStatus(statusId, duration, (ushort)stacks, sourceObject, broadcastAddEvent, hidden);
+        var added = SpawnStatus(statusId, duration, (ushort)stacks, sourceObject, broadcastAddEvent, hidden);
+        RaiseStatusAdded(added, 0, appliedBy);
+        return added;
     }
+
+    private void RaiseStatusAdded(SimStatus status, ushort previousStacks, (EnemyAction Action, SimCharacter Caster)? appliedBy)
+        => SimEvents?.Raise(new StatusAdded(this, status.StatusId, status.Stacks, previousStacks, appliedBy?.Action, appliedBy?.Caster));
 
     // For logging: the party role when available, else the type name.
     private string DiagnosticName => (this as ISimPartyMember)?.Role.ToString() ?? GetType().Name;
 
     public SimStatus AddStatusParam(ushort statusId, int param, float duration = 0f)
-        => SpawnStatus(statusId, duration, (ushort)param, default, broadcastAddEvent: true, hidden: false);
+    {
+        var added = SpawnStatus(statusId, duration, (ushort)param, default, broadcastAddEvent: true, hidden: false);
+        RaiseStatusAdded(added, 0, appliedBy: null);
+        return added;
+    }
+
+    // One the spawn packet already carried: tracked like any other, with nothing sent for it.
+    internal void AdoptSpawnStatus(ushort statusId, ushort param)
+        => statusList.Add(new SimStatus(this, statusId, 0f, param, default, FreeStatusSlot(statusId), hidden: false));
 
     private SimStatus SpawnStatus(ushort statusId, float duration, ushort param, GameObjectId sourceObject, bool broadcastAddEvent, bool hidden)
     {
@@ -322,16 +357,6 @@ public abstract partial class SimCharacter : ISimObject, IPositioned
 
     public void PlayActionTimeline(ushort timelineId) => ActorControl.PlayActionTimeline(timelineId);
 
-    // Plays an action's own animation and VFX on this character through the same synthetic
-    // ActionEffect a boss cast fires, with itself as the target -- a bot tank's LB3 in Umad P3
-    // Limit Cut, the player's mechanic result mark. Effects (statuses, damage) stay the caller's
-    // job, exactly as for an enemy Cast.
-    public void PlayAction(uint actionId, float animationLock = 0.6f)
-    {
-        Casting.NativeActionEffect(actionId, animationLock, (ushort)actionId, 0, ActionType.Action, 0,
-            animationTargetId: GameObjectId, targets: [new ActionEffectTarget(GameObjectId)]);
-    }
-
     public void VoiceLine(uint voiceLineId) => ActorControl.PlayVoiceLine(voiceLineId);
 
     public virtual void SetTargetable(bool targetable) => ActorControl.SetTargetable(targetable);
@@ -361,7 +386,7 @@ public abstract partial class SimCharacter : ISimObject, IPositioned
     {
         ActorControl.PlayDeathAnimation();
         ActorControl.SetMode(CharacterModes.Dead);
-        statusList.Despawn();
+        EndStatuses(StatusLossReason.Died);
         SendStatusList(0, 0);
     }
 
@@ -376,7 +401,7 @@ public abstract partial class SimCharacter : ISimObject, IPositioned
     // A party member outlives the run: back on its feet at full HP, with nothing the run put on it.
     internal virtual void ClearRunState()
     {
-        statusList.Despawn();
+        EndStatuses(null);
         if (ActorControl.Confused) ActorControl.SetConfused(false);
         confusedChaseHold = 0f;
         Motion.Clear();

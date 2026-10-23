@@ -176,9 +176,16 @@ internal sealed class PlayerMotion : CharacterMotion, INavigated
                 Hold(push.DurationSeconds);
                 break;
             case ForcedMove.Carry carry:
-                actorControl.CarryTo(coordinates.ToGlobal(carry.To), Rotation);
+                actorControl.CarryTo(coordinates.ToGlobal(carry.To), Rotation, carry.Timeline);
                 Hold(CarryHoldSeconds);
                 break;
+            case ForcedMove.IceSlide slide:
+            {
+                var direction = slide.To - Position;
+                actorControl.Slide(coordinates.ToGlobal(slide.To), MathF.Atan2(direction.X, direction.Z));
+                Hold(slide.DurationSeconds);
+                break;
+            }
             case ForcedMove.Teleport teleport:
                 SetPlacement(teleport.To);
                 break;

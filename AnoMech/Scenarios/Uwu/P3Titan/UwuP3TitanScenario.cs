@@ -648,7 +648,7 @@ public sealed class UwuP3TitanScenario : IScenario
             Free(role);
             gaol.Despawn();
         }
-        party.WipeAllPlayers("Died to Granite Impact (a gaol was never broken)");
+        party.WipeAllPlayers(actionId, "a gaol was never broken");
     }
 
     // Only the awakened cast has a second hit and aims at a random player; the bots know where it lands from the first cast.

@@ -10,11 +10,6 @@ public sealed class UmadZone : IZone
 {
     public static readonly UmadZone Instance = new();
 
-    public IReadOnlyList<ushort> ArenaMapEffectSnapshot { get; } =
-    [
-        1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1,
-        1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
-    ];
 
     private static readonly Dictionary<byte, ushort> P3ArenaMapEffectOverrides = new() { [0x00] = 0x200, [0x13] = 4 };
 
@@ -44,15 +39,13 @@ public sealed class UmadZone : IZone
 
     public IReadOnlyList<WaymarkLayout> WaymarkPresets => Waymarks;
 
-    public EntranceBarrier EntranceBarrier => new(2000182, 0xBC174E, 0xBC174C, new Vector3(0.41f, 0f, 15.75f));
+    public DutyInitData DutyInitData => UmadReplayData.DutyInitData;
 
     public void Run(SimWorld world)
     {
         world.Map.DirectorUpdate(0x80000028U, 0x4U);
         world.Map.DirectorUpdate(0x8000000DU, 0x1U);
     }
-
-    public void RunClientSetup(SimWorld world) => UmadReplayData.Seed();
 
     private static readonly IReadOnlyList<WaymarkLayout> Waymarks =
     [

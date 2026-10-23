@@ -462,7 +462,7 @@ public sealed class UltimateAnnihilationScenario : IScenario
         orb.PoppedAt = now;
         state.UnpoppedOrbs--;
         PlayEffect(orb.Enemy, ActionId.Aetheroplasm, 1.1f);
-        party.WipeAllPlayers("Died to Aetheroplasm (an orb was never popped)");
+        party.WipeAllPlayers(ActionId.Aetheroplasm, "an orb was never popped");
     }
 
     private void CastRadiantPlumes()

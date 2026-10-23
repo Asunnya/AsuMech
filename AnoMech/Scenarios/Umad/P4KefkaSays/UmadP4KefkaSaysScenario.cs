@@ -39,7 +39,6 @@ public sealed class UmadP4KefkaSaysScenario : IMultiplayerReplayable
     private SimWorld world = null!;
     private SimParty party = null!;
     private SimEnemy[] detonationHelpers = [];  // invisible KefkaHelper that casts DeathSurge on Allagan Field detonation
-    private int detonatioHelperIndex;
     private SimEnemy? bombHelper;
 
     // The current run's randomized per-run assignments, exposed so
@@ -101,7 +100,6 @@ public sealed class UmadP4KefkaSaysScenario : IMultiplayerReplayable
 
     private void Run_OtherDebuffs()
     { 
-        detonatioHelperIndex = 0;
         detonationHelpers = Enumerable
             .Range(0, 4)
             .Select(_ => world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.KefkaHelper, NameId: BNpcNameId.NeoExdeath, Level: 1, Targetable: false, EnemyList: EnemyListMode.Never, Visibility: SpawnVisibility.InvisibleHelper, Placement: new Placement(new Vector3(0f, 0f, 0f), 0f)))!)
@@ -126,19 +124,8 @@ public sealed class UmadP4KefkaSaysScenario : IMultiplayerReplayable
         world.Events.Add(40.99f, () => party.ForEachActive(c => c.AddStatus(state.ChaosMysteries[1].Cast.Status, state.ChaosMysteries[1].Cast.DurationSecond)));
         
         ushort[] debuffsw3 = [StatusId.BeyondDeath, StatusId.AllaganField];
-        world.OnDeathWithStatus(state.AllaganFieldStatus, DetonateAllaganFieldOnCorpse);
         world.Events.Add(51.67f, () => state.Wave3.ForEach((i, c) => c.AddStatus(debuffsw3[i%2], 15f)));
         world.Events.Add(51.67f, () => state.Wave3.ForEach((i, c) => c.AddStatus(state.Wounds[i]? StatusId.WhiteWound : StatusId.BlackWound)));
-        world.Events.Add(66.34f, () => party.ForEachActive(c =>
-        {
-            if (c.HasStatus(state.BeyondDeathStatus))  c.Die(SimCharacterDeathExtensions.Environment, "Beyond Death not cleansed");
-            if (c.HasStatus(state.AllaganFieldStatus))
-            {
-                var helper = detonationHelpers[detonatioHelperIndex++ % 4];
-                world.Events.Add(0.34f, () => helper.SetPosition(c.Position));
-                world.Events.Add(0.44f, () => helper.Cast(UmadActions.DeathSurge));
-            }
-        }));
         world.Events.Add(66.64f, () => party.ForEachActive(c => c.RemoveStatus(StatusId.WhiteWound)));
         world.Events.Add(66.64f, () => party.ForEachActive(c => c.RemoveStatus(StatusId.BlackWound)));
     }
@@ -173,12 +160,26 @@ public sealed class UmadP4KefkaSaysScenario : IMultiplayerReplayable
             bombHelper?.Cast(UmadActions.DeathBomb, player);
     }
 
-    private void DetonateAllaganFieldOnCorpse(SimCharacter holder)
+    // UNVERIFIED: both replays roll Wave 3 true and cleanse every Beyond Death, so only an expiring
+    // Allagan Field is seen; an uncleansed Beyond Death and either status lost on death are not.
+    private void ResolveBeyondDeathAndAllaganField(StatusLost lost)
     {
-        var helper = detonationHelpers[detonatioHelperIndex++ % 4];
-        helper.SetPosition(holder.Position);
-        world.Events.Add(0.1f, () => helper.Cast(UmadActions.DeathSurgeWipe));
+        if (lost.StatusId == state.BeyondDeathStatus && lost.Reason == StatusLossReason.Expired)
+            lost.Holder.DieOfStatus(lost.StatusId, "not cleansed");
+        else if (lost.StatusId == state.AllaganFieldStatus && lost.Reason != StatusLossReason.Removed)
+            DetonateAllaganField(lost.Holder, lost.Reason == StatusLossReason.Died ? UmadActions.DeathSurgeWipe : UmadActions.DeathSurge);
     }
+
+    // Each Wave 3 pair holds one Allagan Field, so the pair picks its holder's helper.
+    private void DetonateAllaganField(SimCharacter holder, EnemyAction surge)
+    {
+        if (holder is not ISimPartyMember member || Array.IndexOf(state.Wave3.List, member.Role) is not (>= 0 and var slot)) return;
+        var helper = detonationHelpers[slot / 2];
+        helper.SetPosition(holder.Position);
+        world.Events.Add(0.1f, () => helper.Cast(surge));
+    }
+
+    public void OnStatusLost(StatusLost lost) => ResolveBeyondDeathAndAllaganField(lost);
 
     public void Tick(float delta, float elapsed)
     {

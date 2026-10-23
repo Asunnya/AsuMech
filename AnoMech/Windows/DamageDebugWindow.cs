@@ -251,10 +251,10 @@ internal sealed class DamageDebugWindow : Window, IDisposable
                 var driver = member switch
                 {
                     SimPlayer => DebugBotControl.Enabled ? "YOU(bot)" : "YOU",
-                    SimNetworkPuppet => "PEER",
+                    SimNetworkPuppet puppet => puppet.BotDriven ? "PEER(bot)" : "PEER",
                     _ => "BOT",
                 };
-                sb.AppendLine($"  {role,-14} [{driver,-8}] {alive}  {hitLabel}  pos=({member.Position.X:F2}, {member.Position.Z:F2}){distLabel}{statusLabel}");
+                sb.AppendLine($"  {role,-14} [{driver,-9}] {alive}  {hitLabel}  pos=({member.Position.X:F2}, {member.Position.Z:F2}){distLabel}{statusLabel}");
             }
             sb.AppendLine();
 

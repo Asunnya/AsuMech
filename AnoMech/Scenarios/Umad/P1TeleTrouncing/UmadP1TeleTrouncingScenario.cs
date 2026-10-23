@@ -372,8 +372,6 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
         // forward to 1s after the fire so nobody waits for the wipe.
         world.Events.Add(ConfusedChaseEnd, JudgeArrowSoaks);
         world.Events.Add(43.19f, PlayFailedP1EndLine);
-        world.Events.Add(44.19f, StartArrowSoakPunishment);
-        world.Events.Add(44.69f, ResolveArrowSoakPunishment);
         world.Events.Add(44.47f, PlayFireLine);
         world.Events.Add(52.67f, PlayP1EndLine);
 
@@ -599,6 +597,7 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
     {
         arrowSoakFailures.Add(what);
         DiagnosticLog.Warn($"[UmadP1TeleTrouncing] Arrow-soak failure {arrowSoakFailures.Count}: {what}.");
+        world.Fail($"Arrow soak failed: {what}");
     }
 
     private void JudgeArrowSoaks()
@@ -610,6 +609,7 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
             return;
         }
         DiagnosticLog.Warn($"[UmadP1TeleTrouncing] Arrow soaks FAILED ({summary}): {string.Join("; ", arrowSoakFailures)}.");
+        if (arrowSoakFailures.Count == 0) world.Fail($"Arrow soak failed: only {summary}");
     }
 
     private void PlayFireLine()
@@ -635,24 +635,6 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
     private void PlayKefkaLine(uint line)
     {
         if (kefka is { } boss) world.Map.DirectorUpdate(0x80000027U, line, 0x2U, 0x1BDBU, boss.EntityId);
-    }
-
-    private void StartArrowSoakPunishment()
-    {
-        if (!ArrowSoakFailed) return;
-        var summary = $"{arrowsSoakedByConfused}/{arrowsPlaced} arrows soaked by Confused players";
-        world.Announce($"Not all arrows were soaked by confused players ({summary}): {string.Join("; ", arrowSoakFailures)}.");
-    }
-
-    private void ResolveArrowSoakPunishment()
-    {
-        if (!ArrowSoakFailed) return;
-        foreach (var role in state.Debuffs.Keys)
-        {
-            if (party.Get(role) is { } member && member.IsAlive())
-                member.Die(UmadConstants.ActionId.LightOfJudgment_Enrage, "not all arrows were soaked by confused players");
-        }
-        kefka?.SetTargetable(false);
     }
 
     // Collisions and resets only: a used or expired arrow is retired first and removed later.
@@ -1017,7 +999,7 @@ public sealed class UmadP1TeleTrouncingScenario : IMultiplayerReplayable
 
     private void EndP1()
     {
-        // A failed set keeps Kefka targetable for the deaths.
+        // A failed set doesn't end P1, so Kefka stays targetable.
         if (!ArrowSoakFailed)
         {
             kefka?.SetTargetable(false);

@@ -108,20 +108,22 @@ public sealed partial class SimParty : ISimObject
                 SetSlot(role, member);
             }
         }
+        foreach (var member in slots)
+            if (member is not null) member.SimEvents = world.SimEvents;
     }
 
     private SimWorld? world;
     private readonly Dictionary<SimCharacter, EnemyActionHandler> actionHandlers = new();
 
     // A member using an action as an enemy does: its ActionEffect, area hits, damage and deaths.
-    public EnemyActionCast Act(SimCharacter member, EnemyAction action, CastTarget target = default)
+    public void Act(SimCharacter member, EnemyAction action, CastTarget target = default)
     {
         if (!actionHandlers.TryGetValue(member, out var handler))
         {
             var w = world ?? throw new InvalidOperationException("SimParty.Act before the party was seated.");
             actionHandlers[member] = handler = new EnemyActionHandler(member, member.Casting, w);
         }
-        return handler.Start(action, target, 0);
+        handler.Start(action, target, 0);
     }
 
     internal void ForEachActive(Action<SimCharacter> action)
@@ -135,14 +137,13 @@ public sealed partial class SimParty : ISimObject
     public void WipeAllPlayers(uint actionId, string? explanation = null)
         => ForEachActive(m => { if (m.IsAlive()) m.Die(actionId, explanation); });
 
-    [Obsolete("Name the action: WipeAllPlayers(actionId, explanation).")]
-    public void WipeAllPlayers(string cause)
-        => ForEachActive(m => { if (m.IsAlive()) m.Die(cause); });
+    // The seats people play: this client's own, and the other players' puppets.
+    internal IEnumerable<SimCharacter> Players() => AllMembers().Where(m => m is SimPlayer or SimNetworkPuppet);
 
-    // Slots nothing real presses buttons for: a bot, or the local player under DebugBotControl
-    // (which drives movement only).
+    // Slots nothing real presses buttons for: a bot, the local player under DebugBotControl (which
+    // drives movement only), or a remote seat a bot plays on its own client.
     public bool IsBotDriven(SimCharacter member)
-        => (!ReferenceEquals(member, Player) || DebugBotControl.Enabled) && member is not SimNetworkPuppet;
+        => member is SimNetworkPuppet puppet ? puppet.BotDriven : !ReferenceEquals(member, Player) || DebugBotControl.Enabled;
 
     internal IEnumerable<SimCharacter> ActiveMembers()
     {

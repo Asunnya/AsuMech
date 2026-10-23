@@ -21,10 +21,6 @@ public class UltimateSuppressionState
     public SimCharacter? PlayerFlamingCrush = null!;
 
     public SimTether? MesohighTether = null;
-    public SimCharacter? MesohighHolder;
-    public int MesohighThermalLowStacks;
-    public EnemyActionCast? ChiradaMistralSong;
-    public EnemyActionCast? SuparnaMistralSong;
 
     public const int SuppressionSpots = 6;
     // Which spread spot each non-tank takes, resolved here so a peer's replay can't re-roll it.

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AnoMech.Core;
 using AnoMech.Core.Game.Motion;
 using AnoMech.Core.Game.Party;
+using AnoMech.Core.Native.Interfaces;
 using AnoMech.Core.SimObjects;
 
 namespace AnoMech.Multiplayer;
@@ -42,27 +43,37 @@ public sealed partial class MultiplayerManager
         {
             if (world.Party.Get(role) is not SimNetworkPuppet puppet) continue;
             foreach (var move in puppet.DrainForcedMoves())
-                _ = relay!.SendAsync(ForcedMoveMessage(world, role, move));
+                _ = Send(ForcedMoveMessage(world, role, move));
         }
     }
 
     private void SendMidRunUpdate()
     {
         if (TryResolveScenario() is IMultiplayerReplayable replayable && replayable.BuildMidRunUpdateMessage() is { } update)
-            _ = relay!.SendAsync(update);
+            _ = Send(update);
     }
 
+    // Backpressure-gated like SelfPose, and sent when any seat in it changes.
     private Task? pendingRolesSend;
+    private List<RoleState>? lastRoles;
+    private long lastRolesMs;
 
     // The players' seats; a bot's goes out as its own movement packets.
-    private Task SampleAndBroadcastRoles()
+    private void BroadcastRoles()
     {
+        if (pendingRolesSend is not (null or { IsCompleted: true })) return;
         var party = Plugin.Game.World.Party;
         var roles = new List<RoleState>(8);
         foreach (var role in Enum.GetValues<PartyRole>())
             if (party.Get(role) is { } member and (SimPlayer or SimNetworkPuppet))
-                roles.Add(new RoleState(role, member.Position.X, member.Position.Y, member.Position.Z, member.Rotation));
-        return relay!.SendAsync(new RolesSnapshotMessage(roles));
+            {
+                var (velocity, jumping) = member is SimNetworkPuppet puppet ? (puppet.PoseVelocity, puppet.PoseJumping) : (ownVelocity, Natives.PlayerInput.IsJumping);
+                roles.Add(new RoleState(role, member.Position.X, member.Position.Y, member.Position.Z, member.Rotation, velocity.X, velocity.Z, jumping));
+            }
+        if (lastRoles != null && roles.SequenceEqual(lastRoles) && NowMs - lastRolesMs < PoseRefreshMs) return;
+        lastRoles = roles;
+        lastRolesMs = NowMs;
+        pendingRolesSend = Send(new RolesSnapshotMessage(roles));
     }
 
     // An enemy goes by its entity id on the host, as its packets name it.
@@ -75,8 +86,8 @@ public sealed partial class MultiplayerManager
         return (PacketActor.None, null);
     }
 
-    private void OnPartyMemberKilledHost(PartyRole role, string cause, uint? actionId)
-        => _ = relay?.SendAsync(new RoleKilledMessage(role, cause));
+    private void OnPartyMemberKilledHost(PartyRole role, string cause, uint? actionId, ushort? statusId)
+        => _ = Send(new RoleKilledMessage(role, cause));
 
     // The host reads its own bookkeeping; a peer reads what the host relayed (PeerStatusMessage).
     public bool IsPeerStale(Guid peerId) => IsHost
@@ -86,10 +97,17 @@ public sealed partial class MultiplayerManager
     // TickCount64 only moves every ~15.6 ms, too coarse for the clock lead built on this ping.
     private long PingClockMs() => Time.GetElapsedTime(0).Ticks / TimeSpan.TicksPerMillisecond;
 
+    // Comfortably more than MaxBehindMs of them.
+    private const int KeptPings = 16;
+
     private void SendPingAndRefreshStatuses()
     {
         var nowMs = NowMs;
-        _ = relay!.SendAsync(new PingMessage(PingClockMs()));
+        var (streamSent, streamReceived) = stream?.PingFields() ?? (0, null!);
+        var sentAt = PingClockMs();
+        pingsSentMs.Enqueue(sentAt);
+        while (pingsSentMs.Count > KeptPings) pingsSentMs.Dequeue();
+        _ = Send(new PingMessage(sentAt, streamSent, streamReceived, HostRunClock()));
 
         peerStatuses.Clear();
         foreach (var peerId in Session.ClaimedBy.Values.Distinct())
@@ -98,7 +116,7 @@ public sealed partial class MultiplayerManager
             var latency = peerLatencyMs.TryGetValue(peerId, out var ms) ? ms : (float?)null;
             peerStatuses[peerId] = new PeerStatusEntry(latency, (nowMs - lastSeen) / 1000f);
         }
-        _ = relay.SendAsync(new PeerStatusMessage(new Dictionary<Guid, PeerStatusEntry>(peerStatuses)));
+        _ = Send(new PeerStatusMessage(new Dictionary<Guid, PeerStatusEntry>(peerStatuses)));
 
         CheckPeerLiveness();
     }
@@ -122,6 +140,33 @@ public sealed partial class MultiplayerManager
             }
             else if (!stale && warnedStalePeers.Remove(peerId))
                 DiagnosticLog.Info($"[Multiplayer] {Session.NameOf(peerId)} ({role}) is reporting in again.");
+        }
+    }
+
+    // A peer whose download can't keep up still hears from the host, only ever later, so it never
+    // goes stale; this far behind it plays a fight the others left seconds ago.
+    private const long MaxBehindMs = 10_000;
+
+    // How long ago the oldest ping the peer hasn't answered went out. Pings go in order with
+    // everything else, so it hasn't taken anything the host sent since.
+    private long PingsBehindMs(Guid peerId)
+    {
+        if (!answeredPingMs.TryGetValue(peerId, out var answered)) return 0;
+        foreach (var sentAt in pingsSentMs)
+            if (sentAt > answered) return PingClockMs() - sentAt;
+        return 0;
+    }
+
+    private void EndRunIfBehind()
+    {
+        foreach (var peerId in Session.ClaimedBy.Values)
+        {
+            if (peerId == MyPeerId || IsPeerStale(peerId) || PingsBehindMs(peerId) <= MaxBehindMs) continue;
+            var reason = $"{Session.NameOf(peerId)} fell more than {MaxBehindMs / 1000} seconds behind";
+            DiagnosticLog.Warn($"[Multiplayer] {reason} -- ending the run for everyone.");
+            Plugin.Game.Leave();
+            BroadcastRunEnded(returnedToInn: true, reason);
+            return;
         }
     }
 }

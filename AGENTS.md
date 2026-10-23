@@ -109,6 +109,23 @@ communicate that with user and try to verify first.
 - **Boss attacks** are `EnemyAction`s. Take cast times and AoE shapes from the Action sheet rather
   than hardcoding them. Use literal coordinates for spawns and moves unless a position really
   changes from run to run.
+- **Sim events** reach the running scenario through its `IWorldEventListener` hooks
+  (`OnActionResolved`, `OnStatusAdded`, `OnStatusLost`, `OnTetherEnded`). They are for what retail
+  itself does when that happens: a debuff that detonates as it runs out or on its holder's death, a
+  tether that snaps, an NPC that breaks when hit, a tower punished when left unsoaked. The timeline
+  stays in `Events.Add`, and what an action does to its own targets stays in its `EnemyAction`
+  effects. A reaction several scenarios share is a helper each one calls from its hook
+  (`HelloWorldFailures`, `Lightsteeped`, `Towers.ResolveTower`). Scheduling the follow-up from a hook
+  is fine, and beats storing a cast's result for a later timeline step. Add a new event type only
+  when a scenario can't be written cleanly without it.
+- **Debuff that goes off when it runs out:** drive it from `OnStatusLost` only when something can
+  remove, cleanse or pass the debuff, or when its holder's death changes what happens. A plain
+  countdown nothing interacts with stays a timeline step at its expiry time.
+- **Avoid scenario state.** Every field a scenario fills mid-run is something to reset, keep in
+  sync and reason about. Read what the event already carries instead (a tether's `TetherId`, a
+  status's `Stacks`, a resolve's `Origin` and `Hits`), and pass values through the closure of a
+  scheduled follow-up. Keep a field only when the fight genuinely needs memory across steps that
+  no event can carry.
 - **Randomness** comes only from `world.Rng`, rolled into `*State`, so a seed reproduces a run.
   Every strat in `AiStrats` must clear the fight with no deaths: `ScenarioCatalogTests` checks this
   for every catalog entry.

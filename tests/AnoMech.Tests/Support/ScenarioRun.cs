@@ -7,8 +7,10 @@ using AnoMech.Scenarios;
 
 namespace AnoMech.Tests;
 
-// ActionId is null for a death through the obsolete Die(string).
-internal sealed record Death(PartyRole Role, string Cause, uint? ActionId, float Time, string Snapshot);
+// ActionId is null for a death no action dealt: StatusId names the status for DieOfStatus, neither for the obsolete Die(string).
+internal sealed record Death(PartyRole Role, string Cause, uint? ActionId, ushort? StatusId, float Time, string Snapshot);
+
+internal sealed record MechanicFailure(string Reason, float Time);
 
 internal sealed record ScenarioRunOptions
 {
@@ -57,13 +59,13 @@ internal sealed record Takeover(float At, Vector2? TeleportTo, float? Facing = n
 // fake game, ticked at a fixed rate until it ends.
 internal sealed record ScenarioRun(
     Type ScenarioType, int Strat, int Seed, PartyRole PlayerRole, float Elapsed, IReadOnlyList<Death> Deaths,
-    string? Failure, IReadOnlyList<string> Warnings, string? ArtifactDirectory)
+    IReadOnlyList<MechanicFailure> MechanicFailures, string? Failure, IReadOnlyList<string> Warnings, string? ArtifactDirectory)
 {
     public const float FrameSeconds = 1f / 60f;
     public const float TimeoutSeconds = 600f;
     private const float AoeCheckWindowSeconds = 1f;
 
-    public bool Passed => Failure is null && Deaths.Count == 0;
+    public bool Passed => Failure is null && Deaths.Count == 0 && MechanicFailures.Count == 0;
 
     public static ScenarioRun Execute(Type scenarioType, int strat, int seed, ScenarioRunOptions? options = null)
     {
@@ -79,6 +81,7 @@ internal sealed record ScenarioRun(
         // A real player's job always fits their seat; job-keyed actions read it.
         fake.BattleCharas.Player.ClassJob = PartyPresets.Standard[(int)role].ClassJob;
         var deaths = new List<Death>();
+        var mechanicFailures = new List<MechanicFailure>();
         var aoeChecks = new List<AoeCheck>();
         var elapsed = 0f;
         var nextTakeover = 0;
@@ -114,11 +117,12 @@ internal sealed record ScenarioRun(
         try
         {
             scenario = game.Catalog.Scenarios.Single(s => s.GetType() == scenarioType);
-            game.PartyMemberKilled += (r, cause, actionId) =>
+            game.PartyMemberKilled += (r, cause, actionId, statusId) =>
             {
                 var snapshot = WorldSnapshot.Describe(game.World, RecentAoeChecks(), game.World.Party.Get(r), includeHidden: true);
-                deaths.Add(new Death(r, cause, actionId, game.World.Events.Elapsed, snapshot));
+                deaths.Add(new Death(r, cause, actionId, statusId, game.World.Events.Elapsed, snapshot));
             };
+            game.MechanicFailed += reason => mechanicFailures.Add(new MechanicFailure(reason, game.World.Events.Elapsed));
             if (options.Overrides is { } setOverrides)
                 setOverrides(scenario.SettingsOverrides
                              ?? throw new InvalidOperationException($"{scenarioType.Name} has no settings overrides."));
@@ -128,7 +132,7 @@ internal sealed record ScenarioRun(
             if (game.Status < SessionStatus.Running)
                 failure = "did not start";
 
-            while (failure is null && game.Status is not (SessionStatus.Succeeded or SessionStatus.Frozen))
+            while (failure is null && game.Status is not (SessionStatus.Succeeded or SessionStatus.CompletedFailed or SessionStatus.Frozen))
             {
                 if (elapsed >= TimeoutSeconds)
                 {
@@ -159,7 +163,7 @@ internal sealed record ScenarioRun(
         string? artifacts = null;
         try
         {
-            var run = new ScenarioRun(scenarioType, strat, seed, role, endTime, deaths, failure, log.Warnings, null);
+            var run = new ScenarioRun(scenarioType, strat, seed, role, endTime, deaths, mechanicFailures, failure, log.Warnings, null);
             if ((!run.Passed && options.WriteArtifactsOnFailure) || options.AlwaysWriteArtifacts)
             {
                 var final = WorldSnapshot.Describe(game.World, RecentAoeChecks());
@@ -173,7 +177,7 @@ internal sealed record ScenarioRun(
             PerRole.ForceSeats = false;
             game.Dispose();
         }
-        return new ScenarioRun(scenarioType, strat, seed, role, endTime, deaths, failure, log.Warnings, artifacts);
+        return new ScenarioRun(scenarioType, strat, seed, role, endTime, deaths, mechanicFailures, failure, log.Warnings, artifacts);
     }
 
     private static void TakeOver(SimWorld world, Takeover takeover, TraceLog log)
@@ -205,6 +209,7 @@ internal sealed record ScenarioRun(
         var lines = new List<string> { $"seed {Seed} (player {PlayerRole}, t={Elapsed:F1}):" };
         if (Failure is not null) lines.Add($"  {Failure}");
         lines.AddRange(Deaths.Select(d => $"  {d.Role} died at t={d.Time:F2}: {d.Cause}"));
+        lines.AddRange(MechanicFailures.Select(f => $"  mechanic failed at t={f.Time:F2}: {f.Reason}"));
         lines.AddRange(Warnings.Distinct().Select(w => $"  warning: {w}"));
         if (ArtifactDirectory is not null) lines.Add($"  details: {ArtifactDirectory}");
         return string.Join(Environment.NewLine, lines);

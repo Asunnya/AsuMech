@@ -8,9 +8,11 @@ public enum SessionStatus
     Running,
     // A death was reported but nobody went down: godmode.
     RunningWithMistake,
-    // Someone went down; the run plays on until the freeze 5s later.
+    // Someone went down or a mechanic failed; the run plays on, to a freeze if one was asked for.
     Failed,
+    // Only a failed run freezes.
     Frozen,
     CompletedWithMistake,
+    CompletedFailed,
     Succeeded,
 }

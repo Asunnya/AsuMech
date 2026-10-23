@@ -14,14 +14,14 @@ public abstract record Distribution
     public static Distribution Stack(int min, Hit? understacked = null)
         => new WildChargeDistribution(0, min, null, understacked);
 
-    // The `front` nearest the origin take `frontHit`, the rest the cast's hit. With `min`, too few in
+    // The `front` first in `hits` take `frontHit`, the rest the cast's hit. With `min`, too few in
     // it and everyone takes `understacked` instead (Lethal by default).
     public static Distribution WildCharge(int front, int? min = null, Hit? frontHit = null, Hit? understacked = null)
         => new WildChargeDistribution(front, min, frontHit, understacked);
 
     public static Distribution Falloff(float lethalWithin) => new FalloffDistribution(lethalWithin);
 
-    // `index` is the target's place in `hits`, nearest the origin first. The reason is said of a
+    // `index` is the target's place in `hits`, front first: nearest the origin, or furthest up a line. The reason is said of a
     // death the hit deals.
     internal abstract (Hit? Hit, string? Reason) Assign(EnemyActionContext ctx, IReadOnlyList<SimCharacter> hits, int index, SimCharacter target);
 }

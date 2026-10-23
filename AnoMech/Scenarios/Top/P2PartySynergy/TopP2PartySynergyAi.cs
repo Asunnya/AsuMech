@@ -7,7 +7,7 @@ namespace AnoMech.Scenarios.Top.P2PartySynergy;
 
 public class TopP2PartySynergyAi : IScenarioAi<TopP2PartySynergyState>
 {
-    public string Name => "Standard";
+    public string Name => "NA pf";
 
     private TopP2PartySynergyState state = null!;
 

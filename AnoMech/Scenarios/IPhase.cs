@@ -14,26 +14,21 @@ public interface IPhase
     byte? Weather => null;
     ushort Bgm => 0;
 
-    // Slot -> resting state where the phase's start differs from IZone.ArenaMapEffectSnapshot,
+    // Slot -> resting state where the phase's start differs from DutyInitData.MapEffectSnapshot,
     // aggregated from the replay's single MapEffect packets between the snapshot and the phase
     // start.
     IReadOnlyDictionary<byte, ushort> ArenaMapEffectOverrides => ImmutableDictionary<byte, ushort>.Empty;
 
     // Optional phase-wide setup, between zone and scenario Run. Default no-op.
     void Run(SimWorld world) { }
-
-    // Phase-wide client-side setup, run on host and peer alike (see IZone.RunClientSetup).
-    // Default no-op.
-    void RunClientSetup(SimWorld world) { }
 }
 
 // Default phase. Pass Init to attach custom phase-wide setup.
 public sealed class Phase : IPhase
 {
     private readonly Action<SimWorld>? init;
-    private readonly Action<SimWorld>? clientSetup;
 
-    public Phase(IZone zone, string name, byte? weather, ushort bgm, Action<SimWorld>? init = null, Action<SimWorld>? clientSetup = null,
+    public Phase(IZone zone, string name, byte? weather, ushort bgm, Action<SimWorld>? init = null,
         IReadOnlyDictionary<byte, ushort>? arenaMapEffectOverrides = null)
     {
         Zone = zone;
@@ -42,7 +37,6 @@ public sealed class Phase : IPhase
         Bgm = bgm;
         ArenaMapEffectOverrides = arenaMapEffectOverrides ?? ImmutableDictionary<byte, ushort>.Empty;
         this.init = init;
-        this.clientSetup = clientSetup;
     }
 
     public IZone Zone { get; }
@@ -52,5 +46,4 @@ public sealed class Phase : IPhase
     public IReadOnlyDictionary<byte, ushort> ArenaMapEffectOverrides { get; }
 
     public void Run(SimWorld world) => init?.Invoke(world);
-    public void RunClientSetup(SimWorld world) => clientSetup?.Invoke(world);
 }

@@ -56,7 +56,7 @@ public static class UwuActions
     public static readonly EnemyAction ViscousAetheroplasmUltima = new(ActionId.ViscousAetheroplasmUltima) 
     {
        Cast = new() { AnimationLock = 2.1f },
-       Effects = [Damage(), ApplyStatus(1532, 10, delayToEffectResult: true)], 
+       Effects = [Damage(), ApplyStatus(StatusId.ViscousAetheroplasm, 10, delayToEffectResult: true)], 
        Timing = new() { DamageDelay = 1.1f },
     };
     
@@ -176,6 +176,7 @@ public static class UwuActions
         Cast = new() { AnimationLock = 2.1f, FaceTarget = false },
         Effects = [
             Damage(ProtectedBy(StatusId.ThermalLow), Lethal),
+            RemoveStatus(StatusId.ThermalLow, atImpact: true),
         ],
         Timing = new() { DamageDelay = 0.99f },
     };

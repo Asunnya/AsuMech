@@ -75,21 +75,21 @@ public class UmadP1TeleTrouncingScenarioTests
     // C takes the first arrow of its own ride 0.14s before Confused lands; the rest of the ride
     // goes as usual.
     [Test]
-    public void UsingArrowWhileNotConfusedWipes()
+    public void UsingArrowWhileNotConfusedFails()
         => TeleTrouncing(CasterDps)
             .TeleportAt(28.6f, to: new(-12, 0))
             .TeleportAt(36f, to: new(-18.3f, 0), facing: FacingSouth)
-            .ShouldKill(UmadConstants.ActionId.LightOfJudgment_Enrage, PerRole.All);
+            .ShouldFail();
 
     // C, Confused at the edge and pulled back there once mid-chase, reaches M2's first arrow
     // after it expires.
     [Test]
-    public void UnsoakedArrowWipes()
+    public void UnsoakedArrowFails()
         => TeleTrouncing(CasterDps)
             .TeleportAt(28.6f, to: new(-19.5f, 0))
             .TeleportAt(30f, to: new(-19.5f, 0))
             .TeleportAt(36f, to: new(-18.3f, 0), facing: FacingSouth)
-            .ShouldKill(UmadConstants.ActionId.LightOfJudgment_Enrage, PerRole.All);
+            .ShouldFail();
 
     // The holder dies with the two who stayed.
     [Test]

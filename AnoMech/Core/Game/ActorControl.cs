@@ -23,6 +23,7 @@ public sealed class ActorControl
     private const uint CorpseFadeCategory = 0x27;
     private const uint PopInCategory = 0x24;
     private const uint ClearTetherCategory = 0x2F;
+    private const uint ActivateCategory = 0x30;
     private const uint ModeAttributeFlagsCategory = 0x31;
     private const uint WipeResetCategory = 0x3C;
     private const uint TargetableCategory = 0x36;
@@ -189,6 +190,8 @@ public sealed class ActorControl
 
     public void SetAnimationState(byte slot, byte value) => Send(AnimationStateCategory, slot, value);
 
+    public void Activate(uint state) => Send(ActivateCategory, state);
+
     public void PlayVoiceLine(uint voiceLineId) => Send(VoiceLineCategory, voiceLineId);
 
     public void LimitBreakCast(uint actionId, bool isUser) => Send(LimitBreakCastCategory, actionId, isUser ? 0u : 1u);
@@ -229,11 +232,12 @@ public sealed class ActorControl
 
     public void PlayActionTimeline(ushort timelineId) => Send(ActionTimelineCategory, timelineId);
 
-    public void CarryTo(Vector3 worldDestination, float rotation)
+    // `timeline` is the ActionTimeline the carried character plays; null = force_warp.
+    public void CarryTo(Vector3 worldDestination, float rotation, ushort? timeline = null)
     {
         var position = ((uint)MathUtil.QuantizePosition(worldDestination.X) << 16) | MathUtil.QuantizePosition(worldDestination.Y);
         var facing = ((uint)MathUtil.QuantizePosition(worldDestination.Z) << 16) | MathUtil.QuantizeRotation(rotation);
-        Send(WarpCategory, position, facing, 0x10000u | ForceWarpTimeline, ++warpSequence);
+        Send(WarpCategory, position, facing, 0x10000u | (timeline ?? ForceWarpTimeline), ++warpSequence);
     }
 
     // Launches the character through the air to the destination. The GimmickJump row picks height and

@@ -29,8 +29,12 @@ public unsafe class MainWindow : Window, IDisposable
 
     internal static readonly Vector4 StartColor = new(0.18f, 0.40f, 0.24f, 0.92f);
     internal static readonly Vector4 StopColor = new(0.45f, 0.14f, 0.16f, 0.92f);
+    // A live run's buttons: restarting or stopping it throws the attempt away, so neither leads.
+    private static readonly Vector4 RestartLiveColor = new(0.26f, 0.36f, 0.29f, 0.80f);
+    private static readonly Vector4 StopRunColor = new(0.30f, 0.30f, 0.33f, 0.92f);
     private static readonly Vector4 RunningColor = new(0.35f, 0.85f, 0.45f, 1f);
-    private static readonly Vector4 PausedColor = new(1f, 0.65f, 0.25f, 1f);
+    private static readonly Vector4 MistakeColor = new(1f, 0.65f, 0.25f, 1f);
+    private static readonly Vector4 FailedColor = new(1f, 0.38f, 0.35f, 1f);
     // Fixed rather than theme-derived: Dalamud's default ButtonActive is red, which reads as
     // "stop"/error next to the semantic Start/Stop buttons.
     private static readonly Vector4 SelectionColor = new(0.30f, 0.55f, 0.85f, 1f);
@@ -97,15 +101,20 @@ public unsafe class MainWindow : Window, IDisposable
 
     // <Version> from AnoMech.csproj flows into the assembly version; surface it in the
     // title bar. Use a ### id so the window identity stays "MainWindow" across versions.
+    private static readonly string TitleText = TitleWithVersion();
+
     private static string TitleWithVersion()
     {
         var v = Assembly.GetExecutingAssembly().GetName().Version;
         var version = v is null ? "" : $" v{v.Major}.{v.Minor}.{v.Build}.{v.Revision}";
-        return $"AnoMech{version}###MainWindow";
+        return $"AnoMech{version}";
     }
 
+    // The title bar still shows while the window is collapsed for the run.
+    private static string Title(bool failed) => $"{TitleText}{(failed ? " — Failed" : "")}###MainWindow";
+
     public MainWindow(Plugin plugin)
-        : base(TitleWithVersion())
+        : base(Title(failed: false))
     {
         var uiScale = ImGuiHelpers.GlobalScale;
         SizeConstraints = new WindowSizeConstraints
@@ -212,12 +221,14 @@ public unsafe class MainWindow : Window, IDisposable
 
         var scenarioActive = RunActive;
         var status = Plugin.Game.Status;
+        WindowName = Title(Plugin.Game.LastRun is { } lastRun && IsFailed(lastRun.Status));
         if (scenarioActive && !_wasScenarioActive)
         {
             if (Plugin.Config.AutoCollapseWhileRunning)
                 RequestCollapsed(true);
         }
-        if (status > SessionStatus.Running && status != _lastStatus)
+        // Not on a failure the run plays on from: expanding mid-fight gets in the way.
+        if (status >= SessionStatus.Frozen && status != _lastStatus)
         {
             RequestCollapsed(false);
         }
@@ -636,34 +647,18 @@ public unsafe class MainWindow : Window, IDisposable
     {
         var uiScale = ImGuiHelpers.GlobalScale;
         var contentStart = ImGui.GetCursorScreenPos();
-        var contentWidth = ImGui.GetContentRegionAvail().X;
-        var rowHeight = ImGui.GetFrameHeight();
         var scenario = _selectedScenario!;
-
-        var (statusLabel, statusColor) = Status(game.Paused, RunActive);
 
         DrawScenarioPanelToggle();
         ImGui.SameLine();
         ImGui.TextDisabled($"{scenario.Phase.Zone.Name} —");
         ImGui.SameLine(0f, 4f * uiScale);
         ImGui.TextUnformatted(scenario.DisplayName());
-
-        var minimumStatusX = ImGui.GetItemRectMax().X + 12f * uiScale;
-        // Room for the widest status, or an auto-sized window whose widest row is this one would
-        // leave the overlay no space and it would not be drawn.
-        ImGui.SameLine(0f, 12f * uiScale);
-        ImGui.Dummy(new Vector2(StatusOverlayWidth(), rowHeight));
-        DrawStatusOverlay(
-            statusLabel,
-            statusColor,
-            contentStart.X + contentWidth,
-            minimumStatusX,
-            contentStart.Y,
-            rowHeight);
+        DrawRunStatus(game);
 
         var dividerColor = StyleColor(ImGuiCol.TextDisabled);
         dividerColor.W *= 0.35f;
-        var dividerY = contentStart.Y + rowHeight;
+        var dividerY = contentStart.Y + ImGui.GetFrameHeight();
         ImGui.GetWindowDrawList().AddLine(
             new Vector2(ImGui.GetWindowPos().X, dividerY),
             new Vector2(ImGui.GetWindowPos().X + ImGui.GetWindowSize().X, dividerY),
@@ -673,6 +668,44 @@ public unsafe class MainWindow : Window, IDisposable
             contentStart.X,
             dividerY + ImGui.GetStyle().ItemSpacing.Y));
     }
+
+    // Left-aligned after the name: a right-aligned widget isn't always given the room to draw.
+    private void DrawRunStatus(AnoMech.Core.Game.Game game)
+    {
+        var (label, color) = RunStatus(game);
+        ImGui.SameLine(0f, 8f * ImGuiHelpers.GlobalScale);
+        ImGui.TextColored(color, $"· {label}");
+        if (game.LastRun is not { Issues.Count: > 0 } run || !ImGui.IsItemHovered()) return;
+        ImGui.BeginTooltip();
+        foreach (var issue in run.Issues)
+            ImGui.TextUnformatted($"{issue.Time,6:F1}s  {issue.Description}");
+        ImGui.EndTooltip();
+    }
+
+    // The live run's state, else how the selected scenario's last run ended.
+    private (string Label, Vector4 Color) RunStatus(AnoMech.Core.Game.Game game)
+    {
+        var idle = ("Idle", StyleColor(ImGuiCol.TextDisabled));
+        if (game.LastRun is not { } run) return RunActive ? ("Running", RunningColor) : idle;
+        if (run.Ended && run.Scenario != _selectedScenario) return idle;
+        var status = run.Status;
+        if (IsFailed(status)) return ("Failed", FailedColor);
+        return status switch
+        {
+            SessionStatus.Succeeded => ("Cleared", RunningColor),
+            SessionStatus.CompletedWithMistake => ("Cleared with mistakes", MistakeColor),
+            _ when run.Ended => ("Stopped", StyleColor(ImGuiCol.TextDisabled)),
+            SessionStatus.RunningWithMistake => ("Running with mistakes", MistakeColor),
+            _ => ("Running", RunningColor),
+        };
+    }
+
+    private static bool IsFailed(SessionStatus status)
+        => status is SessionStatus.Failed or SessionStatus.Frozen or SessionStatus.CompletedFailed;
+
+    // A run still playing, as opposed to one frozen or finished and only left standing.
+    private static bool RunLive(AnoMech.Core.Game.Game game)
+        => game.Status is SessionStatus.Running or SessionStatus.RunningWithMistake or SessionStatus.Failed;
 
     private void DrawScenarioPanelToggle()
     {
@@ -723,17 +756,23 @@ public unsafe class MainWindow : Window, IDisposable
     {
         var uiScale = ImGuiHelpers.GlobalScale;
         var actionSize = new Vector2(140f * uiScale, 32f * uiScale);
-        if (RunActive)
+        if (!inSession)
+            DrawStartButton(game, actionSize);
+        else if (RunActive)
         {
             if (DrawSemanticButton("Stop", actionSize, StopColor))
                 plugin.Runs.Reset();
         }
-        else if (inSession)
-            multiplayerUi.DrawStartButton(actionSize, Selection);
         else
-            DrawStartButton(actionSize);
+            multiplayerUi.DrawStartButton(actionSize, Selection);
 
-        if (game.World.Map.IsInInstance)
+        if (!inSession && RunLive(game))
+        {
+            ImGui.SameLine();
+            if (DrawSemanticButton("Stop###stop", actionSize, StopRunColor))
+                plugin.Runs.Reset();
+        }
+        else if (game.World.Map.IsInInstance)
         {
             ImGui.SameLine();
             if (DrawSemanticButton(inSession ? "Return to inn###leave-instance" : "Leave###leave-instance", actionSize, StopColor))
@@ -765,63 +804,20 @@ public unsafe class MainWindow : Window, IDisposable
 
     private bool SoloSelected => _selectedScenario is { SupportsSolo: true } && _soloMode;
 
-    private void DrawStartButton(Vector2 size)
+    // A start replaces whatever run is standing, so it needs no Stop first.
+    private void DrawStartButton(AnoMech.Core.Game.Game game, Vector2 size)
     {
         var solo = SoloSelected;
         var selection = Selection;
         var refusal = plugin.Runs.StartRefusal(selection, solo);
+        var restart = game.ActiveScenario is { } active && active == _selectedScenario;
+        var label = plugin.Runs.StartWaitingOn != null ? "Waiting to start..." : restart ? "Restart" : "Start";
         ImGui.BeginDisabled(refusal != null);
-        if (DrawSemanticButton($"{(plugin.Runs.StartWaitingOn != null ? "Waiting to start..." : "Start")}###start", size, StartColor))
+        if (DrawSemanticButton($"{label}###start", size, restart && RunLive(game) ? RestartLiveColor : StartColor))
             plugin.Runs.Start(selection, solo);
         ImGui.EndDisabled();
         if (refusal != null && ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
             ImGui.SetTooltip(refusal);
-    }
-
-    private static (string Label, Vector4 Color) Status(bool paused, bool active) =>
-        paused ? ("Paused", PausedColor)
-        : active ? ("Running", RunningColor)
-        : ("Idle", StyleColor(ImGuiCol.TextDisabled));
-
-    // DrawStatusOverlay's dot, gap and widest label.
-    private static float StatusOverlayWidth()
-    {
-        var widestLabel = MathF.Max(
-            ImGui.CalcTextSize(Status(true, false).Label).X,
-            MathF.Max(ImGui.CalcTextSize(Status(false, true).Label).X, ImGui.CalcTextSize(Status(false, false).Label).X));
-        return 10f * ImGuiHelpers.GlobalScale + widestLabel;
-    }
-
-    private static void DrawStatusOverlay(
-        string label,
-        Vector4 color,
-        float right,
-        float minimumX,
-        float top,
-        float height)
-    {
-        var uiScale = ImGuiHelpers.GlobalScale;
-        var radius = 3f * uiScale;
-        var diameter = radius * 2f;
-        var gap = 4f * uiScale;
-        var textSize = ImGui.CalcTextSize(label);
-        var fullWidth = diameter + gap + textSize.X;
-        var x = right - fullWidth;
-        var drawLabel = x >= minimumX;
-        if (!drawLabel)
-            x = right - diameter;
-        if (x < minimumX) return;
-
-        var drawList = ImGui.GetWindowDrawList();
-        drawList.AddCircleFilled(
-            new Vector2(x + radius, top + height * 0.5f),
-            radius,
-            ImGui.GetColorU32(color));
-        if (drawLabel)
-            drawList.AddText(
-                new Vector2(x + diameter + gap, top + (height - textSize.Y) * 0.5f),
-                ImGui.GetColorU32(color),
-                label);
     }
 
     private static bool DrawSemanticButton(string label, Vector2 size, Vector4 color)
@@ -882,7 +878,7 @@ public unsafe class MainWindow : Window, IDisposable
     private void DrawSoloOption(AnoMech.Core.Game.Game game)
     {
         if (!_selectedScenario!.SupportsSolo) return;
-        var running = game.Status >= SessionStatus.Running;
+        var running = RunLive(game);
         ImGui.BeginDisabled(running);
         ImGui.Checkbox("Solo", ref _soloMode);
         ImGui.EndDisabled();
@@ -914,7 +910,7 @@ public unsafe class MainWindow : Window, IDisposable
         if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
             ImGui.SetTooltip(mpActive
                 ? MpDisabledReason
-                : "Restart the same scenario immediately after a successful run. A death turns this back off.");
+                : "Restart the same scenario immediately after a successful run. A failed run turns this back off.");
         ImGui.SameLine();
         ImGui.TextDisabled($"Streak: {practice.Streak}");
     }

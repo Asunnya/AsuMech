@@ -2,6 +2,7 @@ using System;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Motion;
 using AnoMech.Core.Native.Interfaces;
+using FFXIVClientStructs.FFXIV.Client.Game;
 
 namespace AnoMech.Core.SimObjects;
 
@@ -79,6 +80,17 @@ public class SimNpc : SimCharacter
 
     // Which sub-meshes show, e.g. Omega-M's shield.
     public void SetModeAttributeFlags(byte value) => ActorControl.SetModeAttributeFlags(value);
+
+    // Plays an action's own animation and VFX on this character through the same synthetic
+    // ActionEffect a boss cast fires, with itself as the target -- a bot tank's LB3 in Umad P3
+    // Limit Cut. Effects (statuses, damage) stay the caller's job, exactly as for an enemy Cast.
+    // Not for the local player: an effect the client sees itself cast ends its cast bar mid-cast
+    // and leaves the Casting condition set.
+    public void PlayAction(uint actionId, float animationLock = 0.6f)
+    {
+        Casting.NativeActionEffect(actionId, animationLock, (ushort)actionId, 0, ActionType.Action, 0,
+            animationTargetId: GameObjectId, targets: [new ActionEffectTarget(GameObjectId)]);
+    }
 
     public override void Tick(float deltaSeconds)
     {

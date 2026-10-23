@@ -53,18 +53,25 @@ public static class SimCharacterDeathExtensions
         public bool Die(uint actionId, string? explanation = null)
         {
             var name = actionId == Environment ? null : Natives.Data.ActionName(actionId);
-            var message = name is null ? explanation ?? "" : explanation is null ? name : $"{name} ({explanation})";
-            return Kill(c, message, actionId);
+            return Kill(c, Message(name, explanation), actionId, statusId: null);
         }
+
+        // Killed by a status itself, with no action and none of the environment's wall-death packet:
+        // retail's death when TOP's Doom runs out.
+        public bool DieOfStatus(ushort statusId, string? explanation = null)
+            => Kill(c, Message(Natives.Data.StatusName(statusId), explanation), actionId: null, statusId);
 
         // Names no action, so nothing downstream can tell which mechanic it was.
         [Obsolete("Name the action: Die(actionId, explanation).")]
-        public bool Die(string cause) => Kill(c, cause, null);
+        public bool Die(string cause) => Kill(c, cause, null, null);
     }
 
-    private static bool Kill(SimCharacter c, string cause, uint? actionId)
+    private static string Message(string? name, string? explanation)
+        => name is null ? explanation ?? "" : explanation is null ? name : $"{name} ({explanation})";
+
+    private static bool Kill(SimCharacter c, string cause, uint? actionId, ushort? statusId)
     {
-        if (c is ISimPartyMember pm) return Plugin.Game.Kill(pm, cause, actionId);
+        if (c is ISimPartyMember pm) return Plugin.Game.Kill(pm, cause, actionId, statusId);
         Plugin.Log.Warning($"Die() on non-party {c.GetType().Name} ignored: {cause}");
         return false;
     }

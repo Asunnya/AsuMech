@@ -27,7 +27,7 @@ public sealed class TopP5OmegaScenario : IMultiplayerReplayable
     private SimParty party = null!;
 
     TopP5OmegaState state = null!;
-    private HelloWorldHolderDeaths holderDeaths = null!;
+    private HelloWorldFailures helloWorldFailures = null!;
     public void DrawSettings() => settingsWindow.Draw();
     public bool HasPerPlayerSettings => true;
     public void DrawPerPlayerSettings() => settingsWindow.DrawPerPlayer();
@@ -48,7 +48,7 @@ public sealed class TopP5OmegaScenario : IMultiplayerReplayable
         state = new TopP5OmegaState(world.Rng, world.Party, settingsWindow.Overrides);
         LastState = state;
         helloWorld2Broadcast = false;
-        holderDeaths = new HelloWorldHolderDeaths(world);
+        helloWorldFailures = new HelloWorldFailures(world);
         var solo = selectedAi is null;
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<TopP5OmegaState>)AiStrats[idx]).Run(state, world);
@@ -67,7 +67,7 @@ public sealed class TopP5OmegaScenario : IMultiplayerReplayable
 
     private void Run_InstanceEvents()
     {
-        world.Events.Add(0f, holderDeaths.SpawnHelpers);
+        world.Events.Add(0f, helloWorldFailures.SpawnHelpers);
         world.Events.Add(30.96f, () => Natives.Director.ProcessDirectorUpdate(0x80000004U, 0x1517U));
     }
 
@@ -136,6 +136,10 @@ public sealed class TopP5OmegaScenario : IMultiplayerReplayable
         list.RemoveAt(list.Count - 1);
         return last;
     }
+
+    public void OnActionResolved(ActionResolved resolved) => helloWorldFailures.OnActionResolved(resolved);
+    public void OnStatusLost(StatusLost lost) => helloWorldFailures.OnStatusLost(lost);
+    public void OnStatusAdded(StatusAdded added) => helloWorldFailures.OnStatusAdded(added);
 
     public void Tick(float delta, float elapsed)
     {

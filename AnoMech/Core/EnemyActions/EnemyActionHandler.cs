@@ -22,15 +22,16 @@ internal sealed class EnemyActionHandler(SimCharacter caster, SimCast cast, SimW
     };
 
     private EnemyActionCast? casting;
+    private EnemyActionCast? releasing;
 
-    public EnemyActionCast Start(EnemyAction action, CastTarget at, byte animationVariation)
+    // From a cast's start until its ActionEffect: the bar ends ActionEffectOffset before it, and
+    // the caster stays put through that gap.
+    public bool AwaitingRelease => releasing is not null;
+
+    public void Start(EnemyAction action, CastTarget at, byte animationVariation)
     {
+        if (caster.Dead) return;
         var handle = new EnemyActionCast();
-        if (caster.Dead)
-        {
-            handle.Cancelled();
-            return handle;
-        }
         var id = action.ActionId;
         var target = at.Character;
         var location = at.Location;
@@ -46,32 +47,36 @@ internal sealed class EnemyActionHandler(SimCharacter caster, SimCast cast, SimW
         if (castTime > 0f)
         {
             casting = handle;
+            releasing = handle;
             cast.NativeCast(id, ActionType.Action, action.Cast.OmenDelay, castTime, interruptible: false,
                 rotation: CastRotation(action, target, location), position: location, targetId: castTarget);
         }
 
         // Resolve goes first: an instant action runs both inline, and the ActionEffect carries the hits.
         var delivery = new Delivery();
+        var resolveAt = castTime + action.Timing.ResolveSnapshotOffset;
+        var releaseAt = action.Cast.CastSecondsOverride is { } bar ? bar + CastSpec.ActionEffectOffset : sheetCastTime;
         if (action.Effects.Count > 0)
-            Schedule(castTime + action.Timing.ResolveSnapshotOffset, () =>
+            Schedule(resolveAt, () =>
             {
                 if (handle.IsCancelled) return;
                 if (casting == handle) casting = null;
-                Resolve(action, target, location, handle, delivery);
+                Resolve(action, target, location, delivery, MathF.Max(0f, releaseAt - resolveAt));
             });
-        Schedule(sheetCastTime, () =>
+        Schedule(releaseAt, () =>
         {
+            if (releasing == handle) releasing = null;
             if (handle.IsCancelled) return;
             if (casting == handle) casting = null;
             Release(action, target, location, castTarget, animationVariation, delivery);
         });
-        return handle;
     }
 
     public void CancelCast(CastCancelReason reason)
     {
         if (casting is not { } handle) return;
         casting = null;
+        if (releasing == handle) releasing = null;
         handle.Cancelled();
         cast.Cancel(reason);
     }
@@ -137,14 +142,14 @@ internal sealed class EnemyActionHandler(SimCharacter caster, SimCast cast, SimW
         if (delivery.ImpactDue) ConfirmDamage(delivery);
     }
 
-    private void Resolve(EnemyAction action, SimCharacter? target, Vector3? location, EnemyActionCast handle, Delivery delivery)
+    private void Resolve(EnemyAction action, SimCharacter? target, Vector3? location, Delivery delivery, float releaseDelay)
     {
         var party = world.Party;
         var origin = target is not null && target != caster && IsDirectional(action)
             ? caster.Placement().Face(target.Position)
             : target?.Placement()
               ?? (location is { } at ? new Placement(at, caster.Rotation) : caster.Placement());
-        var ctx = new EnemyActionContext(action, caster, target, origin, party);
+        var ctx = new EnemyActionContext(action, caster, target, origin, party, releaseDelay);
 
         // A party member's own action never hits them.
         IReadOnlyList<SimCharacter> hits = IsSingleTarget(action)
@@ -159,21 +164,25 @@ internal sealed class EnemyActionHandler(SimCharacter caster, SimCast cast, SimW
         ctx.Hits = hits;
         if (!IsSingleTarget(action))
             ctx.NpcHits = NpcAreaHits(action, origin, origin.Position == caster.Position ? caster.HitboxRadius : 0f);
-        var positions = hits.Select(h => h.Position).ToList();
         DiagnosticLog.Info(
             $"[EnemyAction] Resolve: {Natives.Data.ActionName(action.ActionId)} at ({origin.Position.X:F1},{origin.Position.Z:F1}) rot={origin.Rotation:F3} -- {hits.Count} target(s): "
             + string.Join(", ", hits.Select(t => (t as ISimPartyMember)?.Role.ToString() ?? "?")));
 
         foreach (var effect in action.Effects)
             effect.Apply(ctx, hits);
-        handle.Resolve(origin, hits.Select((h, i) => new EnemyActionCast.Hit(h, positions[i], ctx.IsKilled(h))).ToList());
+        world.SimEvents.Raise(new ActionResolved(action, caster, origin, hits, ctx.NpcHits, hits.Where(ctx.IsKilled).ToList(), releaseDelay));
 
         delivery.Outcomes = ctx.Outcomes;
         // Ahead of the deaths it shares a time with, so the killing hit lands on a living target.
         if (ctx.Outcomes.Any(o => o.Damage is not null))
             Schedule(action.Timing.DamageDelay, () => ConfirmDamage(delivery));
-        foreach (var status in ctx.HiddenStatuses)
-            Schedule(action.Timing.DamageDelay, status.Reveal);
+        foreach (var (status, revealAt) in ctx.HiddenStatuses)
+            Schedule(revealAt, status.Reveal);
+        foreach (var (who, statusId) in ctx.ImpactRemovals)
+            Schedule(action.Timing.DamageDelay, () =>
+            {
+                if (who.IsAlive()) who.RemoveStatus(statusId);
+            });
         foreach (var outcome in ctx.Outcomes)
         {
             var who = outcome.Target;
@@ -193,8 +202,6 @@ internal sealed class EnemyActionHandler(SimCharacter caster, SimCast cast, SimW
             if (outcome.Killed)
                 Schedule(action.Timing.DamageDelay, () => who.Die(action.ActionId, Explain(action.DeathExplanation, outcome.Explanation)));
         }
-        foreach (var run in ctx.AfterResolveActions)
-            run();
     }
 
     private const float ExcludeCasterThreshold = 0.01f;
@@ -204,17 +211,20 @@ internal sealed class EnemyActionHandler(SimCharacter caster, SimCast cast, SimW
 
     private static IReadOnlyList<SimCharacter> AreaHits(EnemyAction action, Placement origin, float casterHitboxRadius, SimParty party)
     {
-        var query = new AoeQuery(action.ActionId, origin, action.Cast.Rotation, action.Area.Size, action.Area.CastTypeOverride, casterHitboxRadius);
+        var query = new AoeQuery(action.ActionId, origin, action.Cast.Rotation + action.Area.Rotation, action.Area.Size, action.Area.CastTypeOverride, casterHitboxRadius);
 #if DEBUG
         AnoMech.Windows.DamageDebugWindow.Instance?.Record(query);
 #endif
         return query.Run(party.Find);
     }
 
+    // Unlike a player, whose center has to be inside, an NPC is hit anywhere on its hitbox.
     private IReadOnlyList<SimEnemy> NpcAreaHits(EnemyAction action, Placement origin, float casterHitboxRadius)
     {
-        var query = new AoeQuery(action.ActionId, origin, action.Cast.Rotation, action.Area.Size, action.Area.CastTypeOverride, casterHitboxRadius);
-        return query.Run(new CharacterFind<SimEnemy>(() => world.Children.OfType<SimEnemy>().Where(e => e != caster && e.IsAlive())));
+        var query = new AoeQuery(action.ActionId, origin, action.Cast.Rotation + action.Area.Rotation, action.Area.Size, action.Area.CastTypeOverride, casterHitboxRadius);
+        return world.Children.OfType<SimEnemy>()
+            .Where(e => e != caster && e.IsAlive() && query.SignedDistance(e.Position) <= e.HitboxRadius)
+            .ToList();
     }
 
     private static float DistanceXZ(Vector3 a, Vector3 b)

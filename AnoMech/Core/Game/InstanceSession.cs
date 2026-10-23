@@ -39,7 +39,7 @@ public sealed class InstanceSession
         Mode = mode;
     }
 
-    // Null, with why, when the zone load was refused; nothing is set up then.
+    // I wish we could just return Either<string refusal, InstanceSession>
     public static InstanceSession? Enter(SimWorld world, IZone zone, SessionMode mode, out string? refusal)
     {
         // Hard gate: scenarios only ever run from an inn, and only from a state the server isn't
@@ -48,21 +48,31 @@ public sealed class InstanceSession
         // ZoneControl.Enter asks once more before the firewall goes up.
         refusal = Natives.Zone.StartBlockedReason(out _)
                   ?? (Natives.BattleCharas.LocalPlayer.Exists ? null : "no local player");
-        var spawn = zone.EntranceBarrier.Position;
-        if (refusal is null && !Natives.Zone.IsActive && !Natives.Zone.Enter(zone.TerritoryId, zone.Origin + spawn))
-            refusal = "the zone was not entered (see the log)";
-        if (refusal is not null)
+        if (refusal is not null) return null;
+        
+        var init = zone.DutyInitData;
+        if (!Natives.Zone.IsActive) // defensive check, should always be true
         {
-            Plugin.Log.Warning($"InstanceSession: not entering {zone.Name} -- {refusal}.");
-            return null;
+            AddRsData(init); // need to be done before Enter
+            if (!Natives.Zone.Enter(zone.TerritoryId, init.EntranceBarrier.Position))
+            {
+                refusal = "the zone was not entered (see the log)";
+                return null;
+            }
         }
         world.Map.Enter(zone.TerritoryId);
-        var session = new InstanceSession(world, zone, spawn, mode);
+        var session = new InstanceSession(world, zone, init.EntranceBarrier.Position - zone.Origin, mode);
         // Before any action mutates it, so Exit can restore it.
         Natives.UserActions.OnSessionStart();
         world.ScenarioOrigin = zone.Origin;
-        session.OpenEntranceBarrier(zone.EntranceBarrier);
+        session.OpenEntranceBarrier(init.EntranceBarrier);
         return session;
+    }
+
+    private static void AddRsData(DutyInitData data)
+    {
+        foreach (var record in data.Rsv) Natives.Rsv.Add(record);
+        foreach (var record in data.Rsf) Natives.Rsf.Add(record);
     }
 
     // Each run's phase. The first one gets retail's zone-in treatment (settled weather, zone-in
@@ -72,7 +82,7 @@ public sealed class InstanceSession
         var zoneIn = !phaseApplied;
         phaseApplied = true;
         world.Map.SetPhaseWeather(phase.Weather, zoneIn);
-        if (Zone.ArenaMapEffectSnapshot.Count > 0)
+        if (Zone.DutyInitData.MapEffectSnapshot.Count > 0)
             world.Map.SetEffectSnapshot(ArenaMapEffects(phase), zoneIn);
     }
 
@@ -143,7 +153,7 @@ public sealed class InstanceSession
         world.ScenarioOrigin = default;
     }
 
-    // Plugin unload: the native zone reverts itself on its own dispose.
+    // Plugin unload: the native zone's own dispose stops the game while a stay is up.
     public void Dispose()
     {
         SettleFall();
@@ -189,13 +199,13 @@ public sealed class InstanceSession
             GimmickId = entrance.WallLayoutId,
             TargetableStatus = 5,
         };
-        entranceBarrier = Natives.EventObjects.Spawn(config, world.Coordinates.ToGlobal(new Placement(entrance.Position, 0f)));
+        entranceBarrier = Natives.EventObjects.Spawn(config, new Placement(entrance.Position, entrance.Rotation));
         entranceBarrierOpenIn = EntranceBarrierOpenTime;
     }
 
     private ushort[] ArenaMapEffects(IPhase phase)
     {
-        var states = Zone.ArenaMapEffectSnapshot.ToArray();
+        var states = Zone.DutyInitData.MapEffectSnapshot.ToArray();
         foreach (var (slot, state) in phase.ArenaMapEffectOverrides)
             states[slot] = state;
         return states;

@@ -52,6 +52,7 @@ internal sealed class RunController
         }
         var party = new LocalPartyProvider { RoleOverride = selection!.RoleOverride, Solo = solo };
         var p = new RunScenarioParams(selection.Scenario, party, solo ? null : selection.Strat, selection.Waymark, selection.Seed);
+        ZoneControl.EndSpeedBuffs();
         if (ZoneControl.StartBlockedReason(out var settling) != null && settling != null)
         {
             DiagnosticLog.Info($"[RunController] Start waiting for {settling} to settle.");

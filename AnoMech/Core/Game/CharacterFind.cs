@@ -119,6 +119,18 @@ public sealed class CharacterFind<T> where T : IPositioned
         return hits;
     }
 
+    // Members sorted by their bearing off `origin`'s facing, from its right (-π) through straight
+    // ahead (0) to its left (+π). Alive only.
+    public IReadOnlyList<T> ByBearing(Placement origin) => source()
+        .OrderBy(m => Bearing(origin, m.Position))
+        .ToList();
+
+    private static float Bearing(Placement origin, Vector3 point)
+    {
+        var angle = MathF.Atan2(point.X - origin.Position.X, point.Z - origin.Position.Z) - origin.Rotation;
+        return MathF.Atan2(MathF.Sin(angle), MathF.Cos(angle));
+    }
+
     // Plus-shaped AOE centered on `origin`: union of two perpendicular centered
     // rects. Each arm extends `halfLength` along its axis and `halfWidth`
     // perpendicular.
@@ -258,7 +270,17 @@ public sealed class CharacterFind<T> where T : IPositioned
             _ =>
                 LogUnknownCastType(actionId, castType),
         };
-        return SortByDistanceTo(hits, target.Position);
+        // A line's front is how far along it, not how far from its origin (FRU Hallowed Wings ranks
+        // its targets so).
+        return castType is CastType.Rectangle or CastType.Rectangle2 or CastType.Charge
+            ? SortAlong(hits, forward)
+            : SortByDistanceTo(hits, target.Position);
+    }
+
+    private static IReadOnlyList<T> SortAlong(IReadOnlyList<T> hits, Placement line)
+    {
+        var (dx, dz) = (MathF.Sin(line.Rotation), MathF.Cos(line.Rotation));
+        return hits.OrderBy(h => (h.Position.X - line.Position.X) * dx + (h.Position.Z - line.Position.Z) * dz).ToList();
     }
 
     // Orders hits by ascending XZ distance to `from` (closest first), so callers that
