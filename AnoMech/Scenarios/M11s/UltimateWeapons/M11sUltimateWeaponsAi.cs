@@ -116,7 +116,6 @@ public sealed class M11sUltimateWeaponsAi : IScenarioAi<M11sUltimateWeaponsState
         _ => (PartyRole.RegenHealer, PartyRole.MeleeDpsA),
     };
 
-    // The route point a bot `walked` seconds out should be heading for.
     private Vector2? Hop(Vector2? from, Vector2? to, int lastStrike, float walked)
     {
         if (from is not { } a || to is not { } b) return to;
@@ -131,8 +130,6 @@ public sealed class M11sUltimateWeaponsAi : IScenarioAi<M11sUltimateWeaponsState
         return b;
     }
 
-    // Steps out of any Maelstrom already up, then walks round each one in the way, nearest first,
-    // until the way to `to` is clear.
     private List<Vector2> AroundTheTornadoes(Vector2 from, Vector2 to, int lastStrike)
     {
         var tornadoes = state.TornadoSpots().Take(Math.Max(0, lastStrike - M11sUltimateWeaponsState.FirstTornadoWeapon + 1))
