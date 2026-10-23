@@ -90,6 +90,15 @@ public static class M11sConstants
         public const uint ImmortalReign = 0xB428;
         public const uint OneAndOnly = 0xB429;
         public const uint OneAndOnlyRaidwide = 0xB42A;
+        public const uint GreatWallOfFire = 0xB42B;
+        public const uint GreatWallOfFireLine = 0xB42C;
+        public const uint GreatWallOfFireWall = 0xB42D;
+        public const uint WallExplosion = 0xB42E;
+        public const uint OrbitalOmen = 0xB432;
+        public const uint OrbitalOmenLine = 0xB433;
+        public const uint FireAndFury = 0xB42F;
+        public const uint FireAndFuryFront = 0xB430;
+        public const uint FireAndFuryBack = 0xB431;
     }
 
     public static class StatusId
@@ -97,6 +106,7 @@ public static class M11sConstants
         public const ushort PhysicalVulnerabilityUp = 0xB7C;
         public const ushort MagicVulnerabilityUp = 0xB7D;
         public const ushort DamageDown = 0xB5F;
+        public const ushort FireResistanceDownII = 0xB79;
     }
 
     public static class LockonId
@@ -113,6 +123,16 @@ public static class M11sConstants
         public const ushort SwordStrikes = 0x11DD;
         public const ushort AxeStrikes = 0x11DE;
         public const ushort ScytheStrikes = 0x11DF;
+    }
+
+    public static class MapEffect
+    {
+        // Orbital Omen's portals: slots 2-5 on the north wall (x -15, -5, 5, 15), 6-9 on the east (z -15, -5, 5, 15).
+        public const byte NorthPortalSlot = 0x02;
+        public const byte EastPortalSlot = 0x06;
+        public const uint PortalShows = 0x00020001;
+        public const uint PortalFires = 0x00200010;
+        public const uint PortalOff = 0x00080004;
     }
 
     public static class Geometry

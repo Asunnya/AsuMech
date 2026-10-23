@@ -196,4 +196,45 @@ public static class M11sActions
         Cast = new() { AnimationLock = 0.6f, FaceTarget = false },
         Effects = [Damage()],
     };
+
+    private static readonly VulnSpec VulnToFire = VulnerableTo(StatusId.FireResistanceDownII);
+
+    // A second line on the same tank kills through Fire Resistance Down II.
+    public static readonly EnemyAction GreatWallOfFireLine = new(ActionId.GreatWallOfFireLine)
+    {
+        Cast = new() { AnimationLock = 0.6f },
+        Effects = [Damage(VulnToFire, TankBuster), ApplyStatus(StatusId.FireResistanceDownII, 7f)],
+        Timing = new() { DamageDelay = 0.4f },
+        DeathExplanation = "swap for the second line, or invuln it",
+    };
+
+    // UNVERIFIED: lethal; nobody stood in it in the logs.
+    public static readonly EnemyAction WallExplosion = new(ActionId.WallExplosion)
+    {
+        Cast = new() { AnimationLock = 0.6f, FaceTarget = false },
+        Effects = [Damage(Lethal)],
+        Timing = new() { DamageDelay = 0.4f },
+        DeathExplanation = "the wall the line left explodes",
+    };
+
+    // Each leaves Damage Down; neither is lethal on its own.
+    public static readonly EnemyAction OrbitalOmenLine = new(ActionId.OrbitalOmenLine)
+    {
+        Cast = new() { AnimationLock = 0.6f, FaceTarget = false },
+        Effects = [Damage(), ApplyStatus(StatusId.DamageDown, 30f, delayToEffectResult: true)],
+        Timing = new() { DamageDelay = 0.5f },
+    };
+
+    public const float FireAndFuryHalfAngle = MathF.PI / 4f;
+
+    public static readonly EnemyAction FireAndFuryFront = new(ActionId.FireAndFuryFront)
+    {
+        Cast = new() { AnimationLock = 0.6f, FaceTarget = false },
+        Area = new() { Size = FireAndFuryHalfAngle },
+        Effects = [Damage(), ApplyStatus(StatusId.DamageDown, 30f, delayToEffectResult: true)],
+        Timing = new() { DamageDelay = 0.4f },
+    };
+
+    public static readonly EnemyAction FireAndFuryBack = FireAndFuryFront with { ActionId = ActionId.FireAndFuryBack };
 }
+

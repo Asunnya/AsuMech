@@ -116,6 +116,7 @@ All using default NA pf strats unless noted otherwise:
 - AAC Heavyweight M3 (Savage) — M11S _by [Asunnya](https://github.com/Asunnya)_
     - Raw Steel Trophy to Void Stardust (axe or scythe Raw Steel, Trophy Weapons into Assault Evolved twice, Void Stardust comets ending in a stack or spreads)
     - Dance of Domination to One and Only (raidwides into pair stacks between six lines, second Raw Steel Trophy, Charybdistopia, Ultimate Trophy Weapons' six strikes leaving Maelstroms, tornado gust baits)
+    - Great Wall of Fire to Orbital Omen (two line tank busters leaving walls that explode, four pairs of portal lines with Fire and Fury's front and back cones)
 
 ## Details
 
