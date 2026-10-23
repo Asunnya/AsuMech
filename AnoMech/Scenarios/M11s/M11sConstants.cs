@@ -123,6 +123,19 @@ public static class M11sConstants
         public const uint FireBreathLine = 0xB447;
         public const uint MassiveMeteor = 0xB448;
         public const uint MassiveMeteorStack = 0xB449;
+        public const uint EclipticStampede = 0xB452;
+        public const uint MammothMeteor = 0xB453;
+        public const uint AtomicImpact = 0xB454;
+        public const uint EclipticMajesticMeteor = 0xB455;
+        public const uint EclipticCosmicKiss = 0xB456;
+        public const uint WeightyImpact = 0xB457;
+        public const uint EclipticUnmitigatedExplosion = 0xB458;
+        public const uint EclipticMeteowrath = 0xB459;
+        public const uint TwoWayFireball = 0xB7BD;
+        public const uint TwoWayFireballLine = 0xB7BE;
+        public const uint HeartbreakKick = 0xB45D;
+        public const uint HeartbreakKickTower = 0xB45E;
+        public const uint Heartbreaker = 0xB462;
     }
 
     public static class StatusId
@@ -140,6 +153,7 @@ public static class M11sConstants
         public const uint Meteor = 0xF4;
         public const uint FireballLine = 0x20D;
         public const uint MassiveMeteor = 0x131;
+        public const uint AtomicImpact = 0x1E;
     }
 
     public static class TetherId
@@ -181,6 +195,8 @@ public static class M11sConstants
         public const byte MeteorainSlot = 0x16;
         // Meteowrath's shades: 0x1A-0x1D on the west wall (z -15, -5, 5, 15), 0x1E-0x21 on the east.
         public const byte WrathShadeSlot = 0x1A;
+        // Ecliptic Stampede's shades on the four cardinals.
+        public const byte EclipticShadeSlot = 0x22;
     }
 
     public static class Geometry

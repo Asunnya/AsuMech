@@ -379,5 +379,74 @@ public static class M11sActions
         Timing = new() { DamageDelay = 0.4f },
         DeathExplanation = "only the far corner of the safe platform survives",
     };
+
+    // UNVERIFIED: how close is lethal.
+    public const float MammothLethalWithin = 15f;
+
+    public static readonly EnemyAction MammothMeteor = new(ActionId.MammothMeteor)
+    {
+        Cast = new() { AnimationLock = 0.6f, FaceTarget = false },
+        Effects = [Damage(split: Falloff(MammothLethalWithin))],
+        Timing = new() { DamageDelay = 0.5f },
+        DeathExplanation = "get away from the giant meteors",
+    };
+
+    public static readonly EnemyAction AtomicImpact = new(ActionId.AtomicImpact)
+    {
+        Cast = new() { AnimationLock = 0.2f },
+        Effects = [Damage(VulnToMagic), ApplyStatus(StatusId.MagicVulnerabilityUp, 0.96f)],
+        Timing = new() { DamageDelay = 0.3f },
+        DeathExplanation = "the marked drop their puddles away from everyone",
+    };
+
+    public static readonly EnemyAction EclipticMajesticMeteor = MajesticMeteorPuddle with
+    {
+        ActionId = ActionId.EclipticMajesticMeteor,
+        DeathExplanation = "keep the group moving round the boss",
+    };
+
+    // One soaker, a tank; Weighty Impact takes two.
+    public static readonly EnemyAction EclipticCosmicKiss = new(ActionId.EclipticCosmicKiss)
+    {
+        Cast = new() { AnimationLock = 0.6f, FaceTarget = false },
+        Effects = [Damage()],
+        Timing = new() { DamageDelay = 0.4f },
+    };
+
+    public static readonly EnemyAction WeightyImpact = EclipticCosmicKiss with { ActionId = ActionId.WeightyImpact };
+
+    public static readonly EnemyAction EclipticUnmitigatedExplosion = UnmitigatedTowerExplosion with { ActionId = ActionId.EclipticUnmitigatedExplosion };
+
+    // UNVERIFIED: how far the tether must stretch.
+    public const float EclipticWrathStretch = 40f;
+
+    public static readonly EnemyAction EclipticMeteowrath = MajesticMeteowrath with
+    {
+        ActionId = ActionId.EclipticMeteowrath,
+        Effects =
+        [
+            OnTarget(Damage(VulnToMagic, split: Falloff(EclipticWrathStretch))),
+            OnOthers(Damage(VulnToMagic)),
+            ApplyStatus(StatusId.MagicVulnerabilityUp, 2.96f),
+        ],
+    };
+
+    // UNVERIFIED: the minimum; four share each line.
+    public static readonly EnemyAction TwoWayFireballLine = new(ActionId.TwoWayFireballLine)
+    {
+        Cast = new() { AnimationLock = 0.6f },
+        Effects = [Damage(split: Stack(4))],
+        Timing = new() { DamageDelay = 0.4f },
+        DeathExplanation = "four in each line",
+    };
+
+    // UNVERIFIED: never reached in the logs; the minimum.
+    public static readonly EnemyAction HeartbreakKickTower = new(ActionId.HeartbreakKickTower)
+    {
+        Cast = new() { AnimationLock = 0.2f, FaceTarget = false },
+        Effects = [Damage(split: Stack(6))],
+        Timing = new() { DamageDelay = 0.3f },
+        DeathExplanation = "everyone in the tower for every kick",
+    };
 }
 
