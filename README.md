@@ -118,6 +118,7 @@ All using default NA pf strats unless noted otherwise:
     - Dance of Domination to One and Only (raidwides into pair stacks between six lines, second Raw Steel Trophy, Charybdistopia, Ultimate Trophy Weapons' six strikes leaving Maelstroms, tornado gust baits)
     - Great Wall of Fire to Orbital Omen (two line tank busters leaving walls that explode, four pairs of portal lines with Fire and Fury's front and back cones)
     - Meteorain to Triple Tyrannhilation (proximity-baited meteors, shade tethers for the tanks, Fearsome Fireball lines blown into meteors, hiding from three shockwaves behind the last meteors)
+    - Arena Split (Flatliner's knockback onto two platforms, towers that knock back, Meteowrath tethers to stretch, Fire Breath, chasing puddles and portal meteor lines twice, Massive Meteor stacks, last towers and Arcadion Avalanche)
 
 ## Details
 

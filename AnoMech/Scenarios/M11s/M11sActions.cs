@@ -297,5 +297,87 @@ public static class M11sActions
         Timing = new() { DamageDelay = 0.3f },
         DeathExplanation = "hide behind a meteor",
     };
+
+    public static readonly EnemyAction FlatlinerKnockback = new(ActionId.FlatlinerKnockback)
+    {
+        Cast = new() { AnimationLock = 0.6f, FaceTarget = false },
+        Effects = [Damage(), Push(15f, 15f)],
+        Timing = new() { DamageDelay = 0.4f },
+    };
+
+    public static readonly EnemyAction MajesticMeteorPuddle = new(ActionId.MajesticMeteorPuddle)
+    {
+        Cast = new() { AnimationLock = 0.6f, FaceTarget = false },
+        Effects = [Damage(VulnToMagic), ApplyStatus(StatusId.MagicVulnerabilityUp, MagicVulnSeconds)],
+        Timing = new() { DamageDelay = 0.4f },
+        DeathExplanation = "keep moving along the wall",
+    };
+
+    // UNVERIFIED: lethal.
+    public static readonly EnemyAction MajesticMeteorain = new(ActionId.MajesticMeteorain)
+    {
+        Cast = new() { AnimationLock = 0.6f, FaceTarget = false },
+        Effects = [Damage(Lethal)],
+        Timing = new() { DamageDelay = 0.4f },
+        DeathExplanation = "stay out of the portal's meteor line",
+    };
+
+    // UNVERIFIED: how far the tether must stretch; closer and its line kills its target.
+    public const float MeteowrathStretch = 48f;
+
+    public static readonly EnemyAction MajesticMeteowrath = new(ActionId.MajesticMeteowrath)
+    {
+        Cast = new() { AnimationLock = 0.6f },
+        Effects =
+        [
+            OnTarget(Damage(VulnToMagic, split: Falloff(MeteowrathStretch))),
+            OnOthers(Damage(VulnToMagic)),
+            ApplyStatus(StatusId.MagicVulnerabilityUp, 2.96f),
+        ],
+        Timing = new() { DamageDelay = 0.4f },
+        DeathExplanation = "stretch the tether and keep its line off the others",
+    };
+
+    public static readonly EnemyAction FireBreathLine = new(ActionId.FireBreathLine)
+    {
+        Cast = new() { AnimationLock = 0.6f },
+        Effects = [Damage(VulnToMagic), ApplyStatus(StatusId.MagicVulnerabilityUp, 2.96f)],
+        Timing = new() { DamageDelay = 0.4f },
+        DeathExplanation = "keep the breaths and tether lines apart",
+    };
+
+    public const float TowerKnockback = 23f;
+
+    public static readonly EnemyAction TowerExplosion = new(ActionId.TowerExplosion)
+    {
+        Cast = new() { AnimationLock = 0.6f, FaceTarget = false },
+        Effects = [Damage(), Push(TowerKnockback, 20f)],
+        Timing = new() { DamageDelay = 0.4f },
+    };
+
+    // Not lethal in the logs: it leaves Damage Down on everyone.
+    public static readonly EnemyAction UnmitigatedTowerExplosion = new(ActionId.UnmitigatedTowerExplosion)
+    {
+        Cast = new() { AnimationLock = 0.6f, FaceTarget = false },
+        Effects = [Damage(), ApplyStatus(StatusId.DamageDown, 30f, delayToEffectResult: true)],
+        Timing = new() { DamageDelay = 0.4f },
+    };
+
+    // UNVERIFIED: the minimum.
+    public static readonly EnemyAction MassiveMeteorStack = new(ActionId.MassiveMeteorStack)
+    {
+        Cast = new() { AnimationLock = 0.2f },
+        Effects = [Damage(VulnToMagic, split: Stack(4)), ApplyStatus(StatusId.MagicVulnerabilityUp, 0.96f)],
+        Timing = new() { DamageDelay = 0.3f },
+        DeathExplanation = "one stack per platform",
+    };
+
+    public static readonly EnemyAction ArcadionAvalancheSmash = new(0xB44B)
+    {
+        Cast = new() { AnimationLock = 0.6f, FaceTarget = false },
+        Effects = [Damage(Lethal)],
+        Timing = new() { DamageDelay = 0.4f },
+        DeathExplanation = "only the far corner of the safe platform survives",
+    };
 }
 

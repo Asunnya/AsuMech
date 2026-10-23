@@ -111,6 +111,18 @@ public static class M11sConstants
         public const uint FearsomeFireballLine = 0xB43A;
         public const uint TripleTyrannhilation = 0xB43C;
         public const uint Shockwave = 0xB43D;
+        public const uint Flatliner = 0xB43F;
+        public const uint FlatlinerKnockback = 0xBA90;
+        public const uint MajesticMeteor = 0xB440;
+        public const uint MajesticMeteorPuddle = 0xB441;
+        public const uint MajesticMeteorain = 0xB442;
+        public const uint MajesticMeteowrath = 0xB443;
+        public const uint TowerExplosion = 0xB444;
+        public const uint UnmitigatedTowerExplosion = 0xB445;
+        public const uint FireBreath = 0xB446;
+        public const uint FireBreathLine = 0xB447;
+        public const uint MassiveMeteor = 0xB448;
+        public const uint MassiveMeteorStack = 0xB449;
     }
 
     public static class StatusId
@@ -127,11 +139,14 @@ public static class M11sConstants
         public const uint Spread = 0x8B;
         public const uint Meteor = 0xF4;
         public const uint FireballLine = 0x20D;
+        public const uint MassiveMeteor = 0x131;
     }
 
     public static class TetherId
     {
         public const ushort ForegoneFatality = 0x164;
+        public const ushort MeteowrathSlack = 0x39;
+        public const ushort MeteowrathStretched = 0xF9;
     }
 
     public static class TimelineId
@@ -154,6 +169,18 @@ public static class M11sConstants
         public const uint PortalOff = 0x00080004;
         // Foregone Fatality's shades come out of slots 0x12-0x15: north, east, south, west.
         public const byte ShadeSlot = 0x12;
+        public const byte ArenaSlot = 0x00;
+        public const uint ArenaSplits = 0x40004000;
+        public const uint MiddleFalls = 0x00020001;
+        public const uint ArenaRestored = 0x08000004;
+        // Arena Split's towers (0x0E-0x11) and their floor marks (0x0A-0x0D).
+        public const byte TowerSlot = 0x0E;
+        public const byte TowerMarkSlot = 0x0A;
+        public const uint TowerMarkShows = 0x00020004;
+        // Majestic Meteorain's portals: 0x16-0x19 for lines at x -21, -11, 11, 21.
+        public const byte MeteorainSlot = 0x16;
+        // Meteowrath's shades: 0x1A-0x1D on the west wall (z -15, -5, 5, 15), 0x1E-0x21 on the east.
+        public const byte WrathShadeSlot = 0x1A;
     }
 
     public static class Geometry
