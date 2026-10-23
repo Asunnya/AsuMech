@@ -27,6 +27,7 @@ public sealed class M11sOpenerState
     public bool StackFirst { get; }
     public PartyRole CrushingCometTarget { get; }
     public PartyRole HeavyHitterTarget { get; }
+    public PartyRole HeavyWeightTarget { get; }
 
     public M11sOpenerState(Rng rng, M11sOpenerStateOverrides? overrides = null)
     {
@@ -39,18 +40,29 @@ public sealed class M11sOpenerState
         var stack = rng.NextBool();
         var comet = rng.NextBool() ? PartyRole.RegenHealer : PartyRole.ShieldHealer;
         var hitter = rng.NextBool() ? PartyRole.RegenHealer : PartyRole.ShieldHealer;
+        var weight = rng.NextBool() ? PartyRole.RegenHealer : PartyRole.ShieldHealer;
         AxeTrophyFirst = overrides.AxeTrophyFirst ?? axe;
         Weapons = [overrides.FirstWeapons ?? first, overrides.SecondWeapons ?? second];
         FirstWeaponSteps = [overrides.FirstWeaponStep ?? firstStep, overrides.SecondWeaponStep ?? secondStep];
         StackFirst = overrides.StackFirst ?? stack;
         CrushingCometTarget = overrides.CrushingCometTarget ?? comet;
         HeavyHitterTarget = hitter;
+        HeavyWeightTarget = weight;
     }
 
     // Bearing from the centre; the set goes clockwise from its first weapon, 120° apart.
     public float WeaponBearing(int set, int index) => FirstWeaponSteps[set] * Step - index * MathF.Tau / 3f;
 
     public Vector3 WeaponSpot(int set, int index) => Toward(WeaponBearing(set, index)) * Geometry.WeaponRing;
+
+    // The Tyrant dashes from the centre, then weapon to weapon; each weapon's area and the party's
+    // spots around it turn with the direction it came from.
+    public float ArrivalBearing(int set, int index)
+    {
+        var from = index == 0 ? Vector3.Zero : WeaponSpot(set, index - 1);
+        var d = WeaponSpot(set, index) - from;
+        return MathF.Atan2(d.X, d.Z);
+    }
 
     public int IndexOf(int set, Weapon weapon)
     {

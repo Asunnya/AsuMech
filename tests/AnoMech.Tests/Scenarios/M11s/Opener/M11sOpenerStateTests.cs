@@ -31,6 +31,20 @@ public class M11sOpenerStateTests
     }
 
     [Test]
+    public void TheFirstWeaponFacesOutwardAndTheRestTurn30BackFromTheirBearing()
+    {
+        for (var step = 0; step < M11sOpenerState.WeaponSteps; step++)
+        {
+            var state = new M11sOpenerState(new Rng(0), new M11sOpenerStateOverrides { FirstWeaponStep = step });
+            Assert.That(Wrap(state.ArrivalBearing(0, 0) - state.WeaponBearing(0, 0)), Is.EqualTo(0f).Within(0.001f));
+            for (var i = 1; i < 3; i++)
+                Assert.That(Wrap(state.ArrivalBearing(0, i) - state.WeaponBearing(0, i)), Is.EqualTo(-MathF.PI / 6f).Within(0.001f));
+        }
+    }
+
+    private static float Wrap(float a) => MathF.IEEERemainder(a, MathF.Tau);
+
+    [Test]
     public void OverridesPinEveryRoll()
     {
         Weapon[] order = [Weapon.Sword, Weapon.Axe, Weapon.Scythe];

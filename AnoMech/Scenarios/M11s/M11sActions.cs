@@ -20,8 +20,8 @@ public static class M11sActions
         Effects = [Damage()],
     };
 
-    // UNVERIFIED: the cone's half-angle.
-    public const float RawSteelConeHalfAngle = MathF.PI / 6f;
+    public const float RawSteelConeHalfAngle = MathF.PI / 4f;
+    public const float HeavyHitterHalfAngle = MathF.PI / 8f;
 
     public static readonly EnemyAction RawSteelScytheCone = new(ActionId.RawSteelScytheCone)
     {
@@ -36,7 +36,7 @@ public static class M11sActions
     public static readonly EnemyAction HeavyHitter = new(ActionId.HeavyHitter)
     {
         Cast = new() { AnimationLock = 0.6f },
-        Area = new() { Size = RawSteelConeHalfAngle },
+        Area = new() { Size = HeavyHitterHalfAngle },
         Effects = [Damage(VulnToPhysical, split: Stack(4)), ApplyStatus(StatusId.PhysicalVulnerabilityUp, PhysicalVulnSeconds)],
         Timing = new() { DamageDelay = 0.4f },
         DeathExplanation = "the party stacks in the cone behind the boss",
@@ -85,7 +85,7 @@ public static class M11sActions
         DeathExplanation = "stay off the sword's cross",
     };
 
-    // UNVERIFIED: the minimum; the party takes it together in the middle.
+    // On a healer. UNVERIFIED: the minimum; the party takes it together in the middle.
     public static readonly EnemyAction HeavyWeight = new(ActionId.HeavyWeight)
     {
         Cast = new() { AnimationLock = 0.6f },
@@ -94,8 +94,7 @@ public static class M11sActions
         DeathExplanation = "stack in the middle, clear of the axe",
     };
 
-    // UNVERIFIED: the half-angle; eight players around the scythe each take one.
-    public const float SweepingVictoryHalfAngle = MathF.PI / 9f;
+    public const float SweepingVictoryHalfAngle = MathF.PI / 12f;
 
     public static readonly EnemyAction SweepingVictory = new(ActionId.SweepingVictory)
     {

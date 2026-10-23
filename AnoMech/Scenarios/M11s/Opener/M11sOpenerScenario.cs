@@ -44,8 +44,8 @@ public sealed class M11sOpenerScenario : IScenario
     public const float CometResolves = 5f;
     private static readonly float[] AutoAttackAt = [0.5f, 3.04f, 11.11f, 14.14f, 27.69f, 30.73f, 63.46f, 66.49f];
 
-    // The sword's cross is turned 30° back from its bearing.
-    public const float SwordCrossTurn = -MathF.PI / 6f;
+    public const float RepositionAt = 67.55f;
+    private const float DashSpeed = 40f;
 
     private SimWorld world = null!;
     private M11sOpenerState state = null!;
@@ -81,7 +81,11 @@ public sealed class M11sOpenerScenario : IScenario
             var set = s;
             world.Events.Add(TrophyWeaponsCastAt[set], () => tyrant?.Cast(ActionId.TrophyWeapons, animationLock: 0.2f));
             world.Events.Add(WeaponsAppearAt[set], () => ShowWeapons(set));
-            if (set == 1) world.Events.Add(VoidStardustCastAt, () => tyrant?.Cast(ActionId.VoidStardust, animationLock: 0.2f));
+            if (set == 1)
+            {
+                world.Events.Add(RepositionAt, ReturnToTheMiddle);
+                world.Events.Add(VoidStardustCastAt, () => tyrant?.Cast(ActionId.VoidStardust, animationLock: 0.2f));
+            }
             world.Events.Add(AssaultCastAt[set], () => Assault(set));
             for (var i = 0; i < 3; i++)
             {
@@ -214,6 +218,12 @@ public sealed class M11sOpenerScenario : IScenario
 
     private void HideWeapon(Weapon kind) => weapons[kind]?.SetVisible(false);
 
+    private void ReturnToTheMiddle()
+    {
+        tyrant?.Cast(ActionId.Reposition, Vector3.Zero, animationLock: 0.2f);
+        tyrant?.MoveTo(Vector3.Zero, DashSpeed);
+    }
+
     private void Assault(int set)
     {
         tyrant?.Face(state.WeaponSpot(set, 0));
@@ -224,21 +234,21 @@ public sealed class M11sOpenerScenario : IScenario
     {
         var kind = state.Weapons[set][index];
         var spot = state.WeaponSpot(set, index);
-        var bearing = state.WeaponBearing(set, index);
         tyrant?.Face(spot);
         tyrant?.Cast(kind switch
         {
-            Weapon.Axe => ActionId.TurnToAxe,
-            Weapon.Scythe => ActionId.TurnToScythe,
-            _ => ActionId.TurnToSword,
-        }, animationLock: 0.2f);
+            Weapon.Axe => ActionId.DashToAxe,
+            Weapon.Scythe => ActionId.DashToScythe,
+            _ => ActionId.DashToSword,
+        }, spot, animationLock: 0.2f);
+        tyrant?.MoveTo(spot, DashSpeed);
         weapons[kind]?.PlayActionTimeline(kind switch
         {
             Weapon.Axe => TimelineId.AxeStrikes,
             Weapon.Scythe => TimelineId.ScytheStrikes,
             _ => TimelineId.SwordStrikes,
         });
-        strikeHelper?.SetPosition(new Placement(spot, kind == Weapon.Sword ? bearing + SwordCrossTurn : bearing));
+        strikeHelper?.SetPosition(new Placement(spot, state.ArrivalBearing(set, index)));
         strikeHelper?.Cast(kind switch
         {
             Weapon.Axe => Actions.AxeStrike,
@@ -253,8 +263,10 @@ public sealed class M11sOpenerScenario : IScenario
         switch (state.Weapons[set][index])
         {
             case Weapon.Axe:
-                stackHelper?.SetPosition(new Placement(tyrant?.Position ?? Vector3.Zero, 0f));
-                stackHelper?.Cast(Actions.HeavyWeight);
+                var target = Alive(state.HeavyWeightTarget) ?? AliveMembers().FirstOrDefault();
+                if (target == null) break;
+                stackHelper?.SetPosition(new Placement(spot, 0f));
+                stackHelper?.Cast(Actions.HeavyWeight, target);
                 break;
             case Weapon.Scythe:
                 var i = 0;

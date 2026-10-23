@@ -57,9 +57,9 @@ public static class M11sConstants
         public const uint HeavyWeight = 0xB41B;
         public const uint SweepingVictory = 0xB41C;
         public const uint SharpTaste = 0xB41D;
-        public const uint TurnToAxe = 0xB543;
-        public const uint TurnToScythe = 0xB544;
-        public const uint TurnToSword = 0xB545;
+        public const uint DashToAxe = 0xB543;
+        public const uint DashToScythe = 0xB544;
+        public const uint DashToSword = 0xB545;
         public const uint VoidStardust = 0xB412;
         public const uint Cometite = 0xB413;
         public const uint Comet = 0xB414;

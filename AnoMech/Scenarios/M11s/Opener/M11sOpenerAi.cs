@@ -19,9 +19,9 @@ public sealed class M11sOpenerAi : IScenarioAi<M11sOpenerState>
     private static readonly Vector2 PartyBehind = new(0f, 7f);
     private static readonly Vector2 WaitInTheMiddle = new(0f, 2f);
 
-    private const float UnderTheScythe = 3f;
+    private const float UnderTheScythe = 3.5f;
     private const float AcrossFromTheAxe = 2f;
-    private const float AwayFromTheSword = 10f;
+    private const float AwayFromTheSword = 8.5f;
     private const float CometRing = 7f;
     private const float SpreadRing = 15f;
     private const float QuarterTurn = MathF.PI / 2f;
@@ -88,18 +88,18 @@ public sealed class M11sOpenerAi : IScenarioAi<M11sOpenerState>
 
     private Vector2? WeaponSpot(PartyRole role, int set, int index)
     {
-        var bearing = state.WeaponBearing(set, index);
+        var arrival = state.ArrivalBearing(set, index);
         var weapon = Flat(state.WeaponSpot(set, index));
         return state.Weapons[set][index] switch
         {
-            Weapon.Axe => -AcrossFromTheAxe * Toward(bearing) + StackOffset(role),
-            Weapon.Scythe => weapon + UnderTheScythe * Toward(bearing + ProteanTurn(role)),
-            _ => weapon + AwayFromTheSword * Toward(bearing + (LightPartyOne.Contains(role) ? SideQuadrant : InnerQuadrant)) + StackOffset(role),
+            Weapon.Axe => -AcrossFromTheAxe * Toward(state.WeaponBearing(set, index)) + StackOffset(role),
+            Weapon.Scythe => weapon + UnderTheScythe * Toward(arrival + ProteanTurn(role)),
+            _ => weapon + AwayFromTheSword * Toward(arrival + (LightPartyOne.Contains(role) ? LeftOfTheSword : RightOfTheSword)) + StackOffset(role),
         };
     }
 
-    private const float SideQuadrant = MathF.PI * 105f / 180f;
-    private const float InnerQuadrant = MathF.PI * 195f / 180f;
+    private const float LeftOfTheSword = MathF.PI * 3f / 4f;
+    private const float RightOfTheSword = -MathF.PI * 3f / 4f;
 
     private static float ProteanTurn(PartyRole role) => role switch
     {
