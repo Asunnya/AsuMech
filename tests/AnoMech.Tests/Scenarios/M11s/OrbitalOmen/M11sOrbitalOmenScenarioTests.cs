@@ -24,6 +24,27 @@ public class M11sOrbitalOmenScenarioTests
         }
     }
 
+    [Test]
+    public void TheSecondPairAlwaysCrossesNextToTheBoss()
+    {
+        foreach (var pattern in M11sOrbitalOmenState.Patterns)
+            Assert.That((Math.Abs(pattern[1].North), Math.Abs(pattern[1].East)), Is.EqualTo((5, 5)));
+    }
+
+    [TestCaseSource(nameof(PatternIndices))]
+    public void EveryPatternIsClearedWithoutAHit(int pattern)
+        => Negative<Scenario>(MeleeDpsA)
+            .Overrides<M11sOrbitalOmenStateOverrides>(o => o.Pattern = pattern)
+            .TeleportAt(Scenario.LineAt[1] - 0.5f, to: InTheSecondLine)
+            .At(Scenario.PairCastAt[^1] + Scenario.PairResolves + 0.8f, p =>
+            {
+                foreach (var role in Enum.GetValues<AnoMech.Core.Game.Party.PartyRole>())
+                    Assert.That(p.Member(role)!.HasStatus(StatusId.DamageDown), Is.False, $"{role} took a portal line or a cone");
+            })
+            .ShouldKill(ActionId.GreatWallOfFireLine, MeleeDpsA);
+
+    private static IEnumerable<int> PatternIndices() => Enumerable.Range(0, M11sOrbitalOmenState.Patterns.Length);
+
     // The main tank stepping into the second line is the run's death; everyone else must come out
     // of Orbital Omen and Fire and Fury untouched.
     [TestCaseSource(nameof(Seeds))]
