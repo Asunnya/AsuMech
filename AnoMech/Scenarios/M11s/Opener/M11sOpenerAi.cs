@@ -24,13 +24,10 @@ public sealed class M11sOpenerAi : IScenarioAi<M11sOpenerState>
     private const float QuarterTurn = MathF.PI / 2f;
 
     private M11sOpenerState state = null!;
-    private SimWorld world = null!;
-    private readonly float[] firstCometStop = new float[2];
 
     public void Run(M11sOpenerState stateParam, SimWorld world)
     {
         state = stateParam;
-        this.world = world;
         var ai = new AiManager(world);
 
         ai.Move(0.3f, () => ByRole(TanksInFrontPartyBehind));
@@ -52,7 +49,7 @@ public sealed class M11sOpenerAi : IScenarioAi<M11sOpenerState>
             var set = s;
             var waves = CometiteAt[set];
             var startAt = set == 0 ? VoidStardustCastAt : StrikeAt[1][2] + StrikeResolves + 0.05f;
-            ai.Move(startAt, () => ByRole(role => CometStop(role, set, 0, chooseStart: true)), jitter: 0f, sprint: true);
+            ai.Move(startAt, () => ByRole(role => CometStop(role, set, 0)), jitter: 0f, sprint: true);
             ai.Move(waves[0] + 0.05f, () => ByRole(role => CometStop(role, set, 1)), jitter: 0f, sprint: true);
             ai.Move(waves[1] + 0.05f, () => ByRole(role => CometStop(role, set, 2)), jitter: 0f, sprint: true);
             ai.Move(waves[1] + CometiteResolves + 0.05f, () => ByRole(role => StackOrSpreadClearOfTheLastPuddle(role, set)), jitter: 0f, sprint: true);
@@ -115,16 +112,18 @@ public sealed class M11sOpenerAi : IScenarioAi<M11sOpenerState>
         _ => 1f,
     } * MathF.PI / 4f;
 
-    private Vector2? CometStop(PartyRole role, int set, int stop, bool chooseStart = false)
-    {
-        if (chooseStart) firstCometStop[set] = set == 0 ? MathF.PI : NearestCardinalToTheParty();
-        return CometRing * Toward(firstCometStop[set] - stop * QuarterTurn) + StackOffset(role);
-    }
+    private Vector2? CometStop(PartyRole role, int set, int stop) => CometStopCentre(set, stop) + StackOffset(role);
+
+    private Vector2 CometStopCentre(int set, int stop) => CometBoss(set) + CometRing * Toward(BehindTheBoss(set) - stop * QuarterTurn);
+
+    private Vector2 CometBoss(int set) => set == 0 ? Vector2.Zero : Flat(state.WeaponSpot(1, 2));
+
+    private float BehindTheBoss(int set) => set == 0 ? MathF.PI : state.ArrivalBearing(1, 2) + MathF.PI;
 
     private Vector2? StackOrSpreadClearOfTheLastPuddle(PartyRole role, int set)
     {
         var spot = StackOrSpread(role, set);
-        var lastPuddle = CometRing * Toward(firstCometStop[set] - 2 * QuarterTurn);
+        var lastPuddle = CometStopCentre(set, 2);
         var away = spot - lastPuddle;
         return away.Length() >= PuddleClearance ? spot : lastPuddle + PuddleClearance * Vector2.Normalize(away);
     }
@@ -132,7 +131,7 @@ public sealed class M11sOpenerAi : IScenarioAi<M11sOpenerState>
     private Vector2 StackOrSpread(PartyRole role, int set)
     {
         if (state.StackOnSet(set)) return CometStop(role, set, 3)!.Value;
-        return CometSpread(role, set == 0 ? Vector2.Zero : Flat(state.WeaponSpot(1, 2)));
+        return CometSpread(role, CometBoss(set));
     }
 
     public static Vector2 CometSpread(PartyRole role, Vector2 boss)
@@ -145,15 +144,6 @@ public sealed class M11sOpenerAi : IScenarioAi<M11sOpenerState>
 
     private static Vector2 Turn(Vector2 v, float bearing)
         => new(v.X * MathF.Cos(bearing) + v.Y * MathF.Sin(bearing), -v.X * MathF.Sin(bearing) + v.Y * MathF.Cos(bearing));
-
-    private float NearestCardinalToTheParty()
-    {
-        var members = Enum.GetValues<PartyRole>().Select(r => world.Party.Get(r)).Where(m => m != null && m.IsAlive()).ToList();
-        if (members.Count == 0) return MathF.PI;
-        var centre = members.Aggregate(Vector2.Zero, (sum, m) => sum + new Vector2(m!.Position.X, m.Position.Z)) / members.Count;
-        var bearing = MathF.Atan2(centre.X, centre.Y);
-        return MathF.Round(bearing / QuarterTurn) * QuarterTurn;
-    }
 
     private static Vector2 Toward(float bearing) => new(MathF.Sin(bearing), MathF.Cos(bearing));
 

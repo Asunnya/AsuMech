@@ -96,7 +96,7 @@ public sealed class M11sOpenerScenario : IScenario
                 world.Events.Add(StrikeAt[set][index] + FollowUpDelay, () => weapons.FollowUp(state.Weapons[set][index], state.WeaponSpot(set, index), state.HeavyWeightTarget));
                 world.Events.Add(StrikeAt[set][index] + StrikeResolves + 0.8f, () => weapons.Hide(state.WeaponSpot(set, index)));
             }
-            world.Events.Add(StrikeAt[set][2] + StrikeResolves, TankTheBoss);
+            if (set == 0) world.Events.Add(StrikeAt[set][2] + StrikeResolves, TankTheBoss);
         }
         for (var s = 0; s < 2; s++)
         {
