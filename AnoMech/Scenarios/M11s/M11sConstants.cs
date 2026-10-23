@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 using AnoMech.Core.Game;
+using AnoMech.Core.Game.Party;
 
 namespace AnoMech.Scenarios.M11s;
 
@@ -19,6 +20,13 @@ public static class M11sConstants
         new(WaymarkSlot.Two,   new Vector3( 16.25f, 0f, -12.5f)),
         new(WaymarkSlot.Three, new Vector3( 16.25f, 0f,  12.5f)),
         new(WaymarkSlot.Four,  new Vector3(-16.25f, 0f,  12.5f)),
+    ];
+
+    // Each light party's healer sits at index 1.
+    public static readonly PartyRole[][] LightParties =
+    [
+        [PartyRole.MainTank, PartyRole.RegenHealer, PartyRole.MeleeDpsA, PartyRole.PhysRangedDps],
+        [PartyRole.OffTank, PartyRole.ShieldHealer, PartyRole.MeleeDpsB, PartyRole.CasterDps],
     ];
 
     public static class BNpcBaseId

@@ -1,6 +1,7 @@
 using System.Numerics;
 using AnoMech.Core.Game.Party;
 using AnoMech.Scenarios;
+using AnoMech.Scenarios.M11s;
 using AnoMech.Scenarios.M11s.Opener;
 
 namespace AnoMech.Tests;

@@ -1,4 +1,5 @@
 using System.Numerics;
+using AnoMech.Scenarios.M11s;
 using AnoMech.Scenarios.M11s.Opener;
 using static AnoMech.Core.Game.Party.PartyRole;
 using static AnoMech.Scenarios.M11s.M11sConstants;

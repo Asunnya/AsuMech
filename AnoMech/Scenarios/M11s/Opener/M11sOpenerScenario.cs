@@ -35,8 +35,8 @@ public sealed class M11sOpenerScenario : IScenario
     public static readonly float[] WeaponsAppearAt = [39.36f, 73.79f];
     public static readonly float[] AssaultCastAt = [41.92f, 86.92f];
     public static readonly float[][] StrikeAt = [[48.17f, 53.29f, 58.42f], [93.16f, 98.29f, 103.41f]];
-    public const float FollowUpDelay = 1.82f;
-    public const float StrikeResolves = 2f;
+    public const float FollowUpDelay = M11sTrophyWeapons.FollowUpDelay;
+    public const float StrikeResolves = M11sTrophyWeapons.StrikeResolves;
     public const float VoidStardustCastAt = 75.83f;
     public static readonly float[][] CometiteAt = [[80.95f, 82.95f, 84.96f], [107.56f, 109.56f, 111.56f]];
     public const float CometiteResolves = 3f;
@@ -45,24 +45,22 @@ public sealed class M11sOpenerScenario : IScenario
     private static readonly float[] AutoAttackAt = [0.5f, 3.04f, 11.11f, 14.14f, 27.69f, 30.73f, 63.46f, 66.49f];
 
     public const float RepositionAt = 67.55f;
-    private const float DashSpeed = 40f;
+    private const float WalkBackSpeed = 40f;
 
     private SimWorld world = null!;
     private M11sOpenerState state = null!;
     private SimEnemy? tyrant;
-    private readonly Dictionary<Weapon, SimEnemy?> weapons = [];
-    private readonly SimEnemy?[] coneHelpers = new SimEnemy?[3];
-    private readonly SimEnemy?[] spreadHelpers = new SimEnemy?[8];
+    private M11sTrophyWeapons weapons = null!;
+    private M11sRawSteel rawSteel = null!;
     private readonly SimEnemy?[] cometHelpers = new SimEnemy?[8];
     private readonly SimEnemy?[] cometiteHelpers = new SimEnemy?[24];
-    private readonly SimEnemy?[] lineHelpers = new SimEnemy?[2];
-    private SimEnemy? strikeHelper;
-    private SimEnemy? stackHelper;
 
     public void Run(SimWorld worldParam, int? selectedAi)
     {
         world = worldParam;
         state = new M11sOpenerState(world.Rng, settingsWindow.Overrides);
+        weapons = new M11sTrophyWeapons(world, () => tyrant);
+        rawSteel = new M11sRawSteel(world, () => tyrant);
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<M11sOpenerState>)AiStrats[idx]).Run(state, world);
 
@@ -72,15 +70,18 @@ public sealed class M11sOpenerScenario : IScenario
         foreach (var at in AutoAttackAt)
             world.Events.Add(at, AutoAttack);
         world.Events.Add(CrownCastAt[0], () => tyrant?.Cast(Actions.CrownOfArcadia));
-        world.Events.Add(TrophyCastAt, () => tyrant?.Cast(state.AxeTrophyFirst ? ActionId.RawSteelTrophyAxe : ActionId.RawSteelTrophyScythe, animationLock: 0.2f));
-        world.Events.Add(RawSteelSwingAt, () => tyrant?.Cast(state.AxeTrophyFirst ? ActionId.RawSteelAxe : ActionId.RawSteelScythe, animationLock: 0.2f));
-        world.Events.Add(RawSteelFollowAt, RawSteelFollow);
-        world.Events.Add(RawSteelHitAt, RawSteelHit);
+        world.Events.Add(TrophyCastAt, () => rawSteel.Trophy(state.AxeTrophyFirst));
+        world.Events.Add(RawSteelSwingAt, () => rawSteel.Swing(state.AxeTrophyFirst));
+        world.Events.Add(RawSteelFollowAt, () => rawSteel.Follow(state.AxeTrophyFirst));
+        world.Events.Add(RawSteelHitAt, () => rawSteel.Hit(state.AxeTrophyFirst, state.HeavyHitterTarget));
         for (var s = 0; s < 2; s++)
         {
             var set = s;
             world.Events.Add(TrophyWeaponsCastAt[set], () => tyrant?.Cast(ActionId.TrophyWeapons, animationLock: 0.2f));
-            world.Events.Add(WeaponsAppearAt[set], () => ShowWeapons(set));
+            world.Events.Add(WeaponsAppearAt[set], () =>
+            {
+                for (var i = 0; i < 3; i++) weapons.Show(state.Weapons[set][i], state.WeaponSpot(set, i));
+            });
             if (set == 1)
             {
                 world.Events.Add(RepositionAt, ReturnToTheMiddle);
@@ -90,9 +91,9 @@ public sealed class M11sOpenerScenario : IScenario
             for (var i = 0; i < 3; i++)
             {
                 var index = i;
-                world.Events.Add(StrikeAt[set][index], () => Strike(set, index));
-                world.Events.Add(StrikeAt[set][index] + FollowUpDelay, () => FollowUp(set, index));
-                world.Events.Add(StrikeAt[set][index] + StrikeResolves + 0.8f, () => HideWeapon(state.Weapons[set][index]));
+                world.Events.Add(StrikeAt[set][index], () => weapons.Strike(state.Weapons[set][index], state.WeaponSpot(set, index), state.ArrivalBearing(set, index)));
+                world.Events.Add(StrikeAt[set][index] + FollowUpDelay, () => weapons.FollowUp(state.Weapons[set][index], state.WeaponSpot(set, index), state.HeavyWeightTarget));
+                world.Events.Add(StrikeAt[set][index] + StrikeResolves + 0.8f, () => weapons.Hide(state.WeaponSpot(set, index)));
             }
         }
         for (var s = 0; s < 2; s++)
@@ -121,28 +122,10 @@ public sealed class M11sOpenerScenario : IScenario
             Targetable: true,
             EnemyList: EnemyListMode.Always,
             Placement: new Placement(Vector3.Zero, MathF.PI)));
-        weapons[Weapon.Axe] = SpawnWeapon(BNpcBaseId.Axe);
-        weapons[Weapon.Scythe] = SpawnWeapon(BNpcBaseId.Scythe);
-        weapons[Weapon.Sword] = SpawnWeapon(BNpcBaseId.Sword);
-        for (var i = 0; i < coneHelpers.Length; i++) coneHelpers[i] = SpawnHelper();
-        for (var i = 0; i < spreadHelpers.Length; i++) spreadHelpers[i] = SpawnHelper();
+        weapons.Spawn();
+        rawSteel.Spawn();
         for (var i = 0; i < cometHelpers.Length; i++) cometHelpers[i] = SpawnHelper();
         for (var i = 0; i < cometiteHelpers.Length; i++) cometiteHelpers[i] = SpawnHelper();
-        for (var i = 0; i < lineHelpers.Length; i++) lineHelpers[i] = SpawnHelper();
-        strikeHelper = SpawnHelper();
-        stackHelper = SpawnHelper();
-    }
-
-    private SimEnemy? SpawnWeapon(uint baseId)
-    {
-        var weapon = world.SpawnEnemy(new EnemySpawnConfig(
-            BNpcBaseId: baseId,
-            NameId: BNpcNameId.Tyrant,
-            Level: Level,
-            EnemyList: EnemyListMode.Never,
-            Placement: new Placement(Vector3.Zero, 0f)));
-        weapon?.SetVisible(false);
-        return weapon;
     }
 
     private SimEnemy? SpawnHelper() => world.SpawnEnemy(new EnemySpawnConfig(
@@ -157,136 +140,22 @@ public sealed class M11sOpenerScenario : IScenario
 
     private List<SimCharacter> AliveMembers() => Enum.GetValues<PartyRole>().Select(Alive).OfType<SimCharacter>().ToList();
 
-    private List<SimCharacter> AliveNonTanks() => Enum.GetValues<PartyRole>().Where(r => !r.IsTank()).Select(Alive).OfType<SimCharacter>().ToList();
-
     private void AutoAttack()
     {
         if (Alive(PartyRole.MainTank) is { } tank)
             tyrant?.Cast(ActionId.Attack, tank, animationLock: 0.2f);
     }
 
-    private void RawSteelFollow()
-    {
-        if (state.AxeTrophyFirst)
-            tyrant?.Cast(Actions.RawSteelAxeStack, Alive(PartyRole.MainTank) ?? Alive(PartyRole.OffTank));
-        else
-            tyrant?.Cast(ActionId.RawSteelScytheFollow, animationLock: 0.2f);
-    }
-
-    private void RawSteelHit()
-    {
-        if (tyrant is not { } boss) return;
-        if (state.AxeTrophyFirst)
-        {
-            var i = 0;
-            foreach (var member in AliveNonTanks())
-            {
-                spreadHelpers[i]?.SetPosition(boss.Placement());
-                spreadHelpers[i++]?.Cast(Actions.Impact, member);
-            }
-            return;
-        }
-        PartyRole[] targets = [PartyRole.MainTank, PartyRole.OffTank];
-        for (var t = 0; t < targets.Length; t++)
-        {
-            if (Alive(targets[t]) is not { } tank) continue;
-            coneHelpers[t]?.SetPosition(boss.Placement());
-            coneHelpers[t]?.Cast(Actions.RawSteelScytheCone, tank);
-        }
-        var hitter = Alive(state.HeavyHitterTarget) ?? AliveNonTanks().FirstOrDefault();
-        coneHelpers[2]?.SetPosition(boss.Placement());
-        if (hitter != null) coneHelpers[2]?.Cast(Actions.HeavyHitter, hitter);
-    }
-
-    private void ShowWeapons(int set)
-    {
-        for (var i = 0; i < 3; i++)
-        {
-            var kind = state.Weapons[set][i];
-            if (weapons[kind] is not { } weapon) continue;
-            var bearing = state.WeaponBearing(set, i);
-            weapon.SetPosition(new Placement(state.WeaponSpot(set, i), bearing));
-            weapon.SetVisible(true);
-            weapon.PlayActionTimeline(kind switch
-            {
-                Weapon.Axe => TimelineId.AxeAppears,
-                Weapon.Scythe => TimelineId.ScytheAppears,
-                _ => TimelineId.SwordAppears,
-            });
-        }
-    }
-
-    private void HideWeapon(Weapon kind) => weapons[kind]?.SetVisible(false);
-
     private void ReturnToTheMiddle()
     {
         tyrant?.Cast(ActionId.Reposition, Vector3.Zero, animationLock: 0.2f);
-        tyrant?.MoveTo(Vector3.Zero, DashSpeed);
+        tyrant?.MoveTo(Vector3.Zero, WalkBackSpeed);
     }
 
     private void Assault(int set)
     {
         tyrant?.Face(state.WeaponSpot(set, 0));
         tyrant?.Cast(ActionId.AssaultEvolved, animationLock: 0.2f);
-    }
-
-    private void Strike(int set, int index)
-    {
-        var kind = state.Weapons[set][index];
-        var spot = state.WeaponSpot(set, index);
-        tyrant?.Face(spot);
-        tyrant?.Cast(kind switch
-        {
-            Weapon.Axe => ActionId.DashToAxe,
-            Weapon.Scythe => ActionId.DashToScythe,
-            _ => ActionId.DashToSword,
-        }, spot, animationLock: 0.2f);
-        tyrant?.MoveTo(spot, DashSpeed);
-        weapons[kind]?.PlayActionTimeline(kind switch
-        {
-            Weapon.Axe => TimelineId.AxeStrikes,
-            Weapon.Scythe => TimelineId.ScytheStrikes,
-            _ => TimelineId.SwordStrikes,
-        });
-        strikeHelper?.SetPosition(new Placement(spot, state.ArrivalBearing(set, index)));
-        strikeHelper?.Cast(kind switch
-        {
-            Weapon.Axe => Actions.AxeStrike,
-            Weapon.Scythe => Actions.ScytheStrike,
-            _ => Actions.SwordStrike,
-        });
-    }
-
-    private void FollowUp(int set, int index)
-    {
-        var spot = state.WeaponSpot(set, index);
-        switch (state.Weapons[set][index])
-        {
-            case Weapon.Axe:
-                var target = Alive(state.HeavyWeightTarget) ?? AliveMembers().FirstOrDefault();
-                if (target == null) break;
-                stackHelper?.SetPosition(new Placement(spot, 0f));
-                stackHelper?.Cast(Actions.HeavyWeight, target);
-                break;
-            case Weapon.Scythe:
-                var i = 0;
-                foreach (var member in AliveMembers())
-                {
-                    spreadHelpers[i]?.SetPosition(new Placement(spot, 0f));
-                    spreadHelpers[i++]?.Cast(Actions.SweepingVictory, member);
-                }
-                break;
-            default:
-                PartyRole[][] parties = [M11sOpenerAi.LightPartyOne, M11sOpenerAi.LightPartyTwo];
-                for (var p = 0; p < parties.Length; p++)
-                {
-                    var bait = Alive(parties[p][1]) ?? parties[p].Select(Alive).FirstOrDefault(m => m != null);
-                    if (bait == null) continue;
-                    lineHelpers[p]?.SetPosition(new Placement(spot, 0f));
-                    lineHelpers[p]?.Cast(Actions.SharpTaste, bait);
-                }
-                break;
-        }
     }
 
     private void DropCometites(int wave)

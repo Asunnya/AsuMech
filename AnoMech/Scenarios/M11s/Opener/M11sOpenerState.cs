@@ -7,13 +7,6 @@ using static AnoMech.Scenarios.M11s.M11sConstants;
 
 namespace AnoMech.Scenarios.M11s.Opener;
 
-public enum Weapon
-{
-    Axe,
-    Scythe,
-    Sword,
-}
-
 public sealed class M11sOpenerState
 {
     public const int WeaponSteps = 24;
@@ -58,11 +51,7 @@ public sealed class M11sOpenerState
     // The Tyrant dashes from the centre, then weapon to weapon; each weapon's area and the party's
     // spots around it turn with the direction it came from.
     public float ArrivalBearing(int set, int index)
-    {
-        var from = index == 0 ? Vector3.Zero : WeaponSpot(set, index - 1);
-        var d = WeaponSpot(set, index) - from;
-        return MathF.Atan2(d.X, d.Z);
-    }
+        => M11sTrophyWeapons.Bearing(index == 0 ? Vector3.Zero : WeaponSpot(set, index - 1), WeaponSpot(set, index));
 
     public int IndexOf(int set, Weapon weapon)
     {

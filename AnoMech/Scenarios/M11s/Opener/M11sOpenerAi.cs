@@ -12,9 +12,6 @@ public sealed class M11sOpenerAi : IScenarioAi<M11sOpenerState>
 {
     public string Name => "Hector (Toxic)";
 
-    public static readonly PartyRole[] LightPartyOne = [PartyRole.MainTank, PartyRole.RegenHealer, PartyRole.MeleeDpsA, PartyRole.PhysRangedDps];
-    public static readonly PartyRole[] LightPartyTwo = [PartyRole.OffTank, PartyRole.ShieldHealer, PartyRole.MeleeDpsB, PartyRole.CasterDps];
-
     private static readonly Vector2 TanksInFront = new(0f, -5f);
     private static readonly Vector2 PartyBehind = new(0f, 7f);
     private static readonly Vector2 WaitInTheMiddle = new(0f, 2f);
@@ -66,7 +63,9 @@ public sealed class M11sOpenerAi : IScenarioAi<M11sOpenerState>
     private static Vector2? TanksInFrontPartyBehind(PartyRole role) =>
         role.IsTank() ? TanksInFront + StackOffset(role) : PartyBehind + StackOffset(role);
 
-    private Vector2? TakeTheRawSteelSpot(PartyRole role) => state.AxeTrophyFirst ? AxeSpreads(role) : ScytheSplit(role);
+    private Vector2? TakeTheRawSteelSpot(PartyRole role) => RawSteelSpot(role, state.AxeTrophyFirst);
+
+    public static Vector2 RawSteelSpot(PartyRole role, bool axe) => axe ? AxeSpreads(role) : ScytheSplit(role);
 
     private static Vector2 ScytheSplit(PartyRole role) => role switch
     {
@@ -87,14 +86,16 @@ public sealed class M11sOpenerAi : IScenarioAi<M11sOpenerState>
     };
 
     private Vector2? WeaponSpot(PartyRole role, int set, int index)
+        => AroundTheWeapon(role, state.Weapons[set][index], state.WeaponSpot(set, index), state.ArrivalBearing(set, index));
+
+    public static Vector2 AroundTheWeapon(PartyRole role, Weapon kind, Vector3 spot, float arrival)
     {
-        var arrival = state.ArrivalBearing(set, index);
-        var weapon = Flat(state.WeaponSpot(set, index));
-        return state.Weapons[set][index] switch
+        var weapon = Flat(spot);
+        return kind switch
         {
-            Weapon.Axe => -AcrossFromTheAxe * Toward(state.WeaponBearing(set, index)) + StackOffset(role),
+            Weapon.Axe => weapon + (weapon.Length() + AcrossFromTheAxe) * -Vector2.Normalize(weapon) + StackOffset(role),
             Weapon.Scythe => weapon + UnderTheScythe * Toward(arrival + ProteanTurn(role)),
-            _ => weapon + AwayFromTheSword * Toward(arrival + (LightPartyOne.Contains(role) ? LeftOfTheSword : RightOfTheSword)) + StackOffset(role),
+            _ => weapon + AwayFromTheSword * Toward(arrival + (M11sConstants.LightParties[0].Contains(role) ? LeftOfTheSword : RightOfTheSword)) + StackOffset(role),
         };
     }
 
@@ -138,7 +139,7 @@ public sealed class M11sOpenerAi : IScenarioAi<M11sOpenerState>
 
     private static Vector2 Flat(Vector3 p) => new(p.X, p.Z);
 
-    private static Vector2 StackOffset(PartyRole role) => new(0.3f * ((int)role % 3 - 1), 0.3f * ((int)role / 3 - 1));
+    public static Vector2 StackOffset(PartyRole role) => new(0.3f * ((int)role % 3 - 1), 0.3f * ((int)role / 3 - 1));
 
     private static IAiMove ByRole(Func<PartyRole, Vector2?> at)
         => AiMove.Create(Enum.GetValues<PartyRole>().Select(at).ToArray()).NaturalOrder();
