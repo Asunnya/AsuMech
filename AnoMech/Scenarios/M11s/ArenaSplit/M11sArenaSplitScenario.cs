@@ -30,6 +30,8 @@ public sealed class M11sArenaSplitScenario : IScenario
     public const float SplitStartsAt = 5.13f;
     public const float FlatlinerCastAt = 5.23f;
     public const float FlatlinerResolves = 6f;
+    // Its hitbox doubles to 10 while it stands in the fallen middle, so both platforms reach it.
+    public const float BossGrowsAt = 10.93f;
     public const float MiddleFallsAt = 11.31f;
     public const float MajesticMeteorCastAt = 20.37f;
     public static readonly float[] RoundShowsAt = [25.41f, 57.43f];
@@ -51,6 +53,7 @@ public sealed class M11sArenaSplitScenario : IScenario
     public const float CrownCastAt = 124.81f;
     public const float ArenaRestoredAt = 125.79f;
     public const float CrownResolves = 5f;
+    public const float BossShrinksAt = 130.57f;
     private const float TowerMarkBefore = 0.08f;
     private const float KnockbackFlight = 1.6f;
 
@@ -93,13 +96,16 @@ public sealed class M11sArenaSplitScenario : IScenario
         world.Events.Add(0f, () => world.EnforceArenaBoundary(arena, "Fell off the arena"));
         world.Events.Add(0f, () => world.PlaceWaymarks(ToxicWaymarks));
         world.Events.Add(0f, SpawnActors);
+        world.Events.Add(4f, TankTheBoss);
         world.Events.Add(SplitStartsAt, () => world.Map.AddEffect(MapEffect.ArenaSplits, MapEffect.ArenaSlot));
+        world.Events.Add(FlatlinerCastAt, HoldTheBoss);
         world.Events.Add(FlatlinerCastAt, () =>
         {
             tyrant?.Cast(ActionId.Flatliner, animationLock: 0.2f);
             knockbackHelper?.Cast(Actions.FlatlinerKnockback);
         });
         world.Events.Add(FlatlinerCastAt + FlatlinerResolves, () => arena.AirborneUntil(FlatlinerCastAt + FlatlinerResolves + KnockbackFlight));
+        world.Events.Add(BossGrowsAt, () => tyrant?.SetModelScale(2f));
         world.Events.Add(MiddleFallsAt, () =>
         {
             world.Map.AddEffect(MapEffect.MiddleFalls, MapEffect.ArenaSlot);
@@ -133,6 +139,7 @@ public sealed class M11sArenaSplitScenario : IScenario
         world.Events.Add(CrownCastAt, () => tyrant?.Cast(Actions.CrownOfArcadia));
         world.Events.Add(ArenaRestoredAt, () => world.Map.AddEffect(MapEffect.ArenaRestored, MapEffect.ArenaSlot));
         world.Events.Add(CrownCastAt + CrownResolves, arena.Restore);
+        world.Events.Add(BossShrinksAt, () => tyrant?.SetModelScale(1f));
     }
 
     public void Tick(float delta, float elapsed)
@@ -185,6 +192,10 @@ public sealed class M11sArenaSplitScenario : IScenario
         Placement: at));
 
     private SimCharacter? Alive(PartyRole role) => world.Party.Get(role) is { } member && member.IsAlive() ? member : null;
+
+    private void TankTheBoss() => tyrant?.SetTarget(Alive(PartyRole.MainTank));
+
+    private void HoldTheBoss() => tyrant?.Follow();
 
     private List<SimCharacter> AliveMembers() => Enum.GetValues<PartyRole>().Select(Alive).OfType<SimCharacter>().ToList();
 

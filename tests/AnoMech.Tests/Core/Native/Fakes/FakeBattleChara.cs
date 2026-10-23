@@ -61,7 +61,17 @@ internal sealed class FakeBattleChara(FakeBattleCharas owner, int slot) : IBattl
 
     public byte ModelState => Actor?.ModelState ?? 0;
 
-    public float ModelScale { get; set; } = 1f;
+    public float ModelScale
+    {
+        get => modelScale;
+        set
+        {
+            if (Actor is { } actor && modelScale > 0f) actor.HitboxRadius *= value / modelScale;
+            modelScale = value;
+        }
+    }
+
+    private float modelScale = 1f;
 
     // ── Casting ──────────────────────────────────────────────────────────────
 

@@ -76,8 +76,10 @@ public sealed class M11sMeteorainScenario : IScenario
         world.Events.Add(0f, () => world.EnforceArenaBoundary(new SquareArena(Geometry.ArenaHalfWidth), "Walked off the arena"));
         world.Events.Add(0f, () => world.PlaceWaymarks(ToxicWaymarks));
         world.Events.Add(0f, SpawnActors);
+        world.Events.Add(4f, TankTheBoss);
         foreach (var at in AutoAttackAt)
             world.Events.Add(at, AutoAttack);
+        world.Events.Add(MeteorainCastAt, HoldTheBoss);
         world.Events.Add(MeteorainCastAt, () => tyrant?.Cast(ActionId.Meteorain, animationLock: 0.2f));
         for (var s = 0; s < M11sMeteorainState.MeteorSets; s++)
         {
@@ -164,6 +166,10 @@ public sealed class M11sMeteorainScenario : IScenario
         Placement: new Placement(Vector3.Zero, 0f)));
 
     private SimCharacter? Alive(PartyRole role) => world.Party.Get(role) is { } member && member.IsAlive() ? member : null;
+
+    private void TankTheBoss() => tyrant?.SetTarget(Alive(PartyRole.MainTank));
+
+    private void HoldTheBoss() => tyrant?.Follow();
 
     private List<SimCharacter> AliveMembers() => Enum.GetValues<PartyRole>().Select(Alive).OfType<SimCharacter>().ToList();
 

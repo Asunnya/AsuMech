@@ -67,6 +67,7 @@ public sealed class M11sOpenerScenario : IScenario
         world.Events.Add(0f, () => world.EnforceArenaBoundary(new SquareArena(Geometry.ArenaHalfWidth), "Walked off the arena"));
         world.Events.Add(0f, () => world.PlaceWaymarks(ToxicWaymarks));
         world.Events.Add(0f, SpawnActors);
+        world.Events.Add(4f, TankTheBoss);
         foreach (var at in AutoAttackAt)
             world.Events.Add(at, AutoAttack);
         world.Events.Add(CrownCastAt[0], () => tyrant?.Cast(Actions.CrownOfArcadia));
@@ -95,6 +96,7 @@ public sealed class M11sOpenerScenario : IScenario
                 world.Events.Add(StrikeAt[set][index] + FollowUpDelay, () => weapons.FollowUp(state.Weapons[set][index], state.WeaponSpot(set, index), state.HeavyWeightTarget));
                 world.Events.Add(StrikeAt[set][index] + StrikeResolves + 0.8f, () => weapons.Hide(state.WeaponSpot(set, index)));
             }
+            world.Events.Add(StrikeAt[set][2] + StrikeResolves, TankTheBoss);
         }
         for (var s = 0; s < 2; s++)
         {
@@ -138,6 +140,10 @@ public sealed class M11sOpenerScenario : IScenario
 
     private SimCharacter? Alive(PartyRole role) => world.Party.Get(role) is { } member && member.IsAlive() ? member : null;
 
+    private void TankTheBoss() => tyrant?.SetTarget(Alive(PartyRole.MainTank));
+
+    private void HoldTheBoss() => tyrant?.Follow();
+
     private List<SimCharacter> AliveMembers() => Enum.GetValues<PartyRole>().Select(Alive).OfType<SimCharacter>().ToList();
 
     private void AutoAttack()
@@ -154,6 +160,7 @@ public sealed class M11sOpenerScenario : IScenario
 
     private void Assault(int set)
     {
+        HoldTheBoss();
         tyrant?.Face(state.WeaponSpot(set, 0));
         tyrant?.Cast(ActionId.AssaultEvolved, animationLock: 0.2f);
     }

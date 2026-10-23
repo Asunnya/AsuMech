@@ -58,8 +58,10 @@ public sealed class M11sOrbitalOmenScenario : IScenario
         world.Events.Add(0f, () => world.EnforceArenaBoundary(new SquareArena(Geometry.ArenaHalfWidth), "Walked off the arena"));
         world.Events.Add(0f, () => world.PlaceWaymarks(ToxicWaymarks));
         world.Events.Add(0f, SpawnActors);
+        world.Events.Add(4f, TankTheBoss);
         foreach (var at in AutoAttackAt)
             world.Events.Add(at, AutoAttack);
+        world.Events.Add(WallCastAt, HoldTheBoss);
         world.Events.Add(WallCastAt, () => tyrant?.Cast(ActionId.GreatWallOfFire, animationLock: 0.2f));
         PartyRole[] lineTargets = [PartyRole.MainTank, PartyRole.OffTank];
         for (var i = 0; i < LineAt.Length; i++)
@@ -112,6 +114,10 @@ public sealed class M11sOrbitalOmenScenario : IScenario
         Placement: new Placement(Vector3.Zero, 0f)));
 
     private SimCharacter? Alive(PartyRole role) => world.Party.Get(role) is { } member && member.IsAlive() ? member : null;
+
+    private void TankTheBoss() => tyrant?.SetTarget(Alive(PartyRole.MainTank));
+
+    private void HoldTheBoss() => tyrant?.Follow();
 
     private void AutoAttack()
     {

@@ -93,8 +93,10 @@ public sealed class M11sUltimateWeaponsScenario : IScenario
         world.Events.Add(0f, () => world.EnforceArenaBoundary(new SquareArena(Geometry.ArenaHalfWidth), "Walked off the arena"));
         world.Events.Add(0f, () => world.PlaceWaymarks(ToxicWaymarks));
         world.Events.Add(0f, SpawnActors);
+        world.Events.Add(4f, TankTheBoss);
         foreach (var at in AutoAttackAt)
             world.Events.Add(at, AutoAttack);
+        world.Events.Add(DanceCastAt, HoldTheBoss);
         world.Events.Add(DanceCastAt, () => tyrant?.Cast(ActionId.DanceOfDominationTrophy, animationLock: 0.2f));
         world.Events.Add(DanceAt, () =>
         {
@@ -106,12 +108,14 @@ public sealed class M11sUltimateWeaponsScenario : IScenario
         world.Events.Add(EyeCastAt, EyeOfTheHurricane);
         world.Events.Add(DanceLastAt, () => danceHelpers[1]?.Cast(Actions.DanceOfDominationLast));
         world.Events.Add(ExplosionCastAt, Explosions);
+        world.Events.Add(TrophyCastAt, TankTheBoss);
         world.Events.Add(TrophyCastAt, () => rawSteel.Trophy(state.AxeTrophy));
         world.Events.Add(RawSteelSwingAt, () => rawSteel.Swing(state.AxeTrophy));
         world.Events.Add(RawSteelFollowAt, () => rawSteel.Follow(state.AxeTrophy));
         world.Events.Add(RawSteelHitAt, () => rawSteel.Hit(state.AxeTrophy, state.HeavyHitterTarget));
         world.Events.Add(CharybdistopiaCastAt, () => tyrant?.Cast(Actions.Charybdistopia));
         world.Events.Add(UltimateCastAt, () => tyrant?.Cast(ActionId.UltimateTrophyWeapons, animationLock: 0.2f));
+        world.Events.Add(ApexCastAt, HoldTheBoss);
         world.Events.Add(ApexCastAt, () =>
         {
             tyrant?.Face(state.WeaponSpot(0));
@@ -189,6 +193,10 @@ public sealed class M11sUltimateWeaponsScenario : IScenario
         Placement: new Placement(Vector3.Zero, 0f)));
 
     private SimCharacter? Alive(PartyRole role) => world.Party.Get(role) is { } member && member.IsAlive() ? member : null;
+
+    private void TankTheBoss() => tyrant?.SetTarget(Alive(PartyRole.MainTank));
+
+    private void HoldTheBoss() => tyrant?.Follow();
 
     private List<SimCharacter> AliveMembers() => Enum.GetValues<PartyRole>().Select(Alive).OfType<SimCharacter>().ToList();
 

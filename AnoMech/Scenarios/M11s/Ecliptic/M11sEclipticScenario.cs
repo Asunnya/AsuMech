@@ -87,8 +87,10 @@ public sealed class M11sEclipticScenario : IScenario
         world.Events.Add(0f, () => world.EnforceArenaBoundary(new SquareArena(Geometry.ArenaHalfWidth), "Walked off the arena"));
         world.Events.Add(0f, () => world.PlaceWaymarks(ToxicWaymarks));
         world.Events.Add(0f, SpawnActors);
+        world.Events.Add(4f, TankTheBoss);
         foreach (var at in CrownCastAt)
             world.Events.Add(at, () => tyrant?.Cast(Actions.CrownOfArcadia));
+        world.Events.Add(StampedeCastAt, HoldTheBoss);
         world.Events.Add(StampedeCastAt, () => tyrant?.Cast(ActionId.EclipticStampede, animationLock: 0.2f));
         world.Events.Add(AtomicMarkedAt, MarkAtomicImpact);
         world.Events.Add(MammothCastAt, MammothMeteors);
@@ -178,6 +180,10 @@ public sealed class M11sEclipticScenario : IScenario
         Placement: at));
 
     private SimCharacter? Alive(PartyRole role) => world.Party.Get(role) is { } member && member.IsAlive() ? member : null;
+
+    private void TankTheBoss() => tyrant?.SetTarget(Alive(PartyRole.MainTank));
+
+    private void HoldTheBoss() => tyrant?.Follow();
 
     private List<SimCharacter> AliveMembers() => Enum.GetValues<PartyRole>().Select(Alive).OfType<SimCharacter>().ToList();
 
