@@ -113,6 +113,8 @@ All using default NA pf strats unless noted otherwise:
     - Fire/Watersnaking to Hot Impact (fire/water split by distance, Deep Blue's corner proteans, Alley-oop Inferno spreads, Sick Swell's wave, shared tank buster)
     - Deep Varial to Deep Impact (wide fan with small-wave stack or spreads, Alley-oop Inferno, Steam Burst, Hot Aerial's four jumps, Sickest Take-off with the wave's push, Cutback Blaze, Deep Impact)
     - Deep Aerial (tower into the Watery Grave, six rounds of fire and water wave tethers that must stretch, fire through the prison and water around it, Scathing Steam)
+- AAC Heavyweight M3 (Savage) — M11S _by [Asunnya](https://github.com/Asunnya)_
+    - Raw Steel Trophy to Void Stardust (axe or scythe Raw Steel, Trophy Weapons into Assault Evolved twice, Void Stardust comets ending in a stack or spreads)
 
 ## Details
 
@@ -148,7 +150,7 @@ Thanks for contributors:
 * [altair9x](https://github.com/altair9x) - extra strategies
 * [Quantumlyy](https://github.com/Quantumlyy) - extra strategies
 * [Linqx](https://github.com/Linqx) - success/failure checkmarks
-* [Asunnya](https://github.com/Asunnya) - M9S, M10S, UWU P1 Garuda / P2 Ifrit / P3 Titan / Ultimate Annihilation, DSR P1 Knights / P2 Thordan / P3 Nidhogg / P4 Eyes / P5 Wrath / P5 Death / P6 Double Dragons
+* [Asunnya](https://github.com/Asunnya) - M9S, M10S, M11S, UWU P1 Garuda / P2 Ifrit / P3 Titan / Ultimate Annihilation, DSR P1 Knights / P2 Thordan / P3 Nidhogg / P4 Eyes / P5 Wrath / P5 Death / P6 Double Dragons
 
 AnoMech leans heavily on the work of other Dalamud plugins. Huge thanks to their authors!  
 Without them, the following would not be possible:

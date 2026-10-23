@@ -16,6 +16,7 @@ using AnoMech.Scenarios.M10s.Opener;
 using AnoMech.Scenarios.M10s.SickestTakeoff;
 using AnoMech.Scenarios.M10s.Snaking;
 using AnoMech.Scenarios.M10s.XtremeSnaking;
+using AnoMech.Scenarios.M11s.Opener;
 using AnoMech.Scenarios.M9s.Aetherletting;
 using AnoMech.Scenarios.M9s.Coffinmaker;
 using AnoMech.Scenarios.M9s.Deathmatch;
@@ -156,5 +157,6 @@ public sealed class ScenarioCatalog
         new M10sArenaSplitScenario(),
         new M10sXtremeSnakingScenario(),
         new M10sAlleyOopTwoScenario(),
+        new M11sOpenerScenario(),
     ]);
 }
