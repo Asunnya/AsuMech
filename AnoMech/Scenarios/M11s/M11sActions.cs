@@ -158,9 +158,13 @@ public static class M11sActions
     };
 
     // Not lethal on its own: it leaves Damage Down, and kills through the pair stack's vuln.
+    // UNVERIFIED: how long before the hit the orange area appears.
+    private const float HurricaneExplosionOmenDelay = 3.2f;
+
+    // The orange area shows only near the end of the cast; the laser cast draws the lines until then.
     public static readonly EnemyAction HurricaneExplosion = new(ActionId.HurricaneExplosion)
     {
-        Cast = new() { AnimationLock = 0.6f, FaceTarget = false },
+        Cast = new() { AnimationLock = 0.6f, FaceTarget = false, OmenDelay = HurricaneExplosionOmenDelay },
         Effects = [Damage(VulnToMagic), ApplyStatus(StatusId.DamageDown, 30f, delayToEffectResult: true)],
         Timing = new() { DamageDelay = 0.5f },
         DeathExplanation = "stand in a gap between the lines",
