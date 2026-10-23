@@ -236,5 +236,66 @@ public static class M11sActions
     };
 
     public static readonly EnemyAction FireAndFuryBack = FireAndFuryFront with { ActionId = ActionId.FireAndFuryBack };
+
+    // Hits everyone within 4y of where the meteor lands.
+    public static readonly EnemyAction CosmicKiss = new(ActionId.CosmicKiss)
+    {
+        Cast = new() { AnimationLock = 0.2f, FaceTarget = false },
+        Effects = [Damage()],
+        Timing = new() { DamageDelay = 0.3f },
+    };
+
+    // UNVERIFIED: how close two meteors may land before they go off.
+    public const float MeteorsTooClose = 6f;
+
+    public static readonly EnemyAction UnmitigatedExplosion = new(ActionId.UnmitigatedExplosion)
+    {
+        Cast = new() { AnimationLock = 0.2f, FaceTarget = false },
+        Effects = [Damage(Lethal)],
+        Timing = new() { DamageDelay = 0.4f },
+        DeathExplanation = "two meteors landed too close together",
+    };
+
+    public static readonly EnemyAction ForegoneFatality = new(ActionId.ForegoneFatality)
+    {
+        Cast = new() { AnimationLock = 0.2f },
+        Effects = [Damage(TankBuster)],
+        Timing = new() { DamageDelay = 0.3f },
+        DeathExplanation = "a tank takes each shade's tether",
+    };
+
+    public static readonly EnemyAction CometExplosion = new(ActionId.CometExplosion)
+    {
+        Cast = new() { AnimationLock = 0.6f, FaceTarget = false },
+        Effects = [Damage(), ApplyStatus(StatusId.DamageDown, 30f, delayToEffectResult: true)],
+        Timing = new() { DamageDelay = 0.4f },
+    };
+
+    // The first has no meteor to hide behind: the tanks take the front of the line.
+    public static readonly EnemyAction FearsomeFireballFirst = new(ActionId.FearsomeFireballLine)
+    {
+        Cast = new() { AnimationLock = 0.6f },
+        Effects = [Damage(split: WildCharge(1, 4, TankBuster))],
+        Timing = new() { DamageDelay = 0.4f },
+        DeathExplanation = "a tank in front, the party behind in the line",
+    };
+
+    // A meteor in the way takes the line and explodes; unblocked, the party shares it.
+    public static readonly EnemyAction FearsomeFireball = new(ActionId.FearsomeFireballLine)
+    {
+        Cast = new() { AnimationLock = 0.6f },
+        Effects = [Damage(split: Stack(4))],
+        Timing = new() { DamageDelay = 0.4f },
+        DeathExplanation = "stack behind a meteor so it takes the line",
+    };
+
+    // UNVERIFIED: lethal for anyone a meteor doesn't hide.
+    public static readonly EnemyAction Shockwave = new(ActionId.Shockwave)
+    {
+        Cast = new() { AnimationLock = 0.2f, FaceTarget = false },
+        Effects = [Damage(Lethal)],
+        Timing = new() { DamageDelay = 0.3f },
+        DeathExplanation = "hide behind a meteor",
+    };
 }
 

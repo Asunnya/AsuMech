@@ -36,6 +36,8 @@ public static class M11sConstants
         public const uint Scythe = 19185;
         public const uint Sword = 19186;
         public const uint Maelstrom = 19183;
+        public const uint Comet = 19181;
+        public const uint TyrantShade = 19178;
         public const uint Helper = 9020;
     }
 
@@ -43,6 +45,7 @@ public static class M11sConstants
     {
         public const uint Tyrant = 14305;
         public const uint Maelstrom = 14307;
+        public const uint Comet = 14306;
     }
 
     public static class ActionId
@@ -99,6 +102,15 @@ public static class M11sConstants
         public const uint FireAndFury = 0xB42F;
         public const uint FireAndFuryFront = 0xB430;
         public const uint FireAndFuryBack = 0xB431;
+        public const uint Meteorain = 0xB434;
+        public const uint CosmicKiss = 0xB435;
+        public const uint ForegoneFatality = 0xB436;
+        public const uint UnmitigatedExplosion = 0xB437;
+        public const uint CometExplosion = 0xB438;
+        public const uint FearsomeFireball = 0xB439;
+        public const uint FearsomeFireballLine = 0xB43A;
+        public const uint TripleTyrannhilation = 0xB43C;
+        public const uint Shockwave = 0xB43D;
     }
 
     public static class StatusId
@@ -113,6 +125,13 @@ public static class M11sConstants
     {
         public const uint Stack = 0xA1;
         public const uint Spread = 0x8B;
+        public const uint Meteor = 0xF4;
+        public const uint FireballLine = 0x20D;
+    }
+
+    public static class TetherId
+    {
+        public const ushort ForegoneFatality = 0x164;
     }
 
     public static class TimelineId
@@ -133,6 +152,8 @@ public static class M11sConstants
         public const uint PortalShows = 0x00020001;
         public const uint PortalFires = 0x00200010;
         public const uint PortalOff = 0x00080004;
+        // Foregone Fatality's shades come out of slots 0x12-0x15: north, east, south, west.
+        public const byte ShadeSlot = 0x12;
     }
 
     public static class Geometry

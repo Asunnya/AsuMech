@@ -16,6 +16,7 @@ using AnoMech.Scenarios.M10s.Opener;
 using AnoMech.Scenarios.M10s.SickestTakeoff;
 using AnoMech.Scenarios.M10s.Snaking;
 using AnoMech.Scenarios.M10s.XtremeSnaking;
+using AnoMech.Scenarios.M11s.Meteorain;
 using AnoMech.Scenarios.M11s.Opener;
 using AnoMech.Scenarios.M11s.OrbitalOmen;
 using AnoMech.Scenarios.M11s.UltimateWeapons;
@@ -162,5 +163,6 @@ public sealed class ScenarioCatalog
         new M11sOpenerScenario(),
         new M11sUltimateWeaponsScenario(),
         new M11sOrbitalOmenScenario(),
+        new M11sMeteorainScenario(),
     ]);
 }

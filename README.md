@@ -117,6 +117,7 @@ All using default NA pf strats unless noted otherwise:
     - Raw Steel Trophy to Void Stardust (axe or scythe Raw Steel, Trophy Weapons into Assault Evolved twice, Void Stardust comets ending in a stack or spreads)
     - Dance of Domination to One and Only (raidwides into pair stacks between six lines, second Raw Steel Trophy, Charybdistopia, Ultimate Trophy Weapons' six strikes leaving Maelstroms, tornado gust baits)
     - Great Wall of Fire to Orbital Omen (two line tank busters leaving walls that explode, four pairs of portal lines with Fire and Fury's front and back cones)
+    - Meteorain to Triple Tyrannhilation (proximity-baited meteors, shade tethers for the tanks, Fearsome Fireball lines blown into meteors, hiding from three shockwaves behind the last meteors)
 
 ## Details
 
