@@ -49,6 +49,8 @@ public sealed class M11sEclipticScenario : IScenario
     public const float HeartbreakerCastAt = 139f;
 
     public const float PuddleRadius = 5f;
+    private const float PuddleShowsAfter = 0.76f;
+    private const ushort PuddleBurning = 1;
     // UNVERIFIED: how soon a puddle starts burning and how long standing in it kills.
     private const float PuddleArms = 1f;
     private const float PuddleKills = 1f;
@@ -66,6 +68,7 @@ public sealed class M11sEclipticScenario : IScenario
     private SimEnemy? kickHelper;
     private readonly List<SimCharacter> marked = [];
     private readonly List<(Vector3 At, float ArmsAt)> puddles = [];
+    private readonly List<SimEventObject> puddleObjects = [];
     private readonly Dictionary<SimCharacter, float> burning = [];
     private readonly List<SimCharacter>[] soakers = [[], [], [], []];
     private readonly List<(SimEnemy Shade, SimCharacter Target, SimTether? Line)> tethers = [];
@@ -78,6 +81,7 @@ public sealed class M11sEclipticScenario : IScenario
         state = new M11sEclipticState(world.Rng, settingsWindow.Overrides, world.Party.PlayerRole);
         marked.Clear();
         puddles.Clear();
+        puddleObjects.Clear();
         burning.Clear();
         foreach (var s in soakers) s.Clear();
         tethers.Clear();
@@ -109,10 +113,11 @@ public sealed class M11sEclipticScenario : IScenario
         world.Events.Add(WrathAt, Meteowrath);
         world.Events.Add(FireballLinesAt, FireballLines);
         world.Events.Add(FireballLinesAt + 0.5f, () => ShowShades(MapEffect.PortalOff));
-        world.Events.Add(CrownCastAt[1], () => puddles.Clear());
+        world.Events.Add(CrownCastAt[1], ClearPuddles);
         for (var k = 0; k < KickCastAt.Length; k++)
         {
-            world.Events.Add(KickCastAt[k], () => tyrant?.Cast(ActionId.HeartbreakKick, animationLock: 0.2f));
+            var kick = k;
+            world.Events.Add(KickCastAt[k], () => HeartbreakKick(kick));
             for (var h = 0; h < KickHits[k]; h++)
                 world.Events.Add(KickCastAt[k] + FirstKickAfter + h * KickEvery, () => kickHelper?.Cast(Actions.HeartbreakKickTower));
         }
@@ -224,7 +229,30 @@ public sealed class M11sEclipticScenario : IScenario
             atomicHelpers[i]?.SetPosition(new Placement(at, 0f));
             atomicHelpers[i]?.Cast(Actions.AtomicImpact, marked[i]);
             puddles.Add((at, world.Events.Elapsed + PuddleArms));
+            world.Events.Add(PuddleShowsAfter, () => ShowPuddle(at));
         }
+    }
+
+    private void ShowPuddle(Vector3 at)
+    {
+        if (world.SpawnEventObject(new EventObjectSpawnConfig { EObjId = EObjId.AtomicPuddle, Placement = new Placement(at, 0f), TimelineState = PuddleBurning }) is { } puddle)
+            puddleObjects.Add(puddle);
+    }
+
+    // UNVERIFIED: the puddles outlived every logged pull; they go with the next Crown here.
+    private void ClearPuddles()
+    {
+        puddles.Clear();
+        foreach (var puddle in puddleObjects) puddle.Despawn();
+        puddleObjects.Clear();
+    }
+
+    // UNVERIFIED: the tower's look; it borrows the pair tower's omen.
+    private void HeartbreakKick(int kick)
+    {
+        tyrant?.Cast(ActionId.HeartbreakKick, animationLock: 0.2f);
+        var lastHit = FirstKickAfter + (KickHits[kick] - 1) * KickEvery;
+        world.SpawnActionOmen(ActionId.WeightyImpact, Vector3.Zero, 0f, lastHit + 0.3f);
     }
 
     private void BaitMeteors(int wave)

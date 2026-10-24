@@ -444,13 +444,13 @@ public static class M11sActions
         DeathExplanation = "four in each line",
     };
 
-    // UNVERIFIED: never reached in the logs; all eight must stand in it.
+    // UNVERIFIED: never reached in the logs. All eight share it; fewer, and each hit is a buster only
+    // an invulnerable tank lives through.
     public static readonly EnemyAction HeartbreakKickTower = new(ActionId.HeartbreakKickTower)
     {
         Cast = new() { AnimationLock = 0.2f, FaceTarget = false },
-        Effects = [Damage(split: Stack(8))],
+        Effects = [Damage(split: Stack(8, understacked: TankBuster.MinMit(1f)))],
         Timing = new() { DamageDelay = 0.3f },
-        DeathExplanation = "everyone in the tower for every kick",
+        DeathExplanation = "a tank invulns the tower alone, or all eight stand in it",
     };
 }
-

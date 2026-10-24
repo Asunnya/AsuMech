@@ -5,6 +5,7 @@ using System.Numerics;
 using AnoMech.Core.Game.Ai;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.SimObjects;
+using AnoMech.Scenarios.Legacy;
 using AnoMech.Scenarios.M11s.Opener;
 using static AnoMech.Scenarios.M11s.Ecliptic.M11sEclipticScenario;
 
@@ -12,7 +13,7 @@ namespace AnoMech.Scenarios.M11s.Ecliptic;
 
 public sealed class M11sEclipticAi : IScenarioAi<M11sEclipticState>
 {
-    public string Name => "Toxic";
+    public string Name => "Toxic (Tank Tank Party)";
 
     private const float OutForTheMarkers = 10f;
     private const float WallLine = 18.6f;
@@ -54,6 +55,30 @@ public sealed class M11sEclipticAi : IScenarioAi<M11sEclipticState>
         ai.Move(TetherAt + 2.6f, () => ByRole(role => Corner(role)), jitter: 0f, sprint: true);
         ai.Move(WrathAt + 0.1f, () => ByRole(LineStackSpot), jitter: 0f, sprint: true);
         ai.Move(FireballLinesAt + 0.5f, () => ByRole(role => UnderTheBoss(role)));
+        for (var k = 0; k < KickCastAt.Length; k++)
+        {
+            var kick = k;
+            var soaker = KickSoaker(kick);
+            ai.Move(KickCastAt[kick], () => ByRole(role => soaker is not { } tank ? UnderTheBoss(role) : role == tank ? InTheKickTower : OutOfTheKickTower + UnderTheBoss(role)), jitter: 0f, sprint: true);
+            if (soaker is { } invulned)
+                world.Events.Add(KickCastAt[kick] + FirstKickAfter - 0.5f, () => InvulnForTheKick(invulned, kick));
+        }
+    }
+
+    private static readonly Vector2 InTheKickTower = new(0f, -2f);
+    private static readonly Vector2 OutOfTheKickTower = new(0f, 8f);
+
+    private static PartyRole? KickSoaker(int kick) => kick switch
+    {
+        0 => PartyRole.MainTank,
+        1 => PartyRole.OffTank,
+        _ => null,
+    };
+
+    private void InvulnForTheKick(PartyRole role, int kick)
+    {
+        if (world.Party.Get(role) is { } tank && tank.IsAlive() && world.Party.IsBotDriven(tank))
+            DamageSolver.GiveBotInvuln(tank, (KickHits[kick] - 1) * KickEvery + 1.5f);
     }
 
     private static readonly PartyRole[] Outs = [PartyRole.PhysRangedDps, PartyRole.CasterDps, PartyRole.RegenHealer, PartyRole.ShieldHealer];

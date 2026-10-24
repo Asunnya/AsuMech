@@ -51,10 +51,23 @@ public class M11sEclipticScenarioTests
             .ShouldKill(ActionId.EclipticMeteowrath, MainTank);
 
     [Test]
-    public void LeavingTheKickTowerShortKillsThoseInIt()
+    public void JoiningTheMainTankInTheFirstKickTowerKills()
         => Negative<Scenario>(MeleeDpsA)
-            .TeleportAt(Scenario.KickCastAt[0] + 1f, to: new Vector2(15f, 15f))
-            .ShouldKill(ActionId.HeartbreakKickTower, MainTank, OffTank, RegenHealer, ShieldHealer, MeleeDpsB, PhysRangedDps, CasterDps);
+            .TeleportAt(Scenario.KickCastAt[0] + 1f, to: new Vector2(1f, -1f))
+            .ShouldKill(ActionId.HeartbreakKickTower, MeleeDpsA);
+
+    [Test]
+    public void TheMainTankTakesTheFirstKickTowerOnlyWithAnInvuln()
+        => Negative<Scenario>(MainTank)
+            .WithMitigationChecks()
+            .TeleportAt(Scenario.KickCastAt[0] + 1f, to: new Vector2(0f, -2f))
+            .ShouldKill(ActionId.HeartbreakKickTower, MainTank);
+
+    [Test]
+    public void LeavingTheLastKickTowerShortKillsThePartyInIt()
+        => Negative<Scenario>(MeleeDpsA)
+            .TeleportAt(Scenario.KickCastAt[2] + 1f, to: new Vector2(15f, 15f))
+            .ShouldKill(ActionId.HeartbreakKickTower, RegenHealer, ShieldHealer, MeleeDpsB, PhysRangedDps, CasterDps);
 
     private static IEnumerable<int> Seeds() => Enumerable.Range(0, 40);
 
