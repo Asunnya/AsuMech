@@ -95,8 +95,7 @@ public sealed class M11sMeteorainScenario : IScenario
         for (var f = 0; f < M11sMeteorainState.Fireballs; f++)
         {
             var n = f;
-            world.Events.Add(FireballCastAt[n], () => tyrant?.Cast(ActionId.FearsomeFireball, animationLock: 0.2f));
-            world.Events.Add(FireballCastAt[n] + FireballLineAfter, () => FireballLine(n));
+            world.Events.Add(FireballCastAt[n], () => FearsomeFireball(n));
         }
         world.Events.Add(TyrannhilationCastAt, () => tyrant?.Cast(ActionId.TripleTyrannhilation, animationLock: 0.2f));
         for (var i = 0; i < ShockwaveAt.Length; i++)
@@ -253,11 +252,21 @@ public sealed class M11sMeteorainScenario : IScenario
         tethers.Clear();
     }
 
-    private void FireballLine(int n)
+    // The boss wears the marker, pointed at whoever the line will hit.
+    private void FearsomeFireball(int n)
     {
         if (tyrant is not { } boss) return;
+        boss.Cast(ActionId.FearsomeFireball, animationLock: 0.2f);
         var target = state.FireballPriority.Select(Alive).OfType<SimCharacter>().FirstOrDefault(m => !marked.Contains(m)) ?? AliveMembers().FirstOrDefault();
         if (target == null) return;
+        boss.AttachLockonVfx(LockonId.FireballLine, target);
+        world.Events.Add(FireballLineAfter, () => FireballLine(n, target));
+    }
+
+    private void FireballLine(int n, SimCharacter target)
+    {
+        if (tyrant is not { } boss) return;
+        if (!target.IsAlive() && AliveMembers().FirstOrDefault() is { } anyone) target = anyone;
         boss.Face(target);
         var origin = new Vector2(boss.Position.X, boss.Position.Z);
         var dir = Vector2.Normalize(new Vector2(target.Position.X, target.Position.Z) - origin);

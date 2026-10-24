@@ -180,6 +180,8 @@ public sealed class ActorControl
         if (proxy() is { } chara) chara.ActorControl(HeadMarkerCategory, lockonId, chara.EntityId);
     }
 
+    public void HeadMarker(uint lockonId, GameObjectId target) => Send(HeadMarkerCategory, lockonId, target.ObjectId);
+
     public void SetModelState(byte value) => Send(ModelStateCategory, value);
 
     public void SetModeAttributeFlags(byte value) => Send(ModeAttributeFlagsCategory, value);

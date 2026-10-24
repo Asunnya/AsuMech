@@ -13,4 +13,7 @@ public abstract partial class SimCharacter
         => Push(source, distance, distance / MathF.Max(speed, 0.01f));
 
     internal void SendHealth(uint health) => SendStatusList(health, Proxy?.Mana ?? 0);
+
+    // A marker drawn from this character toward `target`, like a line stack shown on its caster.
+    public void AttachLockonVfx(uint lockonId, SimCharacter target) => ActorControl.HeadMarker(lockonId, target.GameObjectId);
 }
