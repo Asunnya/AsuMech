@@ -83,6 +83,8 @@ public sealed class M11sArenaSplitScenario : IScenario
     private SimEnemy? knockbackHelper;
     private SimEnemy? smashHelper;
     private readonly List<(SimEnemy Shade, WrathTether Tether, SimTether? Line)> tethers = [];
+    private readonly int[] towerSoakers = new int[4];
+    private bool towersUp;
 
     public void Run(SimWorld worldParam, int? selectedAi)
     {
@@ -90,6 +92,7 @@ public sealed class M11sArenaSplitScenario : IScenario
         state = new M11sArenaSplitState(world.Rng, settingsWindow.Overrides, world.Party.PlayerRole);
         arena = new SplitArena(() => world.Events.Elapsed);
         tethers.Clear();
+        towersUp = false;
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<M11sArenaSplitState>)AiStrats[idx]).Run(state, world);
 
@@ -117,6 +120,7 @@ public sealed class M11sArenaSplitScenario : IScenario
             var round = r;
             world.Events.Add(RoundShowsAt[round], () => ShowRound(round, MapEffect.PortalShows));
             world.Events.Add(TetherAt[round], () => TetherRound(round));
+            world.Events.Add(TetherAt[round], () => FirePortals(round));
             AddTowers(TowerCastAt[round]);
             world.Events.Add(PreyAt[round], () => MarkPrey(round));
             world.Events.Add(BreathCastAt[round], () => tyrant?.Cast(ActionId.FireBreath, animationLock: 0.2f));
@@ -144,6 +148,7 @@ public sealed class M11sArenaSplitScenario : IScenario
 
     public void Tick(float delta, float elapsed)
     {
+        if (towersUp) ShowTowerSoakers();
         for (var i = 0; i < tethers.Count; i++)
         {
             var (shade, tether, line) = tethers[i];
@@ -211,8 +216,31 @@ public sealed class M11sArenaSplitScenario : IScenario
         foreach (var t in state.Tethers[round]) world.Map.AddEffect(effect, ShadeSlot(t));
     }
 
+    private void FirePortals(int round)
+    {
+        foreach (var x in state.LineXs(round)) world.Map.AddEffect(MapEffect.PortalFires, LineSlot(x));
+    }
+
+    private void ShowTowerSoakers()
+    {
+        for (var i = 0; i < TowerSpots.Length; i++)
+        {
+            var spot = TowerSpots[i];
+            var soakers = Math.Min(2, AliveMembers().Count(m => Vector3.Distance(m.Position, spot) <= TowerRadius));
+            if (soakers == towerSoakers[i]) continue;
+            towerSoakers[i] = soakers;
+            var effect = soakers switch { 0 => MapEffect.TowerEmptied, 1 => MapEffect.TowerOneIn, _ => MapEffect.TowerFilled };
+            world.Map.AddEffect(effect, (byte)(MapEffect.TowerSlot + i));
+        }
+    }
+
     private void ShowTowers(uint effect)
     {
+        if (effect == MapEffect.PortalShows)
+        {
+            Array.Clear(towerSoakers);
+            towersUp = true;
+        }
         for (var i = 0; i < TowerSpots.Length; i++) world.Map.AddEffect(effect, (byte)(MapEffect.TowerSlot + i));
     }
 
@@ -223,6 +251,7 @@ public sealed class M11sArenaSplitScenario : IScenario
             for (var i = 0; i < TowerSpots.Length; i++) world.Map.AddEffect(MapEffect.TowerMarkShows, (byte)(MapEffect.TowerMarkSlot + i));
         });
         world.Events.Add(castAt, () => { foreach (var tower in towerHelpers) tower?.Cast(Actions.TowerExplosion); });
+        world.Events.Add(castAt + TowerResolves - 0.05f, () => towersUp = false);
         world.Events.Add(castAt + TowerResolves - 0.05f, CheckTowerSoaks);
         world.Events.Add(castAt + TowerResolves, () => arena.AirborneUntil(castAt + TowerResolves + KnockbackFlight));
         world.Events.Add(castAt + TowerResolves + 0.1f, () => ShowTowers(MapEffect.PortalOff));

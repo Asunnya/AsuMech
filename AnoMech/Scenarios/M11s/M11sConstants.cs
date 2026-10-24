@@ -41,6 +41,11 @@ public static class M11sConstants
         public const uint Helper = 9020;
     }
 
+    public static class EObjId
+    {
+        public const uint AtomicPuddle = 0x1EBF24;
+    }
+
     public static class BNpcNameId
     {
         public const uint Tyrant = 14305;
@@ -191,6 +196,10 @@ public static class M11sConstants
         public const byte TowerSlot = 0x0E;
         public const byte TowerMarkSlot = 0x0A;
         public const uint TowerMarkShows = 0x00020004;
+        // A tower lights up for one soaker and fills for two (UNVERIFIED: that only a filled one draws its meteor down).
+        public const uint TowerOneIn = 0x00200010;
+        public const uint TowerFilled = 0x00800040;
+        public const uint TowerEmptied = 0x01000001;
         // Majestic Meteorain's portals: 0x16-0x19 for lines at x -21, -11, 11, 21.
         public const byte MeteorainSlot = 0x16;
         // Meteowrath's shades: 0x1A-0x1D on the west wall (z -15, -5, 5, 15), 0x1E-0x21 on the east.
