@@ -457,9 +457,9 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
     private void DropHelloPuddle(PartyRole role, bool near)
     {
         if (near)
-            nearSolver = new HelloWorld(world.Party, role, true);
+            nearSolver = helloWorldFailures.Chain(role, true);
         else
-            farSolver = new HelloWorld(world.Party, role, false);
+            farSolver = helloWorldFailures.Chain(role, false);
         HopHelloPuddle(near);
     }
 

@@ -283,6 +283,6 @@ public sealed class FruP2DiamondDustScenario : IScenario
 
     public void Tick(float delta, float elapsed)
     {
-        puddles.KillWhoeverStandsIn(world.Party, elapsed, ActionId.SinboundHoly, "stepped in a Sinbound Holy puddle");
+        puddles.BleedWhoeverStandsIn(world, elapsed, "stepped in a Sinbound Holy puddle");
     }
 }

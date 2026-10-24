@@ -27,9 +27,8 @@ public sealed class FruP4DarklitDragonsongScenario : IScenario
     private readonly FruP4DarklitDragonsongSettingsWindow settingsWindow = new();
 
     private static readonly Vector3 FragmentPosition = new(0, 0, -16);
-    private const float S = 1f / 2.358f;
-    private const float ChainMin = 22f * S;
-    private const float ChainMax = 61f * S;
+    // Curse chains stretched shorter than this snap. UNVERIFIED: retail's limit lies between 9.4 and 9.8.
+    private const float CurseMinLength = 9.5f;
     // The Oracle's jumps land this short of their target, and don't move her when it's closer.
     private const float JumpLandingShort = 7.5f;
     // It takes every one of these and breaks on any other hit.
@@ -99,7 +98,7 @@ public sealed class FruP4DarklitDragonsongScenario : IScenario
         world.Events.Add(24.1f, () => BattleTalk(gaia, 0x7, BNpcNameId.Gaia));
         world.Events.Add(24.2f, () => usurper?.Cast(ActionId.PathOfLightCast, animationLock: 2.1f));
         world.Events.Add(CursesAt, () => Chain(StatusId.RefulgentFate, TetherId.CurseOfEverlastingLight, CursesEndAt - CursesAt)
-            .ForEach(curse => curse.BreaksWhen(t => t.StretchLt(ChainMin) || t.StretchGt(ChainMax))));
+            .ForEach(curse => curse.BreaksWhen(t => t.StretchLt(CurseMinLength))));
         world.Events.Add(29.1f, () => BattleTalk(ryne, 0x8, BNpcNameId.Ryne));
         world.Events.Add(TowersAt, BrightHunger);
         world.Events.Add(32.2f, () => oracle?.Cast(ActionId.SpiritTakerCast, animationLock: 0.2f));
@@ -241,7 +240,7 @@ public sealed class FruP4DarklitDragonsongScenario : IScenario
         {
             var position = members[i].Position;
             akhRhaiHelpers[i]?.SetPosition(position);
-            akhRhaiHelpers[i]?.Cast(Actions.AkhRhaiCast, position);
+            akhRhaiHelpers[i]?.Cast(ActionId.AkhRhaiCast, position, animationLock: 3.1f);
         }
     }
 
@@ -390,7 +389,7 @@ public sealed class FruP4DarklitDragonsongScenario : IScenario
         Towers.ResolveTower(world, resolved, ActionId.BrightHunger, Actions.InescapableIllumination, minSoakers: 2);
     }
     public void OnTetherEnded(TetherEnded ended) => BreakChainsOnSnappedLink(ended);
-    public void OnStatusAdded(StatusAdded added) => Lightsteeped.ExplodeFifthStack(added);
+    public void OnStatusAdded(StatusAdded added) => Lightsteeped.ExplodeFifthStack(world, added);
 
     public void Tick(float delta, float elapsed)
     {

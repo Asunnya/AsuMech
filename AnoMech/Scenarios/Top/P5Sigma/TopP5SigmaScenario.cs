@@ -209,8 +209,8 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
     private void Run_Omega_4000A408()
     {
         HelloWorld[] solvers = [
-            new HelloWorld(world.Party, state.HelloWorldTargets[0], true),
-            new HelloWorld(world.Party, state.HelloWorldTargets[1], false)];
+            helloWorldFailures.Chain(state.HelloWorldTargets[0], true),
+            helloWorldFailures.Chain(state.HelloWorldTargets[1], false)];
         for (int index = 0; index < 6; index++)
         {
             var i = index;

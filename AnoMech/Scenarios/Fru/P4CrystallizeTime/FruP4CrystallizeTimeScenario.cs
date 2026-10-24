@@ -141,8 +141,10 @@ public sealed class FruP4CrystallizeTimeScenario : IScenario
         world.Events.Add(53.6f, () => PositionUsurperForWaves(second: false));
         world.Events.Add(53.7f, () => usurper?.Cast(Actions.HallowedWingsKnockback));
         world.Events.Add(56.3f, () => usurper?.Cast(Actions.HallowedWingsSwap));
+        world.Events.Add(56.6f, VanishHungryHeads);
         world.Events.Add(58.1f, () => PositionUsurperForWaves(second: true));
         world.Events.Add(58.3f, () => usurper?.Cast(Actions.HallowedWingsKnockback));
+        world.Events.Add(60.7f, PunishHungryHeads);
         world.Events.Add(62.5f, () => world.Map.SetWeather(WeatherId.Oracle, 0f));
         world.Events.Add(62.5f, () => world.Map.AddEffect(MapEffect.ThawFloor, MapEffect.OracleStage));
         world.Events.Add(62.5f, () => SetHourglassScenery(MapEffect.HourglassHide, 0, 1, 2, 3, 4, 5));
@@ -349,8 +351,7 @@ public sealed class FruP4CrystallizeTimeScenario : IScenario
         CastOnHolders(CrystallizeDebuff.BlueIce, Actions.DarkBlizzard, firstHelper: 5);
     }
 
-    // UNVERIFIED: retail may kill with an action instead, likely Joyless Dragonsong (40242); no pull
-    // lets a Wyrmclaw or Wyrmfang run out.
+    // Retail kills its holder alone, with no action.
     private static void KillUncleansed(StatusLost lost)
     {
         if (lost is { StatusId: StatusId.Wyrmclaw or StatusId.Wyrmfang, Reason: StatusLossReason.Expired })
@@ -476,17 +477,10 @@ public sealed class FruP4CrystallizeTimeScenario : IScenario
 
     // A head flies its half circle, catching the first player it touches without stopping, and
     // vanishes after its second catch. Whoever it just caught has to step out of it before it can
-    // catch again. A head that reaches the south still hungry wipes the party.
+    // catch again. A head that reaches the south still hungry catches no one more.
     private void TickDragon(int side, float elapsed)
     {
-        if (dragons[side] is not { } head || dragonCatches[side] >= 2) return;
-        if (elapsed >= DragonsReachSouthAt)
-        {
-            dragonCatches[side] = 2;
-            // UNVERIFIED: no pull lets a head get this far, so the action the wipe shows is a guess.
-            world.Party.WipeAllPlayers(ActionId.LongingOfTheLost, "a dragon head reached the south with a catch left");
-            return;
-        }
+        if (dragons[side] is not { } head || dragonCatches[side] >= 2 || elapsed >= DragonsReachSouthAt) return;
         var position = head.Position;
         head.MoveTo(DragonPosition(side, elapsed + 0.5f), DragonSpeed);
         var contact = dragonCatches[side] == 0 ? DragonInitialContactRadius : DragonContactRadius;
@@ -509,6 +503,27 @@ public sealed class FruP4CrystallizeTimeScenario : IScenario
         if (++dragonCatches[side] < 2) return;
         head.Cast(ActionId.DrachenWandererDisappear, animationLock: 4.1f);
         world.Events.Add(4.2f, head.Despawn);
+    }
+
+    private bool IsHungry(int side) => dragons[side] is not null && dragonCatches[side] < 2;
+
+    // UNVERIFIED: where a hungry head goes after the south; retail shows it only as it vanishes, back
+    // in the north.
+    private void VanishHungryHeads()
+    {
+        for (var side = 0; side < 2; side++)
+            if (IsHungry(side) && dragons[side] is { } head)
+            {
+                head.Cast(ActionId.DrachenWandererDisappear, animationLock: 4.1f);
+                world.Events.Add(4.2f, head.Despawn);
+            }
+    }
+
+    private void PunishHungryHeads()
+    {
+        if (!IsHungry(0) && !IsHungry(1)) return;
+        helpers[6]?.SetPosition(Vector3.Zero);
+        helpers[6]?.Cast(Actions.JoylessDragonsong);
     }
 
     private void DropPuddle(PartyRole catcher, Vector3 position, float elapsed, uint arg2Index)

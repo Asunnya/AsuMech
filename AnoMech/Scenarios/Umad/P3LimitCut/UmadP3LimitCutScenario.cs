@@ -58,6 +58,12 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
 
     public void OnActionResolved(ActionResolved resolved) => QueueCyclonesForWinds(resolved);
 
+    public void OnStatusLost(StatusLost lost)
+    {
+        if (lost is not { StatusId: StatusId.Headwind or StatusId.Tailwind, Reason: StatusLossReason.Expired }) return;
+        world.Events.Add(0.09f, () => thunderHelper?.Cast(UmadActions.StrayGusts, lost.Holder));
+    }
+
     public void Run(SimWorld worldParam, int? selectedAi)
     {
         world = worldParam;
@@ -82,7 +88,7 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
             state.Objects.Exdeath?.Follow(party.Get(PartyRole.OffTank));
         });
         foreach (var at in ChaosAutoAt)
-            world.Events.Add(at, () => state.Objects.Chaos?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
+            world.Events.Add(at, () => state.Objects.Chaos?.Cast(UmadActions.ChaosAutoAttack, party.Get(PartyRole.MainTank)));
         foreach (var at in ExdeathAutoAt)
             world.Events.Add(at, () => state.Objects.Exdeath?.Cast(UmadActions.ExdeathAutoAttack, party.Get(PartyRole.OffTank)));
         // The real packet refreshes Kefka's trance aura in place; AddStatusParam adds a slot, so

@@ -327,6 +327,7 @@ public static class FruConstants
         public const ushort Levitation = 1390;
         public const ushort Incurable = 2398;
         public const ushort Lightsteeped = 2257;
+        public const ushort Bleeding = 3078;
         public const ushort RefulgentChain = 2253;
         public const ushort RefulgentFate = 2255;
         public const ushort ChainsOfEverlastingLight = 4157;

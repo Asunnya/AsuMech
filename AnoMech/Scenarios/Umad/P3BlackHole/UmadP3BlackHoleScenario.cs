@@ -44,8 +44,8 @@ public sealed class UmadP3BlackHoleScenario : IMultiplayerReplayable
     private SimWorld world = null!;
     private SimParty party = null!;
     private List<Vector3>[] BlackHolePositions = null!;
-    // Damage radius is 1.25; small clearance.
-    internal const float BlackHoleAvoidRadius = 1.5f;
+    private const float BlackSparkRadius = 2.2f;
+    internal const float BlackHoleAvoidRadius = 2.3f;
     // Diagnostic: wider than the hit radius so a dump catches the approach.
     internal const float NearBlackHoleLogRadius = 3f;
     // Two crusts spent closer together than this wipe the party: the second cleanse hits everyone
@@ -154,9 +154,17 @@ public sealed class UmadP3BlackHoleScenario : IMultiplayerReplayable
 
     public void OnActionResolved(ActionResolved resolved)
     {
-        // UNVERIFIED delay: no pull leaves a Stomp-a-Mole unsoaked.
         Towers.ResolveTower(world, resolved, ActionId.StompAMole, UmadActions.UnmitigatedImpact, minSoakers: 1);
         QueueCleansesForSpentCrusts(resolved);
+    }
+
+    public void OnStatusLost(StatusLost lost)
+    {
+        if (lost is not { StatusId: StatusId.PrimordialCrust, Reason: StatusLossReason.Expired }) return;
+        lost.Holder.RemoveStatus(StatusId.FirstInLine);
+        lost.Holder.RemoveStatus(StatusId.SecondInLine);
+        lost.Holder.RemoveStatus(StatusId.ThirdInLine);
+        world.Events.Add(0.09f, () => CleanseHelper?.Cast(UmadActions.StrayEarth, lost.Holder));
     }
 
     public void Tick(float delta, float elapsed)
@@ -194,7 +202,7 @@ public sealed class UmadP3BlackHoleScenario : IMultiplayerReplayable
                           $"[UmadP3BlackHoleScenario] Near black hole (wave {wave}): {role} at ({player.Position.X:F2},{player.Position.Z:F2}) is {MathF.Sqrt(distSq):F2}y from hole at ({bh.X:F2},{bh.Z:F2}).");
                   }
                   // Edge-triggered: 180s outlasts the fight.
-                  if (!player.HasStatus(StatusId.DamageDown) && distSq < 1.25f * 1.25f)
+                  if (!player.HasStatus(StatusId.DamageDown) && distSq < BlackSparkRadius * BlackSparkRadius)
                   {
                      var role = (player as ISimPartyMember)?.Role.ToString() ?? "?";
                      AnoMech.Core.DiagnosticLog.Info(
@@ -222,28 +230,28 @@ public sealed class UmadP3BlackHoleScenario : IMultiplayerReplayable
         world.Events.Add(0.1f, () => chaos_4000414D?.AddStatus(StatusId.EpicVillain));
         world.Events.Add(0.98f, () => chaos_4000414D?.Cast(ActionId.Earthquake, animationLock: 3.1f));
         world.Events.Add(1f, () => chaos_4000414D?.Follow(party.Get(PartyRole.MainTank)));
-        world.Events.Add(12.07f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
-        world.Events.Add(15.09f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
-        world.Events.Add(18.13f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
-        world.Events.Add(21.16f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
-        world.Events.Add(24.19f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
-        world.Events.Add(27.22f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
-        world.Events.Add(30.25f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
+        world.Events.Add(12.07f, () => chaos_4000414D?.Cast(UmadActions.ChaosAutoAttack, party.Get(PartyRole.MainTank)));
+        world.Events.Add(15.09f, () => chaos_4000414D?.Cast(UmadActions.ChaosAutoAttack, party.Get(PartyRole.MainTank)));
+        world.Events.Add(18.13f, () => chaos_4000414D?.Cast(UmadActions.ChaosAutoAttack, party.Get(PartyRole.MainTank)));
+        world.Events.Add(21.16f, () => chaos_4000414D?.Cast(UmadActions.ChaosAutoAttack, party.Get(PartyRole.MainTank)));
+        world.Events.Add(24.19f, () => chaos_4000414D?.Cast(UmadActions.ChaosAutoAttack, party.Get(PartyRole.MainTank)));
+        world.Events.Add(27.22f, () => chaos_4000414D?.Cast(UmadActions.ChaosAutoAttack, party.Get(PartyRole.MainTank)));
+        world.Events.Add(30.25f, () => chaos_4000414D?.Cast(UmadActions.ChaosAutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(32.40f, () => chaos_4000414D?.Cast(ActionId.Aetherlink_Chaos, animationLock: 3.1f));
-        world.Events.Add(33.29f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
-        world.Events.Add(36.34f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
-        world.Events.Add(39.37f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
-        world.Events.Add(42.41f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
+        world.Events.Add(33.29f, () => chaos_4000414D?.Cast(UmadActions.ChaosAutoAttack, party.Get(PartyRole.MainTank)));
+        world.Events.Add(36.34f, () => chaos_4000414D?.Cast(UmadActions.ChaosAutoAttack, party.Get(PartyRole.MainTank)));
+        world.Events.Add(39.37f, () => chaos_4000414D?.Cast(UmadActions.ChaosAutoAttack, party.Get(PartyRole.MainTank)));
+        world.Events.Add(42.41f, () => chaos_4000414D?.Cast(UmadActions.ChaosAutoAttack, party.Get(PartyRole.MainTank)));
         RunEdict(chaos_4000414D, 45.58f);
-        world.Events.Add(53.48f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
-        world.Events.Add(56.51f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
-        world.Events.Add(59.54f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
+        world.Events.Add(53.48f, () => chaos_4000414D?.Cast(UmadActions.ChaosAutoAttack, party.Get(PartyRole.MainTank)));
+        world.Events.Add(56.51f, () => chaos_4000414D?.Cast(UmadActions.ChaosAutoAttack, party.Get(PartyRole.MainTank)));
+        world.Events.Add(59.54f, () => chaos_4000414D?.Cast(UmadActions.ChaosAutoAttack, party.Get(PartyRole.MainTank)));
         RunEdict(chaos_4000414D, 72.87f);
-        world.Events.Add(80.90f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
-        world.Events.Add(83.94f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
-        world.Events.Add(86.97f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
-        world.Events.Add(90.00f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
-        world.Events.Add(93.02f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
+        world.Events.Add(80.90f, () => chaos_4000414D?.Cast(UmadActions.ChaosAutoAttack, party.Get(PartyRole.MainTank)));
+        world.Events.Add(83.94f, () => chaos_4000414D?.Cast(UmadActions.ChaosAutoAttack, party.Get(PartyRole.MainTank)));
+        world.Events.Add(86.97f, () => chaos_4000414D?.Cast(UmadActions.ChaosAutoAttack, party.Get(PartyRole.MainTank)));
+        world.Events.Add(90.00f, () => chaos_4000414D?.Cast(UmadActions.ChaosAutoAttack, party.Get(PartyRole.MainTank)));
+        world.Events.Add(93.02f, () => chaos_4000414D?.Cast(UmadActions.ChaosAutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(99.18f, () => chaos_4000414D?.Cast(ActionId.Aetherlink_Chaos, animationLock: 3.1f));
         // The shockwaves keep the facing Chaos casts Implosion with, not wherever it turns after.
         var implosionFrom = new Placement();
@@ -253,12 +261,12 @@ public sealed class UmadP3BlackHoleScenario : IMultiplayerReplayable
             implosionFrom = chaos_4000414D.Placement();
             chaos_4000414D.Cast(state.ImplosionAttack, animationLock: 6.1f);
         });
-        world.Events.Add(124.41f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
-        world.Events.Add(141.47f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
-        world.Events.Add(144.50f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
+        world.Events.Add(124.41f, () => chaos_4000414D?.Cast(UmadActions.ChaosAutoAttack, party.Get(PartyRole.MainTank)));
+        world.Events.Add(141.47f, () => chaos_4000414D?.Cast(UmadActions.ChaosAutoAttack, party.Get(PartyRole.MainTank)));
+        world.Events.Add(144.50f, () => chaos_4000414D?.Cast(UmadActions.ChaosAutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(147.09f, () => chaos_4000414D?.Cast(ActionId.KnockDown_Cast, animationLock: 3.1f));
-        world.Events.Add(152.53f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
-        world.Events.Add(155.57f, () => chaos_4000414D?.Cast(UmadActions.AutoAttack, party.Get(PartyRole.MainTank)));
+        world.Events.Add(152.53f, () => chaos_4000414D?.Cast(UmadActions.ChaosAutoAttack, party.Get(PartyRole.MainTank)));
+        world.Events.Add(155.57f, () => chaos_4000414D?.Cast(UmadActions.ChaosAutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(157.22f, () => chaos_4000414D?.Cast(ActionId.BigBang_Cast, animationLock: 3.1f));
         
         for (int i = 0; i < 2; i++)

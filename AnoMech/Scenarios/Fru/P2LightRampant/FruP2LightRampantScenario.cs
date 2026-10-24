@@ -31,7 +31,7 @@ public sealed class FruP2LightRampantScenario : IScenario
     private const float PuddleArmsAfterShowing = 1.5f;
     private const float PuddleFadesAfterShowing = 9.7f;
     private const float PuddleLastsAfterShowing = 12.85f;
-    // Curse chains stretched shorter than this snap.
+    // Curse chains stretched shorter than this snap. UNVERIFIED: retail's limit lies between 23 and 25.7.
     private const float CurseMinLength = 25f;
 
     // Where Diamond Dust leaves the helpers.
@@ -288,7 +288,7 @@ public sealed class FruP2LightRampantScenario : IScenario
 
     public void OnActionResolved(ActionResolved resolved) => PunishUnsoakedTowers(resolved);
     public void OnTetherEnded(TetherEnded ended) => BreakChainsOnSnappedLink(ended);
-    public void OnStatusAdded(StatusAdded added) => Lightsteeped.ExplodeFifthStack(added);
+    public void OnStatusAdded(StatusAdded added) => Lightsteeped.ExplodeFifthStack(world, added);
 
     private void PunishUnsoakedTowers(ActionResolved resolved)
         => Towers.ResolveTower(world, resolved, ActionId.BrightHunger, Actions.InescapableIllumination,
@@ -298,6 +298,6 @@ public sealed class FruP2LightRampantScenario : IScenario
     {
         foreach (var tower in towers) tower.Tick(world.Party);
         centerTower?.Tick(world.Party);
-        puddles.KillWhoeverStandsIn(world.Party, elapsed, ActionId.LuminousHammer, "stepped in a Luminous Hammer puddle");
+        puddles.BleedWhoeverStandsIn(world, elapsed, "stepped in a Luminous Hammer puddle");
     }
 }

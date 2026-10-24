@@ -299,10 +299,10 @@ public sealed class TopP5OmegaScenario : IMultiplayerReplayable
         Direction[] superliminalDirections = [state.AttackDirections[0], state.AttackDirections[0], state.AttackDirections[3], state.AttackDirections[3], Direction.N, Direction.N];
         float[] superliminalOffset = [-4f, -4f, 0, 0, 0, 0];
         float[] dynamisOffsets = [0, 0, 1, 1, 2, 2, 3, 3];
-        var nearHelper1 = new HelloWorld(world.Party, state.HelloWorldTargets[0], true);
-        var farHelper1 = new HelloWorld(world.Party, state.HelloWorldTargets[1], false);
-        var nearHelper2 = new HelloWorld(world.Party, state.HelloWorldTargets[2], true);
-        var farHelper2 = new HelloWorld(world.Party, state.HelloWorldTargets[3], false);
+        var nearHelper1 = helloWorldFailures.Chain(state.HelloWorldTargets[0], true);
+        var farHelper1 = helloWorldFailures.Chain(state.HelloWorldTargets[1], false);
+        var nearHelper2 = helloWorldFailures.Chain(state.HelloWorldTargets[2], true);
+        var farHelper2 = helloWorldFailures.Chain(state.HelloWorldTargets[3], false);
                                 
         for (int i = 0; i < 6; i++)
         {
