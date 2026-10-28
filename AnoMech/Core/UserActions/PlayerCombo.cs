@@ -34,13 +34,15 @@ internal static unsafe class PlayerCombo
         return set;
     }
 
-    // Forms the sheet doesn't chain but the game combos as their base action: RDM's enchanted melee,
-    // whose swap is gone by the time the press resolves, having spent the mana it read.
+    // Actions the sheet doesn't chain but the game combos as another: RDM's enchanted melee, whose swap
+    // is gone by the time the press resolves, having spent the mana it read, and Verholy, which leads
+    // into Scorch as Verflare does though the sheet names only Verflare.
     private static readonly Dictionary<uint, uint> ComboForms = new()
     {
         [7527] = 7504, [45960] = 7504, // Enchanted Riposte
         [7528] = 7512, [45961] = 7512, // Enchanted Zwerchhau
         [7529] = 7516, [45962] = 7516, // Enchanted Redoublement
+        [7526] = 7525,                 // Verholy
     };
 
     private static uint ComboId(uint actionId) => ComboForms.GetValueOrDefault(actionId, actionId);
