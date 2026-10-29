@@ -13,7 +13,6 @@ public static class UmadConstants
 {
     public static class BNpcBaseId
     {
-        public const uint KefkaHelper = 9020;  // generic invisible helper (also used as a Chaos helper in P3)
         public const uint Kefka       = 18475; // "Kefka Says" boss (P4); distinct row from GodKefka (19506) and KefkaP3 (19504)
         public const uint KefkaCloneP3 = 19451; // the eight Limit Cut clones; cf. KefkaClone 19513
         public const uint KefkaP3     = 19504; // visible boss

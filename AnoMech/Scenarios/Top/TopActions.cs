@@ -284,6 +284,7 @@ public static class TopActions
         Cast = new() { AnimationLock = 1.1f },
         Timing = new() { DamageDelay = 0.6f },
         Effects = [Damage(MagicVulns, split: Stack(4)), ApplyStatus(StatusId.MagicVulnerabilityUp, 1.96f)],
+        ShownAs = BNpcNameId.OmegaM,
     };
 
     // -- P6 Wave Cannon 2 --

@@ -100,7 +100,6 @@ public static class FruConstants
 
     public static class BNpcBaseId
     {
-        public const uint Helper = 9020;
         public const uint UsurperP2 = 17823;
         public const uint FrozenMirror = 17824;
         public const uint HolyLight = 17826;

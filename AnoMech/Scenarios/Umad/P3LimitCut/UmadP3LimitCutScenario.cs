@@ -39,7 +39,6 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
     private SimParty party = null!;
     private UmadP3LimitCutState state = null!;
     private readonly SimEnemy?[] cycloneHelpers = new SimEnemy?[8];
-    private SimEnemy? thunderHelper;
     private SimEventObject? windCrystal;
     private Vector3 umbraImpact;
 
@@ -61,7 +60,7 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
     public void OnStatusLost(StatusLost lost)
     {
         if (lost is not { StatusId: StatusId.Headwind or StatusId.Tailwind, Reason: StatusLossReason.Expired }) return;
-        world.Events.Add(0.09f, () => thunderHelper?.Cast(UmadActions.StrayGusts, lost.Holder));
+        world.Events.Add(0.09f, () => state.Objects.Chaos?.CastFromHelper(UmadActions.StrayGusts, lost.Holder, at: new Placement(WindCrystalPos, 0f)));
     }
 
     public void Run(SimWorld worldParam, int? selectedAi)
@@ -240,11 +239,6 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
                 BNpcBaseId: BNpcBaseId.Chaos, NameId: BNpcNameId.Chaos, Level: 1,
                 Targetable: false, EnemyList: EnemyListMode.Never, Visibility: SpawnVisibility.HiddenUntilShown,
                 Placement: new Placement(WindCrystalPos, 0f)));
-        // The strike's VFX sits on the target, so the helper's model never matters.
-        thunderHelper = world.SpawnEnemy(new EnemySpawnConfig(
-            BNpcBaseId: BNpcBaseId.KefkaHelper, NameId: BNpcNameId.Exdeath, Level: 1,
-            Targetable: false, EnemyList: EnemyListMode.Never, Visibility: SpawnVisibility.InvisibleHelper,
-            Placement: new Placement(WindCrystalPos, 0f)));
         // The fire and water crystals faded when their elements resolved, before this window.
         windCrystal = world.SpawnEventObject(new EventObjectSpawnConfig
         {
@@ -278,7 +272,7 @@ public sealed class UmadP3LimitCutScenario : IMultiplayerReplayable
     private void ResolveThunder()
     {
         if (state.Objects.Exdeath is not { } exdeath) return;
-        thunderHelper?.Cast(UmadActions.ThunderIII, party.Find.Closest(exdeath.Position));
+        exdeath.CastFromHelper(UmadActions.ThunderIII, party.Find.Closest(exdeath.Position), at: new Placement(WindCrystalPos, 0f));
     }
 
     private void ResolveDecisiveBattle()
