@@ -33,35 +33,40 @@ public partial class UwuUtils(SimWorld world)
         enemy?.SetAnimationState(0, 1);
     }
 
-    // Each dummy drops its rain where its target stood at `targetOffset`.
-    public void FeatherRain(Func<SimEnemy?>[] getDummies, float targetOffset, float castOffset,
+    // Five rains, each dropped where its target stood at `targetOffset`.
+    public void FeatherRain(Func<SimEnemy?> getCaster, float targetOffset, float castOffset,
         IReadOnlyList<PartyRole>? targets = null, Func<SimCharacter?>? getExcluded = null)
     {
+        const int rains = 5;
         var positions = new List<Vector3>();
 
         world.Events.Add(targetOffset, () =>
         {
             PartyRole[] excluded = getExcluded?.Invoke() is ISimPartyMember { Role: var role } ? [role] : [];
             positions.AddRange(
-                (targets ?? RoleList.AllExcept(world.Rng, world.Party, excluded).List.Take(getDummies.Length))
+                (targets ?? RoleList.AllExcept(world.Rng, world.Party, excluded).List.Take(rains))
                 .Select(x => world.Party.Get(x)!.Position));
         });
 
         world.Events.Add(castOffset, () =>
         {
-            for (var i = 0; i < getDummies.Length; i++)
-            {
-                var dummy = getDummies[i]();
-                dummy?.SetPosition(new Placement(positions[i], 0));
-                dummy?.Cast(UwuActions.FeatherRain, positions[i]);
-            }
+            foreach (var position in positions.Take(rains))
+                getCaster()?.CastFromHelper(UwuActions.FeatherRain, position, at: OnLocation(position));
         });
     }
 
-    public void EruptionPuddle(Func<SimEnemy?> getDummy, Func<SimCharacter?> getBait, float castOffset)
-        => world.Events.Add(castOffset, () => getDummy()?.Cast(UwuActions.EruptionPuddle, getBait()!.Position));
+    public void EruptionPuddle(Func<SimEnemy?> getCaster, Func<SimCharacter?> getBait, float castOffset)
+        => world.Events.Add(castOffset, () =>
+        {
+            var location = getBait()!.Position;
+            getCaster()?.CastFromHelper(UwuActions.EruptionPuddle, location, at: OnLocation(location));
+        });
 
-    public void LandslideLines(Func<SimEnemy?> getEnemy, Func<SimEnemy?>[] getDummies, float castOffset, LandslideType type)
+    // Retail stands a location-targeted helper on its location, turned north.
+    public static Placement OnLocation(Vector3 location) => new(location, MathF.PI);
+
+    // One line per offset, each from the enemy's spot turned by its offset.
+    public void LandslideLines(Func<SimEnemy?> getEnemy, float castOffset, LandslideType type)
     {
         var (rotationOffsets, action) = type switch
         {
@@ -74,12 +79,8 @@ public partial class UwuUtils(SimWorld world)
         world.Events.Add(castOffset, () =>
         {
             var enemy = getEnemy()!;
-            for (var i = 0; i < getDummies.Length; i++)
-            {
-                var dummy = getDummies[i]();
-                dummy?.SetPosition(new Placement(enemy.Position, enemy.Rotation + rotationOffsets[i]));
-                dummy?.Cast(action);
-            }
+            foreach (var offset in rotationOffsets)
+                enemy.CastFromHelper(action, at: new Placement(enemy.Position, enemy.Rotation + offset));
         });
     }
 }

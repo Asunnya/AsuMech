@@ -50,6 +50,8 @@ public sealed class SimCast : ISimObject
     // roots itself while busy so the action animation finishes in place instead of sliding.
     public bool IsBusy => IsCasting || remainingAnimationLock > 0f;
 
+    internal float RemainingAnimationLock => remainingAnimationLock;
+
     // Owned and ticked by its SimCharacter, never reaped by liveness.
     public bool IsActive => true;
 

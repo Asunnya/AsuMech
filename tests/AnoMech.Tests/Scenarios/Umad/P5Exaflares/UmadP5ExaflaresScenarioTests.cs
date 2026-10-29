@@ -2,10 +2,10 @@ using System.Globalization;
 using System.Numerics;
 using AnoMech.Core.Native.Interfaces;
 using AnoMech.Core.Game.Party;
+using AnoMech.Scenarios.Umad;
 using AnoMech.Scenarios.Umad.P5Exaflares;
 using static AnoMech.Core.Game.Party.PartyRole;
 using static AnoMech.Tests.NegativeRun;
-using BNpcBaseId = AnoMech.Scenarios.Umad.UmadConstants.BNpcBaseId;
 using ActionId = AnoMech.Scenarios.Umad.UmadConstants.ActionId;
 
 namespace AnoMech.Tests;
@@ -127,7 +127,7 @@ public class UmadP5ExaflaresScenarioTests
         {
             if (row["kind"] == "spawn")
             {
-                if (row["id"] == BNpcBaseId.KefkaHelper.ToString()) spawnedAt[row["actor"]] = Time(row);
+                if (row["id"] == UmadReplayData.DutyInitData.HelperPool.BNpcBaseId.ToString()) spawnedAt[row["actor"]] = Time(row);
                 else spawnedAt.Remove(row["actor"]);
             }
             else if (row["kind"] is "cast" or "ability" && spawnedAt.TryGetValue(row["actor"], out var spawn))

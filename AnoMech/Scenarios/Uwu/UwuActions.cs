@@ -30,7 +30,7 @@ public static class UwuActions
         Cast = new() { AnimationLock = 0.1f },
         Area = SparesGaoled,
         Effects = [Damage(Lethal)],
-        Timing = new() { DamageDelay = 0.96f }, // TODO: verify with replay
+        Timing = new() { DamageDelay = 1.1f },
     };
 
     public static readonly EnemyAction LandslideLine = Landslide(ActionId.LandslideLine, 2.1f);
@@ -40,9 +40,9 @@ public static class UwuActions
     private static EnemyAction Landslide(uint actionId, float animationLock) => new(actionId)
     {
         Cast = new() { AnimationLock = animationLock },
-        // TODO: add damage as well and verify damage delay
+        // TODO: add damage as well
         Effects = [LandslideKnockback],
-        Timing = new() { DamageDelay = 1.03f }, // TODO: verify with replay
+        Timing = new() { DamageDelay = 1.19f },
     };
 
     // -- Ultima --
@@ -74,14 +74,14 @@ public static class UwuActions
     {
         Cast = new() { AnimationLock = 2.1f },
         Effects = [Damage(Lethal)],
-        Timing = new() { DamageDelay = 0.6f }, // TODO: verify with replay
+        Timing = new() { DamageDelay = 0.81f },
     };
 
     public static readonly EnemyAction RadiantPlumePuddle = new(ActionId.RadiantPlumePuddle)
     {
         Cast = new() { AnimationLock = 0.1f },
         Effects = [Damage(Lethal)],
-        Timing = new() { DamageDelay = 0.86f }, // TODO: verify with replay
+        Timing = new() { DamageDelay = 1.1f },
     };
 
     public static readonly EnemyAction HomingLasers = new(ActionId.HomingLasers)
@@ -99,7 +99,7 @@ public static class UwuActions
         Cast = new() { AnimationLock = 0.1f },
         Area = SparesGaoled,
         Effects = [Damage(Lethal)],
-        Timing = new() { DamageDelay = 0.9f }, // TODO: verify with replay
+        Timing = new() { DamageDelay = 1.1f },
     };
 
     public static readonly EnemyAction AetherochemicalLaserCenter = AetherochemicalLaser(ActionId.AetherochemicalLaserCenter, 0f);
@@ -135,7 +135,7 @@ public static class UwuActions
         Cast = new() { AnimationLock = 2.1f },
         Area = new() { Size = 8.7f }, 
         Effects = [Damage(Lethal)],
-        Timing = new() { DamageDelay = 0.5f }, // TODO: verify with replay
+        Timing = new() { DamageDelay = 0.63f },
     };
 
     public static readonly EnemyAction WickedWheel = new(ActionId.WickedWheel)
@@ -152,7 +152,7 @@ public static class UwuActions
         Cast = new() { AnimationLock = 1.8f },
         Area = SparesGaoled,
         Effects = [Damage(Lethal)],
-        Timing = new() { DamageDelay = 0.6f }, // TODO: verify with replay
+        Timing = new() { DamageDelay = 0.79f },
     };
     public static readonly EnemyAction MistralSongSuparnaChirada = new(ActionId.MistralSongSuparnaChirada)
     {
@@ -221,7 +221,7 @@ public static class UwuActions
         Cast = new() { AnimationLock = 2.1f },
         Area = SparesGaoled,
         Effects = [Damage(Lethal), DefeatCaster()],
-        Timing = new() { DamageDelay = 0.5f }, // TODO: verify with replay
+        Timing = new() { DamageDelay = 0.63f },
     };
 
     // -- Ifrit --
@@ -264,7 +264,7 @@ public static class UwuActions
     public static readonly EnemyAction Bury = new(ActionId.Bury)
     {
         Effects = [Damage(Lethal)],
-        Timing = new() { DamageDelay = 0.53f }, // TODO: verify with replay
+        Timing = new() { DamageDelay = 0.67f },
     };
 
     public static readonly EnemyAction Burst = new(ActionId.Burst)

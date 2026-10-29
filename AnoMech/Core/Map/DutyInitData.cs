@@ -9,10 +9,11 @@ namespace AnoMech.Core.Map;
 // and empty = the zone has no MapEffect slots.
 public sealed record DutyInitData(
     EntranceBarrier EntranceBarrier,
+    HelperPool HelperPool,
     IReadOnlyList<ushort> MapEffectSnapshot,
     IReadOnlyList<byte[]> Rsv,
     IReadOnlyList<byte[]> Rsf)
 {
-    // A zone with no captured replay: no entrance EObj, map effects or Rsv/Rsf data.
-    public static DutyInitData Unknown(Vector3 origin) => new(EntranceBarrier.Unknown(origin), [], [], []);
+    // A zone with no captured replay: no entrance EObj, helpers, map effects or Rsv/Rsf data.
+    public static DutyInitData Unknown(Vector3 origin) => new(EntranceBarrier.Unknown(origin), default, [], [], []);
 }

@@ -62,7 +62,6 @@ public class UwuConstants
         public const uint BombBoulder = 0x701FD1;
         public const uint GraniteGaol = 0x701FD3;
         public const uint UltimaWeapon = 0x701FD7;
-        public const uint Dummy = 0x704D3F;
     }
 
     public class BNpcNameId

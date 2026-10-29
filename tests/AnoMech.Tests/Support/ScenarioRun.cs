@@ -123,6 +123,8 @@ internal sealed record ScenarioRun(
                 deaths.Add(new Death(r, cause, actionId, statusId, game.World.Events.Elapsed, snapshot));
             };
             game.MechanicFailed += reason => mechanicFailures.Add(new MechanicFailure(reason, game.World.Events.Elapsed));
+            game.World.HelperPoolExhausted += actionId => failure ??=
+                $"helper pool exhausted at t={game.World.Events.Elapsed:F2}: {Natives.Data.ActionName(actionId)} ({actionId}) dropped";
             if (options.Overrides is { } setOverrides)
                 setOverrides(scenario.SettingsOverrides
                              ?? throw new InvalidOperationException($"{scenarioType.Name} has no settings overrides."));
