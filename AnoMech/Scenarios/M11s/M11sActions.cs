@@ -370,7 +370,7 @@ public static class M11sActions
     // UNVERIFIED: the minimum.
     public static readonly EnemyAction MassiveMeteorStack = new(ActionId.MassiveMeteorStack)
     {
-        Cast = new() { AnimationLock = 0.2f },
+        Cast = new() { AnimationLock = 0.2f, FaceTarget = false },
         Effects = [Damage(VulnToMagic, split: Stack(4)), ApplyStatus(StatusId.MagicVulnerabilityUp, 0.96f)],
         Timing = new() { DamageDelay = 0.3f },
         DeathExplanation = "one stack per platform",

@@ -331,13 +331,15 @@ public sealed class M11sArenaSplitScenario : IScenario
             healer.AttachLockonVfx(LockonId.MassiveMeteor);
     }
 
+    // Cast from the boss's spot at each healer (UNVERIFIED: that a caster on the healer hides the falling meteor).
     private void MassiveMeteorHit()
     {
+        if (tyrant is not { } boss) return;
         PartyRole[] healers = [PartyRole.RegenHealer, PartyRole.ShieldHealer];
         for (var i = 0; i < healers.Length; i++)
         {
             if (Alive(healers[i]) is not { } healer) continue;
-            stackHelpers[i]?.SetPosition(new Placement(healer.Position, 0f));
+            stackHelpers[i]?.SetPosition(boss.Placement());
             stackHelpers[i]?.Cast(Actions.MassiveMeteorStack, healer);
         }
     }
