@@ -104,6 +104,7 @@ All using default NA pf strats unless noted otherwise:
     - P5 Death of the Heavens (dooms and cleansing puddles, static dives, earthquakes, playstation knockback, gazes)
     - P6 Wyrmsbreath to Wroth Flames (fire/ice tether pairs, tank breaths, Mortal Vow passes, Akh Afah, Hallowed Wings with Nidhogg's dive, orb crosses with Akh Morn and Hraesvelgr's dive, Hot Wing/Tail spreads and stacks)
     - P6 Hallowed Wings 2 to Cauterize (second Akh Afah, Hallowed Wings with Hot Wing/Tail, static Wyrmsbreath 2, Pyretic/Deep Freeze cleansed by the dragons' dives, Touchdown, last Mortal Vow passes)
+    - P7 Dragon-king Thordan (Exaflare's, Akh Morn's and Gigaflare's Edge with Flames/Ice of Ascalon, Trinity tank swaps and nearest baits, up to Morn Afah's Edge)
 - AAC Heavyweight M1 (Savage) — M9S _by [Asunnya](https://github.com/Asunnya)_
     - Vamp Stomp, Hell in a Cell, Aetherletting, Coffinmaker, Undead Deathmatch, Flails, Vamp Stomp 2, Final
 - AAC Heavyweight M2 (Savage) — M10S _by [Asunnya](https://github.com/Asunnya)_
@@ -155,7 +156,7 @@ Thanks for contributors:
 * [altair9x](https://github.com/altair9x) - extra strategies
 * [Quantumlyy](https://github.com/Quantumlyy) - extra strategies
 * [Linqx](https://github.com/Linqx) - success/failure checkmarks
-* [Asunnya](https://github.com/Asunnya) - M9S, M10S, M11S, UWU P1 Garuda / P2 Ifrit / P3 Titan / Ultimate Annihilation, DSR P1 Knights / P2 Thordan / P3 Nidhogg / P4 Eyes / P5 Wrath / P5 Death / P6 Double Dragons
+* [Asunnya](https://github.com/Asunnya) - M9S, M10S, M11S, UWU P1 Garuda / P2 Ifrit / P3 Titan / Ultimate Annihilation, DSR P1 Knights / P2 Thordan / P3 Nidhogg / P4 Eyes / P5 Wrath / P5 Death / P6 Double Dragons / P7 Dragon-king
 
 AnoMech leans heavily on the work of other Dalamud plugins. Huge thanks to their authors!  
 Without them, the following would not be possible:

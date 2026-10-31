@@ -7,6 +7,7 @@ using AnoMech.Scenarios.Dsr.P4Eyes;
 using AnoMech.Scenarios.Dsr.P5Wrath;
 using AnoMech.Scenarios.Dsr.P5Death;
 using AnoMech.Scenarios.Dsr.P6DoubleDragons;
+using AnoMech.Scenarios.Dsr.P7DragonKing;
 using AnoMech.Scenarios.M10s.AlleyOopTwo;
 using AnoMech.Scenarios.M10s.ArenaSplit;
 using AnoMech.Scenarios.M10s.DeepAerial;
@@ -145,6 +146,7 @@ public sealed class ScenarioCatalog
         new DsrP5DeathScenario(),
         new DsrP6DoubleDragonsScenario(),
         new DsrP6CauterizeScenario(),
+        new DsrP7DragonKingScenario(),
         new M9sVampStompScenario(),
         new M9sCoffinmakerScenario(),
         new M9sAetherlettingScenario(),
