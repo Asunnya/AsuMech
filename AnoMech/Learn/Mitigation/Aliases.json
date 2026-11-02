@@ -1,0 +1,317 @@
+{
+  "actions": {
+    "Spreadlow": [
+      "Deployment Tactics"
+    ],
+    "Spread lo": [
+      "Deployment Tactics"
+    ],
+    "Plant Star": [
+      "Earthly Star"
+    ],
+    "Star": [
+      "Earthly Star"
+    ],
+    "Detonate Star": [
+      "Stellar Detonation"
+    ],
+    "Zoe Shield": [
+      "Zoe",
+      "Eukrasian Prognosis II"
+    ],
+    "Zoe": [
+      "Zoe"
+    ],
+    "Shields": [
+      "Eukrasian Prognosis II",
+      "Succor",
+      "Concitation",
+      "Adloquium"
+    ],
+    "GCD Shield": [
+      "Eukrasian Prognosis II",
+      "Succor",
+      "Concitation"
+    ],
+    "Shake / Veil": [
+      "Shake It Off",
+      "Divine Veil"
+    ],
+    "Veil, Shake": [
+      "Shake It Off",
+      "Divine Veil"
+    ],
+    "Divine Veil / Shake it Off": [
+      "Shake It Off",
+      "Divine Veil"
+    ],
+    "Shake it Off": [
+      "Shake It Off"
+    ],
+    "Shake": [
+      "Shake It Off"
+    ],
+    "Veil": [
+      "Divine Veil"
+    ],
+    "Ranged Mit": [
+      "Troubadour",
+      "Tactician",
+      "Shield Samba"
+    ],
+    "Ranged DPS Mit": [
+      "Troubadour",
+      "Tactician",
+      "Shield Samba"
+    ],
+    "Physis": [
+      "Physis II"
+    ],
+    "Plenary": [
+      "Plenary Indulgence"
+    ],
+    "Benision": [
+      "Divine Benison"
+    ],
+    "Benison": [
+      "Divine Benison"
+    ],
+    "Excog": [
+      "Excogitation"
+    ],
+    "Fey Illumination": [
+      "Fey Illumination"
+    ],
+    "Asp Benefic": [
+      "Aspected Benefic"
+    ],
+    "Nature's": [
+      "Nature's Minne"
+    ],
+    "TBN": [
+      "The Blackest Night"
+    ],
+    "Heart of Stone": [
+      "Heart of Stone",
+      "Heart of Corundum"
+    ],
+    "Heart of Light / Dark Missionary": [
+      "Heart of Light",
+      "Dark Missionary"
+    ],
+    "90s Tank Mit": [
+      "Rampart"
+    ],
+    "Extra 90s": [
+      "Rampart"
+    ],
+    "2min": [
+      "Sentinel",
+      "Guardian",
+      "Vengeance",
+      "Damnation",
+      "Shadow Wall",
+      "Shadowed Vigil",
+      "Nebula",
+      "Great Nebula"
+    ],
+    "Extra cd": [
+      "Sentinel",
+      "Guardian",
+      "Vengeance",
+      "Damnation",
+      "Shadow Wall",
+      "Shadowed Vigil",
+      "Nebula",
+      "Great Nebula"
+    ],
+    "Fast CD": [
+      "Sheltron",
+      "Holy Sheltron",
+      "Raw Intuition",
+      "Bloodwhetting",
+      "The Blackest Night",
+      "Heart of Stone",
+      "Heart of Corundum"
+    ],
+    "Short Mit": [
+      "Sheltron",
+      "Holy Sheltron",
+      "Raw Intuition",
+      "Bloodwhetting",
+      "The Blackest Night",
+      "Heart of Stone",
+      "Heart of Corundum"
+    ],
+    "Short Mitigation": [
+      "Sheltron",
+      "Holy Sheltron",
+      "Raw Intuition",
+      "Bloodwhetting",
+      "The Blackest Night",
+      "Heart of Stone",
+      "Heart of Corundum"
+    ],
+    "Self mit": [
+      "Sheltron",
+      "Holy Sheltron",
+      "Raw Intuition",
+      "Bloodwhetting",
+      "The Blackest Night",
+      "Heart of Stone",
+      "Heart of Corundum",
+      "Rampart"
+    ],
+    "Buddy mit": [
+      "Intervention",
+      "Nascent Flash",
+      "The Blackest Night",
+      "Heart of Corundum",
+      "Heart of Stone"
+    ],
+    "Buddy mit MT": [
+      "Intervention",
+      "Nascent Flash",
+      "The Blackest Night",
+      "Heart of Corundum",
+      "Heart of Stone"
+    ],
+    "Invuln": [
+      "Hallowed Ground",
+      "Holmgang",
+      "Living Dead",
+      "Superbolide"
+    ],
+    "Kitchen Sink": [
+      "Rampart",
+      "Sentinel",
+      "Guardian",
+      "Vengeance",
+      "Damnation",
+      "Shadow Wall",
+      "Shadowed Vigil",
+      "Nebula",
+      "Great Nebula",
+      "Reprisal"
+    ],
+    "Intervention Healer": [
+      "Intervention"
+    ],
+    "Intervention Phys Ranged": [
+      "Intervention"
+    ],
+    "Fairy Tether": [
+      "Fey Union"
+    ],
+    "Fairy Tether MT": [
+      "Fey Union"
+    ],
+    "Fairy Tether Tank": [
+      "Fey Union"
+    ],
+    "Seraph": [
+      "Summon Seraph"
+    ],
+    "Tank LB1": [
+      "Shield Wall"
+    ],
+    "Tank LB3": [
+      "Last Bastion",
+      "Land Waker",
+      "Dark Force",
+      "Gunmetal Soul"
+    ],
+    "Dark Missionary": [
+      "Dark Missionary"
+    ],
+    "Haima OT": [
+      "Haima"
+    ],
+    "Haima MT": [
+      "Haima"
+    ],
+    "Haima": [
+      "Haima"
+    ],
+    "Regen": [
+      "Regen"
+    ],
+    "Celestial  Opposition": [
+      "Celestial Opposition"
+    ],
+    "Collective Unconscious": [
+      "Collective Unconscious"
+    ],
+    "Soteria": [
+      "Soteria"
+    ],
+    "Star on CD": [
+      "Earthly Star"
+    ],
+    "Star off CD": [
+      "Earthly Star"
+    ],
+    "Durochole": [
+      "Druochole"
+    ],
+    "Self-mit": [
+      "Sheltron",
+      "Holy Sheltron",
+      "Raw Intuition",
+      "Bloodwhetting",
+      "The Blackest Night",
+      "Heart of Stone",
+      "Heart of Corundum",
+      "Rampart"
+    ],
+    "Celestial Opposition": [
+      "Celestial Opposition"
+    ]
+  },
+  "reminders": [
+    "Heal yourself",
+    "GCD Heal",
+    "Top to full HP",
+    "Fairy Regen",
+    "eat fairy",
+    "Hold Aggro",
+    "Assist MT",
+    "Delegate to",
+    "Build gauge",
+    "Meant to generate LB",
+    "Provoke",
+    "Searing Healer",
+    "SURECAST",
+    "KB IMMUNE",
+    "Cutscene"
+  ],
+  "conditions": {
+    "(After Cast)": "afterCastEnd",
+    "(After Castbar)": "afterCastEnd",
+    "(After TB)": "afterCastEnd",
+    "(After block)": "afterCastEnd",
+    "after Divination": "afterAction:Divination",
+    "Once 1st falls off": "afterStatusEnds:Feint",
+    "after 1st Cleanse": "afterCastEnd"
+  },
+  "states": {
+    "(Kerachole Active)": "Kerachole",
+    "(Soil Active)": "Sacred Soil",
+    "(Feint Active)": "Feint"
+  },
+  "targets": {
+    "on OT": "OT",
+    "OT": "OT",
+    "MT": "MT",
+    "Tank": "tank",
+    "Healer": "healer",
+    "Phys Ranged": "Phys Range"
+  },
+  "mechanics": {
+    "Sister Block": "Mistral Song #2",
+    "Sister Teathers": "Mesohigh #1",
+    "Sister Tethers": "Mesohigh #1",
+    "Double Sister Block": "Mistral Song #2",
+    "Healer Sister Block": "Mistral Song #2"
+  }
+}

@@ -1,0 +1,102 @@
+t,kind,actor,actor_name,id,name,target,target_name,x,z,rot,detail,omen_delay,ballista,anim_lock,anim_var,knockback,damage_type,y,p,source
+5.300,cast,4000FE15,Garuda,11091,Slipstream,4000FE15,Garuda,100.00,99.30,-2.75,cast=2.20s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuP1GarudaScenario.cs:97
+7.783,ability,4000FE15,Garuda,11091,Slipstream,4000FE15,Garuda,100.00,99.30,-2.80,hits=0,,,2.10,0,,,0.00,,UwuP1GarudaScenario.cs:98
+10.333,ability,4000FE15,Garuda,11074,Mistral Song,10FFFE01,Paladin,100.00,99.30,1.45,hits=0,,,1.10,0,,,0.00,,UwuP1GarudaScenario.cs:99
+13.450,cast,4000FE1B,BNpc 233C,11073,Great Whirlwind,,,103.16,100.10,0.00,cast=2.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuP1GarudaScenario.cs:101
+16.433,ability,4000FE1B,BNpc 233C,11073,Great Whirlwind,4000FE1B,BNpc 233C,103.16,100.10,0.00,hits=0,,,2.10,0,,,0.00,,UwuP1GarudaScenario.cs:102
+19.600,cast,4000FE1B,BNpc 233C,11073,Great Whirlwind,,,103.16,100.10,0.00,cast=2.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuP1GarudaScenario.cs:104
+20.617,cast,4000FE15,Garuda,11091,Slipstream,4000FE15,Garuda,93.70,99.50,3.05,cast=2.20s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuP1GarudaScenario.cs:107
+22.583,ability,4000FE1B,BNpc 233C,11073,Great Whirlwind,4000FE1B,BNpc 233C,103.16,100.10,0.00,hits=0,,,2.10,0,,,0.00,,UwuP1GarudaScenario.cs:108
+23.116,ability,4000FE15,Garuda,11091,Slipstream,4000FE15,Garuda,93.70,99.50,3.05,hits=0,,,2.10,0,,,0.00,,UwuP1GarudaScenario.cs:111
+25.733,cast,4000FE1B,BNpc 233C,11073,Great Whirlwind,,,103.16,100.10,0.00,cast=2.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuP1GarudaScenario.cs:112
+26.583,ability,4000FE15,Garuda,11088,Downburst,4000FE15,Garuda,93.70,99.50,3.05,hits=0,,,2.10,0,,,0.00,,UwuP1GarudaScenario.cs:113
+26.716,ability,4000FE20,spiny plume,11077,Cyclone,10FFFE01,Paladin,92.00,101.60,0.90,hits=0,,,1.10,0,,,0.00,,UwuP1GarudaScenario.cs:114
+28.733,ability,4000FE1B,BNpc 233C,11073,Great Whirlwind,4000FE1B,BNpc 233C,103.16,100.10,0.00,hits=0,,,2.10,0,,,0.00,,UwuP1GarudaScenario.cs:116
+35.533,cast,4000FE16,BNpc 233C,11085,Feather Rain,,,92.12,102.61,0.00,cast=0.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuUtils.Fork.cs:89
+35.533,cast,4000FE17,BNpc 233C,11085,Feather Rain,,,92.08,103.20,0.00,cast=0.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuUtils.Fork.cs:89
+35.533,cast,4000FE18,BNpc 233C,11085,Feather Rain,,,93.95,96.59,0.00,cast=0.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuUtils.Fork.cs:89
+35.533,cast,4000FE19,BNpc 233C,11085,Feather Rain,,,93.29,103.68,0.00,cast=0.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuUtils.Fork.cs:89
+35.533,cast,4000FE1A,BNpc 233C,11085,Feather Rain,,,93.59,103.21,0.00,cast=0.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuUtils.Fork.cs:89
+35.866,ability,4000FE20,spiny plume,11077,Cyclone,10FFFE01,Paladin,93.20,101.90,1.33,hits=0,,,1.10,0,,,0.00,,UwuP1GarudaScenario.cs:122
+36.533,ability,4000FE16,BNpc 233C,11085,Feather Rain,,,92.12,102.61,0.00,hits=0,,,1.10,0,,,0.00,,UwuUtils.Fork.cs:136
+36.533,ability,4000FE17,BNpc 233C,11085,Feather Rain,,,92.08,103.20,0.00,hits=0,,,1.10,0,,,0.00,,UwuUtils.Fork.cs:136
+36.533,ability,4000FE18,BNpc 233C,11085,Feather Rain,,,93.95,96.59,0.00,hits=0,,,1.10,0,,,0.00,,UwuUtils.Fork.cs:136
+36.533,ability,4000FE19,BNpc 233C,11085,Feather Rain,,,93.29,103.68,0.00,hits=0,,,1.10,0,,,0.00,,UwuUtils.Fork.cs:136
+36.533,ability,4000FE1A,BNpc 233C,11085,Feather Rain,,,93.59,103.21,0.00,hits=0,,,1.10,0,,,0.00,,UwuUtils.Fork.cs:136
+38.216,cast,4000FE20,spiny plume,11078,Gigastorm,4000FE20,spiny plume,93.20,104.40,0.00,cast=2.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuP1GarudaScenario.cs:128
+38.316,cast,4000FE15,Garuda,11092,Mistral Shriek,4000FE15,Garuda,100.00,100.00,-2.06,cast=2.70s interruptible=0 rel_rot=0.95,0.0,,,,,,0.00,,UwuP1GarudaScenario.cs:129
+41.200,ability,4000FE20,spiny plume,11078,Gigastorm,4000FE20,spiny plume,93.20,104.43,0.00,hits=0,,,2.10,0,,,0.00,,UwuP1GarudaScenario.cs:130
+41.283,ability,4000FE15,Garuda,11092,Mistral Shriek,4000FE15,Garuda,100.00,100.00,-3.13,hits=0,,,2.30,0,,,0.00,,UwuP1GarudaScenario.cs:131
+44.016,ability,4000FE1C,BNpc 233C,11189,Super Cyclone,4000FE1C,BNpc 233C,97.60,100.98,0.00,hits=0,,,1.10,0,,,0.00,,UwuP1GarudaAi.cs:44
+48.683,cast,4000FE15,Garuda,11080,Friction,10FFFE03,Scholar,100.00,100.00,-0.83,cast=1.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuP1GarudaScenario.cs:136
+50.649,ability,4000FE15,Garuda,11080,Friction,10FFFE03,Scholar,100.00,100.00,-0.83,hits=0,,,1.10,0,,,0.00,,UwuP1GarudaScenario.cs:137
+50.649,ability,4000FE1D,BNpc 233C,11079,Super Cyclone,4000FE1D,BNpc 233C,96.23,103.44,0.00,hits=0,,,1.10,0,,,0.00,,UwuP1GarudaScenario.cs:137
+50.649,ability,4000FE1E,BNpc 233C,11079,Super Cyclone,4000FE1E,BNpc 233C,97.02,105.38,0.00,hits=0,,,1.10,0,,,0.00,,UwuP1GarudaScenario.cs:137
+50.649,ability,4000FE1F,BNpc 233C,11079,Super Cyclone,4000FE1F,BNpc 233C,97.21,104.71,0.00,hits=0,,,1.10,0,,,0.00,,UwuP1GarudaScenario.cs:137
+50.649,ability,4000FE20,BNpc 233C,11079,Super Cyclone,4000FE20,BNpc 233C,96.81,105.57,0.00,hits=0,,,1.10,0,,,0.00,,UwuP1GarudaScenario.cs:137
+50.649,ability,4000FE21,BNpc 233C,11079,Super Cyclone,4000FE21,BNpc 233C,97.00,106.24,0.00,hits=0,,,1.10,0,,,0.00,,UwuP1GarudaScenario.cs:137
+54.783,cast,4000FE15,Garuda,11080,Friction,10FFFE03,Scholar,100.00,100.00,0.16,cast=1.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuP1GarudaScenario.cs:138
+56.749,ability,4000FE15,Garuda,11080,Friction,10FFFE03,Scholar,100.00,100.00,0.16,hits=0,,,1.10,0,,,0.00,,UwuP1GarudaScenario.cs:139
+57.516,ability,4000FE22,BNpc 233C,11189,Super Cyclone,4000FE22,BNpc 233C,99.17,104.88,0.00,hits=0,,,1.10,0,,,0.00,,UwuP1GarudaAi.cs:47
+60.483,ability,4000FE23,BNpc 233C,11189,Super Cyclone,4000FE23,BNpc 233C,99.11,104.99,0.00,hits=0,,,1.10,0,,,0.00,,UwuP1GarudaAi.cs:48
+70.434,cast,4000FE16,BNpc 233C,11085,Feather Rain,,,100.26,104.79,0.00,cast=0.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuUtils.Fork.cs:89
+70.434,cast,4000FE17,BNpc 233C,11085,Feather Rain,,,100.53,104.55,0.00,cast=0.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuUtils.Fork.cs:89
+70.434,cast,4000FE18,BNpc 233C,11085,Feather Rain,,,100.36,104.74,0.00,cast=0.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuUtils.Fork.cs:89
+70.434,cast,4000FE19,BNpc 233C,11085,Feather Rain,,,100.77,104.75,0.00,cast=0.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuUtils.Fork.cs:89
+70.434,cast,4000FE1A,BNpc 233C,11085,Feather Rain,,,100.45,104.71,0.00,cast=0.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuUtils.Fork.cs:89
+71.401,ability,4000FE16,BNpc 233C,11085,Feather Rain,,,100.26,104.79,0.00,hits=0,,,1.10,0,,,0.00,,UwuUtils.Fork.cs:136
+71.401,ability,4000FE17,BNpc 233C,11085,Feather Rain,,,100.53,104.55,0.00,hits=0,,,1.10,0,,,0.00,,UwuUtils.Fork.cs:136
+71.401,ability,4000FE18,BNpc 233C,11085,Feather Rain,,,100.36,104.74,0.00,hits=0,,,1.10,0,,,0.00,,UwuUtils.Fork.cs:136
+71.401,ability,4000FE19,BNpc 233C,11085,Feather Rain,,,100.77,104.75,0.00,hits=0,,,1.10,0,,,0.00,,UwuUtils.Fork.cs:136
+71.401,ability,4000FE1A,BNpc 233C,11085,Feather Rain,,,100.45,104.71,0.00,hits=0,,,1.10,0,,,0.00,,UwuUtils.Fork.cs:136
+73.184,cast,4000FE15,Garuda,11093,Aerial Blast,4000FE15,Garuda,100.00,100.00,-3.12,cast=2.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuP1GarudaScenario.cs:151
+76.185,ability,4000FE15,Garuda,11093,Aerial Blast,4000FE15,Garuda,100.00,100.00,-3.12,hits=0,,,2.30,0,,,0.00,,UwuP1GarudaScenario.cs:152
+91.372,cast,4000FE16,BNpc 233C,11085,Feather Rain,,,99.84,102.69,0.00,cast=0.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuUtils.Fork.cs:89
+91.372,cast,4000FE17,BNpc 233C,11085,Feather Rain,,,100.02,103.05,0.00,cast=0.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuUtils.Fork.cs:89
+91.372,cast,4000FE18,BNpc 233C,11085,Feather Rain,,,99.91,102.57,0.00,cast=0.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuUtils.Fork.cs:89
+91.372,cast,4000FE19,BNpc 233C,11085,Feather Rain,,,100.11,102.56,0.00,cast=0.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuUtils.Fork.cs:89
+91.372,cast,4000FE1A,BNpc 233C,11085,Feather Rain,,,99.98,103.00,0.00,cast=0.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuUtils.Fork.cs:89
+92.355,ability,4000FE16,BNpc 233C,11085,Feather Rain,,,99.84,102.69,0.00,hits=0,,,1.10,0,,,0.00,,UwuUtils.Fork.cs:136
+92.355,ability,4000FE17,BNpc 233C,11085,Feather Rain,,,100.02,103.05,0.00,hits=0,,,1.10,0,,,0.00,,UwuUtils.Fork.cs:136
+92.355,ability,4000FE18,BNpc 233C,11085,Feather Rain,,,99.91,102.57,0.00,hits=0,,,1.10,0,,,0.00,,UwuUtils.Fork.cs:136
+92.355,ability,4000FE19,BNpc 233C,11085,Feather Rain,,,100.11,102.56,0.00,hits=0,,,1.10,0,,,0.00,,UwuUtils.Fork.cs:136
+92.355,ability,4000FE1A,BNpc 233C,11085,Feather Rain,,,99.98,103.00,0.00,hits=0,,,1.10,0,,,0.00,,UwuUtils.Fork.cs:136
+96.589,cast,4000FE26,BNpc 233C,11090,Eye of the Storm,4000FE26,BNpc 233C,100.00,100.00,0.00,cast=2.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuP1GarudaScenario.cs:164
+96.723,cast,4000FE15,Garuda,11086,Wicked Wheel,4000FE15,Garuda,100.00,100.00,2.89,cast=2.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuP1GarudaScenario.cs:165
+99.207,ability,4000FE24,Suparna,11083,Mistral Song,10FFFE00,Warrior,100.00,80.50,0.26,hits=0,,,1.10,0,,,0.00,,UwuP1GarudaScenario.cs:166
+99.207,ability,4000FE25,Chirada,11083,Mistral Song,10FFFE01,Paladin,119.50,100.00,-1.07,hits=0,,,1.10,0,,,0.00,,UwuP1GarudaScenario.cs:166
+99.573,ability,4000FE26,BNpc 233C,11090,Eye of the Storm,4000FE26,BNpc 233C,100.00,100.00,0.00,hits=0,,,2.10,0,,,0.00,,UwuP1GarudaScenario.cs:167
+99.690,ability,4000FE15,Garuda,11086,Wicked Wheel,4000FE15,Garuda,100.00,100.00,2.89,hits=0,,,2.10,0,,,0.00,,UwuP1GarudaScenario.cs:168
+102.324,cast,4000FE27,BNpc 233C,11073,Great Whirlwind,,,102.43,90.63,0.00,cast=2.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuP1GarudaScenario.cs:171
+102.324,cast,4000FE28,BNpc 233C,11073,Great Whirlwind,,,108.56,105.88,0.00,cast=2.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuP1GarudaScenario.cs:172
+102.824,cast,4000FE16,BNpc 233C,11085,Feather Rain,,,106.74,106.82,0.00,cast=0.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuUtils.Fork.cs:89
+102.824,cast,4000FE17,BNpc 233C,11085,Feather Rain,,,107.02,106.84,0.00,cast=0.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuUtils.Fork.cs:89
+102.824,cast,4000FE18,BNpc 233C,11085,Feather Rain,,,106.77,107.16,0.00,cast=0.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuUtils.Fork.cs:89
+102.824,cast,4000FE19,BNpc 233C,11085,Feather Rain,,,108.56,105.88,0.00,cast=0.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuUtils.Fork.cs:89
+102.824,cast,4000FE1A,BNpc 233C,11085,Feather Rain,,,106.81,106.64,0.00,cast=0.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuUtils.Fork.cs:89
+103.791,ability,4000FE16,BNpc 233C,11085,Feather Rain,,,106.74,106.82,0.00,hits=0,,,1.10,0,,,0.00,,UwuUtils.Fork.cs:136
+103.791,ability,4000FE17,BNpc 233C,11085,Feather Rain,,,107.02,106.84,0.00,hits=0,,,1.10,0,,,0.00,,UwuUtils.Fork.cs:136
+103.791,ability,4000FE18,BNpc 233C,11085,Feather Rain,,,106.77,107.16,0.00,hits=0,,,1.10,0,,,0.00,,UwuUtils.Fork.cs:136
+103.791,ability,4000FE19,BNpc 233C,11085,Feather Rain,,,108.56,105.88,0.00,hits=0,,,1.10,0,,,0.00,,UwuUtils.Fork.cs:136
+103.791,ability,4000FE1A,BNpc 233C,11085,Feather Rain,,,106.81,106.64,0.00,hits=0,,,1.10,0,,,0.00,,UwuUtils.Fork.cs:136
+105.325,ability,4000FE27,BNpc 233C,11073,Great Whirlwind,4000FE27,BNpc 233C,102.43,90.63,0.00,hits=0,,,2.10,0,,,0.00,,UwuP1GarudaScenario.cs:174
+105.325,ability,4000FE28,BNpc 233C,11073,Great Whirlwind,4000FE28,BNpc 233C,108.56,105.88,0.00,hits=0,,,2.10,0,,,0.00,,UwuP1GarudaScenario.cs:175
+118.761,cast,4000FE15,Garuda,11091,Slipstream,4000FE15,Garuda,99.90,93.40,3.02,cast=2.20s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuP1GarudaScenario.cs:183
+119.611,cast,4000FE26,BNpc 233C,11090,Eye of the Storm,4000FE26,BNpc 233C,100.00,100.00,0.00,cast=2.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuP1GarudaScenario.cs:186
+121.261,ability,4000FE15,Garuda,11091,Slipstream,4000FE15,Garuda,99.90,93.40,3.10,hits=0,,,2.10,0,,,0.00,,UwuP1GarudaScenario.cs:187
+122.595,ability,4000FE26,BNpc 233C,11090,Eye of the Storm,4000FE26,BNpc 233C,100.00,100.00,0.00,hits=0,,,2.10,0,,,0.00,,UwuP1GarudaScenario.cs:188
+124.645,ability,4000FE24,Suparna,11081,Mesohigh,10FFFE01,Paladin,85.00,100.00,1.57,hits=0,,,1.10,0,,,0.00,,UwuP1GarudaScenario.cs:189
+124.645,ability,4000FE29,BNpc 233C,11189,Super Cyclone,4000FE29,BNpc 233C,91.80,101.20,0.00,hits=0,,,1.10,0,,,0.00,,UwuP1GarudaScenario.cs:189
+124.645,ability,4000FE25,Chirada,11081,Mesohigh,10FFFE06,Black Mage,115.00,100.00,-1.57,hits=0,,,1.10,0,,,0.00,,UwuP1GarudaScenario.cs:189
+124.645,ability,4000FE2A,BNpc 233C,11079,Super Cyclone,4000FE2A,BNpc 233C,107.60,100.20,0.00,hits=0,,,1.10,0,,,0.00,,UwuP1GarudaScenario.cs:189
+124.745,ability,4000FE15,Garuda,11088,Downburst,4000FE15,Garuda,99.90,93.40,3.10,hits=0,,,2.10,0,,,0.00,,UwuP1GarudaScenario.cs:190
+128.263,cast,4000FE16,BNpc 233C,11085,Feather Rain,,,99.97,104.08,0.00,cast=0.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuUtils.Fork.cs:89
+128.263,cast,4000FE17,BNpc 233C,11085,Feather Rain,,,99.94,91.13,0.00,cast=0.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuUtils.Fork.cs:89
+128.263,cast,4000FE18,BNpc 233C,11085,Feather Rain,,,100.06,103.98,0.00,cast=0.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuUtils.Fork.cs:89
+128.263,cast,4000FE19,BNpc 233C,11085,Feather Rain,,,99.73,104.29,0.00,cast=0.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuUtils.Fork.cs:89
+128.263,cast,4000FE1A,BNpc 233C,11085,Feather Rain,,,100.01,104.26,0.00,cast=0.70s interruptible=0 rel_rot=0.00,0.0,,,,,,0.00,,UwuUtils.Fork.cs:89
+129.246,ability,4000FE16,BNpc 233C,11085,Feather Rain,,,99.97,104.08,0.00,hits=0,,,1.10,0,,,0.00,,UwuUtils.Fork.cs:136
+129.246,ability,4000FE17,BNpc 233C,11085,Feather Rain,,,99.94,91.13,0.00,hits=0,,,1.10,0,,,0.00,,UwuUtils.Fork.cs:136
+129.246,ability,4000FE18,BNpc 233C,11085,Feather Rain,,,100.06,103.98,0.00,hits=0,,,1.10,0,,,0.00,,UwuUtils.Fork.cs:136
+129.246,ability,4000FE19,BNpc 233C,11085,Feather Rain,,,99.73,104.29,0.00,hits=0,,,1.10,0,,,0.00,,UwuUtils.Fork.cs:136
+129.246,ability,4000FE1A,BNpc 233C,11085,Feather Rain,,,100.01,104.26,0.00,hits=0,,,1.10,0,,,0.00,,UwuUtils.Fork.cs:136

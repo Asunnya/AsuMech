@@ -1,0 +1,298 @@
+{
+  "scenario": "UltimateAnnihilationScenario",
+  "casts": [
+    {
+      "actionId": 11596,
+      "name": "Ultimate Annihilation",
+      "start": 2.517,
+      "resolve": 5.217,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11108,
+      "name": "Weight of the Land",
+      "start": 14.317,
+      "resolve": 16.517,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11109,
+      "name": "Weight of the Land",
+      "start": 14.317,
+      "resolve": 17.017,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11109,
+      "name": "Weight of the Land",
+      "start": 17.333,
+      "resolve": 20.033,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11090,
+      "name": "Eye of the Storm",
+      "start": 17.467,
+      "resolve": 20.167,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11101,
+      "name": "Flaming Crush",
+      "start": 19.35,
+      "resolve": 19.35,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11109,
+      "name": "Weight of the Land",
+      "start": 20.333,
+      "resolve": 23.033,
+      "occurrence": 4
+    },
+    {
+      "actionId": 11099,
+      "name": "Inferno Howl",
+      "start": 21.433,
+      "resolve": 23.133001,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11137,
+      "name": "Aetheroplasm",
+      "start": 21.583,
+      "resolve": 21.583,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11081,
+      "name": "Mesohigh",
+      "start": 22.516,
+      "resolve": 22.516,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11079,
+      "name": "Super Cyclone",
+      "start": 23.533,
+      "resolve": 23.533,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11085,
+      "name": "Feather Rain",
+      "start": 26.116,
+      "resolve": 26.816,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11137,
+      "name": "Aetheroplasm",
+      "start": 27.916,
+      "resolve": 27.916,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11103,
+      "name": "Crimson Cyclone",
+      "start": 28.666,
+      "resolve": 31.366001,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11100,
+      "name": "Searing Wind",
+      "start": 29.366,
+      "resolve": 29.366,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11121,
+      "name": "Landslide",
+      "start": 30.266,
+      "resolve": 32.166,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11120,
+      "name": "Landslide",
+      "start": 30.266,
+      "resolve": 32.166,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11298,
+      "name": "Landslide",
+      "start": 32.45,
+      "resolve": 34.15,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11104,
+      "name": "Crimson Cyclone",
+      "start": 33.783,
+      "resolve": 33.783,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11090,
+      "name": "Eye of the Storm",
+      "start": 34.483,
+      "resolve": 37.183002,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11100,
+      "name": "Searing Wind",
+      "start": 35.383,
+      "resolve": 35.383,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11137,
+      "name": "Aetheroplasm",
+      "start": 36.466,
+      "resolve": 36.466,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11137,
+      "name": "Aetheroplasm",
+      "start": 38.683,
+      "resolve": 38.683,
+      "occurrence": 4
+    },
+    {
+      "actionId": 11143,
+      "name": "Tank Purge",
+      "start": 38.716,
+      "resolve": 42.416,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11081,
+      "name": "Mesohigh",
+      "start": 39.933,
+      "resolve": 39.933,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11079,
+      "name": "Super Cyclone",
+      "start": 40.95,
+      "resolve": 40.95,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11100,
+      "name": "Searing Wind",
+      "start": 41.4,
+      "resolve": 41.4,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11085,
+      "name": "Feather Rain",
+      "start": 43.533,
+      "resolve": 44.233,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11100,
+      "name": "Searing Wind",
+      "start": 47.416,
+      "resolve": 47.416,
+      "occurrence": 4
+    },
+    {
+      "actionId": 11090,
+      "name": "Eye of the Storm",
+      "start": 51.499,
+      "resolve": 54.199,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11100,
+      "name": "Searing Wind",
+      "start": 53.416,
+      "resolve": 53.416,
+      "occurrence": 5
+    },
+    {
+      "actionId": 11131,
+      "name": "Homing Lasers",
+      "start": 55.149,
+      "resolve": 57.849,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11090,
+      "name": "Eye of the Storm",
+      "start": 63.316,
+      "resolve": 66.016,
+      "occurrence": 4
+    },
+    {
+      "actionId": 11133,
+      "name": "Radiant Plume",
+      "start": 65.349,
+      "resolve": 68.249,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11105,
+      "name": "Radiant Plume",
+      "start": 65.349,
+      "resolve": 69.048996,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11128,
+      "name": "Diffractive Laser",
+      "start": 71.684,
+      "resolve": 71.684,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11090,
+      "name": "Eye of the Storm",
+      "start": 74.835,
+      "resolve": 77.534996,
+      "occurrence": 5
+    },
+    {
+      "actionId": 11508,
+      "name": "Vulcan Burst",
+      "start": 75.768,
+      "resolve": 75.768,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11597,
+      "name": "Ultimate Suppression",
+      "start": 80.236,
+      "resolve": 82.936,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Ultimate Annihilation",
+    "Weight of the Land",
+    "Eye of the Storm",
+    "Flaming Crush",
+    "Inferno Howl",
+    "Aetheroplasm",
+    "Mesohigh",
+    "Super Cyclone",
+    "Feather Rain",
+    "Crimson Cyclone",
+    "Searing Wind",
+    "Landslide",
+    "Tank Purge",
+    "Homing Lasers",
+    "Radiant Plume",
+    "Diffractive Laser",
+    "Vulcan Burst",
+    "Ultimate Suppression"
+  ]
+}

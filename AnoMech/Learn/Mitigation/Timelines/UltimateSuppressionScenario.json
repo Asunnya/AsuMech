@@ -1,0 +1,246 @@
+{
+  "scenario": "UltimateSuppressionScenario",
+  "casts": [
+    {
+      "actionId": 11597,
+      "name": "Ultimate Suppression",
+      "start": 2.517,
+      "resolve": 5.217,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11097,
+      "name": "Eruption",
+      "start": 14.333,
+      "resolve": 16.533,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11098,
+      "name": "Eruption",
+      "start": 14.333,
+      "resolve": 17.033,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11098,
+      "name": "Eruption",
+      "start": 16.333,
+      "resolve": 19.033,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11115,
+      "name": "Rock Throw",
+      "start": 16.333,
+      "resolve": 16.333,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11098,
+      "name": "Eruption",
+      "start": 18.367,
+      "resolve": 21.067001,
+      "occurrence": 4
+    },
+    {
+      "actionId": 11138,
+      "name": "Light Pillar",
+      "start": 20.367,
+      "resolve": 22.067001,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11098,
+      "name": "Eruption",
+      "start": 20.367,
+      "resolve": 23.067001,
+      "occurrence": 5
+    },
+    {
+      "actionId": 11083,
+      "name": "Mistral Song",
+      "start": 20.483,
+      "resolve": 20.483,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11150,
+      "name": "Mistral Song",
+      "start": 20.617,
+      "resolve": 22.317001,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11448,
+      "name": "Granite Impact",
+      "start": 23.433,
+      "resolve": 30.133,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11073,
+      "name": "Great Whirlwind",
+      "start": 23.6,
+      "resolve": 26.300001,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11085,
+      "name": "Feather Rain",
+      "start": 24.083,
+      "resolve": 24.783,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11140,
+      "name": "Aetherochemical Laser",
+      "start": 24.483,
+      "resolve": 27.183,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11139,
+      "name": "Light Pillar",
+      "start": 24.483,
+      "resolve": 25.183,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11139,
+      "name": "Light Pillar",
+      "start": 25.516,
+      "resolve": 26.216002,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11085,
+      "name": "Feather Rain",
+      "start": 26.016,
+      "resolve": 26.716002,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11139,
+      "name": "Light Pillar",
+      "start": 26.466,
+      "resolve": 27.166,
+      "occurrence": 4
+    },
+    {
+      "actionId": 11139,
+      "name": "Light Pillar",
+      "start": 27.483,
+      "resolve": 28.183,
+      "occurrence": 5
+    },
+    {
+      "actionId": 11139,
+      "name": "Light Pillar",
+      "start": 28.483,
+      "resolve": 29.183,
+      "occurrence": 6
+    },
+    {
+      "actionId": 11141,
+      "name": "Aetherochemical Laser",
+      "start": 28.616,
+      "resolve": 31.316,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11139,
+      "name": "Light Pillar",
+      "start": 29.483,
+      "resolve": 30.183,
+      "occurrence": 7
+    },
+    {
+      "actionId": 11142,
+      "name": "Aetherochemical Laser",
+      "start": 32.733,
+      "resolve": 35.433002,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11121,
+      "name": "Landslide",
+      "start": 32.85,
+      "resolve": 34.75,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11120,
+      "name": "Landslide",
+      "start": 32.85,
+      "resolve": 34.75,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11298,
+      "name": "Landslide",
+      "start": 35.083,
+      "resolve": 36.783,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11081,
+      "name": "Mesohigh",
+      "start": 37.733,
+      "resolve": 37.733,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11101,
+      "name": "Flaming Crush",
+      "start": 38.616,
+      "resolve": 38.616,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11079,
+      "name": "Super Cyclone",
+      "start": 38.816,
+      "resolve": 38.816,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11143,
+      "name": "Tank Purge",
+      "start": 39.966,
+      "resolve": 43.666,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11075,
+      "name": "Featherlance",
+      "start": 40.883,
+      "resolve": 40.883,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11085,
+      "name": "Feather Rain",
+      "start": 42.383,
+      "resolve": 43.083,
+      "occurrence": 3
+    }
+  ],
+  "names": [
+    "Ultimate Suppression",
+    "Eruption",
+    "Rock Throw",
+    "Light Pillar",
+    "Mistral Song",
+    "Granite Impact",
+    "Great Whirlwind",
+    "Feather Rain",
+    "Aetherochemical Laser",
+    "Landslide",
+    "Mesohigh",
+    "Flaming Crush",
+    "Super Cyclone",
+    "Tank Purge",
+    "Featherlance"
+  ]
+}

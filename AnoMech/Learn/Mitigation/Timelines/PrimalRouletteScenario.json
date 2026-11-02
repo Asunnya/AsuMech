@@ -1,0 +1,197 @@
+{
+  "scenario": "PrimalRouletteScenario",
+  "casts": [
+    {
+      "actionId": 11143,
+      "name": "Tank Purge",
+      "start": 2.517,
+      "resolve": 6.217,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11147,
+      "name": "Ultima",
+      "start": 12.883,
+      "resolve": 17.583,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11144,
+      "name": "Aetheric Boom",
+      "start": 24.116,
+      "resolve": 27.816,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11145,
+      "name": "Aetheroplasm",
+      "start": 30.266,
+      "resolve": 30.266,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11145,
+      "name": "Aetheroplasm",
+      "start": 33.983,
+      "resolve": 33.983,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11151,
+      "name": "Viscous Aetheroplasm",
+      "start": 49.283,
+      "resolve": 49.283,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11476,
+      "name": "",
+      "start": 51.383,
+      "resolve": 53.083,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11103,
+      "name": "Crimson Cyclone",
+      "start": 57.566,
+      "resolve": 60.266003,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11098,
+      "name": "Eruption",
+      "start": 57.616,
+      "resolve": 60.316,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11097,
+      "name": "Eruption",
+      "start": 57.616,
+      "resolve": 59.816,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11130,
+      "name": "Viscous Aetheroplasm",
+      "start": 62.033,
+      "resolve": 62.033,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11102,
+      "name": "Hellfire",
+      "start": 65.583,
+      "resolve": 68.283,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11477,
+      "name": "",
+      "start": 71.517,
+      "resolve": 73.216995,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11109,
+      "name": "Weight of the Land",
+      "start": 75.602,
+      "resolve": 78.301994,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11109,
+      "name": "Weight of the Land",
+      "start": 78.652,
+      "resolve": 81.352,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11109,
+      "name": "Weight of the Land",
+      "start": 81.636,
+      "resolve": 84.336,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11130,
+      "name": "Viscous Aetheroplasm",
+      "start": 82.036,
+      "resolve": 82.036,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11152,
+      "name": "Earthen Fury",
+      "start": 84.804,
+      "resolve": 87.504,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11475,
+      "name": "",
+      "start": 91.655,
+      "resolve": 93.354996,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11086,
+      "name": "Wicked Wheel",
+      "start": 97.873,
+      "resolve": 100.573,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11130,
+      "name": "Viscous Aetheroplasm",
+      "start": 102.041,
+      "resolve": 102.041,
+      "occurrence": 4
+    },
+    {
+      "actionId": 11087,
+      "name": "Wicked Tornado",
+      "start": 102.941,
+      "resolve": 102.941,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11093,
+      "name": "Aerial Blast",
+      "start": 104.725,
+      "resolve": 107.424995,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11085,
+      "name": "Feather Rain",
+      "start": 114.393,
+      "resolve": 115.092995,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11148,
+      "name": "",
+      "start": 116.11,
+      "resolve": 116.11,
+      "occurrence": 4
+    }
+  ],
+  "names": [
+    "Tank Purge",
+    "Ultima",
+    "Aetheric Boom",
+    "Aetheroplasm",
+    "Viscous Aetheroplasm",
+    "",
+    "Crimson Cyclone",
+    "Eruption",
+    "Hellfire",
+    "Weight of the Land",
+    "Earthen Fury",
+    "Wicked Wheel",
+    "Wicked Tornado",
+    "Aerial Blast",
+    "Feather Rain"
+  ]
+}

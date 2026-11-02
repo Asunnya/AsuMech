@@ -1,0 +1,381 @@
+{
+  "scenario": "UwuP2IfritScenario",
+  "casts": [
+    {
+      "actionId": 11103,
+      "name": "Crimson Cyclone",
+      "start": 5.133,
+      "resolve": 7.833,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11105,
+      "name": "Radiant Plume",
+      "start": 5.167,
+      "resolve": 8.867,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11102,
+      "name": "Hellfire",
+      "start": 12.383,
+      "resolve": 15.083,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11095,
+      "name": "Vulcan Burst",
+      "start": 23.566,
+      "resolve": 23.566,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11094,
+      "name": "Incinerate",
+      "start": 26.383,
+      "resolve": 26.383,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11094,
+      "name": "Incinerate",
+      "start": 29.516,
+      "resolve": 29.516,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11094,
+      "name": "Incinerate",
+      "start": 33.616,
+      "resolve": 33.616,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11099,
+      "name": "Inferno Howl",
+      "start": 46.033,
+      "resolve": 47.733,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11097,
+      "name": "Eruption",
+      "start": 51.166,
+      "resolve": 53.366,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11098,
+      "name": "Eruption",
+      "start": 51.166,
+      "resolve": 53.866,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11098,
+      "name": "Eruption",
+      "start": 53.133,
+      "resolve": 55.833,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11100,
+      "name": "Searing Wind",
+      "start": 53.966,
+      "resolve": 53.966,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11098,
+      "name": "Eruption",
+      "start": 55.133,
+      "resolve": 57.833,
+      "occurrence": 4
+    },
+    {
+      "actionId": 11098,
+      "name": "Eruption",
+      "start": 57.133,
+      "resolve": 59.833,
+      "occurrence": 5
+    },
+    {
+      "actionId": 11096,
+      "name": "Infernal Surge",
+      "start": 57.666,
+      "resolve": 57.666,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11100,
+      "name": "Searing Wind",
+      "start": 59.983,
+      "resolve": 59.983,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11096,
+      "name": "Infernal Surge",
+      "start": 62.566,
+      "resolve": 62.566,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11100,
+      "name": "Searing Wind",
+      "start": 66,
+      "resolve": 66,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11096,
+      "name": "Infernal Surge",
+      "start": 66.033,
+      "resolve": 66.033,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11096,
+      "name": "Infernal Surge",
+      "start": 69.467,
+      "resolve": 69.467,
+      "occurrence": 4
+    },
+    {
+      "actionId": 11102,
+      "name": "Hellfire",
+      "start": 75.385,
+      "resolve": 78.085,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11099,
+      "name": "Inferno Howl",
+      "start": 84.754,
+      "resolve": 86.453995,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11097,
+      "name": "Eruption",
+      "start": 89.871,
+      "resolve": 92.071,
+      "occurrence": 6
+    },
+    {
+      "actionId": 11098,
+      "name": "Eruption",
+      "start": 89.871,
+      "resolve": 92.571,
+      "occurrence": 7
+    },
+    {
+      "actionId": 11098,
+      "name": "Eruption",
+      "start": 91.838,
+      "resolve": 94.537994,
+      "occurrence": 8
+    },
+    {
+      "actionId": 11100,
+      "name": "Searing Wind",
+      "start": 92.689,
+      "resolve": 92.689,
+      "occurrence": 4
+    },
+    {
+      "actionId": 11098,
+      "name": "Eruption",
+      "start": 93.839,
+      "resolve": 96.538994,
+      "occurrence": 9
+    },
+    {
+      "actionId": 11098,
+      "name": "Eruption",
+      "start": 95.856,
+      "resolve": 98.556,
+      "occurrence": 10
+    },
+    {
+      "actionId": 11103,
+      "name": "Crimson Cyclone",
+      "start": 96.923,
+      "resolve": 99.62299,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11100,
+      "name": "Searing Wind",
+      "start": 98.707,
+      "resolve": 98.707,
+      "occurrence": 5
+    },
+    {
+      "actionId": 11099,
+      "name": "Inferno Howl",
+      "start": 102.841,
+      "resolve": 104.541,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11100,
+      "name": "Searing Wind",
+      "start": 104.708,
+      "resolve": 104.708,
+      "occurrence": 6
+    },
+    {
+      "actionId": 11100,
+      "name": "Searing Wind",
+      "start": 110.726,
+      "resolve": 110.726,
+      "occurrence": 7
+    },
+    {
+      "actionId": 11101,
+      "name": "Flaming Crush",
+      "start": 115.01,
+      "resolve": 115.01,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11100,
+      "name": "Searing Wind",
+      "start": 116.744,
+      "resolve": 116.744,
+      "occurrence": 8
+    },
+    {
+      "actionId": 11100,
+      "name": "Searing Wind",
+      "start": 122.812,
+      "resolve": 122.812,
+      "occurrence": 9
+    },
+    {
+      "actionId": 11103,
+      "name": "Crimson Cyclone",
+      "start": 123.445,
+      "resolve": 126.145,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11103,
+      "name": "Crimson Cyclone",
+      "start": 124.862,
+      "resolve": 127.562,
+      "occurrence": 4
+    },
+    {
+      "actionId": 11103,
+      "name": "Crimson Cyclone",
+      "start": 126.246,
+      "resolve": 128.946,
+      "occurrence": 5
+    },
+    {
+      "actionId": 11103,
+      "name": "Crimson Cyclone",
+      "start": 127.663,
+      "resolve": 130.363,
+      "occurrence": 6
+    },
+    {
+      "actionId": 11100,
+      "name": "Searing Wind",
+      "start": 128.829,
+      "resolve": 128.829,
+      "occurrence": 10
+    },
+    {
+      "actionId": 11104,
+      "name": "Crimson Cyclone",
+      "start": 131.379,
+      "resolve": 131.379,
+      "occurrence": 7
+    },
+    {
+      "actionId": 11100,
+      "name": "Searing Wind",
+      "start": 134.845,
+      "resolve": 134.845,
+      "occurrence": 11
+    },
+    {
+      "actionId": 11094,
+      "name": "Incinerate",
+      "start": 138.994,
+      "resolve": 138.994,
+      "occurrence": 4
+    },
+    {
+      "actionId": 11094,
+      "name": "Incinerate",
+      "start": 142.109,
+      "resolve": 142.109,
+      "occurrence": 5
+    },
+    {
+      "actionId": 11094,
+      "name": "Incinerate",
+      "start": 146.192,
+      "resolve": 146.192,
+      "occurrence": 6
+    },
+    {
+      "actionId": 11097,
+      "name": "Eruption",
+      "start": 152.29,
+      "resolve": 154.48999,
+      "occurrence": 11
+    },
+    {
+      "actionId": 11098,
+      "name": "Eruption",
+      "start": 152.29,
+      "resolve": 154.98999,
+      "occurrence": 12
+    },
+    {
+      "actionId": 11098,
+      "name": "Eruption",
+      "start": 154.256,
+      "resolve": 156.956,
+      "occurrence": 13
+    },
+    {
+      "actionId": 11098,
+      "name": "Eruption",
+      "start": 156.273,
+      "resolve": 158.97299,
+      "occurrence": 14
+    },
+    {
+      "actionId": 11098,
+      "name": "Eruption",
+      "start": 158.272,
+      "resolve": 160.972,
+      "occurrence": 15
+    },
+    {
+      "actionId": 11101,
+      "name": "Flaming Crush",
+      "start": 164.271,
+      "resolve": 164.271,
+      "occurrence": 2
+    }
+  ],
+  "names": [
+    "Crimson Cyclone",
+    "Radiant Plume",
+    "Hellfire",
+    "Vulcan Burst",
+    "Incinerate",
+    "Inferno Howl",
+    "Eruption",
+    "Searing Wind",
+    "Infernal Surge",
+    "Flaming Crush"
+  ]
+}

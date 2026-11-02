@@ -17,6 +17,9 @@
     <InternalsVisibleTo Include="AnoMech.Tests" />
     <EmbeddedResource Include="Learn/Lessons/**/*.json" />
     <EmbeddedResource Include="Learn/Toolbox/Plans/*.json" />
+    <EmbeddedResource Include="Learn/Mitigation/Aliases.json" />
+    <EmbeddedResource Include="Learn/Mitigation/Plans/*.json" />
+    <EmbeddedResource Include="Learn/Mitigation/Timelines/*.json" />
     <AdditionalFiles Include="BannedSymbols.txt" />
   </ItemGroup>
 

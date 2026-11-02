@@ -1,0 +1,487 @@
+{
+  "scenario": "UltimatePredationScenario",
+  "casts": [
+    {
+      "actionId": 11126,
+      "name": "Ultimate Predation",
+      "start": 2.517,
+      "resolve": 5.217,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11086,
+      "name": "Wicked Wheel",
+      "start": 17.533,
+      "resolve": 20.233002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11103,
+      "name": "Crimson Cyclone",
+      "start": 17.533,
+      "resolve": 20.233002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11121,
+      "name": "Landslide",
+      "start": 18.233,
+      "resolve": 20.133,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11120,
+      "name": "Landslide",
+      "start": 18.233,
+      "resolve": 20.133,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11298,
+      "name": "Landslide",
+      "start": 20.433,
+      "resolve": 22.133001,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11132,
+      "name": "Ceruleum Vent",
+      "start": 22.283,
+      "resolve": 22.283,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11087,
+      "name": "Wicked Tornado",
+      "start": 22.483,
+      "resolve": 22.483,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11104,
+      "name": "Crimson Cyclone",
+      "start": 22.483,
+      "resolve": 22.483,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11085,
+      "name": "Feather Rain",
+      "start": 26.733,
+      "resolve": 27.433,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11127,
+      "name": "",
+      "start": 29.683,
+      "resolve": 29.683,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11127,
+      "name": "",
+      "start": 32.716,
+      "resolve": 32.716,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11476,
+      "name": "",
+      "start": 32.933,
+      "resolve": 34.633,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11127,
+      "name": "",
+      "start": 37.733,
+      "resolve": 37.733,
+      "occurrence": 4
+    },
+    {
+      "actionId": 11097,
+      "name": "Eruption",
+      "start": 39.033,
+      "resolve": 41.233,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11098,
+      "name": "Eruption",
+      "start": 39.033,
+      "resolve": 41.733,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11127,
+      "name": "",
+      "start": 40.766,
+      "resolve": 40.766,
+      "occurrence": 5
+    },
+    {
+      "actionId": 11098,
+      "name": "Eruption",
+      "start": 41.133,
+      "resolve": 43.833,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11098,
+      "name": "Eruption",
+      "start": 43.033,
+      "resolve": 45.733,
+      "occurrence": 4
+    },
+    {
+      "actionId": 11127,
+      "name": "",
+      "start": 43.816,
+      "resolve": 43.816,
+      "occurrence": 6
+    },
+    {
+      "actionId": 11477,
+      "name": "",
+      "start": 43.95,
+      "resolve": 45.65,
+      "occurrence": 7
+    },
+    {
+      "actionId": 11098,
+      "name": "Eruption",
+      "start": 45.166,
+      "resolve": 47.866,
+      "occurrence": 5
+    },
+    {
+      "actionId": 11289,
+      "name": "Infernal Fetters",
+      "start": 47.199,
+      "resolve": 47.199,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11127,
+      "name": "",
+      "start": 48.833,
+      "resolve": 48.833,
+      "occurrence": 8
+    },
+    {
+      "actionId": 11133,
+      "name": "Radiant Plume",
+      "start": 49.066,
+      "resolve": 51.966003,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11105,
+      "name": "Radiant Plume",
+      "start": 49.066,
+      "resolve": 52.766003,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11112,
+      "name": "",
+      "start": 50.283,
+      "resolve": 50.283,
+      "occurrence": 9
+    },
+    {
+      "actionId": 11113,
+      "name": "Bury",
+      "start": 53.199,
+      "resolve": 53.199,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11121,
+      "name": "Landslide",
+      "start": 54.466,
+      "resolve": 56.366,
+      "occurrence": 4
+    },
+    {
+      "actionId": 11120,
+      "name": "Landslide",
+      "start": 54.466,
+      "resolve": 56.366,
+      "occurrence": 5
+    },
+    {
+      "actionId": 11134,
+      "name": "Landslide",
+      "start": 55.099,
+      "resolve": 56.999,
+      "occurrence": 6
+    },
+    {
+      "actionId": 11135,
+      "name": "Landslide",
+      "start": 55.099,
+      "resolve": 56.999,
+      "occurrence": 7
+    },
+    {
+      "actionId": 11114,
+      "name": "Burst",
+      "start": 55.349,
+      "resolve": 58.549,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11113,
+      "name": "Bury",
+      "start": 55.349,
+      "resolve": 55.349,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11298,
+      "name": "Landslide",
+      "start": 56.516,
+      "resolve": 58.216,
+      "occurrence": 8
+    },
+    {
+      "actionId": 11114,
+      "name": "Burst",
+      "start": 57.266,
+      "resolve": 60.466,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11113,
+      "name": "Bury",
+      "start": 57.266,
+      "resolve": 57.266,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11127,
+      "name": "",
+      "start": 58.333,
+      "resolve": 58.333,
+      "occurrence": 10
+    },
+    {
+      "actionId": 11114,
+      "name": "Burst",
+      "start": 59.249,
+      "resolve": 62.449,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11113,
+      "name": "Bury",
+      "start": 59.249,
+      "resolve": 59.249,
+      "occurrence": 4
+    },
+    {
+      "actionId": 11475,
+      "name": "",
+      "start": 60.383,
+      "resolve": 62.083,
+      "occurrence": 11
+    },
+    {
+      "actionId": 11114,
+      "name": "Burst",
+      "start": 61.299,
+      "resolve": 64.499,
+      "occurrence": 4
+    },
+    {
+      "actionId": 11113,
+      "name": "Bury",
+      "start": 61.299,
+      "resolve": 61.299,
+      "occurrence": 5
+    },
+    {
+      "actionId": 11288,
+      "name": "Tumult",
+      "start": 61.799,
+      "resolve": 61.799,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11288,
+      "name": "Tumult",
+      "start": 62.799,
+      "resolve": 62.799,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11114,
+      "name": "Burst",
+      "start": 63.249,
+      "resolve": 66.449,
+      "occurrence": 5
+    },
+    {
+      "actionId": 11113,
+      "name": "Bury",
+      "start": 63.249,
+      "resolve": 63.249,
+      "occurrence": 6
+    },
+    {
+      "actionId": 11127,
+      "name": "",
+      "start": 63.383,
+      "resolve": 63.383,
+      "occurrence": 12
+    },
+    {
+      "actionId": 11288,
+      "name": "Tumult",
+      "start": 63.916,
+      "resolve": 63.916,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11129,
+      "name": "Viscous Aetheroplasm",
+      "start": 64.383,
+      "resolve": 64.383,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11288,
+      "name": "Tumult",
+      "start": 65.149,
+      "resolve": 65.149,
+      "occurrence": 4
+    },
+    {
+      "actionId": 11114,
+      "name": "Burst",
+      "start": 65.399,
+      "resolve": 68.599,
+      "occurrence": 6
+    },
+    {
+      "actionId": 11288,
+      "name": "Tumult",
+      "start": 66.15,
+      "resolve": 66.15,
+      "occurrence": 5
+    },
+    {
+      "actionId": 11127,
+      "name": "",
+      "start": 66.416,
+      "resolve": 66.416,
+      "occurrence": 13
+    },
+    {
+      "actionId": 11084,
+      "name": "Wicked Wheel",
+      "start": 66.65,
+      "resolve": 69.35,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11288,
+      "name": "Tumult",
+      "start": 67.283,
+      "resolve": 67.283,
+      "occurrence": 6
+    },
+    {
+      "actionId": 11288,
+      "name": "Tumult",
+      "start": 68.367,
+      "resolve": 68.367,
+      "occurrence": 7
+    },
+    {
+      "actionId": 11092,
+      "name": "Mistral Shriek",
+      "start": 68.617,
+      "resolve": 71.31699,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11127,
+      "name": "",
+      "start": 69.484,
+      "resolve": 69.484,
+      "occurrence": 14
+    },
+    {
+      "actionId": 11127,
+      "name": "",
+      "start": 72.484,
+      "resolve": 72.484,
+      "occurrence": 15
+    },
+    {
+      "actionId": 11131,
+      "name": "Homing Lasers",
+      "start": 73.651,
+      "resolve": 76.351,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11085,
+      "name": "Feather Rain",
+      "start": 73.918,
+      "resolve": 74.618,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11130,
+      "name": "Viscous Aetheroplasm",
+      "start": 75.468,
+      "resolve": 75.468,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11085,
+      "name": "Feather Rain",
+      "start": 77.469,
+      "resolve": 78.169,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11127,
+      "name": "",
+      "start": 78.552,
+      "resolve": 78.552,
+      "occurrence": 16
+    },
+    {
+      "actionId": 11596,
+      "name": "Ultimate Annihilation",
+      "start": 80.986,
+      "resolve": 83.686,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Ultimate Predation",
+    "Wicked Wheel",
+    "Crimson Cyclone",
+    "Landslide",
+    "Ceruleum Vent",
+    "Wicked Tornado",
+    "Feather Rain",
+    "",
+    "Eruption",
+    "Infernal Fetters",
+    "Radiant Plume",
+    "Bury",
+    "Burst",
+    "Tumult",
+    "Viscous Aetheroplasm",
+    "Mistral Shriek",
+    "Homing Lasers",
+    "Ultimate Annihilation"
+  ]
+}

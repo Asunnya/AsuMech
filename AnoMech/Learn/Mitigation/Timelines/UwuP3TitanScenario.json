@@ -1,0 +1,545 @@
+{
+  "scenario": "UwuP3TitanScenario",
+  "casts": [
+    {
+      "actionId": 11517,
+      "name": "Geocrush",
+      "start": 2.567,
+      "resolve": 5.267,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11152,
+      "name": "Earthen Fury",
+      "start": 8,
+      "resolve": 10.7,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11106,
+      "name": "Rock Buster",
+      "start": 19.183,
+      "resolve": 19.183,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11107,
+      "name": "Mountain Buster",
+      "start": 22.3,
+      "resolve": 22.3,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11108,
+      "name": "Weight of the Land",
+      "start": 24.4,
+      "resolve": 26.6,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11109,
+      "name": "Weight of the Land",
+      "start": 24.4,
+      "resolve": 27.1,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11109,
+      "name": "Weight of the Land",
+      "start": 27.416,
+      "resolve": 30.116001,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11110,
+      "name": "Geocrush",
+      "start": 32.683,
+      "resolve": 35.383,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11111,
+      "name": "Upheaval",
+      "start": 40.216,
+      "resolve": 43.916,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11113,
+      "name": "Bury",
+      "start": 41.15,
+      "resolve": 41.15,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11114,
+      "name": "Burst",
+      "start": 43.233,
+      "resolve": 46.433002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11115,
+      "name": "Rock Throw",
+      "start": 46.316,
+      "resolve": 46.316,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11119,
+      "name": "Landslide",
+      "start": 48.499,
+      "resolve": 50.399002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11120,
+      "name": "Landslide",
+      "start": 48.499,
+      "resolve": 50.399002,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11113,
+      "name": "Bury",
+      "start": 49.166,
+      "resolve": 49.166,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11114,
+      "name": "Burst",
+      "start": 51.266,
+      "resolve": 54.466,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11119,
+      "name": "Landslide",
+      "start": 52.966,
+      "resolve": 54.866,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11120,
+      "name": "Landslide",
+      "start": 52.966,
+      "resolve": 54.866,
+      "occurrence": 4
+    },
+    {
+      "actionId": 11117,
+      "name": "Granite Impact",
+      "start": 53.416,
+      "resolve": 71.116,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11118,
+      "name": "Freefire",
+      "start": 55.116,
+      "resolve": 55.116,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11118,
+      "name": "Freefire",
+      "start": 55.833,
+      "resolve": 55.833,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11118,
+      "name": "Freefire",
+      "start": 56.549,
+      "resolve": 56.549,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11288,
+      "name": "Tumult",
+      "start": 57.283,
+      "resolve": 57.283,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11288,
+      "name": "Tumult",
+      "start": 58.416,
+      "resolve": 58.416,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11288,
+      "name": "Tumult",
+      "start": 59.516,
+      "resolve": 59.516,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11288,
+      "name": "Tumult",
+      "start": 60.633,
+      "resolve": 60.633,
+      "occurrence": 4
+    },
+    {
+      "actionId": 11288,
+      "name": "Tumult",
+      "start": 61.749,
+      "resolve": 61.749,
+      "occurrence": 5
+    },
+    {
+      "actionId": 11288,
+      "name": "Tumult",
+      "start": 62.866,
+      "resolve": 62.866,
+      "occurrence": 6
+    },
+    {
+      "actionId": 11288,
+      "name": "Tumult",
+      "start": 63.983,
+      "resolve": 63.983,
+      "occurrence": 7
+    },
+    {
+      "actionId": 11288,
+      "name": "Tumult",
+      "start": 65.083,
+      "resolve": 65.083,
+      "occurrence": 8
+    },
+    {
+      "actionId": 11108,
+      "name": "Weight of the Land",
+      "start": 70.217,
+      "resolve": 72.417,
+      "occurrence": 4
+    },
+    {
+      "actionId": 11109,
+      "name": "Weight of the Land",
+      "start": 70.217,
+      "resolve": 72.917,
+      "occurrence": 5
+    },
+    {
+      "actionId": 11109,
+      "name": "Weight of the Land",
+      "start": 73.251,
+      "resolve": 75.951,
+      "occurrence": 6
+    },
+    {
+      "actionId": 11121,
+      "name": "Landslide",
+      "start": 76.052,
+      "resolve": 77.952,
+      "occurrence": 5
+    },
+    {
+      "actionId": 11120,
+      "name": "Landslide",
+      "start": 76.052,
+      "resolve": 77.952,
+      "occurrence": 6
+    },
+    {
+      "actionId": 11119,
+      "name": "Landslide",
+      "start": 78.252,
+      "resolve": 78.252,
+      "occurrence": 7
+    },
+    {
+      "actionId": 11298,
+      "name": "Landslide",
+      "start": 78.286,
+      "resolve": 79.986,
+      "occurrence": 8
+    },
+    {
+      "actionId": 11119,
+      "name": "Landslide",
+      "start": 80.253,
+      "resolve": 80.253,
+      "occurrence": 9
+    },
+    {
+      "actionId": 11120,
+      "name": "Landslide",
+      "start": 80.253,
+      "resolve": 80.253,
+      "occurrence": 10
+    },
+    {
+      "actionId": 11110,
+      "name": "Geocrush",
+      "start": 87.021,
+      "resolve": 89.721,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11115,
+      "name": "Rock Throw",
+      "start": 92.455,
+      "resolve": 92.455,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11448,
+      "name": "Granite Impact",
+      "start": 99.54,
+      "resolve": 106.24,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11121,
+      "name": "Landslide",
+      "start": 104.841,
+      "resolve": 106.741005,
+      "occurrence": 11
+    },
+    {
+      "actionId": 11120,
+      "name": "Landslide",
+      "start": 104.841,
+      "resolve": 106.741005,
+      "occurrence": 12
+    },
+    {
+      "actionId": 11119,
+      "name": "Landslide",
+      "start": 107.025,
+      "resolve": 107.025,
+      "occurrence": 13
+    },
+    {
+      "actionId": 11298,
+      "name": "Landslide",
+      "start": 107.075,
+      "resolve": 108.774994,
+      "occurrence": 14
+    },
+    {
+      "actionId": 11119,
+      "name": "Landslide",
+      "start": 109.025,
+      "resolve": 109.025,
+      "occurrence": 15
+    },
+    {
+      "actionId": 11120,
+      "name": "Landslide",
+      "start": 109.025,
+      "resolve": 109.025,
+      "occurrence": 16
+    },
+    {
+      "actionId": 11288,
+      "name": "Tumult",
+      "start": 112.193,
+      "resolve": 112.193,
+      "occurrence": 9
+    },
+    {
+      "actionId": 11288,
+      "name": "Tumult",
+      "start": 113.293,
+      "resolve": 113.293,
+      "occurrence": 10
+    },
+    {
+      "actionId": 11288,
+      "name": "Tumult",
+      "start": 114.427,
+      "resolve": 114.427,
+      "occurrence": 11
+    },
+    {
+      "actionId": 11288,
+      "name": "Tumult",
+      "start": 115.527,
+      "resolve": 115.527,
+      "occurrence": 12
+    },
+    {
+      "actionId": 11288,
+      "name": "Tumult",
+      "start": 116.644,
+      "resolve": 116.644,
+      "occurrence": 13
+    },
+    {
+      "actionId": 11288,
+      "name": "Tumult",
+      "start": 117.761,
+      "resolve": 117.761,
+      "occurrence": 14
+    },
+    {
+      "actionId": 11106,
+      "name": "Rock Buster",
+      "start": 119.894,
+      "resolve": 119.894,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11107,
+      "name": "Mountain Buster",
+      "start": 123.995,
+      "resolve": 123.995,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11108,
+      "name": "Weight of the Land",
+      "start": 128.179,
+      "resolve": 130.379,
+      "occurrence": 7
+    },
+    {
+      "actionId": 11109,
+      "name": "Weight of the Land",
+      "start": 128.179,
+      "resolve": 130.879,
+      "occurrence": 8
+    },
+    {
+      "actionId": 11113,
+      "name": "Bury",
+      "start": 129.113,
+      "resolve": 129.113,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11113,
+      "name": "Bury",
+      "start": 131.112,
+      "resolve": 131.112,
+      "occurrence": 4
+    },
+    {
+      "actionId": 11109,
+      "name": "Weight of the Land",
+      "start": 131.212,
+      "resolve": 133.912,
+      "occurrence": 9
+    },
+    {
+      "actionId": 11114,
+      "name": "Burst",
+      "start": 131.212,
+      "resolve": 134.412,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11113,
+      "name": "Bury",
+      "start": 133.128,
+      "resolve": 133.128,
+      "occurrence": 5
+    },
+    {
+      "actionId": 11114,
+      "name": "Burst",
+      "start": 133.212,
+      "resolve": 136.412,
+      "occurrence": 4
+    },
+    {
+      "actionId": 11109,
+      "name": "Weight of the Land",
+      "start": 134.195,
+      "resolve": 136.895,
+      "occurrence": 10
+    },
+    {
+      "actionId": 11121,
+      "name": "Landslide",
+      "start": 134.411,
+      "resolve": 136.31099,
+      "occurrence": 17
+    },
+    {
+      "actionId": 11120,
+      "name": "Landslide",
+      "start": 134.411,
+      "resolve": 136.31099,
+      "occurrence": 18
+    },
+    {
+      "actionId": 11113,
+      "name": "Bury",
+      "start": 135.128,
+      "resolve": 135.128,
+      "occurrence": 6
+    },
+    {
+      "actionId": 11114,
+      "name": "Burst",
+      "start": 135.211,
+      "resolve": 138.411,
+      "occurrence": 5
+    },
+    {
+      "actionId": 11119,
+      "name": "Landslide",
+      "start": 136.611,
+      "resolve": 136.611,
+      "occurrence": 19
+    },
+    {
+      "actionId": 11298,
+      "name": "Landslide",
+      "start": 136.644,
+      "resolve": 138.344,
+      "occurrence": 20
+    },
+    {
+      "actionId": 11114,
+      "name": "Burst",
+      "start": 137.227,
+      "resolve": 140.427,
+      "occurrence": 6
+    },
+    {
+      "actionId": 11119,
+      "name": "Landslide",
+      "start": 138.61,
+      "resolve": 138.61,
+      "occurrence": 21
+    },
+    {
+      "actionId": 11120,
+      "name": "Landslide",
+      "start": 138.61,
+      "resolve": 138.61,
+      "occurrence": 22
+    },
+    {
+      "actionId": 11106,
+      "name": "Rock Buster",
+      "start": 144.809,
+      "resolve": 144.809,
+      "occurrence": 3
+    }
+  ],
+  "names": [
+    "Geocrush",
+    "Earthen Fury",
+    "Rock Buster",
+    "Mountain Buster",
+    "Weight of the Land",
+    "Upheaval",
+    "Bury",
+    "Burst",
+    "Rock Throw",
+    "Landslide",
+    "Granite Impact",
+    "Freefire",
+    "Tumult"
+  ]
+}

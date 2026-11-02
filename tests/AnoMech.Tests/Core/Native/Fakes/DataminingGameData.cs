@@ -41,7 +41,8 @@ internal sealed class DataminingGameData(FakeRsvFunctions rsv) : IGameData
             row.Bool("CanTargetParty"),
             row.SByte("AttackType"),
             row.Bool("TargetArea"),
-            row.Bool("IsPlayerAction"));
+            row.Bool("IsPlayerAction"),
+            row.UInt("Recast100ms") / 10f);
     }
 
     // Every action a player presses outside PvP.

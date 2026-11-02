@@ -18,6 +18,9 @@ dotnet $TOOL skeleton-all --out skel/ [--scenario Uwu] [--seeds 1,2] [--force]
 # toolbox plan (id downloads strats/<id>.json; or a saved file): tolerant parse, A-D calibration against the zone's
 # waymark layout, slot->role by job then refined by the opener, step alignment; --write stores the toolbox block
 dotnet $TOOL toolbox-import --plan 122994122467471 --zone UwuZone --layout Naur --lesson <lesson.json> --dump garuda.dump.json --out-plan AnoMech/Learn/Toolbox/Plans/122994122467471.json --write
+# mitigation: cast timeline per scenario (embedded under Learn/Mitigation/Timelines), then a plan from a Google Sheet
+dotnet $TOOL mit-timeline --scenario UwuP1GarudaScenario --out AnoMech/Learn/Mitigation/Timelines/UwuP1GarudaScenario.json
+dotnet $TOOL mit-import --plan uwu-ethel-master --sheet-id <google sheet id> --tabs "Garuda=UwuP1GarudaScenario,Ifrit=UwuP2IfritScenario" --credits "A;B" --out AnoMech/Learn/Mitigation/Plans/uwu-ethel-master.json
 # validation + coverage both ways (what LessonLoaderTests also checks in CI)
 dotnet $TOOL check    --lesson AnoMech/Learn/Lessons/Uwu/P1Garuda.zeal-the-balance.json --dump garuda.dump.json
 ```

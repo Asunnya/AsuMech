@@ -1,0 +1,252 @@
+{
+  "scenario": "UwuP1GarudaScenario",
+  "casts": [
+    {
+      "actionId": 11091,
+      "name": "Slipstream",
+      "start": 5.3,
+      "resolve": 7.5,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11074,
+      "name": "Mistral Song",
+      "start": 10.333,
+      "resolve": 10.333,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11073,
+      "name": "Great Whirlwind",
+      "start": 13.45,
+      "resolve": 16.15,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11073,
+      "name": "Great Whirlwind",
+      "start": 19.6,
+      "resolve": 22.300001,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11091,
+      "name": "Slipstream",
+      "start": 20.617,
+      "resolve": 22.817001,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11073,
+      "name": "Great Whirlwind",
+      "start": 25.733,
+      "resolve": 28.433,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11088,
+      "name": "Downburst",
+      "start": 26.583,
+      "resolve": 26.583,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11077,
+      "name": "Cyclone",
+      "start": 26.716,
+      "resolve": 26.716,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11085,
+      "name": "Feather Rain",
+      "start": 35.533,
+      "resolve": 36.233,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11077,
+      "name": "Cyclone",
+      "start": 35.866,
+      "resolve": 35.866,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11078,
+      "name": "Gigastorm",
+      "start": 38.216,
+      "resolve": 40.916,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11092,
+      "name": "Mistral Shriek",
+      "start": 38.316,
+      "resolve": 41.016003,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11189,
+      "name": "Super Cyclone",
+      "start": 43.966,
+      "resolve": 43.966,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11080,
+      "name": "Friction",
+      "start": 48.683,
+      "resolve": 50.383,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11079,
+      "name": "Super Cyclone",
+      "start": 50.649,
+      "resolve": 50.649,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11080,
+      "name": "Friction",
+      "start": 54.783,
+      "resolve": 56.483,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11189,
+      "name": "Super Cyclone",
+      "start": 57.499,
+      "resolve": 57.499,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11189,
+      "name": "Super Cyclone",
+      "start": 60.483,
+      "resolve": 60.483,
+      "occurrence": 4
+    },
+    {
+      "actionId": 11085,
+      "name": "Feather Rain",
+      "start": 70.434,
+      "resolve": 71.133995,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11093,
+      "name": "Aerial Blast",
+      "start": 73.184,
+      "resolve": 75.883995,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11085,
+      "name": "Feather Rain",
+      "start": 91.372,
+      "resolve": 92.072,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11090,
+      "name": "Eye of the Storm",
+      "start": 96.589,
+      "resolve": 99.288994,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11086,
+      "name": "Wicked Wheel",
+      "start": 96.723,
+      "resolve": 99.423,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11083,
+      "name": "Mistral Song",
+      "start": 99.207,
+      "resolve": 99.207,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11073,
+      "name": "Great Whirlwind",
+      "start": 102.324,
+      "resolve": 105.023994,
+      "occurrence": 4
+    },
+    {
+      "actionId": 11085,
+      "name": "Feather Rain",
+      "start": 102.824,
+      "resolve": 103.523994,
+      "occurrence": 4
+    },
+    {
+      "actionId": 11091,
+      "name": "Slipstream",
+      "start": 118.761,
+      "resolve": 120.961,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11090,
+      "name": "Eye of the Storm",
+      "start": 119.611,
+      "resolve": 122.311,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11081,
+      "name": "Mesohigh",
+      "start": 124.645,
+      "resolve": 124.645,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11189,
+      "name": "Super Cyclone",
+      "start": 124.645,
+      "resolve": 124.645,
+      "occurrence": 5
+    },
+    {
+      "actionId": 11079,
+      "name": "Super Cyclone",
+      "start": 124.645,
+      "resolve": 124.645,
+      "occurrence": 6
+    },
+    {
+      "actionId": 11088,
+      "name": "Downburst",
+      "start": 124.745,
+      "resolve": 124.745,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11085,
+      "name": "Feather Rain",
+      "start": 128.263,
+      "resolve": 128.963,
+      "occurrence": 5
+    }
+  ],
+  "names": [
+    "Slipstream",
+    "Mistral Song",
+    "Great Whirlwind",
+    "Downburst",
+    "Cyclone",
+    "Feather Rain",
+    "Gigastorm",
+    "Mistral Shriek",
+    "Super Cyclone",
+    "Friction",
+    "Aerial Blast",
+    "Eye of the Storm",
+    "Wicked Wheel",
+    "Mesohigh"
+  ]
+}
