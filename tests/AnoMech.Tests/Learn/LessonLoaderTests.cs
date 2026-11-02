@@ -54,17 +54,22 @@ public class LessonLoaderTests
         public void OnMove(GuidanceOrder order) => Orders.Add(order);
     }
 
-    // Every order the strat gives the player has a step, for every role, over a few seeds.
-    [TestCase(PartyRole.MainTank, 1)]
-    [TestCase(PartyRole.OffTank, 2)]
-    [TestCase(PartyRole.MeleeDpsB, 3)]
-    [TestCase(PartyRole.CasterDps, 4)]
-    public void GarudaLessonCoversEveryOrder(PartyRole role, int seed)
+    public static IEnumerable<TestCaseData> EmbeddedLessonRoles()
     {
-        var scenario = Catalog.Scenarios.OfType<UwuP1GarudaScenario>().Single();
-        var lesson = LessonLoader.For(scenario, scenario.AiStrats[0])!;
+        foreach (var lesson in LessonLoader.All)
+        foreach (var (role, seed) in new[] { (PartyRole.MainTank, 1), (PartyRole.ShieldHealer, 2), (PartyRole.MeleeDpsB, 3), (PartyRole.CasterDps, 4) })
+            yield return new TestCaseData(lesson.Scenario, lesson.Strat, role, seed).SetName($"{{m}}({lesson.Scenario},{role})");
+    }
+
+    // Every order the strat gives the player has a step, and every step is triggered, per role.
+    [TestCaseSource(nameof(EmbeddedLessonRoles))]
+    public void EmbeddedLessonCoversEveryOrder(string scenarioName, string strat, PartyRole role, int seed)
+    {
+        var scenario = Catalog.Scenarios.Single(s => s.GetType().Name == scenarioName);
+        var stratIndex = scenario.AiStrats.ToList().FindIndex(a => a.Name == strat);
+        var lesson = LessonLoader.For(scenario, scenario.AiStrats[stratIndex])!;
         var recorder = new Recorder();
-        var run = ScenarioRun.Execute(typeof(UwuP1GarudaScenario), 0, seed, new ScenarioRunOptions
+        var run = ScenarioRun.Execute(scenario.GetType(), stratIndex, seed, new ScenarioRunOptions
         {
             PlayerRole = role,
             Probe = p => p.World.Guidance ??= recorder,
@@ -73,6 +78,20 @@ public class LessonLoaderTests
         Assert.That(recorder.Orders, Is.Not.Empty);
         var uncovered = recorder.Orders.Where(o => lesson.StepFor(o.Key) is null).Select(o => $"{o.Key.Time} ({o.Key.Source})").Distinct().ToList();
         Assert.That(uncovered, Is.Empty);
-        Assert.That(lesson.Steps.Where(s => !s.Skip && !recorder.Orders.Any(o => s.Key.Matches(o.Key))).Select(s => s.Title), Is.Empty, "steps nothing triggers");
+    }
+
+    [Test]
+    public void EveryLessonStepIsTriggeredBySomeRole()
+    {
+        foreach (var lesson in LessonLoader.All)
+        {
+            var scenario = Catalog.Scenarios.Single(s => s.GetType().Name == lesson.Scenario);
+            var stratIndex = scenario.AiStrats.ToList().FindIndex(a => a.Name == lesson.Strat);
+            var recorder = new Recorder();
+            foreach (var role in System.Enum.GetValues<PartyRole>())
+                ScenarioRun.Execute(scenario.GetType(), stratIndex, 1, new ScenarioRunOptions { PlayerRole = role, Probe = p => p.World.Guidance ??= recorder });
+            var untriggered = lesson.Steps.Where(s => !s.Skip && !recorder.Orders.Any(o => s.Key.Matches(o.Key))).Select(s => s.Title).ToList();
+            Assert.That(untriggered, Is.Empty, lesson.Scenario);
+        }
     }
 }

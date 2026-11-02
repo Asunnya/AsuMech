@@ -1,0 +1,204 @@
+{
+  "scenario": "PrimalRouletteScenario",
+  "strat": "NAUR (party right)",
+  "sources": [
+    {
+      "label": "NAUR toolbox (Suppression / Roulette)",
+      "url": "https://ff14.toolboxgaming.space/?id=830635036646261&preview=1"
+    },
+    {
+      "label": "NAUR UWU page",
+      "url": "https://www.naurffxiv.com/ultimate/uwu"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "PrimalRouletteAi",
+        "time": 0.5,
+        "line": 28
+      },
+      "title": "Beside Ultima",
+      "rule": "Tanks on Ultima's left, party on her right.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Primal Roulette begins",
+      "roles": {
+        "MainTank": {
+          "rule": "Left of Ultima with the off tank."
+        },
+        "OffTank": {
+          "rule": "Left of Ultima with the main tank."
+        }
+      }
+    },
+    {
+      "key": {
+        "cls": "PrimalRouletteAi",
+        "time": 30.15,
+        "line": 29
+      },
+      "title": "South orbs",
+      "rule": "Tanks pop the south-west orb; party the south-east one.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Aetheric Boom, orbs spawn",
+      "roles": {
+        "MainTank": {
+          "rule": "South-west orb."
+        },
+        "OffTank": {
+          "rule": "South-west orb."
+        }
+      }
+    },
+    {
+      "key": {
+        "cls": "PrimalRouletteAi",
+        "time": 32.2,
+        "line": 30
+      },
+      "title": "North orbs",
+      "rule": "Tanks pop the north-west orb; party the north-east one.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Orbs drift together",
+      "roles": {
+        "MainTank": {
+          "rule": "North-west orb."
+        },
+        "OffTank": {
+          "rule": "North-west orb."
+        }
+      }
+    },
+    {
+      "key": {
+        "cls": "PrimalRouletteAi",
+        "time": 35.3,
+        "line": 31
+      },
+      "title": "North edge",
+      "rule": "Everyone stacks at the north edge.",
+      "tolerance": 1.5,
+      "skip": false,
+      "cue": "Orbs resolve"
+    },
+    {
+      "key": {
+        "cls": "PrimalRouletteAi",
+        "from": 40.0,
+        "to": 115.0,
+        "line": 61
+      },
+      "title": "Garuda: north-west edge",
+      "rule": "Sprint to the north-west edge for Garuda's wheel and tornado.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Garuda appears"
+    },
+    {
+      "key": {
+        "cls": "PrimalRouletteAi",
+        "from": 40.0,
+        "to": 115.0,
+        "line": 65
+      },
+      "title": "Ifrit: toward the centre",
+      "rule": "Move in toward the centre, ahead of the Crimson Cyclone.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Ifrit appears"
+    },
+    {
+      "key": {
+        "cls": "PrimalRouletteAi",
+        "from": 40.0,
+        "to": 115.0,
+        "line": 54
+      },
+      "title": "Titan: dodge the first Weight",
+      "rule": "Sprint to the other side, out of the first puddles.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Weight of the Land"
+    },
+    {
+      "key": {
+        "cls": "PrimalRouletteAi",
+        "from": 40.0,
+        "to": 115.0,
+        "line": 55
+      },
+      "title": "Titan: back to the anchor",
+      "rule": "Sprint back to the anchor spot.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Second Weight"
+    },
+    {
+      "key": {
+        "cls": "PrimalRouletteAi",
+        "from": 40.0,
+        "to": 115.0,
+        "line": 66
+      },
+      "title": "Ifrit: inner spot",
+      "rule": "Step to the inner spot so the Eruptions land behind you.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Eruption markers"
+    },
+    {
+      "key": {
+        "cls": "PrimalRouletteAi",
+        "from": 40.0,
+        "to": 115.0,
+        "line": 56
+      },
+      "title": "Titan: dodge the third Weight",
+      "rule": "Sprint to the other side again.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Third Weight"
+    },
+    {
+      "key": {
+        "cls": "PrimalRouletteAi",
+        "from": 40.0,
+        "to": 115.0,
+        "line": 57
+      },
+      "title": "Titan: back north",
+      "rule": "Return to the north edge.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Earthen Fury"
+    },
+    {
+      "key": {
+        "cls": "PrimalRouletteAi",
+        "from": 40.0,
+        "to": 115.0,
+        "line": 67
+      },
+      "title": "Ifrit: back north",
+      "rule": "Sprint back to the north edge.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Hellfire"
+    },
+    {
+      "key": {
+        "cls": "PrimalRouletteAi",
+        "time": 115.5,
+        "line": 45
+      },
+      "title": "North for the burn",
+      "rule": "Everyone at the north edge for Ultima's return.",
+      "tolerance": 1.5,
+      "skip": false,
+      "cue": "Ultima returns"
+    }
+  ]
+}

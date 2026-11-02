@@ -1,0 +1,412 @@
+{
+  "scenario": "UwuP3TitanScenario",
+  "strat": "Zeal / The Balance",
+  "sources": [
+    {
+      "label": "NAUR toolbox (Titan)",
+      "url": "https://ff14.toolboxgaming.space/?id=463534803605261&preview=1"
+    },
+    {
+      "label": "NAUR UWU page",
+      "url": "https://www.naurffxiv.com/ultimate/uwu"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 0.5,
+        "line": 56
+      },
+      "title": "Pull spot",
+      "rule": "Stack at the south edge before Titan lands: Geocrush hurts less the farther you are.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Titan drops in"
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 6,
+        "line": 57
+      },
+      "title": "Tank south, party north",
+      "rule": "Party stacks just north of Titan; the main tank takes him south.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Geocrush lands",
+      "roles": {
+        "MainTank": {
+          "rule": "Hold Titan south of centre, facing away from the party."
+        }
+      }
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 24.5,
+        "line": 58
+      },
+      "title": "Swap sides for the Weights",
+      "rule": "Party swings to Titan's east side; the main tank goes west.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Mountain Buster resolves",
+      "roles": {
+        "MainTank": {
+          "rule": "Move to the west side for the Weight of the Land."
+        }
+      }
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 27.5,
+        "line": 59
+      },
+      "title": "Back to tank south, party north",
+      "rule": "Return: party north, main tank south.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "First Weight of the Land resolves",
+      "roles": {
+        "MainTank": {
+          "rule": "Back south of Titan."
+        }
+      }
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 30.8,
+        "line": 61
+      },
+      "title": "Run opposite the jump",
+      "rule": "Everyone runs to the edge straight across from where Titan is facing.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Titan turns to face his jump"
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 36,
+        "line": 62
+      },
+      "title": "Hug the far edge for Geocrush",
+      "rule": "Tight stack on the edge across from the landing.",
+      "tolerance": 1.5,
+      "skip": false,
+      "cue": "Geocrush jump"
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 40.1,
+        "line": 63
+      },
+      "title": "Hold the edge for Upheaval",
+      "rule": "Stay stacked on the edge and face the centre, so the knockback slides you along the wall.",
+      "tolerance": 1.5,
+      "skip": false,
+      "cue": "Upheaval cast"
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 46.8,
+        "line": 69
+      },
+      "title": "Bait the Landslide through the middle",
+      "rule": "Without a marker, stand across the arena so the Landslide line runs between the gaol spots.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Gaol markers"
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 46.8,
+        "line": 68
+      },
+      "title": "Jailed: beside your gaol spot",
+      "rule": "With a gaol marker, stand beside your gaol spot, out of the Landslide line.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Gaol markers"
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 48.6,
+        "line": 71
+      },
+      "title": "Main tank west, safe side",
+      "rule": "Main tank holds the west edge on the side the Landslide won't cross.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Landslide cast"
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 48.6,
+        "line": 70
+      },
+      "title": "Party north of centre",
+      "rule": "Party stacks north of centre, out of the Landslide.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Landslide cast"
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 50.7,
+        "line": 72
+      },
+      "title": "Jailed: sprint into the chain",
+      "rule": "With a gaol marker, sprint onto your spot in the chain line.",
+      "tolerance": 1.5,
+      "skip": false,
+      "cue": "Landslide resolves"
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 50.75,
+        "line": 73
+      },
+      "title": "Party to the north-east",
+      "rule": "Party moves north-east, between the gaols and the bombs.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Landslide resolves"
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 50.8,
+        "line": 74
+      },
+      "title": "Main tank holds west",
+      "rule": "Main tank stays on the west edge.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Landslide resolves"
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 53.05,
+        "line": 75
+      },
+      "title": "Main tank to the safe diagonal",
+      "rule": "Main tank steps to the west diagonal on the safe side.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Granite Impact"
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 57,
+        "line": 76
+      },
+      "title": "Main tank crosses to the east",
+      "rule": "Main tank runs to the east edge, Titan's far side.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Gaols are up"
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 57.8,
+        "line": 78
+      },
+      "title": "Party on Titan's left for Tumult",
+      "rule": "Party stacks on Titan's left side for the Tumults.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Tumult"
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 66.6,
+        "line": 77
+      },
+      "title": "Main tank steps in",
+      "rule": "Main tank moves in closer to Titan.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Tumults running"
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 70.3,
+        "line": 81
+      },
+      "title": "Main tank to the centre",
+      "rule": "Main tank moves to the centre for the Weights.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Weight of the Land"
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 70.3,
+        "line": 80
+      },
+      "title": "Party swaps to Titan's right",
+      "rule": "Party crosses to Titan's right side.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Weight of the Land"
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 73.3,
+        "line": 83
+      },
+      "title": "Main tank back out west",
+      "rule": "Main tank steps back out to the west.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Second Weight resolves"
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 73.3,
+        "line": 82
+      },
+      "title": "Party sidesteps the puddles",
+      "rule": "Party steps aside, out of the Weight puddles.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Second Weight resolves"
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "from": 76.1,
+        "to": 147.60007,
+        "line": 136
+      },
+      "title": "Follow the group through the awakened Landslides",
+      "rule": "Keep moving with the party: out of each Landslide line, then back together.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Awakened Landslides and bombs"
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 84.9,
+        "line": 86
+      },
+      "title": "Stack west for the second jump",
+      "rule": "Stack on the west side, across from the landing.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Titan faces his second jump"
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 90.1,
+        "line": 87
+      },
+      "title": "Stay west as the floor shrinks",
+      "rule": "Stay stacked west, inside the smaller arena.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Geocrush lands"
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 92.5,
+        "line": 88
+      },
+      "title": "Party in front, jailed healer behind",
+      "rule": "Party in front of Titan; the marked healer behind him; main tank on the far side.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Gaol marker on a healer"
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 109.5,
+        "line": 90
+      },
+      "title": "Hold: party in front, healer behind",
+      "rule": "Keep the same shape: party in front of Titan, marked healer behind.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Awakened Landslide resolves"
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 116,
+        "line": 91
+      },
+      "title": "Off tank takes the Mountain Buster",
+      "rule": "Off tank behind Titan for the buster; main tank in front.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Tumults end",
+      "roles": {
+        "OffTank": {
+          "rule": "Step behind Titan to take the Mountain Buster."
+        },
+        "MainTank": {
+          "rule": "Stay in front of Titan."
+        }
+      }
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 126,
+        "line": 92
+      },
+      "title": "Party behind Titan, ranged in front",
+      "rule": "Party stacks behind Titan (east); the regen healer and the caster stay in front.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Mountain Buster resolves"
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 141,
+        "line": 95
+      },
+      "title": "Main tank to Titan's side",
+      "rule": "Main tank steps to Titan's side for the Rock Buster.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Bombs burst"
+    },
+    {
+      "key": {
+        "cls": "UwuP3TitanAi",
+        "time": 148.1,
+        "line": 96
+      },
+      "title": "Stack centre for the transition",
+      "rule": "Tight stack in the centre.",
+      "tolerance": 1.5,
+      "skip": false,
+      "cue": "Rock Buster resolves, Titan leaves"
+    }
+  ]
+}

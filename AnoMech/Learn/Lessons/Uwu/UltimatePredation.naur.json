@@ -1,0 +1,215 @@
+{
+  "scenario": "UltimatePredationScenario",
+  "strat": "NAUR",
+  "sources": [
+    {
+      "label": "NAUR toolbox (Predation)",
+      "url": "https://ff14.toolboxgaming.space/?id=222999692467471&preview=1"
+    },
+    {
+      "label": "NAUR UWU page",
+      "url": "https://www.naurffxiv.com/ultimate/uwu"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "UltimatePredationAi",
+        "time": 15,
+        "line": 48
+      },
+      "title": "Safe cardinal",
+      "rule": "Everyone runs to the safe cardinal edge: the one with no primal in front of it.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Ultima and the primals take their places"
+    },
+    {
+      "key": {
+        "cls": "UltimatePredationAi",
+        "time": 19,
+        "line": 49
+      },
+      "title": "First dodge",
+      "rule": "Slide a few steps along the edge to the first safe spot, out of the Wheel and the dash line.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Wicked Wheel, Crimson Cyclone and Landslide"
+    },
+    {
+      "key": {
+        "cls": "UltimatePredationAi",
+        "time": 21,
+        "line": 50
+      },
+      "title": "Second dodge",
+      "rule": "Slide further along the edge to the second safe spot.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "First set resolves"
+    },
+    {
+      "key": {
+        "cls": "UltimatePredationAi",
+        "time": 26,
+        "line": 51
+      },
+      "title": "Post dodges",
+      "rule": "Party groups north of centre; ranged and caster south; main tank a little further north.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Primals warp away",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand north of the party, slightly west."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand south of centre, apart from the melee."
+        },
+        "CasterDps": {
+          "rule": "Stand south of centre, apart from the melee."
+        }
+      }
+    },
+    {
+      "key": {
+        "cls": "UltimatePredationAi",
+        "time": 37.5,
+        "line": 52
+      },
+      "title": "Eruption bait 1",
+      "rule": "Physical ranged and caster bait the Eruptions from the south edge, each on their own side.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Ifrit reappears"
+    },
+    {
+      "key": {
+        "cls": "UltimatePredationAi",
+        "time": 39.25,
+        "line": 53
+      },
+      "title": "Eruption bait 2",
+      "rule": "Baiters step outward along the south edge.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Eruption markers"
+    },
+    {
+      "key": {
+        "cls": "UltimatePredationAi",
+        "time": 41.45,
+        "line": 54
+      },
+      "title": "Eruption bait 3",
+      "rule": "Baiters keep stepping around the edge toward east and west.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UltimatePredationAi",
+        "time": 43.25,
+        "line": 55
+      },
+      "title": "Eruption bait 4",
+      "rule": "Baiters finish the arc toward the north.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UltimatePredationAi",
+        "time": 45.35,
+        "line": 56
+      },
+      "title": "Stack north of centre",
+      "rule": "Everyone stacks north of centre for the raidwide.",
+      "tolerance": 1.5,
+      "skip": false,
+      "cue": "Last Eruption resolves"
+    },
+    {
+      "key": {
+        "cls": "UltimatePredationAi",
+        "time": 54,
+        "line": 57
+      },
+      "title": "North edge for the Radiant Plumes",
+      "rule": "Stack at the north edge, where no plume lands.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Radiant Plumes cast"
+    },
+    {
+      "key": {
+        "cls": "UltimatePredationAi",
+        "time": 55.75,
+        "line": 58
+      },
+      "title": "Dodge Titan's Landslide",
+      "rule": "Sidestep east along the north edge, out of the Landslide line.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Landslide cast from the south"
+    },
+    {
+      "key": {
+        "cls": "UltimatePredationAi",
+        "time": 58,
+        "line": 59
+      },
+      "title": "Back to the north edge",
+      "rule": "Return to the north edge stack.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Landslide resolves"
+    },
+    {
+      "key": {
+        "cls": "UltimatePredationAi",
+        "time": 60,
+        "line": 60
+      },
+      "title": "Party split",
+      "rule": "Party stacks north-west; the main tank stands apart to the north-east.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Ultima targets the main tank",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand apart from the party, north-east, for the tank hits."
+        }
+      }
+    },
+    {
+      "key": {
+        "cls": "UltimatePredationAi",
+        "time": 73.5,
+        "line": 61
+      },
+      "title": "Split for Feather Rain",
+      "rule": "Both groups step in toward the centre, keeping the split, so the feathers land behind you.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Feather Rain"
+    },
+    {
+      "key": {
+        "cls": "UltimatePredationAi",
+        "time": 77,
+        "line": 62
+      },
+      "title": "Back to the split",
+      "rule": "Back to the north-west stack and the main tank's north-east spot.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Homing Lasers on the main tank",
+      "roles": {
+        "MainTank": {
+          "rule": "Back to your north-east spot."
+        }
+      }
+    }
+  ]
+}

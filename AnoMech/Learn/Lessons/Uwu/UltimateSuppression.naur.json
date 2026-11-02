@@ -1,0 +1,204 @@
+{
+  "scenario": "UltimateSuppressionScenario",
+  "strat": "NAUR",
+  "sources": [
+    {
+      "label": "NAUR toolbox (Suppression)",
+      "url": "https://ff14.toolboxgaming.space/?id=830635036646261&preview=1"
+    },
+    {
+      "label": "NAUR UWU page",
+      "url": "https://www.naurffxiv.com/ultimate/uwu"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "UltimateSuppressionAi",
+        "time": 5,
+        "line": 24
+      },
+      "title": "Suppression start",
+      "rule": "Tanks stay together south-west of centre; everyone else spreads along the west and south edges, each on their own spot, clear of the whirlwinds.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Ultimate Suppression cast, Great Whirlwinds",
+      "roles": {
+        "MainTank": {
+          "rule": "South-west of centre with the off tank."
+        },
+        "OffTank": {
+          "rule": "South-west of centre with the main tank."
+        }
+      }
+    },
+    {
+      "key": {
+        "cls": "UltimateSuppressionAi",
+        "time": 15,
+        "line": 25
+      },
+      "title": "Eruptions: stack centre",
+      "rule": "Everyone but the tanks stacks in the centre to bait the first Eruption together.",
+      "tolerance": 1.5,
+      "skip": false,
+      "cue": "Ifrit casts Eruption"
+    },
+    {
+      "key": {
+        "cls": "UltimateSuppressionAi",
+        "time": 18.3,
+        "line": 26
+      },
+      "title": "Eruptions: step north-east",
+      "rule": "Step a little north-east as one group.",
+      "tolerance": 1.5,
+      "skip": false,
+      "cue": "Eruption markers"
+    },
+    {
+      "key": {
+        "cls": "UltimateSuppressionAi",
+        "time": 18.8,
+        "line": 27
+      },
+      "title": "Eruptions: split by gaol",
+      "rule": "Split: gaol group to the north-east, the rest north-west, so the Eruptions land apart.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Rock Throw gaol"
+    },
+    {
+      "key": {
+        "cls": "UltimateSuppressionAi",
+        "time": 21,
+        "line": 28
+      },
+      "title": "Eruptions: east",
+      "rule": "Shield healer and melee step east to bait the last Eruption.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Light Pillar"
+    },
+    {
+      "key": {
+        "cls": "UltimateSuppressionAi",
+        "time": 23.25,
+        "line": 29
+      },
+      "title": "Feather Rain spread",
+      "rule": "Off tank, regen healer and physical ranged north-east; the rest south-east, each on their own spot.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Garuda warps"
+    },
+    {
+      "key": {
+        "cls": "UltimateSuppressionAi",
+        "time": 23.6,
+        "line": 30
+      },
+      "title": "Main tank follows the gaol",
+      "rule": "Main tank goes to the gaol's north-east side.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Granite Gaol appears"
+    },
+    {
+      "key": {
+        "cls": "UltimateSuppressionAi",
+        "time": 25.25,
+        "line": 31
+      },
+      "title": "Feather Rain regroup",
+      "rule": "Everyone regroups east of centre.",
+      "tolerance": 1.5,
+      "skip": false,
+      "cue": "Feathers land"
+    },
+    {
+      "key": {
+        "cls": "UltimateSuppressionAi",
+        "time": 27.05,
+        "line": 32
+      },
+      "title": "Light Pillar bait 1",
+      "rule": "With the Light Pillar marker, bait it south-east, away from the group.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Light Pillar marker"
+    },
+    {
+      "key": {
+        "cls": "UltimateSuppressionAi",
+        "time": 29.3,
+        "line": 33
+      },
+      "title": "Light Pillar bait 2",
+      "rule": "Bait the next pillar further east.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Light Pillar marker"
+    },
+    {
+      "key": {
+        "cls": "UltimateSuppressionAi",
+        "time": 31,
+        "line": 34
+      },
+      "title": "Stack east",
+      "rule": "Everyone stacks east of centre.",
+      "tolerance": 1.5,
+      "skip": false,
+      "cue": "Garuda and Titan return"
+    },
+    {
+      "key": {
+        "cls": "UltimateSuppressionAi",
+        "time": 33,
+        "line": 35
+      },
+      "title": "Main tank takes the tether",
+      "rule": "Main tank runs south-west to stretch the Mesohigh tether.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Mesohigh tether"
+    },
+    {
+      "key": {
+        "cls": "UltimateSuppressionAi",
+        "time": 33.25,
+        "line": 36
+      },
+      "title": "Dodge Landslide 1",
+      "rule": "Party steps north-east, out of the Landslide line.",
+      "tolerance": 1.5,
+      "skip": false,
+      "cue": "Landslide cast"
+    },
+    {
+      "key": {
+        "cls": "UltimateSuppressionAi",
+        "time": 35.75,
+        "line": 37
+      },
+      "title": "Dodge Landslide 2",
+      "rule": "Party steps back east, out of the second line.",
+      "tolerance": 1.5,
+      "skip": false,
+      "cue": "Second Landslide"
+    },
+    {
+      "key": {
+        "cls": "UltimateSuppressionAi",
+        "time": 42,
+        "line": 38
+      },
+      "title": "Regroup north-east",
+      "rule": "Everyone regroups north-east for the Flaming Crush and Super Cyclone.",
+      "tolerance": 1.5,
+      "skip": false,
+      "cue": "Primals warp away"
+    }
+  ]
+}

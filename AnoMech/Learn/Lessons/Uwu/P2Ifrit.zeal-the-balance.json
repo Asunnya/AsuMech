@@ -1,0 +1,378 @@
+{
+  "scenario": "UwuP2IfritScenario",
+  "strat": "Zeal / The Balance",
+  "sources": [
+    {
+      "label": "NAUR toolbox (Ifrit)",
+      "url": "https://ff14.toolboxgaming.space/?id=562530446784261&preview=1"
+    },
+    {
+      "label": "NAUR UWU page",
+      "url": "https://www.naurffxiv.com/ultimate/uwu"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "time": 0.5,
+        "line": 37
+      },
+      "title": "Opener",
+      "rule": "Spread loosely around the centre before Ifrit lands.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Ifrit lands"
+    },
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "time": 5.3,
+        "line": 38
+      },
+      "title": "Run to the opener safe spot",
+      "rule": "Run to the rim on the side without a Radiant Plume, in two tight rows, so the dash misses everyone.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Crimson Cyclone and Radiant Plumes"
+    },
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "time": 10.3,
+        "line": 39
+      },
+      "title": "Tank Ifrit south, party north",
+      "rule": "Party groups north of centre; the main tank takes Ifrit south.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Ifrit reappears in the centre",
+      "roles": {
+        "MainTank": {
+          "rule": "Take Ifrit south of centre, facing away from the party."
+        }
+      }
+    },
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "time": 40.9,
+        "line": 41
+      },
+      "title": "Surround the nails, Ifrit between the close pair",
+      "rule": "Party spreads loosely at the nail spot; the main tank pulls Ifrit between the close pair of nails.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Infernal Nails become targetable",
+      "roles": {
+        "MainTank": {
+          "rule": "Pull Ifrit between the two close nails, away from the party."
+        }
+      }
+    },
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "time": 48.3,
+        "line": 42
+      },
+      "title": "Eruption baiters split to the rim",
+      "rule": "Physical ranged and caster split to opposite points on the rim to bait the first Eruptions.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Infernal Fetters, then Inferno Howl"
+    },
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "time": 48.5,
+        "line": 43
+      },
+      "title": "Searing Wind holder leaves",
+      "rule": "With Searing Wind, run to the rim opposite the close nails and stay away from everyone.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Inferno Howl lands on you"
+    },
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "time": 51.2,
+        "line": 44
+      },
+      "title": "Bait Eruption 1",
+      "rule": "Baiters step along the rim to the next bait spot.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Eruption markers"
+    },
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "time": 53.2,
+        "line": 45
+      },
+      "title": "Bait Eruption 2",
+      "rule": "Baiters keep walking the rim, one spot ahead of the last Eruption.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "time": 55.2,
+        "line": 46
+      },
+      "title": "Bait Eruption 3",
+      "rule": "Baiters keep walking the rim, one spot ahead of the last Eruption.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "time": 58.3,
+        "line": 47
+      },
+      "title": "Baiters return",
+      "rule": "Baiters come back to the party at the nails.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Last Eruption resolves"
+    },
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "time": 67,
+        "line": 48
+      },
+      "title": "Searing Wind holder returns",
+      "rule": "Once Searing Wind is gone, rejoin the party at the nails.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Searing Wind expires"
+    },
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "time": 72,
+        "line": 50
+      },
+      "title": "Back to the centre",
+      "rule": "Everyone loosely around the centre for Hellfire.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Last nail dies, Ifrit leaves"
+    },
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "time": 79.6,
+        "line": 51
+      },
+      "title": "Gather in the last nail's corner",
+      "rule": "Party gathers in the corner of the last nail; the main tank stands a bit further out.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Hellfire resolves, Ifrit moves",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand on the corner line, further out than the party."
+        }
+      }
+    },
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "time": 82,
+        "line": 52
+      },
+      "title": "Baiters to the rim",
+      "rule": "Physical ranged and caster move to the rim north-east to bait the next Eruptions.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Ifrit casts Inferno Howl"
+    },
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "time": 84.8,
+        "line": 53
+      },
+      "title": "Second Searing Wind holder leaves",
+      "rule": "With Searing Wind, run to the south-west rim and stay there.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Inferno Howl lands on you"
+    },
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "time": 89.9,
+        "line": 54
+      },
+      "title": "Bait Eruption 1",
+      "rule": "Baiters step along the rim to the next bait spot.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Eruption markers"
+    },
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "time": 91.9,
+        "line": 55
+      },
+      "title": "Bait Eruption 2",
+      "rule": "Baiters keep walking the rim.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "time": 93.9,
+        "line": 56
+      },
+      "title": "Bait Eruption 3",
+      "rule": "Baiters keep walking the rim.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "time": 95.9,
+        "line": 57
+      },
+      "title": "Baiters back to the corner",
+      "rule": "Baiters rejoin the party in the corner.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Last Eruption resolves"
+    },
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "time": 104.85,
+        "line": 58
+      },
+      "title": "Third Searing Wind holder leaves",
+      "rule": "With Searing Wind, run to the north-east rim.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Inferno Howl lands on you"
+    },
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "time": 117.7,
+        "line": 59
+      },
+      "title": "Second holder rejoins",
+      "rule": "Rejoin the party in the corner once Searing Wind is gone.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Your Searing Wind expires"
+    },
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "time": 119.5,
+        "line": 60
+      },
+      "title": "Third holder moves south-east",
+      "rule": "Keep Searing Wind away: move to the south-east rim.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Ifrit leaves for the dashes"
+    },
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "from": 123,
+        "to": 133.2001,
+        "line": 65
+      },
+      "title": "Dodge the Crimson Cyclone dashes",
+      "rule": "Stand where no clone's dash line and no awakened cross will hit; follow the marker as it moves.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Ifrit clones appear at the nail spots"
+    },
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "time": 134.9,
+        "line": 68
+      },
+      "title": "Tank Ifrit west, party east of him",
+      "rule": "Party groups just east of Ifrit; the main tank takes him west.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Ifrit returns to the centre",
+      "roles": {
+        "MainTank": {
+          "rule": "Take Ifrit to the west edge, facing away from the party."
+        }
+      }
+    },
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "time": 149.5,
+        "line": 69
+      },
+      "title": "Bait Eruption 1",
+      "rule": "Baiters bait along the rim, starting south-east.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Eruption markers after Incinerate"
+    },
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "time": 152.3,
+        "line": 70
+      },
+      "title": "Bait Eruption 2",
+      "rule": "Baiters keep walking the rim.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "time": 154.3,
+        "line": 71
+      },
+      "title": "Bait Eruption 3",
+      "rule": "Baiters keep walking the rim.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "time": 156.3,
+        "line": 72
+      },
+      "title": "Bait Eruption 4",
+      "rule": "Baiters keep walking the rim.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UwuP2IfritAi",
+        "time": 158.3,
+        "line": 73
+      },
+      "title": "Baiters return",
+      "rule": "Baiters rejoin the party east of Ifrit.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Last Eruption resolves"
+    }
+  ]
+}

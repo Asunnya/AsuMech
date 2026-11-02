@@ -1,0 +1,364 @@
+{
+  "scenario": "UltimateAnnihilationScenario",
+  "strat": "NAUR",
+  "sources": [
+    {
+      "label": "NAUR toolbox (Annihilation)",
+      "url": "https://ff14.toolboxgaming.space/?id=930637786646261&preview=1"
+    },
+    {
+      "label": "NAUR UWU page",
+      "url": "https://www.naurffxiv.com/ultimate/uwu"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "UltimateAnnihilationAi",
+        "time": 4,
+        "line": 64
+      },
+      "title": "West stack",
+      "rule": "Everyone stacks west of centre.",
+      "tolerance": 1.5,
+      "skip": false,
+      "cue": "Ultimate Annihilation cast"
+    },
+    {
+      "key": {
+        "cls": "UltimateAnnihilationAi",
+        "time": 15,
+        "line": 65
+      },
+      "title": "East of the stack",
+      "rule": "Step east, out of the Weight puddles, as one group.",
+      "tolerance": 1.5,
+      "skip": false,
+      "cue": "Weight of the Land"
+    },
+    {
+      "key": {
+        "cls": "UltimateAnnihilationAi",
+        "time": 17.6,
+        "line": 66
+      },
+      "title": "Back west, inside the Eye",
+      "rule": "Back to the west stack, inside the Eye of the Storm's safe ring.",
+      "tolerance": 1.5,
+      "skip": false,
+      "cue": "Eye of the Storm and Mesohigh tethers"
+    },
+    {
+      "key": {
+        "cls": "UltimateAnnihilationAi",
+        "time": 20.6,
+        "line": 67
+      },
+      "title": "Clear of the first Mesohigh",
+      "rule": "Spread by group: tanks at the orb, healers west, melee and caster south-west, physical ranged south, so the tether has room.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Flaming Crush resolves, orb spawns",
+      "roles": {
+        "MainTank": {
+          "rule": "Take the orb with the off tank."
+        },
+        "OffTank": {
+          "rule": "Take the orb with the main tank."
+        },
+        "RegenHealer": {
+          "rule": "Healers go west."
+        },
+        "ShieldHealer": {
+          "rule": "Healers go west."
+        },
+        "PhysRangedDps": {
+          "rule": "Physical ranged goes south."
+        }
+      }
+    },
+    {
+      "key": {
+        "cls": "UltimateAnnihilationAi",
+        "time": 23,
+        "line": 69
+      },
+      "title": "First Mesohigh taker east",
+      "rule": "The first tether taker runs east to stretch the Mesohigh.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Inferno Howl"
+    },
+    {
+      "key": {
+        "cls": "UltimateAnnihilationAi",
+        "time": 24.5,
+        "line": 72
+      },
+      "title": "Searing Wind holder north",
+      "rule": "With Searing Wind, go to the north edge, slightly west, away from everyone.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Searing Wind lands"
+    },
+    {
+      "key": {
+        "cls": "UltimateAnnihilationAi",
+        "time": 24.5,
+        "line": 73
+      },
+      "title": "Other healer to the north edge",
+      "rule": "The healer without Searing Wind goes to the north edge.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Searing Wind lands"
+    },
+    {
+      "key": {
+        "cls": "UltimateAnnihilationAi",
+        "time": 25.65,
+        "line": 74
+      },
+      "title": "Ahead of Feather Rain",
+      "rule": "Move ahead of the feathers: party to the north edge, tanks east of centre, ranged to the north-east corner.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Garuda warps in",
+      "roles": {
+        "MainTank": {
+          "rule": "East of centre with the off tank."
+        },
+        "OffTank": {
+          "rule": "East of centre with the main tank."
+        },
+        "PhysRangedDps": {
+          "rule": "North-east corner."
+        }
+      }
+    },
+    {
+      "key": {
+        "cls": "UltimateAnnihilationAi",
+        "time": 26,
+        "line": 76
+      },
+      "title": "Tanks out of the puddles",
+      "rule": "Tanks step out of the feather puddles.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Feather Rain lands"
+    },
+    {
+      "key": {
+        "cls": "UltimateAnnihilationAi",
+        "time": 27.3,
+        "line": 77
+      },
+      "title": "Group north, tanks on the orb",
+      "rule": "Party at the north edge; tanks on the orb; Searing Wind holder stays apart.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Orb spawns",
+      "roles": {
+        "MainTank": {
+          "rule": "On the orb, east of centre."
+        },
+        "OffTank": {
+          "rule": "On the orb, east of centre."
+        },
+        "PhysRangedDps": {
+          "rule": "North-east corner."
+        }
+      }
+    },
+    {
+      "key": {
+        "cls": "UltimateAnnihilationAi",
+        "time": 28.8,
+        "line": 78
+      },
+      "title": "Tanks to the north edge",
+      "rule": "Tanks join the north edge, main tank west of the off tank.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Ifrit appears in the corner"
+    },
+    {
+      "key": {
+        "cls": "UltimateAnnihilationAi",
+        "time": 29.2,
+        "line": 79
+      },
+      "title": "First taker to the north edge",
+      "rule": "The first Mesohigh taker rejoins the north edge.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Crimson Cyclone cast"
+    },
+    {
+      "key": {
+        "cls": "UltimateAnnihilationAi",
+        "time": 31.8,
+        "line": 80
+      },
+      "title": "Out of the lines",
+      "rule": "Party north-west, between the Landslide and the dash line; tanks on each side.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Landslide and Crimson Cyclone",
+      "roles": {
+        "MainTank": {
+          "rule": "West side, out of both lines."
+        },
+        "OffTank": {
+          "rule": "East side, out of both lines."
+        }
+      }
+    },
+    {
+      "key": {
+        "cls": "UltimateAnnihilationAi",
+        "time": 32.2,
+        "line": 81
+      },
+      "title": "Searing Wind holder south-east",
+      "rule": "With Searing Wind, go south-east, away from the party.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Dash resolves"
+    },
+    {
+      "key": {
+        "cls": "UltimateAnnihilationAi",
+        "time": 35.3,
+        "line": 82
+      },
+      "title": "North-west stack",
+      "rule": "Stack north-west; the off tank takes the orb; the Searing Wind holder stays apart.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Eye of the Storm and second Mesohigh",
+      "roles": {
+        "OffTank": {
+          "rule": "Take the orb east of centre."
+        }
+      }
+    },
+    {
+      "key": {
+        "cls": "UltimateAnnihilationAi",
+        "time": 40.3,
+        "line": 83
+      },
+      "title": "Main tank steps in",
+      "rule": "Main tank moves to the north-west, just off the stack.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "Tank Purge cast"
+    },
+    {
+      "key": {
+        "cls": "UltimateAnnihilationAi",
+        "time": 43.02,
+        "line": 84
+      },
+      "title": "Ahead of the second Feather Rain",
+      "rule": "Move ahead of the feathers: party west of centre, main tank north, off tank east.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Garuda warps in",
+      "roles": {
+        "MainTank": {
+          "rule": "North, out of the stack."
+        },
+        "OffTank": {
+          "rule": "East, out of the stack."
+        }
+      }
+    },
+    {
+      "key": {
+        "cls": "UltimateAnnihilationAi",
+        "time": 43.4,
+        "line": 86
+      },
+      "title": "Out of the puddles",
+      "rule": "Step out of the feather puddles, staying grouped.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Feather Rain lands"
+    },
+    {
+      "key": {
+        "cls": "UltimateAnnihilationAi",
+        "time": 46,
+        "line": 87
+      },
+      "title": "North-west stack again",
+      "rule": "Stack north-west; main tank north of centre, off tank east.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Tank Purge resolves",
+      "roles": {
+        "MainTank": {
+          "rule": "North of centre."
+        },
+        "OffTank": {
+          "rule": "East of centre."
+        }
+      }
+    },
+    {
+      "key": {
+        "cls": "UltimateAnnihilationAi",
+        "time": 54.6,
+        "line": 88
+      },
+      "title": "Searing Wind holder rejoins",
+      "rule": "Rejoin the north-west stack once Searing Wind is gone.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Searing Wind expires"
+    },
+    {
+      "key": {
+        "cls": "UltimateAnnihilationAi",
+        "time": 66.4,
+        "line": 90
+      },
+      "title": "Out of the Radiant Plumes",
+      "rule": "Party to the north-west corner; main tank north; off tank north-east.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Radiant Plumes cast",
+      "roles": {
+        "MainTank": {
+          "rule": "North edge."
+        },
+        "OffTank": {
+          "rule": "North-east corner."
+        }
+      }
+    },
+    {
+      "key": {
+        "cls": "UltimateAnnihilationAi",
+        "time": 69.4,
+        "line": 91
+      },
+      "title": "West of the Diffractive Laser",
+      "rule": "Party west of the laser line; main tank north of centre; off tank east.",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Radiant Plumes resolve",
+      "roles": {
+        "MainTank": {
+          "rule": "North of centre."
+        },
+        "OffTank": {
+          "rule": "East of centre."
+        }
+      }
+    }
+  ]
+}
