@@ -85,6 +85,25 @@ public class LessonDirectorTests
     }
 
     [Test]
+    public void AssistedShowsTheHintLaterPerMasteryAndNeverOnceMastered()
+    {
+        var store = new MasteryStore(new Dictionary<string, int>(), () => { });
+        var assisted = new LessonDirector(Lesson, PartyRole.MainTank, LearnLevel.Assisted, speeds.Add, store);
+        assisted.OnMove(Order(1f, Vector3.Zero, arrival: 7f));
+        Assert.That(assisted.Current!.ShowAt, Is.EqualTo(1f));
+        assisted.Tick(7f, Vector3.Zero);
+        assisted.OnMove(Order(1f, Vector3.Zero, arrival: 7f));
+        Assert.That(assisted.Current!.ShowAt, Is.EqualTo(3f));
+        assisted.Tick(7f, Vector3.Zero);
+        assisted.OnMove(Order(1f, Vector3.Zero, arrival: 7f));
+        assisted.Tick(7f, Vector3.Zero);
+        assisted.OnMove(Order(1f, Vector3.Zero, arrival: 7f));
+        Assert.That(assisted.Current!.HintVisible(1000f), Is.False);
+        assisted.Tick(1.1f, Vector3.Zero);
+        Assert.That(speeds, Is.Empty, "Assisted never slows the sim");
+    }
+
+    [Test]
     public void WithoutADeadlineTheDefaultWindowApplies()
     {
         director.OnMove(Order(1f, Vector3.Zero));

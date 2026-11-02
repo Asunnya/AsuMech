@@ -39,7 +39,7 @@ internal sealed class LearnSession : IDisposable
         countingBefore = Plugin.Practice.Counting;
         Plugin.Practice.Counting = level == LearnLevel.Exam;
         if (level == LearnLevel.Observe) watch = new WatchSession(new GameWatchTarget());
-        Director = new LessonDirector(lesson ?? new Lesson(scenario.GetType().Name, strat.Name, [], []), role, level, SetSpeed);
+        Director = new LessonDirector(lesson ?? new Lesson(scenario.GetType().Name, strat.Name, [], []), role, level, SetSpeed, Plugin.Mastery);
         game.World.Guidance = Director;
         game.MechanicFailed += OnMechanicFailed;
         Current = this;

@@ -85,7 +85,7 @@ internal sealed class GuidanceOverlay : Window
     {
         if (LearnSession.Current is not { Ended: false } session) return;
         var draw = ImGui.GetWindowDrawList();
-        if (session.Director.Current is { } step) DrawStep(draw, session, step);
+        if (session.Director.Current is { } step && step.HintVisible(session.World.Events.Elapsed)) DrawStep(draw, session, step);
         DrawPanel(draw, session);
     }
 
@@ -146,7 +146,8 @@ internal sealed class GuidanceOverlay : Window
         {
             lines.Add((step.Title, AsuTheme.Text));
             if (step.Cue is { } cue) lines.Add(($"Watch for: {cue}", AsuTheme.Muted));
-            if (step.Rule is { } rule) lines.Add((rule, AsuTheme.Text));
+            if (step.HintVisible(session.World.Events.Elapsed)) { if (step.Rule is { } rule) lines.Add((rule, AsuTheme.Text)); }
+            else lines.Add((step.ShowAt == float.MaxValue ? "Mastered: no hint." : "Hint coming…", AsuTheme.Muted));
         }
         else
             lines.Add((session.Lesson is null ? "No lesson for this strat: watching the strat play." : "Waiting for the next step…", AsuTheme.Muted));

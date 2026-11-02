@@ -8,7 +8,11 @@ namespace AnoMech.Learn;
 
 public enum LearnLevel { Observe, Guided, Assisted, Exam }
 
-public sealed record ActiveStep(GuidanceOrder Order, LessonStep? Step, StepEvaluation Evaluation, string Title, string? Rule, string? Cue);
+// ShowAt: sim time from which the hint (target and rule) is drawn; Assisted pushes it later per mastery.
+public sealed record ActiveStep(GuidanceOrder Order, LessonStep? Step, StepEvaluation Evaluation, string Title, string? Rule, string? Cue, float ShowAt)
+{
+    public bool HintVisible(float now) => now >= ShowAt;
+}
 
 // Turns the strat's orders to the player into lesson steps, judges each, and slows the sim while
 // a Guided player is still on the way. Speed goes out through a callback so this stays headless.
@@ -20,11 +24,13 @@ public sealed class LessonDirector : IPlayerGuidanceSink
     private readonly Lesson lesson;
     private readonly PartyRole role;
     private readonly Action<float> setSpeed;
+    private readonly MasteryStore? mastery;
     private readonly List<(ActiveStep Step, StepResult Result)> results = [];
     private float lastSpeed = 1f;
 
-    public LessonDirector(Lesson lesson, PartyRole role, LearnLevel level, Action<float> setSpeed)
+    public LessonDirector(Lesson lesson, PartyRole role, LearnLevel level, Action<float> setSpeed, MasteryStore? mastery = null)
     {
+        this.mastery = mastery;
         this.lesson = lesson;
         this.role = role;
         Level = level;
@@ -51,7 +57,13 @@ public sealed class LessonDirector : IPlayerGuidanceSink
         var deadline = order.ArrivalTime ?? order.IssuedAt + DefaultWindowSeconds;
         var tolerance = step?.ToleranceFor(role) ?? 1.5f;
         var title = step?.Title ?? order.Key.Method ?? $"Move at {order.Key.Time:0.#}s";
-        Current = new ActiveStep(order, step, new StepEvaluation(order.Target, tolerance, deadline), title, step?.RuleFor(role), step?.CueFor(role));
+        var showAt = order.IssuedAt;
+        if (Level == LearnLevel.Assisted && step != null && mastery != null)
+        {
+            var fraction = mastery.HintDelayFraction(lesson, role, step.Key);
+            showAt = fraction >= 1f ? float.MaxValue : order.IssuedAt + (deadline - order.IssuedAt) * fraction;
+        }
+        Current = new ActiveStep(order, step, new StepEvaluation(order.Target, tolerance, deadline), title, step?.RuleFor(role), step?.CueFor(role), showAt);
         StepChanged?.Invoke(Current);
     }
 
@@ -98,6 +110,7 @@ public sealed class LessonDirector : IPlayerGuidanceSink
     {
         var result = step.Evaluation.Result!.Value;
         results.Add((step, result));
+        if (step.Step is { Skip: false } lessonStep) mastery?.Record(lesson, role, lessonStep.Key, result);
         StepResolved?.Invoke(step, result);
     }
 

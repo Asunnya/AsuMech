@@ -40,7 +40,7 @@ public sealed partial class AsuMainWindow
     [
         (LearnLevel.Observe, "Observe", "The strat plays your seat at half speed while the lesson text follows along."),
         (LearnLevel.Guided, "Guided", "Your target is drawn on the ground; the fight slows down until you get there."),
-        (LearnLevel.Assisted, "Assisted", "Not built yet: hints that appear later each time you get a step right."),
+        (LearnLevel.Assisted, "Assisted", "The hint appears later each time you get a step right, and not at all once you've nailed it three times."),
         (LearnLevel.Exam, "Exam", "Nothing on screen; the report comes at the end."),
     ];
 
@@ -57,7 +57,7 @@ public sealed partial class AsuMainWindow
         foreach (var (level, label, tip) in Levels)
         {
             if (level != LearnLevel.Observe) ImGui.SameLine(0f, 0f);
-            var available = level != LearnLevel.Assisted;
+            var available = level != LearnLevel.Assisted || lesson != null;
             bool clicked;
             using (learnLevel == level ? AsuTheme.PushAccentButton() : null)
             {
@@ -85,7 +85,8 @@ public sealed partial class AsuMainWindow
         ImGui.BeginGroup();
         if (lesson is { } l)
         {
-            Muted($"{l.Steps.Count} steps · sources:");
+            var role = Picker.RoleOverride ?? Plugin.Game.World.Party.PlayerRole;
+            Muted($"{l.Steps.Count} steps · {Plugin.Mastery.MasteredCount(l, role)} mastered as {ScenarioSetupUi.RoleLabels[(int)role + 1]} · sources:");
             foreach (var source in l.Sources)
                 if (ImGui.SmallButton($"{source.Label} ↗##{source.Url}")) Util.OpenLink(source.Url);
         }
