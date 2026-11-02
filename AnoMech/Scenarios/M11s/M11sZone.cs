@@ -14,6 +14,10 @@ public sealed class M11sZone : IZone
     public static readonly Phase Fight = new(Instance, "", null, BgmId);
 
     public string Name => "AAC Heavyweight M3 (Savage)";
+
+    public string ShortName => "M11S";
+
+    public string? Tier => "Heavyweight";
     public string Category => "Savage";
     public string? Expansion => "Dawntrail";
     public uint TerritoryId => 1325;

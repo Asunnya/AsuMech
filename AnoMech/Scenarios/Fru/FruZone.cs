@@ -29,6 +29,10 @@ public sealed class FruZone : IZone
         arenaMapEffectOverrides: new Dictionary<byte, ushort> { [MapEffect.PandoraArena] = 0x1 });
 
     public string Name => "Futures Rewritten";
+
+    public string ShortName => "FRU";
+
+    public string? Expansion => "Dawntrail";
     public uint TerritoryId => 1238;
     public Vector3 Origin => new(100f, 0f, 100f);
 

@@ -27,6 +27,10 @@ public sealed class UcobZone : IZone
     private SimEventObject? p5Arena;
 
     public string Name => "The Unending Coil of Bahamut";
+
+    public string ShortName => "UCoB";
+
+    public string? Expansion => "Stormblood";
     public uint TerritoryId => 733;
     public Vector3 Origin => new(0f, 0f, 0f);
 

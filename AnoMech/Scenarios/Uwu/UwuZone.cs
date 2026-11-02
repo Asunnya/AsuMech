@@ -20,6 +20,10 @@ public sealed class UwuZone : IZone
     public static readonly Phase Ultima = new(Instance, "", 95, 547);
 
     public string Name => "The Weapon's Refrain";
+
+    public string ShortName => "UWU";
+
+    public string? Expansion => "Stormblood";
     public uint TerritoryId => 777;
     public Vector3 Origin => new(100f, 0f, 100f);
 

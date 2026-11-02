@@ -32,6 +32,10 @@ public sealed class DsrZone : IZone
     public static readonly Phase DragonKing = new(Instance, "P7", Oppression, DragonKingBgm);
 
     public string Name => "Dragonsong's Reprise";
+
+    public string ShortName => "DSR";
+
+    public string? Expansion => "Endwalker";
     public uint TerritoryId => 968;
     public Vector3 Origin => new(100f, 0f, 100f);
     public DutyInitData DutyInitData => DutyInitData.Unknown(Origin);

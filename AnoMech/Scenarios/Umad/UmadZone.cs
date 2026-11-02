@@ -34,6 +34,10 @@ public sealed class UmadZone : IZone
         });
 
     public string Name => "Dancing Mad";
+
+    public string ShortName => "UMAD";
+
+    public string? Expansion => "Dawntrail";
     public uint TerritoryId => 1363;
     public Vector3 Origin => new(100f, 0f, 100f);
 

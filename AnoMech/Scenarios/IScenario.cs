@@ -24,6 +24,9 @@ public interface IScenario : IWorldEventListener
     // from each strat's IScenarioAi.Group.
     IReadOnlyList<IScenarioAi> AiStrats { get; }
 
+    // Seconds from start to clear, for display only; null when nobody has measured it.
+    float? Duration => null;
+
     // How far into the phase's track the real fight is when this scenario starts.
     float BgmSecondsAtStart => 0f;
 

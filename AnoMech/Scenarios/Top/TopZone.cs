@@ -16,6 +16,10 @@ public sealed class TopZone : IZone
     public static readonly Phase P6 = new(Instance, "P6", 175, BgmId.TopP6);
 
     public string Name => "The Omega Protocol";
+
+    public string ShortName => "TOP";
+
+    public string? Expansion => "Endwalker";
     public uint TerritoryId => 1122;
     public Vector3 Origin => new(100f, 0f, 100f);
 

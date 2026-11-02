@@ -17,6 +17,12 @@ public interface IZone
     // (null = no heading).
     string Category => "Ultimate";
     string? Expansion => null;
+
+    // The fight's tab label ("UWU", "M9S").
+    string ShortName => Name;
+
+    // Savage sub-tier ("Heavyweight"); null for ultimates.
+    string? Tier => null;
     uint TerritoryId { get; }
     Vector3 Origin { get; }
 
