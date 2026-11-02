@@ -9,6 +9,7 @@ namespace AnoMech.Windows.Asu;
 public sealed class AsuMainWindow : Window, IDisposable
 {
     private readonly Plugin plugin;
+    private IDisposable? theme;
 
     public AsuMainWindow(Plugin plugin) : base("AsuMech###AsuMainWindow")
     {
@@ -22,10 +23,23 @@ public sealed class AsuMainWindow : Window, IDisposable
 
     public void Dispose() { }
 
+    public override void PreDraw() => theme = AsuTheme.Push();
+
+    public override void PostDraw()
+    {
+        theme?.Dispose();
+        theme = null;
+    }
+
     public override void Draw()
     {
         ImGui.TextUnformatted("New layout (work in progress).");
-        if (ImGui.Button("Back to the classic layout"))
+        using (AsuTheme.PushTextColor(AsuTheme.Muted))
+            ImGui.TextUnformatted("Theme preview");
+        bool clicked;
+        using (AsuTheme.PushAccentButton())
+            clicked = ImGui.Button("Back to the classic layout");
+        if (clicked)
             plugin.SetNewLayout(false);
     }
 }
