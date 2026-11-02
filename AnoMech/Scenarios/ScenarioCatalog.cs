@@ -44,6 +44,7 @@ using AnoMech.Scenarios.Top.P5Delta;
 using AnoMech.Scenarios.Top.P5Omega;
 using AnoMech.Scenarios.Top.P5Sigma;
 using AnoMech.Scenarios.Top.P6WaveCannon2;
+using AnoMech.Scenarios.Ucob.P1Twintania;
 using AnoMech.Scenarios.Ucob.P5Exaflares;
 using AnoMech.Scenarios.Umad;
 using AnoMech.Scenarios.Umad.P1TeleTrouncing;
@@ -136,6 +137,7 @@ public sealed class ScenarioCatalog
         new UltimateAnnihilationScenario(),
         new UltimateSuppressionScenario(),
         new PrimalRouletteScenario(),
+        new UcobP1TwintaniaScenario(),
         new UcobP5ExaflaresScenario(),
         new DsrP1KnightsScenario(),
         new DsrP2ThordanScenario(),

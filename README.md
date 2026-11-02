@@ -96,6 +96,7 @@ All using default NA pf strats unless noted otherwise:
     - Ultimate Suppression _by [WorstAquaPlayer](https://github.com/WorstAquaPlayer)_
     - Primal Roulette _by [Asunnya](https://github.com/Asunnya)_
 - The Unending Coil of Bahamut (Ultimate) _by [RoarkGit](https://github.com/RoarkGit)_
+    - P1 Twintania (Plummet, Twister, Fireball stacks, Death Sentence tank swaps, Liquid Hell baits, Neurolinks and Hatches) _by [Asunnya](https://github.com/Asunnya)_
     - Exaflares
 - Dragonsong's Reprise (Ultimate) _by [Asunnya](https://github.com/Asunnya)_
     - P1 Knights (pull to Thordan: Hyperdimensional Slash, Shining Blade, Playstation, Holiest Hallowing interrupts, Pure of Heart)
@@ -156,7 +157,7 @@ Thanks for contributors:
 * [altair9x](https://github.com/altair9x) - extra strategies
 * [Quantumlyy](https://github.com/Quantumlyy) - extra strategies
 * [Linqx](https://github.com/Linqx) - success/failure checkmarks
-* [Asunnya](https://github.com/Asunnya) - M9S, M10S, M11S, UWU P1 Garuda / P2 Ifrit / P3 Titan / Ultimate Annihilation, DSR P1 Knights / P2 Thordan / P3 Nidhogg / P4 Eyes / P5 Wrath / P5 Death / P6 Double Dragons / P7 Dragon-king
+* [Asunnya](https://github.com/Asunnya) - M9S, M10S, M11S, UWU P1 Garuda / P2 Ifrit / P3 Titan / Ultimate Annihilation, DSR P1 Knights / P2 Thordan / P3 Nidhogg / P4 Eyes / P5 Wrath / P5 Death / P6 Double Dragons / P7 Dragon-king, UCOB P1 Twintania
 
 AnoMech leans heavily on the work of other Dalamud plugins. Huge thanks to their authors!  
 Without them, the following would not be possible:

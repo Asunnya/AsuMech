@@ -12,6 +12,8 @@ public class UcobConstants
     {
         // The edge moves between phases: earlier phases stop knockbacks at ~24.5.
         public const float P5ArenaRadius = 21.8f;
+        // UNVERIFIED: Twintania's death wall; nobody in the logs stood past 20.
+        public const float P1ArenaRadius = 24.5f;
     }
 
     // "Aether Markers": A/B/C on the rim, D and 1-4 inside. Scenario-local == world here,
@@ -42,6 +44,9 @@ public class UcobConstants
 
     public class BNpcBaseId
     {
+        public const uint Dummy = 9020;
+        public const uint Twintania = 8159;
+        public const uint Oviform = 8160;
         public const uint BahamutPrime = 0x1FE8;
         // The fight's generic invisible caster (x42 in the instance): AOE source for
         // everything the boss doesn't cast from its own body.
@@ -49,12 +54,32 @@ public class UcobConstants
 
     public class BNpcNameId
     {
+        public const uint Twintania = 1482;
+        public const uint Oviform = 2210;
         public const uint BahamutPrime = 3210;
     }
 
     public class StatusId
     {
         public const ushort LohsDaih = 1437;
+        public const ushort Burns = 0xFA;
+        public const ushort Neurolink = 0x158;
+        public const ushort TwintaniaNeurolink = 0x273;
+        public const ushort SlashingResistanceDownII = 0x4F8;
+        public const ushort ManaHypersensitivity = 0x59A;
+    }
+
+    public class LockonId
+    {
+        public const uint Fireball = 0x75;
+        public const uint Hatch = 0x76;
+    }
+
+    public class EObjId
+    {
+        public const uint LiquidHell = 2001150;
+        public const uint Neurolink = 2001151;
+        public const uint Twister = 2001168;
     }
 
     // Lohs Daih is a Transfiguration status: its param is the Transformation row the boss
@@ -64,6 +89,15 @@ public class UcobConstants
     public class ActionId
     {
         public const uint AutoAttack = 9936;
+        public const uint Plummet = 0x26A8;
+        public const uint DeathSentence = 0x26A9;
+        public const uint Twister = 0x26AA;
+        public const uint TwisterBlast = 0x26AB;
+        public const uint Fireball = 0x26AC;
+        public const uint LiquidHell = 0x26AD;
+        public const uint Generate = 0x26AE;
+        public const uint Hatch = 0x26AF;
+        public const uint DeepHatch = 0x26B0;
         public const uint Exaflare = 9967;       // 0x26EF, boss-body cast, no AOE of its own
         public const uint ExaflareFirst = 9968;  // 0x26F0, helper, 4.0s cast, arrow omen, 6y circle
         public const uint ExaflareRest = 9969;   // 0x26F1, helper, instant, 6y circle
