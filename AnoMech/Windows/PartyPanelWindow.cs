@@ -17,7 +17,7 @@ internal sealed unsafe class PartyPanelWindow : Window
 {
     private const string ConfirmPopupId = "##mpconfirm";
 
-    private readonly MainWindow mainWindow;
+    internal IPanelHost Host { get; set; }
     private readonly MultiplayerManager mp;
     // Kick/Ban picked from a seat menu, confirmed in a popup at the panel's root.
     private (Guid Peer, bool Ban)? pendingConfirm;
@@ -25,10 +25,10 @@ internal sealed unsafe class PartyPanelWindow : Window
 
     internal bool RequestedOpen { get; private set; } = true;
 
-    internal PartyPanelWindow(MainWindow mainWindow, MultiplayerManager mp)
+    internal PartyPanelWindow(IPanelHost host, MultiplayerManager mp)
         : base("###AnoMechPartyPanel")
     {
-        this.mainWindow = mainWindow;
+        Host = host;
         this.mp = mp;
         Flags = ImGuiWindowFlags.NoTitleBar
             | ImGuiWindowFlags.NoResize
@@ -47,8 +47,8 @@ internal sealed unsafe class PartyPanelWindow : Window
 
     public override void PreOpenCheck()
     {
-        IsOpen = RequestedOpen && mp.InSession && mainWindow.IsOpen && !mainWindow.IsActuallyCollapsed
-                 && !mainWindow.ShowingMultiplayerSetup;
+        IsOpen = RequestedOpen && mp.InSession && Host.IsOpen && !Host.IsActuallyCollapsed
+                 && !Host.ShowingMultiplayerSetup;
     }
 
     public override void PreDraw()
@@ -58,12 +58,12 @@ internal sealed unsafe class PartyPanelWindow : Window
         panelBackground.W = background.W;
         ImGui.PushStyleColor(ImGuiCol.WindowBg, panelBackground);
 
-        var anchor = mainWindow.RightPanelAnchor;
+        var anchor = Host.RightPanelAnchor;
         Position = new Vector2(anchor.X - ImGui.GetStyle().WindowBorderSize, anchor.Y);
         PositionCondition = ImGuiCond.Always;
         SizeConstraints = new WindowSizeConstraints
         {
-            MinimumSize = new Vector2(220f, mainWindow.ScenarioPanelHeight / ImGuiHelpers.GlobalScale),
+            MinimumSize = new Vector2(220f, Host.ScenarioPanelHeight / ImGuiHelpers.GlobalScale),
             MaximumSize = new Vector2(float.MaxValue, float.MaxValue),
         };
     }

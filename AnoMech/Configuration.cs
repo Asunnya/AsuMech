@@ -19,6 +19,9 @@ public class Configuration : IPluginConfiguration
     public bool AutoCollapseWhileRunning { get; set; } = false;
     public bool ShowSpeedControl { get; set; } = false;
     public bool UseNewLayout { get; set; } = false;
+    // New layout scope; empty means all.
+    public string SelectedExpansion { get; set; } = "";
+    public string SelectedType { get; set; } = "";
     public string LastSelectedScenario { get; set; } = "";
 
     // The player's own multiplayer server (see AnoMech.Relay.Host/README.md), used instead of

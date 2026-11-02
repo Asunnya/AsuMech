@@ -64,6 +64,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
     internal static LogManager LogManager { get; private set; } = null!;
     private ConfigWindow ConfigWindow { get; init; }
     private MainWindow MainWindow { get; init; }
+    internal PartyPanelWindow PartyPanel => MainWindow.PartyPanel;
     private AsuMainWindow AsuMainWindow { get; init; }
     private Window MainUi => Config.UseNewLayout ? AsuMainWindow : MainWindow;
     private FailureBanner? FailureBanner { get; init; }
@@ -99,6 +100,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
             ConfigWindow = new ConfigWindow(this);
             MainWindow = new MainWindow(this);
             AsuMainWindow = new AsuMainWindow(this);
+            if (Config.UseNewLayout) PartyPanel.Host = AsuMainWindow;
 
             windowSystem.AddWindow(ConfigWindow);
             windowSystem.AddWindow(MainWindow);
@@ -343,7 +345,8 @@ public sealed class Plugin : IAsyncDalamudPlugin
                 break;
             case "mp":
             case "multiplayer":
-                MainWindow.OpenMultiplayer();
+                if (Config.UseNewLayout) AsuMainWindow.OpenMultiplayer();
+                else MainWindow.OpenMultiplayer();
                 break;
             case "start":
                 Runs.Start(Picker.Selection, solo: false);
@@ -374,6 +377,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
         MainUi.IsOpen = false;
         Config.UseNewLayout = on;
         Config.Save();
+        PartyPanel.Host = Config.UseNewLayout ? AsuMainWindow : MainWindow;
         MainUi.IsOpen = wasOpen;
     }
 

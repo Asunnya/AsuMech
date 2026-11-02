@@ -22,7 +22,7 @@ using AnoMech.Core.Native.Implementations;
 
 namespace AnoMech.Windows;
 
-public unsafe class MainWindow : Window, IDisposable
+public unsafe class MainWindow : Window, IDisposable, IPanelHost
 {
     private const float ScenarioButtonExtraPadding = 6f;
     private const float SetupDropdownWidth = 180f;
@@ -51,6 +51,10 @@ public unsafe class MainWindow : Window, IDisposable
     internal Vector2 RightPanelAnchor { get; private set; }
     internal float ScenarioPanelHeight { get; private set; }
     internal bool IsActuallyCollapsed { get; private set; }
+    bool IPanelHost.IsActuallyCollapsed => IsActuallyCollapsed;
+    bool IPanelHost.ShowingMultiplayerSetup => ShowingMultiplayerSetup;
+    Vector2 IPanelHost.RightPanelAnchor => RightPanelAnchor;
+    float IPanelHost.ScenarioPanelHeight => ScenarioPanelHeight;
     private float _windowChromeHeight;
     private ScenarioPicker Picker => plugin.Picker;
     private IScenario? _selectedScenario => Picker.Scenario;
