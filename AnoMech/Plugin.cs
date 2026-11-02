@@ -10,6 +10,7 @@ using AnoMech.Core.Native.Implementations.Pointers;
 using AnoMech.Core.Native.Interfaces;
 using AnoMech.Multiplayer;
 using AnoMech.Windows;
+using AnoMech.Windows.Asu;
 using Dalamud.Game.Command;
 using Dalamud.Game.DutyState;
 using Dalamud.Interface.Windowing;
@@ -61,6 +62,8 @@ public sealed class Plugin : IAsyncDalamudPlugin
     internal static LogManager LogManager { get; private set; } = null!;
     private ConfigWindow ConfigWindow { get; init; }
     private MainWindow MainWindow { get; init; }
+    private AsuMainWindow AsuMainWindow { get; init; }
+    private Window MainUi => Config.UseNewLayout ? AsuMainWindow : MainWindow;
     private FailureBanner? FailureBanner { get; init; }
 #if DEBUG
     private DamageDebugWindow DamageDebugWindow { get; init; }
@@ -88,9 +91,11 @@ public sealed class Plugin : IAsyncDalamudPlugin
             if (Config.EnableUserActions) Natives.UserActions.Enable();
             ConfigWindow = new ConfigWindow(this);
             MainWindow = new MainWindow(this);
+            AsuMainWindow = new AsuMainWindow(this);
 
             windowSystem.AddWindow(ConfigWindow);
             windowSystem.AddWindow(MainWindow);
+            windowSystem.AddWindow(AsuMainWindow);
             windowSystem.AddWindow(MainWindow.ScenarioPanel);
             windowSystem.AddWindow(MainWindow.PartyPanel);
             FailureBanner = new FailureBanner();
@@ -101,7 +106,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
 #endif
 
             if (Config.OpenSimMenuOnInn && ZoneControl.IsInInn())
-                MainWindow.IsOpen = true;
+                MainUi.IsOpen = true;
 
             CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
             {
@@ -243,6 +248,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
         LogManager?.Dispose();
         ConfigWindow?.Dispose();
         MainWindow?.Dispose();
+        AsuMainWindow?.Dispose();
         FailureBanner?.Dispose();
 #if DEBUG
         DamageDebugWindow?.Dispose();
@@ -303,11 +309,11 @@ public sealed class Plugin : IAsyncDalamudPlugin
 
         if (!isInn)
         {
-            MainWindow.IsOpen = false;
+            MainUi.IsOpen = false;
             return;
         }
         if (Config.OpenSimMenuOnInn)
-            MainWindow.IsOpen = true;
+            MainUi.IsOpen = true;
     }
 
     private void OnLogout(int type, int code) => ZoneControl.NoteLogout(type, code);
@@ -345,13 +351,24 @@ public sealed class Plugin : IAsyncDalamudPlugin
                 Runs.Leave();
                 break;
             default:
-                MainWindow.Toggle();
+                MainUi.Toggle();
                 break;
         }
     }
 
     public void ToggleConfigUi() => ConfigWindow.Toggle();
-    public void ToggleMainUi() => MainWindow.Toggle();
+    public void ToggleMainUi() => MainUi.Toggle();
+
+    // Swaps the open main window in place, so the switch needs no reload.
+    public void SetNewLayout(bool on)
+    {
+        if (Config.UseNewLayout == on) return;
+        var wasOpen = MainUi.IsOpen;
+        MainUi.IsOpen = false;
+        Config.UseNewLayout = on;
+        Config.Save();
+        MainUi.IsOpen = wasOpen;
+    }
 
     public void OpenSettings()
     {

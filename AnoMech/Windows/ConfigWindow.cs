@@ -11,6 +11,7 @@ namespace AnoMech.Windows;
 
 public class ConfigWindow : Window, IDisposable
 {
+    private readonly Plugin plugin;
     private readonly Configuration configuration;
     private string customRelayUrl;
     private string relayPassword;
@@ -26,6 +27,7 @@ public class ConfigWindow : Window, IDisposable
         var width = 380 * ImGuiHelpers.GlobalScale;
         SizeConstraints = new WindowSizeConstraints { MinimumSize = new Vector2(width, 0), MaximumSize = new Vector2(width, float.MaxValue) };
 
+        this.plugin = plugin;
         configuration = Plugin.Config;
         customRelayUrl = configuration.RelayServerUrl;
         relayPassword = configuration.TokenForRelay(configuration.ActiveRelayUrl());
@@ -41,6 +43,10 @@ public class ConfigWindow : Window, IDisposable
             configuration.OpenSimMenuOnInn = onInn;
             configuration.Save();
         }
+
+        var newLayout = configuration.UseNewLayout;
+        if (ImGui.Checkbox("Use the new main window (preview)", ref newLayout))
+            plugin.SetNewLayout(newLayout);
 
         var suppressBgm = configuration.SuppressBgm;
         if (ImGui.Checkbox("Suppress scenario BGM", ref suppressBgm))
