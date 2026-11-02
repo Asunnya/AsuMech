@@ -86,7 +86,7 @@ public sealed partial class AsuMainWindow
         if (lesson is { } l)
         {
             var role = Picker.RoleOverride ?? Plugin.Game.World.Party.PlayerRole;
-            Muted($"{l.Steps.Count} steps · {Plugin.Mastery.MasteredCount(l, role)} mastered as {ScenarioSetupUi.RoleLabels[(int)role + 1]} · sources:");
+            Muted($"{l.Steps.Count} steps · {Plugin.Mastery.MasteredCount(l, role)} mastered as {ScenarioSetupUi.RoleLabels[(int)role + 1]}{(l.Toolbox != null ? " · toolbox synced" : "")} · sources:");
             foreach (var source in l.Sources)
                 if (ImGui.SmallButton($"{source.Label} ↗##{source.Url}")) Util.OpenLink(source.Url);
         }

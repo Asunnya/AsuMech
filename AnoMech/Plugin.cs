@@ -72,6 +72,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
     private Window MainUi => Config.UseNewLayout ? AsuMainWindow : MainWindow;
     private FailureBanner? FailureBanner { get; init; }
     private Windows.Learn.GuidanceOverlay GuidanceOverlay { get; init; }
+    private Windows.Learn.ToolboxViewer ToolboxViewer { get; init; }
 #if DEBUG
     private DamageDebugWindow DamageDebugWindow { get; init; }
 #endif
@@ -127,6 +128,8 @@ public sealed class Plugin : IAsyncDalamudPlugin
             windowSystem.AddWindow(FailureBanner);
             GuidanceOverlay = new Windows.Learn.GuidanceOverlay();
             windowSystem.AddWindow(GuidanceOverlay);
+            ToolboxViewer = new Windows.Learn.ToolboxViewer();
+            windowSystem.AddWindow(ToolboxViewer);
 #if DEBUG
             DamageDebugWindow = new DamageDebugWindow(this);
             windowSystem.AddWindow(DamageDebugWindow);
