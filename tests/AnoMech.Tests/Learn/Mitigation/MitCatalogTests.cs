@@ -23,7 +23,7 @@ public class MitCatalogTests
     public void EveryActionIsAPlayerAction()
     {
         // Follow-ups and pet actions the sheet doesn't flag as player actions but players press.
-        string[] followUps = ["Fey Union", "Eukrasian Prognosis II", "Stellar Detonation"];
+        string[] followUps = ["Fey Union", "Eukrasian Prognosis II", "Stellar Detonation", "Shield Wall", "Stronghold", "Last Bastion", "Land Waker", "Dark Force", "Gunmetal Soul"];
         var odd = MitCatalog.All.Where(a => !followUps.Contains(a.Name)).Select(a => (a, Row: Data.Action(a.Id)!)).Where(x => !x.Row.IsPlayerAction).Select(x => x.a.Name).ToList();
         Assert.That(odd, Is.Empty);
     }

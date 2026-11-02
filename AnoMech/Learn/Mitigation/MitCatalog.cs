@@ -128,6 +128,13 @@ public static class MitCatalog
         new(25857, "Magick Barrier", ["RDM"], 10f, MitTarget.Party),
         new(34685, "Tempera Coat", ["PCT"], 10f, MitTarget.Self),
         new(34686, "Tempera Grassa", ["PCT"], 10f, MitTarget.Party),
+        // Tank limit breaks
+        new(197, "Shield Wall", Tanks, 10f, MitTarget.Party),
+        new(198, "Stronghold", Tanks, 10f, MitTarget.Party),
+        new(199, "Last Bastion", ["PLD"], 8f, MitTarget.Party),
+        new(4240, "Land Waker", ["WAR"], 8f, MitTarget.Party),
+        new(4241, "Dark Force", ["DRK"], 8f, MitTarget.Party),
+        new(17105, "Gunmetal Soul", ["GNB"], 8f, MitTarget.Party),
     ];
 
     private static readonly Dictionary<string, MitAction> ByName = All.ToDictionary(a => a.Name, StringComparer.OrdinalIgnoreCase);
