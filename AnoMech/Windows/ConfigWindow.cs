@@ -82,32 +82,32 @@ public class ConfigWindow : Window, IDisposable
     private void DrawContent()
     {
         var onInn = configuration.OpenSimMenuOnInn;
-        if (ImGui.Checkbox("Open Sim Menu when entering Inn", ref onInn))
+        if (Pills.Checkbox("Open Sim Menu when entering Inn", ref onInn))
         {
             configuration.OpenSimMenuOnInn = onInn;
             configuration.Save();
         }
 
         var newLayout = configuration.UseNewLayout;
-        if (ImGui.Checkbox("Use the new main window (preview)", ref newLayout))
+        if (Pills.Checkbox("Use the new main window (preview)", ref newLayout))
             plugin.SetNewLayout(newLayout);
 
         var suppressBgm = configuration.SuppressBgm;
-        if (ImGui.Checkbox("Suppress scenario BGM", ref suppressBgm))
+        if (Pills.Checkbox("Suppress scenario BGM", ref suppressBgm))
         {
             configuration.SuppressBgm = suppressBgm;
             configuration.Save();
         }
 
         var resultMarks = configuration.EnableMechanicResultMarks;
-        if (ImGui.Checkbox("Show mechanic success/failure marks", ref resultMarks))
+        if (Pills.Checkbox("Show mechanic success/failure marks", ref resultMarks))
         {
             configuration.EnableMechanicResultMarks = resultMarks;
             configuration.Save();
         }
 
         var showSpeed = configuration.ShowSpeedControl;
-        if (ImGui.Checkbox("Show speed control", ref showSpeed))
+        if (Pills.Checkbox("Show speed control", ref showSpeed))
         {
             configuration.ShowSpeedControl = showSpeed;
             configuration.Save();
@@ -116,7 +116,7 @@ public class ConfigWindow : Window, IDisposable
             ImGui.SetTooltip("Adds the scenario speed buttons and a typed value under God mode in the main window.\nWarning: bots can die at other speeds, since they still run at normal speed.");
 
         var userActions = configuration.EnableUserActions;
-        if (ImGui.Checkbox("Resolve your own actions", ref userActions))
+        if (Pills.Checkbox("Resolve your own actions", ref userActions))
         {
             configuration.EnableUserActions = userActions;
             configuration.Save();
@@ -135,7 +135,7 @@ public class ConfigWindow : Window, IDisposable
             }
 
             var tankMitigation = configuration.EnableTankMitigation;
-            if (ImGui.Checkbox("Require tank mitigation", ref tankMitigation))
+            if (Pills.Checkbox("Require tank mitigation", ref tankMitigation))
             {
                 configuration.EnableTankMitigation = tankMitigation;
                 configuration.Save();
@@ -147,7 +147,7 @@ public class ConfigWindow : Window, IDisposable
         ImGui.Separator();
 
         var logging = configuration.EnableEventLogging;
-        if (ImGui.Checkbox("Enable event logging", ref logging))
+        if (Pills.Checkbox("Enable event logging", ref logging))
         {
             configuration.EnableEventLogging = logging;
             configuration.Save();
@@ -165,7 +165,7 @@ public class ConfigWindow : Window, IDisposable
         ImGui.Separator();
 
         var safeMode = configuration.SafeMode;
-        if (ImGui.Checkbox("Safe mode (debug)", ref safeMode))
+        if (Pills.Checkbox("Safe mode (debug)", ref safeMode))
         {
             configuration.SafeMode = safeMode;
             configuration.Save();

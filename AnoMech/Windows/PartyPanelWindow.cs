@@ -10,6 +10,8 @@ using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
 using static AnoMech.Windows.MultiplayerUi;
 
+using AnoMech.Windows.Asu;
+
 namespace AnoMech.Windows;
 
 // Seats and host moderation for a multiplayer session, docked to the main window's right edge.
@@ -82,7 +84,7 @@ internal sealed unsafe class PartyPanelWindow : Window
         // Locked once Started: the choreography only makes sense replayed from a fresh Start.
         var botControlled = mp.DebugBotControlled;
         ImGui.BeginDisabled(mp.Session.Started);
-        if (ImGui.Checkbox("Debug AI bot", ref botControlled))
+        if (Pills.Checkbox("Debug AI bot", ref botControlled))
             mp.SetDebugBotControlled(botControlled);
         ImGui.EndDisabled();
         if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))

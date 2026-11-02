@@ -15,4 +15,13 @@ internal static class Pills
         ImGui.EndDisabled();
         return clicked;
     }
+
+    // Drop-in for ImGui.Checkbox: a toggle pill in the new layout, a plain checkbox in the classic one.
+    public static bool Checkbox(string label, ref bool value)
+    {
+        if (!Plugin.Config.UseNewLayout) return ImGui.Checkbox(label, ref value);
+        if (!Toggle(label, value)) return false;
+        value = !value;
+        return true;
+    }
 }
