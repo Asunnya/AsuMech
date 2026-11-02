@@ -73,6 +73,9 @@ public sealed class Plugin : IAsyncDalamudPlugin
     private FailureBanner? FailureBanner { get; init; }
     private Windows.Learn.GuidanceOverlay GuidanceOverlay { get; init; }
     private Windows.Learn.ToolboxViewer ToolboxViewer { get; init; }
+    private Windows.Learn.MitOverlay MitOverlay { get; init; }
+    private Windows.Learn.MitTraining MitTraining { get; init; }
+    internal Windows.Learn.MitReportWindow MitReport { get; init; }
 #if DEBUG
     private DamageDebugWindow DamageDebugWindow { get; init; }
 #endif
@@ -130,6 +133,12 @@ public sealed class Plugin : IAsyncDalamudPlugin
             windowSystem.AddWindow(GuidanceOverlay);
             ToolboxViewer = new Windows.Learn.ToolboxViewer();
             windowSystem.AddWindow(ToolboxViewer);
+            MitTraining = new Windows.Learn.MitTraining(Game);
+            Windows.Learn.MitTraining.Install(MitTraining);
+            MitOverlay = new Windows.Learn.MitOverlay();
+            windowSystem.AddWindow(MitOverlay);
+            MitReport = new Windows.Learn.MitReportWindow();
+            windowSystem.AddWindow(MitReport);
 #if DEBUG
             DamageDebugWindow = new DamageDebugWindow(this);
             windowSystem.AddWindow(DamageDebugWindow);
@@ -281,6 +290,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
         AsuMainWindow?.Dispose();
         FailureBanner?.Dispose();
         Windows.Learn.LearnSession.Current?.Dispose();
+        MitTraining?.Dispose();
 #if DEBUG
         DamageDebugWindow?.Dispose();
 #endif

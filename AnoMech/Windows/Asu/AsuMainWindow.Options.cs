@@ -100,6 +100,7 @@ public sealed partial class AsuMainWindow
             ImGui.SetTooltip(SessionDisabledReason);
         ImGui.SameLine();
         DrawStreak(inSession);
+        DrawMitToggle(inSession);
 
         if (Plugin.Config.ShowSpeedControl)
         {
@@ -112,6 +113,43 @@ public sealed partial class AsuMainWindow
                 ImGui.SetTooltip(SessionDisabledReason);
         }
         Muted($"{(inSession ? "Session" : SoloSelected ? "Solo" : "Party")} · Speed {game.EventTimeScale:0.##}× · Seed {(Picker.Seed is { } seed ? seed.ToString() : "random")}");
+    }
+
+    private static readonly string[] AssistLabels = ["None", "Reminder", "Strict"];
+
+    private void DrawMitToggle(bool inSession)
+    {
+        if (Selected is not { } scenario) return;
+        var why = Windows.Learn.MitTraining.Refusal(scenario.GetType().Name, inSession);
+        var on = Plugin.Config.EnableMitigationTraining && why == null;
+        if (Pills.Toggle("Mit plan##mit-pill", on, disabled: why != null))
+        {
+            Plugin.Config.EnableMitigationTraining = !Plugin.Config.EnableMitigationTraining;
+            Plugin.Config.Save();
+        }
+        if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
+            ImGui.SetTooltip(why ?? "Checks the plan's mitigation for your job or seat against what you press. Bots don't mitigate; nothing changes in the damage checks.");
+        if (why != null || !Plugin.Config.EnableMitigationTraining) return;
+        ImGui.SameLine();
+        var plan = Windows.Learn.MitTraining.PlanFor(scenario.GetType().Name);
+        var assist = Plugin.Config.MitPracticeAssist;
+        ImGui.SetNextItemWidth(110f * Dalamud.Interface.Utility.ImGuiHelpers.GlobalScale);
+        if (ImGui.Combo("##mit-assist", ref assist, AssistLabels, AssistLabels.Length))
+        {
+            Plugin.Config.MitPracticeAssist = assist;
+            Plugin.Config.Save();
+        }
+        if (ImGui.IsItemHovered()) ImGui.SetTooltip("None: report only. Reminder: a strip with the next items and a note on each miss. Strict: a miss fails the run.");
+        if (plan != null)
+        {
+            ImGui.SameLine();
+            Muted($"{plan.Source.Title} · {string.Join(", ", plan.Source.Credits)}");
+        }
+        if (Windows.Learn.MitTraining.Instance?.LastReport != null)
+        {
+            ImGui.SameLine();
+            if (ImGui.SmallButton("Report##mit-report")) plugin.MitReport.Toggle();
+        }
     }
 
     private void DrawScenarioSettings(IScenario scenario, bool inSession)
