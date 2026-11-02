@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../../AnoMech/AnoMech.csproj" />
+    <InternalsVisibleTo Include="AnoMech.LessonTools" />
   </ItemGroup>
 
   <!-- The plugin references these with Private=false because Dalamud supplies them in game; the
@@ -28,30 +29,6 @@
     <Reference Include="Microsoft.Extensions.ObjectPool" HintPath="$(DalamudLibPath)Microsoft.Extensions.ObjectPool.dll" Private="true" />
   </ItemGroup>
 
-  <!-- Real sheet data for DataminingGameData, from xivapi/ffxiv-datamining at a pinned commit. Each
-       commit gets its own cache folder, so the network is only touched after a bump or a new sheet.
-       Downloads land in partial/ first so an interrupted fetch is never mistaken for a cached file. -->
-  <PropertyGroup>
-    <DataminingCommit>d9582a624eaec69d45649366dee801c2f3a6e9b3</DataminingCommit>
-    <DataminingDir>$(BaseIntermediateOutputPath)datamining\$(DataminingCommit)\</DataminingDir>
-  </PropertyGroup>
+  <Import Project="Datamining.targets" />
 
-  <ItemGroup>
-    <DataminingSheet Include="Action;BNpcBase;BNpcName;ClassJob;ContentFinderCondition;Knockback;ModelChara;ModelSkeleton;NpcEquip;Omen;Status;TerritoryType;Weather" />
-  </ItemGroup>
-
-  <Target Name="DownloadDataminingSheets" BeforeTargets="BeforeBuild">
-    <DownloadFile SourceUrl="https://raw.githubusercontent.com/xivapi/ffxiv-datamining/$(DataminingCommit)/csv/en/%(DataminingSheet.Identity).csv"
-                  DestinationFolder="$(DataminingDir)partial\"
-                  Retries="3"
-                  Condition="!Exists('$(DataminingDir)%(DataminingSheet.Identity).csv')" />
-    <Move SourceFiles="$(DataminingDir)partial\%(DataminingSheet.Identity).csv"
-          DestinationFolder="$(DataminingDir)"
-          Condition="!Exists('$(DataminingDir)%(DataminingSheet.Identity).csv')" />
-    <ItemGroup>
-      <None Include="$(DataminingDir)%(DataminingSheet.Identity).csv"
-            Link="datamining\%(DataminingSheet.Identity).csv"
-            CopyToOutputDirectory="PreserveNewest" />
-    </ItemGroup>
-  </Target>
 </Project>
