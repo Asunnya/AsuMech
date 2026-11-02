@@ -322,7 +322,7 @@ public unsafe class MainWindow : Window, IDisposable, IPanelHost
             if (!ImGui.BeginTabItem($"{category}###scenario-category-{category}", flags)) continue;
             if (_pendingCategoryTab == category) _pendingCategoryTab = null;
             string? lastExpansion = null;
-            foreach (var zone in Plugin.Game.Catalog.Zones.Where(z => z.Category == category))
+            foreach (var zone in Plugin.Game.Catalog.Zones.Where(z => z.Category == category).OrderBy(ExpansionRank))
             {
                 if (zone.Expansion is { } expansion && expansion != lastExpansion)
                 {
@@ -334,6 +334,13 @@ public unsafe class MainWindow : Window, IDisposable, IPanelHost
             ImGui.EndTabItem();
         }
         ImGui.EndTabBar();
+    }
+
+    // Catalog order interleaves expansions; each heading must appear once.
+    private static int ExpansionRank(IZone zone)
+    {
+        var rank = Asu.CatalogView.ExpansionOrder.ToList().IndexOf(zone.Expansion ?? "");
+        return rank < 0 ? int.MaxValue : rank;
     }
 
     private void DrawZoneSection(IZone zone)
