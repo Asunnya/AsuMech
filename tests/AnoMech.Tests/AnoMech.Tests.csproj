@@ -11,6 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="../../AnoMech/AnoMech.csproj" />
     <InternalsVisibleTo Include="AnoMech.LessonTools" />
+    <None Include="Learn/Toolbox/Fixtures/*.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <!-- The plugin references these with Private=false because Dalamud supplies them in game; the

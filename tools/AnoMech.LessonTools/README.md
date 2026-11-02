@@ -15,6 +15,9 @@ dotnet $TOOL skeleton --dump garuda.dump.json --out lesson.json
 dotnet $TOOL rekey    --lesson AnoMech/Learn/Lessons/Uwu/P1Garuda.zeal-the-balance.json --dump garuda.dump.json
 # every catalog strat without an embedded lesson: dump + skeleton per strat, in the Lessons layout
 dotnet $TOOL skeleton-all --out skel/ [--scenario Uwu] [--seeds 1,2] [--force]
+# toolbox plan (id downloads strats/<id>.json; or a saved file): tolerant parse, A-D calibration against the zone's
+# waymark layout, slot->role by job then refined by the opener, step alignment; --write stores the toolbox block
+dotnet $TOOL toolbox-import --plan 122994122467471 --zone UwuZone --layout Naur --lesson <lesson.json> --dump garuda.dump.json --out-plan AnoMech/Learn/Toolbox/Plans/122994122467471.json --write
 # validation + coverage both ways (what LessonLoaderTests also checks in CI)
 dotnet $TOOL check    --lesson AnoMech/Learn/Lessons/Uwu/P1Garuda.zeal-the-balance.json --dump garuda.dump.json
 ```

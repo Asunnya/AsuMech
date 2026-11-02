@@ -42,7 +42,7 @@ public sealed record LessonStep(
 
 public sealed record LessonSource(string Label, string Url);
 
-public sealed record Lesson(string Scenario, string Strat, List<LessonSource> Sources, List<LessonStep> Steps)
+public sealed record Lesson(string Scenario, string Strat, List<LessonSource> Sources, List<LessonStep> Steps, Toolbox.LessonToolbox? Toolbox = null)
 {
     // The step for an order: by time, then the line breaks ties.
     public LessonStep? StepFor(GuidanceKey key)

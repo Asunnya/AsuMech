@@ -16,6 +16,7 @@
     <ProjectReference Include="../AnoMech.Relay/AnoMech.Relay.csproj" />
     <InternalsVisibleTo Include="AnoMech.Tests" />
     <EmbeddedResource Include="Learn/Lessons/**/*.json" />
+    <EmbeddedResource Include="Learn/Toolbox/Plans/*.json" />
     <AdditionalFiles Include="BannedSymbols.txt" />
   </ItemGroup>
 

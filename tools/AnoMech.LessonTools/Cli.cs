@@ -1,5 +1,7 @@
 using AnoMech.Learn;
 using AnoMech.Learn.Tools;
+using AnoMech.Learn.Toolbox;
+using AnoMech.Core.Game;
 using AnoMech.Scenarios;
 
 namespace AnoMech.LessonTools;
@@ -8,6 +10,7 @@ namespace AnoMech.LessonTools;
 // skeleton --dump dump.json --out lesson.json
 // rekey    --lesson lesson.json --dump dump.json [--out lesson.json]
 // check    --lesson lesson.json --dump dump.json
+// toolbox-import --plan <id|file.json> --zone <ZoneType> [--layout <name>] --lesson lesson.json --dump dump.json --out-plan plans/<id>.json [--write]
 // skeleton-all --out <dir> [--seeds 1] [--scenario <substring>] [--force]   every catalog strat without a lesson
 internal static class Cli
 {
@@ -24,6 +27,7 @@ internal static class Cli
                 "rekey" => Rekey(opts),
                 "check" => Check(opts),
                 "skeleton-all" => SkeletonAll(opts),
+                "toolbox-import" => ToolboxImportCmd(opts),
                 _ => Usage(),
             };
         }
@@ -115,6 +119,59 @@ internal static class Cli
             }
         }
         Console.WriteLine($"{written} skeleton(s) -> {outDir}");
+        return 0;
+    }
+
+    private static int ToolboxImportCmd(Dictionary<string, string> opts)
+    {
+        var planArg = Need(opts, "plan");
+        var id = Path.GetFileName(planArg).Split('.').FirstOrDefault(p => p.All(char.IsDigit) && p.Length >= 6) ?? planArg;
+        byte[] raw;
+        if (File.Exists(planArg)) raw = File.ReadAllBytes(planArg);
+        else
+        {
+            using var http = new HttpClient();
+            raw = http.GetByteArrayAsync($"https://ff14.toolboxgaming.space/strats/{id}.json").GetAwaiter().GetResult();
+        }
+        var zoneName = Need(opts, "zone");
+        var zone = ScenarioCatalog.Create().Zones.FirstOrDefault(z => z.GetType().Name == zoneName)
+                   ?? throw new ArgumentException($"no zone type named {zoneName}");
+        var layout = opts.TryGetValue("layout", out var l) && l.Length > 0
+            ? zone.WaymarkPresets.FirstOrDefault(w => w.Name.Equals(l, StringComparison.OrdinalIgnoreCase)) ?? throw new ArgumentException($"no layout {l}")
+            : zone.WaymarkPresets[0];
+        var (plan, report) = ToolboxImport.Convert(raw, id, layout);
+        Console.WriteLine($"plan {id} \"{plan.Label}\" by {plan.Author}: {report.StepsRecovered} steps{(report.Truncated ? " (recovered from a truncated file)" : "")}");
+        Console.WriteLine($"calibration: {report.Scale:F3} yalm/unit against layout {layout.Name}, residual {report.Residual:F2} m");
+        Console.WriteLine($"roles: {string.Join(", ", report.RoleMap.Select(kv => $"{kv.Key}={kv.Value}"))}");
+        foreach (var w in report.Warnings) Console.WriteLine($"warning: {w}");
+
+        var outPlan = Need(opts, "out-plan");
+        Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(outPlan))!);
+        File.WriteAllText(outPlan, plan.ToJson());
+        Console.WriteLine($"compact plan -> {outPlan} ({new FileInfo(outPlan).Length / 1024} KiB)");
+
+        if (!opts.TryGetValue("lesson", out var lessonPath) || !opts.TryGetValue("dump", out var dumpPath)) return 0;
+        var lesson = LessonLoader.Parse(File.ReadAllText(lessonPath));
+        var dump = OrderDump.Parse(File.ReadAllText(dumpPath));
+        var refined = ToolboxImport.RefineRoleMap(plan, dump, report.RoleMap, out var openerResidual);
+        if (!refined.OrderBy(kv => kv.Key).SequenceEqual(report.RoleMap.OrderBy(kv => kv.Key)))
+            Console.WriteLine($"roles by opener: {string.Join(", ", refined.Select(kv => $"{kv.Key}={kv.Value}"))} (mean {openerResidual:F1} m; confirm against the plan's notes)");
+        var alignment = ToolboxImport.Align(plan, lesson, dump, refined);
+        var steps = new Dictionary<string, int>();
+        foreach (var (tb, stepId, distance) in alignment)
+        {
+            var label = plan.Steps[tb].Label;
+            Console.WriteLine(stepId is null ? $"  {tb,2} {label,-40} unmatched ({distance:F1} m)" : $"  {tb,2} {label,-40} -> {stepId} ({distance:F1} m)");
+            if (stepId != null) steps.TryAdd(stepId, tb);
+        }
+        var roleMap = refined.ToDictionary(kv => kv.Value, kv => kv.Key);
+        var linked = lesson with { Toolbox = new LessonToolbox(id, roleMap, steps) };
+        if (opts.ContainsKey("write"))
+        {
+            File.WriteAllText(lessonPath, LessonSkeleton.ToJson(linked));
+            Console.WriteLine($"toolbox block written to {lessonPath}");
+        }
+        else Console.WriteLine("(add --write to store the toolbox block in the lesson)");
         return 0;
     }
 
