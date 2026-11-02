@@ -33,10 +33,7 @@ public sealed partial class AsuMainWindow
         {
             ImGui.SameLine();
             var running = RunState.Live(game);
-            ImGui.BeginDisabled(running);
-            var solo = Picker.Solo;
-            if (ImGui.Checkbox("Solo", ref solo)) Picker.Solo = solo;
-            ImGui.EndDisabled();
+            if (Pills.Toggle("Solo##solo-pill", Picker.Solo, disabled: running)) Picker.Solo = !Picker.Solo;
             if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
                 ImGui.SetTooltip(running
                     ? "Stop the current scenario before changing the run mode."
@@ -98,10 +95,7 @@ public sealed partial class AsuMainWindow
     private void DrawFooter(Game game, bool inSession)
     {
         if (inSession) game.GodMode = false;
-        ImGui.BeginDisabled(inSession);
-        var god = game.GodMode;
-        if (ImGui.Checkbox("God mode", ref god)) game.GodMode = god;
-        ImGui.EndDisabled();
+        if (Pills.Toggle("God mode##god-pill", game.GodMode, disabled: inSession)) game.GodMode = !game.GodMode;
         if (inSession && ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
             ImGui.SetTooltip(SessionDisabledReason);
         ImGui.SameLine();

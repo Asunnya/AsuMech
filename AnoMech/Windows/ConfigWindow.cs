@@ -23,10 +23,7 @@ public class ConfigWindow : Window, IDisposable
         Flags = ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
                 ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.AlwaysAutoResize;
 
-        // A fixed width; the height follows the multiplayer server section, which grows when
-        // the player picks their own server.
-        var width = 380 * ImGuiHelpers.GlobalScale;
-        SizeConstraints = new WindowSizeConstraints { MinimumSize = new Vector2(width, 0), MaximumSize = new Vector2(width, float.MaxValue) };
+        ApplySizing();
 
         this.plugin = plugin;
         configuration = Plugin.Config;
@@ -37,9 +34,36 @@ public class ConfigWindow : Window, IDisposable
     public void Dispose() { }
 
     private IDisposable? theme;
+    private const float ClassicWidthPx = 380f;
+    private const float NewMinWidthPx = 380f;
+    private const float NewDefaultWidthPx = 600f;
+    private float contentHeight;
+
+    // Classic: fixed width, auto height. New layout: the player sets the width, height follows the content.
+    private void ApplySizing()
+    {
+        var scale = ImGuiHelpers.GlobalScale;
+        if (!configuration.UseNewLayout)
+        {
+            Flags |= ImGuiWindowFlags.NoResize | ImGuiWindowFlags.AlwaysAutoResize;
+            var width = ClassicWidthPx * scale;
+            SizeConstraints = new WindowSizeConstraints { MinimumSize = new Vector2(width, 0), MaximumSize = new Vector2(width, float.MaxValue) };
+            return;
+        }
+        Flags &= ~(ImGuiWindowFlags.NoResize | ImGuiWindowFlags.AlwaysAutoResize);
+        Size = new Vector2(NewDefaultWidthPx, 0f);
+        SizeCondition = ImGuiCond.FirstUseEver;
+        var height = contentHeight > 0f ? contentHeight / scale : 0f;
+        SizeConstraints = new WindowSizeConstraints
+        {
+            MinimumSize = new Vector2(NewMinWidthPx, height),
+            MaximumSize = new Vector2(float.MaxValue, contentHeight > 0f ? height : float.MaxValue),
+        };
+    }
 
     public override void PreDraw()
     {
+        ApplySizing();
         if (configuration.UseNewLayout) theme = AsuTheme.Push();
     }
 
@@ -50,6 +74,12 @@ public class ConfigWindow : Window, IDisposable
     }
 
     public override void Draw()
+    {
+        DrawContent();
+        contentHeight = ImGui.GetCursorPosY() + ImGui.GetStyle().WindowPadding.Y - ImGui.GetStyle().ItemSpacing.Y;
+    }
+
+    private void DrawContent()
     {
         var onInn = configuration.OpenSimMenuOnInn;
         if (ImGui.Checkbox("Open Sim Menu when entering Inn", ref onInn))
