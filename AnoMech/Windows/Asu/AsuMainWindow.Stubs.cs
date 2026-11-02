@@ -14,9 +14,4 @@ public sealed partial class AsuMainWindow
     private static string BestStreakText(IScenario scenario) => "";
     private static void DrawStreak() => ImGui.TextDisabled($"Streak {Plugin.Practice.Streak}");
     private void DrawLearn(Game game, IScenario scenario, bool inSession) => Muted("Learn mode is not built yet.");
-    private void DrawSelector(float width)
-    {
-        if (ImGui.Button($"{SelectorLabel()} ▾##selector", new System.Numerics.Vector2(width, 0f)))
-            ImGui.OpenPopup("selector");
-    }
 }
