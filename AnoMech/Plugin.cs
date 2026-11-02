@@ -81,6 +81,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
         try
         {
             Config = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+            if (Config.MigrateLayout()) Config.Save();
 
             LogManager = new LogManager();
             if (Config.EnableEventLogging) LogManager.Open();
@@ -95,6 +96,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
             Picker = new ScenarioPicker(scenario =>
             {
                 Config.LastSelectedScenario = scenario.FullName();
+                Config.RecentScenarios = ScenarioSearch.PushRecent(Config.RecentScenarios, scenario.FullName());
                 Config.Save();
             });
             ConfigWindow = new ConfigWindow(this);

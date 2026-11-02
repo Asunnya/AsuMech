@@ -6,6 +6,7 @@ using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
 using AnoMech.Core.Native.Interfaces;
+using AnoMech.Windows.Asu;
 
 namespace AnoMech.Windows;
 
@@ -34,6 +35,19 @@ public class ConfigWindow : Window, IDisposable
     }
 
     public void Dispose() { }
+
+    private IDisposable? theme;
+
+    public override void PreDraw()
+    {
+        if (configuration.UseNewLayout) theme = AsuTheme.Push();
+    }
+
+    public override void PostDraw()
+    {
+        theme?.Dispose();
+        theme = null;
+    }
 
     public override void Draw()
     {

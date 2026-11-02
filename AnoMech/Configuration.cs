@@ -1,5 +1,6 @@
 using Dalamud.Configuration;
 using System;
+using System.Collections.Generic;
 using AnoMech.Multiplayer;
 using AnoMech.Network;
 
@@ -18,10 +19,23 @@ public class Configuration : IPluginConfiguration
     public bool EnableMechanicResultMarks { get; set; } = false;
     public bool AutoCollapseWhileRunning { get; set; } = false;
     public bool ShowSpeedControl { get; set; } = false;
-    public bool UseNewLayout { get; set; } = false;
+    public bool UseNewLayout { get; set; } = true;
+
+    // Configs saved before the new layout became the default stored it as off.
+    public int LayoutVersion { get; set; }
+    private const int CurrentLayoutVersion = 1;
+
+    public bool MigrateLayout()
+    {
+        if (LayoutVersion >= CurrentLayoutVersion) return false;
+        UseNewLayout = true;
+        LayoutVersion = CurrentLayoutVersion;
+        return true;
+    }
     // New layout scope; empty means all.
     public string SelectedExpansion { get; set; } = "";
     public string SelectedType { get; set; } = "";
+    public List<string> RecentScenarios { get; set; } = [];
     public string LastSelectedScenario { get; set; } = "";
 
     // The player's own multiplayer server (see AnoMech.Relay.Host/README.md), used instead of
