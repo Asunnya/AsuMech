@@ -1308,6 +1308,865 @@
           "unresolved": "Mountain Buster has no occurrence 3"
         }
       ]
+    },
+    "UltimatePredationScenario": {
+      "mechanics": [
+        {
+          "id": "cutscene-prep-use-when-titan-dies",
+          "label": "Cutscene Prep (Use when Titan dies)",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Deployment Tactics"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Zoe"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Cutscene Prep (Use when Titan dies)\u0022"
+        },
+        {
+          "id": "tank-purge",
+          "label": "Tank Purge",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Heart of Light"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Dark Missionary"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Plenary Indulgence"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Earthly Star"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Tank Purge\u0022"
+        },
+        {
+          "id": "viscous-aetheroplasm",
+          "label": "Viscous Aetheroplasm",
+          "anchor": {
+            "cast": "Viscous Aetheroplasm",
+            "occurrence": 1
+          },
+          "columns": {
+            "Scholar": [
+              {
+                "reminder": "Fairy Regen",
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Assize"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Stellar Detonation"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "tumult-x7",
+          "label": "Tumult (x7)",
+          "anchor": {
+            "cast": "Tumult",
+            "occurrence": 1
+          },
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Heart of Light"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Dark Missionary"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Fey Illumination"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Physis II"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Asylum"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Plenary Indulgence"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Celestial Opposition"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Earthly Star"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 1": [
+              {
+                "accept": [
+                  "Bloodbath"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Phys Range": [
+              {
+                "accept": [
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Caster": [
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum",
+                  "Rampart"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "mistral-shriek",
+          "label": "Mistral Shriek",
+          "anchor": {
+            "cast": "Mistral Shriek",
+            "occurrence": 1
+          },
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Assize"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Collective Unconscious"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "UltimateAnnihilationScenario": {
+      "mechanics": [
+        {
+          "id": "flaming-crush-stack",
+          "label": "Flaming Crush (Stack)",
+          "anchor": {
+            "cast": "Flaming Crush",
+            "occurrence": 1
+          },
+          "columns": {
+            "Scholar": [
+              {
+                "reminder": "Fairy Regen",
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Physis II"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Extras": [
+              {
+                "accept": [
+                  "Curing Waltz"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Nature\u0027s Minne"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Mantra"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "mesohigh-super-cyclone",
+          "label": "Mesohigh \u0026 Super Cyclone",
+          "anchor": {
+            "cast": "Mesohigh",
+            "occurrence": 1
+          },
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "The Blackest Night",
+                  "Intervention"
+                ],
+                "target": "Phys Range",
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Earthly Star"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Phys Range": [
+              {
+                "accept": [
+                  "Second Wind"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "searing-wind",
+          "label": "Searing Wind",
+          "anchor": {
+            "cast": "Searing Wind",
+            "occurrence": 1
+          },
+          "columns": {
+            "Sage": [
+              {
+                "accept": [
+                  "Haima"
+                ],
+                "minCount": 1
+              },
+              {
+                "reminder": "Searing Healer",
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "mesohigh-super-cyclone-2",
+          "label": "Mesohigh \u0026 Super Cyclone",
+          "anchor": {
+            "cast": "Mesohigh",
+            "occurrence": 2
+          },
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Heart of Stone",
+                  "Heart of Corundum",
+                  "The Blackest Night",
+                  "Intervention"
+                ],
+                "target": "healer",
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "reminder": "Heal yourself (Lustrate)",
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "reminder": "Heal yourself",
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "reminder": "Heal yourself",
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "reminder": "Heal yourself (Detonate Star)",
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "tank-purge",
+          "label": "Tank Purge",
+          "anchor": {
+            "cast": "Tank Purge",
+            "occurrence": 1
+          },
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 1": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Extras": [
+              {
+                "accept": [
+                  "Dismantle"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "UltimateSuppressionScenario": {
+      "mechanics": [
+        {
+          "id": "flaming-crush-stack",
+          "label": "Flaming Crush (Stack)",
+          "anchor": {
+            "cast": "Flaming Crush",
+            "occurrence": 1
+          },
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "reminder": "GCD Heal",
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "tank-purge",
+          "label": "Tank Purge",
+          "anchor": {
+            "cast": "Tank Purge",
+            "occurrence": 1
+          },
+          "columns": {
+            "Scholar": [
+              {
+                "reminder": "GCD Heal",
+                "minCount": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "PrimalRouletteScenario": {
+      "mechanics": [
+        {
+          "id": "ultima",
+          "label": "Ultima",
+          "anchor": {
+            "cast": "Ultima",
+            "occurrence": 1
+          },
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Last Bastion",
+                  "Land Waker",
+                  "Dark Force",
+                  "Gunmetal Soul"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Fey Illumination"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Physis II"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Plenary Indulgence"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Earthly Star"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 2": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Caster": [
+              {
+                "accept": [
+                  "Addle"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "aetheric-boom",
+          "label": "Aetheric Boom",
+          "anchor": {
+            "cast": "Aetheric Boom",
+            "occurrence": 1
+          },
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Shield Wall"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Assize"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Stellar Detonation"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "primal-1",
+          "label": "Primal #1",
+          "columns": {
+            "OT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Eukrasian Prognosis II",
+                  "Succor",
+                  "Concitation"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Fey Union"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Eukrasian Prognosis II",
+                  "Succor",
+                  "Concitation"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Haima"
+                ],
+                "target": "MT",
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Celestial Opposition"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Primal #1\u0022"
+        },
+        {
+          "id": "primal-2",
+          "label": "Primal #2",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Passage of Arms"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Deployment Tactics"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Zoe",
+                  "Eukrasian Prognosis II"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Assize"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Asylum"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Plenary Indulgence"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Collective Unconscious"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Phys Range": [
+              {
+                "accept": [
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Extras": [
+              {
+                "accept": [
+                  "Curing Waltz"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Nature\u0027s Minne"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Mantra"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Primal #2\u0022"
+        },
+        {
+          "id": "primal-3",
+          "label": "Primal #3",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Eukrasian Prognosis II",
+                  "Succor",
+                  "Concitation"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Eukrasian Prognosis II",
+                  "Succor",
+                  "Concitation"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Primal #3\u0022"
+        }
+      ]
     }
   }
 }

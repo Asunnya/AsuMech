@@ -9,9 +9,41 @@ namespace AnoMech.Learn.Mitigation;
 // reading each cell through the alias dictionary. Whatever it can't read stays as `unresolved`.
 public static partial class MitSheetImport
 {
-    public static MitScenario Import(string csv, CastTimeline timeline, MitAliases aliases)
+    // A tab that covers several scenarios in sections (a row holding only the section's name).
+    // Rows before the first section go to `defaultScenario`.
+    public static Dictionary<string, MitScenario> ImportSections(string csv, string defaultScenario,
+        IReadOnlyDictionary<string, string> sectionScenarios, Func<string, CastTimeline?> timelineOf, MitAliases aliases)
     {
         var rows = ParseCsv(csv);
+        var headerIndex = rows.FindIndex(r => r.Any(c => c.Trim() == "MT") && r.Any(c => c.Trim() == "OT"));
+        if (headerIndex < 0) throw new InvalidOperationException("no MT/OT header row");
+        var parts = new Dictionary<string, List<List<string>>> { [defaultScenario] = [.. rows.Take(headerIndex + 1)] };
+        var current = defaultScenario;
+        foreach (var row in rows.Skip(headerIndex + 1))
+        {
+            var filled = row.Where(c => c.Trim().Length > 0).Select(c => c.Trim()).ToList();
+            if (filled.Count == 1 && sectionScenarios.TryGetValue(filled[0], out var scenario))
+            {
+                current = scenario;
+                if (!parts.ContainsKey(current)) parts[current] = [.. rows.Take(headerIndex + 1)];
+                continue;
+            }
+            parts[current].Add(row);
+        }
+        var result = new Dictionary<string, MitScenario>();
+        foreach (var (scenario, part) in parts)
+        {
+            if (timelineOf(scenario) is not { } timeline) continue;
+            var imported = Import(part, timeline, aliases);
+            if (imported.Mechanics.Count > 0) result[scenario] = imported;
+        }
+        return result;
+    }
+
+    public static MitScenario Import(string csv, CastTimeline timeline, MitAliases aliases) => Import(ParseCsv(csv), timeline, aliases);
+
+    private static MitScenario Import(List<List<string>> rows, CastTimeline timeline, MitAliases aliases)
+    {
         var headerIndex = rows.FindIndex(r => r.Any(c => c.Trim() == "MT") && r.Any(c => c.Trim() == "OT"));
         if (headerIndex < 0) throw new InvalidOperationException("no MT/OT header row");
         var header = rows[headerIndex];
@@ -55,7 +87,7 @@ public static partial class MitSheetImport
         var numbered = NumberedLabel().Match(label);
         var explicitOccurrence = numbered.Success ? int.Parse(numbered.Groups[1].Value) : (int?)null;
         var baseLabel = NumberedLabel().Replace(label, "").Replace("(x8)", "").Replace("(x6)", "").Replace("(x7)", "").Trim();
-        var names = timeline.Names.OrderByDescending(n => n.Length).ToList();
+        var names = timeline.Names.Where(n => n.Length > 0).OrderByDescending(n => n.Length).ToList();
         var aliased = MitAliases.Default.Mechanics.Keys.FirstOrDefault(k => baseLabel.StartsWith(k, StringComparison.OrdinalIgnoreCase));
         if (aliased != null)
         {

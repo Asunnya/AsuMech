@@ -13,6 +13,13 @@ public class MitPlanValidationTests
         "Cleanses: no cast named like \"Cleanses\"",
         "Infernal Nails (Spawn): no cast named like \"Infernal Nails (Spawn)\"",
         "Rock Slide & Mountain Buster: Mountain Buster has no occurrence 3",
+        // The Ultima tab: a cutscene row, Tank Purge listed before the Predation section (the cast is Annihilation's),
+        // and the three Primal rows, whose boss order is rolled per run.
+        "Cutscene Prep (Use when Titan dies): no cast named like \"Cutscene Prep (Use when Titan dies)\"",
+        "Tank Purge: no cast named like \"Tank Purge\"",
+        "Primal #1: no cast named like \"Primal #1\"",
+        "Primal #2: no cast named like \"Primal #2\"",
+        "Primal #3: no cast named like \"Primal #3\"",
     ];
 
     [Test]

@@ -14,6 +14,7 @@ namespace AnoMech.LessonTools;
 // toolbox-import --plan <id|file.json> --zone <ZoneType> [--layout <name>] --lesson lesson.json --dump dump.json --out-plan plans/<id>.json [--write]
 // mit-timeline --scenario <TypeName> --out Timelines/<TypeName>.json         cast timeline from a headless run
 // mit-import --plan <name> --sheet-id <google id> --tabs "Garuda=UwuP1GarudaScenario,Ifrit=UwuP2IfritScenario" --out Plans/<name>.json [--csv-dir dir]
+//   a tab with sections: "The Ultima Weapon=DefaultScenario[Section A=ScenarioA;Section B=ScenarioB]"
 // skeleton-all --out <dir> [--seeds 1] [--scenario <substring>] [--force]   every catalog strat without a lesson
 internal static class Cli
 {
@@ -203,7 +204,7 @@ internal static class Cli
     private static int MitImport(Dictionary<string, string> opts)
     {
         var name = Need(opts, "plan");
-        var tabs = Need(opts, "tabs").Split(',').Select(t => t.Split('=')).ToDictionary(p => p[0].Trim(), p => p[1].Trim());
+        var tabs = Need(opts, "tabs").Split(',').Select(t => t.Split('=', 2)).ToDictionary(p => p[0].Trim(), p => p[1].Trim());
         var sheetId = opts.TryGetValue("sheet-id", out var sid) ? sid : "";
         var csvDir = opts.TryGetValue("csv-dir", out var dir) ? dir : "";
         var title = opts.TryGetValue("title", out var t) && t.Length > 0 ? t : name;
@@ -219,10 +220,22 @@ internal static class Cli
             else if (sheetId.Length > 0)
                 csv = http.GetStringAsync($"https://docs.google.com/spreadsheets/d/{sheetId}/gviz/tq?tqx=out:csv&sheet={Uri.EscapeDataString(tab)}").GetAwaiter().GetResult();
             else throw new ArgumentException($"no CSV for tab {tab}: pass --sheet-id or --csv-dir");
+            var bracket = scenarioType.IndexOf('[');
+            if (bracket > 0)
+            {
+                var defaultScenario = scenarioType[..bracket].Trim();
+                var sections = scenarioType[(bracket + 1)..].TrimEnd(']').Split(';').Select(s => s.Split('=', 2)).ToDictionary(p => p[0].Trim(), p => p[1].Trim());
+                foreach (var (scenario, imported) in MitSheetImport.ImportSections(csv, defaultScenario, sections, MitTimelines.Load, MitAliases.Default))
+                {
+                    scenarios[scenario] = imported;
+                    Console.WriteLine($"{tab} -> {scenario}: {imported.Mechanics.Count} mechanics, {imported.Mechanics.Count(m => m.Anchor != null)} anchored");
+                }
+                continue;
+            }
             var timeline = MitTimelines.Load(scenarioType) ?? throw new ArgumentException($"no embedded timeline for {scenarioType}; run mit-timeline first");
-            var scenario = MitSheetImport.Import(csv, timeline, MitAliases.Default);
-            scenarios[scenarioType] = scenario;
-            Console.WriteLine($"{tab} -> {scenarioType}: {scenario.Mechanics.Count} mechanics, {scenario.Mechanics.Count(m => m.Anchor != null)} anchored");
+            var scenario1 = MitSheetImport.Import(csv, timeline, MitAliases.Default);
+            scenarios[scenarioType] = scenario1;
+            Console.WriteLine($"{tab} -> {scenarioType}: {scenario1.Mechanics.Count} mechanics, {scenario1.Mechanics.Count(m => m.Anchor != null)} anchored");
         }
         var plan = new MitPlan(name, new MitSource(title, sheetId.Length > 0 ? $"https://docs.google.com/spreadsheets/d/{sheetId}" : "", credits, DateTime.UtcNow.ToString("yyyy-MM-dd")), scenarios);
         foreach (var u in plan.UnresolvedTexts()) Console.WriteLine($"unresolved: {u}");
