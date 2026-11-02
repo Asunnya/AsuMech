@@ -12,6 +12,7 @@ public sealed partial class AsuMainWindow
     private void DrawFeedbackButton() { }
     private void DrawRequestLink(FeedbackKind kind) { }
     private static string BestStreakText(IScenario scenario) => "";
-    private static void DrawStreak() => ImGui.TextDisabled($"Streak {Plugin.Practice.Streak}");
+    private static void DrawStreak() => ImGui.TextDisabled(StreakText());
+    private static string StreakText() => $"streak {Plugin.Practice.Streak}";
     private void DrawLearn(Game game, IScenario scenario, bool inSession) => Muted("Learn mode is not built yet.");
 }

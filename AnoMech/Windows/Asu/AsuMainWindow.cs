@@ -22,6 +22,8 @@ public sealed partial class AsuMainWindow : Window, IDisposable, IPanelHost
 
     private bool showMultiplayerSetup;
     private bool wasInSession;
+    // Last frame's content height: the window is as tall as what it shows, width stays the player's.
+    private float contentHeight;
 
     public AsuMainWindow(Plugin plugin) : base("AsuMech###AsuMainWindow")
     {
@@ -31,6 +33,8 @@ public sealed partial class AsuMainWindow : Window, IDisposable, IPanelHost
         Size = new Vector2(DefaultWidthPx, 0f);
         SizeCondition = ImGuiCond.FirstUseEver;
         IsOpen = false;
+        Plugin.Game.RunStarted += OnRunStarted;
+        Plugin.Game.RunFinished += OnRunFinished;
     }
 
     private ScenarioPicker Picker => plugin.Picker;
@@ -42,7 +46,11 @@ public sealed partial class AsuMainWindow : Window, IDisposable, IPanelHost
     public Vector2 RightPanelAnchor { get; private set; }
     public float ScenarioPanelHeight { get; private set; }
 
-    public void Dispose() { }
+    public void Dispose()
+    {
+        Plugin.Game.RunStarted -= OnRunStarted;
+        Plugin.Game.RunFinished -= OnRunFinished;
+    }
 
     internal void OpenMultiplayer()
     {
@@ -71,10 +79,11 @@ public sealed partial class AsuMainWindow : Window, IDisposable, IPanelHost
     {
         theme = AsuTheme.Push();
         var scale = ImGuiHelpers.GlobalScale;
+        var height = contentHeight > 0f ? contentHeight : 0f;
         SizeConstraints = new WindowSizeConstraints
         {
-            MinimumSize = new Vector2(MinWidthPx, 0f) * scale,
-            MaximumSize = new Vector2(float.MaxValue, float.MaxValue),
+            MinimumSize = new Vector2(MinWidthPx, height / scale),
+            MaximumSize = new Vector2(float.MaxValue, contentHeight > 0f ? height / scale : float.MaxValue),
         };
     }
 
@@ -85,6 +94,12 @@ public sealed partial class AsuMainWindow : Window, IDisposable, IPanelHost
     }
 
     public override void Draw()
+    {
+        DrawContent();
+        contentHeight = ImGui.GetCursorPosY() + ImGui.GetStyle().WindowPadding.Y - ImGui.GetStyle().ItemSpacing.Y;
+    }
+
+    private void DrawContent()
     {
         var pos = ImGui.GetWindowPos();
         var size = ImGui.GetWindowSize();
@@ -101,6 +116,13 @@ public sealed partial class AsuMainWindow : Window, IDisposable, IPanelHost
         var inSession = RunState.InSession;
         Picker.Reconcile(inSession, RunState.IsGuest);
         if (inSession) game.EventTimeScale = 1f;
+        if (!RunState.Active) expandedDuringRun = false;
+
+        if (ShowRunStrip)
+        {
+            DrawRunStrip(game, inSession);
+            return;
+        }
 
         DrawTitleRow(game);
         if (inSession)
