@@ -9,8 +9,9 @@ namespace AnoMech.Scenarios.Ucob;
 public sealed class UcobZone : IZone
 {
     public static readonly UcobZone Instance = new();
-    // UNVERIFIED: P1's weather and track are borrowed from P5.
+    // UNVERIFIED: P1 and P2's weather and track are borrowed from P5.
     public static readonly Phase P1 = new(Instance, "P1", 32, 499);
+    public static readonly Phase P2 = new(Instance, "P2", 32, 499);
     public static readonly Phase P5 = new(Instance, "P5", 32, 499,
         init: world =>
         {

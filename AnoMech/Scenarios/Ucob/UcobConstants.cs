@@ -47,6 +47,12 @@ public class UcobConstants
         public const uint Dummy = 9020;
         public const uint Twintania = 8159;
         public const uint Oviform = 8160;
+        public const uint NaelDeusDarnus = 8161;
+        public const uint Firehorn = 8163;
+        public const uint Iceclaw = 8164;
+        public const uint Thunderwing = 8165;
+        public const uint TailOfDarkness = 8166;
+        public const uint FangOfLight = 8167;
         public const uint BahamutPrime = 0x1FE8;
         // The fight's generic invisible caster (x42 in the instance): AOE source for
         // everything the boss doesn't cast from its own body.
@@ -56,6 +62,12 @@ public class UcobConstants
     {
         public const uint Twintania = 1482;
         public const uint Oviform = 2210;
+        public const uint NaelDeusDarnus = 2612;
+        public const uint Firehorn = 2630;
+        public const uint Iceclaw = 2631;
+        public const uint Thunderwing = 2632;
+        public const uint FangOfLight = 6957;
+        public const uint TailOfDarkness = 6958;
         public const uint BahamutPrime = 3210;
     }
 
@@ -67,7 +79,13 @@ public class UcobConstants
         public const ushort TwintaniaNeurolink = 0x273;
         public const ushort SlashingResistanceDownII = 0x4F8;
         public const ushort ManaHypersensitivity = 0x59A;
+        public const ushort Doom = 0xD2;
+        public const ushort Firescorched = 0x1D0;
+        public const ushort Icebitten = 0x1D1;
+        public const ushort Thunderstruck = 0x1D2;
     }
+
+    public const uint HeavensfallKnockback = 115;
 
     public class LockonId
     {
@@ -80,6 +98,12 @@ public class UcobConstants
         public const uint LiquidHell = 2001150;
         public const uint Neurolink = 2001151;
         public const uint Twister = 2001168;
+        public const uint WingsOfSalvationCleanse = 2003412;
+    }
+
+    public class TetherId
+    {
+        public const ushort Fireball = 5;
     }
 
     // Lohs Daih is a Transfiguration status: its param is the Transformation row the boss
@@ -98,6 +122,23 @@ public class UcobConstants
         public const uint Generate = 0x26AE;
         public const uint Hatch = 0x26AF;
         public const uint DeepHatch = 0x26B0;
+        public const uint BahamutsClaw = 0x26B5;
+        public const uint Ravensbeak = 0x26B6;
+        public const uint Heavensfall = 0x26B8;
+        public const uint ThermionicBurst = 0x26B9;
+        public const uint IronChariot = 0x26BB;
+        public const uint LunarDynamo = 0x26BC;
+        public const uint ThermionicBeam = 0x26BD;
+        public const uint RavenDive = 0x26BE;
+        public const uint MeteorStream = 0x26C0;
+        public const uint DalamudDive = 0x26C1;
+        public const uint BahamutsFavor = 0x26C2;
+        public const uint DragonFireball = 0x26C5;
+        public const uint Iceball = 0x26C6;
+        public const uint ChainLightning = 0x26C7;
+        public const uint ChainLightningSplash = 0x26C8;
+        public const uint Deathstorm = 0x26C9;
+        public const uint WingsOfSalvation = 0x26CA;
         public const uint Exaflare = 9967;       // 0x26EF, boss-body cast, no AOE of its own
         public const uint ExaflareFirst = 9968;  // 0x26F0, helper, 4.0s cast, arrow omen, 6y circle
         public const uint ExaflareRest = 9969;   // 0x26F1, helper, instant, 6y circle
