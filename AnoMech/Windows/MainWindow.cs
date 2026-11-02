@@ -52,47 +52,11 @@ public unsafe class MainWindow : Window, IDisposable
     internal float ScenarioPanelHeight { get; private set; }
     internal bool IsActuallyCollapsed { get; private set; }
     private float _windowChromeHeight;
-    internal IScenario? SelectedScenario => _selectedScenario;
-    private IScenario? _selectedScenario;
+    private ScenarioPicker Picker => plugin.Picker;
+    private IScenario? _selectedScenario => Picker.Scenario;
+    internal IScenario? SelectedScenario => Picker.Scenario;
+    internal ScenarioSelection? Selection => Picker.Selection;
 
-    internal ScenarioSelection? Selection => _selectedScenario is { } scenario
-        ? new ScenarioSelection(scenario, HasStartableStrat() ? _selectedStrat : null, _selectedWaymark, SelectedSeed, _roleOverride)
-        : null;
-
-    private PartyRole? _roleOverride;
-    private bool _soloMode;
-
-    // Index into the selected scenario's AiStrats; reset to the first strat whenever the
-    // selected scenario changes. -1 when a grouped scenario's selected region has no strats
-    // (Start is then gated off).
-    private int _selectedStrat;
-
-    // Index into the selected zone's WaymarkPresets. Remembered per zone so switching between
-    // scenarios in the same encounter keeps the chosen layout.
-    private int _selectedWaymark;
-    private readonly Dictionary<IZone, int> _waymarkMemory = new();
-
-    // Seed for the next Start: empty rolls a fresh one each time, a number replays it every time.
-#if DEBUG
-    private int? SelectedSeed => int.TryParse(_seedText.Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var seed) ? seed : null;
-    private string _seedText = "";
-#else
-    private int? SelectedSeed => null;
-#endif
-
-    // The region/group label currently selected in the strat picker, for scenarios that
-    // declare StratGroups. Null until a grouped scenario is drawn (then it snaps to the
-    // first group); stays null for ungrouped scenarios. Filters AiStrats under the buttons.
-    private string? _selectedStratGroup;
-
-    // The last region picked per grouped scenario, restored on a switch back to it.
-    private readonly Dictionary<IScenario, string> _stratGroupMemory = new();
-
-    // Index 0 = Auto (null override); indices 1..8 map to (PartyRole)(idx - 1).
-    // Labels are the canonical raid role abbreviations: MT/OT tanks, H1/H2 healers
-    // (H1 = regen), M1/M2 melee DPS, R1/R2 ranged DPS (R1 = phys).
-    private static readonly string[] RoleLabels =
-        ["Auto", "MT", "OT", "H1", "H2", "M1", "M2", "R1", "R2"];
 
 #if DEBUG
     private readonly DebugMenu debugMenu;
@@ -202,7 +166,8 @@ public unsafe class MainWindow : Window, IDisposable
     private void FollowHostScenario()
     {
         if (!IsGuest || Plugin.Multiplayer.TryResolveScenario() is not { } hostScenario) return;
-        if (_selectedScenario != hostScenario) SelectScenario(hostScenario, persist: false);
+        Picker.FollowHost(hostScenario);
+        _openZone = hostScenario.Phase.Zone;
     }
 
     // The window is collapsible while a scenario runs, and expands again when the run ends.
@@ -433,54 +398,19 @@ public unsafe class MainWindow : Window, IDisposable
 
     private void RestoreSelectedScenario()
     {
-        if (string.IsNullOrEmpty(Plugin.Config.LastSelectedScenario)) return;
-        foreach (var scenario in Plugin.Game.Catalog.Scenarios)
-        {
-            if (!string.Equals(
-                    scenario.FullName(),
-                    Plugin.Config.LastSelectedScenario,
-                    StringComparison.Ordinal))
-                continue;
-            SelectScenario(scenario, persist: false);
-            return;
-        }
+        if (Picker.Restore(Plugin.Config.LastSelectedScenario, Plugin.Game.Catalog.Scenarios))
+            _openZone = Picker.Scenario!.Phase.Zone;
     }
 
-    // Select a scenario and reset its per-scenario UI state (strat, waymark, remembered region).
-    private void SelectScenario(IScenario scenario, bool persist = true)
+    private void SelectScenario(IScenario scenario)
     {
-        if (_selectedScenario is { } previousScenario)
-            _waymarkMemory[previousScenario.Phase.Zone] = _selectedWaymark;
-
-        _selectedScenario = scenario;
+        Picker.Select(scenario);
         _openZone = scenario.Phase.Zone;
         _pendingCategoryTab = scenario.Phase.Zone.Category;
-        _soloMode = false;
-        _selectedStrat = 0;
-        _selectedWaymark = _waymarkMemory.GetValueOrDefault(scenario.Phase.Zone);
-        if (_selectedWaymark < 0 || _selectedWaymark >= scenario.Phase.Zone.WaymarkPresets.Count)
-            _selectedWaymark = 0;
-        // Restore the last region picked for this scenario; ReconcileStrat snaps null to its first region.
-        _selectedStratGroup = _stratGroupMemory.GetValueOrDefault(scenario);
-        ReconcileStrat();
-
-        if (persist)
-        {
-            Plugin.Config.LastSelectedScenario = scenario.FullName();
-            Plugin.Config.Save();
-        }
     }
 
     private const string MpDisabledReason = "Disabled in a multiplayer session.";
 
-    // Distinct, ordered region labels from the strats' IScenarioAi.Group; empty = ungrouped.
-    private static IReadOnlyList<string> StratGroups(IScenario scenario)
-    {
-        var groups = new List<string>();
-        foreach (var ai in scenario.AiStrats)
-            if (ai.Group is { } g && !groups.Contains(g)) groups.Add(g);
-        return groups;
-    }
 
     private void DrawMainContent()
     {
@@ -497,7 +427,7 @@ public unsafe class MainWindow : Window, IDisposable
 
         var game = Plugin.Game;
         var mpGuest = IsGuest;
-        ReconcileSetup(inSession, mpGuest);
+        Picker.Reconcile(inSession, mpGuest);
         if (inSession) game.EventTimeScale = 1f;
 
         DrawScenarioHeader(game);
@@ -515,33 +445,25 @@ public unsafe class MainWindow : Window, IDisposable
     // Every frame, Setup expanded or not: both Start buttons read these.
     // In a session the role comes from the Party panel seat, and only the host's region/strat
     // is broadcast and run; each is reset, not just disabled, so a stale pick can't apply.
-    private void ReconcileSetup(bool mpConnected, bool mpGuest)
-    {
-        if (mpConnected) _roleOverride = null;
-        if (mpGuest)
-        {
-            _selectedStrat = 0;
-            _selectedStratGroup = null;
-        }
-        ReconcileStrat();
-    }
 
 #if DEBUG
     private void DrawSeedControl()
     {
         ImGui.SetNextItemWidth(120f * ImGuiHelpers.GlobalScale);
-        ImGui.InputTextWithHint("Seed##run-seed", "random", ref _seedText, 16, ImGuiInputTextFlags.CharsDecimal);
-        if (_seedText.Length > 0)
+        var seedText = Picker.SeedText;
+        if (ImGui.InputTextWithHint("Seed##run-seed", "random", ref seedText, 16, ImGuiInputTextFlags.CharsDecimal))
+            Picker.SeedText = seedText;
+        if (seedText.Length > 0)
         {
             ImGui.SameLine();
-            if (ImGui.SmallButton("Clear##run-seed")) _seedText = "";
+            if (ImGui.SmallButton("Clear##run-seed")) Picker.SeedText = "";
         }
 
         // The world keeps its last run's Rng until the next start reseeds it.
         var lastText = Plugin.Game.World.Rng.Seed.ToString(CultureInfo.InvariantCulture);
         ImGui.TextUnformatted($"Last seed: {lastText}");
         ImGui.SameLine();
-        if (ImGui.SmallButton("Reuse##last-seed")) _seedText = lastText;
+        if (ImGui.SmallButton("Reuse##last-seed")) Picker.SeedText = lastText;
         ImGui.SameLine();
         if (ImGui.SmallButton("Copy##last-seed")) ImGui.SetClipboardText(lastText);
         ImGui.Separator();
@@ -574,56 +496,17 @@ public unsafe class MainWindow : Window, IDisposable
     }
 #endif
 
-    // _selectedStrat stays an absolute index into AiStrats (what RunScenario consumes): for a
-    // grouped scenario, a strat of the selected region (its first when the pick isn't in it, -1
-    // when it has none); otherwise in range.
-    private void ReconcileStrat()
-    {
-        if (_selectedScenario is not { } scenario) return;
-        var strats = scenario.AiStrats;
-        var groups = StratGroups(scenario);
-        if (groups.Count == 0)
-        {
-            if (strats.Count > 1) _selectedStrat = Math.Clamp(_selectedStrat, 0, strats.Count - 1);
-            return;
-        }
-        if (!GroupsContain(groups, _selectedStratGroup)) _selectedStratGroup = groups[0];
-        var inRegion = RegionStrats(strats);
-        if (inRegion.Count == 0) _selectedStrat = -1;
-        else if (!inRegion.Contains(_selectedStrat)) _selectedStrat = inRegion[0];
-    }
-
-    private List<int> RegionStrats(IReadOnlyList<IScenarioAi> strats)
-    {
-        var inRegion = new List<int>();
-        for (var i = 0; i < strats.Count; i++)
-            if (strats[i].Group == _selectedStratGroup) inRegion.Add(i);
-        return inRegion;
-    }
-
-    // Mirrors the visibility rules of DrawStratSelector and DrawWaymarkSelector.
-    private static bool HasStratChoice(IScenario scenario) =>
-        StratGroups(scenario).Count > 0 || scenario.AiStrats.Count > 1;
-
-    private static bool HasWaymarkChoice(IScenario scenario) =>
-        scenario.Phase.Zone.WaymarkPresets.Count > 1;
 
     private void DrawSections(IScenario scenario, bool inSession, bool mpGuest)
     {
         // In a session the seat comes from the Party panel, so Setup can be left with nothing.
-        var hasSetup = !inSession || HasStratChoice(scenario) || HasWaymarkChoice(scenario);
+        var hasSetup = !inSession || ScenarioPicker.HasStratChoice(scenario) || ScenarioPicker.HasWaymarkChoice(scenario);
         if (hasSetup)
         {
             if (ImGui.TreeNodeEx("Setup###scenario-setup-v3",
                     ImGuiTreeNodeFlags.DefaultOpen | ImGuiTreeNodeFlags.FramePadding))
             {
-                if (SettingsGrid.Begin("##scenario-setup-grid"))
-                {
-                    if (!inSession) DrawRoleSelector();
-                    DrawStratSelector(mpGuest);
-                    DrawWaymarkSelector();
-                    SettingsGrid.End();
-                }
+                ScenarioSetupUi.DrawSetupGrid(Picker, inSession, mpGuest);
                 ImGui.TreePop();
             }
             ImGui.Spacing();
@@ -821,7 +704,7 @@ public unsafe class MainWindow : Window, IDisposable
 #endif
     }
 
-    private bool SoloSelected => _selectedScenario is { SupportsSolo: true } && _soloMode;
+    private bool SoloSelected => _selectedScenario is { SupportsSolo: true } && Picker.Solo;
 
     // A start replaces whatever run is standing, so it needs no Stop first.
     private void DrawStartButton(AnoMech.Core.Game.Game game, Vector2 size)
@@ -899,7 +782,8 @@ public unsafe class MainWindow : Window, IDisposable
         if (!_selectedScenario!.SupportsSolo) return;
         var running = RunLive(game);
         ImGui.BeginDisabled(running);
-        ImGui.Checkbox("Solo", ref _soloMode);
+        var solo = Picker.Solo;
+        if (ImGui.Checkbox("Solo", ref solo)) Picker.Solo = solo;
         ImGui.EndDisabled();
         if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
             ImGui.SetTooltip(running
@@ -948,117 +832,6 @@ public unsafe class MainWindow : Window, IDisposable
         ImGui.TextDisabled($"Streak: {practice.Streak}");
     }
 
-    // Drawn below the strat picker for scenarios that declare WaymarkPresets. _selectedWaymark
-    // is the index passed to RunScenario on Start; changing it while a scenario is loaded
-    // re-places the markers immediately (same live-feedback loop as the position readout).
-    private void DrawWaymarkSelector()
-    {
-        if (_selectedScenario is null) return;
-        var presets = _selectedScenario.Phase.Zone.WaymarkPresets;
-        if (presets.Count <= 1) return;
-        if (_selectedWaymark < 0 || _selectedWaymark >= presets.Count) _selectedWaymark = 0;
-
-        var labels = new string[presets.Count];
-        for (var i = 0; i < presets.Count; i++) labels[i] = presets[i].Name;
-
-        SettingsGrid.Row("Waymarks:");
-        ImGui.SetNextItemWidth(SetupDropdownWidth * ImGuiHelpers.GlobalScale);
-        if (ImGui.Combo("##waymarks", ref _selectedWaymark, labels, labels.Length))
-        {
-            _waymarkMemory[_selectedScenario.Phase.Zone] = _selectedWaymark;
-            if (Plugin.Game.World.Map.IsInInstance)
-                Plugin.Game.World.PlaceWaymarks(presets[_selectedWaymark].Markers);
-        }
-    }
-
-    private void DrawRoleSelector()
-    {
-        var idx = _roleOverride is { } role ? (int)role + 1 : 0;
-        SettingsGrid.Row("Role:");
-        ImGui.SetNextItemWidth(SetupDropdownWidth * ImGuiHelpers.GlobalScale);
-        if (ImGui.Combo("##role", ref idx, RoleLabels, RoleLabels.Length))
-            _roleOverride = idx == 0 ? null : (PartyRole)(idx - 1);
-    }
-
-    // Only meaningful when a scenario offers more than one strat; hidden otherwise.
-    // When the scenario declares StratGroups, a region-button row is drawn above the
-    // dropdown and the dropdown is filtered to the selected region.
-    private void DrawStratSelector(bool mpGuest)
-    {
-        if (_selectedScenario is null) return;
-        var strats = _selectedScenario.AiStrats;
-        var groups = StratGroups(_selectedScenario);
-        if (groups.Count == 0 && strats.Count <= 1) return;
-        ImGui.BeginDisabled(mpGuest);
-        if (groups.Count > 0)
-            DrawGroupedStratSelector(strats, groups);
-        else
-        {
-            var labels = new string[strats.Count];
-            for (var i = 0; i < strats.Count; i++) labels[i] = strats[i].Name;
-            SettingsGrid.Row("Strategy:");
-            ImGui.SetNextItemWidth(SetupDropdownWidth * ImGuiHelpers.GlobalScale);
-            ImGui.Combo("##strat", ref _selectedStrat, labels, labels.Length);
-        }
-        ImGui.EndDisabled();
-        if (mpGuest && ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
-            ImGui.SetTooltip("Only the host's selection is used in multiplayer.");
-    }
-
-    // Region buttons + a region-filtered strat dropdown, over the pick ReconcileStrat keeps valid.
-    private void DrawGroupedStratSelector(IReadOnlyList<IScenarioAi> strats, IReadOnlyList<string> groups)
-    {
-        SettingsGrid.Row("Region:");
-        for (var i = 0; i < groups.Count; i++)
-        {
-            if (i > 0) ImGui.SameLine();
-            var group = groups[i];
-            var selected = _selectedStratGroup == group;
-            if (selected) ImGui.PushStyleColor(ImGuiCol.Button, ImGui.GetColorU32(ImGuiCol.ButtonActive));
-            ImGui.PushID($"region{i}");
-            if (ImGui.Button(group))
-            {
-                _selectedStratGroup = group;
-                _stratGroupMemory[_selectedScenario!] = group; // remember across scenario switches
-                ReconcileStrat();
-            }
-            ImGui.PopID();
-            if (selected) ImGui.PopStyleColor();
-        }
-
-        var filtered = RegionStrats(strats);
-        SettingsGrid.Row("Strategy:");
-        if (filtered.Count == 0)
-        {
-            ImGui.TextDisabled("(no strats for this region yet)");
-            return;
-        }
-
-        var localIdx = filtered.IndexOf(_selectedStrat);
-        var labels = new string[filtered.Count];
-        for (var i = 0; i < filtered.Count; i++) labels[i] = strats[filtered[i]].Name;
-        ImGui.SetNextItemWidth(SetupDropdownWidth * ImGuiHelpers.GlobalScale);
-        if (ImGui.Combo("##strat", ref localIdx, labels, labels.Length))
-            _selectedStrat = filtered[localIdx];
-    }
-
-    // Grouped scenarios need a real strat in the active region.
-    private bool HasStartableStrat()
-    {
-        if (_selectedScenario is not { } scenario) return false;
-        if (StratGroups(scenario).Count == 0) return true;
-        var strats = scenario.AiStrats;
-        return _selectedStrat >= 0 && _selectedStrat < strats.Count
-            && strats[_selectedStrat].Group == _selectedStratGroup;
-    }
-
-    private static bool GroupsContain(IReadOnlyList<string> groups, string? group)
-    {
-        if (group is null) return false;
-        for (var i = 0; i < groups.Count; i++)
-            if (groups[i] == group) return true;
-        return false;
-    }
 
     private void DrawLocationHint()
     {

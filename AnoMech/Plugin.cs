@@ -9,6 +9,7 @@ using AnoMech.Core.Native.Implementations.Interop;
 using AnoMech.Core.Native.Implementations.Pointers;
 using AnoMech.Core.Native.Interfaces;
 using AnoMech.Multiplayer;
+using AnoMech.Scenarios;
 using AnoMech.Windows;
 using AnoMech.Windows.Asu;
 using Dalamud.Game.Command;
@@ -54,6 +55,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
     internal static PracticeLoop Practice { get; private set; } = null!;
     internal static MultiplayerManager Multiplayer { get; private set; } = null!;
     internal RunController Runs { get; private set; } = null!;
+    internal ScenarioPicker Picker { get; private set; } = null!;
 
     private readonly WindowSystem windowSystem = new("AnoMech");
 
@@ -89,6 +91,11 @@ public sealed class Plugin : IAsyncDalamudPlugin
             Multiplayer = new MultiplayerManager();
             Runs = new RunController(Game, Multiplayer);
             if (Config.EnableUserActions) Natives.UserActions.Enable();
+            Picker = new ScenarioPicker(scenario =>
+            {
+                Config.LastSelectedScenario = scenario.FullName();
+                Config.Save();
+            });
             ConfigWindow = new ConfigWindow(this);
             MainWindow = new MainWindow(this);
             AsuMainWindow = new AsuMainWindow(this);
@@ -288,8 +295,8 @@ public sealed class Plugin : IAsyncDalamudPlugin
             // selected whether or not its window is open.
             if (Multiplayer.SessionCode != null)
             {
-                Multiplayer.PublishSelectedScenario(MainWindow.SelectedScenario);
-                Multiplayer.PublishScenarioSettings(MainWindow.SelectedScenario);
+                Multiplayer.PublishSelectedScenario(Picker.Scenario);
+                Multiplayer.PublishScenarioSettings(Picker.Scenario);
             }
             Multiplayer.Tick(fw->FrameDeltaTime);
         }
@@ -339,10 +346,10 @@ public sealed class Plugin : IAsyncDalamudPlugin
                 MainWindow.OpenMultiplayer();
                 break;
             case "start":
-                Runs.Start(MainWindow.Selection, solo: false);
+                Runs.Start(Picker.Selection, solo: false);
                 break;
             case "start solo":
-                Runs.Start(MainWindow.Selection, solo: true);
+                Runs.Start(Picker.Selection, solo: true);
                 break;
             case "reset":
                 Runs.Reset();
