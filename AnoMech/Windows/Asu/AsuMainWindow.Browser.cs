@@ -8,6 +8,7 @@ namespace AnoMech.Windows.Asu;
 public sealed partial class AsuMainWindow
 {
     private const float UnknownDurationSeconds = 60f;
+    private float detailRightWidth;
     private static readonly string[] TypeLabels = ["All", CatalogView.Ultimate, CatalogView.Savage];
     private static readonly Dictionary<string, string> GroupShortLabels = new()
     {
@@ -94,10 +95,11 @@ public sealed partial class AsuMainWindow
 
         var practice = Plugin.Practice;
         if (inSession) practice.AutoRestart = false;
-        var style = ImGui.GetStyle();
-        var width = ImGui.CalcTextSize("Single").X + ImGui.CalcTextSize("Loop").X + ImGui.CalcTextSize("Run to end").X
-                    + style.FramePadding.X * 6 + style.ItemSpacing.X;
-        ImGui.SameLine(ImGui.GetWindowContentRegionMax().X - width);
+        if (detailRightWidth > 0f)
+            ImGui.SameLine(ImGui.GetWindowContentRegionMax().X - detailRightWidth);
+        else
+            ImGui.SameLine();
+        ImGui.BeginGroup();
         ImGui.BeginDisabled(inSession);
         bool single, loop;
         using (!practice.AutoRestart ? AsuTheme.PushAccentButton() : null)
@@ -118,6 +120,8 @@ public sealed partial class AsuMainWindow
         ImGui.EndDisabled();
         if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
             ImGui.SetTooltip("Needs scenario chaining in the engine.");
+        ImGui.EndGroup();
+        detailRightWidth = ImGui.GetItemRectSize().X;
     }
 
     private static string FormatTime(float seconds) => $"{(int)seconds / 60}:{(int)seconds % 60:00}";

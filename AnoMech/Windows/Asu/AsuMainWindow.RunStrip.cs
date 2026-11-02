@@ -21,6 +21,7 @@ public sealed partial class AsuMainWindow
     private DateTime runStartedAt;
     private TimeSpan runElapsed;
     private bool expandedDuringRun;
+    private float stripRightWidth;
     private readonly HashSet<IScenario> clearedThisSession = [];
 
     private void OnRunStarted(RunScenarioParams p, bool local)
@@ -56,9 +57,11 @@ public sealed partial class AsuMainWindow
         Muted($"{label} · {runElapsed:mm\\:ss} · {StreakText()}{(Plugin.Practice.AutoRestart ? " · loop" : "")}{(watch != null ? " · watching" : "")}");
 
         var size = new Vector2(StripButtonPx * ImGuiHelpers.GlobalScale, 0f);
-        var style = ImGui.GetStyle();
-        var buttons = (inSession ? 1 : 2) * (size.X + style.ItemSpacing.X) + ImGui.GetFrameHeight();
-        ImGui.SameLine(ImGui.GetWindowContentRegionMax().X - buttons);
+        if (stripRightWidth > 0f)
+            ImGui.SameLine(ImGui.GetWindowContentRegionMax().X - stripRightWidth);
+        else
+            ImGui.SameLine();
+        ImGui.BeginGroup();
         if (!inSession)
         {
             bool restart;
@@ -78,6 +81,8 @@ public sealed partial class AsuMainWindow
         ImGui.SameLine();
         if (ImGuiComponents.IconButton("expand", FontAwesomeIcon.Expand)) expandedDuringRun = true;
         if (ImGui.IsItemHovered()) ImGui.SetTooltip("Show the full window");
+        ImGui.EndGroup();
+        stripRightWidth = ImGui.GetItemRectSize().X;
 
         if (scenario != null) DrawSegments(scenario);
         if (failed && run!.Issues.Count > 0)

@@ -10,6 +10,8 @@ public sealed partial class AsuMainWindow
     private enum Mode { Practice, Learn }
 
     private Mode mode = Mode.Practice;
+    // Measured after drawing, used next frame: icon buttons are wider than a frame is tall.
+    private float titleRightWidth;
 
     private void DrawTitleRow(Game game)
     {
@@ -27,12 +29,11 @@ public sealed partial class AsuMainWindow
             ImGui.EndTooltip();
         }
 
-        var style = ImGui.GetStyle();
-        var iconWidth = ImGui.GetFrameHeight();
-        var switchWidth = ImGui.CalcTextSize("Practice").X + ImGui.CalcTextSize("Learn").X + style.FramePadding.X * 4 + style.ItemSpacing.X;
-        var rightWidth = switchWidth + (iconWidth + style.ItemSpacing.X) * 3;
-        ImGui.SameLine(ImGui.GetWindowContentRegionMax().X - rightWidth);
-
+        if (titleRightWidth > 0f)
+            ImGui.SameLine(ImGui.GetWindowContentRegionMax().X - titleRightWidth);
+        else
+            ImGui.SameLine();
+        ImGui.BeginGroup();
         if (ModeButton("Practice", mode == Mode.Practice)) mode = Mode.Practice;
         ImGui.SameLine(0f, 0f);
         if (ModeButton("Learn", mode == Mode.Learn)) mode = Mode.Learn;
@@ -48,6 +49,8 @@ public sealed partial class AsuMainWindow
         ImGui.EndDisabled();
         if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
             ImGui.SetTooltip(Plugin.Game.World.Map.IsInInstance ? "Leave the instance first." : "Close");
+        ImGui.EndGroup();
+        titleRightWidth = ImGui.GetItemRectSize().X;
         ImGui.Separator();
     }
 
