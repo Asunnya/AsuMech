@@ -53,6 +53,9 @@ public sealed partial class SimWorld : ISimObject, IDisposable
     }
 
     // This run's independent stream for one consumer, created on first use.
+    // Hears the strat's orders to the player's slot (Learn). Null outside a lesson.
+    public Game.Ai.IPlayerGuidanceSink? Guidance { get; set; }
+
     public Rng Stream(string name)
     {
         if (!streams.TryGetValue(name, out var stream))

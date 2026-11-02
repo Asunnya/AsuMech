@@ -45,7 +45,9 @@ public sealed class AiManager
                 if (move[i] is not { } local) continue;
                 var member = world.Party.Get(i);
                 if (member == null || !member.IsAlive()) continue;
-                var target = Jitter(new Vector3(local.X, 0f, local.Y), jitter);
+                // The player's slot gets the exact spot: a lesson shows it, and nobody else walks it.
+                var isPlayer = ReferenceEquals(member, world.Party.Player);
+                var target = isPlayer ? new Vector3(local.X, 0f, local.Y) : Jitter(new Vector3(local.X, 0f, local.Y), jitter);
                 var partyMember = member as ISimPartyMember;
                 var role = partyMember?.Role.ToString() ?? $"slot{i}";
                 var dist = Vector2.Distance(new Vector2(member.Position.X, member.Position.Z), new Vector2(target.X, target.Z));
@@ -53,6 +55,8 @@ public sealed class AiManager
                     ? PlanArrival(dist, arrival - time - MoveDeadlineSafetyMargin)
                     : (sprint, 0f);
                 var speed = sprinting ? SprintSpeed : RunSpeed;
+                if (isPlayer && world.Guidance is { } sink && partyMember is { } seat)
+                    sink.OnMove(new GuidanceOrder(GuidanceKey.Of(positions, time, $"{System.IO.Path.GetFileName(file)}:{line}"), seat.Role, target, world.Events.Elapsed, arrivalTime, sprinting));
 
                 if (sprinting) partyMember?.UseSprint(dist / SprintSpeed + 1f);
                 // `for`: the spot before the jitter, which each client rolls on its own stream.
