@@ -2,7 +2,9 @@ using System;
 using System.Linq;
 using System.Numerics;
 using AnoMech.Core.Game;
+using AnoMech.Learn;
 using AnoMech.Scenarios;
+using AnoMech.Windows.Learn;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility;
 using Dalamud.Utility;
@@ -24,11 +26,23 @@ public sealed partial class AsuMainWindow
         if (watch.Ended) watch = null;
     }
 
+    // Every way a run stops by hand also ends a watch or a lesson.
     private void EndWatch()
     {
         watch?.Dispose();
         watch = null;
+        LearnSession.Current?.Dispose();
     }
+
+    private LearnLevel learnLevel = LearnLevel.Guided;
+
+    private static readonly (LearnLevel Level, string Label, string Tip)[] Levels =
+    [
+        (LearnLevel.Observe, "Observe", "The strat plays your seat at half speed while the lesson text follows along."),
+        (LearnLevel.Guided, "Guided", "Your target is drawn on the ground; the fight slows down until you get there."),
+        (LearnLevel.Assisted, "Assisted", "Not built yet: hints that appear later each time you get a step right."),
+        (LearnLevel.Exam, "Exam", "Nothing on screen; the report comes at the end."),
+    ];
 
     private void DrawLearn(Game game, IScenario scenario, bool inSession)
     {
@@ -39,49 +53,65 @@ public sealed partial class AsuMainWindow
             DrawRolePill();
         }
 
-        var why = WatchRefusal(scenario, inSession);
+        var lesson = Picker.SelectedAi is { } ai ? LessonLoader.For(scenario, ai) : null;
+        foreach (var (level, label, tip) in Levels)
+        {
+            if (level != LearnLevel.Observe) ImGui.SameLine(0f, 0f);
+            var available = level != LearnLevel.Assisted;
+            bool clicked;
+            using (learnLevel == level ? AsuTheme.PushAccentButton() : null)
+            {
+                ImGui.BeginDisabled(!available);
+                clicked = ImGui.SmallButton($"{label}##level");
+                ImGui.EndDisabled();
+            }
+            if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled)) ImGui.SetTooltip(tip);
+            if (clicked) learnLevel = level;
+        }
+
+        var why = LearnRefusal(scenario, lesson, inSession);
+        ImGui.SameLine();
         ImGui.BeginDisabled(why != null);
-        bool clicked;
+        bool start;
         using (AsuTheme.PushAccentButton())
-            clicked = ImGui.Button(watch != null ? "◉ Watching…##watch" : "◉ Watch##watch");
+            start = ImGui.Button(LearnSession.Current is { Ended: false } ? "◉ Learning…##learn" : "◉ Start lesson##learn");
         ImGui.EndDisabled();
         if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
-            ImGui.SetTooltip(why ?? $"Bots play your seat at {WatchSession.WatchSpeed}× speed. Watch clears don't count toward streaks.");
-        ImGui.SameLine();
-        Muted($"Speed {WatchSession.WatchSpeed}×");
-        if (clicked) StartWatch();
+            ImGui.SetTooltip(why ?? (learnLevel == LearnLevel.Exam ? "Counts toward your streak." : "Doesn't count toward your streak."));
+        if (start) StartLesson(scenario, lesson);
 
         DrawArenaPreview(scenario);
         ImGui.SameLine();
         ImGui.BeginGroup();
-        if (LearnContent.For(scenario) is { } entry)
+        if (lesson is { } l)
         {
-            ImGui.TextWrapped(entry.Notes);
-            foreach (var (label, url) in entry.Links)
-                if (ImGui.SmallButton($"{label} ↗")) Util.OpenLink(url);
+            Muted($"{l.Steps.Count} steps · sources:");
+            foreach (var source in l.Sources)
+                if (ImGui.SmallButton($"{source.Label} ↗##{source.Url}")) Util.OpenLink(source.Url);
         }
         else
         {
-            Muted("Notes and guide links: not written yet.");
+            Muted(Picker.SelectedAi is null ? "Pick a strat to learn." : "No lesson for this strat yet. Observe still works.");
             DrawRequestLink(FeedbackKind.Strat);
         }
         ImGui.EndGroup();
     }
 
-    private string? WatchRefusal(IScenario scenario, bool inSession)
+    private string? LearnRefusal(IScenario scenario, Lesson? lesson, bool inSession)
     {
-        if (inSession) return "Watch is solo only: a session runs at 1× with every seat played.";
-        if (watch != null) return "Already watching.";
-        if (Picker.SelectedAi == null) return "Watch needs a strat for the bots to play.";
+        if (inSession) return "Learn is solo only: a session runs at 1× with every seat played.";
+        if (LearnSession.Current is { Ended: false }) return "A lesson is already running.";
+        if (Picker.SelectedAi == null) return "Learn needs a strat.";
+        if (lesson == null && learnLevel != LearnLevel.Observe) return "This strat has no lesson yet; Observe is the only level that works without one.";
         return plugin.Runs.StartRefusal(Picker.Selection, SoloSelected);
     }
 
-    private void StartWatch()
+    private void StartLesson(IScenario scenario, Lesson? lesson)
     {
         EndWatch();
-        // A loop would restart after the watch hands control back.
         Plugin.Practice.AutoRestart = false;
-        watch = new WatchSession(new GameWatchTarget());
+        var role = Picker.RoleOverride ?? Plugin.Game.World.Party.PlayerRole;
+        new LearnSession(Plugin.Game, scenario, Picker.SelectedAi!, lesson, role, learnLevel);
         plugin.Runs.Start(Picker.Selection, SoloSelected);
     }
 

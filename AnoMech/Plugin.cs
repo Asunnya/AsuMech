@@ -43,6 +43,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
     [PluginService] internal static IDutyState DutyState { get; private set; } = null!;
     [PluginService] internal static ICondition Condition { get; private set; } = null!;
     [PluginService] internal static IGameConfig GameConfig { get; private set; } = null!;
+    [PluginService] internal static IGameGui GameGui { get; private set; } = null!;
 
     private const string CommandName = "/anomech";
     private const string CommandAlias = "/ano";
@@ -69,6 +70,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
     private AsuMainWindow AsuMainWindow { get; init; }
     private Window MainUi => Config.UseNewLayout ? AsuMainWindow : MainWindow;
     private FailureBanner? FailureBanner { get; init; }
+    private Windows.Learn.GuidanceOverlay GuidanceOverlay { get; init; }
 #if DEBUG
     private DamageDebugWindow DamageDebugWindow { get; init; }
 #endif
@@ -121,6 +123,8 @@ public sealed class Plugin : IAsyncDalamudPlugin
             windowSystem.AddWindow(MainWindow.PartyPanel);
             FailureBanner = new FailureBanner();
             windowSystem.AddWindow(FailureBanner);
+            GuidanceOverlay = new Windows.Learn.GuidanceOverlay();
+            windowSystem.AddWindow(GuidanceOverlay);
 #if DEBUG
             DamageDebugWindow = new DamageDebugWindow(this);
             windowSystem.AddWindow(DamageDebugWindow);
@@ -271,6 +275,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
         MainWindow?.Dispose();
         AsuMainWindow?.Dispose();
         FailureBanner?.Dispose();
+        Windows.Learn.LearnSession.Current?.Dispose();
 #if DEBUG
         DamageDebugWindow?.Dispose();
 #endif

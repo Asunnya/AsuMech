@@ -54,7 +54,7 @@ public sealed partial class AsuMainWindow
         ImGui.AlignTextToFramePadding();
         ImGui.TextUnformatted(scenario is null ? "AsuMech" : $"{scenario.Phase.Zone.ShortName} · {scenario.DisplayName()}");
         ImGui.SameLine();
-        Muted($"{label} · {runElapsed:mm\\:ss} · {StreakText()}{(Plugin.Practice.AutoRestart ? " · loop" : "")}{(watch != null ? " · watching" : "")}");
+        Muted($"{label} · {runElapsed:mm\\:ss} · {StreakText()}{(Plugin.Practice.AutoRestart ? " · loop" : "")}{(watch != null ? " · watching" : "")}{(Windows.Learn.LearnSession.Current is { Ended: false } learn ? $" · {learn.Level.ToString().ToLowerInvariant()}" : "")}");
 
         var size = new Vector2(StripButtonPx * ImGuiHelpers.GlobalScale, 0f);
         if (stripRightWidth > 0f)
