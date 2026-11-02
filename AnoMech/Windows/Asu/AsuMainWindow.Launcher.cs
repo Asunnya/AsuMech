@@ -73,7 +73,7 @@ public sealed partial class AsuMainWindow
             DrawStartButton(game, size);
         else if (RunState.Active)
         {
-            if (ImGui.Button("Stop##stop-session", size)) plugin.Runs.Reset();
+            if (ImGui.Button("Stop##stop-session", size)) { EndWatch(); plugin.Runs.Reset(); }
         }
         else
             multiplayerUi.DrawStartButton(size, Picker.Selection);
@@ -82,12 +82,12 @@ public sealed partial class AsuMainWindow
         {
             ImGui.SameLine();
             using (AsuTheme.PushTextColor(AsuTheme.Bad))
-                if (ImGui.Button("Stop##stop", size)) plugin.Runs.Reset();
+                if (ImGui.Button("Stop##stop", size)) { EndWatch(); plugin.Runs.Reset(); }
         }
         else if (game.World.Map.IsInInstance)
         {
             ImGui.SameLine();
-            if (ImGui.Button(inSession ? "Return to inn##leave" : "Leave##leave", size)) plugin.Runs.Leave();
+            if (ImGui.Button(inSession ? "Return to inn##leave" : "Leave##leave", size)) { EndWatch(); plugin.Runs.Leave(); }
             if (inSession && ImGui.IsItemHovered())
                 ImGui.SetTooltip("Takes the whole party back to the inn. Everyone stays in the session.");
         }
@@ -112,6 +112,7 @@ public sealed partial class AsuMainWindow
             ImGui.SetTooltip(refusal);
         if (!clicked) return;
         mode = Mode.Practice;
+        EndWatch();
         plugin.Runs.Start(selection, solo);
     }
 

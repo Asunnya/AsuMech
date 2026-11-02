@@ -53,7 +53,7 @@ public sealed partial class AsuMainWindow
         ImGui.AlignTextToFramePadding();
         ImGui.TextUnformatted(scenario is null ? "AsuMech" : $"{scenario.Phase.Zone.ShortName} · {scenario.DisplayName()}");
         ImGui.SameLine();
-        Muted($"{label} · {runElapsed:mm\\:ss} · {StreakText()}{(Plugin.Practice.AutoRestart ? " · loop" : "")}");
+        Muted($"{label} · {runElapsed:mm\\:ss} · {StreakText()}{(Plugin.Practice.AutoRestart ? " · loop" : "")}{(watch != null ? " · watching" : "")}");
 
         var size = new Vector2(StripButtonPx * ImGuiHelpers.GlobalScale, 0f);
         var style = ImGui.GetStyle();
@@ -64,13 +64,17 @@ public sealed partial class AsuMainWindow
             bool restart;
             using (failed ? AsuTheme.PushAccentButton() : null)
                 restart = ImGui.Button("↻ Restart##strip-restart", size);
-            if (restart) plugin.Runs.Start(Picker.Selection, SoloSelected);
+            if (restart)
+            {
+                EndWatch();
+                plugin.Runs.Start(Picker.Selection, SoloSelected);
+            }
             ImGui.SameLine();
         }
         bool stop;
         using (AsuTheme.PushTextColor(AsuTheme.Bad))
             stop = ImGui.Button("■ Stop##strip-stop", size);
-        if (stop) plugin.Runs.Reset();
+        if (stop) { EndWatch(); plugin.Runs.Reset(); }
         ImGui.SameLine();
         if (ImGuiComponents.IconButton("expand", FontAwesomeIcon.Expand)) expandedDuringRun = true;
         if (ImGui.IsItemHovered()) ImGui.SetTooltip("Show the full window");

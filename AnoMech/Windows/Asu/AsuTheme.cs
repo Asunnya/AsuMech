@@ -23,6 +23,10 @@ internal static class AsuTheme
     public static readonly Vector4 ToastBackground = Rgb(0x173326);
     public static readonly Vector4 ToastText = Rgb(0xbdf0d2);
     public static readonly Vector4 ArenaMarker = Rgb(0x55585f);
+    public static readonly Vector4 WaymarkRed = Rgb(0xe0605a);
+    public static readonly Vector4 WaymarkYellow = Rgb(0xe6c84f);
+    public static readonly Vector4 WaymarkBlue = Rgb(0x5aa7e0);
+    public static readonly Vector4 WaymarkPurple = Rgb(0xb07de0);
 
     private const float WindowRoundingPx = 12f;
     private const float FrameRoundingPx = 7f;

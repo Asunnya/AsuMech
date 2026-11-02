@@ -52,6 +52,7 @@ public sealed partial class AsuMainWindow : Window, IDisposable, IPanelHost
         Plugin.Game.RunStarted -= OnRunStarted;
         Plugin.Game.RunFinished -= OnRunFinished;
         Plugin.Drill.TargetReached -= OnDrillReached;
+        EndWatch();
     }
 
     internal void OpenMultiplayer()
@@ -60,9 +61,12 @@ public sealed partial class AsuMainWindow : Window, IDisposable, IPanelHost
         if (!RunState.InSession) showMultiplayerSetup = true;
     }
 
+    // Runs every frame, open or closed, so a watch always ends.
     public override void PreOpenCheck()
     {
         var inSession = RunState.InSession;
+        if (inSession) EndWatch();
+        TickWatch(Plugin.Game);
         if (inSession) showMultiplayerSetup = false;
         else if (wasInSession && Plugin.Multiplayer.SessionEndReason != null) showMultiplayerSetup = true;
         wasInSession = inSession;
