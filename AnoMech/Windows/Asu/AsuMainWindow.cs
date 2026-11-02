@@ -98,6 +98,7 @@ public sealed partial class AsuMainWindow : Window, IDisposable, IPanelHost
     public override void Draw()
     {
         DrawContent();
+        DrawFeedbackPopup();
         contentHeight = ImGui.GetCursorPosY() + ImGui.GetStyle().WindowPadding.Y - ImGui.GetStyle().ItemSpacing.Y;
     }
 
