@@ -13,9 +13,13 @@ dotnet $TOOL record   --scenario UwuP1GarudaScenario --strat 0 --seeds 1,2,3 --o
 dotnet $TOOL skeleton --dump garuda.dump.json --out lesson.json
 # after a strat edit moved time literals: follow the source lines, report orphans
 dotnet $TOOL rekey    --lesson AnoMech/Learn/Lessons/Uwu/P1Garuda.zeal-the-balance.json --dump garuda.dump.json
+# every catalog strat without an embedded lesson: dump + skeleton per strat, in the Lessons layout
+dotnet $TOOL skeleton-all --out skel/ [--scenario Uwu] [--seeds 1,2] [--force]
 # validation + coverage both ways (what LessonLoaderTests also checks in CI)
 dotnet $TOOL check    --lesson AnoMech/Learn/Lessons/Uwu/P1Garuda.zeal-the-balance.json --dump garuda.dump.json
 ```
+
+Per-step authoring context (role spots, cue candidates, strat method): `~/.claude/skills/asumech-lesson`.
 
 Flow for a new scenario: `record` → `skeleton` → write `rule`/`cue` (or `skip`) per step → `check` →
 embed under `AnoMech/Learn/Lessons/<Family>/`.

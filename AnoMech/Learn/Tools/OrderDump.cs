@@ -23,6 +23,7 @@ public sealed record OrderDump(string Scenario, string Strat, int StratIndex, Li
         PropertyNameCaseInsensitive = true,
         WriteIndented = true,
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     };
 
     public string ToJson() => JsonSerializer.Serialize(this, Json);

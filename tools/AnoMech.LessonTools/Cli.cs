@@ -8,6 +8,7 @@ namespace AnoMech.LessonTools;
 // skeleton --dump dump.json --out lesson.json
 // rekey    --lesson lesson.json --dump dump.json [--out lesson.json]
 // check    --lesson lesson.json --dump dump.json
+// skeleton-all --out <dir> [--seeds 1] [--scenario <substring>] [--force]   every catalog strat without a lesson
 internal static class Cli
 {
     public static int Run(string[] args)
@@ -22,6 +23,7 @@ internal static class Cli
                 "skeleton" => Skeleton(opts),
                 "rekey" => Rekey(opts),
                 "check" => Check(opts),
+                "skeleton-all" => SkeletonAll(opts),
                 _ => Usage(),
             };
         }
@@ -83,6 +85,41 @@ internal static class Cli
         foreach (var step in orphans) Console.WriteLine($"orphan: {step.Title} ({step.Key.Time ?? step.Key.From})");
         return orphans.Count == 0 ? 0 : 3;
     }
+
+    // Deterministic part of a lesson for every strat in the catalog: dump + skeleton per strat,
+    // laid out as Learn/Lessons expects. The text still has to be written.
+    private static int SkeletonAll(Dictionary<string, string> opts)
+    {
+        var outDir = Need(opts, "out");
+        var seeds = (opts.TryGetValue("seeds", out var sd) && sd.Length > 0 ? sd : "1").Split(',').Select(int.Parse).ToList();
+        var filter = opts.TryGetValue("scenario", out var f) ? f : "";
+        var force = opts.ContainsKey("force");
+        var written = 0;
+        foreach (var scenario in ScenarioCatalog.Create().Scenarios)
+        {
+            var typeName = scenario.GetType().Name;
+            if (filter.Length > 0 && !typeName.Contains(filter, StringComparison.OrdinalIgnoreCase)) continue;
+            for (var i = 0; i < scenario.AiStrats.Count; i++)
+            {
+                var strat = scenario.AiStrats[i];
+                if (!force && LessonLoader.For(scenario, strat) != null) continue;
+                var family = scenario.GetType().Namespace!.Split('.')[2];
+                var dir = Path.Combine(outDir, family);
+                Directory.CreateDirectory(dir);
+                var stem = Path.Combine(dir, $"{typeName.Replace("Scenario", "")}.{Slug(strat.Name)}");
+                Console.Error.WriteLine($"{typeName} / {strat.Name}");
+                var dump = OrderRecorder.Record(typeName, i, seeds, TextWriter.Null);
+                File.WriteAllText(stem + ".dump.json", dump.ToJson());
+                File.WriteAllText(stem + ".json", LessonSkeleton.ToJson(LessonSkeleton.Generate(dump)));
+                written++;
+            }
+        }
+        Console.WriteLine($"{written} skeleton(s) -> {outDir}");
+        return 0;
+    }
+
+    private static string Slug(string name)
+        => string.Join('-', name.ToLowerInvariant().Split(Path.GetInvalidFileNameChars().Concat([' ', '/', '(', ')', ',', '.']).ToArray(), StringSplitOptions.RemoveEmptyEntries));
 
     private static int Check(Dictionary<string, string> opts)
     {
