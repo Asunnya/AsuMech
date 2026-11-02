@@ -77,7 +77,8 @@ public sealed partial class AsuMainWindow
     private void DrawScenarioRow(IZone zone)
     {
         var scenarios = ScenariosOf(zone).ToList();
-        var items = scenarios.Select(s => new TabRowItem(s.DisplayName(), Tooltip: Pickable(s, out var why) ? null : why)).ToList();
+        var items = scenarios.Select(s => new TabRowItem(s.DisplayName(),
+            Tooltip: Pickable(s, out var why) ? BestStreakText(s).TrimStart(' ', '·') is { Length: > 0 } best ? best : null : why)).ToList();
         var selected = Selected == null ? -1 : scenarios.IndexOf(Selected);
         var clicked = OverflowTabRow.Draw("scenarios", items, selected);
         if (clicked >= 0 && clicked != selected && Pickable(scenarios[clicked], out _))

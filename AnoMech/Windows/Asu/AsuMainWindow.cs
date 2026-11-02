@@ -35,6 +35,7 @@ public sealed partial class AsuMainWindow : Window, IDisposable, IPanelHost
         IsOpen = false;
         Plugin.Game.RunStarted += OnRunStarted;
         Plugin.Game.RunFinished += OnRunFinished;
+        Plugin.Drill.TargetReached += OnDrillReached;
     }
 
     private ScenarioPicker Picker => plugin.Picker;
@@ -50,6 +51,7 @@ public sealed partial class AsuMainWindow : Window, IDisposable, IPanelHost
     {
         Plugin.Game.RunStarted -= OnRunStarted;
         Plugin.Game.RunFinished -= OnRunFinished;
+        Plugin.Drill.TargetReached -= OnDrillReached;
     }
 
     internal void OpenMultiplayer()
@@ -118,6 +120,7 @@ public sealed partial class AsuMainWindow : Window, IDisposable, IPanelHost
         if (inSession) game.EventTimeScale = 1f;
         if (!RunState.Active) expandedDuringRun = false;
 
+        DrawToast();
         if (ShowRunStrip)
         {
             DrawRunStrip(game, inSession);

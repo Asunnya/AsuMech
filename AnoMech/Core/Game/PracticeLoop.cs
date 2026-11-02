@@ -13,6 +13,9 @@ public sealed class PracticeLoop
     public bool AutoRestart { get; set; }
     public int Streak { get; private set; }
 
+    // Off while runs don't count, such as a bot-played Watch: the streak neither grows nor resets.
+    public bool Counting { get; set; } = true;
+
     public PracticeLoop(Game game)
     {
         this.game = game;
@@ -25,7 +28,7 @@ public sealed class PracticeLoop
     private void OnRunStarted(RunScenarioParams p, bool local)
     {
         // Restarting the same scenario is the normal way to extend a streak.
-        if (p.Scenario != lastScenario)
+        if (Counting && p.Scenario != lastScenario)
             Streak = 0;
         lastScenario = p.Scenario;
         // A host rerunning on its own would desync the session.
@@ -34,7 +37,7 @@ public sealed class PracticeLoop
 
     private void OnRunFinished(bool clean)
     {
-        if (clean) Streak++;
+        if (clean && Counting) Streak++;
         if (AutoRestart && lastRun is { } p)
             game.StartScenario(p);
     }
@@ -43,6 +46,7 @@ public sealed class PracticeLoop
 
     private void EndStreak()
     {
+        if (!Counting) return;
         Streak = 0;
         AutoRestart = false;
     }

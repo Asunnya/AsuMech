@@ -105,7 +105,7 @@ public sealed partial class AsuMainWindow
         if (inSession && ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
             ImGui.SetTooltip(SessionDisabledReason);
         ImGui.SameLine();
-        DrawStreak();
+        DrawStreak(inSession);
 
         if (Plugin.Config.ShowSpeedControl)
         {

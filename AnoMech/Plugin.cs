@@ -53,6 +53,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
     internal static Configuration Config { get; private set; } = null!;
     internal static Game Game { get; private set; } = null!;
     internal static PracticeLoop Practice { get; private set; } = null!;
+    internal static DrillTracker Drill { get; private set; } = null!;
     internal static MultiplayerManager Multiplayer { get; private set; } = null!;
     internal RunController Runs { get; private set; } = null!;
     internal ScenarioPicker Picker { get; private set; } = null!;
@@ -89,6 +90,15 @@ public sealed class Plugin : IAsyncDalamudPlugin
             GameNatives.Install();
             opcodeUpdater = new OpcodeUpdater();
             Game = new Game();
+            Drill = new DrillTracker(Config.BestStreaks, Config.Save);
+            // Before PracticeLoop subscribes: a reached target must turn Auto-restart off before it restarts.
+            IScenario? drillScenario = null;
+            Game.RunStarted += (p, _) => drillScenario = p.Scenario;
+            Game.RunFinished += clean =>
+            {
+                if (drillScenario is { } s && Drill.RecordFinish(s.FullName(), clean, Practice.Streak, Practice.Counting))
+                    Practice.AutoRestart = false;
+            };
             Practice = new PracticeLoop(Game);
             Multiplayer = new MultiplayerManager();
             Runs = new RunController(Game, Multiplayer);

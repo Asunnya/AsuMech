@@ -36,6 +36,7 @@ public class Configuration : IPluginConfiguration
     public string SelectedExpansion { get; set; } = "";
     public string SelectedType { get; set; } = "";
     public List<string> RecentScenarios { get; set; } = [];
+    public Dictionary<string, int> BestStreaks { get; set; } = [];
     public string LastSelectedScenario { get; set; } = "";
 
     // The player's own multiplayer server (see AnoMech.Relay.Host/README.md), used instead of
