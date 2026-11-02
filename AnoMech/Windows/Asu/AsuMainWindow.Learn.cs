@@ -79,6 +79,8 @@ public sealed partial class AsuMainWindow
     private void StartWatch()
     {
         EndWatch();
+        // A loop would restart after the watch hands control back.
+        Plugin.Practice.AutoRestart = false;
         watch = new WatchSession(new GameWatchTarget());
         plugin.Runs.Start(Picker.Selection, SoloSelected);
     }
