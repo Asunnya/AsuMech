@@ -32,39 +32,49 @@ internal static class OverflowTabRow
 
         var clicked = -1;
         ImGui.PushID(id);
-        var rowStart = ImGui.GetCursorPos();
+        // Every piece is placed at an explicit x on one row top: SameLine after a moved cursor
+        // drifts the rest of the row vertically.
+        var origin = ImGui.GetCursorScreenPos();
+        var rowHeight = ImGui.GetTextLineHeight() + padding.Y * 2;
+        var x = origin.X;
         if (fit.Overflows)
         {
-            ImGui.SetCursorPosY(rowStart.Y + padding.Y * 0.5f);
+            var buttonHeight = ImGui.GetFrameHeight();
+            ImGui.SetCursorScreenPos(new Vector2(x, origin.Y + (rowHeight - buttonHeight) * 0.5f));
             if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.Bars, fit.Hidden.Count.ToString()))
                 ImGui.OpenPopup("overflow");
             if (ImGui.IsItemHovered()) ImGui.SetTooltip($"{fit.Hidden.Count} more");
-            ImGui.SameLine();
-            ImGui.SetCursorPosY(rowStart.Y);
+            x = ImGui.GetItemRectMax().X + spacing;
             clicked = DrawPopup(items, selected, fit, groupNames);
         }
 
+        var draw = ImGui.GetWindowDrawList();
         int? lastGroup = null;
         foreach (var i in fit.Visible)
         {
             var item = items[i];
             if (item.Group >= 0 && item.Group != lastGroup)
             {
-                if (lastGroup != null) DrawSeparator(scale);
+                if (lastGroup != null)
+                {
+                    var sx = x + SeparatorPx * scale * 0.5f - spacing * 0.5f;
+                    draw.AddLine(new Vector2(sx, origin.Y + rowHeight * 0.25f), new Vector2(sx, origin.Y + rowHeight * 0.75f),
+                        AsuTheme.U32(AsuTheme.Line));
+                    x += SeparatorPx * scale;
+                }
                 if (fit.ShowGroupLabels && groupLabels is not null && item.Group < groupLabels.Count)
                 {
-                    ImGui.SetCursorPosY(rowStart.Y + padding.Y);
-                    using (AsuTheme.PushTextColor(AsuTheme.Muted))
-                        ImGui.TextUnformatted(groupLabels[item.Group]);
-                    ImGui.SameLine();
-                    ImGui.SetCursorPosY(rowStart.Y);
+                    draw.AddText(new Vector2(x, origin.Y + padding.Y), AsuTheme.U32(AsuTheme.Muted), groupLabels[item.Group]);
+                    x += LabelWidth(item.Group);
                 }
                 lastGroup = item.Group;
             }
+            ImGui.SetCursorScreenPos(new Vector2(x, origin.Y));
             if (DrawTab(i, item, i == selected, padding)) clicked = i;
-            ImGui.SameLine();
+            x = ImGui.GetItemRectMax().X + spacing;
         }
-        ImGui.NewLine();
+        ImGui.SetCursorScreenPos(new Vector2(origin.X, origin.Y));
+        ImGui.Dummy(new Vector2(System.Math.Max(0f, x - origin.X - spacing), rowHeight));
         ImGui.PopID();
         return clicked;
     }
@@ -83,17 +93,6 @@ internal static class OverflowTabRow
             draw.AddRectFilled(pos with { Y = pos.Y + size.Y - AsuTheme.Underline }, pos + size, AsuTheme.U32(AsuTheme.Accent));
         if (hovered && item.Tooltip is { } tip) ImGui.SetTooltip(tip);
         return pressed;
-    }
-
-    private static void DrawSeparator(float scale)
-    {
-        var pos = ImGui.GetCursorScreenPos();
-        var height = ImGui.GetFrameHeight();
-        var x = pos.X + SeparatorPx * scale * 0.5f;
-        ImGui.GetWindowDrawList().AddLine(new Vector2(x, pos.Y + height * 0.25f), new Vector2(x, pos.Y + height * 0.85f),
-            AsuTheme.U32(AsuTheme.Line));
-        ImGui.Dummy(new Vector2(SeparatorPx * scale - ImGui.GetStyle().ItemSpacing.X, height));
-        ImGui.SameLine();
     }
 
     private static int DrawPopup(IReadOnlyList<TabRowItem> items, int selected, TabFitResult fit, IReadOnlyList<string>? groupNames)
