@@ -46,6 +46,9 @@ public sealed partial class AsuMainWindow
 
     private void DrawLearn(Game game, IScenario scenario, bool inSession)
     {
+        using (AsuTheme.PushTextColor(AsuTheme.WaymarkYellow))
+            ImGui.TextWrapped("Learn is still being built: lessons, hints, reports and the mitigation trainer may be incomplete or wrong, and can change between versions.");
+
         DrawStratPill(scenario);
         if (!inSession)
         {
