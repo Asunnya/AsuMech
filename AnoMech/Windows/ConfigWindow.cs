@@ -126,7 +126,7 @@ public class ConfigWindow : Window, IDisposable
         if (configuration.EnableUserActions)
         {
             var threshold = configuration.CastInterruptThreshold;
-            ImGui.SetNextItemWidth(90 * ImGuiHelpers.GlobalScale);
+            ImGui.SetNextItemWidth(150 * ImGuiHelpers.GlobalScale);
             if (ImGui.InputFloat("Slidecast window (s)", ref threshold, 0.05f, 0.1f, "%.2f"))
             {
                 configuration.CastInterruptThreshold = Math.Clamp(threshold, 0f, 5f);

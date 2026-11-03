@@ -12,14 +12,11 @@ internal static class Pills
     private const float KnobInsetPx = 2f;
     private static readonly Dictionary<uint, float> KnobPositions = new();
 
-    // A rounded on/off button, accent when on. Returns true when clicked.
+    // A sliding on/off switch. Returns true when clicked.
     public static bool Toggle(string label, bool on, bool disabled = false)
     {
-        bool clicked;
         ImGui.BeginDisabled(disabled);
-        using (AsuTheme.PushPill())
-        using (on ? AsuTheme.PushAccentButton() : null)
-            clicked = ImGui.Button($"{(on ? "● " : "○ ")}{label}");
+        var clicked = Switch(label, on);
         ImGui.EndDisabled();
         return clicked;
     }
