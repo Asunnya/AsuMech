@@ -23,10 +23,9 @@ public class ConfigWindow : Window, IDisposable
         Flags = ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
                 ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.AlwaysAutoResize;
 
-        ApplySizing();
-
         this.plugin = plugin;
         configuration = Plugin.Config;
+        ApplySizing();
         customRelayUrl = configuration.RelayServerUrl;
         relayPassword = configuration.TokenForRelay(configuration.ActiveRelayUrl());
     }
