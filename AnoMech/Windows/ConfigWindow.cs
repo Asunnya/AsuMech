@@ -30,7 +30,9 @@ public class ConfigWindow : Window, IDisposable
         relayPassword = configuration.TokenForRelay(configuration.ActiveRelayUrl());
     }
 
-    public void Dispose() { }
+    public void Dispose() => SaveAccent();
+
+    public override void OnClose() => SaveAccent();
 
     private IDisposable? theme;
     private const float ClassicWidthPx = 380f;
@@ -206,11 +208,15 @@ public class ConfigWindow : Window, IDisposable
                 accentUnsaved = true;
             }
         }
-        if (accentUnsaved && !ImGui.IsAnyItemActive())
-        {
-            configuration.Save();
-            accentUnsaved = false;
-        }
+        if (!ImGui.IsMouseDown(ImGuiMouseButton.Left)) SaveAccent();
+    }
+
+    // Also on close and unload: a pick still held in memory is lost when the plugin reloads.
+    private void SaveAccent()
+    {
+        if (!accentUnsaved) return;
+        configuration.Save();
+        accentUnsaved = false;
     }
 
     private void DrawMultiplayerServer()
