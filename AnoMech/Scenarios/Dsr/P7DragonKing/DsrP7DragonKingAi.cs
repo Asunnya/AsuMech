@@ -21,12 +21,14 @@ public sealed class DsrP7DragonKingAi : IScenarioAi<DsrP7DragonKingState>
     private static readonly PartyRole[] GroupTwo = [ShieldHealer, MeleeDpsB, CasterDps];
     private static readonly PartyRole[] NonTanks = [RegenHealer, ShieldHealer, MeleeDpsA, MeleeDpsB, PhysRangedDps, CasterDps];
     private static readonly PartyRole[] Everyone = Enum.GetValues<PartyRole>();
-    private static readonly Vector2 SouthMaxMelee = new(0f, 6f);
-    private static readonly Vector2 UnderTheDragonKing = new(0f, 1f);
-    private static readonly Vector2 AggroTankNorth = new(0f, -5f);
-    private static readonly Vector2 OtherTankOnHisRight = new(5f, 0f);
-    private static readonly Vector2 IceSouthExaflareEdge = new(0f, 0.8f);
-    private static readonly Vector2 FlamesSouthExaflareEdge = new(0f, 15.2f);
+    public static readonly Vector2 BehindOutsideTheDragonKing = new(0f, 10.5f);
+    public static readonly Vector2 MiddleOfTheDragonKing = Vector2.Zero;
+    public static readonly Vector2 MainTankFrontLeft = new(-7.8f, -7.8f);
+    public static readonly Vector2 OffTankFrontRight = new(7.8f, -7.8f);
+    public static readonly Vector2 IceExaflareStartInsideRearLeft = new(-6.08f, 3.47f);
+    public static readonly Vector2 FlamesExaflareStartOutsideRearLeft = new(-8.07f, 4.61f);
+    public static readonly Vector2 StepBackFromTheRearExaflare = new(0f, 13.5f);
+    public static readonly float StepForwardDelay = State.ExaflareDelays[3] + 0.1f;
     private static readonly Vector2 OutOfEveryTower = new(0f, 1f);
     private const float IceAkhMornRadius = 7.2f;
     private const float FlamesAkhMornRadius = 9f;
@@ -44,7 +46,7 @@ public sealed class DsrP7DragonKingAi : IScenarioAi<DsrP7DragonKingState>
         world = worldParam;
         var ai = new AiManager(world);
 
-        ai.Move(Scenario.StartAt + 0.5f, () => AiMove.Create(Cluster(SouthMaxMelee, Everyone)).NaturalOrder(), jitter: 0f);
+        ai.Move(Scenario.StartAt + 0.5f, () => AiMove.Create(Cluster(BehindOutsideTheDragonKing, Everyone)).NaturalOrder(), jitter: 0f);
         for (var cycle = 0; cycle < State.Cycles; cycle++)
         {
             var c = cycle;
@@ -53,11 +55,11 @@ public sealed class DsrP7DragonKingAi : IScenarioAi<DsrP7DragonKingState>
             var gigaflarePair = 3 * c + 2;
             var firstHit = Scenario.ExaflareFirstHits[c];
 
-            var waitAtTheSouthExaflare = c == 0 ? Scenario.ExaflareCasts[0] + 1.3f : Scenario.TrinityHits[2 * (gigaflarePair - 3) + 1] + AfterTrinity;
-            ai.Move(waitAtTheSouthExaflare, () => AiMove.Create(Cluster(SouthExaflareEdge(c), Everyone)).NaturalOrder(), jitter: 0f);
+            var waitAtTheRearLeft = c == 0 ? Scenario.ExaflareCasts[0] + 1.3f : Scenario.TrinityHits[2 * (gigaflarePair - 3) + 1] + AfterTrinity;
+            ai.Move(waitAtTheRearLeft, () => AiMove.Create(Cluster(ExaflareStart(c), Everyone)).NaturalOrder(), jitter: 0f);
             ai.Move(firstHit + StepAfterHit, () => AiMove.Create(Cluster(State.Spot(EdgeSpot.Tanks), Everyone)).NaturalOrder(), jitter: 0f, sprint: true);
-            ai.Move(firstHit + State.ExaflareDelays[1] + 0.1f, () => AiMove.Create(Cluster(State.SouthOfTheExaflares, Everyone)).NaturalOrder(), jitter: 0f, sprint: true);
-            ai.Move(firstHit + State.BaitStepInDelay, () => AiMove.Create(FirstBaitStepsIntoTheSouthExaflare(exaflarePair)).NaturalOrder(), jitter: 0f);
+            ai.Move(firstHit + State.ExaflareDelays[1] + 0.1f, () => AiMove.Create(Cluster(StepBackFromTheRearExaflare, Everyone)).NaturalOrder(), jitter: 0f, sprint: true);
+            ai.Move(firstHit + StepForwardDelay, () => AiMove.Create(TrinitySpots(exaflarePair, 0)).NaturalOrder(), jitter: 0f, sprint: true);
             ai.Move(firstHit + State.ExaflareDelays[^1] + 0.2f, () => AiMove.Create(TrinitySpots(exaflarePair, 1)).NaturalOrder(), jitter: 0f);
 
             ai.Move(Scenario.TrinityHits[2 * exaflarePair + 1] + AfterTrinity, () => AiMove.Create(AkhMornSpots(c)).NaturalOrder(), jitter: 0f);
@@ -76,8 +78,8 @@ public sealed class DsrP7DragonKingAi : IScenarioAi<DsrP7DragonKingState>
         ai.Move(Scenario.MornAfahsEdgeCast + 0.5f, () => AiMove.Create(HealersAndMainTankTakeTheFirstTowers()).NaturalOrder(), jitter: 0f);
     }
 
-    private Vector2 SouthExaflareEdge(int cycle)
-        => state.ExaflareElement(cycle) == AscalonElement.Ice ? IceSouthExaflareEdge : FlamesSouthExaflareEdge;
+    private Vector2 ExaflareStart(int cycle)
+        => state.ExaflareElement(cycle) == AscalonElement.Ice ? IceExaflareStartInsideRearLeft : FlamesExaflareStartOutsideRearLeft;
 
     private Vector2 OppositeGigaflare(int cycle, int blast)
     {
@@ -85,31 +87,17 @@ public sealed class DsrP7DragonKingAi : IScenarioAi<DsrP7DragonKingState>
         return -Vector2.Normalize(state.GigaflareSpot(cycle, blast)) * radius;
     }
 
-    private static Vector2?[] FirstBaitStepsIntoTheSouthExaflare(int pair)
-    {
-        var bait = Bait(pair, 0);
-        var spots = Cluster(State.SouthOfTheExaflares, NonTanks.Where(r => r != bait));
-        spots[(int)bait] = State.Spot(EdgeSpot.Tanks);
-        spots[(int)AggroTank(pair)] = State.ExaflareDarkTankSpot;
-        spots[(int)OtherTank(pair)] = State.ExaflareLightTankSpot;
-        return spots;
-    }
-
     private static Vector2?[] TrinitySpots(int pair, int trinity)
     {
         var bait = Bait(pair, trinity);
-        var spots = Cluster(SouthMaxMelee, NonTanks.Where(r => r != bait));
-        spots[(int)bait] = UnderTheDragonKing;
-        spots[(int)AggroTank(pair)] = AggroTankNorth;
-        spots[(int)OtherTank(pair)] = OtherTankOnHisRight;
+        var spots = Cluster(BehindOutsideTheDragonKing, NonTanks.Where(r => r != bait));
+        spots[(int)bait] = MiddleOfTheDragonKing;
+        spots[(int)MainTank] = MainTankFrontLeft;
+        spots[(int)OffTank] = OffTankFrontRight;
         return spots;
     }
 
     private static PartyRole Bait(int pair, int trinity) => TrinityPairs[pair % TrinityPairs.Length][trinity];
-
-    private static PartyRole AggroTank(int pair) => pair % 2 == 0 ? MainTank : OffTank;
-
-    private static PartyRole OtherTank(int pair) => pair % 2 == 0 ? OffTank : MainTank;
 
     private Vector2 AkhMornSpot(int cycle, EdgeSpot spot)
         => State.Spot(spot) * ((state.AkhMornElement(cycle) == AscalonElement.Ice ? IceAkhMornRadius : FlamesAkhMornRadius) / State.SpotRadius);

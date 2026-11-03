@@ -28,8 +28,8 @@ public sealed class DsrP7DragonKingScenario : IScenario
     private readonly DsrP7DragonKingStateOverrides overrides = new();
     public object SettingsOverrides => overrides;
 
-    public const float StartAt = 24f;
-    public const float AlternativeEnd = 26.91f;
+    // Joins just before the boss turns targetable; the Alternative End raidwide before it is skipped.
+    public const float StartAt = 34f;
     public const float Targetable = 35.95f;
     public static readonly float[] ExaflareCasts = [40.23f, 119.10f, 199.05f];
     public static readonly float[] ExaflareFirstHits = [47.12f, 125.96f, 205.91f];
@@ -93,8 +93,7 @@ public sealed class DsrP7DragonKingScenario : IScenario
         world.Events.Add(StartAt, () => world.PlaceWaymarks(NaurWaymarks));
         world.Events.Add(StartAt, SpawnThordan);
         world.Events.Add(StartAt, FillHelperPool);
-        world.Events.Add(AlternativeEnd, () => PlayFromHelper(ActionId.AlternativeEnd, new Vector3(0f, 0f, -12f)));
-        world.Events.Add(27.84f, () => world.Map.DirectorUpdate(ArenaDirector.MapChange, ArenaDirector.ThordanMap));
+        world.Events.Add(StartAt, () => world.Map.DirectorUpdate(ArenaDirector.MapChange, ArenaDirector.ThordanMap));
         world.Events.Add(Targetable, () => thordan?.SetTargetable(true));
         world.Events.Add(35.99f, () => world.Map.DirectorUpdate(ArenaDirector.Layout, 1U, ArenaDirector.DragonKingLayout));
 
@@ -264,7 +263,9 @@ public sealed class DsrP7DragonKingScenario : IScenario
         {
             var at = ToWorld(state.GigaflareSpot(cycle, blast));
             if (TakeHelper(new Placement(at, 0f)) is not { } helper) continue;
-            helper.NativeCast(GigaflareActions[blast], ActionType.Action, 0f, GigaflareCastSeconds[blast], false, targetId: helper.GameObjectId, position: at);
+            // All three cast together; each telegraph waits for the previous blast so the order reads at a glance.
+            var omenDelay = blast == 0 ? 0f : GigaflareHits[cycle][blast - 1] - GigaflareCasts[cycle];
+            helper.NativeCast(GigaflareActions[blast], ActionType.Action, omenDelay, GigaflareCastSeconds[blast], false, targetId: helper.GameObjectId, position: at);
             gigaflareCasters.Add(helper);
         }
     }

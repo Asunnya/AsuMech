@@ -9,37 +9,6 @@ namespace AnoMech.Tests;
 
 public class DsrP7DragonKingStateTests
 {
-    private const float BotSpread = 0.71f;
-
-    // Every one of the 512 exaflare patterns: the south start once its neighbours have taken their
-    // first step, south of it from the second step on, the bait back on it and the tanks beside the
-    // group from the fourth.
-    [Test]
-    public void TheStaticSouthDodgeClearsEveryExaflarePattern()
-    {
-        var failures = new List<string>();
-        for (var pattern = 0; pattern < 512; pattern++)
-        {
-            int[] headings = [pattern % 8, pattern / 8 % 8, pattern / 64];
-            var state = new DsrP7DragonKingState(new Rng(0), new DsrP7DragonKingStateOverrides { ExaflareHeadings = [headings, headings, headings] });
-            var south = DsrP7DragonKingState.Spot(EdgeSpot.Tanks);
-            var all = Enum.GetValues<EdgeSpot>().SelectMany(s => state.ExaflareExplosions(0, s).Select(e => (Spot: s, Explosion: e))).ToList();
-            bool Clear(Vector2 at, Func<(EdgeSpot Spot, Explosion Explosion), bool> when)
-                => all.Where(when).All(e => Vector2.Distance(at, e.Explosion.At) > DsrP7DragonKingState.ExaflareRadius + BotSpread);
-            var second = DsrP7DragonKingState.ExaflareDelays[1];
-            var third = DsrP7DragonKingState.ExaflareDelays[2];
-            var fifth = DsrP7DragonKingState.ExaflareDelays[4];
-            if (!Clear(south, e => e.Explosion.Delay == second && e.Spot != EdgeSpot.Tanks)
-                || !Clear(south, e => e.Explosion.Delay == second && e.Spot == EdgeSpot.Tanks)
-                || !Clear(DsrP7DragonKingState.SouthOfTheExaflares, e => e.Explosion.Delay >= third)
-                || !Clear(south, e => e.Explosion.Delay >= fifth)
-                || !Clear(DsrP7DragonKingState.ExaflareDarkTankSpot, e => e.Explosion.Delay >= fifth)
-                || !Clear(DsrP7DragonKingState.ExaflareLightTankSpot, e => e.Explosion.Delay >= fifth))
-                failures.Add(string.Join(",", headings));
-        }
-        Assert.That(failures, Is.Empty);
-    }
-
     [Test]
     public void EachMechanicRollsItsOwnAscalon([Range(0, 49)] int seed)
         => Assert.That(new DsrP7DragonKingState(new Rng(seed)).Elements, Has.Count.EqualTo(8));

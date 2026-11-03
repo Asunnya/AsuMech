@@ -18,6 +18,7 @@ public sealed class DsrZone : IZone
     private const byte FairSkies = 2;
     public const byte Oppression = 45;
     private const byte DarkThordanWeather = 46;
+    private const byte DragonKingWeather = 47;
     private const byte Clouds = 3;
 
     public static readonly DsrZone Instance = new();
@@ -28,8 +29,7 @@ public sealed class DsrZone : IZone
     public static readonly Phase Eyes = new(Instance, "P4", Clouds, EyesBgm);
     public static readonly Phase DarkThordan = new(Instance, "P5", DarkThordanWeather, DarkThordanBgm);
     public static readonly Phase DoubleDragons = new(Instance, "P6", Clouds, DoubleDragonsBgm);
-    // UNVERIFIED: the Dragon-king's weather; P2's is kept, as he fights on Thordan's map.
-    public static readonly Phase DragonKing = new(Instance, "P7", Oppression, DragonKingBgm);
+    public static readonly Phase DragonKing = new(Instance, "P7", DragonKingWeather, DragonKingBgm);
 
     public string Name => "Dragonsong's Reprise";
 

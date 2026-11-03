@@ -31,12 +31,6 @@ public sealed class DsrP7DragonKingState
     public const float ExaflareRadius = 6f;
     public const float ExaflareStep = 7f;
     public static readonly float[] ExaflareDelays = [0f, 1.92f, 3.79f, 5.65f, 7.52f, 9.39f];
-    // The static dodge: into the south exaflare once it fires, south again once the next step lands.
-    public static readonly Vector2 SouthOfTheExaflares = new(0f, 13.5f);
-    // Clear of every exaflare from its fourth step on, whatever the headings.
-    public static readonly Vector2 ExaflareDarkTankSpot = new(-4f, 13.5f);
-    public static readonly Vector2 ExaflareLightTankSpot = new(4f, 13.5f);
-    public const float BaitStepInDelay = 6.0f;
 
     private static readonly Vector2[] Spots = [new(-6.93f, -4f), new(6.93f, -4f), new(0f, 8f)];
 
