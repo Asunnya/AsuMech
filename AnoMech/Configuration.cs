@@ -20,6 +20,8 @@ public class Configuration : IPluginConfiguration
     public bool AutoCollapseWhileRunning { get; set; } = false;
     public bool ShowSpeedControl { get; set; } = false;
     public bool UseNewLayout { get; set; } = true;
+    public uint AccentColor { get; set; } = DefaultAccentColor;
+    public const uint DefaultAccentColor = 0xe8835f;
 
     // Configs saved before the new layout became the default stored it as off.
     public int LayoutVersion { get; set; }
