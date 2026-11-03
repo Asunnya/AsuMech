@@ -88,6 +88,9 @@ public sealed partial class AsuMainWindow
         if (failed && run!.Issues.Count > 0)
             using (AsuTheme.PushTextColor(AsuTheme.Bad))
                 ImGui.TextWrapped($"Mechanic failed: {run.Issues[^1].Description}. Streak reset.");
+
+        DrawRunToggles(game, inSession);
+        if (scenario != null) DrawScenarioSettings(scenario, inSession);
     }
 
     // One segment per scenario of the fight, as wide as its length.

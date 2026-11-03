@@ -64,6 +64,7 @@ public unsafe class MainWindow : Window, IDisposable, IPanelHost
 
 #if DEBUG
     private readonly DebugMenu debugMenu;
+    internal DebugMenu DebugMenu => debugMenu;
 #endif
 
     // <Version> from AnoMech.csproj flows into the assembly version; surface it in the
@@ -458,55 +459,6 @@ public unsafe class MainWindow : Window, IDisposable, IPanelHost
     // In a session the role comes from the Party panel seat, and only the host's region/strat
     // is broadcast and run; each is reset, not just disabled, so a stale pick can't apply.
 
-#if DEBUG
-    private void DrawSeedControl()
-    {
-        ImGui.SetNextItemWidth(120f * ImGuiHelpers.GlobalScale);
-        var seedText = Picker.SeedText;
-        if (ImGui.InputTextWithHint("Seed##run-seed", "random", ref seedText, 16, ImGuiInputTextFlags.CharsDecimal))
-            Picker.SeedText = seedText;
-        if (seedText.Length > 0)
-        {
-            ImGui.SameLine();
-            if (ImGui.SmallButton("Clear##run-seed")) Picker.SeedText = "";
-        }
-
-        // The world keeps its last run's Rng until the next start reseeds it.
-        var lastText = Plugin.Game.World.Rng.Seed.ToString(CultureInfo.InvariantCulture);
-        ImGui.TextUnformatted($"Last seed: {lastText}");
-        ImGui.SameLine();
-        if (ImGui.SmallButton("Reuse##last-seed")) Picker.SeedText = lastText;
-        ImGui.SameLine();
-        if (ImGui.SmallButton("Copy##last-seed")) ImGui.SetClipboardText(lastText);
-        ImGui.Separator();
-    }
-
-    // In a session MultiplayerManager owns DebugBotControl.Enabled per run, so route through its
-    // sticky toggle (as the Party panel does); solo nothing else writes the flag.
-    private void DrawBotControlsPlayer(bool inSession)
-    {
-        var mp = Plugin.Multiplayer;
-        if (inSession)
-        {
-            var botControlled = mp.DebugBotControlled;
-            ImGui.BeginDisabled(mp.Session.Started);
-            if (ImGui.Checkbox("Bot controls player##bot-controls-player", ref botControlled))
-                mp.SetDebugBotControlled(botControlled);
-            ImGui.EndDisabled();
-        }
-        else
-        {
-            var enabled = DebugBotControl.Enabled;
-            if (ImGui.Checkbox("Bot controls player##bot-controls-player", ref enabled))
-                DebugBotControl.Enabled = enabled;
-        }
-        if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
-            ImGui.SetTooltip(inSession
-                ? "Your seat is driven by the strat's AI. Locked once the fight starts."
-                : "Your character is driven by the strat's AI, like a bot in your role.");
-        ImGui.Separator();
-    }
-#endif
 
 
     private void DrawSections(IScenario scenario, bool inSession, bool mpGuest)
@@ -542,16 +494,7 @@ public unsafe class MainWindow : Window, IDisposable, IPanelHost
         if (ImGui.TreeNodeEx("Debug###debug-v3",
                 ImGuiTreeNodeFlags.FramePadding))
         {
-            DrawSeedControl();
-            DrawBotControlsPlayer(inSession);
-            ImGui.BeginDisabled(inSession);
-            ImGui.BeginGroup();
-            debugMenu.DrawSpeedControl();
-            ImGui.EndGroup();
-            ImGui.EndDisabled();
-            if (inSession && ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
-                ImGui.SetTooltip(MpDisabledReason);
-            debugMenu.DrawDebugContent();
+            DebugSection.Draw(Picker, debugMenu, inSession);
             ImGui.TreePop();
         }
 #endif

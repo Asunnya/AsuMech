@@ -66,6 +66,9 @@ public sealed class Plugin : IAsyncDalamudPlugin
     private ConfigWindow ConfigWindow { get; init; }
     private MainWindow MainWindow { get; init; }
     internal PartyPanelWindow PartyPanel => MainWindow.PartyPanel;
+#if DEBUG
+    internal DebugMenu DebugMenu => MainWindow.DebugMenu;
+#endif
     private AsuMainWindow AsuMainWindow { get; init; }
     private Window MainUi => Config.UseNewLayout ? AsuMainWindow : MainWindow;
     private FailureBanner? FailureBanner { get; init; }

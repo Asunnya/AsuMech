@@ -94,10 +94,7 @@ public sealed partial class AsuMainWindow
 
     private void DrawFooter(Game game, bool inSession)
     {
-        if (inSession) game.GodMode = false;
-        if (Pills.Toggle("God mode##god-pill", game.GodMode, disabled: inSession)) game.GodMode = !game.GodMode;
-        if (inSession && ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
-            ImGui.SetTooltip(SessionDisabledReason);
+        DrawRunToggles(game, inSession);
         ImGui.SameLine();
         DrawStreak(inSession);
 
@@ -114,16 +111,40 @@ public sealed partial class AsuMainWindow
         Muted($"{(inSession ? "Session" : SoloSelected ? "Solo" : "Party")} · Speed {game.EventTimeScale:0.##}× · Seed {(Picker.Seed is { } seed ? seed.ToString() : "random")}");
     }
 
+    // God mode and Auto-restart are forced off in a session: a host rerunning alone would desync it.
+    private static void DrawRunToggles(Game game, bool inSession)
+    {
+        if (inSession) game.GodMode = false;
+        if (Pills.Toggle("God mode##god-pill", game.GodMode, disabled: inSession)) game.GodMode = !game.GodMode;
+        if (inSession && ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
+            ImGui.SetTooltip(SessionDisabledReason);
+        ImGui.SameLine();
+        var practice = Plugin.Practice;
+        if (inSession) practice.AutoRestart = false;
+        if (Pills.Toggle("Auto-restart##auto-restart-pill", practice.AutoRestart, disabled: inSession)) practice.AutoRestart = !practice.AutoRestart;
+        if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
+            ImGui.SetTooltip(inSession
+                ? SessionDisabledReason
+                : "Restart the same scenario immediately after a successful run. A failed run turns this back off.");
+    }
+
     private void DrawScenarioSettings(IScenario scenario, bool inSession)
     {
-        if (!ImGui.CollapsingHeader("Scenario settings###asu-scenario-settings")) return;
-        ScenarioSetupUi.DrawSetupGrid(Picker, inSession, RunState.IsGuest);
-        if (inSession)
-            multiplayerUi.DrawScenarioSettings(scenario);
-        else
+        if (ImGui.CollapsingHeader("Setup###asu-setup"))
+            ScenarioSetupUi.DrawSetupGrid(Picker, inSession, RunState.IsGuest);
+        if (ImGui.CollapsingHeader("Scenario settings###asu-scenario-settings"))
         {
-            scenario.DrawSettings();
-            scenario.DrawMultiplayerSettings();
+            if (inSession)
+                multiplayerUi.DrawScenarioSettings(scenario);
+            else
+            {
+                scenario.DrawSettings();
+                scenario.DrawMultiplayerSettings();
+            }
         }
+#if DEBUG
+        if (ImGui.CollapsingHeader("Debug###asu-debug"))
+            DebugSection.Draw(Picker, plugin.DebugMenu, inSession);
+#endif
     }
 }
