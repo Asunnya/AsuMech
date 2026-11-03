@@ -76,7 +76,7 @@ public sealed partial class AsuMainWindow : Window, IDisposable, IPanelHost
 
         // Inside an instance the window is the only way out, so it can't be closed there.
         var inInstance = Plugin.Game.World.Map.IsInInstance;
-        if (inInstance) IsOpen = true;
+        if (inInstance && Plugin.Config.UseNewLayout) IsOpen = true;
         ShowCloseButton = !inInstance;
         RespectCloseHotkey = !inInstance;
     }

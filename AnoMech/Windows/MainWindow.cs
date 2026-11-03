@@ -208,7 +208,8 @@ public unsafe class MainWindow : Window, IDisposable, IPanelHost
         var inInstance = Plugin.Game.World.Map.IsInInstance;
         if (inInstance)
         {
-            IsOpen = true;
+            // Both main windows check every frame; only the active layout's may force itself open.
+            if (!Plugin.Config.UseNewLayout) IsOpen = true;
             ShowCloseButton = false;
             RespectCloseHotkey = false;
             if (scenarioActive)
