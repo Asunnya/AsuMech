@@ -14,9 +14,11 @@ internal static class AsuTheme
     public static readonly Vector4 Line = Rgb(0x2a2d33);
     public static readonly Vector4 Text = Rgb(0xe8e6e3);
     public static readonly Vector4 Muted = Rgb(0x8d8a85);
-    public static readonly Vector4 Accent = Rgb(0xe8835f);
-    public static readonly Vector4 AccentHover = Rgb(0xf09574);
-    public static readonly Vector4 OnAccent = Rgb(0x1f120d);
+    public static Vector4 Accent => Rgb(Plugin.Config.AccentColor);
+    public static Vector4 AccentHover => Vector4.Lerp(Accent, Vector4.One, 0.2f);
+    // Dark text on light accents, light text on dark ones.
+    public static Vector4 OnAccent => Luminance(Accent) > 0.4f ? Vector4.Lerp(Accent, Black, 0.87f) : Text;
+    private static readonly Vector4 Black = new(0f, 0f, 0f, 1f);
     public static readonly Vector4 Ok = Rgb(0x79c99a);
     public static readonly Vector4 Bad = Rgb(0xff7b72);
     public static readonly Vector4 Cleared = Rgb(0x3c5a48);
@@ -107,8 +109,15 @@ internal static class AsuTheme
         return scope;
     }
 
-    private static Vector4 Rgb(uint rgb)
+    public static Vector4 Rgb(uint rgb)
         => new(((rgb >> 16) & 0xff) / 255f, ((rgb >> 8) & 0xff) / 255f, (rgb & 0xff) / 255f, 1f);
+
+    public static uint ToRgb(Vector3 color)
+        => ((uint)MathF.Round(Math.Clamp(color.X, 0f, 1f) * 255) << 16)
+         | ((uint)MathF.Round(Math.Clamp(color.Y, 0f, 1f) * 255) << 8)
+         | (uint)MathF.Round(Math.Clamp(color.Z, 0f, 1f) * 255);
+
+    private static float Luminance(Vector4 c) => 0.2126f * c.X + 0.7152f * c.Y + 0.0722f * c.Z;
 
     // Counts its own pushes so a scope always pops exactly what it pushed.
     private sealed class StyleScope : IDisposable

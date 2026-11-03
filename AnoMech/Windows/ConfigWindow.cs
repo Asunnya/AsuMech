@@ -91,6 +91,8 @@ public class ConfigWindow : Window, IDisposable
         if (Pills.Checkbox("Use the new main window (preview)", ref newLayout))
             plugin.SetNewLayout(newLayout);
 
+        if (configuration.UseNewLayout) DrawAccentColor();
+
         var suppressBgm = configuration.SuppressBgm;
         if (Pills.Checkbox("Suppress scenario BGM", ref suppressBgm))
         {
@@ -126,7 +128,7 @@ public class ConfigWindow : Window, IDisposable
         if (configuration.EnableUserActions)
         {
             var threshold = configuration.CastInterruptThreshold;
-            ImGui.SetNextItemWidth(90 * ImGuiHelpers.GlobalScale);
+            ImGui.SetNextItemWidth(150 * ImGuiHelpers.GlobalScale);
             if (ImGui.InputFloat("Slidecast window (s)", ref threshold, 0.05f, 0.1f, "%.2f"))
             {
                 configuration.CastInterruptThreshold = Math.Clamp(threshold, 0f, 5f);
@@ -181,6 +183,34 @@ public class ConfigWindow : Window, IDisposable
                 "the sim zone this way. You still can't send anything to the server " +
                 "while in the instance.");
 #endif
+    }
+
+    private bool accentUnsaved;
+
+    // Saved once the picker is let go, not on every drag frame.
+    private void DrawAccentColor()
+    {
+        var color = AsuTheme.Rgb(configuration.AccentColor);
+        var rgb = new Vector3(color.X, color.Y, color.Z);
+        if (ImGui.ColorEdit3("Main color", ref rgb, ImGuiColorEditFlags.NoInputs))
+        {
+            configuration.AccentColor = AsuTheme.ToRgb(rgb);
+            accentUnsaved = true;
+        }
+        if (configuration.AccentColor != Configuration.DefaultAccentColor)
+        {
+            ImGui.SameLine();
+            if (ImGui.Button("Reset##accent"))
+            {
+                configuration.AccentColor = Configuration.DefaultAccentColor;
+                accentUnsaved = true;
+            }
+        }
+        if (accentUnsaved && !ImGui.IsAnyItemActive())
+        {
+            configuration.Save();
+            accentUnsaved = false;
+        }
     }
 
     private void DrawMultiplayerServer()
