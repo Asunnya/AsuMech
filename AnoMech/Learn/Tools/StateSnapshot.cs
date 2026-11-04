@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
+using AnoMech.Scenarios;
 
 namespace AnoMech.Learn.Tools;
 
@@ -51,20 +52,45 @@ public static class StateSnapshot
         int or long or short or byte or uint or ushort => Convert.ToString(value, CultureInfo.InvariantCulture),
         Vector3 v => $"({v.X:0.#},{v.Z:0.#})",
         Vector2 v => $"({v.X:0.#},{v.Y:0.#})",
+        Direction d => DirectionText(d),
         IEnumerable list => Join(list),
         _ when value.GetType().Namespace?.StartsWith("AnoMech.Core.SimObjects", StringComparison.Ordinal) == true => null,
         _ when value is Delegate => null,
         _ when value.GetType().IsValueType && !value.GetType().IsPrimitive => Tuple(value),
+        _ when Named(value) is { } name => name,
         _ => value.ToString(),
     };
 
-    // A record struct (a lane, a pair) as "(a,b,c)" so list features can name one.
+    // The static member's name for an enum-like record (OmegaAttack.Pile), else null.
+    private static string? Named(object value)
+    {
+        foreach (var (name, candidate) in Toolbox.ExampleOverrides.NamedValues(value.GetType()))
+            if (ReferenceEquals(candidate, value) || candidate.Equals(value)) return name;
+        return null;
+    }
+
+    // A compass name when the direction sits on an octant, else degrees clockwise from north.
+    private static string DirectionText(Direction d)
+    {
+        var octant = d.Index() * MathF.PI / 4f;
+        var off = MathF.Abs(d.RadiansFromNorth - octant);
+        if (off > MathF.PI) off = 2f * MathF.PI - off;
+        return off < 0.01f ? d.Name() : (d.RadiansFromNorth * 180f / MathF.PI).ToString("0.#", CultureInfo.InvariantCulture) + "°";
+    }
+
+    // A record struct (a lane, a pair) or a value tuple as "(a,b,c)" so list features can name one.
     private static string? Tuple(object value)
     {
         var parts = new List<string>();
-        foreach (var p in value.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(p => p.GetIndexParameters().Length == 0))
+        var type = value.GetType();
+        foreach (var p in type.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(p => p.GetIndexParameters().Length == 0))
         {
             if (Describe(Try(() => p.GetValue(value))) is not { } text) return null;
+            parts.Add(text);
+        }
+        foreach (var f in type.GetFields(BindingFlags.Instance | BindingFlags.Public))
+        {
+            if (Describe(Try(() => f.GetValue(value))) is not { } text) return null;
             parts.Add(text);
         }
         return parts.Count == 0 ? value.ToString() : "(" + string.Join(",", parts) + ")";
