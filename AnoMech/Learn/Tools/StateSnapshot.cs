@@ -54,8 +54,21 @@ public static class StateSnapshot
         IEnumerable list => Join(list),
         _ when value.GetType().Namespace?.StartsWith("AnoMech.Core.SimObjects", StringComparison.Ordinal) == true => null,
         _ when value is Delegate => null,
+        _ when value.GetType().IsValueType && !value.GetType().IsPrimitive => Tuple(value),
         _ => value.ToString(),
     };
+
+    // A record struct (a lane, a pair) as "(a,b,c)" so list features can name one.
+    private static string? Tuple(object value)
+    {
+        var parts = new List<string>();
+        foreach (var p in value.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(p => p.GetIndexParameters().Length == 0))
+        {
+            if (Describe(Try(() => p.GetValue(value))) is not { } text) return null;
+            parts.Add(text);
+        }
+        return parts.Count == 0 ? value.ToString() : "(" + string.Join(",", parts) + ")";
+    }
 
     private static string? Join(IEnumerable list)
     {

@@ -23,10 +23,11 @@ public sealed record MinedRule(string Cls, int Line, float Time, string Role, Li
 // names the role (a target list containing it) is also tried as "am I in it".
 public static class RuleMiner
 {
-    public const float SameSpotYalms = 3.5f;
+    public const float SameSpotYalms = 4.5f;
     // With enough seeds, a value seen once proves nothing; it has to recur.
     public const int MinSupportSeeds = 2;
     public const int SeedsForSupport = 6;
+    public const int FewValues = 4;
 
     public static List<MinedRule> Mine(OrderDump dump, WaymarkLayout? waymarks = null)
     {
@@ -91,15 +92,16 @@ public static class RuleMiner
                 if (map.TryGetValue(key, out var spot) && spot != spotOf[seed]) return false;
                 map[key] = spotOf[seed];
             }
-            // A feature as varied as the seeds themselves explains nothing, nor one whose values barely recur.
-            if (map.Count >= seedList.Count) return false;
+            // A feature as varied as the seeds themselves explains nothing; one with few values (a
+            // bearing, a side) may, even when a value showed up once; otherwise every value must recur.
+            if (map.Count > seedList.Count / 2) return false;
             var support = new Dictionary<string, int>();
             foreach (var seed in seedList)
             {
                 var key = string.Join(" & ", names.Select(n => features[n](seed) ?? "?"));
                 support[key] = support.GetValueOrDefault(key) + 1;
             }
-            return support.Values.All(n => n >= minSupport);
+            return map.Count <= FewValues || support.Values.All(n => n >= minSupport);
         }
         // Fewest values first; on a tie, the feature about the role itself, then the shortest name.
         var single = features.Keys.Where(n => Explains([n], out _)).OrderBy(n => Values(n)).ThenByDescending(n => n.EndsWith(" has " + role, StringComparison.Ordinal)).ThenBy(n => n.Length).ToList();
@@ -130,8 +132,8 @@ public static class RuleMiner
         var start = 0;
         for (var i = 0; i < inner.Length; i++)
         {
-            if (inner[i] == '(') depth++;
-            else if (inner[i] == ')') depth--;
+            if (inner[i] is '(' or '{') depth++;
+            else if (inner[i] is ')' or '}') depth--;
             else if (inner[i] == ',' && depth == 0) { items.Add(inner[start..i]); start = i + 1; }
         }
         if (inner.Length > 0) items.Add(inner[start..]);

@@ -21,6 +21,8 @@ namespace AnoMech.LessonTools;
 // oracle   --plan plans/<id>.json --lesson lesson.json --dump dump.json [--write]   example seed + toolbox vs strat residuals
 // author   --scenario <TypeName> [--strat N] [--seeds 1..8] --out <dir> [--plan <id|file> --zone <ZoneType> [--layout <name>]]
 //          record -> skeleton -> mine -> cues [-> toolbox-import -> oracle] -> <dir>/<Scenario>.<strat>.context.md
+// context  --dump dump.json --lesson lesson.json --out context.md [--plan plans/<id>.json] [--zone <ZoneType> --layout <name>]
+//          the context file again from an existing dump (after a miner change or a lesson edit), no recording
 internal static class Cli
 {
     public static int Run(string[] args)
@@ -43,6 +45,7 @@ internal static class Cli
                 "cues" => Cues(opts),
                 "oracle" => Oracle(opts),
                 "author" => Author(opts),
+                "context" => Context(opts),
                 _ => Usage(),
             };
         }
@@ -392,6 +395,21 @@ internal static class Cli
         Console.WriteLine($"dump     {dumpPath}");
         Console.WriteLine($"skeleton {lessonPath}");
         Console.WriteLine($"context  {contextPath}");
+        return 0;
+    }
+
+    private static int Context(Dictionary<string, string> opts)
+    {
+        var dump = OrderDump.Parse(File.ReadAllText(Need(opts, "dump")));
+        var lesson = LessonLoader.Parse(File.ReadAllText(Need(opts, "lesson")));
+        var type = typeof(Game).Assembly.GetTypes().FirstOrDefault(t => t.Name == dump.Scenario);
+        var zone = ScenarioCatalog.Create().Scenarios.FirstOrDefault(s => s.GetType() == type)?.Phase.Zone;
+        var layout = Layout(opts, zone);
+        var plan = opts.TryGetValue("plan", out var planPath) && planPath.Length > 0 ? ToolboxPlan.Parse(File.ReadAllText(planPath)) : null;
+        var oracle = plan != null && lesson.Toolbox is { } link ? ToolboxOracle.Check(plan, lesson, link, dump) : null;
+        var outPath = Need(opts, "out");
+        File.WriteAllText(outPath, LessonContext.Write(dump, lesson, RuleMiner.Mine(dump, layout), CueExtractor.Extract(dump), oracle, plan, layout));
+        Console.WriteLine($"context  {outPath}");
         return 0;
     }
 }
