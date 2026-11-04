@@ -88,7 +88,7 @@ public sealed partial class AsuMainWindow : Window, IDisposable, IPanelHost
         var height = contentHeight > 0f ? contentHeight : 0f;
         SizeConstraints = new WindowSizeConstraints
         {
-            MinimumSize = new Vector2(MinWidthPx, height / scale),
+            MinimumSize = new Vector2(MinWidthPx * AsuTheme.UserScale, height / scale),
             MaximumSize = new Vector2(float.MaxValue, contentHeight > 0f ? height / scale : float.MaxValue),
         };
     }

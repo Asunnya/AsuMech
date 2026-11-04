@@ -47,20 +47,18 @@ public sealed partial class AsuMainWindow
 
         var pos = ImGui.GetCursorScreenPos();
         var lineHeight = ImGui.GetFrameHeight();
-        var radius = DotRadiusPx * ImGuiHelpers.GlobalScale;
+        var radius = DotRadiusPx * AsuTheme.Scale;
         ImGui.GetWindowDrawList().AddCircleFilled(new Vector2(pos.X + radius, pos.Y + lineHeight * 0.5f), radius, AsuTheme.U32(color));
         ImGui.Dummy(new Vector2(radius * 2f, lineHeight));
         ImGui.SameLine();
         ImGui.AlignTextToFramePadding();
         ImGui.TextUnformatted(scenario is null ? "AsuMech" : $"{scenario.Phase.Zone.ShortName} · {scenario.DisplayName()}");
-        ImGui.SameLine();
-        Muted($"{label} · {runElapsed:mm\\:ss} · {StreakText()}{(Plugin.Practice.AutoRestart ? " · loop" : "")}{(watch != null ? " · watching" : "")}{(Windows.Learn.LearnSession.Current is { Ended: false } learn ? $" · {learn.Level.ToString().ToLowerInvariant()}" : "")}");
+        var status = $"{label} · {runElapsed:mm\\:ss} · {StreakText()}{(Plugin.Practice.AutoRestart ? " · loop" : "")}{(watch != null ? " · watching" : "")}{(Windows.Learn.LearnSession.Current is { Ended: false } learn ? $" · {learn.Level.ToString().ToLowerInvariant()}" : "")}";
+        Flow.SameLineIfFits(Flow.TextWidth(status));
+        Muted(status);
 
-        var size = new Vector2(StripButtonPx * ImGuiHelpers.GlobalScale, 0f);
-        if (stripRightWidth > 0f)
-            ImGui.SameLine(ImGui.GetWindowContentRegionMax().X - stripRightWidth);
-        else
-            ImGui.SameLine();
+        var size = new Vector2(StripButtonPx * AsuTheme.Scale, 0f);
+        Flow.SameLineRight(stripRightWidth);
         ImGui.BeginGroup();
         if (!inSession)
         {
@@ -97,7 +95,7 @@ public sealed partial class AsuMainWindow
     private void DrawSegments(IScenario current)
     {
         var scenarios = ScenariosOf(current.Phase.Zone).ToList();
-        var scale = ImGuiHelpers.GlobalScale;
+        var scale = AsuTheme.Scale;
         var gap = SegmentGapPx * scale;
         var height = SegmentHeightPx * scale;
         var width = ImGui.GetContentRegionAvail().X;

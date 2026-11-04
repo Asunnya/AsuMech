@@ -26,7 +26,7 @@ public sealed partial class AsuMainWindow
             ImGui.OpenPopup("selector");
         }
 
-        var scale = ImGuiHelpers.GlobalScale;
+        var scale = AsuTheme.Scale;
         ImGui.SetNextWindowSizeConstraints(new Vector2(System.Math.Max(width, SelectorPopupMinPx * scale), 0f), new Vector2(float.MaxValue, float.MaxValue));
         if (!ImGui.BeginPopup("selector")) return;
 

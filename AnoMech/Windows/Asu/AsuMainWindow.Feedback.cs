@@ -52,7 +52,7 @@ public sealed partial class AsuMainWindow
             ImGui.OpenPopup("feedback-popup");
             openFeedbackNextFrame = false;
         }
-        ImGui.SetNextWindowSize(new Vector2(FeedbackPopupPx * ImGuiHelpers.GlobalScale, 0f));
+        ImGui.SetNextWindowSize(new Vector2(FeedbackPopupPx * AsuTheme.Scale, 0f));
         if (!ImGui.BeginPopup("feedback-popup")) return;
         ImGui.TextWrapped("Opens a pre-filled GitHub issue. You review it before posting.");
         ImGui.Separator();

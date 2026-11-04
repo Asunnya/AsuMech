@@ -298,6 +298,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
         AsuMainWindow?.Dispose();
         LessonReport?.Dispose();
         StepDrill?.Dispose();
+        Windows.Asu.AsuFonts.Dispose();
         FailureBanner?.Dispose();
         Windows.Learn.LearnSession.Current?.Dispose();
         MitTraining?.Dispose();

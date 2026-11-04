@@ -54,7 +54,7 @@ public sealed partial class AsuMainWindow
         DrawStratPill(scenario);
         if (!inSession)
         {
-            ImGui.SameLine();
+            Flow.SameLineIfFits(Flow.ButtonWidth(RolePillLabel()));
             DrawRolePill();
         }
 
@@ -153,7 +153,7 @@ public sealed partial class AsuMainWindow
     // The arena and the selected waymark layout, north up.
     private void DrawArenaPreview(IScenario scenario)
     {
-        var scale = ImGuiHelpers.GlobalScale;
+        var scale = AsuTheme.Scale;
         var size = ArenaPreviewPx * scale;
         var pos = ImGui.GetCursorScreenPos();
         var center = pos + new Vector2(size * 0.5f);
