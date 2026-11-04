@@ -4,7 +4,7 @@
   "sources": [
     {
       "label": "NAUR toolbox (Zeal)",
-      "url": "https://ff14.toolboxgaming.space/?id=122994122467471&preview=1"
+      "url": "https://ff14.toolboxgaming.space/?id=122994122467471\u0026preview=1"
     },
     {
       "label": "NAUR UWU page",
@@ -214,7 +214,7 @@
         "time": 94.3,
         "line": 53
       },
-      "title": "Tanks intercept the sisters' songs, party stacks south-east",
+      "title": "Tanks intercept the sisters\u0027 songs, party stacks south-east",
       "cue": "Suparna and Chirada cast Mistral Song",
       "rule": "Party stacks south-east.",
       "roles": {
@@ -257,7 +257,7 @@
         "line": 56
       },
       "title": "Stack south, tank far north",
-      "rule": "Stack south; main tank far north for the sisters' return.",
+      "rule": "Stack south; main tank far north for the sisters\u0027 return.",
       "tolerance": 2,
       "skip": false
     },
@@ -273,10 +273,10 @@
       "rule": "Hold your spot; the tanks take the tethers.",
       "roles": {
         "MainTank": {
-          "rule": "Grab the sister's tether on the west side."
+          "rule": "Grab the sister\u0027s tether on the west side."
         },
         "OffTank": {
-          "rule": "Grab the sister's tether on the east side."
+          "rule": "Grab the sister\u0027s tether on the east side."
         }
       },
       "tolerance": 2.5,
@@ -332,6 +332,7 @@
       "UwuP1GarudaAi@125": 30,
       "UwuP1GarudaAi@112.4": 27,
       "UwuP1GarudaAi@101.35": 25
-    }
+    },
+    "exampleSeed": 7
   }
 }
