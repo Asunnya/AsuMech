@@ -16,7 +16,10 @@ namespace AnoMech.Windows.Learn;
 internal sealed class ToolboxViewer : Window
 {
     private const float DefaultSizePx = 340f;
-    private const float ArenaYalms = 44f;
+    // Plans are calibrated by waymarks; the wall sits near 15 yalms. Enemies dragged past it are parked
+    // off the arena by the author, and the toolbox's own "Main Boss" marker is unused when adds stand in.
+    private const float ArenaYalms = 32f;
+    private const float ParkedYalms = 16.5f;
     private const float PlayerIconPx = 24f;
     private const float EnemyIconPx = 28f;
     private const float OpacitySliderPx = 110f;
@@ -66,7 +69,17 @@ internal sealed class ToolboxViewer : Window
 
     private void OnStepChanged(ActiveStep step)
     {
-        if (!follow || link is null || step.Step is null) return;
+        if (follow) Show(step);
+    }
+
+    private void JumpToCurrent()
+    {
+        if (subscribed?.Current is { } step) Show(step);
+    }
+
+    private void Show(ActiveStep step)
+    {
+        if (link is null || step.Step is null) return;
         if (link.Steps.TryGetValue(MasteryStore.StepId(step.Step.Key), out var index)) shown = index;
     }
 
@@ -86,7 +99,7 @@ internal sealed class ToolboxViewer : Window
         {
             ImGui.SameLine();
             using (AsuTheme.PushAccentButton())
-                if (ImGui.SmallButton("Follow the run")) follow = true;
+                if (ImGui.SmallButton("Follow the run")) { follow = true; JumpToCurrent(); }
         }
         var config = Plugin.Config;
         using (AsuTheme.PushPill())
@@ -116,7 +129,13 @@ internal sealed class ToolboxViewer : Window
         foreach (var o in step.Objects.Where(o => o.Kind == "tether")) DrawTether(draw, o, At(o), px);
         if (config.ToolboxShowWaymarks)
             foreach (var o in step.Objects.Where(o => o.Kind == "waymark")) DrawWaymark(draw, o, At(o), px);
-        foreach (var o in step.Objects.Where(o => o.Kind is "boss" or "add")) DrawEnemy(draw, o, At(o), px);
+        var hasAdds = step.Objects.Any(o => o.Kind == "add");
+        foreach (var o in step.Objects.Where(o => o.Kind is "boss" or "add"))
+        {
+            if (new Vector2(o.X, o.Z).Length() > ParkedYalms) continue;
+            if (o.Kind == "boss" && hasAdds && o.Label == "Main Boss") continue;
+            DrawEnemy(draw, o, At(o), px);
+        }
         foreach (var o in step.Objects.Where(o => o.Kind == "player")) DrawPlayer(draw, o, At(o));
         foreach (var o in step.Objects.Where(o => o.Kind == "text"))
             draw.AddText(At(o), AsuTheme.U32(AsuTheme.Text), o.Label);
