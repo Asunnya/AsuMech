@@ -42,8 +42,12 @@ public sealed record LessonStep(
 
 public sealed record LessonSource(string Label, string Url);
 
-public sealed record Lesson(string Scenario, string Strat, List<LessonSource> Sources, List<LessonStep> Steps, Toolbox.LessonToolbox? Toolbox = null)
+// Draft: the text came out of the authoring chain and nobody has reviewed it in game yet.
+public sealed record Lesson(string Scenario, string Strat, List<LessonSource> Sources, List<LessonStep> Steps, Toolbox.LessonToolbox? Toolbox = null, bool Draft = false)
 {
+    // A drafted rule that still lists rolls and spots instead of telling the player what to read.
+    public static bool IsTable(string? rule) => rule != null && (rule.StartsWith("Depends on ", StringComparison.Ordinal) || rule.Contains("read the strat", StringComparison.Ordinal));
+
     // The step for an order: by time, then the line breaks ties.
     public LessonStep? StepFor(GuidanceKey key)
     {

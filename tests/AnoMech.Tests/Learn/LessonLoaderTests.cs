@@ -48,6 +48,25 @@ public class LessonLoaderTests
         Assert.That(errors, Has.Some.Contains("needs a time"));
     }
 
+    [Test]
+    public void TableRulesAreOnlyAllowedInADraft()
+    {
+        const string steps = "\"steps\": [ { \"key\": { \"cls\": \"UwuP1GarudaAi\", \"time\": 1 }, \"rule\": \"Depends on NailBearing: 270 → N wall; 90 → S wall.\" } ]";
+        var reviewed = LessonLoader.Parse("{ \"scenario\": \"UwuP1GarudaScenario\", \"strat\": \"Zeal / The Balance\", \"sources\": [], " + steps + " }");
+        Assert.That(LessonLoader.Validate(reviewed, Catalog.Scenarios), Has.Some.Contains("still a table"));
+        var draft = LessonLoader.Parse("{ \"scenario\": \"UwuP1GarudaScenario\", \"strat\": \"Zeal / The Balance\", \"sources\": [], \"draft\": true, " + steps + " }");
+        Assert.That(draft.Draft, Is.True);
+        Assert.That(LessonLoader.Validate(draft, Catalog.Scenarios), Is.Empty);
+    }
+
+    [Test]
+    public void TheGlossaryIsNotALesson()
+    {
+        Assert.That(LessonLoader.All.Select(l => l.Scenario), Has.None.Empty);
+        Assert.That(Glossary.Load("Uwu").Fields, Is.Not.Empty);
+        Assert.That(Glossary.Load("NoSuchFamily").Fields, Is.Empty);
+    }
+
     private sealed class Recorder : IPlayerGuidanceSink
     {
         public readonly List<GuidanceOrder> Orders = [];

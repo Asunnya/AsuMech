@@ -37,6 +37,21 @@ public class LessonDraftTests
     }
 
     [Test]
+    public void TheGlossaryWordsFieldsAndValuesAndMembershipReadsAsIfYouAreIn()
+    {
+        var glossary = Glossary.Parse("""{ "fields": { "NailBearing": "the nails' close pair", "FrictionTargets": "the Friction targets" }, "values": { "*": { "270": "west" }, "NailBearing": { "90": "east" } } }""");
+        var table = new MinedRule("Ai", 40, 10f, "MainTank", [new MinedSpot("N wall", 0, -19, [1]), new MinedSpot("S wall", 0, 19, [2])], ["NailBearing"], new() { ["270"] = "N wall", ["90"] = "S wall" }, 2);
+        Assert.That(LessonDraft.Sentence(table, glossary), Is.EqualTo("Depends on the nails' close pair: west → N wall; east → S wall."));
+        Assert.That(Lesson.IsTable(LessonDraft.Sentence(table, glossary)), Is.True);
+        var relation = table with { Fields = [], SpotByValue = new(), Relation = "with NailBearing as north: NW wall" };
+        Assert.That(LessonDraft.Sentence(relation, glossary), Is.EqualTo("with the nails' close pair as north: the north-west wall."));
+        var membership = table with { Fields = ["FrictionTargets has MainTank"], SpotByValue = new() { ["yes"] = "N wall", ["no"] = "centre" } };
+        Assert.That(LessonDraft.Sentence(membership, glossary), Is.EqualTo("If you are in the Friction targets: Go to the north wall; otherwise: Stand at the centre."));
+        Assert.That(Lesson.IsTable(LessonDraft.Sentence(membership, glossary)), Is.False);
+        Assert.That(Drafted().Draft, Is.True);
+    }
+
+    [Test]
     public void AStackGetsOneRuleATightToleranceAndTheLastCastAsCue()
     {
         var step = Drafted().Steps[0];

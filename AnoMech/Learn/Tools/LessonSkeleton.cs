@@ -28,7 +28,7 @@ public static class LessonSkeleton
                 return new LessonStep(key, Title: title, Rule: "", Tolerance: DefaultTolerance);
             })
             .ToList();
-        return new Lesson(dump.Scenario, dump.Strat, [], steps);
+        return new Lesson(dump.Scenario, dump.Strat, [], steps, Draft: true);
     }
 
     // TanksInterceptSistersSongsPartyStackSouthEast -> "Tanks intercept sisters songs party stack south east".

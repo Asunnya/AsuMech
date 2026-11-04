@@ -379,7 +379,7 @@ internal static class Cli
             : zone.WaymarkPresets.FirstOrDefault(w => w.Name.Equals(layoutName, StringComparison.OrdinalIgnoreCase)) ?? zone.WaymarkPresets.FirstOrDefault();
         var rules = RuleMiner.Mine(dump, layout);
         var cues = CueExtractor.Extract(dump);
-        lesson = LessonDraft.Draft(lesson, dump, rules, cues);
+        lesson = LessonDraft.Draft(lesson, dump, rules, cues, Glossary.Load(Glossary.FamilyOf(type)));
 
         ToolboxPlan? plan = null;
         OracleReport? oracle = null;
@@ -417,7 +417,8 @@ internal static class Cli
         var type = typeof(Game).Assembly.GetTypes().FirstOrDefault(t => t.Name == dump.Scenario);
         var zone = ScenarioCatalog.Create().Scenarios.FirstOrDefault(s => s.GetType() == type)?.Phase.Zone;
         var layout = Layout(opts, zone);
-        var drafted = LessonDraft.Draft(lesson, dump, RuleMiner.Mine(dump, layout), CueExtractor.Extract(dump));
+        var glossary = type is null ? Glossary.Empty : Glossary.Load(Glossary.FamilyOf(type));
+        var drafted = LessonDraft.Draft(lesson, dump, RuleMiner.Mine(dump, layout), CueExtractor.Extract(dump), glossary);
         var outPath = Need(opts, "out");
         File.WriteAllText(outPath, LessonSkeleton.ToJson(drafted));
         Console.WriteLine($"draft    {outPath} ({drafted.Steps.Count(s => s.Skip)} skipped, {drafted.Steps.Count(s => s.Cue != null)} with a cue)");

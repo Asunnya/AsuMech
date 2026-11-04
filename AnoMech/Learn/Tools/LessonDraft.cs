@@ -18,8 +18,9 @@ public static class LessonDraft
 
     private static readonly string[] Roles = ["MainTank", "OffTank", "RegenHealer", "ShieldHealer", "MeleeDpsA", "MeleeDpsB", "PhysRangedDps", "CasterDps"];
 
-    public static Lesson Draft(Lesson skeleton, OrderDump dump, List<MinedRule> rules, Dictionary<(string Cls, int Line, string Role), List<CueCandidate>> cues)
+    public static Lesson Draft(Lesson skeleton, OrderDump dump, List<MinedRule> rules, Dictionary<(string Cls, int Line, string Role), List<CueCandidate>> cues, Glossary? glossary = null)
     {
+        glossary ??= Glossary.Empty;
         var steps = new List<LessonStep>();
         LessonStep? previous = null;
         foreach (var step in skeleton.Steps)
@@ -28,7 +29,7 @@ public static class LessonDraft
             var stepRules = rules.Where(r => r.Cls == step.Key.Cls && r.Line == line).ToList();
             var stepCues = Roles.Where(role => cues.ContainsKey((step.Key.Cls, line, role))).ToDictionary(role => role, role => cues[(step.Key.Cls, line, role)]);
             var skip = Skips(step, previous, dump);
-            var (rule, roles) = Rules(stepRules);
+            var (rule, roles) = Rules(stepRules, glossary);
             var cue = Cue(stepCues);
             var drafted = step with
             {
@@ -42,7 +43,7 @@ public static class LessonDraft
             steps.Add(drafted);
             previous = step;
         }
-        return skeleton with { Steps = steps };
+        return skeleton with { Steps = steps, Draft = true };
     }
 
     // The orders that moved nobody more than a step from where the previous order put them.
@@ -70,8 +71,9 @@ public static class LessonDraft
 
     // The description most roles share is the rule; a role a few steps away from that spot (a
     // spread) shares it too; the rest get their own line.
-    private static (string Rule, Dictionary<string, LessonRoleText> Roles) Rules(List<MinedRule> rules)
+    private static (string Rule, Dictionary<string, LessonRoleText> Roles) Rules(List<MinedRule> rules, Glossary glossary)
     {
+        string Sentence(MinedRule r) => LessonDraft.Sentence(r, glossary);
         var byRole = rules.ToDictionary(r => r.Role, Sentence);
         if (byRole.Count == 0) return ("", new());
         var shared = byRole.Values.GroupBy(t => t).OrderByDescending(g => g.Count()).First().Key;
@@ -84,14 +86,26 @@ public static class LessonDraft
         return (shared, own);
     }
 
-    public static string Sentence(MinedRule rule)
+    public static string Sentence(MinedRule rule, Glossary? glossary = null)
     {
+        glossary ??= Glossary.Empty;
         if (rule.Fixed) return $"{Place(rule.Spots[0].Label)}.";
-        if (rule.Relation is { } relation) return $"{Relation(relation)}.";
+        if (rule.Relation is { } relation) return $"{glossary.Apply(Relation(relation))}.";
+        if (rule.Fields.Count == 1 && rule.Fields[0].EndsWith(" has " + rule.Role, StringComparison.Ordinal) && rule.SpotByValue.Count == 2
+            && rule.SpotByValue.TryGetValue("yes", out var inside) && rule.SpotByValue.TryGetValue("no", out var outside))
+            return $"If you are in {glossary.Field(rule.Fields[0][..^(" has ".Length + rule.Role.Length)])}: {Place(inside)}; otherwise: {Place(outside)}.";
         if (rule.Fields.Count > 0)
-            return $"Depends on {string.Join(" and ", rule.Fields)}: {string.Join("; ", rule.SpotByValue.Select(kv => $"{kv.Key} → {kv.Value}"))}.";
-        var closest = rule.NearestField is { } near && rule.Purity >= 0.6f ? $" (closest field: {near})" : "";
+            return $"Depends on {string.Join(" and ", rule.Fields.Select(f => glossary.Apply(f)))}: {string.Join("; ", rule.SpotByValue.Select(kv => $"{ValueWords(kv.Key, rule.Fields, glossary)} → {kv.Value}"))}.";
+        var closest = rule.NearestField is { } near && rule.Purity >= 0.6f ? $" (closest field: {glossary.Apply(near)})" : "";
         return $"The spot follows a rule the rolls alone don't show; read the strat{closest}.";
+    }
+
+    // A table key ("270 & yes") with each field's value in the glossary's words.
+    private static string ValueWords(string key, List<string> fields, Glossary glossary)
+    {
+        var parts = key.Split(" & ");
+        if (parts.Length != fields.Count) return key;
+        return string.Join(" & ", parts.Select((v, i) => glossary.Value(fields[i], v)));
     }
 
     // "at B" / "near D (W 8m)" / "centre" / "N wall" / "SE 12m" in words.

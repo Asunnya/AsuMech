@@ -52,6 +52,8 @@ public static class LessonLoader
                 errors.Add($"step {i}: key needs a time or a from/to range");
             if (!lesson.Steps[i].Skip && string.IsNullOrWhiteSpace(lesson.Steps[i].Rule) && (lesson.Steps[i].Roles?.Values.All(r => string.IsNullOrWhiteSpace(r.Rule)) ?? true))
                 errors.Add($"step {i} ({key.Time ?? key.From}): needs a rule or skip");
+            if (!lesson.Draft && !lesson.Steps[i].Skip && (Lesson.IsTable(lesson.Steps[i].Rule) || (lesson.Steps[i].Roles?.Values.Any(r => Lesson.IsTable(r.Rule)) ?? false)))
+                errors.Add($"step {i} ({key.Time ?? key.From}): rule is still a table; reword it or mark the lesson draft");
         }
         return errors;
     }
@@ -60,7 +62,7 @@ public static class LessonLoader
     {
         var assembly = Assembly.GetExecutingAssembly();
         var lessons = new List<Lesson>();
-        foreach (var name in assembly.GetManifestResourceNames().Where(n => n.StartsWith(ResourcePrefix, StringComparison.Ordinal) && n.EndsWith(".json", StringComparison.Ordinal)))
+        foreach (var name in assembly.GetManifestResourceNames().Where(n => n.StartsWith(ResourcePrefix, StringComparison.Ordinal) && n.EndsWith(".json", StringComparison.Ordinal) && !n.EndsWith("." + Glossary.FileName, StringComparison.Ordinal)))
         {
             using var stream = assembly.GetManifestResourceStream(name)!;
             using var reader = new StreamReader(stream);

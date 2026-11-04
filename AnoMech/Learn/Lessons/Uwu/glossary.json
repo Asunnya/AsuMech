@@ -1,0 +1,36 @@
+{
+  "fields": {
+    "SuparnaSongBearing": "Suparna's song side",
+    "ChiradaSongBearing": "Chirada's song side",
+    "MistralSongTarget": "the Mistral Song target",
+    "SistersSongTargets": "the sisters' song targets",
+    "FrictionTargets": "the Friction targets",
+    "SatinPlumesFirst": "the first plume set",
+    "SatinPlumesSecond": "the second plume set",
+    "MesohighTargets": "the Mesohigh tether targets",
+    "OpenerBearing": "Ifrit's opener side",
+    "NailBearing": "the nails' close pair",
+    "NailKillBearings": "the nail kill order",
+    "FettersDps": "the Infernal Fetters DPS",
+    "HowlFirst": "the first Searing Wind",
+    "HowlSecond": "the second Searing Wind",
+    "HowlThird": "the third Searing Wind",
+    "FlamingCrushTargets": "the Flaming Crush targets",
+    "AwakenedDash": "the awakened dash side",
+    "FirstJumpBearing": "Titan's first jump side",
+    "SecondJumpBearing": "Titan's second jump side",
+    "SafeSide": "the safe side",
+    "GaolTargets": "the gaol targets",
+    "JailedHealer": "the jailed healer",
+    "WeightTargets": "the Weight of the Land targets",
+    "AwakenedLandslideTargets": "the awakened Landslide targets"
+  },
+  "values": {
+    "*": {
+      "0": "north", "45": "north-east", "90": "east", "135": "south-east",
+      "180": "south", "225": "south-west", "270": "west", "315": "north-west",
+      "MainTank": "MT", "OffTank": "OT", "RegenHealer": "H1", "ShieldHealer": "H2",
+      "MeleeDpsA": "M1", "MeleeDpsB": "M2", "PhysRangedDps": "R1", "CasterDps": "R2"
+    }
+  }
+}
