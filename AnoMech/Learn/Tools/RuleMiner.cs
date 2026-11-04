@@ -12,10 +12,14 @@ public sealed record MinedSpot(string Label, float X, float Z, List<int> Seeds);
 // How a step's spot for one role varies with the scenario's rolls: one spot for every seed, or
 // the state fields whose value picks the spot, or nothing the recorded fields explain.
 public sealed record MinedRule(string Cls, int Line, float Time, string Role, List<MinedSpot> Spots, List<string> Fields,
-    Dictionary<string, string> SpotByValue, int SeedCount, string? NearestField = null, float Purity = 0f)
+    Dictionary<string, string> SpotByValue, int SeedCount, string? NearestField = null, float Purity = 0f, string? Relation = null)
 {
     public bool Fixed => Spots.Count == 1;
-    public bool Explained => Fixed || Fields.Count > 0;
+    public bool Explained => Fixed || Relation != null || Fields.Count > 0;
+
+    // One line a player could follow, or null when the spot is unexplained.
+    public string? Describe() => Fixed ? Spots[0].Label
+        : Relation ?? (Fields.Count > 0 ? $"by {string.Join(" & ", Fields)}: {string.Join("; ", SpotByValue.Select(kv => $"{kv.Key} → {kv.Value}"))}" : null);
 }
 
 // Reads which rolls decide each step's spot. A field explains a step when seeds that share its value
@@ -42,8 +46,9 @@ public static class RuleMiner
                     .ToDictionary(g => g.Key, g => new Vector2(g.First().X, g.First().Z));
                 if (bySeed.Count == 0) continue;
                 var spots = Cluster(bySeed, waymarks);
-                var (fields, mapping, nearest, purity) = spots.Count == 1 ? ([], new Dictionary<string, string>(), null, 1f) : Explain(spots, bySeed.Keys, runs, role);
-                rules.Add(new MinedRule(step.Key.Cls, step.Key.Line, first, role, spots, fields, mapping, bySeed.Count, nearest, purity));
+                var relation = spots.Count == 1 ? null : Relate(bySeed, runs, waymarks);
+                var (fields, mapping, nearest, purity) = spots.Count == 1 || relation != null ? ([], new Dictionary<string, string>(), null, 1f) : Explain(spots, bySeed.Keys, runs, role);
+                rules.Add(new MinedRule(step.Key.Cls, step.Key.Line, first, role, spots, fields, mapping, bySeed.Count, nearest, purity, relation));
             }
         }
         return rules;
@@ -62,6 +67,84 @@ public static class RuleMiner
         var named = spots.Select(s => new MinedSpot(Describe(s.Centre, waymarks), s.Centre.X, s.Centre.Y, s.Seeds)).ToList();
         return named.GroupBy(s => s.Label).Select(g => g.Count() == 1 ? g.First()
             : new MinedSpot(g.Key, g.Average(s => s.X), g.Average(s => s.Z), g.SelectMany(s => s.Seeds).OrderBy(x => x).ToList())).ToList();
+    }
+
+    // A spot that follows a rolled vector (same place, opposite, a turn away) or sits still in the
+    // frame of a rolled bearing reads as one sentence instead of a table of values.
+    private static string? Relate(Dictionary<int, Vector2> bySeed, Dictionary<int, Dictionary<string, string>> runs, WaymarkLayout? waymarks)
+    {
+        var seeds = bySeed.Keys.Where(runs.ContainsKey).ToList();
+        if (seeds.Count < 3) return null;
+        foreach (var name in runs[seeds[0]].Keys)
+        {
+            var vectors = seeds.Select(s => ParseVector(runs[s].GetValueOrDefault(name))).ToList();
+            if (vectors.All(v => v != null))
+            {
+                var offsets = seeds.Select((s, i) => bySeed[s] - vectors[i]!.Value).ToList();
+                var mean = new Vector2(offsets.Average(o => o.X), offsets.Average(o => o.Y));
+                if (offsets.All(o => Vector2.Distance(o, mean) <= RelationSlackYalms))
+                    return mean.Length() < 2f ? $"at {name}" : $"{Compass(mean)} of {name}";
+                var turns = seeds.Select((s, i) => Turn(vectors[i]!.Value, bySeed[s])).ToList();
+                var radii = seeds.Select(s => bySeed[s].Length()).ToList();
+                if (turns.All(t => t != null) && Spread(turns.Select(t => t!.Value)) <= RelationSlackDegrees && radii.Max() - radii.Min() <= RelationSlackYalms * 2)
+                    return $"{TurnName(turns.Average(t => t!.Value))} {name}, {radii.Average():0}m out";
+                continue;
+            }
+            var bearings = seeds.Select(s => ParseBearing(runs[s].GetValueOrDefault(name))).ToList();
+            if (bearings.All(b => b != null) && bearings.Distinct().Count() > 1)
+            {
+                var inFrame = seeds.Select((s, i) => Rotate(bySeed[s], -bearings[i]!.Value)).ToList();
+                var centre = new Vector2(inFrame.Average(p => p.X), inFrame.Average(p => p.Y));
+                if (inFrame.All(p => Vector2.Distance(p, centre) <= RelationSlackYalms))
+                    return $"with {name} as north: {Compass(centre)}";
+            }
+        }
+        return null;
+    }
+
+    private const float RelationSlackYalms = 2f;
+    private const float RelationSlackDegrees = 20f;
+
+    private static Vector2? ParseVector(string? text)
+    {
+        if (text is not { Length: > 4 } || text[0] != '(' || text[^1] != ')') return null;
+        var parts = text[1..^1].Split(',');
+        return parts.Length == 2 && float.TryParse(parts[0], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var x)
+                                 && float.TryParse(parts[1], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var z) ? new Vector2(x, z) : null;
+    }
+
+    // Compass degrees on a 45° grid, as the scenarios roll bearings.
+    private static float? ParseBearing(string? text)
+        => float.TryParse(text, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var b) && b >= 0f && b < 360f && MathF.Abs(b % 45f) < 0.5f ? b : null;
+
+    private static float? Turn(Vector2 from, Vector2 to)
+    {
+        if (from.Length() < 2f || to.Length() < 2f) return null;
+        var a = MathF.Atan2(to.X, -to.Y) - MathF.Atan2(from.X, -from.Y);
+        return ((a * 180f / MathF.PI) % 360f + 540f) % 360f - 180f;
+    }
+
+    private static float Spread(IEnumerable<float> degrees)
+    {
+        var list = degrees.ToList();
+        var mean = list.Average();
+        return list.Max(d => MathF.Abs(d - mean));
+    }
+
+    private static string TurnName(float degrees) => degrees switch
+    {
+        > 160f or < -160f => "opposite",
+        > 70f and < 110f => "a quarter turn clockwise of",
+        < -70f and > -110f => "a quarter turn counterclockwise of",
+        > 25f and < 65f => "an eighth turn clockwise of",
+        < -25f and > -65f => "an eighth turn counterclockwise of",
+        _ => $"{degrees:0}° from",
+    };
+
+    private static Vector2 Rotate(Vector2 p, float degrees)
+    {
+        var (sin, cos) = MathF.SinCos(degrees * MathF.PI / 180f);
+        return new Vector2(p.X * cos - p.Y * sin, p.X * sin + p.Y * cos);
     }
 
     // Features: every field as is, "<field> has <role>" for fields listing roles, and

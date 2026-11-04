@@ -22,6 +22,9 @@ namespace AnoMech.LessonTools;
 // author   --scenario <TypeName> [--strat N] [--seeds 1..8] --out <dir> [--plan <id|file> --zone <ZoneType> [--layout <name>]]
 //          record -> skeleton -> mine -> cues [-> toolbox-import -> oracle] -> <dir>/<Scenario>.<strat>.context.md
 // context  --dump dump.json --lesson lesson.json --out context.md [--plan plans/<id>.json] [--zone <ZoneType> --layout <name>]
+// draft    --dump dump.json --lesson lesson.json --out lesson.json [--zone <ZoneType> --layout <name>]   rule/cue/roles/tolerance/skip from the mined data
+// author-all --out <dir> [--seeds 1..12] [--scenario <substring>] [--layout <name>] [--plans "UwuP2IfritScenario=562530446784261,..."] [--force]
+//          author (with draft) for every catalog strat without an embedded lesson, in the Lessons layout
 //          the context file again from an existing dump (after a miner change or a lesson edit), no recording
 internal static class Cli
 {
@@ -46,6 +49,8 @@ internal static class Cli
                 "oracle" => Oracle(opts),
                 "author" => Author(opts),
                 "context" => Context(opts),
+                "draft" => Draft(opts),
+                "author-all" => AuthorAll(opts),
                 _ => Usage(),
             };
         }
@@ -58,7 +63,7 @@ internal static class Cli
 
     private static int Usage()
     {
-        Console.Error.WriteLine("usage: author|record|skeleton|rekey|check|mine|cues|oracle|toolbox-import|mit-timeline|mit-import (see Cli.cs)");
+        Console.Error.WriteLine("usage: author|author-all|draft|context|record|skeleton|rekey|check|mine|cues|oracle|toolbox-import|mit-timeline|mit-import (see Cli.cs)");
         return 1;
     }
 
@@ -351,23 +356,34 @@ internal static class Cli
         var strat = opts.TryGetValue("strat", out var st) && st.Length > 0 ? int.Parse(st) : 0;
         var outDir = Need(opts, "out");
         Directory.CreateDirectory(outDir);
-        var dump = OrderRecorder.Record(scenario, strat, Seeds(opts, "1..8"), Console.Error);
-        var slug = $"{dump.Scenario}.{strat}";
-        var dumpPath = Path.Combine(outDir, $"{slug}.dump.json");
-        File.WriteAllText(dumpPath, dump.ToJson());
+        var planArg = opts.TryGetValue("plan", out var pl) && pl.Length > 0 ? pl : null;
+        var layoutName = opts.TryGetValue("layout", out var l) && l.Length > 0 ? l : null;
+        var stem = AuthorOne(scenario, strat, Seeds(opts, "1..8"), outDir, null, planArg, layoutName, Console.Error);
+        Console.WriteLine($"dump     {stem}.dump.json");
+        Console.WriteLine($"lesson   {stem}.lesson.json");
+        Console.WriteLine($"context  {stem}.context.md");
+        return 0;
+    }
+
+    // record -> skeleton -> mine -> cues -> draft [-> toolbox import -> oracle] -> context. Returns the file stem.
+    private static string AuthorOne(string scenarioTypeName, int strat, List<int> seeds, string outDir, string? stemName, string? planArg, string? layoutName, TextWriter log)
+    {
+        var dump = OrderRecorder.Record(scenarioTypeName, strat, seeds, log);
+        var stem = Path.Combine(outDir, stemName ?? $"{dump.Scenario}.{strat}");
+        File.WriteAllText(stem + ".dump.json", dump.ToJson());
         var lesson = LessonSkeleton.Generate(dump);
-        var lessonPath = Path.Combine(outDir, $"{slug}.lesson.json");
 
         var type = typeof(Game).Assembly.GetTypes().First(t => t.Name == dump.Scenario);
-        var catalogScenario = ScenarioCatalog.Create().Scenarios.FirstOrDefault(s => s.GetType() == type);
-        var zone = catalogScenario?.Phase.Zone;
-        var layout = Layout(opts, zone);
+        var zone = ScenarioCatalog.Create().Scenarios.FirstOrDefault(s => s.GetType() == type)?.Phase.Zone;
+        var layout = zone is null ? null : layoutName is null ? zone.WaymarkPresets.FirstOrDefault()
+            : zone.WaymarkPresets.FirstOrDefault(w => w.Name.Equals(layoutName, StringComparison.OrdinalIgnoreCase)) ?? zone.WaymarkPresets.FirstOrDefault();
         var rules = RuleMiner.Mine(dump, layout);
         var cues = CueExtractor.Extract(dump);
+        lesson = LessonDraft.Draft(lesson, dump, rules, cues);
 
         ToolboxPlan? plan = null;
         OracleReport? oracle = null;
-        if (opts.TryGetValue("plan", out var planArg) && planArg.Length > 0 && layout != null)
+        if (planArg != null && layout != null)
         {
             var id = Path.GetFileName(planArg).Split('.').FirstOrDefault(p => p.All(char.IsDigit) && p.Length >= 6) ?? planArg;
             byte[] raw;
@@ -387,14 +403,55 @@ internal static class Cli
             var link = new LessonToolbox(id, refined.ToDictionary(kv => kv.Value, kv => kv.Key), steps);
             oracle = ToolboxOracle.Check(plan, lesson, link, dump);
             lesson = lesson with { Toolbox = link with { ExampleSeed = oracle.ExampleSeed } };
-            Console.Error.WriteLine($"toolbox {id}: {plan.Steps.Count} steps, {steps.Count} aligned, example seed {oracle.ExampleSeed}, {oracle.Disagreements.Count()} disagree");
+            log.WriteLine($"toolbox {id}: {plan.Steps.Count} steps, {steps.Count} aligned, example seed {oracle.ExampleSeed}, {oracle.Disagreements.Count()} disagree");
         }
-        File.WriteAllText(lessonPath, LessonSkeleton.ToJson(lesson));
-        var contextPath = Path.Combine(outDir, $"{slug}.context.md");
-        File.WriteAllText(contextPath, LessonContext.Write(dump, lesson, rules, cues, oracle, plan, layout));
-        Console.WriteLine($"dump     {dumpPath}");
-        Console.WriteLine($"skeleton {lessonPath}");
-        Console.WriteLine($"context  {contextPath}");
+        File.WriteAllText(stem + ".lesson.json", LessonSkeleton.ToJson(lesson));
+        File.WriteAllText(stem + ".context.md", LessonContext.Write(dump, lesson, rules, cues, oracle, plan, layout));
+        return stem;
+    }
+
+    private static int Draft(Dictionary<string, string> opts)
+    {
+        var dump = OrderDump.Parse(File.ReadAllText(Need(opts, "dump")));
+        var lesson = LessonLoader.Parse(File.ReadAllText(Need(opts, "lesson")));
+        var type = typeof(Game).Assembly.GetTypes().FirstOrDefault(t => t.Name == dump.Scenario);
+        var zone = ScenarioCatalog.Create().Scenarios.FirstOrDefault(s => s.GetType() == type)?.Phase.Zone;
+        var layout = Layout(opts, zone);
+        var drafted = LessonDraft.Draft(lesson, dump, RuleMiner.Mine(dump, layout), CueExtractor.Extract(dump));
+        var outPath = Need(opts, "out");
+        File.WriteAllText(outPath, LessonSkeleton.ToJson(drafted));
+        Console.WriteLine($"draft    {outPath} ({drafted.Steps.Count(s => s.Skip)} skipped, {drafted.Steps.Count(s => s.Cue != null)} with a cue)");
+        return 0;
+    }
+
+    private static int AuthorAll(Dictionary<string, string> opts)
+    {
+        var outDir = Need(opts, "out");
+        var seeds = Seeds(opts, "1..12");
+        var filter = opts.TryGetValue("scenario", out var f) ? f : "";
+        var force = opts.ContainsKey("force");
+        var layoutName = opts.TryGetValue("layout", out var l) && l.Length > 0 ? l : null;
+        var plans = (opts.TryGetValue("plans", out var pl) ? pl : "").Split(',', StringSplitOptions.RemoveEmptyEntries)
+            .Select(x => x.Split('=')).Where(x => x.Length == 2).ToDictionary(x => x[0].Trim(), x => x[1].Trim());
+        var written = 0;
+        foreach (var scenario in ScenarioCatalog.Create().Scenarios)
+        {
+            var typeName = scenario.GetType().Name;
+            if (filter.Length > 0 && !typeName.Contains(filter, StringComparison.OrdinalIgnoreCase)) continue;
+            for (var i = 0; i < scenario.AiStrats.Count; i++)
+            {
+                var strat = scenario.AiStrats[i];
+                if (!force && LessonLoader.For(scenario, strat) != null) continue;
+                var family = scenario.GetType().Namespace!.Split('.')[2];
+                var dir = Path.Combine(outDir, family);
+                Directory.CreateDirectory(dir);
+                Console.Error.WriteLine($"{typeName} / {strat.Name}");
+                var stem = AuthorOne(typeName, i, seeds, dir, $"{typeName.Replace("Scenario", "")}.{Slug(strat.Name)}", plans.GetValueOrDefault(typeName), layoutName, TextWriter.Null);
+                Console.WriteLine($"{stem}.lesson.json");
+                written++;
+            }
+        }
+        Console.WriteLine($"{written} lesson draft(s) -> {outDir}");
         return 0;
     }
 

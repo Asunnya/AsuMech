@@ -70,4 +70,26 @@ public class RuleMinerTests
         Assert.That(RuleMiner.Describe(new Vector2(0.5f, -10.5f), layout), Is.EqualTo("at A"));
         Assert.That(RuleMiner.Describe(new Vector2(12.5f, 1f), layout), Is.EqualTo("near 2 (E 13m)"));
     }
+
+    [Test]
+    public void ASpotOppositeARolledVectorReadsAsARelation()
+    {
+        var dump = new OrderDump("S", "A", 0,
+            [Order(1, "MainTank", -17f, 0f), Order(2, "MainTank", 0f, 17f), Order(3, "MainTank", 0f, -17f), Order(4, "MainTank", 17f, 0f)],
+            [Run(1, ("SafeSpot", "(17,0)")), Run(2, ("SafeSpot", "(0,-17)")), Run(3, ("SafeSpot", "(0,17)")), Run(4, ("SafeSpot", "(-17,0)"))]);
+        var rule = RuleMiner.Mine(dump).Single();
+        Assert.That(rule.Relation, Is.EqualTo("opposite SafeSpot, 17m out"));
+        Assert.That(rule.Explained, Is.True);
+    }
+
+    [Test]
+    public void ASpotStillInTheFrameOfARolledBearingReadsAsARelation()
+    {
+        // The spot is always "a quarter turn clockwise of the bearing, 10 m out".
+        var dump = new OrderDump("S", "A", 0,
+            [Order(1, "MainTank", 10f, 0f), Order(2, "MainTank", 0f, 10f), Order(3, "MainTank", -10f, 0f), Order(4, "MainTank", 0f, -10f)],
+            [Run(1, ("NailBearing", "0")), Run(2, ("NailBearing", "90")), Run(3, ("NailBearing", "180")), Run(4, ("NailBearing", "270"))]);
+        var rule = RuleMiner.Mine(dump).Single();
+        Assert.That(rule.Relation, Is.EqualTo("with NailBearing as north: E 10m"));
+    }
 }

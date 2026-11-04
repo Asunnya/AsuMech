@@ -7,9 +7,14 @@ Dalamud SDK the tests do (`DALAMUD_HOME`).
 dotnet build tools/AnoMech.LessonTools -p:GenerateSupportedOSPlatformAttribute=false
 TOOL=$(find tools/AnoMech.LessonTools/bin -name AnoMech.LessonTools.dll | head -1)
 
-# one command per strat: record -> skeleton -> rule miner -> cue extractor [-> toolbox import -> oracle]
-# writes <out>/<Scenario>.<strat>.{dump.json,lesson.json,context.md}; the context is what the author reads
-dotnet $TOOL author --scenario UwuP1GarudaScenario --strat 0 --seeds 1..12 --out work/ [--plan 122994122467471 --zone UwuZone --layout Naur]
+# one command per strat: record -> skeleton -> rule miner -> cue extractor -> draft [-> toolbox import -> oracle]
+# writes <out>/<Scenario>.<strat>.{dump.json,lesson.json,context.md}; the lesson already has a rule, cue, roles,
+# tolerance and skip per step from the mined data, the context says where each came from
+dotnet $TOOL author --scenario UwuP1GarudaScenario --strat 0 --seeds 1..12 --out work/ [--plan 122994122467471 --layout Naur]
+# the same for every catalog strat without an embedded lesson, in the Lessons folder layout
+dotnet $TOOL author-all --out work/all --seeds 1..12 [--scenario Uwu] [--layout Naur] [--plans "UwuP3TitanScenario=463534803605261"]
+# draft the text again from an existing dump (after a miner change)
+dotnet $TOOL draft --dump x.dump.json --lesson x.lesson.json --out x.lesson.json [--zone UwuZone --layout Naur]
 
 # the pieces, when one is needed on its own:
 # every order the strat gives the player's slot, over seeds × 8 roles, plus each seed's *State and visible events
@@ -38,7 +43,10 @@ dotnet $TOOL check    --lesson AnoMech/Learn/Lessons/Uwu/P1Garuda.zeal-the-balan
 
 Per-step authoring context (role spots, cue candidates, strat method): `~/.claude/skills/asumech-lesson`.
 
-Flow for a new scenario: `author` → read the context, write `rule`/`cue` (or `skip`) per step in the
-skeleton → `check` → embed under `AnoMech/Learn/Lessons/<Family>/`. The miner only sees what the
+Flow for a new scenario: `author` (or `author-all`) → read the context, rewrite the drafted `rule`/`cue`
+in player language where the draft is a table → `check` → embed under `AnoMech/Learn/Lessons/<Family>/`.
+The draft's rules come in three shapes: a fixed place ("Go to near D (W 8m)."), a relation to a rolled
+field ("Go opposite OpenerSafeSpot, 17m out." / "with NailBearing as north: NW wall") or a value table
+("Depends on NailBearing: 270 → N 10m; …"); tables are the ones worth rephrasing. The miner only sees what the
 `*State` exposes as public members; a spot that stays "unexplained" with 12 seeds is usually a
 geometric rule over a list field (hazard spots), which the context names as the closest field.

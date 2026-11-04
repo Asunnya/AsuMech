@@ -53,6 +53,8 @@ public static class LessonContext
                 if (stepRules.FirstOrDefault(r => r.Role == role) is not { } rule) continue;
                 if (rule.Fixed)
                     sb.AppendLine($"- {role}: {rule.Spots[0].Label} ({rule.Spots[0].X:0.#}, {rule.Spots[0].Z:0.#})");
+                else if (rule.Relation is { } relation)
+                    sb.AppendLine($"- {role}: {relation} → {string.Join("; ", rule.Spots.Select(s => s.Label))}");
                 else if (rule.Fields.Count > 0)
                     sb.AppendLine($"- {role}: by {string.Join(" & ", rule.Fields)} → {string.Join("; ", rule.SpotByValue.Select(kv => $"{kv.Key}: {kv.Value}"))}");
                 else
