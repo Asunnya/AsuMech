@@ -8,6 +8,7 @@ namespace AnoMech.Windows.Learn;
 internal static class JobIcons
 {
     private const uint IconBase = 062100;
+    private const uint EnemyIcon = 060951;
 
     private static readonly Dictionary<string, uint> Rows = new()
     {
@@ -18,9 +19,10 @@ internal static class JobIcons
 
     // Null until the texture is loaded or when the job is unknown; callers draw a fallback then.
     public static IDalamudTextureWrap? Get(string? job)
-    {
-        if (job is null || !Rows.TryGetValue(job.ToUpperInvariant(), out var row)) return null;
-        var texture = Plugin.TextureProvider.GetFromGameIcon(new GameIconLookup(IconBase + row));
-        return texture.TryGetWrap(out var wrap, out _) ? wrap : null;
-    }
+        => job != null && Rows.TryGetValue(job.ToUpperInvariant(), out var row) ? Icon(IconBase + row) : null;
+
+    public static IDalamudTextureWrap? Enemy() => Icon(EnemyIcon);
+
+    private static IDalamudTextureWrap? Icon(uint id)
+        => Plugin.TextureProvider.GetFromGameIcon(new GameIconLookup(id)).TryGetWrap(out var wrap, out _) ? wrap : null;
 }

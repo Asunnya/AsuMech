@@ -18,6 +18,9 @@ internal sealed class ToolboxViewer : Window
     private const float DefaultSizePx = 340f;
     private const float ArenaYalms = 44f;
     private const float PlayerIconPx = 24f;
+    private const float EnemyIconPx = 28f;
+    private const float OpacitySliderPx = 110f;
+    private const float MinOpacity = 0.2f;
     private const float OtherRoleAlpha = 0.3f;
 
     private ToolboxPlan? plan;
@@ -30,7 +33,7 @@ internal sealed class ToolboxViewer : Window
     public ToolboxViewer() : base("Toolbox###AsuMechToolbox")
     {
         Flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse;
-        Size = new Vector2(DefaultSizePx, DefaultSizePx + 90f);
+        Size = new Vector2(DefaultSizePx, DefaultSizePx + 120f);
         SizeCondition = ImGuiCond.FirstUseEver;
         RespectCloseHotkey = false;
     }
@@ -85,6 +88,18 @@ internal sealed class ToolboxViewer : Window
             using (AsuTheme.PushAccentButton())
                 if (ImGui.SmallButton("Follow the run")) follow = true;
         }
+        var config = Plugin.Config;
+        using (AsuTheme.PushPill())
+            if (Pills.Toggle("Markers##waymarks", config.ToolboxShowWaymarks)) { config.ToolboxShowWaymarks = !config.ToolboxShowWaymarks; config.Save(); }
+        ImGui.SameLine();
+        ImGui.SetNextItemWidth(OpacitySliderPx * ImGuiHelpers.GlobalScale);
+        var opacity = config.ToolboxOpacity;
+        if (ImGui.SliderFloat("Opacity", ref opacity, MinOpacity, 1f, "%.0f%%" ) || ImGui.IsItemDeactivatedAfterEdit())
+        {
+            config.ToolboxOpacity = Math.Clamp(opacity, MinOpacity, 1f);
+            if (ImGui.IsItemDeactivatedAfterEdit()) config.Save();
+        }
+        BgAlpha = config.ToolboxOpacity;
 
         var size = Math.Min(ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y - ImGui.GetTextLineHeightWithSpacing() * 2);
         if (size < 80f) return;
@@ -92,19 +107,16 @@ internal sealed class ToolboxViewer : Window
         var centre = origin + new Vector2(size * 0.5f);
         var px = size / ArenaYalms;
         var draw = ImGui.GetWindowDrawList();
-        draw.AddCircleFilled(centre, size * 0.5f, AsuTheme.U32(AsuTheme.Element));
+        draw.AddCircleFilled(centre, size * 0.5f, AsuTheme.U32(AsuTheme.Element with { W = config.ToolboxOpacity }));
         draw.AddCircle(centre, size * 0.5f, AsuTheme.U32(AsuTheme.Line));
         draw.AddText(new Vector2(centre.X - 4f, origin.Y), AsuTheme.U32(AsuTheme.Muted), "N");
 
         Vector2 At(ToolboxObject o) => centre + new Vector2(o.X, o.Z) * px;
         foreach (var o in step.Objects.Where(o => o.Kind == "zone")) DrawZone(draw, o, At(o), px);
         foreach (var o in step.Objects.Where(o => o.Kind == "tether")) DrawTether(draw, o, At(o), px);
-        foreach (var o in step.Objects.Where(o => o.Kind == "waymark")) DrawWaymark(draw, o, At(o), px);
-        foreach (var o in step.Objects.Where(o => o.Kind is "boss" or "add"))
-        {
-            draw.AddCircle(At(o), Math.Max(4f, o.Width * 0.5f * px), AsuTheme.U32(AsuTheme.Bad), 32, 2f);
-            draw.AddText(At(o) + new Vector2(4f, -ImGui.GetTextLineHeight() * 0.5f), AsuTheme.U32(AsuTheme.Muted), o.Label);
-        }
+        if (config.ToolboxShowWaymarks)
+            foreach (var o in step.Objects.Where(o => o.Kind == "waymark")) DrawWaymark(draw, o, At(o), px);
+        foreach (var o in step.Objects.Where(o => o.Kind is "boss" or "add")) DrawEnemy(draw, o, At(o), px);
         foreach (var o in step.Objects.Where(o => o.Kind == "player")) DrawPlayer(draw, o, At(o));
         foreach (var o in step.Objects.Where(o => o.Kind == "text"))
             draw.AddText(At(o), AsuTheme.U32(AsuTheme.Text), o.Label);
@@ -113,6 +125,18 @@ internal sealed class ToolboxViewer : Window
         if (step.Note.Length > 0)
             using (AsuTheme.PushTextColor(AsuTheme.Muted))
                 ImGui.TextWrapped(step.Note.Split('\n')[0]);
+    }
+
+    private static void DrawEnemy(ImDrawListPtr draw, ToolboxObject o, Vector2 at, float px)
+    {
+        var hitbox = Math.Max(4f, o.Width * 0.5f * px);
+        draw.AddCircle(at, hitbox, AsuTheme.U32(AsuTheme.Bad with { W = 0.6f }), 32, 1.5f);
+        var r = EnemyIconPx * 0.5f * ImGuiHelpers.GlobalScale;
+        if (JobIcons.Enemy() is { } icon)
+            draw.AddImage(icon.Handle, at - new Vector2(r), at + new Vector2(r));
+        else
+            draw.AddCircleFilled(at, r * 0.5f, AsuTheme.U32(AsuTheme.Bad));
+        draw.AddText(at + new Vector2(-ImGui.CalcTextSize(o.Label).X * 0.5f, r + 2f), AsuTheme.U32(AsuTheme.Muted), o.Label);
     }
 
     private void DrawPlayer(ImDrawListPtr draw, ToolboxObject o, Vector2 at)

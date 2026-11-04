@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using System.Numerics;
 using AnoMech.Core.Game;
+using AnoMech.Core.Game.Party;
+using AnoMech.Core.Native.Interfaces;
 using AnoMech.Learn;
 using AnoMech.Scenarios;
 using AnoMech.Windows.Learn;
@@ -88,7 +90,7 @@ public sealed partial class AsuMainWindow
         ImGui.BeginGroup();
         if (lesson is { } l)
         {
-            var role = Picker.RoleOverride ?? Plugin.Game.World.Party.PlayerRole;
+            var role = LearnRole();
             Muted($"{l.Steps.Count} steps · {Plugin.Mastery.MasteredCount(l, role)} mastered as {ScenarioSetupUi.RoleLabels[(int)role + 1]}{(l.Toolbox != null ? " · toolbox synced" : "")} · sources:");
             foreach (var source in l.Sources)
                 if (ImGui.SmallButton($"{source.Label} ↗##{source.Url}")) Util.OpenLink(source.Url);
@@ -114,7 +116,7 @@ public sealed partial class AsuMainWindow
     {
         EndWatch();
         Plugin.Practice.AutoRestart = false;
-        var role = Picker.RoleOverride ?? Plugin.Game.World.Party.PlayerRole;
+        var role = LearnRole();
         new LearnSession(Plugin.Game, scenario, Picker.SelectedAi!, lesson, role, learnLevel);
         plugin.Runs.Start(Picker.Selection, SoloSelected);
     }
@@ -162,4 +164,12 @@ public sealed partial class AsuMainWindow
         WaymarkSlot.A => "A", WaymarkSlot.B => "B", WaymarkSlot.C => "C", WaymarkSlot.D => "D",
         WaymarkSlot.One => "1", WaymarkSlot.Two => "2", WaymarkSlot.Three => "3", _ => "4",
     };
+
+    // The seat the run will give the player: the override, else the one their current job takes.
+    private PartyRole LearnRole()
+    {
+        if (Picker.RoleOverride is { } forced) return forced;
+        var player = Natives.BattleCharas.LocalPlayer;
+        return player.Exists ? PartyPresets.SkipRoleForJob(player.ClassJob) : Plugin.Game.World.Party.PlayerRole;
+    }
 }

@@ -43,6 +43,8 @@ public class Configuration : IPluginConfiguration
 
     // Mitigation training: checks the plan's action for your column against what you pressed.
     public bool EnableMitigationTraining { get; set; } = false;
+    public bool ToolboxShowWaymarks { get; set; } = true;
+    public float ToolboxOpacity { get; set; } = 1f;
     public string SelectedMitPlan { get; set; } = "";
     // Windows.Learn.MitAssist: 0 none, 1 reminder, 2 strict (a miss fails the run).
     public int MitPracticeAssist { get; set; } = 1;
