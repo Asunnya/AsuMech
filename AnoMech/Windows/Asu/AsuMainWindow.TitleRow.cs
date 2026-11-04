@@ -11,7 +11,7 @@ public sealed partial class AsuMainWindow
 
     private Mode mode = Mode.Practice;
     // Measured after drawing, used next frame: icon buttons are wider than a frame is tall.
-    private float titleRightWidth;
+    private float titleIconsWidth;
 
     private void DrawTitleRow(Game game)
     {
@@ -29,11 +29,16 @@ public sealed partial class AsuMainWindow
             ImGui.EndTooltip();
         }
 
-        Flow.SameLineRight(titleRightWidth);
+        // Down to P and L when the full names would push the row onto a second line.
+        var room = ImGui.GetWindowContentRegionMax().X - (ImGui.GetItemRectMax().X - ImGui.GetWindowPos().X) - ImGui.GetStyle().ItemSpacing.X;
+        var compact = titleIconsWidth > 0f && ModeWidth(false) + titleIconsWidth > room;
+        Flow.SameLineRight(titleIconsWidth > 0f ? ModeWidth(compact) + titleIconsWidth : 0f);
         ImGui.BeginGroup();
-        if (ModeButton("Practice", mode == Mode.Practice)) mode = Mode.Practice;
+        var groupStart = ImGui.GetCursorScreenPos().X;
+        if (ModeButton(compact ? "P##mode-practice" : "Practice##mode-practice", mode == Mode.Practice, compact)) mode = Mode.Practice;
         ImGui.SameLine(0f, 0f);
-        if (ModeButton("Learn", mode == Mode.Learn)) mode = Mode.Learn;
+        if (ModeButton(compact ? "L##mode-learn" : "Learn##mode-learn", mode == Mode.Learn, compact)) mode = Mode.Learn;
+        var modeEnd = ImGui.GetItemRectMax().X;
 
         ImGui.SameLine();
         DrawFeedbackButton();
@@ -47,13 +52,19 @@ public sealed partial class AsuMainWindow
         if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
             ImGui.SetTooltip(Plugin.Game.World.Map.IsInInstance ? "Leave the instance first." : "Close");
         ImGui.EndGroup();
-        titleRightWidth = ImGui.GetItemRectSize().X;
+        titleIconsWidth = ImGui.GetItemRectSize().X - (modeEnd - groupStart);
         ImGui.Separator();
     }
 
-    private static bool ModeButton(string label, bool active)
+    private static float ModeWidth(bool compact)
+        => compact ? Flow.ButtonWidth("P") + Flow.ButtonWidth("L") : Flow.ButtonWidth("Practice") + Flow.ButtonWidth("Learn");
+
+    private static bool ModeButton(string label, bool active, bool compact)
     {
-        using var colors = active ? AsuTheme.PushAccentButton() : null;
-        return ImGui.Button(label);
+        bool clicked;
+        using (active ? AsuTheme.PushAccentButton() : null)
+            clicked = ImGui.Button(label);
+        if (compact && ImGui.IsItemHovered()) ImGui.SetTooltip(label.Contains("practice") ? "Practice" : "Learn");
+        return clicked;
     }
 }
