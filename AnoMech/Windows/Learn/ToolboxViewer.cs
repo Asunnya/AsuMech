@@ -22,8 +22,8 @@ internal sealed class ToolboxViewer : Window
     private const float ParkedYalms = 16.5f;
     private const float PlayerIconPx = 24f;
     private const float EnemyIconPx = 28f;
-    private const float OpacitySliderPx = 110f;
-    private const float MinOpacity = 0.2f;
+    private const float OpacitySliderPx = 90f;
+    private const float MinOpacity = 0.1f;
     private const float OtherRoleAlpha = 0.3f;
 
     private ToolboxPlan? plan;
@@ -107,12 +107,11 @@ internal sealed class ToolboxViewer : Window
         ImGui.SameLine();
         ImGui.SetNextItemWidth(OpacitySliderPx * ImGuiHelpers.GlobalScale);
         var opacity = config.ToolboxOpacity;
-        if (ImGui.SliderFloat("Opacity", ref opacity, MinOpacity, 1f, "%.0f%%" ) || ImGui.IsItemDeactivatedAfterEdit())
+        if (ImGui.SliderFloat("Marker opacity", ref opacity, MinOpacity, 1f, "%.0f%%") || ImGui.IsItemDeactivatedAfterEdit())
         {
             config.ToolboxOpacity = Math.Clamp(opacity, MinOpacity, 1f);
             if (ImGui.IsItemDeactivatedAfterEdit()) config.Save();
         }
-        BgAlpha = config.ToolboxOpacity;
 
         var size = Math.Min(ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y - ImGui.GetTextLineHeightWithSpacing() * 2);
         if (size < 80f) return;
@@ -120,7 +119,7 @@ internal sealed class ToolboxViewer : Window
         var centre = origin + new Vector2(size * 0.5f);
         var px = size / ArenaYalms;
         var draw = ImGui.GetWindowDrawList();
-        draw.AddCircleFilled(centre, size * 0.5f, AsuTheme.U32(AsuTheme.Element with { W = config.ToolboxOpacity }));
+        draw.AddCircleFilled(centre, size * 0.5f, AsuTheme.U32(AsuTheme.Element));
         draw.AddCircle(centre, size * 0.5f, AsuTheme.U32(AsuTheme.Line));
         draw.AddText(new Vector2(centre.X - 4f, origin.Y), AsuTheme.U32(AsuTheme.Muted), "N");
 
@@ -128,7 +127,7 @@ internal sealed class ToolboxViewer : Window
         foreach (var o in step.Objects.Where(o => o.Kind == "zone")) DrawZone(draw, o, At(o), px);
         foreach (var o in step.Objects.Where(o => o.Kind == "tether")) DrawTether(draw, o, At(o), px);
         if (config.ToolboxShowWaymarks)
-            foreach (var o in step.Objects.Where(o => o.Kind == "waymark")) DrawWaymark(draw, o, At(o), px);
+            foreach (var o in step.Objects.Where(o => o.Kind == "waymark")) DrawWaymark(draw, o, At(o), config.ToolboxOpacity);
         var hasAdds = step.Objects.Any(o => o.Kind == "add");
         foreach (var o in step.Objects.Where(o => o.Kind is "boss" or "add"))
         {
@@ -206,14 +205,14 @@ internal sealed class ToolboxViewer : Window
         draw.AddLine(at - axis, at + axis, AsuTheme.U32(ParseColor(o.Color, AsuTheme.Bad)), 2f);
     }
 
-    private static void DrawWaymark(ImDrawListPtr draw, ToolboxObject o, Vector2 at, float px)
+    private static void DrawWaymark(ImDrawListPtr draw, ToolboxObject o, Vector2 at, float opacity)
     {
         var label = o.Label.Replace("Waymark ", "");
-        var color = AsuTheme.U32(label switch
+        var color = AsuTheme.U32((label switch
         {
             "A" or "1" => AsuTheme.WaymarkRed, "B" or "2" => AsuTheme.WaymarkYellow,
             "C" or "3" => AsuTheme.WaymarkBlue, _ => AsuTheme.WaymarkPurple,
-        });
+        }) with { W = opacity });
         if (o.Shape == "circle") draw.AddCircle(at, 5f, color, 16, 1.5f);
         else draw.AddRect(at - new Vector2(5f), at + new Vector2(5f), color, 0f, ImDrawFlags.None, 1.5f);
         draw.AddText(at + new Vector2(6f, -7f), color, label);
