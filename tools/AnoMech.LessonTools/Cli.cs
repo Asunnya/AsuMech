@@ -7,7 +7,7 @@ using AnoMech.Scenarios;
 
 namespace AnoMech.LessonTools;
 
-// record   --scenario <TypeName> [--strat N] [--seeds 1,2,3] --out dump.json
+// record   --scenario <TypeName> [--strat N] [--seeds 1,2,3] --out dump.json [--example "Prop=value;Prop=value" | --lesson lesson.json]   --example/--lesson pin the rolls
 // skeleton --dump dump.json --out lesson.json
 // rekey    --lesson lesson.json --dump dump.json [--out lesson.json]
 // check    --lesson lesson.json --dump dump.json
@@ -18,8 +18,8 @@ namespace AnoMech.LessonTools;
 // skeleton-all --out <dir> [--seeds 1] [--scenario <substring>] [--force]   every catalog strat without a lesson
 // mine     --dump dump.json [--zone <ZoneType> --layout <name>]              which rolls pick each step's spot, per role
 // cues     --dump dump.json [--window 8]                                     what preceded each order
-// oracle   --plan plans/<id>.json --lesson lesson.json --dump dump.json [--write]   example seed + toolbox vs strat residuals
-// author   --scenario <TypeName> [--strat N] [--seeds 1..8] --out <dir> [--plan <id|file> --zone <ZoneType> [--layout <name>]]
+// oracle   --plan plans/<id>.json --lesson lesson.json --dump dump.json [--write] [--pinned-dump dump.json]   example seed + toolbox vs strat residuals; the pinned dump scores the lesson's example
+// author   --scenario <TypeName> [--strat N] [--seeds 1..8] --out <dir> [--plan <id|url|file> [--layout <name>]] [--lesson existing.json]   --lesson lends its toolbox example
 //          record -> skeleton -> mine -> cues [-> toolbox-import -> oracle] -> <dir>/<Scenario>.<strat>.context.md
 // context  --dump dump.json --lesson lesson.json --out context.md [--plan plans/<id>.json] [--zone <ZoneType> --layout <name>]
 // draft    --dump dump.json --lesson lesson.json --out lesson.json [--zone <ZoneType> --layout <name>]   rule/cue/roles/tolerance/skip from the mined data
@@ -91,8 +91,8 @@ internal static class Cli
     {
         var scenario = Need(opts, "scenario");
         var strat = opts.TryGetValue("strat", out var s) ? int.Parse(s) : 0;
-        var seeds = (opts.TryGetValue("seeds", out var sd) ? sd : "1,2,3").Split(',').Select(int.Parse).ToList();
-        var dump = OrderRecorder.Record(scenario, strat, seeds, Console.Error);
+        var seeds = Seeds(opts, "1,2,3");
+        var dump = OrderRecorder.Record(scenario, strat, seeds, Console.Error, Example(opts));
         File.WriteAllText(Need(opts, "out"), dump.ToJson());
         Console.WriteLine($"{dump.Orders.Count} orders from {seeds.Count} seeds × 8 roles -> {opts["out"]}");
         return 0;
@@ -310,6 +310,16 @@ internal static class Cli
         return errors.Count == 0 ? 0 : 3;
     }
 
+    // --example "SuparnaSongBearing=270;SatinPlumesFirst=[(16,-4),(-4,16)]" or the toolbox example of --lesson.
+    private static IReadOnlyDictionary<string, string>? Example(Dictionary<string, string> opts)
+    {
+        if (opts.TryGetValue("example", out var text) && text.Length > 0)
+            return text.Split(';', StringSplitOptions.RemoveEmptyEntries).Select(p => p.Split('=', 2)).Where(p => p.Length == 2).ToDictionary(p => p[0].Trim(), p => p[1].Trim());
+        if (opts.TryGetValue("lesson", out var path) && path.Length > 0 && File.Exists(path))
+            return LessonLoader.Parse(File.ReadAllText(path)).Toolbox?.Example;
+        return null;
+    }
+
     private static List<int> Seeds(Dictionary<string, string> opts, string fallback)
     {
         var text = opts.TryGetValue("seeds", out var sd) && sd.Length > 0 ? sd : fallback;
@@ -365,6 +375,11 @@ internal static class Cli
         if (lesson.Toolbox is not { } link) throw new ArgumentException("the lesson has no toolbox block; run toolbox-import --write first");
         var report = ToolboxOracle.Check(plan, lesson, link, dump);
         PrintOracle(report);
+        if (opts.TryGetValue("pinned-dump", out var pinnedPath) && pinnedPath.Length > 0)
+        {
+            var pinned = ToolboxOracle.Check(plan, lesson, link, OrderDump.Parse(File.ReadAllText(pinnedPath)));
+            Console.WriteLine($"with the example pinned (seed {pinned.ExampleSeed}): {pinned.TotalResidual:F1} m total, {pinned.Disagreements.Count()} disagree");
+        }
         if (opts.ContainsKey("write"))
         {
             File.WriteAllText(lessonPath, LessonSkeleton.ToJson(lesson with { Toolbox = link with { ExampleSeed = report.ExampleSeed } }));
@@ -391,7 +406,8 @@ internal static class Cli
             ? PlanRegistry.For(scenario, found.AiStrats[strat].Name) : null;
         var planArg = opts.TryGetValue("plan", out var pl) && pl.Length > 0 ? pl : registered?.Url;
         var layoutName = opts.TryGetValue("layout", out var l) && l.Length > 0 ? l : registered?.Layout;
-        var stem = AuthorOne(scenario, strat, Seeds(opts, "1..8"), outDir, null, planArg, layoutName, Console.Error);
+        var existing = opts.TryGetValue("lesson", out var lp) && lp.Length > 0 ? LessonLoader.Parse(File.ReadAllText(lp)) : null;
+        var stem = AuthorOne(scenario, strat, Seeds(opts, "1..8"), outDir, null, planArg, layoutName, Console.Error, existing);
         Console.WriteLine($"dump     {stem}.dump.json");
         Console.WriteLine($"lesson   {stem}.lesson.json");
         Console.WriteLine($"context  {stem}.context.md");
@@ -399,7 +415,7 @@ internal static class Cli
     }
 
     // record -> skeleton -> mine -> cues -> draft [-> toolbox import -> oracle] -> context. Returns the file stem.
-    private static string AuthorOne(string scenarioTypeName, int strat, List<int> seeds, string outDir, string? stemName, string? planArg, string? layoutName, TextWriter log)
+    private static string AuthorOne(string scenarioTypeName, int strat, List<int> seeds, string outDir, string? stemName, string? planArg, string? layoutName, TextWriter log, Lesson? existingLesson = null)
     {
         var dump = OrderRecorder.Record(scenarioTypeName, strat, seeds, log);
         var stem = Path.Combine(outDir, stemName ?? $"{dump.Scenario}.{strat}");
@@ -430,6 +446,18 @@ internal static class Cli
             oracle = ToolboxOracle.Check(plan, lesson, link, dump);
             lesson = lesson with { Toolbox = link with { ExampleSeed = oracle.ExampleSeed } };
             log.WriteLine($"toolbox {id}: {plan.Steps.Count} steps, {steps.Count} aligned, example seed {oracle.ExampleSeed}, {oracle.Disagreements.Count()} disagree");
+            // A lesson that already pins the plan's rolls is scored again with them pinned: that is
+            // the roll the player will replay, so the residual that matters is this one.
+            var previous = existingLesson ?? LessonLoader.All.FirstOrDefault(l => l.Scenario == dump.Scenario && l.Strat == dump.Strat);
+            if (previous?.Toolbox?.Example is { Count: > 0 } example)
+            {
+                var pinnedDump = OrderRecorder.Record(scenarioTypeName, strat, [oracle.ExampleSeed], TextWriter.Null, example);
+                File.WriteAllText(stem + ".pinned.dump.json", pinnedDump.ToJson());
+                var pinned = ToolboxOracle.Check(plan, lesson, lesson.Toolbox!, pinnedDump);
+                lesson = lesson with { Toolbox = lesson.Toolbox! with { Example = new Dictionary<string, string>(example) } };
+                oracle = pinned;
+                log.WriteLine($"example pinned ({string.Join(", ", example.Keys)}): {pinned.TotalResidual:F1} m total, {pinned.Disagreements.Count()} disagree");
+            }
         }
         File.WriteAllText(stem + ".lesson.json", LessonSkeleton.ToJson(lesson));
         File.WriteAllText(stem + ".context.md", LessonContext.Write(dump, lesson, rules, cues, oracle, plan, layout));

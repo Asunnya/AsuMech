@@ -2,6 +2,7 @@ using AnoMech.Core.Game;
 using AnoMech.Core.Game.Ai;
 using AnoMech.Core.Game.Party;
 using AnoMech.Learn.Tools;
+using AnoMech.Learn.Toolbox;
 using AnoMech.Tests;
 
 namespace AnoMech.LessonTools;
@@ -17,7 +18,9 @@ internal static class OrderRecorder
         public void OnMove(GuidanceOrder order) => into.Add(DumpedOrder.Of(order, seed));
     }
 
-    public static OrderDump Record(string scenarioTypeName, int strat, IReadOnlyList<int> seeds, TextWriter log)
+    // `example` pins rolls on the scenario's overrides for every run (a lesson's toolbox example),
+    // so the dump shows the roll the plan draws; mining wants it null.
+    public static OrderDump Record(string scenarioTypeName, int strat, IReadOnlyList<int> seeds, TextWriter log, IReadOnlyDictionary<string, string>? example = null)
     {
         var type = typeof(Game).Assembly.GetTypes().FirstOrDefault(t => t.Name == scenarioTypeName || t.FullName == scenarioTypeName)
                    ?? throw new ArgumentException($"no scenario type named {scenarioTypeName}");
@@ -43,6 +46,7 @@ internal static class OrderRecorder
                     PlayerRole = role,
                     WriteArtifactsOnFailure = false,
                     TimelinePath = csv,
+                    Overrides = example is null ? null : o => ExampleOverrides.Apply(o, example),
                     Probe = p =>
                     {
                         p.World.Guidance ??= sink;
