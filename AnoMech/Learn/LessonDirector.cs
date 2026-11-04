@@ -38,6 +38,8 @@ public sealed class LessonDirector : IPlayerGuidanceSink
     }
 
     public LearnLevel Level { get; }
+    // Observe is the strat playing the slot: nothing to judge or to count as mastery.
+    public bool Judging => Level != LearnLevel.Observe;
     public ActiveStep? Current { get; private set; }
     public IReadOnlyList<(ActiveStep Step, StepResult Result)> Results => results;
 
@@ -69,7 +71,7 @@ public sealed class LessonDirector : IPlayerGuidanceSink
 
     public void OnMechanicFailed()
     {
-        if (Current is not { Evaluation.Result: null } current) return;
+        if (!Judging || Current is not { Evaluation.Result: null } current) return;
         current.Evaluation.MarkFailed();
         Resolve(current);
     }
@@ -82,6 +84,7 @@ public sealed class LessonDirector : IPlayerGuidanceSink
             Speed(1f);
             return;
         }
+        if (!Judging) return;
         var wasResolved = current.Evaluation.Result != null;
         current.Evaluation.Sample(now, playerPosition);
         if (!wasResolved && current.Evaluation.Result != null) Resolve(current);
@@ -98,7 +101,7 @@ public sealed class LessonDirector : IPlayerGuidanceSink
 
     private void CloseCurrent()
     {
-        if (Current is not { } current) return;
+        if (!Judging || Current is not { } current) return;
         if (current.Evaluation.Result == null)
         {
             current.Evaluation.Close();

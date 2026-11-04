@@ -119,4 +119,20 @@ public class LessonDirectorTests
         director.End();
         Assert.That(director.Results, Has.Count.EqualTo(1));
     }
+
+    [Test]
+    public void ObserveNeverJudgesNorTouchesSpeed()
+    {
+        var store = new MasteryStore(new Dictionary<string, int>(), () => { });
+        var observe = new LessonDirector(Lesson, PartyRole.MainTank, LearnLevel.Observe, speeds.Add, store);
+        observe.OnMove(Order(1f, new Vector3(10f, 0f, 0f), arrival: 5f));
+        observe.Tick(1.1f, Vector3.Zero);
+        observe.Tick(6f, Vector3.Zero);
+        observe.OnMechanicFailed();
+        observe.OnMove(Order(3f, Vector3.Zero));
+        observe.End();
+        Assert.That(observe.Results, Is.Empty);
+        Assert.That(store.MasteredCount(Lesson, PartyRole.MainTank), Is.Zero);
+        Assert.That(speeds, Is.EqualTo(new[] { 1f }).Or.Empty);
+    }
 }
