@@ -9,15 +9,18 @@ using System.Text.Json.Serialization;
 namespace AnoMech.Learn.Toolbox;
 
 // Where a raidplan lives: the host and the id its link carries.
-public enum RaidplanHost { Toolbox, RaidplanIo, Unknown }
+public enum RaidplanHost { Toolbox, RaidplanIo, Stgy, Unknown }
 
 public sealed record PlanRef(RaidplanHost Host, string Id, string Url)
 {
     // "https://ff14.toolboxgaming.space/?id=122994122467471&preview=1", "https://raidplan.io/plan/abc123",
-    // or a bare toolbox id.
+    // a bare toolbox id, pasted "[stgy:…]" codes (one board per code, in order), or an
+    // ffxivstrats.io strategy ("https://ffxivstrats.io/fight/dt-ulti-umad?strategy=883", id "dt-ulti-umad/883").
     public static PlanRef Parse(string text)
     {
         text = text.Trim();
+        if (text.Contains("[stgy:", StringComparison.Ordinal))
+            return new PlanRef(RaidplanHost.Stgy, "stgy-" + Crc(text), text);
         if (text.All(char.IsDigit) && text.Length >= 6) return new PlanRef(RaidplanHost.Toolbox, text, $"https://ff14.toolboxgaming.space/?id={text}");
         if (!Uri.TryCreate(text, UriKind.Absolute, out var uri)) return new PlanRef(RaidplanHost.Unknown, text, text);
         if (uri.Host.EndsWith("toolboxgaming.space", StringComparison.OrdinalIgnoreCase))
@@ -25,12 +28,32 @@ public sealed record PlanRef(RaidplanHost Host, string Id, string Url)
             var id = uri.Query.TrimStart('?').Split('&').Select(p => p.Split('=', 2)).FirstOrDefault(p => p[0] == "id" && p.Length == 2)?[1];
             return id is null ? new PlanRef(RaidplanHost.Unknown, text, text) : new PlanRef(RaidplanHost.Toolbox, id, text);
         }
+        if (uri.Host.EndsWith("ffxivstrats.io", StringComparison.OrdinalIgnoreCase))
+        {
+            var parts = uri.AbsolutePath.Trim('/').Split('/');
+            var strategy = uri.Query.TrimStart('?').Split('&').Select(p => p.Split('=', 2)).FirstOrDefault(p => p[0] == "strategy" && p.Length == 2)?[1]
+                           ?? (uri.Fragment.Length > 1 ? uri.Fragment[1..] : null);
+            if (parts.Length >= 2 && parts[0] == "strategy") return new PlanRef(RaidplanHost.Stgy, $"strategy/{parts[1]}", text);
+            if (parts.Length >= 2 && parts[0] == "fight" && strategy != null) return new PlanRef(RaidplanHost.Stgy, $"{parts[1]}/{strategy}", text);
+            if (parts.Length >= 2 && parts[0] == "fight") return new PlanRef(RaidplanHost.Stgy, parts[1], text);
+        }
         if (uri.Host.EndsWith("raidplan.io", StringComparison.OrdinalIgnoreCase))
         {
             var parts = uri.AbsolutePath.Trim('/').Split('/');
             if (parts.Length >= 2 && parts[0] == "plan") return new PlanRef(RaidplanHost.RaidplanIo, parts[1], text);
         }
         return new PlanRef(RaidplanHost.Unknown, text, text);
+    }
+
+    private static string Crc(string text)
+    {
+        var crc = 0xFFFFFFFFu;
+        foreach (var b in System.Text.Encoding.UTF8.GetBytes(text))
+        {
+            crc ^= b;
+            for (var i = 0; i < 8; i++) crc = (crc & 1) != 0 ? (crc >> 1) ^ 0xEDB88320u : crc >> 1;
+        }
+        return (~crc).ToString("x8");
     }
 }
 

@@ -169,13 +169,25 @@ internal static class Cli
                     var docUrl = api.RootElement.GetProperty("plan").GetProperty("doc_url").GetString() ?? throw new InvalidOperationException("api/plan has no doc_url");
                     return (plan.Id, http.GetByteArrayAsync(docUrl).GetAwaiter().GetResult());
                 }
+            case RaidplanHost.Stgy when plan.Url.Contains("[stgy:", StringComparison.Ordinal):
+                return (plan.Id, System.Text.Encoding.UTF8.GetBytes(plan.Url));
+            case RaidplanHost.Stgy:
+            {
+                // "<fight>/<id>" or "strategy/<id>" fetches one strategy; "<fight>" alone the popular feed.
+                var parts = plan.Id.Split('/');
+                var url = parts.Length == 2 ? $"https://api.ffxivstrats.io/strategy/{parts[1]}"
+                    : $"https://api.ffxivstrats.io/fights/{parts[0]}/feed?type=strategy&sort=popular&offset=0&limit=20";
+                return ($"stgy-{plan.Id.Replace('/', '-')}", http.GetByteArrayAsync(url).GetAwaiter().GetResult());
+            }
             default:
                 throw new ArgumentException($"no importer for {planArg}");
         }
     }
 
     private static IRaidplanProvider ProviderFor(string planArg)
-        => Raidplans.For(File.Exists(planArg) ? (planArg.Contains("raidplan", StringComparison.OrdinalIgnoreCase) ? RaidplanHost.RaidplanIo : RaidplanHost.Toolbox) : PlanRef.Parse(planArg).Host);
+        => Raidplans.For(!File.Exists(planArg) ? PlanRef.Parse(planArg).Host
+            : planArg.Contains("raidplan", StringComparison.OrdinalIgnoreCase) ? RaidplanHost.RaidplanIo
+            : planArg.Contains("stgy", StringComparison.OrdinalIgnoreCase) ? RaidplanHost.Stgy : RaidplanHost.Toolbox);
 
     private static int LearnReady(Dictionary<string, string> opts)
     {
