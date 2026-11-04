@@ -17,7 +17,7 @@ internal sealed class ToolboxViewer : Window
 {
     private const float DefaultSizePx = 340f;
     private const float ArenaYalms = 44f;
-    private const float PlayerRadiusPx = 7f;
+    private const float PlayerIconPx = 24f;
     private const float OtherRoleAlpha = 0.3f;
 
     private ToolboxPlan? plan;
@@ -118,14 +118,19 @@ internal sealed class ToolboxViewer : Window
     private void DrawPlayer(ImDrawListPtr draw, ToolboxObject o, Vector2 at)
     {
         var mine = link != null && link.RoleMap.TryGetValue(role.ToString(), out var slot) && slot == o.Key;
-        var color = mine ? AsuTheme.Accent : AsuTheme.Text with { W = OtherRoleAlpha };
-        var r = PlayerRadiusPx * ImGuiHelpers.GlobalScale;
-        draw.AddCircleFilled(at, r, AsuTheme.U32(color));
+        var alpha = mine ? 1f : OtherRoleAlpha;
+        var r = PlayerIconPx * 0.5f * ImGuiHelpers.GlobalScale;
+        if (JobIcons.Get(o.Job) is { } icon)
+            draw.AddImage(icon.Handle, at - new Vector2(r), at + new Vector2(r), Vector2.Zero, Vector2.One, AsuTheme.U32(Vector4.One with { W = alpha }));
+        else
+        {
+            draw.AddCircleFilled(at, r, AsuTheme.U32((mine ? AsuTheme.Accent : AsuTheme.Text) with { W = alpha }));
+            var label = o.Job is { Length: > 0 } ? o.Job : o.Key;
+            draw.AddText(at + new Vector2(r + 2f, -ImGui.GetTextLineHeight() * 0.5f), AsuTheme.U32(mine ? AsuTheme.Text : AsuTheme.Muted), label);
+        }
         if (mine) draw.AddCircle(at, r + 2f, AsuTheme.U32(AsuTheme.Accent), 24, 2f);
-        var label = o.Job is { Length: > 0 } ? o.Job : o.Key;
-        draw.AddText(at + new Vector2(r + 2f, -ImGui.GetTextLineHeight() * 0.5f), AsuTheme.U32(mine ? AsuTheme.Text : AsuTheme.Muted), label);
         if (o.Buffs is { Count: > 0 })
-            draw.AddCircle(at, r + 5f, AsuTheme.U32(AsuTheme.WaymarkYellow with { W = mine ? 1f : OtherRoleAlpha }), 24, 1.5f);
+            draw.AddCircle(at, r + 5f, AsuTheme.U32(AsuTheme.WaymarkYellow with { W = alpha }), 24, 1.5f);
     }
 
     private static void DrawZone(ImDrawListPtr draw, ToolboxObject o, Vector2 at, float px)

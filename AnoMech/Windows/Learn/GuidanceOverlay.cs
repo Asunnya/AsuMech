@@ -19,6 +19,7 @@ internal sealed class GuidanceOverlay : Window
     private const float ArrowHeadPx = 10f;
     private const float PanelWidthPx = 440f;
     private const float PanelTopPx = 90f;
+    private const float PanelMaxWidthFraction = 0.6f;
     private static readonly TimeSpan ResultDuration = TimeSpan.FromSeconds(2.5);
 
     private (string Text, Vector4 Color, DateTime Until)? result;
@@ -153,15 +154,23 @@ internal sealed class GuidanceOverlay : Window
             lines.Add((session.Lesson is null ? "No lesson for this strat: watching the strat play." : "Waiting for the next step…", AsuTheme.Muted));
         if (result is { } r && DateTime.UtcNow < r.Until) lines.Add((r.Text, r.Color));
 
-        var lineHeight = ImGui.GetTextLineHeightWithSpacing();
-        var height = padding.Y * 2 + lineHeight * lines.Count;
+        // Grows to the longest line up to the width cap, then wraps.
+        var maxWidth = ImGui.GetIO().DisplaySize.X * PanelMaxWidthFraction;
+        foreach (var (text, _) in lines)
+            width = Math.Min(maxWidth, Math.Max(width, ImGui.CalcTextSize(text).X + padding.X * 2));
+        x = (ImGui.GetIO().DisplaySize.X - width) * 0.5f;
+        var wrap = width - padding.X * 2;
+        var spacing = ImGui.GetTextLineHeightWithSpacing() - ImGui.GetTextLineHeight();
+        var height = padding.Y * 2 - spacing;
+        foreach (var (text, _) in lines) height += ImGui.CalcTextSize(text, false, wrap).Y + spacing;
         draw.AddRectFilled(new Vector2(x, y), new Vector2(x + width, y + height), AsuTheme.U32(AsuTheme.Window with { W = 0.92f }), 8f * scale);
         draw.AddRect(new Vector2(x, y), new Vector2(x + width, y + height), AsuTheme.U32(AsuTheme.Line), 8f * scale);
         var cursor = new Vector2(x, y) + padding;
+        var font = ImGui.GetFont();
         foreach (var (text, color) in lines)
         {
-            draw.AddText(cursor, AsuTheme.U32(color), text);
-            cursor.Y += lineHeight;
+            draw.AddText(font, ImGui.GetFontSize(), cursor, AsuTheme.U32(color), text, wrap);
+            cursor.Y += ImGui.CalcTextSize(text, false, wrap).Y + spacing;
         }
     }
 }
