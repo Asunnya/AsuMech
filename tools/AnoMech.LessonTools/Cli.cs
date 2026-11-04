@@ -16,6 +16,11 @@ namespace AnoMech.LessonTools;
 // mit-import --plan <name> --sheet-id <google id> --tabs "Garuda=UwuP1GarudaScenario,Ifrit=UwuP2IfritScenario" --out Plans/<name>.json [--csv-dir dir]
 //   a tab with sections: "The Ultima Weapon=DefaultScenario[Section A=ScenarioA;Section B=ScenarioB]"
 // skeleton-all --out <dir> [--seeds 1] [--scenario <substring>] [--force]   every catalog strat without a lesson
+// mine     --dump dump.json [--zone <ZoneType> --layout <name>]              which rolls pick each step's spot, per role
+// cues     --dump dump.json [--window 8]                                     what preceded each order
+// oracle   --plan plans/<id>.json --lesson lesson.json --dump dump.json [--write]   example seed + toolbox vs strat residuals
+// author   --scenario <TypeName> [--strat N] [--seeds 1..8] --out <dir> [--plan <id|file> --zone <ZoneType> [--layout <name>]]
+//          record -> skeleton -> mine -> cues [-> toolbox-import -> oracle] -> <dir>/<Scenario>.<strat>.context.md
 internal static class Cli
 {
     public static int Run(string[] args)
@@ -34,6 +39,10 @@ internal static class Cli
                 "toolbox-import" => ToolboxImportCmd(opts),
                 "mit-timeline" => MitTimeline(opts),
                 "mit-import" => MitImport(opts),
+                "mine" => Mine(opts),
+                "cues" => Cues(opts),
+                "oracle" => Oracle(opts),
+                "author" => Author(opts),
                 _ => Usage(),
             };
         }
@@ -46,7 +55,7 @@ internal static class Cli
 
     private static int Usage()
     {
-        Console.Error.WriteLine("usage: record|skeleton|rekey|check (see Cli.cs)");
+        Console.Error.WriteLine("usage: author|record|skeleton|rekey|check|mine|cues|oracle|toolbox-import|mit-timeline|mit-import (see Cli.cs)");
         return 1;
     }
 
@@ -260,5 +269,129 @@ internal static class Cli
         foreach (var e in errors) Console.WriteLine(e);
         Console.WriteLine(errors.Count == 0 ? "ok" : $"{errors.Count} problem(s)");
         return errors.Count == 0 ? 0 : 3;
+    }
+
+    private static List<int> Seeds(Dictionary<string, string> opts, string fallback)
+    {
+        var text = opts.TryGetValue("seeds", out var sd) && sd.Length > 0 ? sd : fallback;
+        var range = text.Split("..");
+        return range.Length == 2 ? Enumerable.Range(int.Parse(range[0]), int.Parse(range[1]) - int.Parse(range[0]) + 1).ToList() : text.Split(',').Select(int.Parse).ToList();
+    }
+
+    private static WaymarkLayout? Layout(Dictionary<string, string> opts, IZone? zone = null)
+    {
+        if (zone is null)
+        {
+            if (!opts.TryGetValue("zone", out var zoneName) || zoneName.Length == 0) return null;
+            zone = ScenarioCatalog.Create().Zones.FirstOrDefault(z => z.GetType().Name == zoneName) ?? throw new ArgumentException($"no zone type named {zoneName}");
+        }
+        return opts.TryGetValue("layout", out var l) && l.Length > 0
+            ? zone.WaymarkPresets.FirstOrDefault(w => w.Name.Equals(l, StringComparison.OrdinalIgnoreCase)) ?? throw new ArgumentException($"no layout {l}")
+            : zone.WaymarkPresets.FirstOrDefault();
+    }
+
+    private static int Mine(Dictionary<string, string> opts)
+    {
+        var dump = OrderDump.Parse(File.ReadAllText(Need(opts, "dump")));
+        var rules = RuleMiner.Mine(dump, Layout(opts));
+        foreach (var r in rules)
+        {
+            var spots = r.Fixed ? r.Spots[0].Label
+                : r.Fields.Count > 0 ? $"by {string.Join(" & ", r.Fields)}: {string.Join("; ", r.SpotByValue.Select(kv => $"{kv.Key} -> {kv.Value}"))}"
+                : $"unexplained: {string.Join("; ", r.Spots.Select(s => $"{s.Label} (seeds {string.Join(",", s.Seeds)})"))}";
+            Console.WriteLine($"{r.Cls}@{r.Time:0.##} L{r.Line} {r.Role,-14} {spots}");
+        }
+        return 0;
+    }
+
+    private static int Cues(Dictionary<string, string> opts)
+    {
+        var dump = OrderDump.Parse(File.ReadAllText(Need(opts, "dump")));
+        var window = opts.TryGetValue("window", out var w) && w.Length > 0 ? float.Parse(w, System.Globalization.CultureInfo.InvariantCulture) : CueExtractor.WindowSeconds;
+        foreach (var ((cls, line, role), list) in CueExtractor.Extract(dump, window).OrderBy(kv => kv.Key.Line))
+        {
+            Console.WriteLine($"{cls} L{line} {role}");
+            foreach (var c in list.Take(6))
+                Console.WriteLine($"   {c.Kind} {c.Name}{(c.Target is { } t ? " on " + t : "")} {c.SecondsBefore:0.0}s before{(c.Stable ? "" : $" ({c.Seeds}/{c.OfSeeds})")}");
+        }
+        return 0;
+    }
+
+    private static int Oracle(Dictionary<string, string> opts)
+    {
+        var plan = ToolboxPlan.Parse(File.ReadAllText(Need(opts, "plan")));
+        var lessonPath = Need(opts, "lesson");
+        var lesson = LessonLoader.Parse(File.ReadAllText(lessonPath));
+        var dump = OrderDump.Parse(File.ReadAllText(Need(opts, "dump")));
+        if (lesson.Toolbox is not { } link) throw new ArgumentException("the lesson has no toolbox block; run toolbox-import --write first");
+        var report = ToolboxOracle.Check(plan, lesson, link, dump);
+        PrintOracle(report);
+        if (opts.ContainsKey("write"))
+        {
+            File.WriteAllText(lessonPath, LessonSkeleton.ToJson(lesson with { Toolbox = link with { ExampleSeed = report.ExampleSeed } }));
+            Console.WriteLine($"exampleSeed {report.ExampleSeed} written to {lessonPath}");
+        }
+        return report.Disagreements.Any() ? 1 : 0;
+    }
+
+    private static void PrintOracle(OracleReport report)
+    {
+        Console.WriteLine($"example seed {report.ExampleSeed}: {string.Join(", ", report.ResidualBySeed.OrderBy(kv => kv.Value).Select(kv => $"{kv.Key}={kv.Value:F1}"))} (total m)");
+        foreach (var s in report.Steps)
+            Console.WriteLine($"  {s.ToolboxStep,2} {s.Label,-40} {s.StepId,-28} {s.Residual,5:F1} m {(s.Agrees ? "" : "DISAGREES: " + string.Join(", ", s.RolesOff.Select(kv => $"{kv.Key} {kv.Value:F1}")))}");
+    }
+
+    // The whole deterministic chain for one strat; the context file is what the author reads.
+    private static int Author(Dictionary<string, string> opts)
+    {
+        var scenario = Need(opts, "scenario");
+        var strat = opts.TryGetValue("strat", out var st) && st.Length > 0 ? int.Parse(st) : 0;
+        var outDir = Need(opts, "out");
+        Directory.CreateDirectory(outDir);
+        var dump = OrderRecorder.Record(scenario, strat, Seeds(opts, "1..8"), Console.Error);
+        var slug = $"{dump.Scenario}.{strat}";
+        var dumpPath = Path.Combine(outDir, $"{slug}.dump.json");
+        File.WriteAllText(dumpPath, dump.ToJson());
+        var lesson = LessonSkeleton.Generate(dump);
+        var lessonPath = Path.Combine(outDir, $"{slug}.lesson.json");
+
+        var type = typeof(Game).Assembly.GetTypes().First(t => t.Name == dump.Scenario);
+        var catalogScenario = ScenarioCatalog.Create().Scenarios.FirstOrDefault(s => s.GetType() == type);
+        var zone = catalogScenario?.Phase.Zone;
+        var layout = Layout(opts, zone);
+        var rules = RuleMiner.Mine(dump, layout);
+        var cues = CueExtractor.Extract(dump);
+
+        ToolboxPlan? plan = null;
+        OracleReport? oracle = null;
+        if (opts.TryGetValue("plan", out var planArg) && planArg.Length > 0 && layout != null)
+        {
+            var id = Path.GetFileName(planArg).Split('.').FirstOrDefault(p => p.All(char.IsDigit) && p.Length >= 6) ?? planArg;
+            byte[] raw;
+            if (File.Exists(planArg)) raw = File.ReadAllBytes(planArg);
+            else
+            {
+                using var http = new HttpClient();
+                raw = http.GetByteArrayAsync($"https://ff14.toolboxgaming.space/strats/{id}.json").GetAwaiter().GetResult();
+            }
+            var (converted, report) = ToolboxImport.Convert(raw, id, layout);
+            plan = converted;
+            File.WriteAllText(Path.Combine(outDir, $"{id}.json"), plan.ToJson());
+            var refined = ToolboxImport.RefineRoleMap(plan, dump, report.RoleMap, out _);
+            var steps = new Dictionary<string, int>();
+            foreach (var (tb, stepId, _) in ToolboxImport.Align(plan, lesson, dump, refined))
+                if (stepId != null) steps.TryAdd(stepId, tb);
+            var link = new LessonToolbox(id, refined.ToDictionary(kv => kv.Value, kv => kv.Key), steps);
+            oracle = ToolboxOracle.Check(plan, lesson, link, dump);
+            lesson = lesson with { Toolbox = link with { ExampleSeed = oracle.ExampleSeed } };
+            Console.Error.WriteLine($"toolbox {id}: {plan.Steps.Count} steps, {steps.Count} aligned, example seed {oracle.ExampleSeed}, {oracle.Disagreements.Count()} disagree");
+        }
+        File.WriteAllText(lessonPath, LessonSkeleton.ToJson(lesson));
+        var contextPath = Path.Combine(outDir, $"{slug}.context.md");
+        File.WriteAllText(contextPath, LessonContext.Write(dump, lesson, rules, cues, oracle, plan, layout));
+        Console.WriteLine($"dump     {dumpPath}");
+        Console.WriteLine($"skeleton {lessonPath}");
+        Console.WriteLine($"context  {contextPath}");
+        return 0;
     }
 }

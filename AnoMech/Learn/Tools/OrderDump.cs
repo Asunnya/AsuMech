@@ -16,7 +16,14 @@ public sealed record DumpedOrder(string Cls, float Time, string Source, string? 
     public int Line => int.TryParse(Source[(Source.LastIndexOf(':') + 1)..], out var n) ? n : -1;
 }
 
-public sealed record OrderDump(string Scenario, string Strat, int StratIndex, List<DumpedOrder> Orders)
+// One thing the sim sent during a run that a player could see: a cast bar, a resolve, a status, a
+// tether, a head marker, a spawn. Actor and Target are party roles when the sim put a seat there.
+public sealed record DumpedEvent(float Time, string Kind, string Name, string? Actor, string? Target, float? X, float? Z, string? Detail);
+
+// What one seed rolled (the scenario's *State, stringified) and what it showed, the same for every role.
+public sealed record DumpedRun(int Seed, Dictionary<string, string> State, List<DumpedEvent> Events);
+
+public sealed record OrderDump(string Scenario, string Strat, int StratIndex, List<DumpedOrder> Orders, List<DumpedRun>? Runs = null)
 {
     private static readonly JsonSerializerOptions Json = new()
     {
@@ -25,6 +32,8 @@ public sealed record OrderDump(string Scenario, string Strat, int StratIndex, Li
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     };
+
+    public DumpedRun? Run(int seed) => Runs?.Find(r => r.Seed == seed);
 
     public string ToJson() => JsonSerializer.Serialize(this, Json);
     public static OrderDump Parse(string json) => JsonSerializer.Deserialize<OrderDump>(json, Json)!;

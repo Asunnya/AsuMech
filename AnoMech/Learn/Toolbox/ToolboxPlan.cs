@@ -28,4 +28,4 @@ public sealed record ToolboxPlan(string Id, string Label, string Author, string 
 }
 
 // The lesson's link to a plan: which slot each role is, and which toolbox step each lesson step shows.
-public sealed record LessonToolbox(string PlanId, Dictionary<string, string> RoleMap, Dictionary<string, int> Steps);
+public sealed record LessonToolbox(string PlanId, Dictionary<string, string> RoleMap, Dictionary<string, int> Steps, int? ExampleSeed = null);

@@ -67,7 +67,7 @@ public sealed record CastTimeline(string Scenario, List<CastEvent> Casts)
         return new CastTimeline(scenario, casts);
     }
 
-    private static List<string> SplitCsv(string line)
+    internal static List<string> SplitCsv(string line)
     {
         var cells = new List<string>();
         var sb = new System.Text.StringBuilder();

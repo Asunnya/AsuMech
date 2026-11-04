@@ -7,8 +7,19 @@ Dalamud SDK the tests do (`DALAMUD_HOME`).
 dotnet build tools/AnoMech.LessonTools -p:GenerateSupportedOSPlatformAttribute=false
 TOOL=$(find tools/AnoMech.LessonTools/bin -name AnoMech.LessonTools.dll | head -1)
 
-# every order the strat gives the player's slot, over seeds × 8 roles
-dotnet $TOOL record   --scenario UwuP1GarudaScenario --strat 0 --seeds 1,2,3 --out garuda.dump.json
+# one command per strat: record -> skeleton -> rule miner -> cue extractor [-> toolbox import -> oracle]
+# writes <out>/<Scenario>.<strat>.{dump.json,lesson.json,context.md}; the context is what the author reads
+dotnet $TOOL author --scenario UwuP1GarudaScenario --strat 0 --seeds 1..12 --out work/ [--plan 122994122467471 --zone UwuZone --layout Naur]
+
+# the pieces, when one is needed on its own:
+# every order the strat gives the player's slot, over seeds × 8 roles, plus each seed's *State and visible events
+dotnet $TOOL record   --scenario UwuP1GarudaScenario --strat 0 --seeds 1..8 --out garuda.dump.json
+# which rolls pick each step's spot per role (fixed / by <field> / unexplained), spots named by compass and waymark
+dotnet $TOOL mine     --dump garuda.dump.json --zone UwuZone --layout Naur
+# what the player could see in the 8 s before each order: casts, statuses, tethers, markers, spawns, ranked
+dotnet $TOOL cues     --dump garuda.dump.json [--window 8]
+# the toolbox against the strat: example seed (the roll the plan draws) and per-step residuals; --write stores exampleSeed
+dotnet $TOOL oracle   --plan AnoMech/Learn/Toolbox/Plans/122994122467471.json --lesson <lesson.json> --dump garuda.dump.json [--write]
 # one step per strat call, titles from method names, rules left empty
 dotnet $TOOL skeleton --dump garuda.dump.json --out lesson.json
 # after a strat edit moved time literals: follow the source lines, report orphans
@@ -27,5 +38,7 @@ dotnet $TOOL check    --lesson AnoMech/Learn/Lessons/Uwu/P1Garuda.zeal-the-balan
 
 Per-step authoring context (role spots, cue candidates, strat method): `~/.claude/skills/asumech-lesson`.
 
-Flow for a new scenario: `record` → `skeleton` → write `rule`/`cue` (or `skip`) per step → `check` →
-embed under `AnoMech/Learn/Lessons/<Family>/`.
+Flow for a new scenario: `author` → read the context, write `rule`/`cue` (or `skip`) per step in the
+skeleton → `check` → embed under `AnoMech/Learn/Lessons/<Family>/`. The miner only sees what the
+`*State` exposes as public members; a spot that stays "unexplained" with 12 seeds is usually a
+geometric rule over a list field (hazard spots), which the context names as the closest field.
