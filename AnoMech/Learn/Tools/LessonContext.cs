@@ -13,7 +13,7 @@ public static class LessonContext
     private static readonly string[] Roles = ["MainTank", "OffTank", "RegenHealer", "ShieldHealer", "MeleeDpsA", "MeleeDpsB", "PhysRangedDps", "CasterDps"];
 
     public static string Write(OrderDump dump, Lesson skeleton, List<MinedRule> rules, Dictionary<(string Cls, int Line, string Role), List<CueCandidate>> cues,
-        OracleReport? oracle = null, ToolboxPlan? plan = null, WaymarkLayout? waymarks = null)
+        OracleReport? oracle = null, ToolboxPlan? plan = null, WaymarkLayout? waymarks = null, IReadOnlyList<Sources.WtfdigMechanic>? texts = null)
     {
         var sb = new StringBuilder();
         var seeds = dump.Orders.Select(o => o.Seed).Distinct().Count();
@@ -76,6 +76,22 @@ public static class LessonContext
             {
                 var target = own ? " on you" : c.Target is { } t ? $" on {t}" : "";
                 sb.AppendLine($"  cue: {c.Kind} {c.Name}{target} {c.SecondsBefore:0.0}s before{(c.Stable ? "" : $" ({c.Seeds}/{c.OfSeeds} seeds)")}");
+            }
+        }
+        if (texts is { Count: > 0 })
+        {
+            sb.AppendLine();
+            sb.AppendLine("## WTFDIG text (by mechanic, the page's strat; match to steps by hand, credit kept in sources)");
+            foreach (var phase in texts.GroupBy(t => t.Phase))
+            {
+                sb.AppendLine();
+                sb.AppendLine($"### {phase.Key}");
+                foreach (var t in phase)
+                {
+                    sb.AppendLine($"- **{t.Mechanic}**{(t.Action is { Length: > 0 } ? $": {t.Action.Replace("\n", " / ")}" : "")}");
+                    if (t.Description is { Length: > 0 }) sb.AppendLine($"  - {t.Description.Replace("\n", " / ")}");
+                    foreach (var (role, text) in t.ByRole) sb.AppendLine($"  - {role}: {text.Replace("\n", " / ")}");
+                }
             }
         }
         return sb.ToString();

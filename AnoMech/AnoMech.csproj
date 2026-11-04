@@ -18,6 +18,7 @@
     <EmbeddedResource Include="Learn/Lessons/**/*.json" />
     <EmbeddedResource Include="Learn/Toolbox/Plans/*.json" />
     <EmbeddedResource Include="Learn/Toolbox/plans.json" />
+    <EmbeddedResource Include="Learn/Sources/wtfdig/*.json" />
     <EmbeddedResource Include="Learn/Mitigation/Aliases.json" />
     <EmbeddedResource Include="Learn/Mitigation/Plans/*.json" />
     <EmbeddedResource Include="Learn/Mitigation/Timelines/*.json" />

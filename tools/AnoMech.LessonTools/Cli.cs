@@ -2,6 +2,7 @@ using AnoMech.Learn;
 using AnoMech.Learn.Tools;
 using AnoMech.Learn.Toolbox;
 using AnoMech.Learn.Mitigation;
+using AnoMech.Learn.Sources;
 using AnoMech.Core.Game;
 using AnoMech.Scenarios;
 using System.Text.Json;
@@ -29,6 +30,8 @@ namespace AnoMech.LessonTools;
 //          author (with draft) for every catalog strat without an embedded lesson, in the Lessons layout; plans and layouts
 //          come from Learn/Toolbox/plans.json unless --plans/--layout say otherwise
 //          context: the context file again from an existing dump (after a miner change or a lesson edit), no recording
+// wtfdig-fetch --fight umad [--path src/routes/ultimates/umad] [--branch main] --out AnoMech/Learn/Sources/wtfdig/umad.json   data.ts (+ mits.ts) -> JSON, no code run
+// mit-import --plan <name> --wtfdig umad --mit-plan ikuya --tabs "p1=UmadP1TeleTrouncingScenario,p2=UmadP2ForsakenScenario" --out Plans/<name>.json
 // learn-ready --scenario <TypeName> [--strat N] [--no-run]   what the chain can read from the scenario and how it degrades
 // status [--family <Family>]                                 scenario × strat × lesson × toolbox × example × mit × draft
 internal static class Cli
@@ -57,6 +60,7 @@ internal static class Cli
                 "draft" => Draft(opts),
                 "author-all" => AuthorAll(opts),
                 "learn-ready" => LearnReady(opts),
+                "wtfdig-fetch" => WtfdigFetch(opts),
                 "status" => Status(opts),
                 _ => Usage(),
             };
@@ -278,6 +282,7 @@ internal static class Cli
     private static int MitImport(Dictionary<string, string> opts)
     {
         var name = Need(opts, "plan");
+        if (opts.TryGetValue("wtfdig", out var fight) && fight.Length > 0) return MitImportWtfdig(opts, name, fight);
         var csvFile = opts.TryGetValue("csv", out var cf) && cf.Length > 0 ? cf : null;
         var tabs = csvFile != null
             ? new Dictionary<string, string> { [Path.GetFileNameWithoutExtension(csvFile)] = Need(opts, "scenario") }
@@ -322,6 +327,62 @@ internal static class Cli
         Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(outPath))!);
         File.WriteAllText(outPath, plan.ToJson());
         Console.WriteLine($"plan -> {outPath}; {plan.UnresolvedTexts().Count()} unresolved");
+        return 0;
+    }
+
+    // WTFDIG's mits.ts, already converted (wtfdig-fetch), rendered as the sheet grid per phase tag and
+    // anchored on each scenario's timeline like any sheet.
+    private static int MitImportWtfdig(Dictionary<string, string> opts, string name, string fight)
+    {
+        var source = WtfdigSource.Load(fight) ?? throw new ArgumentException($"no embedded WTFDIG source for {fight}; run wtfdig-fetch first");
+        var planName = Need(opts, "mit-plan");
+        if (source.Mits[planName] is null) throw new ArgumentException($"{fight} has no mit plan {planName}; it has {string.Join(", ", source.Mits.Select(kv => kv.Key))}");
+        var tabs = Need(opts, "tabs").Split(',').Select(t => t.Split('=', 2)).ToDictionary(p => p[0].Trim(), p => p[1].Trim());
+        var scenarios = new Dictionary<string, MitScenario>();
+        foreach (var (tag, scenarioType) in tabs)
+        {
+            var timeline = MitTimelines.Load(scenarioType) ?? throw new ArgumentException($"no embedded timeline for {scenarioType}; run mit-timeline first");
+            var csv = WtfdigSource.GridToCsv(source.MitGrid(planName, tag));
+            var scenario = MitSheetImport.Import(csv, timeline, MitAliases.Default);
+            scenarios[scenarioType] = scenario;
+            Console.WriteLine($"{tag} -> {scenarioType}: {scenario.Mechanics.Count} mechanics, {scenario.Mechanics.Count(m => m.Anchor != null)} anchored");
+        }
+        var label = source.Mits[planName]!["label"]?.GetValue<string>() ?? planName;
+        var url = source.Mits[planName]!["url"]?.GetValue<string>() ?? source.Url;
+        var plan = new MitPlan(name, new MitSource(label, url, [$"WTFDIG ({source.Url}, MIT)"], DateTime.UtcNow.ToString("yyyy-MM-dd")), scenarios);
+        foreach (var u in plan.UnresolvedTexts()) Console.WriteLine($"unresolved: {u}");
+        var outPath = Need(opts, "out");
+        Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(outPath))!);
+        File.WriteAllText(outPath, plan.ToJson());
+        Console.WriteLine($"plan -> {outPath}; {plan.UnresolvedTexts().Count()} unresolved");
+        return 0;
+    }
+
+    private static int WtfdigFetch(Dictionary<string, string> opts)
+    {
+        var fight = Need(opts, "fight");
+        var path = opts.TryGetValue("path", out var p) && p.Length > 0 ? p.Trim('/') : $"src/routes/ultimates/{fight}";
+        var branch = opts.TryGetValue("branch", out var b) && b.Length > 0 ? b : "main";
+        using var http = new HttpClient();
+        http.DefaultRequestHeaders.UserAgent.ParseAdd("AnoMech.LessonTools");
+        var commit = "";
+        try
+        {
+            using var doc = JsonDocument.Parse(http.GetStringAsync($"https://api.github.com/repos/mczub/wtfdig/commits/{branch}").GetAwaiter().GetResult());
+            commit = doc.RootElement.GetProperty("sha").GetString() ?? "";
+        }
+        catch (HttpRequestException e) { Console.Error.WriteLine($"commit lookup failed: {e.Message}"); }
+        var raw = $"https://raw.githubusercontent.com/mczub/wtfdig/{(commit.Length > 0 ? commit : branch)}/{path}";
+        var data = http.GetStringAsync($"{raw}/data.ts").GetAwaiter().GetResult();
+        string? mits = null;
+        try { mits = http.GetStringAsync($"{raw}/mits.ts").GetAwaiter().GetResult(); }
+        catch (HttpRequestException) { }
+        var json = WtfdigSource.Convert(fight, data, mits, commit, $"https://github.com/mczub/wtfdig/tree/{(commit.Length > 0 ? commit[..7] : branch)}/{path}");
+        var outPath = opts.TryGetValue("out", out var o) && o.Length > 0 ? o : $"AnoMech/Learn/Sources/wtfdig/{fight}.json";
+        Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(outPath))!);
+        File.WriteAllText(outPath, json);
+        var source = WtfdigSource.Parse(json);
+        Console.WriteLine($"{fight} @ {(commit.Length > 0 ? commit[..7] : branch)}: strats {string.Join(", ", source.StratNames)}; {source.Mechanics().Count} mechanics for {source.DefaultStrat}; mit plans {string.Join(", ", source.Mits.Select(kv => kv.Key))}{(mits is null ? " (no mits.ts)" : "")} -> {outPath} ({new FileInfo(outPath).Length / 1024} KiB)");
         return 0;
     }
 
@@ -490,8 +551,12 @@ internal static class Cli
                 log.WriteLine($"example pinned ({string.Join(", ", example.Keys)}): {pinned.TotalResidual:F1} m total, {pinned.Disagreements.Count()} disagree");
             }
         }
+        var wtfdig = WtfdigSource.Load(Glossary.FamilyOf(type).ToLowerInvariant());
+        var texts = wtfdig?.Mechanics();
+        if (wtfdig != null && texts is { Count: > 0 } && lesson.Sources.All(s => !s.Url.Contains("wtfdig", StringComparison.OrdinalIgnoreCase)))
+            lesson = lesson with { Sources = [.. lesson.Sources, new LessonSource($"WTFDIG ({wtfdig.DefaultStrat}), MIT", wtfdig.Url)] };
         File.WriteAllText(stem + ".lesson.json", LessonSkeleton.ToJson(lesson));
-        File.WriteAllText(stem + ".context.md", LessonContext.Write(dump, lesson, rules, cues, oracle, plan, layout));
+        File.WriteAllText(stem + ".context.md", LessonContext.Write(dump, lesson, rules, cues, oracle, plan, layout, texts));
         return stem;
     }
 

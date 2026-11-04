@@ -1,0 +1,164 @@
+{
+  "scenario": "UmadP1TeleTrouncingScenario",
+  "casts": [
+    {
+      "actionId": 47801,
+      "name": "Tele-trouncing",
+      "start": 1.6,
+      "resolve": 6.2999997,
+      "occurrence": 1
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 8.9,
+      "resolve": 8.9,
+      "occurrence": 1
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 11.933,
+      "resolve": 11.933,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47802,
+      "name": "Tele-trouncing",
+      "start": 14.433,
+      "resolve": 14.433,
+      "occurrence": 2
+    },
+    {
+      "actionId": 48370,
+      "name": "Graven Image",
+      "start": 15.683,
+      "resolve": 18.383,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47802,
+      "name": "Tele-trouncing",
+      "start": 17.433,
+      "resolve": 17.433,
+      "occurrence": 3
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 19.017,
+      "resolve": 19.017,
+      "occurrence": 3
+    },
+    {
+      "actionId": 50516,
+      "name": "",
+      "start": 20.817,
+      "resolve": 23.517,
+      "occurrence": 4
+    },
+    {
+      "actionId": 47783,
+      "name": "Double-trouble Trap",
+      "start": 22.783,
+      "resolve": 22.783,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47798,
+      "name": "Idyllic Will",
+      "start": 28.466,
+      "resolve": 28.466,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47797,
+      "name": "Indulgent Will",
+      "start": 28.466,
+      "resolve": 28.466,
+      "occurrence": 1
+    },
+    {
+      "actionId": 50517,
+      "name": "",
+      "start": 32.783,
+      "resolve": 32.783,
+      "occurrence": 5
+    },
+    {
+      "actionId": 50173,
+      "name": "",
+      "start": 34.883,
+      "resolve": 34.883,
+      "occurrence": 6
+    },
+    {
+      "actionId": 47764,
+      "name": "Mystery Magic",
+      "start": 36.416,
+      "resolve": 41.116,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47776,
+      "name": "Thrumming Thunder III",
+      "start": 36.416,
+      "resolve": 41.116,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47777,
+      "name": "Thrumming Thunder III",
+      "start": 36.416,
+      "resolve": 41.116,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47796,
+      "name": "Indolent Will",
+      "start": 41.5,
+      "resolve": 41.5,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47779,
+      "name": "Flagrant Fire III",
+      "start": 42.2,
+      "resolve": 42.2,
+      "occurrence": 1
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 44.483,
+      "resolve": 44.483,
+      "occurrence": 7
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 48.633,
+      "resolve": 48.633,
+      "occurrence": 8
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 51.666,
+      "resolve": 51.666,
+      "occurrence": 9
+    }
+  ],
+  "names": [
+    "Tele-trouncing",
+    "",
+    "Graven Image",
+    "Double-trouble Trap",
+    "Idyllic Will",
+    "Indulgent Will",
+    "Mystery Magic",
+    "Thrumming Thunder III",
+    "Indolent Will",
+    "Flagrant Fire III"
+  ]
+}

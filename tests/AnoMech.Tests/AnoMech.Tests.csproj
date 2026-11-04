@@ -13,6 +13,7 @@
     <InternalsVisibleTo Include="AnoMech.LessonTools" />
     <None Include="Learn/Toolbox/Fixtures/*.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="Learn/Mitigation/Fixtures/*.csv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="Learn/Sources/Fixtures/*.ts" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <!-- The plugin references these with Private=false because Dalamud supplies them in game; the
