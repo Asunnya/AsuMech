@@ -100,6 +100,7 @@ public sealed partial class AsuMainWindow
                 ImGui.SameLine();
                 if (ImGui.SmallButton("Report##lesson-report")) plugin.LessonReport.Toggle();
             }
+            DrawDrill(scenario, l, role);
         }
         else
         {
@@ -107,6 +108,28 @@ public sealed partial class AsuMainWindow
             DrawRequestLink(FeedbackKind.Strat);
         }
         ImGui.EndGroup();
+    }
+
+    // Repeats the weakest step until it is mastered; Stop or "End drill" breaks the loop.
+    private void DrawDrill(IScenario scenario, Lesson lesson, PartyRole role)
+    {
+        var runner = plugin.StepDrill;
+        if (runner.Active is { } active)
+        {
+            using (AsuTheme.PushTextColor(AsuTheme.Accent))
+                ImGui.TextUnformatted($"Drilling: {active.Step.Title ?? MasteryStore.StepId(active.Step.Key)} · run {runner.Runs} · {Plugin.Mastery.Streak(active.Lesson, active.Role, active.Step.Key)}/{MasteryStore.HitsToMaster}");
+            ImGui.SameLine();
+            if (ImGui.SmallButton("End drill")) runner.End();
+            return;
+        }
+        var weakest = StepDrillPlanner.Weakest(lesson, role, Plugin.Mastery, LearnSession.LastReport);
+        if (weakest is null) { Muted("Every step mastered."); return; }
+        var level = learnLevel == LearnLevel.Observe ? LearnLevel.Guided : learnLevel;
+        var window = StepDrillPlanner.Window(weakest);
+        if (ImGui.SmallButton($"Drill weakest: {weakest.Title ?? MasteryStore.StepId(weakest.Key)}##drill"))
+            runner.Start(new StepDrillRunner.Spec(scenario, Picker.SelectedAi!, lesson, weakest, role, level, window));
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip($"Runs only {window.From:0}s–{window.To:0}s of the fight, {level}, on repeat. The bots skip the orders before the slice, so adds or spreads set up earlier may be missing.");
     }
 
     private string? LearnRefusal(IScenario scenario, Lesson? lesson, bool inSession)

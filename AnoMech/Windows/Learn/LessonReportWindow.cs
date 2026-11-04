@@ -36,14 +36,17 @@ internal sealed class LessonReportWindow : Window, IDisposable
         ImGui.TextUnformatted(report.Title);
         using (AsuTheme.PushTextColor(report.InPlace == report.Results.Count ? AsuTheme.Ok : AsuTheme.Accent))
             ImGui.TextUnformatted(report.Summary);
-        if (!ImGui.BeginTable("lesson-report", 4, ImGuiTableFlags.RowBg | ImGuiTableFlags.ScrollY | ImGuiTableFlags.SizingStretchProp)) return;
+        if (!ImGui.BeginTable("lesson-report", 5, ImGuiTableFlags.RowBg | ImGuiTableFlags.ScrollY | ImGuiTableFlags.SizingStretchProp)) return;
         ImGui.TableSetupColumn("Step");
         ImGui.TableSetupColumn("Result");
         ImGui.TableSetupColumn("Arrived");
         ImGui.TableSetupColumn("Off by");
+        ImGui.TableSetupColumn("", ImGuiTableColumnFlags.WidthFixed);
         ImGui.TableHeadersRow();
+        var row = 0;
         foreach (var (step, result) in report.Results)
         {
+            row++;
             var eval = step.Evaluation;
             ImGui.TableNextRow();
             ImGui.TableNextColumn(); ImGui.TextUnformatted($"{step.Order.Key.Time:0.#}s  {step.Title}");
@@ -54,6 +57,8 @@ internal sealed class LessonReportWindow : Window, IDisposable
             ImGui.TextUnformatted(eval.ArrivedAt is { } at ? $"{at - eval.Deadline:+0.0;-0.0}s" : "—");
             ImGui.TableNextColumn();
             ImGui.TextUnformatted(result == StepResult.OnTime || eval.ResolvedDistance is not { } d ? "" : $"{d:0.0} yalms");
+            ImGui.TableNextColumn();
+            if (step.Step is { Skip: false } lessonStep && ImGui.SmallButton($"Drill##{row}")) StepDrillRunner.Instance?.Start(report, lessonStep);
         }
         ImGui.EndTable();
     }

@@ -40,6 +40,7 @@ internal sealed class GuidanceOverlay : Window
     {
         var session = LearnSession.Current;
         session?.Tick(ImGui.GetIO().DeltaTime);
+        StepDrillRunner.Instance?.Tick(ImGui.GetIO().DeltaTime);
         if (session is { Ended: false } && session.Level != LearnLevel.Exam)
         {
             Subscribe(session.Director);

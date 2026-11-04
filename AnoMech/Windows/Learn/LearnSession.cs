@@ -29,10 +29,12 @@ internal sealed class LearnSession : IDisposable
     private bool sawLive;
     private float waited;
 
-    public LearnSession(Game game, IScenario scenario, IScenarioAi strat, Lesson? lesson, PartyRole role, LearnLevel level)
+    public LearnSession(Game game, IScenario scenario, IScenarioAi strat, Lesson? lesson, PartyRole role, LearnLevel level, DrillWindow? drill = null)
     {
         Current?.Dispose();
         this.game = game;
+        Drill = drill;
+        if (drill != null) game.RunStarted += OnRunStarted;
         Scenario = scenario;
         Strat = strat;
         Lesson = lesson;
@@ -53,6 +55,7 @@ internal sealed class LearnSession : IDisposable
     public Lesson? Lesson { get; }
     public PartyRole Role { get; }
     public LearnLevel Level { get; }
+    public DrillWindow? Drill { get; }
     public LessonDirector Director { get; }
     public bool Ended { get; private set; }
 
@@ -78,6 +81,14 @@ internal sealed class LearnSession : IDisposable
 
     private void OnMechanicFailed(string reason) => Director.OnMechanicFailed();
 
+    private void OnRunStarted(RunScenarioParams p, bool local) => ApplyDrill();
+
+    // Cuts the freshly scheduled timeline down to the drill's slice. Safe to call more than once.
+    public void ApplyDrill()
+    {
+        if (Drill is { } w && !Ended) game.World.Events.KeepWindow(w.From, w.To);
+    }
+
     private void SetSpeed(float scale)
     {
         // Observe runs at the watch speed; the director's slowdown is for someone at the controls.
@@ -90,12 +101,13 @@ internal sealed class LearnSession : IDisposable
         if (Ended) return;
         Ended = true;
         Director.End();
-        if (Director.Judging && Director.Results.Count > 0)
+        if (Director.Judging && Director.Results.Count > 0 && Lesson is { } judged)
         {
-            LastReport = new LessonReport(Scenario.Name, Strat.Name, Level, Role, Director.Results);
+            LastReport = new LessonReport(Scenario, Strat, judged, Level, Role, Director.Results);
             ReportReady?.Invoke(LastReport);
         }
         game.MechanicFailed -= OnMechanicFailed;
+        if (Drill != null) game.RunStarted -= OnRunStarted;
         if (ReferenceEquals(game.World.Guidance, Director)) game.World.Guidance = null;
         watch?.Dispose();
         game.EventTimeScale = speedBefore;

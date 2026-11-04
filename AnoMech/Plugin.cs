@@ -80,6 +80,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
     private Windows.Learn.MitTraining MitTraining { get; init; }
     internal Windows.Learn.MitReportWindow MitReport { get; init; }
     internal Windows.Learn.LessonReportWindow LessonReport { get; init; }
+    internal Windows.Learn.StepDrillRunner StepDrill { get; init; }
 #if DEBUG
     private DamageDebugWindow DamageDebugWindow { get; init; }
 #endif
@@ -145,6 +146,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
             windowSystem.AddWindow(MitReport);
             LessonReport = new Windows.Learn.LessonReportWindow();
             windowSystem.AddWindow(LessonReport);
+            StepDrill = new Windows.Learn.StepDrillRunner(this, Game);
 #if DEBUG
             DamageDebugWindow = new DamageDebugWindow(this);
             windowSystem.AddWindow(DamageDebugWindow);
@@ -295,6 +297,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
         MainWindow?.Dispose();
         AsuMainWindow?.Dispose();
         LessonReport?.Dispose();
+        StepDrill?.Dispose();
         FailureBanner?.Dispose();
         Windows.Learn.LearnSession.Current?.Dispose();
         MitTraining?.Dispose();
