@@ -26,12 +26,12 @@ public sealed partial class AsuMainWindow
         DrawStratPill(scenario);
         if (!inSession)
         {
-            ImGui.SameLine();
+            Flow.SameLineIfFits(Flow.ButtonWidth(RolePillLabel()));
             DrawRolePill();
         }
         if (!inSession && scenario.SupportsSolo)
         {
-            ImGui.SameLine();
+            Flow.SameLineIfFits(Pills.Width("Solo"));
             var running = RunState.Live(game);
             if (Pills.Toggle("Solo##solo-pill", Picker.Solo, disabled: running)) Picker.Solo = !Picker.Solo;
             if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
@@ -78,13 +78,17 @@ public sealed partial class AsuMainWindow
         ImGui.EndPopup();
     }
 
+    private int RoleIndex => Picker.RoleOverride is { } role ? (int)role + 1 : 0;
+
+    private string RolePillLabel() => $"Role: {ScenarioSetupUi.RoleLabels[RoleIndex]}##role-pill";
+
     private void DrawRolePill()
     {
         var labels = ScenarioSetupUi.RoleLabels;
-        var idx = Picker.RoleOverride is { } role ? (int)role + 1 : 0;
+        var idx = RoleIndex;
         bool clicked;
         using (AsuTheme.PushPill())
-            clicked = ImGui.Button($"Role: {labels[idx]}##role-pill");
+            clicked = ImGui.Button(RolePillLabel());
         if (ImGui.IsItemHovered()) ImGui.SetTooltip("Click for the next role, right-click for the previous one.");
         var next = clicked ? idx + 1 : ImGui.IsItemClicked(ImGuiMouseButton.Right) ? idx - 1 + labels.Length : -1;
         if (next < 0) return;
@@ -95,7 +99,7 @@ public sealed partial class AsuMainWindow
     private void DrawFooter(Game game, bool inSession)
     {
         DrawRunToggles(game, inSession);
-        ImGui.SameLine();
+        Flow.SameLineIfFits(StreakWidth());
         DrawStreak(inSession);
 
         if (Plugin.Config.ShowSpeedControl)
@@ -118,7 +122,7 @@ public sealed partial class AsuMainWindow
         if (Pills.Toggle("God mode##god-pill", game.GodMode, disabled: inSession)) game.GodMode = !game.GodMode;
         if (inSession && ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
             ImGui.SetTooltip(SessionDisabledReason);
-        ImGui.SameLine();
+        Flow.SameLineIfFits(Pills.Width("Auto-restart"));
         var practice = Plugin.Practice;
         if (inSession) practice.AutoRestart = false;
         if (Pills.Toggle("Auto-restart##auto-restart-pill", practice.AutoRestart, disabled: inSession)) practice.AutoRestart = !practice.AutoRestart;

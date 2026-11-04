@@ -273,6 +273,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
         ConfigWindow?.Dispose();
         MainWindow?.Dispose();
         AsuMainWindow?.Dispose();
+        Windows.Asu.AsuFonts.Dispose();
         FailureBanner?.Dispose();
 #if DEBUG
         DamageDebugWindow?.Dispose();

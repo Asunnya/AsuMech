@@ -30,6 +30,13 @@ internal static class Pills
         return true;
     }
 
+    public static float Width(string label)
+    {
+        var shown = label.Split("##")[0];
+        var track = ImGui.GetFrameHeight() * 1.75f;
+        return track + (shown.Length > 0 ? ImGui.GetStyle().ItemInnerSpacing.X + ImGui.CalcTextSize(shown).X : 0);
+    }
+
     // The label is part of the hit area, like a checkbox's.
     private static bool Switch(string label, bool on)
     {
@@ -41,7 +48,7 @@ internal static class Pills
         var pos = ImGui.GetCursorScreenPos();
         var id = ImGui.GetID(label);
 
-        var width = trackSize.X + (shown.Length > 0 ? spacing + textSize.X : 0);
+        var width = Width(label);
         var clicked = ImGui.InvisibleButton(label, new Vector2(width, height));
         var hovered = ImGui.IsItemHovered();
 
@@ -61,7 +68,7 @@ internal static class Pills
 
         var draw = ImGui.GetWindowDrawList();
         draw.AddRectFilled(trackMin, trackMax, ImGui.GetColorU32(track), radius);
-        draw.AddCircleFilled(knobCenter, radius - KnobInsetPx * ImGuiHelpers.GlobalScale, ImGui.GetColorU32(knob));
+        draw.AddCircleFilled(knobCenter, radius - KnobInsetPx * AsuTheme.Scale, ImGui.GetColorU32(knob));
         if (shown.Length > 0)
             draw.AddText(new Vector2(trackMax.X + spacing, pos.Y + (height - textSize.Y) / 2), ImGui.GetColorU32(ImGuiCol.Text), shown);
 

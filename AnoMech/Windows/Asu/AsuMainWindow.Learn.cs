@@ -35,7 +35,7 @@ public sealed partial class AsuMainWindow
         DrawStratPill(scenario);
         if (!inSession)
         {
-            ImGui.SameLine();
+            Flow.SameLineIfFits(Flow.ButtonWidth(RolePillLabel()));
             DrawRolePill();
         }
 
@@ -47,8 +47,9 @@ public sealed partial class AsuMainWindow
         ImGui.EndDisabled();
         if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
             ImGui.SetTooltip(why ?? $"Bots play your seat at {WatchSession.WatchSpeed}× speed. Watch clears don't count toward streaks.");
-        ImGui.SameLine();
-        Muted($"Speed {WatchSession.WatchSpeed}×");
+        var speed = $"Speed {WatchSession.WatchSpeed}×";
+        Flow.SameLineIfFits(Flow.TextWidth(speed));
+        Muted(speed);
         if (clicked) StartWatch();
 
         DrawArenaPreview(scenario);
@@ -88,7 +89,7 @@ public sealed partial class AsuMainWindow
     // The arena and the selected waymark layout, north up.
     private void DrawArenaPreview(IScenario scenario)
     {
-        var scale = ImGuiHelpers.GlobalScale;
+        var scale = AsuTheme.Scale;
         var size = ArenaPreviewPx * scale;
         var pos = ImGui.GetCursorScreenPos();
         var center = pos + new Vector2(size * 0.5f);

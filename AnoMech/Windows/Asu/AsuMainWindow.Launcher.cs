@@ -13,6 +13,7 @@ public sealed partial class AsuMainWindow
     private const string AllExpansions = "All expansions";
     private const float ExpansionComboPx = 140f;
     private const float ActionButtonPx = 96f;
+    private const float SelectorMinPx = 160f;
 
     private static string? ExpansionScope => Plugin.Config.SelectedExpansion.Length == 0 ? null : Plugin.Config.SelectedExpansion;
     private static string? TypeScope => Plugin.Config.SelectedType.Length == 0 ? null : Plugin.Config.SelectedType;
@@ -37,7 +38,7 @@ public sealed partial class AsuMainWindow
 
     private void DrawLauncher(Game game, bool inSession)
     {
-        var scale = ImGuiHelpers.GlobalScale;
+        var scale = AsuTheme.Scale;
         ImGui.SetNextItemWidth(ExpansionComboPx * scale);
         if (ImGui.BeginCombo("##expansion", ExpansionScope ?? AllExpansions))
         {
@@ -49,14 +50,16 @@ public sealed partial class AsuMainWindow
 
         ImGui.SameLine();
         var actions = ActionsWidth(game, inSession);
-        DrawSelector(ImGui.GetContentRegionAvail().X - actions - ImGui.GetStyle().ItemSpacing.X);
-        ImGui.SameLine();
+        var rest = ImGui.GetContentRegionAvail().X;
+        var beside = rest - actions - ImGui.GetStyle().ItemSpacing.X;
+        DrawSelector(beside >= SelectorMinPx * scale ? beside : rest);
+        Flow.SameLineRight(actions);
         DrawActions(game, inSession);
     }
 
     private float ActionsWidth(Game game, bool inSession)
     {
-        var width = ActionButtonPx * ImGuiHelpers.GlobalScale;
+        var width = ActionButtonPx * AsuTheme.Scale;
         return HasSecondaryAction(game, inSession) ? width * 2 + ImGui.GetStyle().ItemSpacing.X : width;
     }
 
@@ -68,7 +71,7 @@ public sealed partial class AsuMainWindow
 
     private void DrawActions(Game game, bool inSession)
     {
-        var size = new Vector2(ActionButtonPx * ImGuiHelpers.GlobalScale, 0f);
+        var size = new Vector2(ActionButtonPx * AsuTheme.Scale, 0f);
         if (!inSession)
             DrawStartButton(game, size);
         else if (RunState.Active)

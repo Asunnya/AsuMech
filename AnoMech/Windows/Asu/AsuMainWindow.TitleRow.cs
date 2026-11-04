@@ -29,10 +29,7 @@ public sealed partial class AsuMainWindow
             ImGui.EndTooltip();
         }
 
-        if (titleRightWidth > 0f)
-            ImGui.SameLine(ImGui.GetWindowContentRegionMax().X - titleRightWidth);
-        else
-            ImGui.SameLine();
+        Flow.SameLineRight(titleRightWidth);
         ImGui.BeginGroup();
         if (ModeButton("Practice", mode == Mode.Practice)) mode = Mode.Practice;
         ImGui.SameLine(0f, 0f);

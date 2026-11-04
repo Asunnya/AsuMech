@@ -42,7 +42,12 @@ internal static class AsuTheme
     private static readonly Vector2 FramePaddingPx = new(11f, 6f);
     private static readonly Vector2 TabPaddingPx = new(10f, 6f);
 
-    private static float Scale => ImGuiHelpers.GlobalScale;
+    public const int MinScalePercent = 75;
+    public const int MaxScalePercent = 150;
+    public static int ScalePercent => Math.Clamp(Plugin.Config.WindowScalePercent, MinScalePercent, MaxScalePercent);
+    public static float UserScale => ScalePercent / 100f;
+    // Dalamud's scale times the player's window size setting.
+    public static float Scale => ImGuiHelpers.GlobalScale * UserScale;
     public static float RowGap => RowGapPx * Scale;
     public static float Underline => UnderlinePx * Scale;
     public static float PillRounding => PillRoundingPx * Scale;
@@ -54,6 +59,7 @@ internal static class AsuTheme
     public static IDisposable Push()
     {
         var scope = new StyleScope();
+        scope.Font(AsuFonts.Push(ScalePercent));
         scope.Color(ImGuiCol.WindowBg, Window);
         scope.Color(ImGuiCol.ChildBg, Window);
         scope.Color(ImGuiCol.PopupBg, Element);
@@ -126,7 +132,10 @@ internal static class AsuTheme
     {
         private int colors;
         private int vars;
+        private IDisposable? font;
         private bool disposed;
+
+        public void Font(IDisposable? pushed) => font = pushed;
 
         public void Color(ImGuiCol col, Vector4 value)
         {
@@ -152,6 +161,7 @@ internal static class AsuTheme
             disposed = true;
             if (vars > 0) ImGui.PopStyleVar(vars);
             if (colors > 0) ImGui.PopStyleColor(colors);
+            font?.Dispose();
         }
     }
 }

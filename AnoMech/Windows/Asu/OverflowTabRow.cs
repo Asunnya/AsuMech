@@ -22,7 +22,7 @@ internal static class OverflowTabRow
         IReadOnlyList<string>? groupLabels = null, IReadOnlyList<string>? groupNames = null)
     {
         if (items.Count == 0) return -1;
-        var scale = ImGuiHelpers.GlobalScale;
+        var scale = AsuTheme.Scale;
         var padding = AsuTheme.TabPadding;
         var spacing = ImGui.GetStyle().ItemSpacing.X;
         var measures = items.Select(it => new TabMeasure(ImGui.CalcTextSize(it.Label).X + padding.X * 2 + spacing, it.Group)).ToList();

@@ -24,16 +24,20 @@ public sealed partial class AsuMainWindow
     private static string BestStreakText(IScenario scenario)
         => Plugin.Drill.BestOf(scenario.FullName()) is var best and > 0 ? $" · best {best}" : "";
 
+    private static string DrillLabel() => $"Drill: {(Plugin.Drill.StreakTarget is { } t ? t.ToString() : "off")}##drill";
+
+    private float StreakWidth() => Flow.TextWidth(StreakText()) + ImGui.GetStyle().ItemSpacing.X + Flow.ButtonWidth(DrillLabel());
+
     private void DrawStreak(bool inSession)
     {
         ImGui.AlignTextToFramePadding();
         Muted(StreakText());
-        ImGui.SameLine();
+        Flow.SameLineIfFits(Flow.ButtonWidth(DrillLabel()));
         ImGui.BeginDisabled(inSession);
         bool clicked;
         using (AsuTheme.PushPill())
         using (Plugin.Drill.StreakTarget != null ? AsuTheme.PushAccentButton() : null)
-            clicked = ImGui.Button($"Drill: {(Plugin.Drill.StreakTarget is { } t ? t.ToString() : "off")}##drill");
+            clicked = ImGui.Button(DrillLabel());
         ImGui.EndDisabled();
         if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
             ImGui.SetTooltip(inSession

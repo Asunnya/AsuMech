@@ -57,7 +57,7 @@ public class ConfigWindow : Window, IDisposable
         var height = contentHeight > 0f ? contentHeight / scale : 0f;
         SizeConstraints = new WindowSizeConstraints
         {
-            MinimumSize = new Vector2(NewMinWidthPx, height),
+            MinimumSize = new Vector2(NewMinWidthPx * AsuTheme.UserScale, height),
             MaximumSize = new Vector2(float.MaxValue, contentHeight > 0f ? height : float.MaxValue),
         };
     }
@@ -93,7 +93,11 @@ public class ConfigWindow : Window, IDisposable
         if (Pills.Checkbox("Use the new main window (preview)", ref newLayout))
             plugin.SetNewLayout(newLayout);
 
-        if (configuration.UseNewLayout) DrawAccentColor();
+        if (configuration.UseNewLayout)
+        {
+            DrawAccentColor();
+            DrawWindowScale();
+        }
 
         var suppressBgm = configuration.SuppressBgm;
         if (Pills.Checkbox("Suppress scenario BGM", ref suppressBgm))
@@ -210,6 +214,35 @@ public class ConfigWindow : Window, IDisposable
         }
         if (!ImGui.IsMouseDown(ImGuiMouseButton.Left)) SaveAccent();
     }
+
+    private int? scaleDraft;
+
+    // Applied on release: resizing mid-drag would move the slider out from under the mouse.
+    private void DrawWindowScale()
+    {
+        var percent = scaleDraft ?? AsuTheme.ScalePercent;
+        ImGui.SetNextItemWidth(240f * ImGuiHelpers.GlobalScale);
+        if (ImGui.SliderInt("Window size", ref percent, AsuTheme.MinScalePercent, AsuTheme.MaxScalePercent, "%d%%"))
+            scaleDraft = (int)MathF.Round(percent / (float)ScaleStepPercent) * ScaleStepPercent;
+        if (ImGui.IsItemDeactivated() && scaleDraft is { } draft)
+        {
+            scaleDraft = null;
+            configuration.WindowScalePercent = draft;
+            configuration.Save();
+        }
+        if (ImGui.IsItemHovered()) ImGui.SetTooltip("Scales the text, buttons and spacing of the main window and this one. Ctrl+click to type a value.");
+        if (configuration.WindowScalePercent != 100 && scaleDraft == null)
+        {
+            ImGui.SameLine();
+            if (ImGui.Button("Reset##scale"))
+            {
+                configuration.WindowScalePercent = 100;
+                configuration.Save();
+            }
+        }
+    }
+
+    private const int ScaleStepPercent = 5;
 
     // Also on close and unload: a pick still held in memory is lost when the plugin reloads.
     private void SaveAccent()

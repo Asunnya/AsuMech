@@ -112,10 +112,7 @@ public sealed partial class AsuMainWindow
 
         var practice = Plugin.Practice;
         if (inSession) practice.AutoRestart = false;
-        if (detailRightWidth > 0f)
-            ImGui.SameLine(ImGui.GetWindowContentRegionMax().X - detailRightWidth);
-        else
-            ImGui.SameLine();
+        Flow.SameLineRight(detailRightWidth);
         ImGui.BeginGroup();
         ImGui.BeginDisabled(inSession);
         bool single, loop;
