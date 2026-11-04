@@ -28,4 +28,8 @@ public sealed record ToolboxPlan(string Id, string Label, string Author, string 
 }
 
 // The lesson's link to a plan: which slot each role is, and which toolbox step each lesson step shows.
-public sealed record LessonToolbox(string PlanId, Dictionary<string, string> RoleMap, Dictionary<string, int> Steps, int? ExampleSeed = null);
+// Example: the rolls the plan draws, as the scenario's *StateOverrides property names and values
+// ("SuparnaSongBearing": "270", "SatinPlumesFirst": "[(16,-4),(-4,16),(-12,-12),(-16,4)]"), pinned
+// for a replay on top of ExampleSeed.
+public sealed record LessonToolbox(string PlanId, Dictionary<string, string> RoleMap, Dictionary<string, int> Steps, int? ExampleSeed = null,
+    Dictionary<string, string>? Example = null);

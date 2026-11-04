@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Ai;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.SimObjects;
 using AnoMech.Learn;
+using AnoMech.Learn.Toolbox;
 using AnoMech.Scenarios;
 using AnoMech.Windows.Asu;
 
@@ -83,6 +85,16 @@ internal sealed class LearnSession : IDisposable
 
     private void OnRunStarted(RunScenarioParams p, bool local) => ApplyDrill();
 
+    private object? pinned;
+    private IReadOnlyList<string> pinnedKeys = [];
+
+    // The toolbox's rolls on the scenario's overrides for this run; lifted again when the session ends.
+    public void PinExample(object overrides, Dictionary<string, string> example)
+    {
+        pinnedKeys = ExampleOverrides.Apply(overrides, example);
+        pinned = overrides;
+    }
+
     // Cuts the freshly scheduled timeline down to the drill's slice. Safe to call more than once.
     public void ApplyDrill()
     {
@@ -108,6 +120,7 @@ internal sealed class LearnSession : IDisposable
         }
         game.MechanicFailed -= OnMechanicFailed;
         if (Drill != null) game.RunStarted -= OnRunStarted;
+        if (pinned != null) ExampleOverrides.Lift(pinned, pinnedKeys);
         if (ReferenceEquals(game.World.Guidance, Director)) game.World.Guidance = null;
         watch?.Dispose();
         game.EventTimeScale = speedBefore;

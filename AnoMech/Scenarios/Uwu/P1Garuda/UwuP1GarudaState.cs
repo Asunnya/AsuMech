@@ -49,18 +49,30 @@ public sealed class UwuP1GarudaState
     public SimTether? SuparnaMesohigh { get; set; }
     public SimTether? ChiradaMesohigh { get; set; }
 
-    public UwuP1GarudaState(Rng rng)
+    public UwuP1GarudaState(Rng rng, UwuP1GarudaStateOverrides? overrides = null)
     {
+        var forced = overrides ?? new UwuP1GarudaStateOverrides();
+        // Every roll is drawn before a pin replaces it, so the seed's other rolls stay put.
         var cardinals = rng.Shuffle(0f, 90f, 180f, 270f).Take(2).ToArray();
-        SuparnaSongSpot = AtBearing(cardinals[0], SongSpotRadius);
-        ChiradaSongSpot = AtBearing(cardinals[1], SongSpotRadius);
-        MistralSongTarget = Healers[rng.Next(Healers.Length)];
-        SistersSongTargets = rng.Shuffle(NonTanks).Take(2).ToList();
-        FrictionTargets = [NonTanks[rng.Next(NonTanks.Length)], NonTanks[rng.Next(NonTanks.Length)]];
-        SatinPlumesFirst = rng.Shuffle(SatinPlumeSpots).Take(4).ToList();
-        SatinPlumesSecond = rng.Shuffle(SatinPlumeSpots).Take(4).ToList();
-        MesohighTargets = rng.Shuffle(Enum.GetValues<PartyRole>()).Take(2).ToList();
+        SuparnaSongSpot = AtBearing(forced.SuparnaSongBearing ?? cardinals[0], SongSpotRadius);
+        ChiradaSongSpot = AtBearing(forced.ChiradaSongBearing ?? cardinals[1], SongSpotRadius);
+        var songTarget = Healers[rng.Next(Healers.Length)];
+        MistralSongTarget = forced.MistralSongTarget ?? songTarget;
+        var sistersTargets = rng.Shuffle(NonTanks).Take(2).ToList();
+        SistersSongTargets = forced.SistersSongTargets ?? sistersTargets;
+        var frictionTargets = new List<PartyRole> { NonTanks[rng.Next(NonTanks.Length)], NonTanks[rng.Next(NonTanks.Length)] };
+        FrictionTargets = forced.FrictionTargets ?? frictionTargets;
+        var plumesFirst = rng.Shuffle(SatinPlumeSpots).Take(4).ToList();
+        SatinPlumesFirst = Plumes(forced.SatinPlumesFirst) ?? plumesFirst;
+        var plumesSecond = rng.Shuffle(SatinPlumeSpots).Take(4).ToList();
+        SatinPlumesSecond = Plumes(forced.SatinPlumesSecond) ?? plumesSecond;
+        var mesohighTargets = rng.Shuffle(Enum.GetValues<PartyRole>()).Take(2).ToList();
+        MesohighTargets = forced.MesohighTargets ?? mesohighTargets;
     }
+
+    // Pinned plumes snap to the nearest of the twelve spawn spots; fewer than four means no pin.
+    private static IReadOnlyList<Vector3>? Plumes(List<Vector2>? pinned)
+        => pinned is { Count: 4 } ? pinned.Select(p => SatinPlumeSpots.MinBy(s => Vector2.Distance(new Vector2(s.X, s.Z), p))).ToList() : null;
 
     // Compass degrees: 0 = north (-Z), 90 = east (+X).
     public static Vector3 AtBearing(float bearingDegrees, float radius)

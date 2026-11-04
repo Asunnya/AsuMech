@@ -146,9 +146,14 @@ public sealed partial class AsuMainWindow
         EndWatch();
         Plugin.Practice.AutoRestart = false;
         var role = LearnRole();
-        new LearnSession(Plugin.Game, scenario, Picker.SelectedAi!, lesson, role, learnLevel);
+        var session = new LearnSession(Plugin.Game, scenario, Picker.SelectedAi!, lesson, role, learnLevel);
         var selection = Picker.Selection;
-        if (selection != null && ReplaySeed(lesson, role) is { } seed) selection = selection with { Seed = seed };
+        if (selection != null && ReplaySeed(lesson, role) is { } seed)
+        {
+            selection = selection with { Seed = seed };
+            if (lesson?.Toolbox?.Example is { Count: > 0 } example && scenario.SettingsOverrides is { } overrides)
+                session.PinExample(overrides, example);
+        }
         plugin.Runs.Start(selection, SoloSelected);
     }
 

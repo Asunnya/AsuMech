@@ -20,6 +20,10 @@ public sealed class UwuP1GarudaScenario : IScenario
     public IPhase Phase => UwuZone.Garuda;
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new UwuP1GarudaAi()];
+    public void DrawSettings() => settingsWindow.Draw();
+    public object SettingsOverrides => settingsWindow.Overrides;
+
+    private readonly UwuP1GarudaSettingsWindow settingsWindow = new();
 
     private const float MistralSongHalfWidth = 2.5f;
     private const float MistralSongLength = 40f;
@@ -73,7 +77,7 @@ public sealed class UwuP1GarudaScenario : IScenario
         party = world.Party;
         utils = new UwuUtils(world);
         damage = new DamageSolver(party);
-        state = new UwuP1GarudaState(world.Rng);
+        state = new UwuP1GarudaState(world.Rng, settingsWindow.Overrides);
         satinPlumes.Clear();
         satinPlumeHp.Clear();
         satinPlumeBotDrain.Clear();
