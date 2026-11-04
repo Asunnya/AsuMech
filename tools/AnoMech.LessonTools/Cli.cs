@@ -23,9 +23,12 @@ namespace AnoMech.LessonTools;
 //          record -> skeleton -> mine -> cues [-> toolbox-import -> oracle] -> <dir>/<Scenario>.<strat>.context.md
 // context  --dump dump.json --lesson lesson.json --out context.md [--plan plans/<id>.json] [--zone <ZoneType> --layout <name>]
 // draft    --dump dump.json --lesson lesson.json --out lesson.json [--zone <ZoneType> --layout <name>]   rule/cue/roles/tolerance/skip from the mined data
-// author-all --out <dir> [--seeds 1..12] [--scenario <substring>] [--layout <name>] [--plans "UwuP2IfritScenario=562530446784261,..."] [--force]
-//          author (with draft) for every catalog strat without an embedded lesson, in the Lessons layout
-//          the context file again from an existing dump (after a miner change or a lesson edit), no recording
+// author-all --out <dir> [--seeds 1..12] [--scenario <substring>|--family <Family>] [--layout <name>] [--plans "UwuP2IfritScenario=562530446784261,..."] [--force]
+//          author (with draft) for every catalog strat without an embedded lesson, in the Lessons layout; plans and layouts
+//          come from Learn/Toolbox/plans.json unless --plans/--layout say otherwise
+//          context: the context file again from an existing dump (after a miner change or a lesson edit), no recording
+// learn-ready --scenario <TypeName> [--strat N] [--no-run]   what the chain can read from the scenario and how it degrades
+// status [--family <Family>]                                 scenario × strat × lesson × toolbox × example × mit × draft
 internal static class Cli
 {
     public static int Run(string[] args)
@@ -51,6 +54,8 @@ internal static class Cli
                 "context" => Context(opts),
                 "draft" => Draft(opts),
                 "author-all" => AuthorAll(opts),
+                "learn-ready" => LearnReady(opts),
+                "status" => Status(opts),
                 _ => Usage(),
             };
         }
@@ -63,7 +68,7 @@ internal static class Cli
 
     private static int Usage()
     {
-        Console.Error.WriteLine("usage: author|author-all|draft|context|record|skeleton|rekey|check|mine|cues|oracle|toolbox-import|mit-timeline|mit-import (see Cli.cs)");
+        Console.Error.WriteLine("usage: learn-ready|status|author|author-all|draft|context|record|skeleton|rekey|check|mine|cues|oracle|toolbox-import|mit-timeline|mit-import (see Cli.cs)");
         return 1;
     }
 
@@ -145,17 +150,43 @@ internal static class Cli
         return 0;
     }
 
+    // A saved toolbox file, a bare toolbox id, or a plan link of a known host -> (id, raw toolbox JSON).
+    private static (string Id, byte[] Raw) FetchPlan(string planArg)
+    {
+        if (File.Exists(planArg))
+            return (Path.GetFileName(planArg).Split('.').FirstOrDefault(p => p.All(char.IsDigit) && p.Length >= 6) ?? Path.GetFileNameWithoutExtension(planArg), File.ReadAllBytes(planArg));
+        var plan = PlanRef.Parse(planArg);
+        using var http = new HttpClient();
+        return plan.Host switch
+        {
+            RaidplanHost.Toolbox => (plan.Id, http.GetByteArrayAsync($"https://ff14.toolboxgaming.space/strats/{plan.Id}.json").GetAwaiter().GetResult()),
+            _ => throw new ArgumentException($"no importer for {planArg}"),
+        };
+    }
+
+    private static int LearnReady(Dictionary<string, string> opts)
+    {
+        var name = Need(opts, "scenario");
+        var scenario = ScenarioCatalog.Create().Scenarios.FirstOrDefault(s => s.GetType().Name == name) ?? throw new ArgumentException($"no scenario type named {name}");
+        var strat = opts.TryGetValue("strat", out var st) && st.Length > 0 ? int.Parse(st) : 0;
+        var dump = opts.ContainsKey("no-run") || scenario.AiStrats.Count == 0 ? null : OrderRecorder.Record(name, strat, [1], TextWriter.Null);
+        var rows = LearnReadiness.Check(scenario, dump);
+        Console.Write(LearnReadiness.Table(scenario, rows));
+        return rows.Any(r => r.Status == Readiness.Missing) ? 1 : 0;
+    }
+
+    private static int Status(Dictionary<string, string> opts)
+    {
+        var rows = LearnStatus.Rows(ScenarioCatalog.Create());
+        if (opts.TryGetValue("family", out var family) && family.Length > 0) rows = rows.Where(r => r.Family.Equals(family, StringComparison.OrdinalIgnoreCase)).ToList();
+        Console.Write(LearnStatus.Table(rows));
+        return 0;
+    }
+
     private static int ToolboxImportCmd(Dictionary<string, string> opts)
     {
         var planArg = Need(opts, "plan");
-        var id = Path.GetFileName(planArg).Split('.').FirstOrDefault(p => p.All(char.IsDigit) && p.Length >= 6) ?? planArg;
-        byte[] raw;
-        if (File.Exists(planArg)) raw = File.ReadAllBytes(planArg);
-        else
-        {
-            using var http = new HttpClient();
-            raw = http.GetByteArrayAsync($"https://ff14.toolboxgaming.space/strats/{id}.json").GetAwaiter().GetResult();
-        }
+        var (id, raw) = FetchPlan(planArg);
         var zoneName = Need(opts, "zone");
         var zone = ScenarioCatalog.Create().Zones.FirstOrDefault(z => z.GetType().Name == zoneName)
                    ?? throw new ArgumentException($"no zone type named {zoneName}");
@@ -356,8 +387,10 @@ internal static class Cli
         var strat = opts.TryGetValue("strat", out var st) && st.Length > 0 ? int.Parse(st) : 0;
         var outDir = Need(opts, "out");
         Directory.CreateDirectory(outDir);
-        var planArg = opts.TryGetValue("plan", out var pl) && pl.Length > 0 ? pl : null;
-        var layoutName = opts.TryGetValue("layout", out var l) && l.Length > 0 ? l : null;
+        var registered = ScenarioCatalog.Create().Scenarios.FirstOrDefault(s => s.GetType().Name == scenario) is { } found && strat < found.AiStrats.Count
+            ? PlanRegistry.For(scenario, found.AiStrats[strat].Name) : null;
+        var planArg = opts.TryGetValue("plan", out var pl) && pl.Length > 0 ? pl : registered?.Url;
+        var layoutName = opts.TryGetValue("layout", out var l) && l.Length > 0 ? l : registered?.Layout;
         var stem = AuthorOne(scenario, strat, Seeds(opts, "1..8"), outDir, null, planArg, layoutName, Console.Error);
         Console.WriteLine($"dump     {stem}.dump.json");
         Console.WriteLine($"lesson   {stem}.lesson.json");
@@ -385,14 +418,7 @@ internal static class Cli
         OracleReport? oracle = null;
         if (planArg != null && layout != null)
         {
-            var id = Path.GetFileName(planArg).Split('.').FirstOrDefault(p => p.All(char.IsDigit) && p.Length >= 6) ?? planArg;
-            byte[] raw;
-            if (File.Exists(planArg)) raw = File.ReadAllBytes(planArg);
-            else
-            {
-                using var http = new HttpClient();
-                raw = http.GetByteArrayAsync($"https://ff14.toolboxgaming.space/strats/{id}.json").GetAwaiter().GetResult();
-            }
+            var (id, raw) = FetchPlan(planArg);
             var (converted, report) = ToolboxImport.Convert(raw, id, layout);
             plan = converted;
             File.WriteAllText(Path.Combine(outDir, $"{id}.json"), plan.ToJson());
@@ -430,6 +456,7 @@ internal static class Cli
         var outDir = Need(opts, "out");
         var seeds = Seeds(opts, "1..12");
         var filter = opts.TryGetValue("scenario", out var f) ? f : "";
+        var familyFilter = opts.TryGetValue("family", out var fam) ? fam : "";
         var force = opts.ContainsKey("force");
         var layoutName = opts.TryGetValue("layout", out var l) && l.Length > 0 ? l : null;
         var plans = (opts.TryGetValue("plans", out var pl) ? pl : "").Split(',', StringSplitOptions.RemoveEmptyEntries)
@@ -438,16 +465,19 @@ internal static class Cli
         foreach (var scenario in ScenarioCatalog.Create().Scenarios)
         {
             var typeName = scenario.GetType().Name;
+            var family = Glossary.FamilyOf(scenario.GetType());
             if (filter.Length > 0 && !typeName.Contains(filter, StringComparison.OrdinalIgnoreCase)) continue;
+            if (familyFilter.Length > 0 && !family.Equals(familyFilter, StringComparison.OrdinalIgnoreCase)) continue;
             for (var i = 0; i < scenario.AiStrats.Count; i++)
             {
                 var strat = scenario.AiStrats[i];
                 if (!force && LessonLoader.For(scenario, strat) != null) continue;
-                var family = scenario.GetType().Namespace!.Split('.')[2];
                 var dir = Path.Combine(outDir, family);
                 Directory.CreateDirectory(dir);
                 Console.Error.WriteLine($"{typeName} / {strat.Name}");
-                var stem = AuthorOne(typeName, i, seeds, dir, $"{typeName.Replace("Scenario", "")}.{Slug(strat.Name)}", plans.GetValueOrDefault(typeName), layoutName, TextWriter.Null);
+                var registered = PlanRegistry.For(typeName, strat.Name);
+                var stem = AuthorOne(typeName, i, seeds, dir, $"{typeName.Replace("Scenario", "")}.{Slug(strat.Name)}",
+                    plans.GetValueOrDefault(typeName) ?? registered?.Url, layoutName ?? registered?.Layout, TextWriter.Null);
                 Console.WriteLine($"{stem}.lesson.json");
                 written++;
             }

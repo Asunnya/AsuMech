@@ -1,5 +1,7 @@
 {
   "fields": {
+    "SuparnaSongSpot": "Suparna's song spot",
+    "ChiradaSongSpot": "Chirada's song spot",
     "SuparnaSongBearing": "Suparna's song side",
     "ChiradaSongBearing": "Chirada's song side",
     "MistralSongTarget": "the Mistral Song target",
