@@ -9,7 +9,7 @@ using System.Text.Json.Serialization;
 namespace AnoMech.Learn.Toolbox;
 
 // Where a raidplan lives: the host and the id its link carries.
-public enum RaidplanHost { Toolbox, RaidplanIo, Stgy, Unknown }
+public enum RaidplanHost { Toolbox, RaidplanIo, Stgy, Xivplan, Unknown }
 
 public sealed record PlanRef(RaidplanHost Host, string Id, string Url)
 {
@@ -21,6 +21,7 @@ public sealed record PlanRef(RaidplanHost Host, string Id, string Url)
         text = text.Trim();
         if (text.Contains("[stgy:", StringComparison.Ordinal))
             return new PlanRef(RaidplanHost.Stgy, "stgy-" + Crc(text), text);
+        if (XivplanProvider.Looks(text)) return new PlanRef(RaidplanHost.Xivplan, "xivplan-" + Crc(text), text);
         if (text.All(char.IsDigit) && text.Length >= 6) return new PlanRef(RaidplanHost.Toolbox, text, $"https://ff14.toolboxgaming.space/?id={text}");
         if (!Uri.TryCreate(text, UriKind.Absolute, out var uri)) return new PlanRef(RaidplanHost.Unknown, text, text);
         if (uri.Host.EndsWith("toolboxgaming.space", StringComparison.OrdinalIgnoreCase))

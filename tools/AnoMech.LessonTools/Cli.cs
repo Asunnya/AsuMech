@@ -32,6 +32,7 @@ namespace AnoMech.LessonTools;
 //          context: the context file again from an existing dump (after a miner change or a lesson edit), no recording
 // wtfdig-fetch --fight umad [--path src/routes/ultimates/umad] [--branch main] --out AnoMech/Learn/Sources/wtfdig/umad.json   data.ts (+ mits.ts) -> JSON, no code run
 // mit-import --plan <name> --wtfdig umad --mit-plan ikuya --tabs "p1=UmadP1TeleTrouncingScenario,p2=UmadP2ForsakenScenario" --out Plans/<name>.json
+// slides-fetch --deck <google id|url|file.pptx> --out <dir> [--zone <ZoneType> [--layout <name>]]   text, notes and images per slide; XIVPlan links found become plans
 // learn-ready --scenario <TypeName> [--strat N] [--no-run]   what the chain can read from the scenario and how it degrades
 // status [--family <Family>]                                 scenario × strat × lesson × toolbox × example × mit × draft
 internal static class Cli
@@ -61,6 +62,7 @@ internal static class Cli
                 "author-all" => AuthorAll(opts),
                 "learn-ready" => LearnReady(opts),
                 "wtfdig-fetch" => WtfdigFetch(opts),
+                "slides-fetch" => SlidesFetch(opts),
                 "status" => Status(opts),
                 _ => Usage(),
             };
@@ -173,6 +175,8 @@ internal static class Cli
                     var docUrl = api.RootElement.GetProperty("plan").GetProperty("doc_url").GetString() ?? throw new InvalidOperationException("api/plan has no doc_url");
                     return (plan.Id, http.GetByteArrayAsync(docUrl).GetAwaiter().GetResult());
                 }
+            case RaidplanHost.Xivplan:
+                return (plan.Id, System.Text.Encoding.UTF8.GetBytes(plan.Url));
             case RaidplanHost.Stgy when plan.Url.Contains("[stgy:", StringComparison.Ordinal):
                 return (plan.Id, System.Text.Encoding.UTF8.GetBytes(plan.Url));
             case RaidplanHost.Stgy:
@@ -191,7 +195,8 @@ internal static class Cli
     private static IRaidplanProvider ProviderFor(string planArg)
         => Raidplans.For(!File.Exists(planArg) ? PlanRef.Parse(planArg).Host
             : planArg.Contains("raidplan", StringComparison.OrdinalIgnoreCase) ? RaidplanHost.RaidplanIo
-            : planArg.Contains("stgy", StringComparison.OrdinalIgnoreCase) ? RaidplanHost.Stgy : RaidplanHost.Toolbox);
+            : planArg.Contains("stgy", StringComparison.OrdinalIgnoreCase) ? RaidplanHost.Stgy
+            : planArg.EndsWith(".xivplan", StringComparison.OrdinalIgnoreCase) || planArg.Contains("xivplan", StringComparison.OrdinalIgnoreCase) ? RaidplanHost.Xivplan : RaidplanHost.Toolbox);
 
     private static int LearnReady(Dictionary<string, string> opts)
     {
@@ -355,6 +360,42 @@ internal static class Cli
         Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(outPath))!);
         File.WriteAllText(outPath, plan.ToJson());
         Console.WriteLine($"plan -> {outPath}; {plan.UnresolvedTexts().Count()} unresolved");
+        return 0;
+    }
+
+    // A public Google Slides deck exported as PPTX (no login), split per slide; a slide whose text or
+    // notes carries an XIVPlan link gets that scene imported as a plan when a zone is given.
+    private static int SlidesFetch(Dictionary<string, string> opts)
+    {
+        var deck = Need(opts, "deck");
+        var outDir = Need(opts, "out");
+        Directory.CreateDirectory(outDir);
+        byte[] pptx;
+        if (File.Exists(deck)) pptx = File.ReadAllBytes(deck);
+        else
+        {
+            using var http = new HttpClient();
+            pptx = http.GetByteArrayAsync(PptxDeck.ExportUrl(deck)).GetAwaiter().GetResult();
+            File.WriteAllBytes(Path.Combine(outDir, "deck.pptx"), pptx);
+        }
+        var slides = PptxDeck.Read(pptx);
+        var layout = Layout(opts);
+        var plans = 0;
+        foreach (var slide in slides)
+        {
+            var stem = Path.Combine(outDir, $"slide{slide.Number:00}");
+            File.WriteAllText(stem + ".txt", $"# {slide.Title}\n\n{string.Join("\n", slide.Texts)}\n\n## notes\n{slide.Notes}\n\n## links\n{string.Join("\n", slide.Links)}\n");
+            foreach (var (name, bytes) in slide.Images) File.WriteAllBytes($"{stem}.{name}", bytes);
+            var xivplan = slide.Links.FirstOrDefault(XivplanProvider.Looks);
+            Console.WriteLine($"slide {slide.Number,2}: {slide.Title,-40} {slide.Texts.Count} texts, {slide.Images.Count} images{(xivplan != null ? ", XIVPlan link" : "")}");
+            if (xivplan is null || layout is null) continue;
+            var plan = PlanRef.Parse(xivplan);
+            var (converted, report) = Raidplans.Convert(plan, System.Text.Encoding.UTF8.GetBytes(xivplan), layout);
+            File.WriteAllText(stem + ".plan.json", converted.ToJson());
+            foreach (var w in report.Warnings) Console.WriteLine($"   warning: {w}");
+            plans++;
+        }
+        Console.WriteLine($"{slides.Count} slides -> {outDir}{(layout is null ? " (pass --zone to import XIVPlan links)" : $", {plans} plan(s)")}");
         return 0;
     }
 

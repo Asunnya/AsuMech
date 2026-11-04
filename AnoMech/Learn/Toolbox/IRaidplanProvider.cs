@@ -16,7 +16,7 @@ public interface IRaidplanProvider
 
 public static class Raidplans
 {
-    public static readonly IReadOnlyList<IRaidplanProvider> All = [new ToolboxProvider(), new RaidplanIoProvider(), new Stgy.StgyProvider()];
+    public static readonly IReadOnlyList<IRaidplanProvider> All = [new ToolboxProvider(), new RaidplanIoProvider(), new Stgy.StgyProvider(), new XivplanProvider()];
 
     public static IRaidplanProvider For(RaidplanHost host)
         => All.FirstOrDefault(p => p.Host == host) ?? throw new ArgumentException($"no importer for {host}");
