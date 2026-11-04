@@ -91,7 +91,7 @@ public sealed partial class AsuMainWindow
         if (lesson is { } l)
         {
             var role = LearnRole();
-            Muted($"{l.Steps.Count} steps · {Plugin.Mastery.MasteredCount(l, role)} mastered as {ScenarioSetupUi.RoleLabels[(int)role + 1]}{(l.Toolbox != null ? " · toolbox synced" : "")} · sources:");
+            Muted($"{l.Steps.Count} steps · {Plugin.Mastery.MasteredCount(l, role)} mastered as {ScenarioSetupUi.RoleLabels[(int)role + 1]}{(l.Toolbox != null ? " · toolbox synced" : "")}{(ReplaySeed(l, role) is { } replay ? $" · replays the toolbox's roll (seed {replay})" : "")} · sources:");
             foreach (var source in l.Sources)
                 if (ImGui.SmallButton($"{source.Label} ↗##{source.Url}")) Util.OpenLink(source.Url);
             if (LearnSession.LastReport is { } report)
@@ -147,7 +147,17 @@ public sealed partial class AsuMainWindow
         Plugin.Practice.AutoRestart = false;
         var role = LearnRole();
         new LearnSession(Plugin.Game, scenario, Picker.SelectedAi!, lesson, role, learnLevel);
-        plugin.Runs.Start(Picker.Selection, SoloSelected);
+        var selection = Picker.Selection;
+        if (selection != null && ReplaySeed(lesson, role) is { } seed) selection = selection with { Seed = seed };
+        plugin.Runs.Start(selection, SoloSelected);
+    }
+
+    // The roll the toolbox draws, so the viewer and the run agree: every Observe, and Guided until
+    // the first step is mastered. Later runs roll freely, since the rule is what has to be learnt.
+    private int? ReplaySeed(Lesson? lesson, PartyRole role)
+    {
+        if (lesson?.Toolbox?.ExampleSeed is not { } seed || Picker.Seed != null) return null;
+        return learnLevel == LearnLevel.Observe || learnLevel == LearnLevel.Guided && Plugin.Mastery.MasteredCount(lesson, role) == 0 ? seed : null;
     }
 
     // The arena and the selected waymark layout, north up.
