@@ -1,0 +1,68 @@
+using System;
+using System.Numerics;
+using AnoMech.Learn;
+using AnoMech.Windows.Asu;
+using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Windowing;
+
+namespace AnoMech.Windows.Learn;
+
+// Step × result × timing × distance for the last judged run. Opens by itself after an Exam, since
+// the Exam shows nothing during the run.
+internal sealed class LessonReportWindow : Window, IDisposable
+{
+    public LessonReportWindow() : base("Lesson report###AsuMechLessonReport")
+    {
+        Size = new Vector2(560f, 380f);
+        SizeCondition = ImGuiCond.FirstUseEver;
+        LearnSession.ReportReady += OnReport;
+    }
+
+    public void Dispose() => LearnSession.ReportReady -= OnReport;
+
+    private void OnReport(LessonReport report)
+    {
+        if (report.Level == LearnLevel.Exam) IsOpen = true;
+    }
+
+    public override void Draw()
+    {
+        using var theme = AsuTheme.Push();
+        if (LearnSession.LastReport is not { } report)
+        {
+            ImGui.TextUnformatted("No judged lesson run yet.");
+            return;
+        }
+        ImGui.TextUnformatted(report.Title);
+        using (AsuTheme.PushTextColor(report.InPlace == report.Results.Count ? AsuTheme.Ok : AsuTheme.Accent))
+            ImGui.TextUnformatted(report.Summary);
+        if (!ImGui.BeginTable("lesson-report", 4, ImGuiTableFlags.RowBg | ImGuiTableFlags.ScrollY | ImGuiTableFlags.SizingStretchProp)) return;
+        ImGui.TableSetupColumn("Step");
+        ImGui.TableSetupColumn("Result");
+        ImGui.TableSetupColumn("Arrived");
+        ImGui.TableSetupColumn("Off by");
+        ImGui.TableHeadersRow();
+        foreach (var (step, result) in report.Results)
+        {
+            var eval = step.Evaluation;
+            ImGui.TableNextRow();
+            ImGui.TableNextColumn(); ImGui.TextUnformatted($"{step.Order.Key.Time:0.#}s  {step.Title}");
+            ImGui.TableNextColumn();
+            using (AsuTheme.PushTextColor(result == StepResult.OnTime ? AsuTheme.Ok : result == StepResult.Late ? AsuTheme.Accent : AsuTheme.Bad))
+                ImGui.TextUnformatted(Label(result));
+            ImGui.TableNextColumn();
+            ImGui.TextUnformatted(eval.ArrivedAt is { } at ? $"{at - eval.Deadline:+0.0;-0.0}s" : "—");
+            ImGui.TableNextColumn();
+            ImGui.TextUnformatted(result == StepResult.OnTime || eval.ResolvedDistance is not { } d ? "" : $"{d:0.0} yalms");
+        }
+        ImGui.EndTable();
+    }
+
+    private static string Label(StepResult result) => result switch
+    {
+        StepResult.OnTime => "In place",
+        StepResult.Late => "Late",
+        StepResult.WrongPlace => "Wrong place",
+        _ => "Mechanic failed",
+    };
+}

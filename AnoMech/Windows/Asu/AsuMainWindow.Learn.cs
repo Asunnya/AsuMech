@@ -94,6 +94,12 @@ public sealed partial class AsuMainWindow
             Muted($"{l.Steps.Count} steps · {Plugin.Mastery.MasteredCount(l, role)} mastered as {ScenarioSetupUi.RoleLabels[(int)role + 1]}{(l.Toolbox != null ? " · toolbox synced" : "")} · sources:");
             foreach (var source in l.Sources)
                 if (ImGui.SmallButton($"{source.Label} ↗##{source.Url}")) Util.OpenLink(source.Url);
+            if (LearnSession.LastReport is { } report)
+            {
+                Muted($"Last run: {report.Summary}");
+                ImGui.SameLine();
+                if (ImGui.SmallButton("Report##lesson-report")) plugin.LessonReport.Toggle();
+            }
         }
         else
         {

@@ -14,6 +14,8 @@ public sealed class StepEvaluation(Vector3 target, float tolerance, float deadli
     public StepResult? Result { get; private set; }
     public float? ArrivedAt { get; private set; }
     public float LastDistance { get; private set; } = float.MaxValue;
+    // Distance when the result was settled; LastDistance keeps moving afterwards.
+    public float? ResolvedDistance { get; private set; }
     public bool Within => LastDistance <= tolerance;
 
     public void Sample(float time, Vector3 position)
@@ -30,17 +32,24 @@ public sealed class StepEvaluation(Vector3 target, float tolerance, float deadli
         ArrivedAt ??= time;
         // Still there at the deadline counts; arriving after it is late.
         Result = ArrivedAt <= deadline ? StepResult.OnTime : StepResult.Late;
+        ResolvedDistance = LastDistance;
     }
 
     public void MarkFailed()
     {
-        if (Result is null) Result = StepResult.MechanicFailed;
+        if (Result != null) return;
+        Result = StepResult.MechanicFailed;
+        ResolvedDistance = LastDistance;
     }
 
     // The next order arrived or the run ended.
     public StepResult Close()
     {
-        Result ??= StepResult.WrongPlace;
+        if (Result == null)
+        {
+            Result = StepResult.WrongPlace;
+            ResolvedDistance = LastDistance;
+        }
         return Result.Value;
     }
 }

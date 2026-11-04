@@ -66,4 +66,16 @@ public class StepEvaluationTests
         e.Sample(10f, Target + new Vector3(0f, 7f, 0f));
         Assert.That(e.Result, Is.EqualTo(StepResult.OnTime));
     }
+
+    [Test]
+    public void TheDistanceAtTheVerdictIsKeptWhileLaterSamplesMoveOn()
+    {
+        var e = New();
+        e.Sample(9f, Far);
+        e.Close();
+        Assert.That(e.ResolvedDistance, Is.EqualTo(Vector2.Distance(new Vector2(20f, 20f), new Vector2(5f, 5f))).Within(0.01f));
+        e.Sample(11f, Target);
+        Assert.That(e.ResolvedDistance, Is.EqualTo(Vector2.Distance(new Vector2(20f, 20f), new Vector2(5f, 5f))).Within(0.01f));
+        Assert.That(e.LastDistance, Is.EqualTo(0f));
+    }
 }

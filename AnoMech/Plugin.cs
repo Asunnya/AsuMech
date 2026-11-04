@@ -79,6 +79,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
     private Windows.Learn.MitOverlay MitOverlay { get; init; }
     private Windows.Learn.MitTraining MitTraining { get; init; }
     internal Windows.Learn.MitReportWindow MitReport { get; init; }
+    internal Windows.Learn.LessonReportWindow LessonReport { get; init; }
 #if DEBUG
     private DamageDebugWindow DamageDebugWindow { get; init; }
 #endif
@@ -142,6 +143,8 @@ public sealed class Plugin : IAsyncDalamudPlugin
             windowSystem.AddWindow(MitOverlay);
             MitReport = new Windows.Learn.MitReportWindow();
             windowSystem.AddWindow(MitReport);
+            LessonReport = new Windows.Learn.LessonReportWindow();
+            windowSystem.AddWindow(LessonReport);
 #if DEBUG
             DamageDebugWindow = new DamageDebugWindow(this);
             windowSystem.AddWindow(DamageDebugWindow);
@@ -291,6 +294,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
         ConfigWindow?.Dispose();
         MainWindow?.Dispose();
         AsuMainWindow?.Dispose();
+        LessonReport?.Dispose();
         FailureBanner?.Dispose();
         Windows.Learn.LearnSession.Current?.Dispose();
         MitTraining?.Dispose();

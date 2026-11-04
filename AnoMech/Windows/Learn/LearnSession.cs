@@ -18,6 +18,9 @@ internal sealed class LearnSession : IDisposable
     public const float MaxSecondsToStart = 60f;
 
     public static LearnSession? Current { get; private set; }
+    // The last judged run, for the report window; Observe leaves it untouched.
+    public static LessonReport? LastReport { get; private set; }
+    public static event Action<LessonReport>? ReportReady;
 
     private readonly Game game;
     private readonly WatchSession? watch;
@@ -87,6 +90,11 @@ internal sealed class LearnSession : IDisposable
         if (Ended) return;
         Ended = true;
         Director.End();
+        if (Director.Judging && Director.Results.Count > 0)
+        {
+            LastReport = new LessonReport(Scenario.Name, Strat.Name, Level, Role, Director.Results);
+            ReportReady?.Invoke(LastReport);
+        }
         game.MechanicFailed -= OnMechanicFailed;
         if (ReferenceEquals(game.World.Guidance, Director)) game.World.Guidance = null;
         watch?.Dispose();
