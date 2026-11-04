@@ -105,15 +105,18 @@ public static class ToolboxImport
     // Uniform scale and translation (no rotation) fitting the toolbox's A-D onto the layout. The
     // numbered marks are left out: plans often place them by their own convention.
     public static (float Scale, Vector2 Offset, float Residual) Calibrate(JsonElement instance, WaymarkLayout layout)
+        => Calibrate(WaymarkKeys.Where(kv => instance.TryGetProperty(kv.Key, out _)).Select(kv => (kv.Value, Centre(instance.GetProperty(kv.Key)))), layout);
+
+    // The same fit for any provider's waymark positions in its own canvas units.
+    public static (float Scale, Vector2 Offset, float Residual) Calibrate(IEnumerable<(WaymarkSlot Slot, Vector2 At)> marks, WaymarkLayout layout)
     {
         var pairs = new List<(Vector2 Tb, Vector2 Game)>();
-        foreach (var (key, slot) in WaymarkKeys)
+        foreach (var (slot, at) in marks)
         {
             if (slot > WaymarkSlot.D) continue;
-            if (!instance.TryGetProperty(key, out var wm)) continue;
             var game = layout.Markers.FirstOrDefault(m => m.Slot == slot);
             if (game is null) continue;
-            pairs.Add((Centre(wm), new Vector2(game.Offset.X, game.Offset.Z)));
+            pairs.Add((at, new Vector2(game.Offset.X, game.Offset.Z)));
         }
         if (pairs.Count < 2) throw new InvalidOperationException("fewer than two waymarks to calibrate with");
         var tbMean = pairs.Aggregate(Vector2.Zero, (a, p) => a + p.Tb) / pairs.Count;

@@ -4,6 +4,7 @@ using AnoMech.Learn.Toolbox;
 using AnoMech.Learn.Mitigation;
 using AnoMech.Core.Game;
 using AnoMech.Scenarios;
+using System.Text.Json;
 
 namespace AnoMech.LessonTools;
 
@@ -15,6 +16,7 @@ namespace AnoMech.LessonTools;
 // mit-timeline --scenario <TypeName> --out Timelines/<TypeName>.json         cast timeline from a headless run
 // mit-import --plan <name> --sheet-id <google id> --tabs "Garuda=UwuP1GarudaScenario,Ifrit=UwuP2IfritScenario" --out Plans/<name>.json [--csv-dir dir]
 //   a tab with sections: "The Ultima Weapon=DefaultScenario[Section A=ScenarioA;Section B=ScenarioB]"
+//   one exported CSV instead of a sheet: --csv <file> --scenario <TypeName or TypeName[sections]> (--tabs not needed)
 // skeleton-all --out <dir> [--seeds 1] [--scenario <substring>] [--force]   every catalog strat without a lesson
 // mine     --dump dump.json [--zone <ZoneType> --layout <name>]              which rolls pick each step's spot, per role
 // cues     --dump dump.json [--window 8]                                     what preceded each order
@@ -157,12 +159,23 @@ internal static class Cli
             return (Path.GetFileName(planArg).Split('.').FirstOrDefault(p => p.All(char.IsDigit) && p.Length >= 6) ?? Path.GetFileNameWithoutExtension(planArg), File.ReadAllBytes(planArg));
         var plan = PlanRef.Parse(planArg);
         using var http = new HttpClient();
-        return plan.Host switch
+        switch (plan.Host)
         {
-            RaidplanHost.Toolbox => (plan.Id, http.GetByteArrayAsync($"https://ff14.toolboxgaming.space/strats/{plan.Id}.json").GetAwaiter().GetResult()),
-            _ => throw new ArgumentException($"no importer for {planArg}"),
-        };
+            case RaidplanHost.Toolbox:
+                return (plan.Id, http.GetByteArrayAsync($"https://ff14.toolboxgaming.space/strats/{plan.Id}.json").GetAwaiter().GetResult());
+            case RaidplanHost.RaidplanIo:
+                using (var api = JsonDocument.Parse(http.GetStringAsync($"https://raidplan.io/api/plan/{plan.Id}").GetAwaiter().GetResult()))
+                {
+                    var docUrl = api.RootElement.GetProperty("plan").GetProperty("doc_url").GetString() ?? throw new InvalidOperationException("api/plan has no doc_url");
+                    return (plan.Id, http.GetByteArrayAsync(docUrl).GetAwaiter().GetResult());
+                }
+            default:
+                throw new ArgumentException($"no importer for {planArg}");
+        }
     }
+
+    private static IRaidplanProvider ProviderFor(string planArg)
+        => Raidplans.For(File.Exists(planArg) ? (planArg.Contains("raidplan", StringComparison.OrdinalIgnoreCase) ? RaidplanHost.RaidplanIo : RaidplanHost.Toolbox) : PlanRef.Parse(planArg).Host);
 
     private static int LearnReady(Dictionary<string, string> opts)
     {
@@ -187,13 +200,14 @@ internal static class Cli
     {
         var planArg = Need(opts, "plan");
         var (id, raw) = FetchPlan(planArg);
+        var provider = ProviderFor(planArg);
         var zoneName = Need(opts, "zone");
         var zone = ScenarioCatalog.Create().Zones.FirstOrDefault(z => z.GetType().Name == zoneName)
                    ?? throw new ArgumentException($"no zone type named {zoneName}");
         var layout = opts.TryGetValue("layout", out var l) && l.Length > 0
             ? zone.WaymarkPresets.FirstOrDefault(w => w.Name.Equals(l, StringComparison.OrdinalIgnoreCase)) ?? throw new ArgumentException($"no layout {l}")
             : zone.WaymarkPresets[0];
-        var (plan, report) = ToolboxImport.Convert(raw, id, layout);
+        var (plan, report) = provider.Convert(raw, id, layout);
         Console.WriteLine($"plan {id} \"{plan.Label}\" by {plan.Author}: {report.StepsRecovered} steps{(report.Truncated ? " (recovered from a truncated file)" : "")}");
         Console.WriteLine($"calibration: {report.Scale:F3} yalm/unit against layout {layout.Name}, residual {report.Residual:F2} m");
         Console.WriteLine($"roles: {string.Join(", ", report.RoleMap.Select(kv => $"{kv.Key}={kv.Value}"))}");
@@ -252,7 +266,10 @@ internal static class Cli
     private static int MitImport(Dictionary<string, string> opts)
     {
         var name = Need(opts, "plan");
-        var tabs = Need(opts, "tabs").Split(',').Select(t => t.Split('=', 2)).ToDictionary(p => p[0].Trim(), p => p[1].Trim());
+        var csvFile = opts.TryGetValue("csv", out var cf) && cf.Length > 0 ? cf : null;
+        var tabs = csvFile != null
+            ? new Dictionary<string, string> { [Path.GetFileNameWithoutExtension(csvFile)] = Need(opts, "scenario") }
+            : Need(opts, "tabs").Split(',').Select(t => t.Split('=', 2)).ToDictionary(p => p[0].Trim(), p => p[1].Trim());
         var sheetId = opts.TryGetValue("sheet-id", out var sid) ? sid : "";
         var csvDir = opts.TryGetValue("csv-dir", out var dir) ? dir : "";
         var title = opts.TryGetValue("title", out var t) && t.Length > 0 ? t : name;
@@ -264,7 +281,8 @@ internal static class Cli
         {
             var csvPath = Path.Combine(csvDir, tab.Replace(' ', '_') + ".csv");
             string csv;
-            if (csvDir.Length > 0 && File.Exists(csvPath)) csv = File.ReadAllText(csvPath);
+            if (csvFile != null) csv = File.ReadAllText(csvFile);
+            else if (csvDir.Length > 0 && File.Exists(csvPath)) csv = File.ReadAllText(csvPath);
             else if (sheetId.Length > 0)
                 csv = http.GetStringAsync($"https://docs.google.com/spreadsheets/d/{sheetId}/gviz/tq?tqx=out:csv&sheet={Uri.EscapeDataString(tab)}").GetAwaiter().GetResult();
             else throw new ArgumentException($"no CSV for tab {tab}: pass --sheet-id or --csv-dir");
@@ -285,7 +303,8 @@ internal static class Cli
             scenarios[scenarioType] = scenario1;
             Console.WriteLine($"{tab} -> {scenarioType}: {scenario1.Mechanics.Count} mechanics, {scenario1.Mechanics.Count(m => m.Anchor != null)} anchored");
         }
-        var plan = new MitPlan(name, new MitSource(title, sheetId.Length > 0 ? $"https://docs.google.com/spreadsheets/d/{sheetId}" : "", credits, DateTime.UtcNow.ToString("yyyy-MM-dd")), scenarios);
+        var sourceUrl = opts.TryGetValue("url", out var sourceArg) && sourceArg.Length > 0 ? sourceArg : sheetId.Length > 0 ? $"https://docs.google.com/spreadsheets/d/{sheetId}" : "";
+        var plan = new MitPlan(name, new MitSource(title, sourceUrl, credits, DateTime.UtcNow.ToString("yyyy-MM-dd")), scenarios);
         foreach (var u in plan.UnresolvedTexts()) Console.WriteLine($"unresolved: {u}");
         var outPath = Need(opts, "out");
         Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(outPath))!);
@@ -435,7 +454,7 @@ internal static class Cli
         if (planArg != null && layout != null)
         {
             var (id, raw) = FetchPlan(planArg);
-            var (converted, report) = ToolboxImport.Convert(raw, id, layout);
+            var (converted, report) = ProviderFor(planArg).Convert(raw, id, layout);
             plan = converted;
             File.WriteAllText(Path.Combine(outDir, $"{id}.json"), plan.ToJson());
             var refined = ToolboxImport.RefineRoleMap(plan, dump, report.RoleMap, out _);

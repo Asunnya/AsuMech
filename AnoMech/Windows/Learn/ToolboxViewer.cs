@@ -188,6 +188,25 @@ internal sealed class ToolboxViewer : Window
         }
         var half = new Vector2(o.Width, o.Height) * 0.5f * px;
         var rot = o.Rotation * MathF.PI / 180f;
+        if (o.Shape == "donut")
+        {
+            // raidplan.io's donut: inner radius is half the outer.
+            draw.AddCircle(at, half.X, edge, 48, half.X * 0.5f);
+            draw.AddCircle(at, half.X, fill, 48, half.X * 0.5f);
+            return;
+        }
+        if (o.Shape == "cone")
+        {
+            // A wedge whose apex sits at the top of its unrotated box and whose base is the bottom edge.
+            Vector2 P(float sx, float sy)
+            {
+                var p = new Vector2(half.X * sx, half.Y * sy);
+                return at + new Vector2(p.X * MathF.Cos(rot) - p.Y * MathF.Sin(rot), p.X * MathF.Sin(rot) + p.Y * MathF.Cos(rot));
+            }
+            draw.AddTriangleFilled(P(0, -1), P(1, 1), P(-1, 1), fill);
+            draw.AddTriangle(P(0, -1), P(1, 1), P(-1, 1), edge, 1.5f);
+            return;
+        }
         Vector2 Corner(float sx, float sy)
         {
             var p = new Vector2(half.X * sx, half.Y * sy);
