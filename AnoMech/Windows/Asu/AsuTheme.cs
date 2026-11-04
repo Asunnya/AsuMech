@@ -19,6 +19,8 @@ internal static class AsuTheme
     // Dark text on light accents, light text on dark ones.
     public static Vector4 OnAccent => Luminance(Accent) > 0.4f ? Vector4.Lerp(Accent, Black, 0.87f) : Text;
     private static readonly Vector4 Black = new(0f, 0f, 0f, 1f);
+    // Behind the fight and scenario tabs; tinted by the main color so it follows the picker.
+    public static Vector4 HeaderBand => Vector4.Lerp(Element, Accent, 0.12f);
     public static readonly Vector4 Ok = Rgb(0x79c99a);
     public static readonly Vector4 Bad = Rgb(0xff7b72);
     public static readonly Vector4 Cleared = Rgb(0x3c5a48);

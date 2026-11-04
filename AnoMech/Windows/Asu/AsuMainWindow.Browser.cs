@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using AnoMech.Scenarios;
 using Dalamud.Bindings.ImGui;
 
@@ -29,14 +30,30 @@ public sealed partial class AsuMainWindow
             return;
         }
 
+        var draw = ImGui.GetWindowDrawList();
+        var top = ImGui.GetCursorScreenPos().Y;
+        draw.ChannelsSplit(2);
+        draw.ChannelsSetCurrent(1);
         var zone = DrawFightRow(groups);
+        if (zone != null) DrawScenarioRow(zone);
+        DrawHeaderBand(draw, top);
         if (zone == null)
         {
             Muted("Pick a fight.");
             return;
         }
-        DrawScenarioRow(zone);
         DrawDetailLine(inSession);
+    }
+
+    // Edge to edge behind the tab rows, drawn on the channel under them.
+    private static void DrawHeaderBand(ImDrawListPtr draw, float top)
+    {
+        var halfGap = ImGui.GetStyle().ItemSpacing.Y * 0.5f;
+        var bottom = ImGui.GetCursorScreenPos().Y - halfGap;
+        var left = ImGui.GetWindowPos().X;
+        draw.ChannelsSetCurrent(0);
+        draw.AddRectFilled(new Vector2(left, top - halfGap), new Vector2(left + ImGui.GetWindowSize().X, bottom), AsuTheme.U32(AsuTheme.HeaderBand));
+        draw.ChannelsMerge();
     }
 
     private static void DrawTypeSwitch()
