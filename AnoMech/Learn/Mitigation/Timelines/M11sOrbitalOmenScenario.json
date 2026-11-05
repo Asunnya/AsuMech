@@ -1,0 +1,131 @@
+{
+  "scenario": "M11sOrbitalOmenScenario",
+  "casts": [
+    {
+      "actionId": 46085,
+      "name": "",
+      "start": 1.017,
+      "resolve": 1.017,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46085,
+      "name": "",
+      "start": 4.017,
+      "resolve": 4.017,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46123,
+      "name": "Great Wall of Fire",
+      "start": 6.617,
+      "resolve": 11.316999,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46124,
+      "name": "Great Wall of Fire",
+      "start": 11.833,
+      "resolve": 11.833,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46126,
+      "name": "Explosion",
+      "start": 12.633,
+      "resolve": 15.333,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46124,
+      "name": "Great Wall of Fire",
+      "start": 15.033,
+      "resolve": 15.033,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46126,
+      "name": "Explosion",
+      "start": 15.833,
+      "resolve": 18.533,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46130,
+      "name": "Orbital Omen",
+      "start": 20.15,
+      "resolve": 24.849998,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46085,
+      "name": "",
+      "start": 22.017,
+      "resolve": 22.017,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46085,
+      "name": "",
+      "start": 25.016,
+      "resolve": 25.016,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46131,
+      "name": "Orbital Omen",
+      "start": 28.316,
+      "resolve": 34.016,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46131,
+      "name": "Orbital Omen",
+      "start": 29.816,
+      "resolve": 35.516,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46127,
+      "name": "Fire and Fury",
+      "start": 29.816,
+      "resolve": 33.516,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46128,
+      "name": "Fire and Fury",
+      "start": 29.816,
+      "resolve": 34.516,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46129,
+      "name": "Fire and Fury",
+      "start": 29.816,
+      "resolve": 34.516,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46131,
+      "name": "Orbital Omen",
+      "start": 31.333,
+      "resolve": 37.033,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46131,
+      "name": "Orbital Omen",
+      "start": 32.816,
+      "resolve": 38.516003,
+      "occurrence": 5
+    }
+  ],
+  "names": [
+    "",
+    "Great Wall of Fire",
+    "Explosion",
+    "Orbital Omen",
+    "Fire and Fury"
+  ]
+}

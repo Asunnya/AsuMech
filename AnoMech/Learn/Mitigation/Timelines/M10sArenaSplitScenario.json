@@ -1,0 +1,171 @@
+{
+  "scenario": "M10sArenaSplitScenario",
+  "casts": [
+    {
+      "actionId": 46456,
+      "name": "",
+      "start": 3.967,
+      "resolve": 3.967,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46539,
+      "name": "Sick Swell",
+      "start": 4.017,
+      "resolve": 6.717,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46548,
+      "name": "Flame Floater",
+      "start": 6.267,
+      "resolve": 10.967,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46527,
+      "name": "Flame Floater",
+      "start": 11.467,
+      "resolve": 11.467,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46460,
+      "name": "",
+      "start": 14.433,
+      "resolve": 14.433,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46528,
+      "name": "Alley-oop Inferno",
+      "start": 15.55,
+      "resolve": 19.55,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46529,
+      "name": "Alley-oop Inferno",
+      "start": 15.55,
+      "resolve": 20.25,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46457,
+      "name": "",
+      "start": 18.167,
+      "resolve": 18.167,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46557,
+      "name": "Alley-oop Double-dip",
+      "start": 20.433,
+      "resolve": 25.133,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46558,
+      "name": "Alley-oop Double-dip",
+      "start": 26.066,
+      "resolve": 26.066,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46587,
+      "name": "Steam Burst",
+      "start": 27.666,
+      "resolve": 30.366001,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46486,
+      "name": "Freaky Pyrotation",
+      "start": 28.5,
+      "resolve": 32.5,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46559,
+      "name": "Alley-oop Double-dip",
+      "start": 28.633,
+      "resolve": 28.633,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46541,
+      "name": "Sickest Take-off",
+      "start": 28.633,
+      "resolve": 32.333,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46587,
+      "name": "Steam Burst",
+      "start": 30.233,
+      "resolve": 32.933,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46487,
+      "name": "Freaky Pyrotation",
+      "start": 33.65,
+      "resolve": 33.65,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46542,
+      "name": "Sickest Take-off",
+      "start": 34.816,
+      "resolve": 41.516003,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46540,
+      "name": "Sick Swell",
+      "start": 34.816,
+      "resolve": 41.516003,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46587,
+      "name": "Steam Burst",
+      "start": 43.066,
+      "resolve": 45.766003,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46520,
+      "name": "Divers\u0027 Dare",
+      "start": 44,
+      "resolve": 48.7,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46521,
+      "name": "Divers\u0027 Dare",
+      "start": 44,
+      "resolve": 48.7,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46544,
+      "name": "Awesome Slab",
+      "start": 44.316,
+      "resolve": 44.316,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "",
+    "Sick Swell",
+    "Flame Floater",
+    "Alley-oop Inferno",
+    "Alley-oop Double-dip",
+    "Steam Burst",
+    "Freaky Pyrotation",
+    "Sickest Take-off",
+    "Divers\u0027 Dare",
+    "Awesome Slab"
+  ]
+}

@@ -1,0 +1,512 @@
+{
+  "scenario": "UmadP4KefkaSaysScenario",
+  "casts": [
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 1.367,
+      "resolve": 1.367,
+      "occurrence": 1
+    },
+    {
+      "actionId": 49884,
+      "name": "Kefka Says",
+      "start": 1.467,
+      "resolve": 6.167,
+      "occurrence": 1
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 9.417,
+      "resolve": 9.417,
+      "occurrence": 2
+    },
+    {
+      "actionId": 50173,
+      "name": "",
+      "start": 9.6,
+      "resolve": 9.6,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47764,
+      "name": "Mystery Magic",
+      "start": 11.033,
+      "resolve": 15.733,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47777,
+      "name": "Thrumming Thunder III",
+      "start": 11.033,
+      "resolve": 15.733,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47776,
+      "name": "Thrumming Thunder III",
+      "start": 11.033,
+      "resolve": 15.733,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47768,
+      "name": "Blizzard III Blowout",
+      "start": 11.033,
+      "resolve": 15.733,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47892,
+      "name": "Grand Cross",
+      "start": 11.383,
+      "resolve": 20.083,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47903,
+      "name": "Tsunami",
+      "start": 16.517,
+      "resolve": 25.217,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47905,
+      "name": "Tsunami",
+      "start": 16.517,
+      "resolve": 25.217,
+      "occurrence": 2
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 17.467,
+      "resolve": 17.467,
+      "occurrence": 4
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 20.5,
+      "resolve": 20.5,
+      "occurrence": 5
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 23.533,
+      "resolve": 23.533,
+      "occurrence": 6
+    },
+    {
+      "actionId": 47764,
+      "name": "Mystery Magic",
+      "start": 25.95,
+      "resolve": 30.650002,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47777,
+      "name": "Thrumming Thunder III",
+      "start": 25.95,
+      "resolve": 30.650002,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47776,
+      "name": "Thrumming Thunder III",
+      "start": 25.95,
+      "resolve": 30.650002,
+      "occurrence": 4
+    },
+    {
+      "actionId": 47771,
+      "name": "Blizzard III Blowout",
+      "start": 25.95,
+      "resolve": 30.650002,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47774,
+      "name": "Blizzard III Blowout",
+      "start": 25.95,
+      "resolve": 30.650002,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47892,
+      "name": "Grand Cross",
+      "start": 26.316,
+      "resolve": 35.016,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47902,
+      "name": "Inferno",
+      "start": 31.433,
+      "resolve": 40.133,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47904,
+      "name": "Inferno",
+      "start": 31.433,
+      "resolve": 40.133,
+      "occurrence": 2
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 31.583,
+      "resolve": 31.583,
+      "occurrence": 7
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 34.616,
+      "resolve": 34.616,
+      "occurrence": 8
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 37.65,
+      "resolve": 37.65,
+      "occurrence": 9
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 40.683,
+      "resolve": 40.683,
+      "occurrence": 10
+    },
+    {
+      "actionId": 47764,
+      "name": "Mystery Magic",
+      "start": 41.083,
+      "resolve": 45.783,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47777,
+      "name": "Thrumming Thunder III",
+      "start": 41.083,
+      "resolve": 45.783,
+      "occurrence": 5
+    },
+    {
+      "actionId": 47776,
+      "name": "Thrumming Thunder III",
+      "start": 41.083,
+      "resolve": 45.783,
+      "occurrence": 6
+    },
+    {
+      "actionId": 47771,
+      "name": "Blizzard III Blowout",
+      "start": 41.083,
+      "resolve": 45.783,
+      "occurrence": 4
+    },
+    {
+      "actionId": 47774,
+      "name": "Blizzard III Blowout",
+      "start": 41.083,
+      "resolve": 45.783,
+      "occurrence": 5
+    },
+    {
+      "actionId": 47892,
+      "name": "Grand Cross",
+      "start": 41.266,
+      "resolve": 49.966,
+      "occurrence": 3
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 48.766,
+      "resolve": 48.766,
+      "occurrence": 11
+    },
+    {
+      "actionId": 50516,
+      "name": "",
+      "start": 49.266,
+      "resolve": 51.966,
+      "occurrence": 12
+    },
+    {
+      "actionId": 50082,
+      "name": "Flood of Naught",
+      "start": 57.399,
+      "resolve": 62.099,
+      "occurrence": 1
+    },
+    {
+      "actionId": 50070,
+      "name": "Edge of Death",
+      "start": 57.399,
+      "resolve": 62.599,
+      "occurrence": 1
+    },
+    {
+      "actionId": 50068,
+      "name": "White Antilight",
+      "start": 57.399,
+      "resolve": 62.599,
+      "occurrence": 1
+    },
+    {
+      "actionId": 50069,
+      "name": "Black Antilight",
+      "start": 57.399,
+      "resolve": 62.599,
+      "occurrence": 1
+    },
+    {
+      "actionId": 50517,
+      "name": "",
+      "start": 66.116,
+      "resolve": 66.116,
+      "occurrence": 13
+    },
+    {
+      "actionId": 47900,
+      "name": "Death Surge",
+      "start": 66.783,
+      "resolve": 66.783,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47780,
+      "name": "Mana Charge",
+      "start": 68.2,
+      "resolve": 70.899994,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47896,
+      "name": "Death Bolt",
+      "start": 71.384,
+      "resolve": 71.384,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47898,
+      "name": "Death Wave",
+      "start": 71.384,
+      "resolve": 71.384,
+      "occurrence": 1
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 73.201,
+      "resolve": 73.201,
+      "occurrence": 14
+    },
+    {
+      "actionId": 50654,
+      "name": "Thrumming Thunder III",
+      "start": 74.451,
+      "resolve": 79.15099,
+      "occurrence": 7
+    },
+    {
+      "actionId": 47776,
+      "name": "Thrumming Thunder III",
+      "start": 74.451,
+      "resolve": 79.15099,
+      "occurrence": 8
+    },
+    {
+      "actionId": 47777,
+      "name": "Thrumming Thunder III",
+      "start": 74.451,
+      "resolve": 79.15099,
+      "occurrence": 9
+    },
+    {
+      "actionId": 47895,
+      "name": "Death Shriek",
+      "start": 80.503,
+      "resolve": 80.503,
+      "occurrence": 1
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 81.253,
+      "resolve": 81.253,
+      "occurrence": 15
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 84.287,
+      "resolve": 84.287,
+      "occurrence": 16
+    },
+    {
+      "actionId": 49738,
+      "name": "Ultima Upsurge",
+      "start": 84.604,
+      "resolve": 89.30399,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47906,
+      "name": "Stray Flames",
+      "start": 87.371,
+      "resolve": 92.071,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47765,
+      "name": "Blizzard III Blowout",
+      "start": 92.422,
+      "resolve": 97.121994,
+      "occurrence": 6
+    },
+    {
+      "actionId": 47768,
+      "name": "Blizzard III Blowout",
+      "start": 92.422,
+      "resolve": 97.121994,
+      "occurrence": 7
+    },
+    {
+      "actionId": 47897,
+      "name": "Death Bolt",
+      "start": 96.489,
+      "resolve": 96.489,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47899,
+      "name": "Death Wave",
+      "start": 96.489,
+      "resolve": 96.489,
+      "occurrence": 2
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 100.424,
+      "resolve": 100.424,
+      "occurrence": 17
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 103.458,
+      "resolve": 103.458,
+      "occurrence": 18
+    },
+    {
+      "actionId": 47781,
+      "name": "Mana Release",
+      "start": 103.641,
+      "resolve": 110.340996,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47894,
+      "name": "Death Shriek",
+      "start": 104.391,
+      "resolve": 104.391,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47908,
+      "name": "Stray Spray",
+      "start": 110.076,
+      "resolve": 114.77599,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47776,
+      "name": "Thrumming Thunder III",
+      "start": 110.642,
+      "resolve": 115.341995,
+      "occurrence": 10
+    },
+    {
+      "actionId": 47777,
+      "name": "Thrumming Thunder III",
+      "start": 110.642,
+      "resolve": 115.341995,
+      "occurrence": 11
+    },
+    {
+      "actionId": 47771,
+      "name": "Blizzard III Blowout",
+      "start": 110.642,
+      "resolve": 115.341995,
+      "occurrence": 8
+    },
+    {
+      "actionId": 47774,
+      "name": "Blizzard III Blowout",
+      "start": 110.642,
+      "resolve": 115.341995,
+      "occurrence": 9
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 113.526,
+      "resolve": 113.526,
+      "occurrence": 19
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 116.51,
+      "resolve": 116.51,
+      "occurrence": 20
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 119.544,
+      "resolve": 119.544,
+      "occurrence": 21
+    },
+    {
+      "actionId": 47803,
+      "name": "Light of Judgment",
+      "start": 120.044,
+      "resolve": 124.743996,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "",
+    "Kefka Says",
+    "Mystery Magic",
+    "Thrumming Thunder III",
+    "Blizzard III Blowout",
+    "Grand Cross",
+    "Tsunami",
+    "Inferno",
+    "Flood of Naught",
+    "Edge of Death",
+    "White Antilight",
+    "Black Antilight",
+    "Death Surge",
+    "Mana Charge",
+    "Death Bolt",
+    "Death Wave",
+    "Death Shriek",
+    "Ultima Upsurge",
+    "Stray Flames",
+    "Mana Release",
+    "Stray Spray",
+    "Light of Judgment"
+  ]
+}

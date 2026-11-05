@@ -1,0 +1,183 @@
+{
+  "scenario": "M11sMeteorainScenario",
+  "casts": [
+    {
+      "actionId": 46085,
+      "name": "",
+      "start": 1.017,
+      "resolve": 1.017,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46085,
+      "name": "",
+      "start": 4.017,
+      "resolve": 4.017,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46132,
+      "name": "Meteorain",
+      "start": 6.2,
+      "resolve": 10.9,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46137,
+      "name": "Fearsome Fireball",
+      "start": 13.867,
+      "resolve": 18.567,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46138,
+      "name": "Fearsome Fireball",
+      "start": 19.183,
+      "resolve": 19.183,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46133,
+      "name": "Cosmic Kiss",
+      "start": 20.367,
+      "resolve": 20.367,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46137,
+      "name": "Fearsome Fireball",
+      "start": 23.8,
+      "resolve": 28.5,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46134,
+      "name": "Foregone Fatality",
+      "start": 28.333,
+      "resolve": 28.333,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46138,
+      "name": "Fearsome Fireball",
+      "start": 29.116,
+      "resolve": 29.116,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46136,
+      "name": "Explosion",
+      "start": 29.933,
+      "resolve": 32.633,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46133,
+      "name": "Cosmic Kiss",
+      "start": 30.383,
+      "resolve": 30.383,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46137,
+      "name": "Fearsome Fireball",
+      "start": 33.766,
+      "resolve": 38.466,
+      "occurrence": 5
+    },
+    {
+      "actionId": 46134,
+      "name": "Foregone Fatality",
+      "start": 38.366,
+      "resolve": 38.366,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46138,
+      "name": "Fearsome Fireball",
+      "start": 39.083,
+      "resolve": 39.083,
+      "occurrence": 6
+    },
+    {
+      "actionId": 46136,
+      "name": "Explosion",
+      "start": 39.9,
+      "resolve": 42.600002,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46133,
+      "name": "Cosmic Kiss",
+      "start": 40.4,
+      "resolve": 40.4,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46137,
+      "name": "Fearsome Fireball",
+      "start": 43.733,
+      "resolve": 48.433002,
+      "occurrence": 7
+    },
+    {
+      "actionId": 46134,
+      "name": "Foregone Fatality",
+      "start": 48.366,
+      "resolve": 48.366,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46138,
+      "name": "Fearsome Fireball",
+      "start": 49.049,
+      "resolve": 49.049,
+      "occurrence": 8
+    },
+    {
+      "actionId": 46136,
+      "name": "Explosion",
+      "start": 49.866,
+      "resolve": 52.566,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46140,
+      "name": "Triple Tyrannhilation",
+      "start": 54.683,
+      "resolve": 61.383,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46141,
+      "name": "Shockwave",
+      "start": 62.833,
+      "resolve": 62.833,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46141,
+      "name": "Shockwave",
+      "start": 64.399,
+      "resolve": 64.399,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46141,
+      "name": "Shockwave",
+      "start": 65.966,
+      "resolve": 65.966,
+      "occurrence": 3
+    }
+  ],
+  "names": [
+    "",
+    "Meteorain",
+    "Fearsome Fireball",
+    "Cosmic Kiss",
+    "Foregone Fatality",
+    "Explosion",
+    "Triple Tyrannhilation",
+    "Shockwave"
+  ]
+}

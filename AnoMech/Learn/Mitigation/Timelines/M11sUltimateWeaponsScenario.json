@@ -1,0 +1,362 @@
+{
+  "scenario": "M11sUltimateWeaponsScenario",
+  "casts": [
+    {
+      "actionId": 46085,
+      "name": "",
+      "start": 1.017,
+      "resolve": 1.017,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46085,
+      "name": "",
+      "start": 4.017,
+      "resolve": 4.017,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47035,
+      "name": "Dance of Domination Trophy",
+      "start": 8.233,
+      "resolve": 9.933,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46110,
+      "name": "Dance of Domination",
+      "start": 16.333,
+      "resolve": 16.333,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46111,
+      "name": "Dance of Domination",
+      "start": 16.333,
+      "resolve": 16.533,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46113,
+      "name": "Dance of Domination",
+      "start": 17.45,
+      "resolve": 17.45,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46113,
+      "name": "Dance of Domination",
+      "start": 18.033,
+      "resolve": 18.033,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46113,
+      "name": "Dance of Domination",
+      "start": 18.617,
+      "resolve": 18.617,
+      "occurrence": 5
+    },
+    {
+      "actionId": 46113,
+      "name": "Dance of Domination",
+      "start": 19.183,
+      "resolve": 19.183,
+      "occurrence": 6
+    },
+    {
+      "actionId": 46113,
+      "name": "Dance of Domination",
+      "start": 19.767,
+      "resolve": 19.767,
+      "occurrence": 7
+    },
+    {
+      "actionId": 46116,
+      "name": "Eye of the Hurricane",
+      "start": 20.883,
+      "resolve": 25.583,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47082,
+      "name": "Dance of Domination",
+      "start": 20.917,
+      "resolve": 20.917,
+      "occurrence": 8
+    },
+    {
+      "actionId": 46112,
+      "name": "Explosion",
+      "start": 21.1,
+      "resolve": 25.8,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47036,
+      "name": "Explosion",
+      "start": 21.1,
+      "resolve": 26.3,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46114,
+      "name": "Raw Steel Trophy",
+      "start": 29.966,
+      "resolve": 31.666,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46090,
+      "name": "Raw Steel",
+      "start": 38.066,
+      "resolve": 38.066,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46091,
+      "name": "Raw Steel",
+      "start": 38.25,
+      "resolve": 38.25,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46092,
+      "name": "Impact",
+      "start": 39.416,
+      "resolve": 39.416,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46085,
+      "name": "",
+      "start": 42.016,
+      "resolve": 42.016,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46085,
+      "name": "",
+      "start": 45.016,
+      "resolve": 45.016,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46117,
+      "name": "Charybdistopia",
+      "start": 49.666,
+      "resolve": 54.366,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47085,
+      "name": "Ultimate Trophy Weapons",
+      "start": 57.333,
+      "resolve": 60.033,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47086,
+      "name": "Assault Apex",
+      "start": 63.116,
+      "resolve": 67.816,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46403,
+      "name": "Assault Evolved",
+      "start": 68.383,
+      "resolve": 68.383,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46104,
+      "name": "Assault Evolved",
+      "start": 68.383,
+      "resolve": 70.083,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46107,
+      "name": "Heavy Weight",
+      "start": 70.201,
+      "resolve": 70.201,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46404,
+      "name": "Assault Evolved",
+      "start": 73.501,
+      "resolve": 73.501,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46105,
+      "name": "Assault Evolved",
+      "start": 73.501,
+      "resolve": 75.201,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46108,
+      "name": "Sweeping Victory",
+      "start": 75.318,
+      "resolve": 75.318,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46405,
+      "name": "Assault Evolved",
+      "start": 78.636,
+      "resolve": 78.636,
+      "occurrence": 5
+    },
+    {
+      "actionId": 46106,
+      "name": "Assault Evolved",
+      "start": 78.636,
+      "resolve": 80.336,
+      "occurrence": 6
+    },
+    {
+      "actionId": 46109,
+      "name": "Sharp Taste",
+      "start": 80.453,
+      "resolve": 80.453,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46405,
+      "name": "Assault Evolved",
+      "start": 83.753,
+      "resolve": 83.753,
+      "occurrence": 7
+    },
+    {
+      "actionId": 46106,
+      "name": "Assault Evolved",
+      "start": 83.753,
+      "resolve": 85.452995,
+      "occurrence": 8
+    },
+    {
+      "actionId": 46109,
+      "name": "Sharp Taste",
+      "start": 85.57,
+      "resolve": 85.57,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46403,
+      "name": "Assault Evolved",
+      "start": 88.871,
+      "resolve": 88.871,
+      "occurrence": 9
+    },
+    {
+      "actionId": 46104,
+      "name": "Assault Evolved",
+      "start": 88.871,
+      "resolve": 90.571,
+      "occurrence": 10
+    },
+    {
+      "actionId": 46107,
+      "name": "Heavy Weight",
+      "start": 90.705,
+      "resolve": 90.705,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46404,
+      "name": "Assault Evolved",
+      "start": 94.006,
+      "resolve": 94.006,
+      "occurrence": 11
+    },
+    {
+      "actionId": 46105,
+      "name": "Assault Evolved",
+      "start": 94.006,
+      "resolve": 95.70599,
+      "occurrence": 12
+    },
+    {
+      "actionId": 46108,
+      "name": "Sweeping Victory",
+      "start": 95.823,
+      "resolve": 95.823,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46084,
+      "name": "",
+      "start": 97.123,
+      "resolve": 97.123,
+      "occurrence": 5
+    },
+    {
+      "actionId": 46120,
+      "name": "Immortal Reign",
+      "start": 100.24,
+      "resolve": 102.939995,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46119,
+      "name": "Powerful Gust",
+      "start": 102.257,
+      "resolve": 102.257,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46118,
+      "name": "Charybdis",
+      "start": 103.074,
+      "resolve": 103.074,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46118,
+      "name": "Charybdis",
+      "start": 104.074,
+      "resolve": 104.074,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46121,
+      "name": "One and Only",
+      "start": 106.958,
+      "resolve": 112.658,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46122,
+      "name": "One and Only",
+      "start": 106.958,
+      "resolve": 115.658,
+      "occurrence": 2
+    }
+  ],
+  "names": [
+    "",
+    "Dance of Domination Trophy",
+    "Dance of Domination",
+    "Eye of the Hurricane",
+    "Explosion",
+    "Raw Steel Trophy",
+    "Raw Steel",
+    "Impact",
+    "Charybdistopia",
+    "Ultimate Trophy Weapons",
+    "Assault Apex",
+    "Assault Evolved",
+    "Heavy Weight",
+    "Sweeping Victory",
+    "Sharp Taste",
+    "Immortal Reign",
+    "Powerful Gust",
+    "Charybdis",
+    "One and Only"
+  ]
+}

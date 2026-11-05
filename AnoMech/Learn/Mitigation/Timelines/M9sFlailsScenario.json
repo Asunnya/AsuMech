@@ -1,0 +1,980 @@
+{
+  "scenario": "M9sFlailsScenario",
+  "casts": [
+    {
+      "actionId": 45875,
+      "name": "Sadistic Screech",
+      "start": 6.067,
+      "resolve": 10.767,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 16.417,
+      "resolve": 16.417,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 16.417,
+      "resolve": 16.417,
+      "occurrence": 2
+    },
+    {
+      "actionId": 45963,
+      "name": "Plummet",
+      "start": 17.267,
+      "resolve": 23.967,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46857,
+      "name": "Electrocution",
+      "start": 17.267,
+      "resolve": 23.967,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 17.483,
+      "resolve": 17.483,
+      "occurrence": 3
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 17.483,
+      "resolve": 17.483,
+      "occurrence": 4
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 18.55,
+      "resolve": 18.55,
+      "occurrence": 5
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 18.55,
+      "resolve": 18.55,
+      "occurrence": 6
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 19.633,
+      "resolve": 19.633,
+      "occurrence": 7
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 19.633,
+      "resolve": 19.633,
+      "occurrence": 8
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 20.7,
+      "resolve": 20.7,
+      "occurrence": 9
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 20.7,
+      "resolve": 20.7,
+      "occurrence": 10
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 21.767,
+      "resolve": 21.767,
+      "occurrence": 11
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 21.767,
+      "resolve": 21.767,
+      "occurrence": 12
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 22.833,
+      "resolve": 22.833,
+      "occurrence": 13
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 22.833,
+      "resolve": 22.833,
+      "occurrence": 14
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 23.9,
+      "resolve": 23.9,
+      "occurrence": 15
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 23.9,
+      "resolve": 23.9,
+      "occurrence": 16
+    },
+    {
+      "actionId": 45965,
+      "name": "Barbed Burst",
+      "start": 24.916,
+      "resolve": 40.616,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 24.966,
+      "resolve": 24.966,
+      "occurrence": 17
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 24.966,
+      "resolve": 24.966,
+      "occurrence": 18
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 26.033,
+      "resolve": 26.033,
+      "occurrence": 19
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 26.033,
+      "resolve": 26.033,
+      "occurrence": 20
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 27.1,
+      "resolve": 27.1,
+      "occurrence": 21
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 27.1,
+      "resolve": 27.1,
+      "occurrence": 22
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 28.183,
+      "resolve": 28.183,
+      "occurrence": 23
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 28.183,
+      "resolve": 28.183,
+      "occurrence": 24
+    },
+    {
+      "actionId": 45956,
+      "name": "Killer Voice",
+      "start": 28.283,
+      "resolve": 32.983,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 29.25,
+      "resolve": 29.25,
+      "occurrence": 25
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 30.05,
+      "resolve": 30.05,
+      "occurrence": 26
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 30.316,
+      "resolve": 30.316,
+      "occurrence": 27
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 31.116,
+      "resolve": 31.116,
+      "occurrence": 28
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 31.383,
+      "resolve": 31.383,
+      "occurrence": 29
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 32.183,
+      "resolve": 32.183,
+      "occurrence": 30
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 32.45,
+      "resolve": 32.45,
+      "occurrence": 31
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 33.25,
+      "resolve": 33.25,
+      "occurrence": 32
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 33.533,
+      "resolve": 33.533,
+      "occurrence": 33
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 34.333,
+      "resolve": 34.333,
+      "occurrence": 34
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 34.6,
+      "resolve": 34.6,
+      "occurrence": 35
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 35.4,
+      "resolve": 35.4,
+      "occurrence": 36
+    },
+    {
+      "actionId": 45963,
+      "name": "Plummet",
+      "start": 35.433,
+      "resolve": 42.133,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46857,
+      "name": "Electrocution",
+      "start": 35.433,
+      "resolve": 42.133,
+      "occurrence": 2
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 35.666,
+      "resolve": 35.666,
+      "occurrence": 37
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 36.466,
+      "resolve": 36.466,
+      "occurrence": 38
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 36.733,
+      "resolve": 36.733,
+      "occurrence": 39
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 37.533,
+      "resolve": 37.533,
+      "occurrence": 40
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 37.8,
+      "resolve": 37.8,
+      "occurrence": 41
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 38.6,
+      "resolve": 38.6,
+      "occurrence": 42
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 38.866,
+      "resolve": 38.866,
+      "occurrence": 43
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 39.666,
+      "resolve": 39.666,
+      "occurrence": 44
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 39.933,
+      "resolve": 39.933,
+      "occurrence": 45
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 40.733,
+      "resolve": 40.733,
+      "occurrence": 46
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 41,
+      "resolve": 41,
+      "occurrence": 47
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 41.8,
+      "resolve": 41.8,
+      "occurrence": 48
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 42.083,
+      "resolve": 42.083,
+      "occurrence": 49
+    },
+    {
+      "actionId": 45965,
+      "name": "Barbed Burst",
+      "start": 43.066,
+      "resolve": 58.766003,
+      "occurrence": 2
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 43.15,
+      "resolve": 43.15,
+      "occurrence": 50
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 43.683,
+      "resolve": 43.683,
+      "occurrence": 51
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 44.216,
+      "resolve": 44.216,
+      "occurrence": 52
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 44.749,
+      "resolve": 44.749,
+      "occurrence": 53
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 45.283,
+      "resolve": 45.283,
+      "occurrence": 54
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 45.816,
+      "resolve": 45.816,
+      "occurrence": 55
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 46.349,
+      "resolve": 46.349,
+      "occurrence": 56
+    },
+    {
+      "actionId": 45956,
+      "name": "Killer Voice",
+      "start": 46.449,
+      "resolve": 51.149002,
+      "occurrence": 2
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 46.883,
+      "resolve": 46.883,
+      "occurrence": 57
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 47.433,
+      "resolve": 47.433,
+      "occurrence": 58
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 47.949,
+      "resolve": 47.949,
+      "occurrence": 59
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 48.483,
+      "resolve": 48.483,
+      "occurrence": 60
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 49.033,
+      "resolve": 49.033,
+      "occurrence": 61
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 49.549,
+      "resolve": 49.549,
+      "occurrence": 62
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 50.099,
+      "resolve": 50.099,
+      "occurrence": 63
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 50.633,
+      "resolve": 50.633,
+      "occurrence": 64
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 51.166,
+      "resolve": 51.166,
+      "occurrence": 65
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 51.699,
+      "resolve": 51.699,
+      "occurrence": 66
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 52.233,
+      "resolve": 52.233,
+      "occurrence": 67
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 52.766,
+      "resolve": 52.766,
+      "occurrence": 68
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 53.299,
+      "resolve": 53.299,
+      "occurrence": 69
+    },
+    {
+      "actionId": 45963,
+      "name": "Plummet",
+      "start": 53.583,
+      "resolve": 60.283,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46857,
+      "name": "Electrocution",
+      "start": 53.583,
+      "resolve": 60.283,
+      "occurrence": 3
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 53.833,
+      "resolve": 53.833,
+      "occurrence": 70
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 54.383,
+      "resolve": 54.383,
+      "occurrence": 71
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 54.899,
+      "resolve": 54.899,
+      "occurrence": 72
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 55.449,
+      "resolve": 55.449,
+      "occurrence": 73
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 55.983,
+      "resolve": 55.983,
+      "occurrence": 74
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 57.049,
+      "resolve": 57.049,
+      "occurrence": 75
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 57.299,
+      "resolve": 57.299,
+      "occurrence": 76
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 58.099,
+      "resolve": 58.099,
+      "occurrence": 77
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 58.383,
+      "resolve": 58.383,
+      "occurrence": 78
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 59.183,
+      "resolve": 59.183,
+      "occurrence": 79
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 59.449,
+      "resolve": 59.449,
+      "occurrence": 80
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 60.249,
+      "resolve": 60.249,
+      "occurrence": 81
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 60.516,
+      "resolve": 60.516,
+      "occurrence": 82
+    },
+    {
+      "actionId": 45965,
+      "name": "Barbed Burst",
+      "start": 61.216,
+      "resolve": 76.916,
+      "occurrence": 3
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 61.316,
+      "resolve": 61.316,
+      "occurrence": 83
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 61.583,
+      "resolve": 61.583,
+      "occurrence": 84
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 62.383,
+      "resolve": 62.383,
+      "occurrence": 85
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 62.649,
+      "resolve": 62.649,
+      "occurrence": 86
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 63.449,
+      "resolve": 63.449,
+      "occurrence": 87
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 63.733,
+      "resolve": 63.733,
+      "occurrence": 88
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 64.516,
+      "resolve": 64.516,
+      "occurrence": 89
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 64.783,
+      "resolve": 64.783,
+      "occurrence": 90
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 65.583,
+      "resolve": 65.583,
+      "occurrence": 91
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 65.85,
+      "resolve": 65.85,
+      "occurrence": 92
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 66.65,
+      "resolve": 66.65,
+      "occurrence": 93
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 66.916,
+      "resolve": 66.916,
+      "occurrence": 94
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 67.717,
+      "resolve": 67.717,
+      "occurrence": 95
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 67.983,
+      "resolve": 67.983,
+      "occurrence": 96
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 68.784,
+      "resolve": 68.784,
+      "occurrence": 97
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 69.05,
+      "resolve": 69.05,
+      "occurrence": 98
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 69.85,
+      "resolve": 69.85,
+      "occurrence": 99
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 70.917,
+      "resolve": 70.917,
+      "occurrence": 100
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 70.917,
+      "resolve": 70.917,
+      "occurrence": 101
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 71.984,
+      "resolve": 71.984,
+      "occurrence": 102
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 71.984,
+      "resolve": 71.984,
+      "occurrence": 103
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 73.051,
+      "resolve": 73.051,
+      "occurrence": 104
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 73.051,
+      "resolve": 73.051,
+      "occurrence": 105
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 74.135,
+      "resolve": 74.135,
+      "occurrence": 106
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 74.135,
+      "resolve": 74.135,
+      "occurrence": 107
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 75.202,
+      "resolve": 75.202,
+      "occurrence": 108
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 75.202,
+      "resolve": 75.202,
+      "occurrence": 109
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 76.268,
+      "resolve": 76.268,
+      "occurrence": 110
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 76.268,
+      "resolve": 76.268,
+      "occurrence": 111
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 77.335,
+      "resolve": 77.335,
+      "occurrence": 112
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 77.335,
+      "resolve": 77.335,
+      "occurrence": 113
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 78.402,
+      "resolve": 78.402,
+      "occurrence": 114
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 78.402,
+      "resolve": 78.402,
+      "occurrence": 115
+    },
+    {
+      "actionId": 45875,
+      "name": "Sadistic Screech",
+      "start": 78.619,
+      "resolve": 83.319,
+      "occurrence": 2
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 79.469,
+      "resolve": 79.469,
+      "occurrence": 116
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 79.469,
+      "resolve": 79.469,
+      "occurrence": 117
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 80.536,
+      "resolve": 80.536,
+      "occurrence": 118
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 80.536,
+      "resolve": 80.536,
+      "occurrence": 119
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 81.603,
+      "resolve": 81.603,
+      "occurrence": 120
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 81.603,
+      "resolve": 81.603,
+      "occurrence": 121
+    },
+    {
+      "actionId": 45931,
+      "name": "Gravegrazer",
+      "start": 82.687,
+      "resolve": 82.687,
+      "occurrence": 122
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 82.687,
+      "resolve": 82.687,
+      "occurrence": 123
+    },
+    {
+      "actionId": 45932,
+      "name": "Gravegrazer",
+      "start": 83.753,
+      "resolve": 83.753,
+      "occurrence": 124
+    },
+    {
+      "actionId": 45886,
+      "name": "Crowd Kill",
+      "start": 92.955,
+      "resolve": 93.155,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Sadistic Screech",
+    "Gravegrazer",
+    "Plummet",
+    "Electrocution",
+    "Barbed Burst",
+    "Killer Voice",
+    "Crowd Kill"
+  ]
+}

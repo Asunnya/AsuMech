@@ -1,0 +1,299 @@
+{
+  "scenario": "FruP4DarklitDragonsongScenario",
+  "casts": [
+    {
+      "actionId": 40237,
+      "name": "Akh Rhai",
+      "start": 6.6,
+      "resolve": 8.8,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40186,
+      "name": "Drachen Armor",
+      "start": 6.6,
+      "resolve": 6.6,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40174,
+      "name": "Edge of Oblivion",
+      "start": 6.6,
+      "resolve": 11.299999,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40238,
+      "name": "Akh Rhai",
+      "start": 9.15,
+      "resolve": 9.15,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40238,
+      "name": "Akh Rhai",
+      "start": 9.75,
+      "resolve": 9.75,
+      "occurrence": 3
+    },
+    {
+      "actionId": 40238,
+      "name": "Akh Rhai",
+      "start": 10.333,
+      "resolve": 10.333,
+      "occurrence": 4
+    },
+    {
+      "actionId": 40238,
+      "name": "Akh Rhai",
+      "start": 10.933,
+      "resolve": 10.933,
+      "occurrence": 5
+    },
+    {
+      "actionId": 40238,
+      "name": "Akh Rhai",
+      "start": 11.517,
+      "resolve": 11.517,
+      "occurrence": 6
+    },
+    {
+      "actionId": 40238,
+      "name": "Akh Rhai",
+      "start": 12.117,
+      "resolve": 12.117,
+      "occurrence": 7
+    },
+    {
+      "actionId": 40238,
+      "name": "Akh Rhai",
+      "start": 12.7,
+      "resolve": 12.7,
+      "occurrence": 8
+    },
+    {
+      "actionId": 40238,
+      "name": "Akh Rhai",
+      "start": 13.283,
+      "resolve": 13.283,
+      "occurrence": 9
+    },
+    {
+      "actionId": 40238,
+      "name": "Akh Rhai",
+      "start": 13.883,
+      "resolve": 13.883,
+      "occurrence": 10
+    },
+    {
+      "actionId": 40238,
+      "name": "Akh Rhai",
+      "start": 14.467,
+      "resolve": 14.467,
+      "occurrence": 11
+    },
+    {
+      "actionId": 40175,
+      "name": "",
+      "start": 14.817,
+      "resolve": 14.817,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40117,
+      "name": "",
+      "start": 14.817,
+      "resolve": 14.817,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40239,
+      "name": "Darklit Dragonsong",
+      "start": 16.117,
+      "resolve": 20.817001,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40301,
+      "name": "Darklit Dragonsong",
+      "start": 16.117,
+      "resolve": 20.817001,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40187,
+      "name": "the Path of Light",
+      "start": 24.216,
+      "resolve": 31.916,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40213,
+      "name": "Bright Hunger",
+      "start": 32.216,
+      "resolve": 32.216,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40288,
+      "name": "Spirit Taker",
+      "start": 32.216,
+      "resolve": 34.916,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40190,
+      "name": "the Path of Light",
+      "start": 33.066,
+      "resolve": 33.066,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40227,
+      "name": "Hallowed Wings",
+      "start": 35.316,
+      "resolve": 40.016003,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40289,
+      "name": "Spirit Taker",
+      "start": 35.616,
+      "resolve": 35.616,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40283,
+      "name": "Somber Dance",
+      "start": 38.416,
+      "resolve": 43.116,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40271,
+      "name": "Dark Water III",
+      "start": 40.166,
+      "resolve": 40.166,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40284,
+      "name": "Somber Dance",
+      "start": 43.816,
+      "resolve": 43.816,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40174,
+      "name": "Edge of Oblivion",
+      "start": 45.416,
+      "resolve": 50.116,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40285,
+      "name": "Somber Dance",
+      "start": 47.016,
+      "resolve": 47.016,
+      "occurrence": 3
+    },
+    {
+      "actionId": 40175,
+      "name": "",
+      "start": 51.566,
+      "resolve": 51.566,
+      "occurrence": 3
+    },
+    {
+      "actionId": 40117,
+      "name": "",
+      "start": 51.566,
+      "resolve": 51.566,
+      "occurrence": 4
+    },
+    {
+      "actionId": 40247,
+      "name": "Akh Morn",
+      "start": 52.916,
+      "resolve": 56.616,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40302,
+      "name": "Akh Morn",
+      "start": 52.916,
+      "resolve": 56.616,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40248,
+      "name": "Akh Morn",
+      "start": 57.766,
+      "resolve": 57.766,
+      "occurrence": 3
+    },
+    {
+      "actionId": 40303,
+      "name": "Akh Morn",
+      "start": 57.766,
+      "resolve": 57.766,
+      "occurrence": 4
+    },
+    {
+      "actionId": 40248,
+      "name": "Akh Morn",
+      "start": 58.816,
+      "resolve": 58.816,
+      "occurrence": 5
+    },
+    {
+      "actionId": 40303,
+      "name": "Akh Morn",
+      "start": 58.816,
+      "resolve": 58.816,
+      "occurrence": 6
+    },
+    {
+      "actionId": 40248,
+      "name": "Akh Morn",
+      "start": 59.866,
+      "resolve": 59.866,
+      "occurrence": 7
+    },
+    {
+      "actionId": 40303,
+      "name": "Akh Morn",
+      "start": 59.866,
+      "resolve": 59.866,
+      "occurrence": 8
+    },
+    {
+      "actionId": 40248,
+      "name": "Akh Morn",
+      "start": 60.916,
+      "resolve": 60.916,
+      "occurrence": 9
+    },
+    {
+      "actionId": 40303,
+      "name": "Akh Morn",
+      "start": 60.916,
+      "resolve": 60.916,
+      "occurrence": 10
+    }
+  ],
+  "names": [
+    "Akh Rhai",
+    "Drachen Armor",
+    "Edge of Oblivion",
+    "",
+    "Darklit Dragonsong",
+    "the Path of Light",
+    "Bright Hunger",
+    "Spirit Taker",
+    "Hallowed Wings",
+    "Somber Dance",
+    "Dark Water III",
+    "Akh Morn"
+  ]
+}

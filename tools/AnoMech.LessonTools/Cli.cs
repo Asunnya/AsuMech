@@ -16,6 +16,7 @@ namespace AnoMech.LessonTools;
 // check    --lesson lesson.json --dump dump.json
 // toolbox-import --plan <id|file.json> --zone <ZoneType> [--layout <name>] --lesson lesson.json --dump dump.json --out-plan plans/<id>.json [--write]
 // mit-timeline --scenario <TypeName> --out Timelines/<TypeName>.json         cast timeline from a headless run
+// mit-timeline --all [--out AnoMech/Learn/Mitigation/Timelines] [--check]   every catalog scenario; --check only reports drift against the embedded ones
 // mit-import --plan <name> --sheet-id <google id> --tabs "Garuda=UwuP1GarudaScenario,Ifrit=UwuP2IfritScenario" --out Plans/<name>.json [--csv-dir dir]
 //   a tab with sections: "The Ultima Weapon=DefaultScenario[Section A=ScenarioA;Section B=ScenarioB]"
 //   one exported CSV instead of a sheet: --csv <file> --scenario <TypeName or TypeName[sections]> (--tabs not needed)
@@ -32,7 +33,8 @@ namespace AnoMech.LessonTools;
 //          come from Learn/Toolbox/plans.json unless --plans/--layout say otherwise
 //          context: the context file again from an existing dump (after a miner change or a lesson edit), no recording
 // wtfdig-fetch --fight umad [--path src/routes/ultimates/umad] [--branch main] --out AnoMech/Learn/Sources/wtfdig/umad.json   data.ts (+ mits.ts) -> JSON, no code run
-// mit-import --plan <name> --wtfdig umad --mit-plan ikuya --tabs "p1=UmadP1TeleTrouncingScenario,p2=UmadP2ForsakenScenario" --out Plans/<name>.json
+// mit-import --plan <name> --wtfdig umad --mit-plan ikuya --tabs "p1=UmadP1TeleTrouncingScenario,p3=UmadP3LimitCutScenario|UmadP3BlackHoleScenario" --out Plans/<name>.json
+//   a phase tag shared by several scenarios: each gets the rows that anchor on its own timeline
 // slides-fetch --deck <google id|url|file.pptx> --out <dir> [--zone <ZoneType> [--layout <name>]]   text, notes and images per slide; XIVPlan links found become plans
 // example  --plan plans/<id>.json --lesson lesson.json --dump dump.json [--write]   the plan's roll as overrides values (adds -> spots/bearings, buffs -> targets)
 // overrides-check --scenario <TypeName> [--strat N] [--seed 1]   pin each roll to its own value and see whether the seed's other rolls move
@@ -311,19 +313,46 @@ internal static class Cli
 
     private static int MitTimeline(Dictionary<string, string> opts)
     {
+        if (opts.ContainsKey("all")) return MitTimelineAll(opts);
         var scenario = Need(opts, "scenario");
         var type = typeof(Game).Assembly.GetTypes().FirstOrDefault(t => t.Name == scenario) ?? throw new ArgumentException($"no scenario type named {scenario}");
-        new AnoMech.Tests.DalamudServices().InstallNullServices();
-        var csvPath = Path.GetTempFileName();
-        var run = AnoMech.Tests.ScenarioRun.Execute(type, 0, 1, new AnoMech.Tests.ScenarioRunOptions { TimelinePath = csvPath, WriteArtifactsOnFailure = false });
-        if (run.Failure != null) Console.Error.WriteLine($"run: {run.Failure}");
-        var timeline = CastTimeline.FromTimelineCsv(type.Name, File.ReadAllText(csvPath));
-        File.Delete(csvPath);
+        var timeline = CastTimelines.Record(type, 0, 1, out var failure);
+        if (failure != null) Console.Error.WriteLine($"run: {failure}");
         var outPath = Need(opts, "out");
         Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(outPath))!);
         File.WriteAllText(outPath, timeline.ToJson());
         Console.WriteLine($"{timeline.Casts.Count} casts ({string.Join(", ", timeline.Names)}) -> {outPath}");
         return 0;
+    }
+
+    // Every catalog scenario with a strat, recorded once; a timeline is written when missing or
+    // when the run drifted from the embedded one (--check only says so).
+    private static int MitTimelineAll(Dictionary<string, string> opts)
+    {
+        var outDir = opts.TryGetValue("out", out var o) && o.Length > 0 ? o : "AnoMech/Learn/Mitigation/Timelines";
+        var check = opts.ContainsKey("check");
+        var filter = opts.TryGetValue("scenario", out var f) ? f : "";
+        Directory.CreateDirectory(outDir);
+        var written = 0;
+        var drifted = 0;
+        foreach (var scenario in ScenarioCatalog.Create().Scenarios)
+        {
+            var type = scenario.GetType();
+            if (scenario.AiStrats.Count == 0) continue;
+            if (filter.Length > 0 && !type.Name.Contains(filter, StringComparison.OrdinalIgnoreCase)) continue;
+            var timeline = CastTimelines.Record(type, 0, 1, out var failure);
+            var embedded = MitTimelines.Load(type.Name);
+            var drift = embedded?.Drift(timeline) ?? [];
+            var status = embedded is null ? "new" : drift.Count == 0 ? "ok" : $"drifted ({drift.Count})";
+            Console.WriteLine($"{type.Name,-36} {timeline.Casts.Count,3} casts  {status}{(failure != null ? $"  run: {failure}" : "")}");
+            foreach (var d in drift.Take(8)) Console.WriteLine($"    {d}");
+            if (drift.Count > 0) drifted++;
+            if (check || (embedded != null && drift.Count == 0)) continue;
+            File.WriteAllText(Path.Combine(outDir, $"{type.Name}.json"), timeline.ToJson());
+            written++;
+        }
+        Console.WriteLine(check ? $"{drifted} drifted" : $"{written} timeline(s) written to {outDir}, {drifted} had drifted");
+        return check && drifted > 0 ? 1 : 0;
     }
 
     // Each tab is fetched as CSV from the sheet (or read from --csv-dir/<Tab>.csv) and anchored on
@@ -389,13 +418,19 @@ internal static class Cli
         if (source.Mits[planName] is null) throw new ArgumentException($"{fight} has no mit plan {planName}; it has {string.Join(", ", source.Mits.Select(kv => kv.Key))}");
         var tabs = Need(opts, "tabs").Split(',').Select(t => t.Split('=', 2)).ToDictionary(p => p[0].Trim(), p => p[1].Trim());
         var scenarios = new Dictionary<string, MitScenario>();
-        foreach (var (tag, scenarioType) in tabs)
+        foreach (var (tag, scenarioTypes) in tabs)
         {
-            var timeline = MitTimelines.Load(scenarioType) ?? throw new ArgumentException($"no embedded timeline for {scenarioType}; run mit-timeline first");
             var csv = WtfdigSource.GridToCsv(source.MitGrid(planName, tag));
-            var scenario = MitSheetImport.Import(csv, timeline, MitAliases.Default);
-            scenarios[scenarioType] = scenario;
-            Console.WriteLine($"{tag} -> {scenarioType}: {scenario.Mechanics.Count} mechanics, {scenario.Mechanics.Count(m => m.Anchor != null)} anchored");
+            var types = scenarioTypes.Split('|').Select(t => t.Trim()).ToList();
+            var imported = types.ToDictionary(t => t, t => MitSheetImport.Import(csv, MitTimelines.Load(t) ?? throw new ArgumentException($"no embedded timeline for {t}; run mit-timeline first"), MitAliases.Default));
+            foreach (var (scenarioType, scenario) in imported)
+            {
+                // A phase split over several scenarios: a row that anchors in a sibling belongs there, not here.
+                var others = imported.Where(kv => kv.Key != scenarioType).Select(kv => kv.Value).ToList();
+                var kept = scenario.Mechanics.Where(m => m.Anchor != null || others.All(o => o.Mechanics.FirstOrDefault(x => x.Label == m.Label)?.Anchor is null)).ToList();
+                scenarios[scenarioType] = new MitScenario(kept);
+                Console.WriteLine($"{tag} -> {scenarioType}: {kept.Count} mechanics, {kept.Count(m => m.Anchor != null)} anchored");
+            }
         }
         var label = source.Mits[planName]!["label"]?.GetValue<string>() ?? planName;
         var url = source.Mits[planName]!["url"]?.GetValue<string>() ?? source.Url;

@@ -1,0 +1,135 @@
+{
+  "scenario": "UcobP5ExaflaresScenario",
+  "casts": [
+    {
+      "actionId": 9967,
+      "name": "Exaflare",
+      "start": 3.017,
+      "resolve": 6.717,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9968,
+      "name": "Exaflare",
+      "start": 5.017,
+      "resolve": 8.717,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9968,
+      "name": "Exaflare",
+      "start": 8.017,
+      "resolve": 11.717,
+      "occurrence": 3
+    },
+    {
+      "actionId": 9936,
+      "name": "",
+      "start": 8.983,
+      "resolve": 8.983,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 10.6,
+      "resolve": 10.6,
+      "occurrence": 4
+    },
+    {
+      "actionId": 9968,
+      "name": "Exaflare",
+      "start": 11.017,
+      "resolve": 14.717,
+      "occurrence": 5
+    },
+    {
+      "actionId": 9936,
+      "name": "",
+      "start": 12.017,
+      "resolve": 12.017,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 12.067,
+      "resolve": 12.067,
+      "occurrence": 6
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 13.55,
+      "resolve": 13.55,
+      "occurrence": 7
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 15.033,
+      "resolve": 15.033,
+      "occurrence": 8
+    },
+    {
+      "actionId": 9936,
+      "name": "",
+      "start": 15.033,
+      "resolve": 15.033,
+      "occurrence": 3
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 16.5,
+      "resolve": 16.5,
+      "occurrence": 9
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 18.033,
+      "resolve": 18.033,
+      "occurrence": 10
+    },
+    {
+      "actionId": 9936,
+      "name": "",
+      "start": 18.083,
+      "resolve": 18.083,
+      "occurrence": 4
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 19.5,
+      "resolve": 19.5,
+      "occurrence": 11
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 21.033,
+      "resolve": 21.033,
+      "occurrence": 12
+    },
+    {
+      "actionId": 9936,
+      "name": "",
+      "start": 21.117,
+      "resolve": 21.117,
+      "occurrence": 5
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 22.5,
+      "resolve": 22.5,
+      "occurrence": 13
+    }
+  ],
+  "names": [
+    "Exaflare",
+    ""
+  ]
+}

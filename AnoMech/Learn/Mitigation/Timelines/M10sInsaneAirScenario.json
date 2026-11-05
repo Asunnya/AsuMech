@@ -1,0 +1,291 @@
+{
+  "scenario": "M10sInsaneAirScenario",
+  "casts": [
+    {
+      "actionId": 46553,
+      "name": "Xtreme Spectacular",
+      "start": 11.433,
+      "resolve": 15.132999,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46554,
+      "name": "Xtreme Spectacular",
+      "start": 11.433,
+      "resolve": 15.132999,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46500,
+      "name": "Xtreme Spectacular",
+      "start": 15.667,
+      "resolve": 22.767,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46556,
+      "name": "Xtreme Spectacular",
+      "start": 23.933,
+      "resolve": 23.933,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46556,
+      "name": "Xtreme Spectacular",
+      "start": 24.95,
+      "resolve": 24.95,
+      "occurrence": 5
+    },
+    {
+      "actionId": 46556,
+      "name": "Xtreme Spectacular",
+      "start": 25.766,
+      "resolve": 25.766,
+      "occurrence": 6
+    },
+    {
+      "actionId": 46556,
+      "name": "Xtreme Spectacular",
+      "start": 26.283,
+      "resolve": 26.283,
+      "occurrence": 7
+    },
+    {
+      "actionId": 46556,
+      "name": "Xtreme Spectacular",
+      "start": 26.833,
+      "resolve": 26.833,
+      "occurrence": 8
+    },
+    {
+      "actionId": 47050,
+      "name": "Xtreme Spectacular",
+      "start": 27.633,
+      "resolve": 27.633,
+      "occurrence": 9
+    },
+    {
+      "actionId": 46458,
+      "name": "Epic Brotherhood",
+      "start": 33,
+      "resolve": 33,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46459,
+      "name": "Epic Brotherhood",
+      "start": 33,
+      "resolve": 33,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46456,
+      "name": "",
+      "start": 40.216,
+      "resolve": 40.216,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46457,
+      "name": "",
+      "start": 40.216,
+      "resolve": 40.216,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47255,
+      "name": "Insane Air",
+      "start": 42.883,
+      "resolve": 48.482998,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47256,
+      "name": "Insane Air",
+      "start": 42.883,
+      "resolve": 48.482998,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46575,
+      "name": "Blasting Snap",
+      "start": 50.649,
+      "resolve": 50.649,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46580,
+      "name": "Re-entry Plunge",
+      "start": 50.649,
+      "resolve": 50.649,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46577,
+      "name": "Blasting Snap",
+      "start": 51.816,
+      "resolve": 51.816,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46582,
+      "name": "Re-entry Plunge",
+      "start": 51.816,
+      "resolve": 51.816,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47257,
+      "name": "Insane Air",
+      "start": 52.249,
+      "resolve": 55.849,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47258,
+      "name": "Insane Air",
+      "start": 52.249,
+      "resolve": 55.849,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46583,
+      "name": "Vertical Blast",
+      "start": 57.999,
+      "resolve": 57.999,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46576,
+      "name": "Plunging Snap",
+      "start": 57.999,
+      "resolve": 57.999,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46585,
+      "name": "Vertical Blast",
+      "start": 59.166,
+      "resolve": 59.166,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46578,
+      "name": "Plunging Snap",
+      "start": 59.166,
+      "resolve": 59.166,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47257,
+      "name": "Insane Air",
+      "start": 59.599,
+      "resolve": 63.198997,
+      "occurrence": 5
+    },
+    {
+      "actionId": 47258,
+      "name": "Insane Air",
+      "start": 59.599,
+      "resolve": 63.198997,
+      "occurrence": 6
+    },
+    {
+      "actionId": 46575,
+      "name": "Blasting Snap",
+      "start": 65.349,
+      "resolve": 65.349,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46584,
+      "name": "Vertical Plunge",
+      "start": 65.349,
+      "resolve": 65.349,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46577,
+      "name": "Blasting Snap",
+      "start": 66.516,
+      "resolve": 66.516,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46586,
+      "name": "Vertical Plunge",
+      "start": 66.516,
+      "resolve": 66.516,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47257,
+      "name": "Insane Air",
+      "start": 66.966,
+      "resolve": 70.566,
+      "occurrence": 7
+    },
+    {
+      "actionId": 47258,
+      "name": "Insane Air",
+      "start": 66.966,
+      "resolve": 70.566,
+      "occurrence": 8
+    },
+    {
+      "actionId": 46579,
+      "name": "Re-entry Blast",
+      "start": 72.701,
+      "resolve": 72.701,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46580,
+      "name": "Re-entry Plunge",
+      "start": 72.701,
+      "resolve": 72.701,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46581,
+      "name": "Re-entry Blast",
+      "start": 73.868,
+      "resolve": 73.868,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46582,
+      "name": "Re-entry Plunge",
+      "start": 73.868,
+      "resolve": 73.868,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46520,
+      "name": "Divers\u0027 Dare",
+      "start": 78.536,
+      "resolve": 83.236,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46521,
+      "name": "Divers\u0027 Dare",
+      "start": 78.536,
+      "resolve": 83.236,
+      "occurrence": 2
+    }
+  ],
+  "names": [
+    "Xtreme Spectacular",
+    "Epic Brotherhood",
+    "",
+    "Insane Air",
+    "Blasting Snap",
+    "Re-entry Plunge",
+    "Vertical Blast",
+    "Plunging Snap",
+    "Vertical Plunge",
+    "Re-entry Blast",
+    "Divers\u0027 Dare"
+  ]
+}

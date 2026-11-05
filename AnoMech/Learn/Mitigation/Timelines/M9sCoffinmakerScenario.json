@@ -1,0 +1,214 @@
+{
+  "scenario": "M9sCoffinmakerScenario",
+  "casts": [
+    {
+      "actionId": 45875,
+      "name": "Sadistic Screech",
+      "start": 0.833,
+      "resolve": 5.533,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46853,
+      "name": "Dead Wake",
+      "start": 8.95,
+      "resolve": 13.15,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45927,
+      "name": "Dead Wake",
+      "start": 8.95,
+      "resolve": 13.65,
+      "occurrence": 2
+    },
+    {
+      "actionId": 45904,
+      "name": "Half Moon",
+      "start": 16.2,
+      "resolve": 20.2,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45947,
+      "name": "Half Moon",
+      "start": 16.2,
+      "resolve": 20.900002,
+      "occurrence": 2
+    },
+    {
+      "actionId": 45948,
+      "name": "Half Moon",
+      "start": 16.2,
+      "resolve": 23.900002,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46854,
+      "name": "Coffinfiller",
+      "start": 16.2,
+      "resolve": 20.900002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45928,
+      "name": "Coffinfiller",
+      "start": 16.2,
+      "resolve": 20.900002,
+      "occurrence": 2
+    },
+    {
+      "actionId": 45928,
+      "name": "Coffinfiller",
+      "start": 19.233,
+      "resolve": 23.932999,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46853,
+      "name": "Dead Wake",
+      "start": 26.383,
+      "resolve": 30.583,
+      "occurrence": 3
+    },
+    {
+      "actionId": 45927,
+      "name": "Dead Wake",
+      "start": 26.383,
+      "resolve": 31.083,
+      "occurrence": 4
+    },
+    {
+      "actionId": 45904,
+      "name": "Half Moon",
+      "start": 33.616,
+      "resolve": 37.616,
+      "occurrence": 4
+    },
+    {
+      "actionId": 45947,
+      "name": "Half Moon",
+      "start": 33.616,
+      "resolve": 38.316,
+      "occurrence": 5
+    },
+    {
+      "actionId": 45948,
+      "name": "Half Moon",
+      "start": 33.616,
+      "resolve": 41.316,
+      "occurrence": 6
+    },
+    {
+      "actionId": 46854,
+      "name": "Coffinfiller",
+      "start": 33.616,
+      "resolve": 38.316,
+      "occurrence": 4
+    },
+    {
+      "actionId": 45929,
+      "name": "Coffinfiller",
+      "start": 33.616,
+      "resolve": 38.316,
+      "occurrence": 5
+    },
+    {
+      "actionId": 45929,
+      "name": "Coffinfiller",
+      "start": 36.65,
+      "resolve": 41.350002,
+      "occurrence": 6
+    },
+    {
+      "actionId": 46853,
+      "name": "Dead Wake",
+      "start": 43.783,
+      "resolve": 47.983,
+      "occurrence": 5
+    },
+    {
+      "actionId": 45927,
+      "name": "Dead Wake",
+      "start": 43.783,
+      "resolve": 48.483,
+      "occurrence": 6
+    },
+    {
+      "actionId": 45902,
+      "name": "Half Moon",
+      "start": 51.016,
+      "resolve": 55.016,
+      "occurrence": 7
+    },
+    {
+      "actionId": 45943,
+      "name": "Half Moon",
+      "start": 51.016,
+      "resolve": 55.716,
+      "occurrence": 8
+    },
+    {
+      "actionId": 45944,
+      "name": "Half Moon",
+      "start": 51.016,
+      "resolve": 58.716,
+      "occurrence": 9
+    },
+    {
+      "actionId": 46854,
+      "name": "Coffinfiller",
+      "start": 51.016,
+      "resolve": 55.716,
+      "occurrence": 7
+    },
+    {
+      "actionId": 45930,
+      "name": "Coffinfiller",
+      "start": 51.016,
+      "resolve": 55.716,
+      "occurrence": 8
+    },
+    {
+      "actionId": 45930,
+      "name": "Coffinfiller",
+      "start": 54.049,
+      "resolve": 58.749,
+      "occurrence": 9
+    },
+    {
+      "actionId": 45904,
+      "name": "Half Moon",
+      "start": 61.199,
+      "resolve": 65.199005,
+      "occurrence": 10
+    },
+    {
+      "actionId": 45947,
+      "name": "Half Moon",
+      "start": 61.199,
+      "resolve": 65.899,
+      "occurrence": 11
+    },
+    {
+      "actionId": 45948,
+      "name": "Half Moon",
+      "start": 61.199,
+      "resolve": 68.899,
+      "occurrence": 12
+    },
+    {
+      "actionId": 45875,
+      "name": "Sadistic Screech",
+      "start": 78.386,
+      "resolve": 83.086,
+      "occurrence": 2
+    }
+  ],
+  "names": [
+    "Sadistic Screech",
+    "Dead Wake",
+    "Half Moon",
+    "Coffinfiller"
+  ]
+}

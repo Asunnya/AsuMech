@@ -1,0 +1,388 @@
+{
+  "scenario": "UmadP2ForsakenScenario",
+  "casts": [
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 1.317,
+      "resolve": 1.317,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47804,
+      "name": "Forsaken",
+      "start": 2.467,
+      "resolve": 9.167,
+      "occurrence": 1
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 11.367,
+      "resolve": 11.367,
+      "occurrence": 2
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 14.4,
+      "resolve": 14.4,
+      "occurrence": 3
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 17.433,
+      "resolve": 17.433,
+      "occurrence": 4
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 20.483,
+      "resolve": 20.483,
+      "occurrence": 5
+    },
+    {
+      "actionId": 47806,
+      "name": "the Path of Light",
+      "start": 22.666,
+      "resolve": 22.666,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47809,
+      "name": "Spellscatter",
+      "start": 23.283,
+      "resolve": 23.283,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47808,
+      "name": "Spelldriver",
+      "start": 23.283,
+      "resolve": 23.283,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47810,
+      "name": "Spellwave",
+      "start": 23.283,
+      "resolve": 23.283,
+      "occurrence": 1
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 24.516,
+      "resolve": 24.516,
+      "occurrence": 6
+    },
+    {
+      "actionId": 47826,
+      "name": "Future\u0027s End",
+      "start": 25.616,
+      "resolve": 31.716,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47830,
+      "name": "Future\u0027s End",
+      "start": 32.316,
+      "resolve": 32.316,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47832,
+      "name": "Future\u0027s End",
+      "start": 32.366,
+      "resolve": 32.366,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47806,
+      "name": "the Path of Light",
+      "start": 32.683,
+      "resolve": 32.683,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47809,
+      "name": "Spellscatter",
+      "start": 33.3,
+      "resolve": 33.3,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47810,
+      "name": "Spellwave",
+      "start": 33.3,
+      "resolve": 33.3,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47836,
+      "name": "All Things Ending",
+      "start": 38.466,
+      "resolve": 43.166,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47806,
+      "name": "the Path of Light",
+      "start": 43.716,
+      "resolve": 43.716,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47809,
+      "name": "Spellscatter",
+      "start": 44.333,
+      "resolve": 44.333,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47808,
+      "name": "Spelldriver",
+      "start": 44.333,
+      "resolve": 44.333,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47810,
+      "name": "Spellwave",
+      "start": 44.333,
+      "resolve": 44.333,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47826,
+      "name": "Future\u0027s End",
+      "start": 46.766,
+      "resolve": 52.865997,
+      "occurrence": 4
+    },
+    {
+      "actionId": 47830,
+      "name": "Future\u0027s End",
+      "start": 53.466,
+      "resolve": 53.466,
+      "occurrence": 5
+    },
+    {
+      "actionId": 47832,
+      "name": "Future\u0027s End",
+      "start": 53.599,
+      "resolve": 53.599,
+      "occurrence": 6
+    },
+    {
+      "actionId": 47806,
+      "name": "the Path of Light",
+      "start": 53.733,
+      "resolve": 53.733,
+      "occurrence": 4
+    },
+    {
+      "actionId": 47810,
+      "name": "Spellwave",
+      "start": 54.349,
+      "resolve": 54.349,
+      "occurrence": 4
+    },
+    {
+      "actionId": 47809,
+      "name": "Spellscatter",
+      "start": 54.349,
+      "resolve": 54.349,
+      "occurrence": 4
+    },
+    {
+      "actionId": 47836,
+      "name": "All Things Ending",
+      "start": 59.666,
+      "resolve": 64.366,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47806,
+      "name": "the Path of Light",
+      "start": 64.766,
+      "resolve": 64.766,
+      "occurrence": 5
+    },
+    {
+      "actionId": 47809,
+      "name": "Spellscatter",
+      "start": 65.366,
+      "resolve": 65.366,
+      "occurrence": 5
+    },
+    {
+      "actionId": 47808,
+      "name": "Spelldriver",
+      "start": 65.366,
+      "resolve": 65.366,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47810,
+      "name": "Spellwave",
+      "start": 65.366,
+      "resolve": 65.366,
+      "occurrence": 5
+    },
+    {
+      "actionId": 47826,
+      "name": "Future\u0027s End",
+      "start": 67.767,
+      "resolve": 73.867,
+      "occurrence": 7
+    },
+    {
+      "actionId": 47830,
+      "name": "Future\u0027s End",
+      "start": 74.468,
+      "resolve": 74.468,
+      "occurrence": 8
+    },
+    {
+      "actionId": 47832,
+      "name": "Future\u0027s End",
+      "start": 74.618,
+      "resolve": 74.618,
+      "occurrence": 9
+    },
+    {
+      "actionId": 47806,
+      "name": "the Path of Light",
+      "start": 74.785,
+      "resolve": 74.785,
+      "occurrence": 6
+    },
+    {
+      "actionId": 47810,
+      "name": "Spellwave",
+      "start": 75.385,
+      "resolve": 75.385,
+      "occurrence": 6
+    },
+    {
+      "actionId": 47809,
+      "name": "Spellscatter",
+      "start": 75.385,
+      "resolve": 75.385,
+      "occurrence": 6
+    },
+    {
+      "actionId": 47836,
+      "name": "All Things Ending",
+      "start": 80.669,
+      "resolve": 85.368996,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47806,
+      "name": "the Path of Light",
+      "start": 85.821,
+      "resolve": 85.821,
+      "occurrence": 7
+    },
+    {
+      "actionId": 47809,
+      "name": "Spellscatter",
+      "start": 86.421,
+      "resolve": 86.421,
+      "occurrence": 7
+    },
+    {
+      "actionId": 47808,
+      "name": "Spelldriver",
+      "start": 86.421,
+      "resolve": 86.421,
+      "occurrence": 4
+    },
+    {
+      "actionId": 47810,
+      "name": "Spellwave",
+      "start": 86.421,
+      "resolve": 86.421,
+      "occurrence": 7
+    },
+    {
+      "actionId": 47827,
+      "name": "Past\u0027s End",
+      "start": 88.821,
+      "resolve": 94.921,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47831,
+      "name": "Past\u0027s End",
+      "start": 95.523,
+      "resolve": 95.523,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47833,
+      "name": "Past\u0027s End",
+      "start": 95.523,
+      "resolve": 95.523,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47806,
+      "name": "the Path of Light",
+      "start": 95.823,
+      "resolve": 95.823,
+      "occurrence": 8
+    },
+    {
+      "actionId": 47810,
+      "name": "Spellwave",
+      "start": 96.423,
+      "resolve": 96.423,
+      "occurrence": 8
+    },
+    {
+      "actionId": 47809,
+      "name": "Spellscatter",
+      "start": 96.423,
+      "resolve": 96.423,
+      "occurrence": 8
+    },
+    {
+      "actionId": 47837,
+      "name": "All Things Ending",
+      "start": 101.624,
+      "resolve": 106.324,
+      "occurrence": 4
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 109.476,
+      "resolve": 109.476,
+      "occurrence": 7
+    },
+    {
+      "actionId": 47805,
+      "name": "Light of Judgment",
+      "start": 110.843,
+      "resolve": 115.543,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "",
+    "Forsaken",
+    "the Path of Light",
+    "Spellscatter",
+    "Spelldriver",
+    "Spellwave",
+    "Future\u0027s End",
+    "All Things Ending",
+    "Past\u0027s End",
+    "Light of Judgment"
+  ]
+}

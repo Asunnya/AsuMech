@@ -1,0 +1,107 @@
+{
+  "scenario": "DsrP4EyesScenario",
+  "casts": [
+    {
+      "actionId": 29050,
+      "name": "",
+      "start": 14.467,
+      "resolve": 14.467,
+      "occurrence": 1
+    },
+    {
+      "actionId": 26821,
+      "name": "Soul of Friendship",
+      "start": 17.5,
+      "resolve": 17.5,
+      "occurrence": 1
+    },
+    {
+      "actionId": 26822,
+      "name": "Soul of Devotion",
+      "start": 17.5,
+      "resolve": 17.5,
+      "occurrence": 1
+    },
+    {
+      "actionId": 26810,
+      "name": "Resentment",
+      "start": 24.716,
+      "resolve": 24.716,
+      "occurrence": 1
+    },
+    {
+      "actionId": 26814,
+      "name": "Hatebound",
+      "start": 30.033,
+      "resolve": 32.733,
+      "occurrence": 1
+    },
+    {
+      "actionId": 26817,
+      "name": "Flare Nova",
+      "start": 40.916,
+      "resolve": 40.916,
+      "occurrence": 1
+    },
+    {
+      "actionId": 26815,
+      "name": "Flare Star",
+      "start": 46.916,
+      "resolve": 46.916,
+      "occurrence": 1
+    },
+    {
+      "actionId": 26819,
+      "name": "Mirage Dive",
+      "start": 56.116,
+      "resolve": 58.816,
+      "occurrence": 1
+    },
+    {
+      "actionId": 26820,
+      "name": "Mirage Dive",
+      "start": 59.883,
+      "resolve": 59.883,
+      "occurrence": 2
+    },
+    {
+      "actionId": 26820,
+      "name": "Mirage Dive",
+      "start": 65.016,
+      "resolve": 65.016,
+      "occurrence": 3
+    },
+    {
+      "actionId": 26820,
+      "name": "Mirage Dive",
+      "start": 70.134,
+      "resolve": 70.134,
+      "occurrence": 4
+    },
+    {
+      "actionId": 26820,
+      "name": "Mirage Dive",
+      "start": 75.235,
+      "resolve": 75.235,
+      "occurrence": 5
+    },
+    {
+      "actionId": 26813,
+      "name": "Steep in Rage",
+      "start": 79.102,
+      "resolve": 84.801994,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "",
+    "Soul of Friendship",
+    "Soul of Devotion",
+    "Resentment",
+    "Hatebound",
+    "Flare Nova",
+    "Flare Star",
+    "Mirage Dive",
+    "Steep in Rage"
+  ]
+}

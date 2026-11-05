@@ -1,0 +1,885 @@
+{
+  "scenario": "UmadP3BlackHoleScenario",
+  "casts": [
+    {
+      "actionId": 50545,
+      "name": "Earthquake",
+      "start": 0.983,
+      "resolve": 5.6829996,
+      "occurrence": 1
+    },
+    {
+      "actionId": 50546,
+      "name": "Earthquake",
+      "start": 0.983,
+      "resolve": 5.6829996,
+      "occurrence": 2
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 12.083,
+      "resolve": 12.083,
+      "occurrence": 1
+    },
+    {
+      "actionId": 49744,
+      "name": "",
+      "start": 12.083,
+      "resolve": 12.083,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47866,
+      "name": "Earthquake",
+      "start": 13.417,
+      "resolve": 13.417,
+      "occurrence": 3
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 15.1,
+      "resolve": 15.1,
+      "occurrence": 3
+    },
+    {
+      "actionId": 49744,
+      "name": "",
+      "start": 15.1,
+      "resolve": 15.1,
+      "occurrence": 4
+    },
+    {
+      "actionId": 47847,
+      "name": "Slap Happy",
+      "start": 16.4,
+      "resolve": 21.099998,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47866,
+      "name": "Earthquake",
+      "start": 17.333,
+      "resolve": 17.333,
+      "occurrence": 4
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 18.133,
+      "resolve": 18.133,
+      "occurrence": 5
+    },
+    {
+      "actionId": 49744,
+      "name": "",
+      "start": 18.133,
+      "resolve": 18.133,
+      "occurrence": 6
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 21.167,
+      "resolve": 21.167,
+      "occurrence": 7
+    },
+    {
+      "actionId": 49744,
+      "name": "",
+      "start": 21.167,
+      "resolve": 21.167,
+      "occurrence": 8
+    },
+    {
+      "actionId": 47848,
+      "name": "Slap Happy",
+      "start": 22.15,
+      "resolve": 22.15,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47867,
+      "name": "Black Hole",
+      "start": 22.183,
+      "resolve": 24.883001,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47848,
+      "name": "Slap Happy",
+      "start": 22.8,
+      "resolve": 22.8,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47849,
+      "name": "Slap Happy",
+      "start": 23.266,
+      "resolve": 24.466002,
+      "occurrence": 4
+    },
+    {
+      "actionId": 47848,
+      "name": "Slap Happy",
+      "start": 23.45,
+      "resolve": 23.45,
+      "occurrence": 5
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 24.2,
+      "resolve": 24.2,
+      "occurrence": 9
+    },
+    {
+      "actionId": 47851,
+      "name": "Shockwave",
+      "start": 24.816,
+      "resolve": 24.816,
+      "occurrence": 1
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 27.233,
+      "resolve": 27.233,
+      "occurrence": 10
+    },
+    {
+      "actionId": 49744,
+      "name": "",
+      "start": 27.233,
+      "resolve": 27.233,
+      "occurrence": 11
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 30.266,
+      "resolve": 30.266,
+      "occurrence": 12
+    },
+    {
+      "actionId": 49744,
+      "name": "",
+      "start": 30.266,
+      "resolve": 30.266,
+      "occurrence": 13
+    },
+    {
+      "actionId": 47868,
+      "name": "Nothingness",
+      "start": 32.283,
+      "resolve": 32.283,
+      "occurrence": 1
+    },
+    {
+      "actionId": 49892,
+      "name": "Aetherlink",
+      "start": 32.416,
+      "resolve": 32.416,
+      "occurrence": 1
+    },
+    {
+      "actionId": 49893,
+      "name": "Aetherlink",
+      "start": 32.416,
+      "resolve": 32.416,
+      "occurrence": 2
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 33.3,
+      "resolve": 33.3,
+      "occurrence": 14
+    },
+    {
+      "actionId": 49744,
+      "name": "",
+      "start": 33.3,
+      "resolve": 33.3,
+      "occurrence": 15
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 36.35,
+      "resolve": 36.35,
+      "occurrence": 16
+    },
+    {
+      "actionId": 49744,
+      "name": "",
+      "start": 36.35,
+      "resolve": 36.35,
+      "occurrence": 17
+    },
+    {
+      "actionId": 47881,
+      "name": "Thunder III",
+      "start": 37.6,
+      "resolve": 42.3,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47868,
+      "name": "Nothingness",
+      "start": 39.333,
+      "resolve": 39.333,
+      "occurrence": 2
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 39.383,
+      "resolve": 39.383,
+      "occurrence": 18
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 42.416,
+      "resolve": 42.416,
+      "occurrence": 19
+    },
+    {
+      "actionId": 47884,
+      "name": "Thunder III",
+      "start": 42.633,
+      "resolve": 42.633,
+      "occurrence": 2
+    },
+    {
+      "actionId": 49744,
+      "name": "",
+      "start": 44.383,
+      "resolve": 44.383,
+      "occurrence": 20
+    },
+    {
+      "actionId": 47873,
+      "name": "Damning Edict",
+      "start": 45.583,
+      "resolve": 50.283,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47884,
+      "name": "Thunder III",
+      "start": 45.633,
+      "resolve": 45.633,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47847,
+      "name": "Slap Happy",
+      "start": 46.833,
+      "resolve": 51.533,
+      "occurrence": 6
+    },
+    {
+      "actionId": 49744,
+      "name": "",
+      "start": 47.416,
+      "resolve": 47.416,
+      "occurrence": 21
+    },
+    {
+      "actionId": 49744,
+      "name": "",
+      "start": 50.466,
+      "resolve": 50.466,
+      "occurrence": 22
+    },
+    {
+      "actionId": 47848,
+      "name": "Slap Happy",
+      "start": 52.599,
+      "resolve": 52.599,
+      "occurrence": 7
+    },
+    {
+      "actionId": 47848,
+      "name": "Slap Happy",
+      "start": 53.249,
+      "resolve": 53.249,
+      "occurrence": 8
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 53.483,
+      "resolve": 53.483,
+      "occurrence": 23
+    },
+    {
+      "actionId": 49744,
+      "name": "",
+      "start": 53.483,
+      "resolve": 53.483,
+      "occurrence": 24
+    },
+    {
+      "actionId": 47849,
+      "name": "Slap Happy",
+      "start": 53.716,
+      "resolve": 54.916,
+      "occurrence": 9
+    },
+    {
+      "actionId": 47848,
+      "name": "Slap Happy",
+      "start": 53.899,
+      "resolve": 53.899,
+      "occurrence": 10
+    },
+    {
+      "actionId": 47851,
+      "name": "Shockwave",
+      "start": 55.266,
+      "resolve": 55.266,
+      "occurrence": 2
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 56.516,
+      "resolve": 56.516,
+      "occurrence": 25
+    },
+    {
+      "actionId": 49744,
+      "name": "",
+      "start": 56.516,
+      "resolve": 56.516,
+      "occurrence": 26
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 59.549,
+      "resolve": 59.549,
+      "occurrence": 27
+    },
+    {
+      "actionId": 49744,
+      "name": "",
+      "start": 59.549,
+      "resolve": 59.549,
+      "occurrence": 28
+    },
+    {
+      "actionId": 47868,
+      "name": "Nothingness",
+      "start": 62.833,
+      "resolve": 62.833,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47866,
+      "name": "Earthquake",
+      "start": 64.383,
+      "resolve": 64.383,
+      "occurrence": 5
+    },
+    {
+      "actionId": 47868,
+      "name": "Nothingness",
+      "start": 67.933,
+      "resolve": 67.933,
+      "occurrence": 4
+    },
+    {
+      "actionId": 47866,
+      "name": "Earthquake",
+      "start": 69.484,
+      "resolve": 69.484,
+      "occurrence": 6
+    },
+    {
+      "actionId": 47873,
+      "name": "Damning Edict",
+      "start": 72.884,
+      "resolve": 77.584,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47868,
+      "name": "Nothingness",
+      "start": 73.034,
+      "resolve": 73.034,
+      "occurrence": 5
+    },
+    {
+      "actionId": 47852,
+      "name": "Look upon Me and Despair",
+      "start": 74.251,
+      "resolve": 77.951,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47854,
+      "name": "Look upon Me and Despair",
+      "start": 74.301,
+      "resolve": 79.001,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47866,
+      "name": "Earthquake",
+      "start": 74.585,
+      "resolve": 74.585,
+      "occurrence": 7
+    },
+    {
+      "actionId": 49744,
+      "name": "",
+      "start": 77.785,
+      "resolve": 77.785,
+      "occurrence": 29
+    },
+    {
+      "actionId": 47881,
+      "name": "Thunder III",
+      "start": 78.852,
+      "resolve": 83.551994,
+      "occurrence": 4
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 80.903,
+      "resolve": 80.903,
+      "occurrence": 30
+    },
+    {
+      "actionId": 50362,
+      "name": "",
+      "start": 81.403,
+      "resolve": 81.403,
+      "occurrence": 31
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 83.953,
+      "resolve": 83.953,
+      "occurrence": 32
+    },
+    {
+      "actionId": 47884,
+      "name": "Thunder III",
+      "start": 83.953,
+      "resolve": 83.953,
+      "occurrence": 5
+    },
+    {
+      "actionId": 49744,
+      "name": "",
+      "start": 85.854,
+      "resolve": 85.854,
+      "occurrence": 33
+    },
+    {
+      "actionId": 47884,
+      "name": "Thunder III",
+      "start": 86.954,
+      "resolve": 86.954,
+      "occurrence": 6
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 86.971,
+      "resolve": 86.971,
+      "occurrence": 34
+    },
+    {
+      "actionId": 49744,
+      "name": "",
+      "start": 88.905,
+      "resolve": 88.905,
+      "occurrence": 35
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 90.005,
+      "resolve": 90.005,
+      "occurrence": 36
+    },
+    {
+      "actionId": 49744,
+      "name": "",
+      "start": 91.922,
+      "resolve": 91.922,
+      "occurrence": 37
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 93.022,
+      "resolve": 93.022,
+      "occurrence": 38
+    },
+    {
+      "actionId": 47868,
+      "name": "Nothingness",
+      "start": 97.123,
+      "resolve": 97.123,
+      "occurrence": 6
+    },
+    {
+      "actionId": 47866,
+      "name": "Earthquake",
+      "start": 98.673,
+      "resolve": 98.673,
+      "occurrence": 8
+    },
+    {
+      "actionId": 49892,
+      "name": "Aetherlink",
+      "start": 99.19,
+      "resolve": 99.19,
+      "occurrence": 3
+    },
+    {
+      "actionId": 49893,
+      "name": "Aetherlink",
+      "start": 99.19,
+      "resolve": 99.19,
+      "occurrence": 4
+    },
+    {
+      "actionId": 47868,
+      "name": "Nothingness",
+      "start": 102.224,
+      "resolve": 102.224,
+      "occurrence": 7
+    },
+    {
+      "actionId": 47866,
+      "name": "Earthquake",
+      "start": 103.774,
+      "resolve": 103.774,
+      "occurrence": 9
+    },
+    {
+      "actionId": 47868,
+      "name": "Nothingness",
+      "start": 107.325,
+      "resolve": 107.325,
+      "occurrence": 8
+    },
+    {
+      "actionId": 47866,
+      "name": "Earthquake",
+      "start": 108.875,
+      "resolve": 108.875,
+      "occurrence": 10
+    },
+    {
+      "actionId": 47869,
+      "name": "Longitudinal Implosion",
+      "start": 113.393,
+      "resolve": 118.092995,
+      "occurrence": 1
+    },
+    {
+      "actionId": 48486,
+      "name": "White Hole",
+      "start": 113.393,
+      "resolve": 118.092995,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47846,
+      "name": "Slap Happy",
+      "start": 114.81,
+      "resolve": 119.509995,
+      "occurrence": 11
+    },
+    {
+      "actionId": 47871,
+      "name": "Shockwave",
+      "start": 119.094,
+      "resolve": 119.094,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47848,
+      "name": "Slap Happy",
+      "start": 120.578,
+      "resolve": 120.578,
+      "occurrence": 12
+    },
+    {
+      "actionId": 47871,
+      "name": "Shockwave",
+      "start": 121.111,
+      "resolve": 121.111,
+      "occurrence": 4
+    },
+    {
+      "actionId": 47848,
+      "name": "Slap Happy",
+      "start": 121.228,
+      "resolve": 121.228,
+      "occurrence": 13
+    },
+    {
+      "actionId": 47849,
+      "name": "Slap Happy",
+      "start": 121.695,
+      "resolve": 122.895,
+      "occurrence": 14
+    },
+    {
+      "actionId": 47848,
+      "name": "Slap Happy",
+      "start": 121.878,
+      "resolve": 121.878,
+      "occurrence": 15
+    },
+    {
+      "actionId": 49744,
+      "name": "",
+      "start": 122.462,
+      "resolve": 122.462,
+      "occurrence": 39
+    },
+    {
+      "actionId": 47850,
+      "name": "Shocking Impact",
+      "start": 123.262,
+      "resolve": 123.262,
+      "occurrence": 1
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 124.412,
+      "resolve": 124.412,
+      "occurrence": 40
+    },
+    {
+      "actionId": 49744,
+      "name": "",
+      "start": 125.496,
+      "resolve": 125.496,
+      "occurrence": 41
+    },
+    {
+      "actionId": 47868,
+      "name": "Nothingness",
+      "start": 130.612,
+      "resolve": 130.612,
+      "occurrence": 9
+    },
+    {
+      "actionId": 47866,
+      "name": "Earthquake",
+      "start": 132.179,
+      "resolve": 132.179,
+      "occurrence": 11
+    },
+    {
+      "actionId": 47853,
+      "name": "Look upon Me and Despair",
+      "start": 132.262,
+      "resolve": 135.96199,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47854,
+      "name": "Look upon Me and Despair",
+      "start": 132.362,
+      "resolve": 137.062,
+      "occurrence": 4
+    },
+    {
+      "actionId": 47868,
+      "name": "Nothingness",
+      "start": 137.677,
+      "resolve": 137.677,
+      "occurrence": 10
+    },
+    {
+      "actionId": 47866,
+      "name": "Earthquake",
+      "start": 139.243,
+      "resolve": 139.243,
+      "occurrence": 12
+    },
+    {
+      "actionId": 50483,
+      "name": "",
+      "start": 139.41,
+      "resolve": 139.41,
+      "occurrence": 42
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 141.476,
+      "resolve": 141.476,
+      "occurrence": 43
+    },
+    {
+      "actionId": 49744,
+      "name": "",
+      "start": 141.526,
+      "resolve": 141.526,
+      "occurrence": 44
+    },
+    {
+      "actionId": 47887,
+      "name": "Blizzard III",
+      "start": 143.626,
+      "resolve": 146.326,
+      "occurrence": 1
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 144.509,
+      "resolve": 144.509,
+      "occurrence": 45
+    },
+    {
+      "actionId": 47855,
+      "name": "Stomp-a-Mole",
+      "start": 145.525,
+      "resolve": 150.22499,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47885,
+      "name": "Blizzard III",
+      "start": 146.692,
+      "resolve": 149.392,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47874,
+      "name": "Knock Down",
+      "start": 147.092,
+      "resolve": 151.79199,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47885,
+      "name": "Blizzard III",
+      "start": 149.741,
+      "resolve": 152.441,
+      "occurrence": 3
+    },
+    {
+      "actionId": 49744,
+      "name": "",
+      "start": 150.674,
+      "resolve": 150.674,
+      "occurrence": 46
+    },
+    {
+      "actionId": 47856,
+      "name": "Stomp-a-Mole",
+      "start": 150.724,
+      "resolve": 151.924,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47856,
+      "name": "Stomp-a-Mole",
+      "start": 152.007,
+      "resolve": 153.207,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47875,
+      "name": "Knock Down",
+      "start": 152.14,
+      "resolve": 152.14,
+      "occurrence": 2
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 152.54,
+      "resolve": 152.54,
+      "occurrence": 47
+    },
+    {
+      "actionId": 47856,
+      "name": "Stomp-a-Mole",
+      "start": 153.29,
+      "resolve": 154.48999,
+      "occurrence": 4
+    },
+    {
+      "actionId": 49744,
+      "name": "",
+      "start": 153.707,
+      "resolve": 153.707,
+      "occurrence": 48
+    },
+    {
+      "actionId": 47856,
+      "name": "Stomp-a-Mole",
+      "start": 154.64,
+      "resolve": 155.84,
+      "occurrence": 5
+    },
+    {
+      "actionId": 49746,
+      "name": "",
+      "start": 155.573,
+      "resolve": 155.573,
+      "occurrence": 49
+    },
+    {
+      "actionId": 47889,
+      "name": "Blizzard III",
+      "start": 156.956,
+      "resolve": 160.65599,
+      "occurrence": 4
+    },
+    {
+      "actionId": 47877,
+      "name": "Big Bang",
+      "start": 157.222,
+      "resolve": 161.922,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47875,
+      "name": "Knock Down",
+      "start": 157.672,
+      "resolve": 157.672,
+      "occurrence": 3
+    }
+  ],
+  "names": [
+    "Earthquake",
+    "",
+    "Slap Happy",
+    "Black Hole",
+    "Shockwave",
+    "Nothingness",
+    "Aetherlink",
+    "Thunder III",
+    "Damning Edict",
+    "Look upon Me and Despair",
+    "Longitudinal Implosion",
+    "White Hole",
+    "Shocking Impact",
+    "Blizzard III",
+    "Stomp-a-Mole",
+    "Knock Down",
+    "Big Bang"
+  ]
+}

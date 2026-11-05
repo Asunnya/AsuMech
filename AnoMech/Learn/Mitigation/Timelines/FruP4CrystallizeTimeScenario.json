@@ -1,0 +1,368 @@
+{
+  "scenario": "FruP4CrystallizeTimeScenario",
+  "casts": [
+    {
+      "actionId": 40240,
+      "name": "Crystallize Time",
+      "start": 1.017,
+      "resolve": 10.717,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40298,
+      "name": "Crystallize Time",
+      "start": 1.017,
+      "resolve": 10.717,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40174,
+      "name": "Edge of Oblivion",
+      "start": 12.017,
+      "resolve": 16.717,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40293,
+      "name": "Speed",
+      "start": 15.217,
+      "resolve": 20.417,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40294,
+      "name": "Quicken",
+      "start": 20.817,
+      "resolve": 20.817,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40295,
+      "name": "Slow",
+      "start": 20.817,
+      "resolve": 20.817,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40299,
+      "name": "Maelstrom",
+      "start": 21.517,
+      "resolve": 22.717001,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40271,
+      "name": "Dark Water III",
+      "start": 23.916,
+      "resolve": 23.916,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40241,
+      "name": "Longing of the Lost",
+      "start": 25.55,
+      "resolve": 25.55,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40280,
+      "name": "Dark Aero III",
+      "start": 25.916,
+      "resolve": 25.916,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40274,
+      "name": "Dark Eruption",
+      "start": 25.916,
+      "resolve": 25.916,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40279,
+      "name": "Dark Blizzard III",
+      "start": 25.916,
+      "resolve": 25.916,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40299,
+      "name": "Maelstrom",
+      "start": 27.016,
+      "resolve": 28.216002,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40175,
+      "name": "",
+      "start": 28.016,
+      "resolve": 28.016,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40277,
+      "name": "Unholy Darkness",
+      "start": 28.816,
+      "resolve": 28.816,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40251,
+      "name": "Tidal Light",
+      "start": 29.316,
+      "resolve": 32.016,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40252,
+      "name": "Tidal Light",
+      "start": 29.316,
+      "resolve": 32.016,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40241,
+      "name": "Longing of the Lost",
+      "start": 29.916,
+      "resolve": 29.916,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40244,
+      "name": "",
+      "start": 29.916,
+      "resolve": 29.916,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40299,
+      "name": "Maelstrom",
+      "start": 31.966,
+      "resolve": 33.166,
+      "occurrence": 3
+    },
+    {
+      "actionId": 40253,
+      "name": "Tidal Light",
+      "start": 32.433,
+      "resolve": 34.133,
+      "occurrence": 3
+    },
+    {
+      "actionId": 40175,
+      "name": "",
+      "start": 34.416,
+      "resolve": 34.416,
+      "occurrence": 3
+    },
+    {
+      "actionId": 40253,
+      "name": "Tidal Light",
+      "start": 34.433,
+      "resolve": 36.133,
+      "occurrence": 4
+    },
+    {
+      "actionId": 40251,
+      "name": "Tidal Light",
+      "start": 35.716,
+      "resolve": 38.416,
+      "occurrence": 5
+    },
+    {
+      "actionId": 40252,
+      "name": "Tidal Light",
+      "start": 35.716,
+      "resolve": 38.416,
+      "occurrence": 6
+    },
+    {
+      "actionId": 40253,
+      "name": "Tidal Light",
+      "start": 36.433,
+      "resolve": 38.133,
+      "occurrence": 7
+    },
+    {
+      "actionId": 40253,
+      "name": "Tidal Light",
+      "start": 38.833,
+      "resolve": 40.533,
+      "occurrence": 8
+    },
+    {
+      "actionId": 40253,
+      "name": "Tidal Light",
+      "start": 40.833,
+      "resolve": 42.533,
+      "occurrence": 9
+    },
+    {
+      "actionId": 40253,
+      "name": "Tidal Light",
+      "start": 42.833,
+      "resolve": 44.533,
+      "occurrence": 10
+    },
+    {
+      "actionId": 40281,
+      "name": "Quietus",
+      "start": 42.916,
+      "resolve": 42.916,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40288,
+      "name": "Spirit Taker",
+      "start": 45.116,
+      "resolve": 47.816,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40175,
+      "name": "",
+      "start": 46.216,
+      "resolve": 46.216,
+      "occurrence": 4
+    },
+    {
+      "actionId": 40229,
+      "name": "Hallowed Wings",
+      "start": 47.516,
+      "resolve": 51.916,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40289,
+      "name": "Spirit Taker",
+      "start": 48.516,
+      "resolve": 48.516,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40332,
+      "name": "Hallowed Wings",
+      "start": 53.716,
+      "resolve": 53.916,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40230,
+      "name": "Hallowed Wings",
+      "start": 56.316,
+      "resolve": 56.516003,
+      "occurrence": 3
+    },
+    {
+      "actionId": 40332,
+      "name": "Hallowed Wings",
+      "start": 58.316,
+      "resolve": 58.516003,
+      "occurrence": 4
+    },
+    {
+      "actionId": 40175,
+      "name": "",
+      "start": 62.716,
+      "resolve": 62.716,
+      "occurrence": 5
+    },
+    {
+      "actionId": 40117,
+      "name": "",
+      "start": 62.716,
+      "resolve": 62.716,
+      "occurrence": 6
+    },
+    {
+      "actionId": 40247,
+      "name": "Akh Morn",
+      "start": 64.016,
+      "resolve": 67.715996,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40302,
+      "name": "Akh Morn",
+      "start": 64.016,
+      "resolve": 67.715996,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40248,
+      "name": "Akh Morn",
+      "start": 69,
+      "resolve": 69,
+      "occurrence": 3
+    },
+    {
+      "actionId": 40303,
+      "name": "Akh Morn",
+      "start": 69,
+      "resolve": 69,
+      "occurrence": 4
+    },
+    {
+      "actionId": 40248,
+      "name": "Akh Morn",
+      "start": 70.05,
+      "resolve": 70.05,
+      "occurrence": 5
+    },
+    {
+      "actionId": 40303,
+      "name": "Akh Morn",
+      "start": 70.05,
+      "resolve": 70.05,
+      "occurrence": 6
+    },
+    {
+      "actionId": 40248,
+      "name": "Akh Morn",
+      "start": 71.101,
+      "resolve": 71.101,
+      "occurrence": 7
+    },
+    {
+      "actionId": 40303,
+      "name": "Akh Morn",
+      "start": 71.101,
+      "resolve": 71.101,
+      "occurrence": 8
+    },
+    {
+      "actionId": 40248,
+      "name": "Akh Morn",
+      "start": 72.151,
+      "resolve": 72.151,
+      "occurrence": 9
+    },
+    {
+      "actionId": 40303,
+      "name": "Akh Morn",
+      "start": 72.151,
+      "resolve": 72.151,
+      "occurrence": 10
+    }
+  ],
+  "names": [
+    "Crystallize Time",
+    "Edge of Oblivion",
+    "Speed",
+    "Quicken",
+    "Slow",
+    "Maelstrom",
+    "Dark Water III",
+    "Longing of the Lost",
+    "Dark Aero III",
+    "Dark Eruption",
+    "Dark Blizzard III",
+    "",
+    "Unholy Darkness",
+    "Tidal Light",
+    "Quietus",
+    "Spirit Taker",
+    "Hallowed Wings",
+    "Akh Morn"
+  ]
+}

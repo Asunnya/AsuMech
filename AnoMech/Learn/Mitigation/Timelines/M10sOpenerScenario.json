@@ -1,0 +1,154 @@
+{
+  "scenario": "M10sOpenerScenario",
+  "casts": [
+    {
+      "actionId": 48639,
+      "name": "",
+      "start": 3.267,
+      "resolve": 3.267,
+      "occurrence": 1
+    },
+    {
+      "actionId": 48639,
+      "name": "",
+      "start": 6.3,
+      "resolve": 6.3,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46518,
+      "name": "Hot Impact",
+      "start": 9.367,
+      "resolve": 14.066999,
+      "occurrence": 1
+    },
+    {
+      "actionId": 48639,
+      "name": "",
+      "start": 17.4,
+      "resolve": 17.4,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46456,
+      "name": "",
+      "start": 20.517,
+      "resolve": 20.517,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46522,
+      "name": "Flame Floater",
+      "start": 22.833,
+      "resolve": 29.533,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46523,
+      "name": "Flame Floater",
+      "start": 30.183,
+      "resolve": 30.183,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46524,
+      "name": "Flame Floater",
+      "start": 33.383,
+      "resolve": 33.383,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46525,
+      "name": "Flame Floater",
+      "start": 36.733,
+      "resolve": 36.733,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46526,
+      "name": "Flame Floater",
+      "start": 39.883,
+      "resolve": 39.883,
+      "occurrence": 5
+    },
+    {
+      "actionId": 46460,
+      "name": "",
+      "start": 42.966,
+      "resolve": 42.966,
+      "occurrence": 5
+    },
+    {
+      "actionId": 46528,
+      "name": "Alley-oop Inferno",
+      "start": 48.083,
+      "resolve": 52.083,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46529,
+      "name": "Alley-oop Inferno",
+      "start": 48.083,
+      "resolve": 52.783,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46537,
+      "name": "Cutback Blaze",
+      "start": 57.549,
+      "resolve": 61.549,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46538,
+      "name": "Cutback Blaze",
+      "start": 62.716,
+      "resolve": 62.716,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46530,
+      "name": "Pyrotation",
+      "start": 63.966,
+      "resolve": 67.966,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46531,
+      "name": "Pyrotation",
+      "start": 69.6,
+      "resolve": 69.6,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46531,
+      "name": "Pyrotation",
+      "start": 71.601,
+      "resolve": 71.601,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46531,
+      "name": "Pyrotation",
+      "start": 73.635,
+      "resolve": 73.635,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46520,
+      "name": "Divers\u0027 Dare",
+      "start": 77.419,
+      "resolve": 82.118996,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "",
+    "Hot Impact",
+    "Flame Floater",
+    "Alley-oop Inferno",
+    "Cutback Blaze",
+    "Pyrotation",
+    "Divers\u0027 Dare"
+  ]
+}

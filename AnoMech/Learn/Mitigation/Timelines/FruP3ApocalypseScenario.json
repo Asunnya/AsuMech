@@ -1,0 +1,169 @@
+{
+  "scenario": "FruP3ApocalypseScenario",
+  "casts": [
+    {
+      "actionId": 40269,
+      "name": "Spell-in-Waiting Refrain",
+      "start": 2.117,
+      "resolve": 3.8170002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40270,
+      "name": "Dark Water III",
+      "start": 7.2,
+      "resolve": 11.9,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40272,
+      "name": "Dark Water III",
+      "start": 12.317,
+      "resolve": 12.317,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40296,
+      "name": "Apocalypse",
+      "start": 15.317,
+      "resolve": 19.017,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40288,
+      "name": "Spirit Taker",
+      "start": 21.517,
+      "resolve": 24.217001,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40271,
+      "name": "Dark Water III",
+      "start": 22.816,
+      "resolve": 22.816,
+      "occurrence": 3
+    },
+    {
+      "actionId": 40289,
+      "name": "Spirit Taker",
+      "start": 24.816,
+      "resolve": 24.816,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40117,
+      "name": "",
+      "start": 27.616,
+      "resolve": 27.616,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40273,
+      "name": "Dark Eruption",
+      "start": 30.916,
+      "resolve": 34.616,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40297,
+      "name": "Apocalypse",
+      "start": 33.316,
+      "resolve": 33.316,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40297,
+      "name": "Apocalypse",
+      "start": 35.316,
+      "resolve": 35.316,
+      "occurrence": 3
+    },
+    {
+      "actionId": 40274,
+      "name": "Dark Eruption",
+      "start": 36.016,
+      "resolve": 36.016,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40297,
+      "name": "Apocalypse",
+      "start": 37.316,
+      "resolve": 37.316,
+      "occurrence": 4
+    },
+    {
+      "actionId": 40181,
+      "name": "Darkest Dance",
+      "start": 38.516,
+      "resolve": 43.216,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40297,
+      "name": "Apocalypse",
+      "start": 39.316,
+      "resolve": 39.316,
+      "occurrence": 5
+    },
+    {
+      "actionId": 40297,
+      "name": "Apocalypse",
+      "start": 41.316,
+      "resolve": 41.316,
+      "occurrence": 6
+    },
+    {
+      "actionId": 40271,
+      "name": "Dark Water III",
+      "start": 41.816,
+      "resolve": 41.816,
+      "occurrence": 4
+    },
+    {
+      "actionId": 40297,
+      "name": "Apocalypse",
+      "start": 43.316,
+      "resolve": 43.316,
+      "occurrence": 7
+    },
+    {
+      "actionId": 40182,
+      "name": "Darkest Dance",
+      "start": 44.016,
+      "resolve": 44.016,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40183,
+      "name": "Darkest Dance",
+      "start": 46.816,
+      "resolve": 46.816,
+      "occurrence": 3
+    },
+    {
+      "actionId": 40271,
+      "name": "Dark Water III",
+      "start": 50.816,
+      "resolve": 50.816,
+      "occurrence": 5
+    },
+    {
+      "actionId": 40282,
+      "name": "Shockwave Pulsar",
+      "start": 51.216,
+      "resolve": 55.916,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Spell-in-Waiting Refrain",
+    "Dark Water III",
+    "Apocalypse",
+    "Spirit Taker",
+    "",
+    "Dark Eruption",
+    "Darkest Dance",
+    "Shockwave Pulsar"
+  ]
+}

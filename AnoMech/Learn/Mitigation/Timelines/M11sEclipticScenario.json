@@ -1,0 +1,319 @@
+{
+  "scenario": "M11sEclipticScenario",
+  "casts": [
+    {
+      "actionId": 46086,
+      "name": "Crown of Arcadia",
+      "start": 4.4,
+      "resolve": 9.1,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46162,
+      "name": "Ecliptic Stampede",
+      "start": 16.783,
+      "resolve": 21.483002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46163,
+      "name": "Mammoth Meteor",
+      "start": 22.95,
+      "resolve": 28.650002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46164,
+      "name": "Atomic Impact",
+      "start": 28.966,
+      "resolve": 28.966,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46165,
+      "name": "Majestic Meteor",
+      "start": 28.966,
+      "resolve": 31.666,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46165,
+      "name": "Majestic Meteor",
+      "start": 30.966,
+      "resolve": 33.666,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46164,
+      "name": "Atomic Impact",
+      "start": 31.983,
+      "resolve": 31.983,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46165,
+      "name": "Majestic Meteor",
+      "start": 32.966,
+      "resolve": 35.666,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46164,
+      "name": "Atomic Impact",
+      "start": 34.983,
+      "resolve": 34.983,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46165,
+      "name": "Majestic Meteor",
+      "start": 34.983,
+      "resolve": 37.683002,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46165,
+      "name": "Majestic Meteor",
+      "start": 36.983,
+      "resolve": 39.683002,
+      "occurrence": 5
+    },
+    {
+      "actionId": 46164,
+      "name": "Atomic Impact",
+      "start": 37.966,
+      "resolve": 37.966,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46165,
+      "name": "Majestic Meteor",
+      "start": 38.983,
+      "resolve": 41.683002,
+      "occurrence": 6
+    },
+    {
+      "actionId": 46167,
+      "name": "Weighty Impact",
+      "start": 39.966,
+      "resolve": 44.666,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46166,
+      "name": "Cosmic Kiss",
+      "start": 39.966,
+      "resolve": 44.666,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46164,
+      "name": "Atomic Impact",
+      "start": 40.983,
+      "resolve": 40.983,
+      "occurrence": 5
+    },
+    {
+      "actionId": 46164,
+      "name": "Atomic Impact",
+      "start": 43.966,
+      "resolve": 43.966,
+      "occurrence": 6
+    },
+    {
+      "actionId": 47037,
+      "name": "Two-way Fireball",
+      "start": 51.966,
+      "resolve": 57.666,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46169,
+      "name": "Majestic Meteowrath",
+      "start": 54.516,
+      "resolve": 54.516,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47038,
+      "name": "Two-way Fireball",
+      "start": 58.733,
+      "resolve": 58.733,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46086,
+      "name": "Crown of Arcadia",
+      "start": 62.066,
+      "resolve": 66.766,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46173,
+      "name": "Heartbreak Kick",
+      "start": 75.002,
+      "resolve": 79.701996,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46174,
+      "name": "Heartbreak Kick",
+      "start": 81.203,
+      "resolve": 81.203,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46174,
+      "name": "Heartbreak Kick",
+      "start": 83.203,
+      "resolve": 83.203,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46174,
+      "name": "Heartbreak Kick",
+      "start": 85.204,
+      "resolve": 85.204,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46174,
+      "name": "Heartbreak Kick",
+      "start": 87.204,
+      "resolve": 87.204,
+      "occurrence": 5
+    },
+    {
+      "actionId": 46174,
+      "name": "Heartbreak Kick",
+      "start": 89.205,
+      "resolve": 89.205,
+      "occurrence": 6
+    },
+    {
+      "actionId": 46173,
+      "name": "Heartbreak Kick",
+      "start": 95.006,
+      "resolve": 99.70599,
+      "occurrence": 7
+    },
+    {
+      "actionId": 46174,
+      "name": "Heartbreak Kick",
+      "start": 101.207,
+      "resolve": 101.207,
+      "occurrence": 8
+    },
+    {
+      "actionId": 46174,
+      "name": "Heartbreak Kick",
+      "start": 103.208,
+      "resolve": 103.208,
+      "occurrence": 9
+    },
+    {
+      "actionId": 46174,
+      "name": "Heartbreak Kick",
+      "start": 105.208,
+      "resolve": 105.208,
+      "occurrence": 10
+    },
+    {
+      "actionId": 46174,
+      "name": "Heartbreak Kick",
+      "start": 107.208,
+      "resolve": 107.208,
+      "occurrence": 11
+    },
+    {
+      "actionId": 46174,
+      "name": "Heartbreak Kick",
+      "start": 109.209,
+      "resolve": 109.209,
+      "occurrence": 12
+    },
+    {
+      "actionId": 46174,
+      "name": "Heartbreak Kick",
+      "start": 111.209,
+      "resolve": 111.209,
+      "occurrence": 13
+    },
+    {
+      "actionId": 46173,
+      "name": "Heartbreak Kick",
+      "start": 115.01,
+      "resolve": 119.71,
+      "occurrence": 14
+    },
+    {
+      "actionId": 46174,
+      "name": "Heartbreak Kick",
+      "start": 121.211,
+      "resolve": 121.211,
+      "occurrence": 15
+    },
+    {
+      "actionId": 46174,
+      "name": "Heartbreak Kick",
+      "start": 123.212,
+      "resolve": 123.212,
+      "occurrence": 16
+    },
+    {
+      "actionId": 46174,
+      "name": "Heartbreak Kick",
+      "start": 125.212,
+      "resolve": 125.212,
+      "occurrence": 17
+    },
+    {
+      "actionId": 46174,
+      "name": "Heartbreak Kick",
+      "start": 127.213,
+      "resolve": 127.213,
+      "occurrence": 18
+    },
+    {
+      "actionId": 46174,
+      "name": "Heartbreak Kick",
+      "start": 129.213,
+      "resolve": 129.213,
+      "occurrence": 19
+    },
+    {
+      "actionId": 46174,
+      "name": "Heartbreak Kick",
+      "start": 131.212,
+      "resolve": 131.212,
+      "occurrence": 20
+    },
+    {
+      "actionId": 46174,
+      "name": "Heartbreak Kick",
+      "start": 133.212,
+      "resolve": 133.212,
+      "occurrence": 21
+    },
+    {
+      "actionId": 46178,
+      "name": "Heartbreaker",
+      "start": 139.01,
+      "resolve": 146.70999,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Crown of Arcadia",
+    "Ecliptic Stampede",
+    "Mammoth Meteor",
+    "Atomic Impact",
+    "Majestic Meteor",
+    "Weighty Impact",
+    "Cosmic Kiss",
+    "Two-way Fireball",
+    "Majestic Meteowrath",
+    "Heartbreak Kick",
+    "Heartbreaker"
+  ]
+}

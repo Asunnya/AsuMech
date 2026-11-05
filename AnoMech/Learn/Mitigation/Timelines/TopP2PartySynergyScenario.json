@@ -1,0 +1,179 @@
+{
+  "scenario": "TopP2PartySynergyScenario",
+  "casts": [
+    {
+      "actionId": 31550,
+      "name": "Party Synergy",
+      "start": 1.883,
+      "resolve": 4.583,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31551,
+      "name": "Party Synergy",
+      "start": 1.933,
+      "resolve": 4.633,
+      "occurrence": 2
+    },
+    {
+      "actionId": 31530,
+      "name": "Superliminal Steel",
+      "start": 13.817,
+      "resolve": 15.017,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31525,
+      "name": "Beyond Strength",
+      "start": 13.817,
+      "resolve": 15.017,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31532,
+      "name": "Superliminal Steel",
+      "start": 13.817,
+      "resolve": 15.017,
+      "occurrence": 2
+    },
+    {
+      "actionId": 31531,
+      "name": "Superliminal Steel",
+      "start": 13.817,
+      "resolve": 15.017,
+      "occurrence": 3
+    },
+    {
+      "actionId": 31515,
+      "name": "Subject Simulation F",
+      "start": 14.483,
+      "resolve": 14.483,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31516,
+      "name": "Subject Simulation M",
+      "start": 14.483,
+      "resolve": 14.483,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31508,
+      "name": "",
+      "start": 15.467,
+      "resolve": 15.467,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31509,
+      "name": "",
+      "start": 15.967,
+      "resolve": 15.967,
+      "occurrence": 2
+    },
+    {
+      "actionId": 31510,
+      "name": "",
+      "start": 16.617,
+      "resolve": 16.617,
+      "occurrence": 3
+    },
+    {
+      "actionId": 31511,
+      "name": "",
+      "start": 16.617,
+      "resolve": 16.617,
+      "occurrence": 4
+    },
+    {
+      "actionId": 31518,
+      "name": "",
+      "start": 20.733,
+      "resolve": 20.733,
+      "occurrence": 5
+    },
+    {
+      "actionId": 31517,
+      "name": "",
+      "start": 20.733,
+      "resolve": 20.733,
+      "occurrence": 6
+    },
+    {
+      "actionId": 31521,
+      "name": "Optical Laser",
+      "start": 20.767,
+      "resolve": 21.767,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31535,
+      "name": "Optimized Fire III",
+      "start": 21.75,
+      "resolve": 21.75,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31508,
+      "name": "",
+      "start": 23.883,
+      "resolve": 23.883,
+      "occurrence": 7
+    },
+    {
+      "actionId": 31509,
+      "name": "",
+      "start": 24.283,
+      "resolve": 24.283,
+      "occurrence": 8
+    },
+    {
+      "actionId": 31520,
+      "name": "",
+      "start": 24.833,
+      "resolve": 24.833,
+      "occurrence": 9
+    },
+    {
+      "actionId": 31519,
+      "name": "",
+      "start": 24.833,
+      "resolve": 24.833,
+      "occurrence": 10
+    },
+    {
+      "actionId": 31534,
+      "name": "Discharger",
+      "start": 28.933,
+      "resolve": 28.933,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31526,
+      "name": "Efficient Bladework",
+      "start": 31.833,
+      "resolve": 33.033,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31536,
+      "name": "Spotlight",
+      "start": 33.266,
+      "resolve": 33.266,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Party Synergy",
+    "Superliminal Steel",
+    "Beyond Strength",
+    "Subject Simulation F",
+    "Subject Simulation M",
+    "",
+    "Optical Laser",
+    "Optimized Fire III",
+    "Discharger",
+    "Efficient Bladework",
+    "Spotlight"
+  ]
+}

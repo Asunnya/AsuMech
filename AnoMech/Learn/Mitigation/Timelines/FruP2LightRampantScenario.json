@@ -1,0 +1,127 @@
+{
+  "scenario": "FruP2LightRampantScenario",
+  "casts": [
+    {
+      "actionId": 40175,
+      "name": "",
+      "start": 1.733,
+      "resolve": 1.733,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40212,
+      "name": "Light Rampant",
+      "start": 3.017,
+      "resolve": 7.717,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40218,
+      "name": "Luminous Hammer",
+      "start": 15.867,
+      "resolve": 15.867,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40218,
+      "name": "Luminous Hammer",
+      "start": 17.433,
+      "resolve": 17.433,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40213,
+      "name": "Bright Hunger",
+      "start": 19.017,
+      "resolve": 19.017,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40218,
+      "name": "Luminous Hammer",
+      "start": 19.017,
+      "resolve": 19.017,
+      "occurrence": 3
+    },
+    {
+      "actionId": 40218,
+      "name": "Luminous Hammer",
+      "start": 20.6,
+      "resolve": 20.6,
+      "occurrence": 4
+    },
+    {
+      "actionId": 40218,
+      "name": "Luminous Hammer",
+      "start": 22.183,
+      "resolve": 22.183,
+      "occurrence": 5
+    },
+    {
+      "actionId": 40219,
+      "name": "Burst",
+      "start": 22.433,
+      "resolve": 27.133,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40217,
+      "name": "Powerful Light",
+      "start": 25.016,
+      "resolve": 25.016,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40219,
+      "name": "Burst",
+      "start": 25.416,
+      "resolve": 30.116001,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40220,
+      "name": "Banish III",
+      "start": 32.016,
+      "resolve": 36.716,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40213,
+      "name": "Bright Hunger",
+      "start": 33.816,
+      "resolve": 33.816,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40222,
+      "name": "Banish III",
+      "start": 37.116,
+      "resolve": 37.116,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40189,
+      "name": "the House of Light",
+      "start": 40.233,
+      "resolve": 44.933002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40188,
+      "name": "the House of Light",
+      "start": 45.966,
+      "resolve": 45.966,
+      "occurrence": 2
+    }
+  ],
+  "names": [
+    "",
+    "Light Rampant",
+    "Luminous Hammer",
+    "Bright Hunger",
+    "Burst",
+    "Powerful Light",
+    "Banish III",
+    "the House of Light"
+  ]
+}

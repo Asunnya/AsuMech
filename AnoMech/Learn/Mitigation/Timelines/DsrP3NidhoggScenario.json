@@ -1,0 +1,317 @@
+{
+  "scenario": "DsrP3NidhoggScenario",
+  "casts": [
+    {
+      "actionId": 26376,
+      "name": "Final Chorus",
+      "start": 6.967,
+      "resolve": 6.967,
+      "occurrence": 1
+    },
+    {
+      "actionId": 26416,
+      "name": "attack",
+      "start": 14.117,
+      "resolve": 14.117,
+      "occurrence": 1
+    },
+    {
+      "actionId": 26416,
+      "name": "attack",
+      "start": 17.233,
+      "resolve": 17.233,
+      "occurrence": 2
+    },
+    {
+      "actionId": 26416,
+      "name": "attack",
+      "start": 20.367,
+      "resolve": 20.367,
+      "occurrence": 3
+    },
+    {
+      "actionId": 26381,
+      "name": "Dive from Grace",
+      "start": 22.466,
+      "resolve": 27.166,
+      "occurrence": 1
+    },
+    {
+      "actionId": 26386,
+      "name": "Gnash and Lash",
+      "start": 29.616,
+      "resolve": 36.916,
+      "occurrence": 1
+    },
+    {
+      "actionId": 26382,
+      "name": "Dark High Jump",
+      "start": 37.283,
+      "resolve": 37.283,
+      "occurrence": 1
+    },
+    {
+      "actionId": 26383,
+      "name": "Dark Spineshatter Dive",
+      "start": 37.283,
+      "resolve": 37.283,
+      "occurrence": 1
+    },
+    {
+      "actionId": 26384,
+      "name": "Dark Elusive Jump",
+      "start": 37.283,
+      "resolve": 37.283,
+      "occurrence": 1
+    },
+    {
+      "actionId": 26388,
+      "name": "Eye of the Tyrant",
+      "start": 37.466,
+      "resolve": 37.466,
+      "occurrence": 1
+    },
+    {
+      "actionId": 26389,
+      "name": "Gnashing Wheel",
+      "start": 40.9,
+      "resolve": 40.9,
+      "occurrence": 1
+    },
+    {
+      "actionId": 26385,
+      "name": "Darkdragon Dive",
+      "start": 41.383,
+      "resolve": 43.583,
+      "occurrence": 1
+    },
+    {
+      "actionId": 26390,
+      "name": "Lashing Wheel",
+      "start": 44.016,
+      "resolve": 44.016,
+      "occurrence": 1
+    },
+    {
+      "actionId": 26378,
+      "name": "Geirskogul",
+      "start": 46.516,
+      "resolve": 50.716,
+      "occurrence": 1
+    },
+    {
+      "actionId": 26383,
+      "name": "Dark Spineshatter Dive",
+      "start": 47.283,
+      "resolve": 47.283,
+      "occurrence": 2
+    },
+    {
+      "actionId": 26384,
+      "name": "Dark Elusive Jump",
+      "start": 47.283,
+      "resolve": 47.283,
+      "occurrence": 2
+    },
+    {
+      "actionId": 26387,
+      "name": "Lash and Gnash",
+      "start": 51.166,
+      "resolve": 58.466,
+      "occurrence": 1
+    },
+    {
+      "actionId": 26385,
+      "name": "Darkdragon Dive",
+      "start": 51.383,
+      "resolve": 53.583,
+      "occurrence": 2
+    },
+    {
+      "actionId": 26378,
+      "name": "Geirskogul",
+      "start": 56.516,
+      "resolve": 60.716,
+      "occurrence": 2
+    },
+    {
+      "actionId": 26382,
+      "name": "Dark High Jump",
+      "start": 58.299,
+      "resolve": 58.299,
+      "occurrence": 2
+    },
+    {
+      "actionId": 26388,
+      "name": "Eye of the Tyrant",
+      "start": 59.016,
+      "resolve": 59.016,
+      "occurrence": 2
+    },
+    {
+      "actionId": 26390,
+      "name": "Lashing Wheel",
+      "start": 62.416,
+      "resolve": 62.416,
+      "occurrence": 2
+    },
+    {
+      "actionId": 26385,
+      "name": "Darkdragon Dive",
+      "start": 62.416,
+      "resolve": 64.616,
+      "occurrence": 3
+    },
+    {
+      "actionId": 26389,
+      "name": "Gnashing Wheel",
+      "start": 65.533,
+      "resolve": 65.533,
+      "occurrence": 2
+    },
+    {
+      "actionId": 26378,
+      "name": "Geirskogul",
+      "start": 67.483,
+      "resolve": 71.683,
+      "occurrence": 3
+    },
+    {
+      "actionId": 26416,
+      "name": "attack",
+      "start": 69.684,
+      "resolve": 69.684,
+      "occurrence": 4
+    },
+    {
+      "actionId": 26416,
+      "name": "attack",
+      "start": 72.784,
+      "resolve": 72.784,
+      "occurrence": 5
+    },
+    {
+      "actionId": 26379,
+      "name": "Drachenlance",
+      "start": 74.035,
+      "resolve": 76.635,
+      "occurrence": 1
+    },
+    {
+      "actionId": 26380,
+      "name": "Drachenlance",
+      "start": 74.135,
+      "resolve": 77.335,
+      "occurrence": 2
+    },
+    {
+      "actionId": 26391,
+      "name": "Darkdragon Dive",
+      "start": 79.069,
+      "resolve": 83.769,
+      "occurrence": 4
+    },
+    {
+      "actionId": 26394,
+      "name": "Darkdragon Dive",
+      "start": 79.069,
+      "resolve": 83.769,
+      "occurrence": 5
+    },
+    {
+      "actionId": 26392,
+      "name": "Darkdragon Dive",
+      "start": 79.069,
+      "resolve": 83.769,
+      "occurrence": 6
+    },
+    {
+      "actionId": 26378,
+      "name": "Geirskogul",
+      "start": 86.687,
+      "resolve": 90.88699,
+      "occurrence": 4
+    },
+    {
+      "actionId": 26396,
+      "name": "Soul Tether",
+      "start": 91.105,
+      "resolve": 91.105,
+      "occurrence": 1
+    },
+    {
+      "actionId": 26416,
+      "name": "attack",
+      "start": 96.239,
+      "resolve": 96.239,
+      "occurrence": 6
+    },
+    {
+      "actionId": 26416,
+      "name": "attack",
+      "start": 99.357,
+      "resolve": 99.357,
+      "occurrence": 7
+    },
+    {
+      "actionId": 26416,
+      "name": "attack",
+      "start": 102.474,
+      "resolve": 102.474,
+      "occurrence": 8
+    },
+    {
+      "actionId": 26416,
+      "name": "attack",
+      "start": 105.591,
+      "resolve": 105.591,
+      "occurrence": 9
+    },
+    {
+      "actionId": 26416,
+      "name": "attack",
+      "start": 108.725,
+      "resolve": 108.725,
+      "occurrence": 10
+    },
+    {
+      "actionId": 26379,
+      "name": "Drachenlance",
+      "start": 111.976,
+      "resolve": 114.576,
+      "occurrence": 3
+    },
+    {
+      "actionId": 26380,
+      "name": "Drachenlance",
+      "start": 112.076,
+      "resolve": 115.27599,
+      "occurrence": 4
+    },
+    {
+      "actionId": 29750,
+      "name": "Revenge of the Horde",
+      "start": 116.977,
+      "resolve": 127.977,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Final Chorus",
+    "attack",
+    "Dive from Grace",
+    "Gnash and Lash",
+    "Dark High Jump",
+    "Dark Spineshatter Dive",
+    "Dark Elusive Jump",
+    "Eye of the Tyrant",
+    "Gnashing Wheel",
+    "Darkdragon Dive",
+    "Lashing Wheel",
+    "Geirskogul",
+    "Lash and Gnash",
+    "Drachenlance",
+    "Soul Tether",
+    "Revenge of the Horde"
+  ]
+}

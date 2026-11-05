@@ -1,0 +1,255 @@
+{
+  "scenario": "DsrP5WrathScenario",
+  "casts": [
+    {
+      "actionId": 27526,
+      "name": "Incarnation",
+      "start": 4.283,
+      "resolve": 7.983,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27527,
+      "name": "the Dragon\u0027s Eye",
+      "start": 11.417,
+      "resolve": 14.117,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25531,
+      "name": "attack",
+      "start": 18.567,
+      "resolve": 18.567,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25531,
+      "name": "attack",
+      "start": 21.683,
+      "resolve": 21.683,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25581,
+      "name": "Knights of the Round",
+      "start": 25.983,
+      "resolve": 25.983,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27529,
+      "name": "Wrath of the Heavens",
+      "start": 29.116,
+      "resolve": 32.815998,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27531,
+      "name": "Twisting Dive",
+      "start": 38.983,
+      "resolve": 44.683002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27535,
+      "name": "Chain Lightning",
+      "start": 42.566,
+      "resolve": 42.566,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27530,
+      "name": "Spiral Pierce",
+      "start": 45.066,
+      "resolve": 45.066,
+      "occurrence": 1
+    },
+    {
+      "actionId": 29346,
+      "name": "Skyward Leap",
+      "start": 45.116,
+      "resolve": 45.116,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25546,
+      "name": "Ascalon\u0027s Mercy Revealed",
+      "start": 47.216,
+      "resolve": 50.216,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25547,
+      "name": "Ascalon\u0027s Mercy Revealed",
+      "start": 51.283,
+      "resolve": 51.283,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25572,
+      "name": "Altar Flare",
+      "start": 51.283,
+      "resolve": 54.483,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25573,
+      "name": "Altar Flare",
+      "start": 51.283,
+      "resolve": 54.983,
+      "occurrence": 2
+    },
+    {
+      "actionId": 27537,
+      "name": "Liquid Heaven",
+      "start": 51.316,
+      "resolve": 51.316,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27533,
+      "name": "Cauterize",
+      "start": 52.166,
+      "resolve": 57.866,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27534,
+      "name": "Cauterize",
+      "start": 52.166,
+      "resolve": 57.866,
+      "occurrence": 2
+    },
+    {
+      "actionId": 27537,
+      "name": "Liquid Heaven",
+      "start": 52.483,
+      "resolve": 52.483,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25573,
+      "name": "Altar Flare",
+      "start": 52.783,
+      "resolve": 56.483,
+      "occurrence": 3
+    },
+    {
+      "actionId": 25306,
+      "name": "Empty Dimension",
+      "start": 53.366,
+      "resolve": 58.066,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27537,
+      "name": "Liquid Heaven",
+      "start": 53.633,
+      "resolve": 53.633,
+      "occurrence": 3
+    },
+    {
+      "actionId": 25573,
+      "name": "Altar Flare",
+      "start": 54.316,
+      "resolve": 58.016003,
+      "occurrence": 4
+    },
+    {
+      "actionId": 27537,
+      "name": "Liquid Heaven",
+      "start": 54.799,
+      "resolve": 54.799,
+      "occurrence": 4
+    },
+    {
+      "actionId": 25573,
+      "name": "Altar Flare",
+      "start": 55.816,
+      "resolve": 59.516003,
+      "occurrence": 5
+    },
+    {
+      "actionId": 27537,
+      "name": "Liquid Heaven",
+      "start": 55.966,
+      "resolve": 55.966,
+      "occurrence": 5
+    },
+    {
+      "actionId": 27536,
+      "name": "Chain Lightning",
+      "start": 58.549,
+      "resolve": 58.549,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25542,
+      "name": "Ancient Quaga",
+      "start": 59.433,
+      "resolve": 65.132996,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25531,
+      "name": "attack",
+      "start": 69.8,
+      "resolve": 69.8,
+      "occurrence": 3
+    },
+    {
+      "actionId": 25543,
+      "name": "Heavenly Heel",
+      "start": 71.851,
+      "resolve": 75.550995,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25541,
+      "name": "Ascalon\u0027s Might",
+      "start": 78.952,
+      "resolve": 78.952,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25541,
+      "name": "Ascalon\u0027s Might",
+      "start": 80.586,
+      "resolve": 80.586,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25541,
+      "name": "Ascalon\u0027s Might",
+      "start": 82.253,
+      "resolve": 82.253,
+      "occurrence": 3
+    },
+    {
+      "actionId": 25581,
+      "name": "Knights of the Round",
+      "start": 86.204,
+      "resolve": 86.204,
+      "occurrence": 2
+    }
+  ],
+  "names": [
+    "Incarnation",
+    "the Dragon\u0027s Eye",
+    "attack",
+    "Knights of the Round",
+    "Wrath of the Heavens",
+    "Twisting Dive",
+    "Chain Lightning",
+    "Spiral Pierce",
+    "Skyward Leap",
+    "Ascalon\u0027s Mercy Revealed",
+    "Altar Flare",
+    "Liquid Heaven",
+    "Cauterize",
+    "Empty Dimension",
+    "Ancient Quaga",
+    "Heavenly Heel",
+    "Ascalon\u0027s Might"
+  ]
+}

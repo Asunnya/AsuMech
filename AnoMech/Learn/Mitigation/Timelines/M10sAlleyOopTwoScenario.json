@@ -1,0 +1,148 @@
+{
+  "scenario": "M10sAlleyOopTwoScenario",
+  "casts": [
+    {
+      "actionId": 46458,
+      "name": "Epic Brotherhood",
+      "start": 3.783,
+      "resolve": 3.783,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46459,
+      "name": "Epic Brotherhood",
+      "start": 3.783,
+      "resolve": 3.783,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46457,
+      "name": "",
+      "start": 5.917,
+      "resolve": 5.917,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46557,
+      "name": "Alley-oop Double-dip",
+      "start": 8.1,
+      "resolve": 12.8,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46528,
+      "name": "Alley-oop Inferno",
+      "start": 10.75,
+      "resolve": 14.75,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46529,
+      "name": "Alley-oop Inferno",
+      "start": 10.75,
+      "resolve": 15.45,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46558,
+      "name": "Alley-oop Double-dip",
+      "start": 13.467,
+      "resolve": 13.467,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46559,
+      "name": "Alley-oop Double-dip",
+      "start": 16.033,
+      "resolve": 16.033,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46587,
+      "name": "Steam Burst",
+      "start": 17.95,
+      "resolve": 20.650002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46530,
+      "name": "Pyrotation",
+      "start": 19.683,
+      "resolve": 23.683,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46519,
+      "name": "Deep Impact",
+      "start": 19.95,
+      "resolve": 24.550001,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46531,
+      "name": "Pyrotation",
+      "start": 24.85,
+      "resolve": 24.85,
+      "occurrence": 2
+    },
+    {
+      "actionId": 44486,
+      "name": "Deep Impact",
+      "start": 25.066,
+      "resolve": 25.066,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46531,
+      "name": "Pyrotation",
+      "start": 26.866,
+      "resolve": 26.866,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46531,
+      "name": "Pyrotation",
+      "start": 28.866,
+      "resolve": 28.866,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46520,
+      "name": "Divers\u0027 Dare",
+      "start": 33.233,
+      "resolve": 37.933002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46521,
+      "name": "Divers\u0027 Dare",
+      "start": 33.233,
+      "resolve": 37.933002,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46520,
+      "name": "Divers\u0027 Dare",
+      "start": 42.416,
+      "resolve": 47.116,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46521,
+      "name": "Divers\u0027 Dare",
+      "start": 42.416,
+      "resolve": 47.116,
+      "occurrence": 4
+    }
+  ],
+  "names": [
+    "Epic Brotherhood",
+    "",
+    "Alley-oop Double-dip",
+    "Alley-oop Inferno",
+    "Steam Burst",
+    "Pyrotation",
+    "Deep Impact",
+    "Divers\u0027 Dare"
+  ]
+}

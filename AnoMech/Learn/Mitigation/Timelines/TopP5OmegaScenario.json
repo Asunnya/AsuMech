@@ -1,0 +1,290 @@
+{
+  "scenario": "TopP5OmegaScenario",
+  "casts": [
+    {
+      "actionId": 32789,
+      "name": "Run: ****mi* (Omega Version)",
+      "start": 1.167,
+      "resolve": 5.8669996,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31746,
+      "name": "",
+      "start": 6.6,
+      "resolve": 6.6,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31746,
+      "name": "",
+      "start": 9.683,
+      "resolve": 9.683,
+      "occurrence": 2
+    },
+    {
+      "actionId": 31746,
+      "name": "",
+      "start": 12.733,
+      "resolve": 12.733,
+      "occurrence": 3
+    },
+    {
+      "actionId": 31644,
+      "name": "Diffuse Wave Cannon",
+      "start": 15.483,
+      "resolve": 23.182999,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31746,
+      "name": "",
+      "start": 15.783,
+      "resolve": 15.783,
+      "occurrence": 4
+    },
+    {
+      "actionId": 31746,
+      "name": "",
+      "start": 18.733,
+      "resolve": 18.733,
+      "occurrence": 5
+    },
+    {
+      "actionId": 31746,
+      "name": "",
+      "start": 21.833,
+      "resolve": 21.833,
+      "occurrence": 6
+    },
+    {
+      "actionId": 31532,
+      "name": "Superliminal Steel",
+      "start": 22.966,
+      "resolve": 24.166,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31531,
+      "name": "Superliminal Steel",
+      "start": 22.966,
+      "resolve": 24.166,
+      "occurrence": 2
+    },
+    {
+      "actionId": 31530,
+      "name": "Superliminal Steel",
+      "start": 23.016,
+      "resolve": 24.216002,
+      "occurrence": 3
+    },
+    {
+      "actionId": 31525,
+      "name": "Beyond Strength",
+      "start": 23.016,
+      "resolve": 24.216002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31609,
+      "name": "Diffuse Wave Cannon",
+      "start": 23.583,
+      "resolve": 24.283,
+      "occurrence": 2
+    },
+    {
+      "actionId": 31746,
+      "name": "",
+      "start": 24.85,
+      "resolve": 24.85,
+      "occurrence": 7
+    },
+    {
+      "actionId": 31530,
+      "name": "Superliminal Steel",
+      "start": 26.966,
+      "resolve": 28.166,
+      "occurrence": 4
+    },
+    {
+      "actionId": 31526,
+      "name": "Efficient Bladework",
+      "start": 26.966,
+      "resolve": 28.166,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31532,
+      "name": "Superliminal Steel",
+      "start": 26.966,
+      "resolve": 28.166,
+      "occurrence": 5
+    },
+    {
+      "actionId": 31531,
+      "name": "Superliminal Steel",
+      "start": 26.966,
+      "resolve": 28.166,
+      "occurrence": 6
+    },
+    {
+      "actionId": 31607,
+      "name": "Diffuse Wave Cannon",
+      "start": 27.55,
+      "resolve": 27.55,
+      "occurrence": 3
+    },
+    {
+      "actionId": 31609,
+      "name": "Diffuse Wave Cannon",
+      "start": 27.583,
+      "resolve": 28.283,
+      "occurrence": 4
+    },
+    {
+      "actionId": 31746,
+      "name": "",
+      "start": 27.833,
+      "resolve": 27.833,
+      "occurrence": 8
+    },
+    {
+      "actionId": 31746,
+      "name": "",
+      "start": 30.9,
+      "resolve": 30.9,
+      "occurrence": 9
+    },
+    {
+      "actionId": 31638,
+      "name": "Oversampled Wave Cannon",
+      "start": 31.683,
+      "resolve": 41.383,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31625,
+      "name": "Hello, Near World",
+      "start": 41.266,
+      "resolve": 41.266,
+      "occurrence": 1
+    },
+    {
+      "actionId": 33040,
+      "name": "Hello, Distant World",
+      "start": 41.266,
+      "resolve": 41.266,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31597,
+      "name": "Oversampled Wave Cannon",
+      "start": 41.75,
+      "resolve": 41.75,
+      "occurrence": 2
+    },
+    {
+      "actionId": 31626,
+      "name": "Hello, Near World",
+      "start": 42.266,
+      "resolve": 42.266,
+      "occurrence": 2
+    },
+    {
+      "actionId": 33041,
+      "name": "Hello, Distant World",
+      "start": 42.266,
+      "resolve": 42.266,
+      "occurrence": 2
+    },
+    {
+      "actionId": 31626,
+      "name": "Hello, Near World",
+      "start": 43.266,
+      "resolve": 43.266,
+      "occurrence": 3
+    },
+    {
+      "actionId": 33041,
+      "name": "Hello, Distant World",
+      "start": 43.266,
+      "resolve": 43.266,
+      "occurrence": 3
+    },
+    {
+      "actionId": 32374,
+      "name": "Blaster",
+      "start": 45.433,
+      "resolve": 57.032997,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31641,
+      "name": "Blaster",
+      "start": 57.533,
+      "resolve": 57.533,
+      "occurrence": 2
+    },
+    {
+      "actionId": 32373,
+      "name": "Blaster",
+      "start": 57.583,
+      "resolve": 57.583,
+      "occurrence": 3
+    },
+    {
+      "actionId": 31625,
+      "name": "Hello, Near World",
+      "start": 59.283,
+      "resolve": 59.283,
+      "occurrence": 4
+    },
+    {
+      "actionId": 33040,
+      "name": "Hello, Distant World",
+      "start": 59.283,
+      "resolve": 59.283,
+      "occurrence": 4
+    },
+    {
+      "actionId": 31626,
+      "name": "Hello, Near World",
+      "start": 60.283,
+      "resolve": 60.283,
+      "occurrence": 5
+    },
+    {
+      "actionId": 33041,
+      "name": "Hello, Distant World",
+      "start": 60.283,
+      "resolve": 60.283,
+      "occurrence": 5
+    },
+    {
+      "actionId": 31626,
+      "name": "Hello, Near World",
+      "start": 61.283,
+      "resolve": 61.283,
+      "occurrence": 6
+    },
+    {
+      "actionId": 33041,
+      "name": "Hello, Distant World",
+      "start": 61.283,
+      "resolve": 61.283,
+      "occurrence": 6
+    }
+  ],
+  "names": [
+    "Run: ****mi* (Omega Version)",
+    "",
+    "Diffuse Wave Cannon",
+    "Superliminal Steel",
+    "Beyond Strength",
+    "Efficient Bladework",
+    "Oversampled Wave Cannon",
+    "Hello, Near World",
+    "Hello, Distant World",
+    "Blaster"
+  ]
+}

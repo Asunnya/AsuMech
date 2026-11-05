@@ -1,0 +1,112 @@
+{
+  "scenario": "M10sSickestTakeoffScenario",
+  "casts": [
+    {
+      "actionId": 48640,
+      "name": "",
+      "start": 5.5,
+      "resolve": 5.5,
+      "occurrence": 1
+    },
+    {
+      "actionId": 48640,
+      "name": "",
+      "start": 9.55,
+      "resolve": 9.55,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46539,
+      "name": "Sick Swell",
+      "start": 9.833,
+      "resolve": 12.533,
+      "occurrence": 1
+    },
+    {
+      "actionId": 48640,
+      "name": "",
+      "start": 15.617,
+      "resolve": 15.617,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46541,
+      "name": "Sickest Take-off",
+      "start": 18.017,
+      "resolve": 21.717001,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46542,
+      "name": "Sickest Take-off",
+      "start": 24.083,
+      "resolve": 30.783,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46540,
+      "name": "Sick Swell",
+      "start": 24.083,
+      "resolve": 30.783,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46543,
+      "name": "Awesome Splash",
+      "start": 33.666,
+      "resolve": 33.666,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46560,
+      "name": "Reverse Alley-oop",
+      "start": 40.3,
+      "resolve": 45,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46561,
+      "name": "Reverse Alley-oop",
+      "start": 45.916,
+      "resolve": 45.916,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46562,
+      "name": "Reverse Alley-oop",
+      "start": 48.483,
+      "resolve": 48.483,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46519,
+      "name": "Deep Impact",
+      "start": 51.433,
+      "resolve": 56.032997,
+      "occurrence": 1
+    },
+    {
+      "actionId": 44486,
+      "name": "Deep Impact",
+      "start": 56.599,
+      "resolve": 56.599,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46521,
+      "name": "Divers\u0027 Dare",
+      "start": 58.683,
+      "resolve": 63.383,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "",
+    "Sick Swell",
+    "Sickest Take-off",
+    "Awesome Splash",
+    "Reverse Alley-oop",
+    "Deep Impact",
+    "Divers\u0027 Dare"
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "scenario": "M9sVampStompScenario",
+  "casts": [
+    {
+      "actionId": 45956,
+      "name": "Killer Voice",
+      "start": 5,
+      "resolve": 9.7,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45914,
+      "name": "Hardcore",
+      "start": 15.15,
+      "resolve": 17.85,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45951,
+      "name": "Hardcore",
+      "start": 15.15,
+      "resolve": 19.849998,
+      "occurrence": 2
+    },
+    {
+      "actionId": 45898,
+      "name": "Vamp Stomp",
+      "start": 25.333,
+      "resolve": 29.133,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45940,
+      "name": "Vamp Stomp",
+      "start": 25.333,
+      "resolve": 30.033,
+      "occurrence": 2
+    },
+    {
+      "actionId": 45900,
+      "name": "",
+      "start": 30.8,
+      "resolve": 30.8,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45941,
+      "name": "Blast Beat",
+      "start": 33.516,
+      "resolve": 34.216,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45942,
+      "name": "Blast Beat",
+      "start": 35.45,
+      "resolve": 35.45,
+      "occurrence": 2
+    },
+    {
+      "actionId": 45942,
+      "name": "Blast Beat",
+      "start": 36.8,
+      "resolve": 36.8,
+      "occurrence": 3
+    },
+    {
+      "actionId": 45941,
+      "name": "Blast Beat",
+      "start": 37,
+      "resolve": 37.7,
+      "occurrence": 4
+    },
+    {
+      "actionId": 45942,
+      "name": "Blast Beat",
+      "start": 38.1,
+      "resolve": 38.1,
+      "occurrence": 5
+    },
+    {
+      "actionId": 45942,
+      "name": "Blast Beat",
+      "start": 38.7,
+      "resolve": 38.7,
+      "occurrence": 6
+    },
+    {
+      "actionId": 45942,
+      "name": "Blast Beat",
+      "start": 39.35,
+      "resolve": 39.35,
+      "occurrence": 7
+    },
+    {
+      "actionId": 45941,
+      "name": "Blast Beat",
+      "start": 40.483,
+      "resolve": 41.183002,
+      "occurrence": 8
+    },
+    {
+      "actionId": 45917,
+      "name": "Brutal Rain",
+      "start": 41.466,
+      "resolve": 44.966,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45955,
+      "name": "Brutal Rain",
+      "start": 46.799,
+      "resolve": 46.799,
+      "occurrence": 2
+    },
+    {
+      "actionId": 45955,
+      "name": "Brutal Rain",
+      "start": 47.849,
+      "resolve": 47.849,
+      "occurrence": 3
+    },
+    {
+      "actionId": 45955,
+      "name": "Brutal Rain",
+      "start": 48.933,
+      "resolve": 48.933,
+      "occurrence": 4
+    }
+  ],
+  "names": [
+    "Killer Voice",
+    "Hardcore",
+    "Vamp Stomp",
+    "",
+    "Blast Beat",
+    "Brutal Rain"
+  ]
+}

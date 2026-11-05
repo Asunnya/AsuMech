@@ -1,0 +1,1148 @@
+{
+  "scenario": "DsrP7DragonKingScenario",
+  "casts": [
+    {
+      "actionId": 28059,
+      "name": "Exaflare\u0027s Edge",
+      "start": 40.233,
+      "resolve": 45.933002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 28060,
+      "name": "Exaflare\u0027s Edge",
+      "start": 40.233,
+      "resolve": 46.833,
+      "occurrence": 2
+    },
+    {
+      "actionId": 28050,
+      "name": "Ice of Ascalon",
+      "start": 47.35,
+      "resolve": 47.35,
+      "occurrence": 1
+    },
+    {
+      "actionId": 28061,
+      "name": "Exaflare\u0027s Edge",
+      "start": 49.05,
+      "resolve": 49.05,
+      "occurrence": 3
+    },
+    {
+      "actionId": 28061,
+      "name": "Exaflare\u0027s Edge",
+      "start": 50.916,
+      "resolve": 50.916,
+      "occurrence": 4
+    },
+    {
+      "actionId": 28061,
+      "name": "Exaflare\u0027s Edge",
+      "start": 52.783,
+      "resolve": 52.783,
+      "occurrence": 5
+    },
+    {
+      "actionId": 28062,
+      "name": "Trinity",
+      "start": 54.333,
+      "resolve": 54.333,
+      "occurrence": 1
+    },
+    {
+      "actionId": 28061,
+      "name": "Exaflare\u0027s Edge",
+      "start": 54.65,
+      "resolve": 54.65,
+      "occurrence": 6
+    },
+    {
+      "actionId": 28063,
+      "name": "Trinity",
+      "start": 55.416,
+      "resolve": 55.416,
+      "occurrence": 2
+    },
+    {
+      "actionId": 28064,
+      "name": "Trinity",
+      "start": 55.416,
+      "resolve": 55.416,
+      "occurrence": 3
+    },
+    {
+      "actionId": 28065,
+      "name": "Trinity",
+      "start": 55.416,
+      "resolve": 55.416,
+      "occurrence": 4
+    },
+    {
+      "actionId": 28061,
+      "name": "Exaflare\u0027s Edge",
+      "start": 56.516,
+      "resolve": 56.516,
+      "occurrence": 7
+    },
+    {
+      "actionId": 28062,
+      "name": "Trinity",
+      "start": 58.383,
+      "resolve": 58.383,
+      "occurrence": 5
+    },
+    {
+      "actionId": 28063,
+      "name": "Trinity",
+      "start": 59.466,
+      "resolve": 59.466,
+      "occurrence": 6
+    },
+    {
+      "actionId": 28064,
+      "name": "Trinity",
+      "start": 59.466,
+      "resolve": 59.466,
+      "occurrence": 7
+    },
+    {
+      "actionId": 28065,
+      "name": "Trinity",
+      "start": 59.466,
+      "resolve": 59.466,
+      "occurrence": 8
+    },
+    {
+      "actionId": 28051,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 61.416,
+      "resolve": 67.116,
+      "occurrence": 1
+    },
+    {
+      "actionId": 29453,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 61.416,
+      "resolve": 67.816,
+      "occurrence": 2
+    },
+    {
+      "actionId": 29452,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 61.416,
+      "resolve": 67.816,
+      "occurrence": 3
+    },
+    {
+      "actionId": 29454,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 61.416,
+      "resolve": 67.816,
+      "occurrence": 4
+    },
+    {
+      "actionId": 28049,
+      "name": "Flames of Ascalon",
+      "start": 68.184,
+      "resolve": 68.184,
+      "occurrence": 1
+    },
+    {
+      "actionId": 28052,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 69.484,
+      "resolve": 69.484,
+      "occurrence": 5
+    },
+    {
+      "actionId": 28054,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 70.284,
+      "resolve": 70.284,
+      "occurrence": 6
+    },
+    {
+      "actionId": 28055,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 70.284,
+      "resolve": 70.284,
+      "occurrence": 7
+    },
+    {
+      "actionId": 28052,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 70.551,
+      "resolve": 70.551,
+      "occurrence": 8
+    },
+    {
+      "actionId": 28054,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 71.351,
+      "resolve": 71.351,
+      "occurrence": 9
+    },
+    {
+      "actionId": 28055,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 71.351,
+      "resolve": 71.351,
+      "occurrence": 10
+    },
+    {
+      "actionId": 28052,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 71.635,
+      "resolve": 71.635,
+      "occurrence": 11
+    },
+    {
+      "actionId": 28054,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 72.435,
+      "resolve": 72.435,
+      "occurrence": 12
+    },
+    {
+      "actionId": 28055,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 72.435,
+      "resolve": 72.435,
+      "occurrence": 13
+    },
+    {
+      "actionId": 28053,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 72.701,
+      "resolve": 72.701,
+      "occurrence": 14
+    },
+    {
+      "actionId": 28054,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 73.502,
+      "resolve": 73.502,
+      "occurrence": 15
+    },
+    {
+      "actionId": 28055,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 73.502,
+      "resolve": 73.502,
+      "occurrence": 16
+    },
+    {
+      "actionId": 28062,
+      "name": "Trinity",
+      "start": 78.786,
+      "resolve": 78.786,
+      "occurrence": 9
+    },
+    {
+      "actionId": 28063,
+      "name": "Trinity",
+      "start": 79.853,
+      "resolve": 79.853,
+      "occurrence": 10
+    },
+    {
+      "actionId": 28064,
+      "name": "Trinity",
+      "start": 79.853,
+      "resolve": 79.853,
+      "occurrence": 11
+    },
+    {
+      "actionId": 28065,
+      "name": "Trinity",
+      "start": 79.853,
+      "resolve": 79.853,
+      "occurrence": 12
+    },
+    {
+      "actionId": 28062,
+      "name": "Trinity",
+      "start": 82.854,
+      "resolve": 82.854,
+      "occurrence": 13
+    },
+    {
+      "actionId": 28063,
+      "name": "Trinity",
+      "start": 83.92,
+      "resolve": 83.92,
+      "occurrence": 14
+    },
+    {
+      "actionId": 28064,
+      "name": "Trinity",
+      "start": 83.92,
+      "resolve": 83.92,
+      "occurrence": 15
+    },
+    {
+      "actionId": 28065,
+      "name": "Trinity",
+      "start": 83.92,
+      "resolve": 83.92,
+      "occurrence": 16
+    },
+    {
+      "actionId": 28057,
+      "name": "Gigaflare\u0027s Edge",
+      "start": 85.871,
+      "resolve": 93.571,
+      "occurrence": 1
+    },
+    {
+      "actionId": 28058,
+      "name": "Gigaflare\u0027s Edge",
+      "start": 85.871,
+      "resolve": 94.571,
+      "occurrence": 2
+    },
+    {
+      "actionId": 28114,
+      "name": "Gigaflare\u0027s Edge",
+      "start": 85.871,
+      "resolve": 98.571,
+      "occurrence": 3
+    },
+    {
+      "actionId": 28115,
+      "name": "Gigaflare\u0027s Edge",
+      "start": 85.871,
+      "resolve": 102.571,
+      "occurrence": 4
+    },
+    {
+      "actionId": 28049,
+      "name": "Flames of Ascalon",
+      "start": 95.006,
+      "resolve": 95.006,
+      "occurrence": 2
+    },
+    {
+      "actionId": 28062,
+      "name": "Trinity",
+      "start": 112.026,
+      "resolve": 112.026,
+      "occurrence": 17
+    },
+    {
+      "actionId": 28063,
+      "name": "Trinity",
+      "start": 113.093,
+      "resolve": 113.093,
+      "occurrence": 18
+    },
+    {
+      "actionId": 28064,
+      "name": "Trinity",
+      "start": 113.093,
+      "resolve": 113.093,
+      "occurrence": 19
+    },
+    {
+      "actionId": 28065,
+      "name": "Trinity",
+      "start": 113.093,
+      "resolve": 113.093,
+      "occurrence": 20
+    },
+    {
+      "actionId": 28062,
+      "name": "Trinity",
+      "start": 116.077,
+      "resolve": 116.077,
+      "occurrence": 21
+    },
+    {
+      "actionId": 28063,
+      "name": "Trinity",
+      "start": 117.144,
+      "resolve": 117.144,
+      "occurrence": 22
+    },
+    {
+      "actionId": 28064,
+      "name": "Trinity",
+      "start": 117.144,
+      "resolve": 117.144,
+      "occurrence": 23
+    },
+    {
+      "actionId": 28065,
+      "name": "Trinity",
+      "start": 117.144,
+      "resolve": 117.144,
+      "occurrence": 24
+    },
+    {
+      "actionId": 28059,
+      "name": "Exaflare\u0027s Edge",
+      "start": 119.111,
+      "resolve": 124.811,
+      "occurrence": 8
+    },
+    {
+      "actionId": 28060,
+      "name": "Exaflare\u0027s Edge",
+      "start": 119.111,
+      "resolve": 125.711,
+      "occurrence": 9
+    },
+    {
+      "actionId": 28049,
+      "name": "Flames of Ascalon",
+      "start": 126.246,
+      "resolve": 126.246,
+      "occurrence": 3
+    },
+    {
+      "actionId": 28061,
+      "name": "Exaflare\u0027s Edge",
+      "start": 127.897,
+      "resolve": 127.897,
+      "occurrence": 10
+    },
+    {
+      "actionId": 28061,
+      "name": "Exaflare\u0027s Edge",
+      "start": 129.763,
+      "resolve": 129.763,
+      "occurrence": 11
+    },
+    {
+      "actionId": 28061,
+      "name": "Exaflare\u0027s Edge",
+      "start": 131.612,
+      "resolve": 131.612,
+      "occurrence": 12
+    },
+    {
+      "actionId": 28062,
+      "name": "Trinity",
+      "start": 133.229,
+      "resolve": 133.229,
+      "occurrence": 25
+    },
+    {
+      "actionId": 28061,
+      "name": "Exaflare\u0027s Edge",
+      "start": 133.495,
+      "resolve": 133.495,
+      "occurrence": 13
+    },
+    {
+      "actionId": 28063,
+      "name": "Trinity",
+      "start": 134.295,
+      "resolve": 134.295,
+      "occurrence": 26
+    },
+    {
+      "actionId": 28064,
+      "name": "Trinity",
+      "start": 134.295,
+      "resolve": 134.295,
+      "occurrence": 27
+    },
+    {
+      "actionId": 28065,
+      "name": "Trinity",
+      "start": 134.295,
+      "resolve": 134.295,
+      "occurrence": 28
+    },
+    {
+      "actionId": 28061,
+      "name": "Exaflare\u0027s Edge",
+      "start": 135.361,
+      "resolve": 135.361,
+      "occurrence": 14
+    },
+    {
+      "actionId": 28062,
+      "name": "Trinity",
+      "start": 137.278,
+      "resolve": 137.278,
+      "occurrence": 29
+    },
+    {
+      "actionId": 28063,
+      "name": "Trinity",
+      "start": 138.344,
+      "resolve": 138.344,
+      "occurrence": 30
+    },
+    {
+      "actionId": 28064,
+      "name": "Trinity",
+      "start": 138.344,
+      "resolve": 138.344,
+      "occurrence": 31
+    },
+    {
+      "actionId": 28065,
+      "name": "Trinity",
+      "start": 138.344,
+      "resolve": 138.344,
+      "occurrence": 32
+    },
+    {
+      "actionId": 28051,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 140.31,
+      "resolve": 146.01,
+      "occurrence": 17
+    },
+    {
+      "actionId": 29453,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 140.31,
+      "resolve": 146.70999,
+      "occurrence": 18
+    },
+    {
+      "actionId": 29452,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 140.31,
+      "resolve": 146.70999,
+      "occurrence": 19
+    },
+    {
+      "actionId": 29454,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 140.31,
+      "resolve": 146.70999,
+      "occurrence": 20
+    },
+    {
+      "actionId": 28050,
+      "name": "Ice of Ascalon",
+      "start": 147.075,
+      "resolve": 147.075,
+      "occurrence": 2
+    },
+    {
+      "actionId": 28052,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 148.375,
+      "resolve": 148.375,
+      "occurrence": 21
+    },
+    {
+      "actionId": 28054,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 149.175,
+      "resolve": 149.175,
+      "occurrence": 22
+    },
+    {
+      "actionId": 28055,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 149.175,
+      "resolve": 149.175,
+      "occurrence": 23
+    },
+    {
+      "actionId": 28052,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 149.441,
+      "resolve": 149.441,
+      "occurrence": 24
+    },
+    {
+      "actionId": 28054,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 150.241,
+      "resolve": 150.241,
+      "occurrence": 25
+    },
+    {
+      "actionId": 28055,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 150.241,
+      "resolve": 150.241,
+      "occurrence": 26
+    },
+    {
+      "actionId": 28052,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 150.508,
+      "resolve": 150.508,
+      "occurrence": 27
+    },
+    {
+      "actionId": 28054,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 151.308,
+      "resolve": 151.308,
+      "occurrence": 28
+    },
+    {
+      "actionId": 28055,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 151.308,
+      "resolve": 151.308,
+      "occurrence": 29
+    },
+    {
+      "actionId": 28052,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 151.574,
+      "resolve": 151.574,
+      "occurrence": 30
+    },
+    {
+      "actionId": 28054,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 152.374,
+      "resolve": 152.374,
+      "occurrence": 31
+    },
+    {
+      "actionId": 28055,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 152.374,
+      "resolve": 152.374,
+      "occurrence": 32
+    },
+    {
+      "actionId": 28053,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 152.641,
+      "resolve": 152.641,
+      "occurrence": 33
+    },
+    {
+      "actionId": 28054,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 153.44,
+      "resolve": 153.44,
+      "occurrence": 34
+    },
+    {
+      "actionId": 28055,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 153.44,
+      "resolve": 153.44,
+      "occurrence": 35
+    },
+    {
+      "actionId": 28062,
+      "name": "Trinity",
+      "start": 158.739,
+      "resolve": 158.739,
+      "occurrence": 33
+    },
+    {
+      "actionId": 28063,
+      "name": "Trinity",
+      "start": 159.805,
+      "resolve": 159.805,
+      "occurrence": 34
+    },
+    {
+      "actionId": 28064,
+      "name": "Trinity",
+      "start": 159.805,
+      "resolve": 159.805,
+      "occurrence": 35
+    },
+    {
+      "actionId": 28065,
+      "name": "Trinity",
+      "start": 159.805,
+      "resolve": 159.805,
+      "occurrence": 36
+    },
+    {
+      "actionId": 28062,
+      "name": "Trinity",
+      "start": 162.788,
+      "resolve": 162.788,
+      "occurrence": 37
+    },
+    {
+      "actionId": 28063,
+      "name": "Trinity",
+      "start": 163.854,
+      "resolve": 163.854,
+      "occurrence": 38
+    },
+    {
+      "actionId": 28064,
+      "name": "Trinity",
+      "start": 163.854,
+      "resolve": 163.854,
+      "occurrence": 39
+    },
+    {
+      "actionId": 28065,
+      "name": "Trinity",
+      "start": 163.854,
+      "resolve": 163.854,
+      "occurrence": 40
+    },
+    {
+      "actionId": 28057,
+      "name": "Gigaflare\u0027s Edge",
+      "start": 165.821,
+      "resolve": 173.521,
+      "occurrence": 5
+    },
+    {
+      "actionId": 28058,
+      "name": "Gigaflare\u0027s Edge",
+      "start": 165.821,
+      "resolve": 174.521,
+      "occurrence": 6
+    },
+    {
+      "actionId": 28114,
+      "name": "Gigaflare\u0027s Edge",
+      "start": 165.821,
+      "resolve": 178.521,
+      "occurrence": 7
+    },
+    {
+      "actionId": 28115,
+      "name": "Gigaflare\u0027s Edge",
+      "start": 165.821,
+      "resolve": 182.521,
+      "occurrence": 8
+    },
+    {
+      "actionId": 28050,
+      "name": "Ice of Ascalon",
+      "start": 174.952,
+      "resolve": 174.952,
+      "occurrence": 3
+    },
+    {
+      "actionId": 28062,
+      "name": "Trinity",
+      "start": 191.964,
+      "resolve": 191.964,
+      "occurrence": 41
+    },
+    {
+      "actionId": 28063,
+      "name": "Trinity",
+      "start": 193.031,
+      "resolve": 193.031,
+      "occurrence": 42
+    },
+    {
+      "actionId": 28064,
+      "name": "Trinity",
+      "start": 193.031,
+      "resolve": 193.031,
+      "occurrence": 43
+    },
+    {
+      "actionId": 28065,
+      "name": "Trinity",
+      "start": 193.031,
+      "resolve": 193.031,
+      "occurrence": 44
+    },
+    {
+      "actionId": 28062,
+      "name": "Trinity",
+      "start": 196.03,
+      "resolve": 196.03,
+      "occurrence": 45
+    },
+    {
+      "actionId": 28063,
+      "name": "Trinity",
+      "start": 197.096,
+      "resolve": 197.096,
+      "occurrence": 46
+    },
+    {
+      "actionId": 28064,
+      "name": "Trinity",
+      "start": 197.096,
+      "resolve": 197.096,
+      "occurrence": 47
+    },
+    {
+      "actionId": 28065,
+      "name": "Trinity",
+      "start": 197.096,
+      "resolve": 197.096,
+      "occurrence": 48
+    },
+    {
+      "actionId": 28059,
+      "name": "Exaflare\u0027s Edge",
+      "start": 199.063,
+      "resolve": 204.763,
+      "occurrence": 15
+    },
+    {
+      "actionId": 28060,
+      "name": "Exaflare\u0027s Edge",
+      "start": 199.063,
+      "resolve": 205.66301,
+      "occurrence": 16
+    },
+    {
+      "actionId": 28050,
+      "name": "Ice of Ascalon",
+      "start": 206.177,
+      "resolve": 206.177,
+      "occurrence": 4
+    },
+    {
+      "actionId": 28061,
+      "name": "Exaflare\u0027s Edge",
+      "start": 207.844,
+      "resolve": 207.844,
+      "occurrence": 17
+    },
+    {
+      "actionId": 28061,
+      "name": "Exaflare\u0027s Edge",
+      "start": 209.71,
+      "resolve": 209.71,
+      "occurrence": 18
+    },
+    {
+      "actionId": 28061,
+      "name": "Exaflare\u0027s Edge",
+      "start": 211.576,
+      "resolve": 211.576,
+      "occurrence": 19
+    },
+    {
+      "actionId": 28062,
+      "name": "Trinity",
+      "start": 213.192,
+      "resolve": 213.192,
+      "occurrence": 49
+    },
+    {
+      "actionId": 28061,
+      "name": "Exaflare\u0027s Edge",
+      "start": 213.442,
+      "resolve": 213.442,
+      "occurrence": 20
+    },
+    {
+      "actionId": 28063,
+      "name": "Trinity",
+      "start": 214.259,
+      "resolve": 214.259,
+      "occurrence": 50
+    },
+    {
+      "actionId": 28064,
+      "name": "Trinity",
+      "start": 214.259,
+      "resolve": 214.259,
+      "occurrence": 51
+    },
+    {
+      "actionId": 28065,
+      "name": "Trinity",
+      "start": 214.259,
+      "resolve": 214.259,
+      "occurrence": 52
+    },
+    {
+      "actionId": 28061,
+      "name": "Exaflare\u0027s Edge",
+      "start": 215.309,
+      "resolve": 215.309,
+      "occurrence": 21
+    },
+    {
+      "actionId": 28062,
+      "name": "Trinity",
+      "start": 217.191,
+      "resolve": 217.191,
+      "occurrence": 53
+    },
+    {
+      "actionId": 28063,
+      "name": "Trinity",
+      "start": 218.275,
+      "resolve": 218.275,
+      "occurrence": 54
+    },
+    {
+      "actionId": 28064,
+      "name": "Trinity",
+      "start": 218.275,
+      "resolve": 218.275,
+      "occurrence": 55
+    },
+    {
+      "actionId": 28065,
+      "name": "Trinity",
+      "start": 218.275,
+      "resolve": 218.275,
+      "occurrence": 56
+    },
+    {
+      "actionId": 28051,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 220.224,
+      "resolve": 225.924,
+      "occurrence": 36
+    },
+    {
+      "actionId": 29453,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 220.224,
+      "resolve": 226.624,
+      "occurrence": 37
+    },
+    {
+      "actionId": 29452,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 220.224,
+      "resolve": 226.624,
+      "occurrence": 38
+    },
+    {
+      "actionId": 29454,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 220.224,
+      "resolve": 226.624,
+      "occurrence": 39
+    },
+    {
+      "actionId": 28049,
+      "name": "Flames of Ascalon",
+      "start": 227.006,
+      "resolve": 227.006,
+      "occurrence": 4
+    },
+    {
+      "actionId": 28052,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 228.289,
+      "resolve": 228.289,
+      "occurrence": 40
+    },
+    {
+      "actionId": 28054,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 229.089,
+      "resolve": 229.089,
+      "occurrence": 41
+    },
+    {
+      "actionId": 28055,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 229.089,
+      "resolve": 229.089,
+      "occurrence": 42
+    },
+    {
+      "actionId": 28052,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 229.355,
+      "resolve": 229.355,
+      "occurrence": 43
+    },
+    {
+      "actionId": 28054,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 230.155,
+      "resolve": 230.155,
+      "occurrence": 44
+    },
+    {
+      "actionId": 28055,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 230.155,
+      "resolve": 230.155,
+      "occurrence": 45
+    },
+    {
+      "actionId": 28052,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 230.422,
+      "resolve": 230.422,
+      "occurrence": 46
+    },
+    {
+      "actionId": 28054,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 231.221,
+      "resolve": 231.221,
+      "occurrence": 47
+    },
+    {
+      "actionId": 28055,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 231.221,
+      "resolve": 231.221,
+      "occurrence": 48
+    },
+    {
+      "actionId": 28052,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 231.505,
+      "resolve": 231.505,
+      "occurrence": 49
+    },
+    {
+      "actionId": 28054,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 232.304,
+      "resolve": 232.304,
+      "occurrence": 50
+    },
+    {
+      "actionId": 28055,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 232.304,
+      "resolve": 232.304,
+      "occurrence": 51
+    },
+    {
+      "actionId": 28052,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 232.571,
+      "resolve": 232.571,
+      "occurrence": 52
+    },
+    {
+      "actionId": 28054,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 233.371,
+      "resolve": 233.371,
+      "occurrence": 53
+    },
+    {
+      "actionId": 28055,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 233.371,
+      "resolve": 233.371,
+      "occurrence": 54
+    },
+    {
+      "actionId": 28053,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 233.637,
+      "resolve": 233.637,
+      "occurrence": 55
+    },
+    {
+      "actionId": 28054,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 234.437,
+      "resolve": 234.437,
+      "occurrence": 56
+    },
+    {
+      "actionId": 28055,
+      "name": "Akh Morn\u0027s Edge",
+      "start": 234.437,
+      "resolve": 234.437,
+      "occurrence": 57
+    },
+    {
+      "actionId": 28062,
+      "name": "Trinity",
+      "start": 239.836,
+      "resolve": 239.836,
+      "occurrence": 57
+    },
+    {
+      "actionId": 28063,
+      "name": "Trinity",
+      "start": 240.902,
+      "resolve": 240.902,
+      "occurrence": 58
+    },
+    {
+      "actionId": 28064,
+      "name": "Trinity",
+      "start": 240.902,
+      "resolve": 240.902,
+      "occurrence": 59
+    },
+    {
+      "actionId": 28065,
+      "name": "Trinity",
+      "start": 240.902,
+      "resolve": 240.902,
+      "occurrence": 60
+    },
+    {
+      "actionId": 28062,
+      "name": "Trinity",
+      "start": 243.885,
+      "resolve": 243.885,
+      "occurrence": 61
+    },
+    {
+      "actionId": 28063,
+      "name": "Trinity",
+      "start": 244.951,
+      "resolve": 244.951,
+      "occurrence": 62
+    },
+    {
+      "actionId": 28064,
+      "name": "Trinity",
+      "start": 244.951,
+      "resolve": 244.951,
+      "occurrence": 63
+    },
+    {
+      "actionId": 28065,
+      "name": "Trinity",
+      "start": 244.951,
+      "resolve": 244.951,
+      "occurrence": 64
+    },
+    {
+      "actionId": 28206,
+      "name": "Morn Afah\u0027s Edge",
+      "start": 246.918,
+      "resolve": 256.618,
+      "occurrence": 1
+    },
+    {
+      "actionId": 29456,
+      "name": "Morn Afah\u0027s Edge",
+      "start": 246.918,
+      "resolve": 257.318,
+      "occurrence": 2
+    },
+    {
+      "actionId": 29455,
+      "name": "Morn Afah\u0027s Edge",
+      "start": 246.918,
+      "resolve": 257.318,
+      "occurrence": 3
+    },
+    {
+      "actionId": 29457,
+      "name": "Morn Afah\u0027s Edge",
+      "start": 246.918,
+      "resolve": 257.318,
+      "occurrence": 4
+    }
+  ],
+  "names": [
+    "Exaflare\u0027s Edge",
+    "Ice of Ascalon",
+    "Trinity",
+    "Akh Morn\u0027s Edge",
+    "Flames of Ascalon",
+    "Gigaflare\u0027s Edge",
+    "Morn Afah\u0027s Edge"
+  ]
+}

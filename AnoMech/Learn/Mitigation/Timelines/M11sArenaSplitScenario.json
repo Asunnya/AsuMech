@@ -1,0 +1,219 @@
+{
+  "scenario": "M11sArenaSplitScenario",
+  "casts": [
+    {
+      "actionId": 46143,
+      "name": "Flatliner",
+      "start": 5.233,
+      "resolve": 8.933,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47760,
+      "name": "Flatliner",
+      "start": 5.233,
+      "resolve": 10.933,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46144,
+      "name": "Majestic Meteor",
+      "start": 20.383,
+      "resolve": 25.083,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46148,
+      "name": "Explosion",
+      "start": 28.533,
+      "resolve": 38.233,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46150,
+      "name": "Fire Breath",
+      "start": 44.516,
+      "resolve": 52.216,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46145,
+      "name": "Majestic Meteor",
+      "start": 46.533,
+      "resolve": 49.233,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46145,
+      "name": "Majestic Meteor",
+      "start": 48.533,
+      "resolve": 51.233,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46145,
+      "name": "Majestic Meteor",
+      "start": 50.533,
+      "resolve": 53.233,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46146,
+      "name": "Majestic Meteorain",
+      "start": 53.283,
+      "resolve": 53.283,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46151,
+      "name": "Fire Breath",
+      "start": 53.283,
+      "resolve": 53.283,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46147,
+      "name": "Majestic Meteowrath",
+      "start": 53.283,
+      "resolve": 53.283,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46148,
+      "name": "Explosion",
+      "start": 60.566,
+      "resolve": 70.266,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46150,
+      "name": "Fire Breath",
+      "start": 76.619,
+      "resolve": 84.319,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46145,
+      "name": "Majestic Meteor",
+      "start": 78.586,
+      "resolve": 81.285995,
+      "occurrence": 5
+    },
+    {
+      "actionId": 46145,
+      "name": "Majestic Meteor",
+      "start": 80.586,
+      "resolve": 83.285995,
+      "occurrence": 6
+    },
+    {
+      "actionId": 46145,
+      "name": "Majestic Meteor",
+      "start": 82.586,
+      "resolve": 85.285995,
+      "occurrence": 7
+    },
+    {
+      "actionId": 46146,
+      "name": "Majestic Meteorain",
+      "start": 85.404,
+      "resolve": 85.404,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46151,
+      "name": "Fire Breath",
+      "start": 85.404,
+      "resolve": 85.404,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46147,
+      "name": "Majestic Meteowrath",
+      "start": 85.404,
+      "resolve": 85.404,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46152,
+      "name": "Massive Meteor",
+      "start": 89.771,
+      "resolve": 94.471,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46153,
+      "name": "Massive Meteor",
+      "start": 95.906,
+      "resolve": 95.906,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46153,
+      "name": "Massive Meteor",
+      "start": 97.373,
+      "resolve": 97.373,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46148,
+      "name": "Explosion",
+      "start": 98.607,
+      "resolve": 108.307,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46153,
+      "name": "Massive Meteor",
+      "start": 98.857,
+      "resolve": 98.857,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46153,
+      "name": "Massive Meteor",
+      "start": 100.324,
+      "resolve": 100.324,
+      "occurrence": 5
+    },
+    {
+      "actionId": 46153,
+      "name": "Massive Meteor",
+      "start": 101.791,
+      "resolve": 101.791,
+      "occurrence": 6
+    },
+    {
+      "actionId": 46154,
+      "name": "Arcadion Avalanche",
+      "start": 103.691,
+      "resolve": 109.391,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46155,
+      "name": "Arcadion Avalanche",
+      "start": 103.691,
+      "resolve": 118.891,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46086,
+      "name": "Crown of Arcadia",
+      "start": 124.812,
+      "resolve": 129.512,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Flatliner",
+    "Majestic Meteor",
+    "Explosion",
+    "Fire Breath",
+    "Majestic Meteorain",
+    "Majestic Meteowrath",
+    "Massive Meteor",
+    "Arcadion Avalanche",
+    "Crown of Arcadia"
+  ]
+}

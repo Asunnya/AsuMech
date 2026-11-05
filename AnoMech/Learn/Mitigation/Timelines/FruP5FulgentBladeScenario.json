@@ -1,0 +1,279 @@
+{
+  "scenario": "FruP5FulgentBladeScenario",
+  "casts": [
+    {
+      "actionId": 40306,
+      "name": "Fulgent Blade",
+      "start": 1.517,
+      "resolve": 7.217,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40114,
+      "name": "attack",
+      "start": 10.65,
+      "resolve": 10.65,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40115,
+      "name": "",
+      "start": 11.367,
+      "resolve": 11.367,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40118,
+      "name": "the Path of Darkness",
+      "start": 11.567,
+      "resolve": 18.267,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40307,
+      "name": "the Path of Light",
+      "start": 11.567,
+      "resolve": 18.267,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40114,
+      "name": "attack",
+      "start": 13.817,
+      "resolve": 13.817,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40115,
+      "name": "",
+      "start": 14.567,
+      "resolve": 14.567,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40118,
+      "name": "the Path of Darkness",
+      "start": 15.617,
+      "resolve": 22.317,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40307,
+      "name": "the Path of Light",
+      "start": 15.617,
+      "resolve": 22.317,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40114,
+      "name": "attack",
+      "start": 16.917,
+      "resolve": 16.917,
+      "occurrence": 3
+    },
+    {
+      "actionId": 40115,
+      "name": "",
+      "start": 17.717,
+      "resolve": 17.717,
+      "occurrence": 3
+    },
+    {
+      "actionId": 40118,
+      "name": "the Path of Darkness",
+      "start": 19.567,
+      "resolve": 26.266998,
+      "occurrence": 3
+    },
+    {
+      "actionId": 40307,
+      "name": "the Path of Light",
+      "start": 19.567,
+      "resolve": 26.266998,
+      "occurrence": 3
+    },
+    {
+      "actionId": 40114,
+      "name": "attack",
+      "start": 20.067,
+      "resolve": 20.067,
+      "occurrence": 4
+    },
+    {
+      "actionId": 40309,
+      "name": "the Path of Darkness",
+      "start": 20.667,
+      "resolve": 20.667,
+      "occurrence": 4
+    },
+    {
+      "actionId": 40308,
+      "name": "the Path of Light",
+      "start": 20.667,
+      "resolve": 20.667,
+      "occurrence": 4
+    },
+    {
+      "actionId": 40115,
+      "name": "",
+      "start": 20.817,
+      "resolve": 20.817,
+      "occurrence": 4
+    },
+    {
+      "actionId": 40308,
+      "name": "the Path of Light",
+      "start": 22.716,
+      "resolve": 22.716,
+      "occurrence": 5
+    },
+    {
+      "actionId": 40309,
+      "name": "the Path of Darkness",
+      "start": 22.716,
+      "resolve": 22.716,
+      "occurrence": 5
+    },
+    {
+      "actionId": 40114,
+      "name": "attack",
+      "start": 23.316,
+      "resolve": 23.316,
+      "occurrence": 5
+    },
+    {
+      "actionId": 40115,
+      "name": "",
+      "start": 23.966,
+      "resolve": 23.966,
+      "occurrence": 5
+    },
+    {
+      "actionId": 40309,
+      "name": "the Path of Darkness",
+      "start": 24.666,
+      "resolve": 24.666,
+      "occurrence": 6
+    },
+    {
+      "actionId": 40308,
+      "name": "the Path of Light",
+      "start": 24.666,
+      "resolve": 24.666,
+      "occurrence": 6
+    },
+    {
+      "actionId": 40310,
+      "name": "Akh Morn",
+      "start": 26.366,
+      "resolve": 34.065998,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40309,
+      "name": "the Path of Darkness",
+      "start": 26.716,
+      "resolve": 26.716,
+      "occurrence": 7
+    },
+    {
+      "actionId": 40308,
+      "name": "the Path of Light",
+      "start": 26.716,
+      "resolve": 26.716,
+      "occurrence": 7
+    },
+    {
+      "actionId": 40309,
+      "name": "the Path of Darkness",
+      "start": 28.666,
+      "resolve": 28.666,
+      "occurrence": 8
+    },
+    {
+      "actionId": 40308,
+      "name": "the Path of Light",
+      "start": 28.666,
+      "resolve": 28.666,
+      "occurrence": 8
+    },
+    {
+      "actionId": 40309,
+      "name": "the Path of Darkness",
+      "start": 30.716,
+      "resolve": 30.716,
+      "occurrence": 9
+    },
+    {
+      "actionId": 40308,
+      "name": "the Path of Light",
+      "start": 30.716,
+      "resolve": 30.716,
+      "occurrence": 9
+    },
+    {
+      "actionId": 40309,
+      "name": "the Path of Darkness",
+      "start": 32.766,
+      "resolve": 32.766,
+      "occurrence": 10
+    },
+    {
+      "actionId": 40308,
+      "name": "the Path of Light",
+      "start": 32.766,
+      "resolve": 32.766,
+      "occurrence": 10
+    },
+    {
+      "actionId": 40311,
+      "name": "Akh Morn",
+      "start": 34.466,
+      "resolve": 34.466,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40312,
+      "name": "Akh Morn",
+      "start": 34.466,
+      "resolve": 34.466,
+      "occurrence": 3
+    },
+    {
+      "actionId": 40309,
+      "name": "the Path of Darkness",
+      "start": 34.816,
+      "resolve": 34.816,
+      "occurrence": 11
+    },
+    {
+      "actionId": 40308,
+      "name": "the Path of Light",
+      "start": 34.816,
+      "resolve": 34.816,
+      "occurrence": 11
+    },
+    {
+      "actionId": 40309,
+      "name": "the Path of Darkness",
+      "start": 36.866,
+      "resolve": 36.866,
+      "occurrence": 12
+    },
+    {
+      "actionId": 40308,
+      "name": "the Path of Light",
+      "start": 36.866,
+      "resolve": 36.866,
+      "occurrence": 12
+    }
+  ],
+  "names": [
+    "Fulgent Blade",
+    "attack",
+    "",
+    "the Path of Darkness",
+    "the Path of Light",
+    "Akh Morn"
+  ]
+}

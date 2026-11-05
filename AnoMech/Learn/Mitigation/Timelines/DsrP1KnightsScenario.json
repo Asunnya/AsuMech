@@ -1,0 +1,368 @@
+{
+  "scenario": "DsrP1KnightsScenario",
+  "casts": [
+    {
+      "actionId": 25300,
+      "name": "Holiest of Holy",
+      "start": 2.15,
+      "resolve": 5.8500004,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25306,
+      "name": "Empty Dimension",
+      "start": 14.267,
+      "resolve": 18.967,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25309,
+      "name": "Heavensblaze",
+      "start": 19.3,
+      "resolve": 24,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25297,
+      "name": "Holy Shield Bash",
+      "start": 19.3,
+      "resolve": 19.3,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25299,
+      "name": "Holy Bladedance",
+      "start": 22.333,
+      "resolve": 22.333,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25302,
+      "name": "Hyperdimensional Slash",
+      "start": 34.716,
+      "resolve": 39.416,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25303,
+      "name": "Hyperdimensional Slash",
+      "start": 40.866,
+      "resolve": 40.866,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25582,
+      "name": "Hyperdimensional Slash",
+      "start": 40.866,
+      "resolve": 40.866,
+      "occurrence": 3
+    },
+    {
+      "actionId": 25303,
+      "name": "Hyperdimensional Slash",
+      "start": 47.949,
+      "resolve": 47.949,
+      "occurrence": 4
+    },
+    {
+      "actionId": 25582,
+      "name": "Hyperdimensional Slash",
+      "start": 47.949,
+      "resolve": 47.949,
+      "occurrence": 5
+    },
+    {
+      "actionId": 25308,
+      "name": "Faith Unmoving",
+      "start": 51.866,
+      "resolve": 55.566,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25300,
+      "name": "Holiest of Holy",
+      "start": 52.933,
+      "resolve": 56.633,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25294,
+      "name": "Shining Blade",
+      "start": 59.099,
+      "resolve": 59.099,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25294,
+      "name": "Shining Blade",
+      "start": 60.166,
+      "resolve": 60.166,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25295,
+      "name": "Bright Flare",
+      "start": 60.516,
+      "resolve": 61.216,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25295,
+      "name": "Bright Flare",
+      "start": 61.199,
+      "resolve": 61.899002,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25294,
+      "name": "Shining Blade",
+      "start": 61.233,
+      "resolve": 61.233,
+      "occurrence": 3
+    },
+    {
+      "actionId": 25295,
+      "name": "Bright Flare",
+      "start": 61.866,
+      "resolve": 62.566,
+      "occurrence": 3
+    },
+    {
+      "actionId": 25294,
+      "name": "Shining Blade",
+      "start": 62.299,
+      "resolve": 62.299,
+      "occurrence": 4
+    },
+    {
+      "actionId": 25295,
+      "name": "Bright Flare",
+      "start": 62.666,
+      "resolve": 63.366,
+      "occurrence": 4
+    },
+    {
+      "actionId": 25295,
+      "name": "Bright Flare",
+      "start": 63.733,
+      "resolve": 64.433,
+      "occurrence": 5
+    },
+    {
+      "actionId": 25295,
+      "name": "Bright Flare",
+      "start": 64.466,
+      "resolve": 65.166,
+      "occurrence": 6
+    },
+    {
+      "actionId": 25301,
+      "name": "Execution",
+      "start": 64.833,
+      "resolve": 64.833,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25296,
+      "name": "Holiest Hallowing",
+      "start": 67.967,
+      "resolve": 71.667,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25310,
+      "name": "Heavensflame",
+      "start": 77.002,
+      "resolve": 83.701996,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25308,
+      "name": "Faith Unmoving",
+      "start": 78.036,
+      "resolve": 81.736,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25311,
+      "name": "Heavensflame",
+      "start": 84.62,
+      "resolve": 84.62,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25296,
+      "name": "Holiest Hallowing",
+      "start": 86.221,
+      "resolve": 89.921,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25300,
+      "name": "Holiest of Holy",
+      "start": 94.206,
+      "resolve": 97.906,
+      "occurrence": 3
+    },
+    {
+      "actionId": 25306,
+      "name": "Empty Dimension",
+      "start": 95.223,
+      "resolve": 99.923,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25296,
+      "name": "Holiest Hallowing",
+      "start": 105.425,
+      "resolve": 109.125,
+      "occurrence": 3
+    },
+    {
+      "actionId": 25313,
+      "name": "Planar Prison",
+      "start": 112.326,
+      "resolve": 112.326,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25314,
+      "name": "Spear of the Fury",
+      "start": 112.326,
+      "resolve": 122.02599,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25316,
+      "name": "Pure of Heart",
+      "start": 112.843,
+      "resolve": 148.043,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25315,
+      "name": "Shockwave",
+      "start": 124.112,
+      "resolve": 124.112,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25315,
+      "name": "Shockwave",
+      "start": 125.196,
+      "resolve": 125.196,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25315,
+      "name": "Shockwave",
+      "start": 126.262,
+      "resolve": 126.262,
+      "occurrence": 3
+    },
+    {
+      "actionId": 25315,
+      "name": "Shockwave",
+      "start": 127.329,
+      "resolve": 127.329,
+      "occurrence": 4
+    },
+    {
+      "actionId": 25369,
+      "name": "Brightwing",
+      "start": 128.163,
+      "resolve": 128.163,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25315,
+      "name": "Shockwave",
+      "start": 128.396,
+      "resolve": 128.396,
+      "occurrence": 5
+    },
+    {
+      "actionId": 25315,
+      "name": "Shockwave",
+      "start": 129.463,
+      "resolve": 129.463,
+      "occurrence": 6
+    },
+    {
+      "actionId": 25315,
+      "name": "Shockwave",
+      "start": 130.546,
+      "resolve": 130.546,
+      "occurrence": 7
+    },
+    {
+      "actionId": 25369,
+      "name": "Brightwing",
+      "start": 133.212,
+      "resolve": 133.212,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25370,
+      "name": "Skyblind",
+      "start": 133.645,
+      "resolve": 136.145,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25369,
+      "name": "Brightwing",
+      "start": 138.244,
+      "resolve": 138.244,
+      "occurrence": 3
+    },
+    {
+      "actionId": 25370,
+      "name": "Skyblind",
+      "start": 138.694,
+      "resolve": 141.194,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25369,
+      "name": "Brightwing",
+      "start": 143.276,
+      "resolve": 143.276,
+      "occurrence": 4
+    },
+    {
+      "actionId": 25370,
+      "name": "Skyblind",
+      "start": 143.726,
+      "resolve": 146.226,
+      "occurrence": 3
+    },
+    {
+      "actionId": 25370,
+      "name": "Skyblind",
+      "start": 148.758,
+      "resolve": 151.258,
+      "occurrence": 4
+    }
+  ],
+  "names": [
+    "Holiest of Holy",
+    "Empty Dimension",
+    "Heavensblaze",
+    "Holy Shield Bash",
+    "Holy Bladedance",
+    "Hyperdimensional Slash",
+    "Faith Unmoving",
+    "Shining Blade",
+    "Bright Flare",
+    "Execution",
+    "Holiest Hallowing",
+    "Heavensflame",
+    "Planar Prison",
+    "Spear of the Fury",
+    "Pure of Heart",
+    "Shockwave",
+    "Brightwing",
+    "Skyblind"
+  ]
+}

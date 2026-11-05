@@ -1,0 +1,91 @@
+{
+  "scenario": "M10sSnakingScenario",
+  "casts": [
+    {
+      "actionId": 46458,
+      "name": "Epic Brotherhood",
+      "start": 6.083,
+      "resolve": 6.083,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46459,
+      "name": "Epic Brotherhood",
+      "start": 6.083,
+      "resolve": 6.083,
+      "occurrence": 2
+    },
+    {
+      "actionId": 45953,
+      "name": "Firesnaking",
+      "start": 8.25,
+      "resolve": 12.95,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45954,
+      "name": "Watersnaking",
+      "start": 8.25,
+      "resolve": 12.95,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46557,
+      "name": "Alley-oop Double-dip",
+      "start": 20.783,
+      "resolve": 25.483002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46528,
+      "name": "Alley-oop Inferno",
+      "start": 20.883,
+      "resolve": 24.883,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46529,
+      "name": "Alley-oop Inferno",
+      "start": 20.883,
+      "resolve": 25.583,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46558,
+      "name": "Alley-oop Double-dip",
+      "start": 26.4,
+      "resolve": 26.4,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46539,
+      "name": "Sick Swell",
+      "start": 28.016,
+      "resolve": 30.716002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46559,
+      "name": "Alley-oop Double-dip",
+      "start": 28.983,
+      "resolve": 28.983,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46464,
+      "name": "Hot Impact",
+      "start": 32.333,
+      "resolve": 37.033,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Epic Brotherhood",
+    "Firesnaking",
+    "Watersnaking",
+    "Alley-oop Double-dip",
+    "Alley-oop Inferno",
+    "Sick Swell",
+    "Hot Impact"
+  ]
+}

@@ -1,0 +1,681 @@
+{
+  "scenario": "DsrP2ThordanScenario",
+  "casts": [
+    {
+      "actionId": 25531,
+      "name": "attack",
+      "start": 6.083,
+      "resolve": 6.083,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25531,
+      "name": "attack",
+      "start": 9.2,
+      "resolve": 9.2,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25544,
+      "name": "Ascalon\u0027s Mercy Concealed",
+      "start": 11.25,
+      "resolve": 13.95,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25545,
+      "name": "Ascalon\u0027s Mercy Concealed",
+      "start": 14.333,
+      "resolve": 15.533,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25541,
+      "name": "Ascalon\u0027s Might",
+      "start": 17.367,
+      "resolve": 17.367,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25541,
+      "name": "Ascalon\u0027s Might",
+      "start": 19.05,
+      "resolve": 19.05,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25541,
+      "name": "Ascalon\u0027s Might",
+      "start": 20.717,
+      "resolve": 20.717,
+      "occurrence": 3
+    },
+    {
+      "actionId": 25540,
+      "name": "",
+      "start": 24.516,
+      "resolve": 24.516,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25581,
+      "name": "Knights of the Round",
+      "start": 25.616,
+      "resolve": 25.616,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25555,
+      "name": "Strength of the Ward",
+      "start": 28.733,
+      "resolve": 32.433,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25557,
+      "name": "Heavy Impact",
+      "start": 39.383,
+      "resolve": 43.383,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25558,
+      "name": "Heavy Impact",
+      "start": 39.383,
+      "resolve": 45.083,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25548,
+      "name": "Lightning Storm",
+      "start": 39.383,
+      "resolve": 44.783,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25556,
+      "name": "Spiral Thrust",
+      "start": 39.383,
+      "resolve": 45.083,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25549,
+      "name": "Lightning Storm",
+      "start": 45.566,
+      "resolve": 45.566,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25559,
+      "name": "Heavy Impact",
+      "start": 47.283,
+      "resolve": 47.283,
+      "occurrence": 3
+    },
+    {
+      "actionId": 25544,
+      "name": "Ascalon\u0027s Mercy Concealed",
+      "start": 47.466,
+      "resolve": 50.166,
+      "occurrence": 3
+    },
+    {
+      "actionId": 25560,
+      "name": "Heavy Impact",
+      "start": 49.149,
+      "resolve": 49.149,
+      "occurrence": 4
+    },
+    {
+      "actionId": 25545,
+      "name": "Ascalon\u0027s Mercy Concealed",
+      "start": 50.533,
+      "resolve": 51.733,
+      "occurrence": 4
+    },
+    {
+      "actionId": 25561,
+      "name": "Heavy Impact",
+      "start": 51.033,
+      "resolve": 51.033,
+      "occurrence": 5
+    },
+    {
+      "actionId": 25563,
+      "name": "Dimensional Collapse",
+      "start": 52.483,
+      "resolve": 60.183002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25564,
+      "name": "Dimensional Collapse",
+      "start": 52.483,
+      "resolve": 61.183002,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25540,
+      "name": "",
+      "start": 52.583,
+      "resolve": 52.583,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25562,
+      "name": "Heavy Impact",
+      "start": 52.899,
+      "resolve": 52.899,
+      "occurrence": 6
+    },
+    {
+      "actionId": 25566,
+      "name": "Conviction",
+      "start": 54.233,
+      "resolve": 62.133003,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25567,
+      "name": "Conviction",
+      "start": 54.233,
+      "resolve": 64.933,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25550,
+      "name": "the Dragon\u0027s Rage",
+      "start": 55.799,
+      "resolve": 60.199,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25565,
+      "name": "Skyward Leap",
+      "start": 61.516,
+      "resolve": 61.516,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25297,
+      "name": "Holy Shield Bash",
+      "start": 61.849,
+      "resolve": 61.849,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25551,
+      "name": "the Dragon\u0027s Rage",
+      "start": 61.899,
+      "resolve": 61.899,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25298,
+      "name": "Holy Bladedance",
+      "start": 63.949,
+      "resolve": 63.949,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25299,
+      "name": "Holy Bladedance",
+      "start": 64.899,
+      "resolve": 64.899,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25540,
+      "name": "",
+      "start": 64.933,
+      "resolve": 64.933,
+      "occurrence": 3
+    },
+    {
+      "actionId": 25299,
+      "name": "Holy Bladedance",
+      "start": 65.816,
+      "resolve": 65.816,
+      "occurrence": 3
+    },
+    {
+      "actionId": 25299,
+      "name": "Holy Bladedance",
+      "start": 66.716,
+      "resolve": 66.716,
+      "occurrence": 4
+    },
+    {
+      "actionId": 25542,
+      "name": "Ancient Quaga",
+      "start": 66.983,
+      "resolve": 72.683,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25531,
+      "name": "attack",
+      "start": 77.102,
+      "resolve": 77.102,
+      "occurrence": 3
+    },
+    {
+      "actionId": 25543,
+      "name": "Heavenly Heel",
+      "start": 79.136,
+      "resolve": 82.836,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25541,
+      "name": "Ascalon\u0027s Might",
+      "start": 86.071,
+      "resolve": 86.071,
+      "occurrence": 4
+    },
+    {
+      "actionId": 25541,
+      "name": "Ascalon\u0027s Might",
+      "start": 87.721,
+      "resolve": 87.721,
+      "occurrence": 5
+    },
+    {
+      "actionId": 25541,
+      "name": "Ascalon\u0027s Might",
+      "start": 89.388,
+      "resolve": 89.388,
+      "occurrence": 6
+    },
+    {
+      "actionId": 25540,
+      "name": "",
+      "start": 92.422,
+      "resolve": 92.422,
+      "occurrence": 4
+    },
+    {
+      "actionId": 25581,
+      "name": "Knights of the Round",
+      "start": 93.355,
+      "resolve": 93.355,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25569,
+      "name": "Sanctity of the Ward",
+      "start": 96.473,
+      "resolve": 100.173,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25552,
+      "name": "the Dragon\u0027s Gaze",
+      "start": 109.125,
+      "resolve": 112.825,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25571,
+      "name": "Sacred Sever",
+      "start": 114.077,
+      "resolve": 114.077,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25570,
+      "name": "Shining Blade",
+      "start": 114.143,
+      "resolve": 114.143,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25553,
+      "name": "the Dragon\u0027s Gaze",
+      "start": 114.243,
+      "resolve": 114.243,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25554,
+      "name": "the Dragon\u0027s Glory",
+      "start": 114.243,
+      "resolve": 114.243,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25295,
+      "name": "Bright Flare",
+      "start": 115.527,
+      "resolve": 116.227,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25570,
+      "name": "Shining Blade",
+      "start": 115.71,
+      "resolve": 115.71,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25571,
+      "name": "Sacred Sever",
+      "start": 115.844,
+      "resolve": 115.844,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25295,
+      "name": "Bright Flare",
+      "start": 116.21,
+      "resolve": 116.909996,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25295,
+      "name": "Bright Flare",
+      "start": 117.144,
+      "resolve": 117.843994,
+      "occurrence": 3
+    },
+    {
+      "actionId": 25570,
+      "name": "Shining Blade",
+      "start": 117.261,
+      "resolve": 117.261,
+      "occurrence": 3
+    },
+    {
+      "actionId": 25571,
+      "name": "Sacred Sever",
+      "start": 117.627,
+      "resolve": 117.627,
+      "occurrence": 3
+    },
+    {
+      "actionId": 25295,
+      "name": "Bright Flare",
+      "start": 117.827,
+      "resolve": 118.527,
+      "occurrence": 4
+    },
+    {
+      "actionId": 25295,
+      "name": "Bright Flare",
+      "start": 118.711,
+      "resolve": 119.410995,
+      "occurrence": 5
+    },
+    {
+      "actionId": 25295,
+      "name": "Bright Flare",
+      "start": 119.394,
+      "resolve": 120.093994,
+      "occurrence": 6
+    },
+    {
+      "actionId": 25571,
+      "name": "Sacred Sever",
+      "start": 119.411,
+      "resolve": 119.411,
+      "occurrence": 4
+    },
+    {
+      "actionId": 25540,
+      "name": "",
+      "start": 120.211,
+      "resolve": 120.211,
+      "occurrence": 5
+    },
+    {
+      "actionId": 29563,
+      "name": "Conviction",
+      "start": 124.462,
+      "resolve": 133.362,
+      "occurrence": 3
+    },
+    {
+      "actionId": 29564,
+      "name": "Conviction",
+      "start": 124.462,
+      "resolve": 136.162,
+      "occurrence": 4
+    },
+    {
+      "actionId": 25576,
+      "name": "Holy Comet",
+      "start": 124.512,
+      "resolve": 136.212,
+      "occurrence": 1
+    },
+    {
+      "actionId": 28590,
+      "name": "Heavens\u0027 Stake",
+      "start": 124.545,
+      "resolve": 131.245,
+      "occurrence": 1
+    },
+    {
+      "actionId": 28591,
+      "name": "Heavens\u0027 Stake",
+      "start": 124.545,
+      "resolve": 131.745,
+      "occurrence": 2
+    },
+    {
+      "actionId": 28592,
+      "name": "Heavens\u0027 Stake",
+      "start": 124.545,
+      "resolve": 131.745,
+      "occurrence": 3
+    },
+    {
+      "actionId": 25574,
+      "name": "Hiemal Storm",
+      "start": 124.595,
+      "resolve": 131.295,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25575,
+      "name": "Hiemal Storm",
+      "start": 132.179,
+      "resolve": 132.179,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25577,
+      "name": "Holy Comet",
+      "start": 137.86,
+      "resolve": 137.86,
+      "occurrence": 2
+    },
+    {
+      "actionId": 28650,
+      "name": "Conviction",
+      "start": 138.827,
+      "resolve": 146.72699,
+      "occurrence": 5
+    },
+    {
+      "actionId": 28651,
+      "name": "Conviction",
+      "start": 138.827,
+      "resolve": 149.527,
+      "occurrence": 6
+    },
+    {
+      "actionId": 25577,
+      "name": "Holy Comet",
+      "start": 139.293,
+      "resolve": 139.293,
+      "occurrence": 3
+    },
+    {
+      "actionId": 25577,
+      "name": "Holy Comet",
+      "start": 140.71,
+      "resolve": 140.71,
+      "occurrence": 4
+    },
+    {
+      "actionId": 25577,
+      "name": "Holy Comet",
+      "start": 142.143,
+      "resolve": 142.143,
+      "occurrence": 5
+    },
+    {
+      "actionId": 25308,
+      "name": "Faith Unmoving",
+      "start": 142.843,
+      "resolve": 146.543,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25577,
+      "name": "Holy Comet",
+      "start": 143.559,
+      "resolve": 143.559,
+      "occurrence": 6
+    },
+    {
+      "actionId": 25577,
+      "name": "Holy Comet",
+      "start": 144.992,
+      "resolve": 144.992,
+      "occurrence": 7
+    },
+    {
+      "actionId": 25577,
+      "name": "Holy Comet",
+      "start": 146.425,
+      "resolve": 146.425,
+      "occurrence": 8
+    },
+    {
+      "actionId": 25532,
+      "name": "",
+      "start": 154.306,
+      "resolve": 154.306,
+      "occurrence": 6
+    },
+    {
+      "actionId": 25533,
+      "name": "Ultimate End",
+      "start": 159.389,
+      "resolve": 159.389,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25534,
+      "name": "Ultimate End",
+      "start": 167.82,
+      "resolve": 167.82,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25535,
+      "name": "",
+      "start": 173.452,
+      "resolve": 173.452,
+      "occurrence": 7
+    },
+    {
+      "actionId": 25537,
+      "name": "Broad Swing",
+      "start": 177.084,
+      "resolve": 179.784,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25538,
+      "name": "Broad Swing",
+      "start": 180.917,
+      "resolve": 180.917,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25538,
+      "name": "Broad Swing",
+      "start": 181.85,
+      "resolve": 181.85,
+      "occurrence": 3
+    },
+    {
+      "actionId": 25538,
+      "name": "Broad Swing",
+      "start": 182.866,
+      "resolve": 182.866,
+      "occurrence": 4
+    },
+    {
+      "actionId": 25536,
+      "name": "Broad Swing",
+      "start": 185.482,
+      "resolve": 188.18199,
+      "occurrence": 5
+    },
+    {
+      "actionId": 25538,
+      "name": "Broad Swing",
+      "start": 189.315,
+      "resolve": 189.315,
+      "occurrence": 6
+    },
+    {
+      "actionId": 25538,
+      "name": "Broad Swing",
+      "start": 190.248,
+      "resolve": 190.248,
+      "occurrence": 7
+    },
+    {
+      "actionId": 25538,
+      "name": "Broad Swing",
+      "start": 191.264,
+      "resolve": 191.264,
+      "occurrence": 8
+    },
+    {
+      "actionId": 25539,
+      "name": "Aetheric Burst",
+      "start": 193.913,
+      "resolve": 199.913,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "attack",
+    "Ascalon\u0027s Mercy Concealed",
+    "Ascalon\u0027s Might",
+    "",
+    "Knights of the Round",
+    "Strength of the Ward",
+    "Heavy Impact",
+    "Lightning Storm",
+    "Spiral Thrust",
+    "Dimensional Collapse",
+    "Conviction",
+    "the Dragon\u0027s Rage",
+    "Skyward Leap",
+    "Holy Shield Bash",
+    "Holy Bladedance",
+    "Ancient Quaga",
+    "Heavenly Heel",
+    "Sanctity of the Ward",
+    "the Dragon\u0027s Gaze",
+    "Sacred Sever",
+    "Shining Blade",
+    "the Dragon\u0027s Glory",
+    "Bright Flare",
+    "Holy Comet",
+    "Heavens\u0027 Stake",
+    "Hiemal Storm",
+    "Faith Unmoving",
+    "Ultimate End",
+    "Broad Swing",
+    "Aetheric Burst"
+  ]
+}

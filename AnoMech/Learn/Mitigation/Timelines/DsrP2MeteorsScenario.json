@@ -1,0 +1,146 @@
+{
+  "scenario": "DsrP2MeteorsScenario",
+  "casts": [
+    {
+      "actionId": 25540,
+      "name": "",
+      "start": 120.217,
+      "resolve": 120.217,
+      "occurrence": 1
+    },
+    {
+      "actionId": 29563,
+      "name": "Conviction",
+      "start": 124.451,
+      "resolve": 133.351,
+      "occurrence": 1
+    },
+    {
+      "actionId": 29564,
+      "name": "Conviction",
+      "start": 124.451,
+      "resolve": 136.151,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25576,
+      "name": "Holy Comet",
+      "start": 124.501,
+      "resolve": 136.201,
+      "occurrence": 1
+    },
+    {
+      "actionId": 28590,
+      "name": "Heavens\u0027 Stake",
+      "start": 124.551,
+      "resolve": 131.251,
+      "occurrence": 1
+    },
+    {
+      "actionId": 28591,
+      "name": "Heavens\u0027 Stake",
+      "start": 124.551,
+      "resolve": 131.751,
+      "occurrence": 2
+    },
+    {
+      "actionId": 28592,
+      "name": "Heavens\u0027 Stake",
+      "start": 124.551,
+      "resolve": 131.751,
+      "occurrence": 3
+    },
+    {
+      "actionId": 25574,
+      "name": "Hiemal Storm",
+      "start": 124.601,
+      "resolve": 131.301,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25575,
+      "name": "Hiemal Storm",
+      "start": 132.184,
+      "resolve": 132.184,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25577,
+      "name": "Holy Comet",
+      "start": 137.866,
+      "resolve": 137.866,
+      "occurrence": 2
+    },
+    {
+      "actionId": 28650,
+      "name": "Conviction",
+      "start": 138.833,
+      "resolve": 146.73299,
+      "occurrence": 3
+    },
+    {
+      "actionId": 28651,
+      "name": "Conviction",
+      "start": 138.833,
+      "resolve": 149.53299,
+      "occurrence": 4
+    },
+    {
+      "actionId": 25577,
+      "name": "Holy Comet",
+      "start": 139.282,
+      "resolve": 139.282,
+      "occurrence": 3
+    },
+    {
+      "actionId": 25577,
+      "name": "Holy Comet",
+      "start": 140.715,
+      "resolve": 140.715,
+      "occurrence": 4
+    },
+    {
+      "actionId": 25577,
+      "name": "Holy Comet",
+      "start": 142.132,
+      "resolve": 142.132,
+      "occurrence": 5
+    },
+    {
+      "actionId": 25308,
+      "name": "Faith Unmoving",
+      "start": 142.832,
+      "resolve": 146.532,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25577,
+      "name": "Holy Comet",
+      "start": 143.565,
+      "resolve": 143.565,
+      "occurrence": 6
+    },
+    {
+      "actionId": 25577,
+      "name": "Holy Comet",
+      "start": 144.981,
+      "resolve": 144.981,
+      "occurrence": 7
+    },
+    {
+      "actionId": 25577,
+      "name": "Holy Comet",
+      "start": 146.414,
+      "resolve": 146.414,
+      "occurrence": 8
+    }
+  ],
+  "names": [
+    "",
+    "Conviction",
+    "Holy Comet",
+    "Heavens\u0027 Stake",
+    "Hiemal Storm",
+    "Faith Unmoving"
+  ]
+}

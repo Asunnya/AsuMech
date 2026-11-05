@@ -1,0 +1,123 @@
+{
+  "scenario": "M9sAetherlettingScenario",
+  "casts": [
+    {
+      "actionId": 45886,
+      "name": "Crowd Kill",
+      "start": 6.75,
+      "resolve": 6.95,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45888,
+      "name": "Finale Fatale",
+      "start": 25.516,
+      "resolve": 30.216,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45939,
+      "name": "Pulping Pulse",
+      "start": 32.533,
+      "resolve": 36.233,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45967,
+      "name": "Aetherletting",
+      "start": 37.65,
+      "resolve": 49.65,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45969,
+      "name": "Aetherletting",
+      "start": 41.666,
+      "resolve": 50.366,
+      "occurrence": 2
+    },
+    {
+      "actionId": 45969,
+      "name": "Aetherletting",
+      "start": 43.683,
+      "resolve": 52.383,
+      "occurrence": 3
+    },
+    {
+      "actionId": 45969,
+      "name": "Aetherletting",
+      "start": 45.683,
+      "resolve": 54.383,
+      "occurrence": 4
+    },
+    {
+      "actionId": 45969,
+      "name": "Aetherletting",
+      "start": 47.683,
+      "resolve": 56.383,
+      "occurrence": 5
+    },
+    {
+      "actionId": 45970,
+      "name": "Aetherletting",
+      "start": 47.683,
+      "resolve": 52.383,
+      "occurrence": 6
+    },
+    {
+      "actionId": 45970,
+      "name": "Aetherletting",
+      "start": 49.683,
+      "resolve": 54.383,
+      "occurrence": 7
+    },
+    {
+      "actionId": 45970,
+      "name": "Aetherletting",
+      "start": 51.683,
+      "resolve": 56.383,
+      "occurrence": 8
+    },
+    {
+      "actionId": 45971,
+      "name": "Aetherletting",
+      "start": 53.166,
+      "resolve": 66.866,
+      "occurrence": 9
+    },
+    {
+      "actionId": 45970,
+      "name": "Aetherletting",
+      "start": 53.683,
+      "resolve": 58.383,
+      "occurrence": 10
+    },
+    {
+      "actionId": 45971,
+      "name": "Aetherletting",
+      "start": 55.149,
+      "resolve": 68.849,
+      "occurrence": 11
+    },
+    {
+      "actionId": 45971,
+      "name": "Aetherletting",
+      "start": 57.149,
+      "resolve": 70.849,
+      "occurrence": 12
+    },
+    {
+      "actionId": 45971,
+      "name": "Aetherletting",
+      "start": 59.149,
+      "resolve": 72.849,
+      "occurrence": 13
+    }
+  ],
+  "names": [
+    "Crowd Kill",
+    "Finale Fatale",
+    "Pulping Pulse",
+    "Aetherletting"
+  ]
+}

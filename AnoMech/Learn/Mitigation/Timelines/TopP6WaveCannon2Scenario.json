@@ -1,0 +1,115 @@
+{
+  "scenario": "TopP6WaveCannon2Scenario",
+  "casts": [
+    {
+      "actionId": 31650,
+      "name": "Cosmo Arrow",
+      "start": 1.917,
+      "resolve": 7.6169996,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31651,
+      "name": "Cosmo Arrow",
+      "start": 1.917,
+      "resolve": 9.617,
+      "occurrence": 2
+    },
+    {
+      "actionId": 32337,
+      "name": "Inhale",
+      "start": 1.917,
+      "resolve": 7.1169996,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31651,
+      "name": "Cosmo Arrow",
+      "start": 3.917,
+      "resolve": 11.617,
+      "occurrence": 3
+    },
+    {
+      "actionId": 32337,
+      "name": "Inhale",
+      "start": 3.917,
+      "resolve": 9.117,
+      "occurrence": 2
+    },
+    {
+      "actionId": 31652,
+      "name": "Cosmo Arrow",
+      "start": 11.917,
+      "resolve": 11.917,
+      "occurrence": 4
+    },
+    {
+      "actionId": 31652,
+      "name": "Cosmo Arrow",
+      "start": 13.917,
+      "resolve": 13.917,
+      "occurrence": 5
+    },
+    {
+      "actionId": 31652,
+      "name": "Cosmo Arrow",
+      "start": 15.917,
+      "resolve": 15.917,
+      "occurrence": 6
+    },
+    {
+      "actionId": 31657,
+      "name": "Wave Cannon",
+      "start": 16.033,
+      "resolve": 26.633001,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31652,
+      "name": "Cosmo Arrow",
+      "start": 17.917,
+      "resolve": 17.917,
+      "occurrence": 7
+    },
+    {
+      "actionId": 31659,
+      "name": "Wave Cannon",
+      "start": 19.083,
+      "resolve": 19.083,
+      "occurrence": 2
+    },
+    {
+      "actionId": 31652,
+      "name": "Cosmo Arrow",
+      "start": 19.917,
+      "resolve": 19.917,
+      "occurrence": 8
+    },
+    {
+      "actionId": 31659,
+      "name": "Wave Cannon",
+      "start": 21.083,
+      "resolve": 21.083,
+      "occurrence": 3
+    },
+    {
+      "actionId": 31652,
+      "name": "Cosmo Arrow",
+      "start": 21.917,
+      "resolve": 21.917,
+      "occurrence": 9
+    },
+    {
+      "actionId": 31658,
+      "name": "Wave Cannon",
+      "start": 27.416,
+      "resolve": 27.416,
+      "occurrence": 4
+    }
+  ],
+  "names": [
+    "Cosmo Arrow",
+    "Inhale",
+    "Wave Cannon"
+  ]
+}

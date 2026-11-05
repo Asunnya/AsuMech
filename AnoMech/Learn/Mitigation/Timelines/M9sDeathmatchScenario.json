@@ -1,0 +1,181 @@
+{
+  "scenario": "M9sDeathmatchScenario",
+  "casts": [
+    {
+      "actionId": 45984,
+      "name": "Undead Deathmatch",
+      "start": 2.717,
+      "resolve": 6.217,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45985,
+      "name": "Bloody Bondage",
+      "start": 2.717,
+      "resolve": 7.417,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45988,
+      "name": "Sanguine Scratch",
+      "start": 11.867,
+      "resolve": 13.867,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45989,
+      "name": "Sanguine Scratch",
+      "start": 11.867,
+      "resolve": 14.566999,
+      "occurrence": 2
+    },
+    {
+      "actionId": 45991,
+      "name": "Sanguine Scratch",
+      "start": 17.6,
+      "resolve": 17.6,
+      "occurrence": 3
+    },
+    {
+      "actionId": 45991,
+      "name": "Sanguine Scratch",
+      "start": 20,
+      "resolve": 20,
+      "occurrence": 4
+    },
+    {
+      "actionId": 45991,
+      "name": "Sanguine Scratch",
+      "start": 22.383,
+      "resolve": 22.383,
+      "occurrence": 5
+    },
+    {
+      "actionId": 45991,
+      "name": "Sanguine Scratch",
+      "start": 24.8,
+      "resolve": 24.8,
+      "occurrence": 6
+    },
+    {
+      "actionId": 45993,
+      "name": "Breakwing Beat",
+      "start": 26.433,
+      "resolve": 27.133001,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45992,
+      "name": "Breakdown Drop",
+      "start": 26.433,
+      "resolve": 27.133001,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45988,
+      "name": "Sanguine Scratch",
+      "start": 30.2,
+      "resolve": 32.2,
+      "occurrence": 7
+    },
+    {
+      "actionId": 45989,
+      "name": "Sanguine Scratch",
+      "start": 30.2,
+      "resolve": 32.9,
+      "occurrence": 8
+    },
+    {
+      "actionId": 45991,
+      "name": "Sanguine Scratch",
+      "start": 35.916,
+      "resolve": 35.916,
+      "occurrence": 9
+    },
+    {
+      "actionId": 45991,
+      "name": "Sanguine Scratch",
+      "start": 38.316,
+      "resolve": 38.316,
+      "occurrence": 10
+    },
+    {
+      "actionId": 45991,
+      "name": "Sanguine Scratch",
+      "start": 40.7,
+      "resolve": 40.7,
+      "occurrence": 11
+    },
+    {
+      "actionId": 45991,
+      "name": "Sanguine Scratch",
+      "start": 43.1,
+      "resolve": 43.1,
+      "occurrence": 12
+    },
+    {
+      "actionId": 45994,
+      "name": "Breakdown Drop",
+      "start": 44.766,
+      "resolve": 45.466,
+      "occurrence": 2
+    },
+    {
+      "actionId": 45995,
+      "name": "Breakwing Beat",
+      "start": 44.766,
+      "resolve": 45.466,
+      "occurrence": 2
+    },
+    {
+      "actionId": 45917,
+      "name": "Brutal Rain",
+      "start": 47.516,
+      "resolve": 51.016,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45955,
+      "name": "Brutal Rain",
+      "start": 52.883,
+      "resolve": 52.883,
+      "occurrence": 2
+    },
+    {
+      "actionId": 45955,
+      "name": "Brutal Rain",
+      "start": 53.949,
+      "resolve": 53.949,
+      "occurrence": 3
+    },
+    {
+      "actionId": 45955,
+      "name": "Brutal Rain",
+      "start": 55.016,
+      "resolve": 55.016,
+      "occurrence": 4
+    },
+    {
+      "actionId": 45955,
+      "name": "Brutal Rain",
+      "start": 56.083,
+      "resolve": 56.083,
+      "occurrence": 5
+    },
+    {
+      "actionId": 45955,
+      "name": "Brutal Rain",
+      "start": 57.149,
+      "resolve": 57.149,
+      "occurrence": 6
+    }
+  ],
+  "names": [
+    "Undead Deathmatch",
+    "Bloody Bondage",
+    "Sanguine Scratch",
+    "Breakwing Beat",
+    "Breakdown Drop",
+    "Brutal Rain"
+  ]
+}

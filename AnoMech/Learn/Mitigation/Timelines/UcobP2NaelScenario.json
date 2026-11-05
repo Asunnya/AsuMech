@@ -1,0 +1,554 @@
+{
+  "scenario": "UcobP2NaelScenario",
+  "casts": [
+    {
+      "actionId": 9912,
+      "name": "Heavensfall",
+      "start": 8.417,
+      "resolve": 8.417,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9913,
+      "name": "Thermionic Burst",
+      "start": 12.4,
+      "resolve": 15.099999,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9920,
+      "name": "Meteor Stream",
+      "start": 13.967,
+      "resolve": 13.967,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9913,
+      "name": "Thermionic Burst",
+      "start": 16.567,
+      "resolve": 19.267,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9920,
+      "name": "Meteor Stream",
+      "start": 17.183,
+      "resolve": 17.183,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9921,
+      "name": "Dalamud Dive",
+      "start": 19.967,
+      "resolve": 19.967,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9909,
+      "name": "Bahamut\u0027s Claw",
+      "start": 22.117,
+      "resolve": 22.117,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9909,
+      "name": "Bahamut\u0027s Claw",
+      "start": 22.916,
+      "resolve": 22.916,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9909,
+      "name": "Bahamut\u0027s Claw",
+      "start": 23.716,
+      "resolve": 23.716,
+      "occurrence": 3
+    },
+    {
+      "actionId": 9909,
+      "name": "Bahamut\u0027s Claw",
+      "start": 24.516,
+      "resolve": 24.516,
+      "occurrence": 4
+    },
+    {
+      "actionId": 9909,
+      "name": "Bahamut\u0027s Claw",
+      "start": 25.333,
+      "resolve": 25.333,
+      "occurrence": 5
+    },
+    {
+      "actionId": 9922,
+      "name": "Bahamut\u0027s Favor",
+      "start": 28.183,
+      "resolve": 30.883001,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9927,
+      "name": "Chain Lightning",
+      "start": 38.183,
+      "resolve": 38.183,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9926,
+      "name": "Iceball",
+      "start": 41.233,
+      "resolve": 41.233,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9926,
+      "name": "Iceball",
+      "start": 43.283,
+      "resolve": 43.283,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9928,
+      "name": "Chain Lightning",
+      "start": 44.316,
+      "resolve": 44.316,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9916,
+      "name": "Lunar Dynamo",
+      "start": 44.433,
+      "resolve": 44.433,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9926,
+      "name": "Iceball",
+      "start": 45.333,
+      "resolve": 45.333,
+      "occurrence": 3
+    },
+    {
+      "actionId": 9926,
+      "name": "Iceball",
+      "start": 47.383,
+      "resolve": 47.383,
+      "occurrence": 4
+    },
+    {
+      "actionId": 9917,
+      "name": "Thermionic Beam",
+      "start": 47.533,
+      "resolve": 47.533,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9930,
+      "name": "Wings of Salvation",
+      "start": 48.199,
+      "resolve": 50.899002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9929,
+      "name": "Deathstorm",
+      "start": 48.199,
+      "resolve": 48.199,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9925,
+      "name": "Fireball",
+      "start": 50.216,
+      "resolve": 50.216,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9930,
+      "name": "Wings of Salvation",
+      "start": 52.349,
+      "resolve": 55.049,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9926,
+      "name": "Iceball",
+      "start": 56.533,
+      "resolve": 56.533,
+      "occurrence": 5
+    },
+    {
+      "actionId": 9926,
+      "name": "Iceball",
+      "start": 58.599,
+      "resolve": 58.599,
+      "occurrence": 6
+    },
+    {
+      "actionId": 9909,
+      "name": "Bahamut\u0027s Claw",
+      "start": 58.683,
+      "resolve": 58.683,
+      "occurrence": 6
+    },
+    {
+      "actionId": 9909,
+      "name": "Bahamut\u0027s Claw",
+      "start": 59.499,
+      "resolve": 59.499,
+      "occurrence": 7
+    },
+    {
+      "actionId": 9909,
+      "name": "Bahamut\u0027s Claw",
+      "start": 60.299,
+      "resolve": 60.299,
+      "occurrence": 8
+    },
+    {
+      "actionId": 9926,
+      "name": "Iceball",
+      "start": 60.649,
+      "resolve": 60.649,
+      "occurrence": 7
+    },
+    {
+      "actionId": 9909,
+      "name": "Bahamut\u0027s Claw",
+      "start": 61.099,
+      "resolve": 61.099,
+      "occurrence": 9
+    },
+    {
+      "actionId": 9909,
+      "name": "Bahamut\u0027s Claw",
+      "start": 61.916,
+      "resolve": 61.916,
+      "occurrence": 10
+    },
+    {
+      "actionId": 9926,
+      "name": "Iceball",
+      "start": 62.716,
+      "resolve": 62.716,
+      "occurrence": 8
+    },
+    {
+      "actionId": 9927,
+      "name": "Chain Lightning",
+      "start": 63.333,
+      "resolve": 63.333,
+      "occurrence": 3
+    },
+    {
+      "actionId": 9925,
+      "name": "Fireball",
+      "start": 65.349,
+      "resolve": 65.349,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9928,
+      "name": "Chain Lightning",
+      "start": 69.45,
+      "resolve": 69.45,
+      "occurrence": 4
+    },
+    {
+      "actionId": 9917,
+      "name": "Thermionic Beam",
+      "start": 72.834,
+      "resolve": 72.834,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9916,
+      "name": "Lunar Dynamo",
+      "start": 75.868,
+      "resolve": 75.868,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9930,
+      "name": "Wings of Salvation",
+      "start": 76.502,
+      "resolve": 79.201996,
+      "occurrence": 3
+    },
+    {
+      "actionId": 9929,
+      "name": "Deathstorm",
+      "start": 77.352,
+      "resolve": 77.352,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9930,
+      "name": "Wings of Salvation",
+      "start": 80.653,
+      "resolve": 83.353,
+      "occurrence": 4
+    },
+    {
+      "actionId": 9927,
+      "name": "Chain Lightning",
+      "start": 82.486,
+      "resolve": 82.486,
+      "occurrence": 5
+    },
+    {
+      "actionId": 9926,
+      "name": "Iceball",
+      "start": 82.853,
+      "resolve": 82.853,
+      "occurrence": 9
+    },
+    {
+      "actionId": 9930,
+      "name": "Wings of Salvation",
+      "start": 84.82,
+      "resolve": 87.52,
+      "occurrence": 5
+    },
+    {
+      "actionId": 9926,
+      "name": "Iceball",
+      "start": 84.904,
+      "resolve": 84.904,
+      "occurrence": 10
+    },
+    {
+      "actionId": 9926,
+      "name": "Iceball",
+      "start": 86.971,
+      "resolve": 86.971,
+      "occurrence": 11
+    },
+    {
+      "actionId": 9928,
+      "name": "Chain Lightning",
+      "start": 88.604,
+      "resolve": 88.604,
+      "occurrence": 6
+    },
+    {
+      "actionId": 9926,
+      "name": "Iceball",
+      "start": 89.021,
+      "resolve": 89.021,
+      "occurrence": 12
+    },
+    {
+      "actionId": 9925,
+      "name": "Fireball",
+      "start": 91.488,
+      "resolve": 91.488,
+      "occurrence": 3
+    },
+    {
+      "actionId": 9909,
+      "name": "Bahamut\u0027s Claw",
+      "start": 94.972,
+      "resolve": 94.972,
+      "occurrence": 11
+    },
+    {
+      "actionId": 9909,
+      "name": "Bahamut\u0027s Claw",
+      "start": 95.773,
+      "resolve": 95.773,
+      "occurrence": 12
+    },
+    {
+      "actionId": 9909,
+      "name": "Bahamut\u0027s Claw",
+      "start": 96.573,
+      "resolve": 96.573,
+      "occurrence": 13
+    },
+    {
+      "actionId": 9909,
+      "name": "Bahamut\u0027s Claw",
+      "start": 97.39,
+      "resolve": 97.39,
+      "occurrence": 14
+    },
+    {
+      "actionId": 9909,
+      "name": "Bahamut\u0027s Claw",
+      "start": 98.19,
+      "resolve": 98.19,
+      "occurrence": 15
+    },
+    {
+      "actionId": 9926,
+      "name": "Iceball",
+      "start": 104.174,
+      "resolve": 104.174,
+      "occurrence": 13
+    },
+    {
+      "actionId": 9918,
+      "name": "Raven Dive",
+      "start": 106.175,
+      "resolve": 106.175,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9926,
+      "name": "Iceball",
+      "start": 106.225,
+      "resolve": 106.225,
+      "occurrence": 14
+    },
+    {
+      "actionId": 9926,
+      "name": "Iceball",
+      "start": 108.292,
+      "resolve": 108.292,
+      "occurrence": 15
+    },
+    {
+      "actionId": 9916,
+      "name": "Lunar Dynamo",
+      "start": 109.226,
+      "resolve": 109.226,
+      "occurrence": 3
+    },
+    {
+      "actionId": 9927,
+      "name": "Chain Lightning",
+      "start": 109.626,
+      "resolve": 109.626,
+      "occurrence": 7
+    },
+    {
+      "actionId": 9926,
+      "name": "Iceball",
+      "start": 110.342,
+      "resolve": 110.342,
+      "occurrence": 16
+    },
+    {
+      "actionId": 9925,
+      "name": "Fireball",
+      "start": 112.626,
+      "resolve": 112.626,
+      "occurrence": 4
+    },
+    {
+      "actionId": 9930,
+      "name": "Wings of Salvation",
+      "start": 112.943,
+      "resolve": 115.643,
+      "occurrence": 6
+    },
+    {
+      "actionId": 9929,
+      "name": "Deathstorm",
+      "start": 113.476,
+      "resolve": 113.476,
+      "occurrence": 3
+    },
+    {
+      "actionId": 9928,
+      "name": "Chain Lightning",
+      "start": 115.744,
+      "resolve": 115.744,
+      "occurrence": 8
+    },
+    {
+      "actionId": 9930,
+      "name": "Wings of Salvation",
+      "start": 117.094,
+      "resolve": 119.794,
+      "occurrence": 7
+    },
+    {
+      "actionId": 9926,
+      "name": "Iceball",
+      "start": 118.477,
+      "resolve": 118.477,
+      "occurrence": 17
+    },
+    {
+      "actionId": 9926,
+      "name": "Iceball",
+      "start": 119.594,
+      "resolve": 119.594,
+      "occurrence": 18
+    },
+    {
+      "actionId": 9926,
+      "name": "Iceball",
+      "start": 120.711,
+      "resolve": 120.711,
+      "occurrence": 19
+    },
+    {
+      "actionId": 9930,
+      "name": "Wings of Salvation",
+      "start": 121.245,
+      "resolve": 123.945,
+      "occurrence": 8
+    },
+    {
+      "actionId": 9926,
+      "name": "Iceball",
+      "start": 121.828,
+      "resolve": 121.828,
+      "occurrence": 20
+    },
+    {
+      "actionId": 9926,
+      "name": "Iceball",
+      "start": 122.945,
+      "resolve": 122.945,
+      "occurrence": 21
+    },
+    {
+      "actionId": 9926,
+      "name": "Iceball",
+      "start": 124.062,
+      "resolve": 124.062,
+      "occurrence": 22
+    },
+    {
+      "actionId": 9926,
+      "name": "Iceball",
+      "start": 125.179,
+      "resolve": 125.179,
+      "occurrence": 23
+    },
+    {
+      "actionId": 9926,
+      "name": "Iceball",
+      "start": 126.296,
+      "resolve": 126.296,
+      "occurrence": 24
+    },
+    {
+      "actionId": 9910,
+      "name": "Ravensbeak",
+      "start": 130.362,
+      "resolve": 134.062,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Heavensfall",
+    "Thermionic Burst",
+    "Meteor Stream",
+    "Dalamud Dive",
+    "Bahamut\u0027s Claw",
+    "Bahamut\u0027s Favor",
+    "Chain Lightning",
+    "Iceball",
+    "Lunar Dynamo",
+    "Thermionic Beam",
+    "Wings of Salvation",
+    "Deathstorm",
+    "Fireball",
+    "Raven Dive",
+    "Ravensbeak"
+  ]
+}

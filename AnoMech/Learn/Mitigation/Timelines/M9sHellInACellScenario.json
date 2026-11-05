@@ -1,0 +1,139 @@
+{
+  "scenario": "M9sHellInACellScenario",
+  "casts": [
+    {
+      "actionId": 45889,
+      "name": "Finale Fatale",
+      "start": 2.733,
+      "resolve": 7.4329996,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45939,
+      "name": "Pulping Pulse",
+      "start": 9.75,
+      "resolve": 13.45,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45973,
+      "name": "Hell in a Cell",
+      "start": 14.883,
+      "resolve": 18.383,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45974,
+      "name": "Bloody Bondage",
+      "start": 14.883,
+      "resolve": 19.583,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45980,
+      "name": "Ultrasonic Spread",
+      "start": 22,
+      "resolve": 26.7,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47235,
+      "name": "Ultrasonic Spread",
+      "start": 28.016,
+      "resolve": 28.016,
+      "occurrence": 2
+    },
+    {
+      "actionId": 45982,
+      "name": "Ultrasonic Spread",
+      "start": 28.016,
+      "resolve": 28.016,
+      "occurrence": 3
+    },
+    {
+      "actionId": 45981,
+      "name": "Ultrasonic Amp",
+      "start": 29.116,
+      "resolve": 33.815998,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45983,
+      "name": "Ultrasonic Amp",
+      "start": 35.133,
+      "resolve": 35.133,
+      "occurrence": 2
+    },
+    {
+      "actionId": 45973,
+      "name": "Hell in a Cell",
+      "start": 37.266,
+      "resolve": 40.766,
+      "occurrence": 2
+    },
+    {
+      "actionId": 45974,
+      "name": "Bloody Bondage",
+      "start": 37.266,
+      "resolve": 41.966,
+      "occurrence": 2
+    },
+    {
+      "actionId": 45980,
+      "name": "Ultrasonic Spread",
+      "start": 44.416,
+      "resolve": 49.116,
+      "occurrence": 4
+    },
+    {
+      "actionId": 47235,
+      "name": "Ultrasonic Spread",
+      "start": 50.433,
+      "resolve": 50.433,
+      "occurrence": 5
+    },
+    {
+      "actionId": 45982,
+      "name": "Ultrasonic Spread",
+      "start": 50.433,
+      "resolve": 50.433,
+      "occurrence": 6
+    },
+    {
+      "actionId": 45981,
+      "name": "Ultrasonic Amp",
+      "start": 51.566,
+      "resolve": 56.266003,
+      "occurrence": 3
+    },
+    {
+      "actionId": 45983,
+      "name": "Ultrasonic Amp",
+      "start": 57.583,
+      "resolve": 57.583,
+      "occurrence": 4
+    },
+    {
+      "actionId": 45939,
+      "name": "Pulping Pulse",
+      "start": 58.433,
+      "resolve": 62.133,
+      "occurrence": 2
+    },
+    {
+      "actionId": 45939,
+      "name": "Pulping Pulse",
+      "start": 62.433,
+      "resolve": 66.132996,
+      "occurrence": 3
+    }
+  ],
+  "names": [
+    "Finale Fatale",
+    "Pulping Pulse",
+    "Hell in a Cell",
+    "Bloody Bondage",
+    "Ultrasonic Spread",
+    "Ultrasonic Amp"
+  ]
+}

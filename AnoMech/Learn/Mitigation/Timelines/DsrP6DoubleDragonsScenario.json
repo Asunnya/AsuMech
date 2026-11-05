@@ -1,0 +1,383 @@
+{
+  "scenario": "DsrP6DoubleDragonsScenario",
+  "casts": [
+    {
+      "actionId": 27946,
+      "name": "Wyrmclaw",
+      "start": 8.483,
+      "resolve": 8.483,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27938,
+      "name": "Wyrmclaw",
+      "start": 8.517,
+      "resolve": 8.517,
+      "occurrence": 2
+    },
+    {
+      "actionId": 27946,
+      "name": "Wyrmclaw",
+      "start": 11.583,
+      "resolve": 11.583,
+      "occurrence": 3
+    },
+    {
+      "actionId": 27938,
+      "name": "Wyrmclaw",
+      "start": 11.633,
+      "resolve": 11.633,
+      "occurrence": 4
+    },
+    {
+      "actionId": 27955,
+      "name": "Dread Wyrmsbreath",
+      "start": 14.75,
+      "resolve": 20.75,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27956,
+      "name": "Great Wyrmsbreath",
+      "start": 14.75,
+      "resolve": 20.75,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27960,
+      "name": "Swirling Blizzard",
+      "start": 14.75,
+      "resolve": 21.45,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27959,
+      "name": "Ice Breath",
+      "start": 21.833,
+      "resolve": 21.833,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27958,
+      "name": "Flame Breath",
+      "start": 21.833,
+      "resolve": 21.833,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27963,
+      "name": "Dark Breath",
+      "start": 21.833,
+      "resolve": 21.833,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27965,
+      "name": "Staggering Breath",
+      "start": 21.833,
+      "resolve": 21.833,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27946,
+      "name": "Wyrmclaw",
+      "start": 24.833,
+      "resolve": 24.833,
+      "occurrence": 5
+    },
+    {
+      "actionId": 27938,
+      "name": "Wyrmclaw",
+      "start": 24.866,
+      "resolve": 24.866,
+      "occurrence": 6
+    },
+    {
+      "actionId": 27946,
+      "name": "Wyrmclaw",
+      "start": 27.95,
+      "resolve": 27.95,
+      "occurrence": 7
+    },
+    {
+      "actionId": 27938,
+      "name": "Wyrmclaw",
+      "start": 27.95,
+      "resolve": 27.95,
+      "occurrence": 8
+    },
+    {
+      "actionId": 27952,
+      "name": "Mortal Vow",
+      "start": 29.016,
+      "resolve": 29.016,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27971,
+      "name": "Akh Afah",
+      "start": 32.183,
+      "resolve": 39.883,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27969,
+      "name": "Akh Afah",
+      "start": 32.183,
+      "resolve": 39.883,
+      "occurrence": 2
+    },
+    {
+      "actionId": 27970,
+      "name": "Akh Afah",
+      "start": 40.366,
+      "resolve": 40.366,
+      "occurrence": 3
+    },
+    {
+      "actionId": 27972,
+      "name": "Akh Afah",
+      "start": 40.366,
+      "resolve": 40.366,
+      "occurrence": 4
+    },
+    {
+      "actionId": 27943,
+      "name": "Hallowed Wings",
+      "start": 45.983,
+      "resolve": 53.183002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27966,
+      "name": "Cauterize",
+      "start": 49.533,
+      "resolve": 54.233,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27944,
+      "name": "Hallowed Wings",
+      "start": 54.266,
+      "resolve": 54.266,
+      "occurrence": 2
+    },
+    {
+      "actionId": 27945,
+      "name": "Hallowed Plume",
+      "start": 54.266,
+      "resolve": 54.266,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27946,
+      "name": "Wyrmclaw",
+      "start": 59.816,
+      "resolve": 59.816,
+      "occurrence": 9
+    },
+    {
+      "actionId": 27938,
+      "name": "Wyrmclaw",
+      "start": 59.849,
+      "resolve": 59.849,
+      "occurrence": 10
+    },
+    {
+      "actionId": 27946,
+      "name": "Wyrmclaw",
+      "start": 62.933,
+      "resolve": 62.933,
+      "occurrence": 11
+    },
+    {
+      "actionId": 27938,
+      "name": "Wyrmclaw",
+      "start": 62.966,
+      "resolve": 62.966,
+      "occurrence": 12
+    },
+    {
+      "actionId": 27953,
+      "name": "Mortal Vow",
+      "start": 62.983,
+      "resolve": 62.983,
+      "occurrence": 2
+    },
+    {
+      "actionId": 27946,
+      "name": "Wyrmclaw",
+      "start": 66.033,
+      "resolve": 66.033,
+      "occurrence": 13
+    },
+    {
+      "actionId": 27973,
+      "name": "Wroth Flames",
+      "start": 66.083,
+      "resolve": 68.283,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27974,
+      "name": "Akh Morn",
+      "start": 71.384,
+      "resolve": 79.084,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27967,
+      "name": "Cauterize",
+      "start": 74.468,
+      "resolve": 79.168,
+      "occurrence": 2
+    },
+    {
+      "actionId": 26409,
+      "name": "Flame Blast",
+      "start": 77.702,
+      "resolve": 82.402,
+      "occurrence": 1
+    },
+    {
+      "actionId": 26409,
+      "name": "Flame Blast",
+      "start": 79.703,
+      "resolve": 84.403,
+      "occurrence": 2
+    },
+    {
+      "actionId": 27975,
+      "name": "Akh Morn",
+      "start": 81.019,
+      "resolve": 81.019,
+      "occurrence": 2
+    },
+    {
+      "actionId": 27975,
+      "name": "Akh Morn",
+      "start": 82.586,
+      "resolve": 82.586,
+      "occurrence": 3
+    },
+    {
+      "actionId": 26409,
+      "name": "Flame Blast",
+      "start": 82.687,
+      "resolve": 87.38699,
+      "occurrence": 3
+    },
+    {
+      "actionId": 27975,
+      "name": "Akh Morn",
+      "start": 84.137,
+      "resolve": 84.137,
+      "occurrence": 4
+    },
+    {
+      "actionId": 27949,
+      "name": "Hot Tail",
+      "start": 85.787,
+      "resolve": 90.987,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27950,
+      "name": "Hot Tail",
+      "start": 85.787,
+      "resolve": 91.987,
+      "occurrence": 2
+    },
+    {
+      "actionId": 27946,
+      "name": "Wyrmclaw",
+      "start": 85.871,
+      "resolve": 85.871,
+      "occurrence": 14
+    },
+    {
+      "actionId": 27946,
+      "name": "Wyrmclaw",
+      "start": 88.955,
+      "resolve": 88.955,
+      "occurrence": 15
+    },
+    {
+      "actionId": 27946,
+      "name": "Wyrmclaw",
+      "start": 92.022,
+      "resolve": 92.022,
+      "occurrence": 16
+    },
+    {
+      "actionId": 29739,
+      "name": "Spreading Flames",
+      "start": 93.272,
+      "resolve": 93.272,
+      "occurrence": 1
+    },
+    {
+      "actionId": 29740,
+      "name": "Entangled Flames",
+      "start": 93.272,
+      "resolve": 93.272,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27946,
+      "name": "Wyrmclaw",
+      "start": 95.106,
+      "resolve": 95.106,
+      "occurrence": 17
+    },
+    {
+      "actionId": 27938,
+      "name": "Wyrmclaw",
+      "start": 95.156,
+      "resolve": 95.156,
+      "occurrence": 18
+    },
+    {
+      "actionId": 27953,
+      "name": "Mortal Vow",
+      "start": 97.04,
+      "resolve": 97.04,
+      "occurrence": 3
+    },
+    {
+      "actionId": 27946,
+      "name": "Wyrmclaw",
+      "start": 98.223,
+      "resolve": 98.223,
+      "occurrence": 19
+    },
+    {
+      "actionId": 27938,
+      "name": "Wyrmclaw",
+      "start": 98.273,
+      "resolve": 98.273,
+      "occurrence": 20
+    }
+  ],
+  "names": [
+    "Wyrmclaw",
+    "Dread Wyrmsbreath",
+    "Great Wyrmsbreath",
+    "Swirling Blizzard",
+    "Ice Breath",
+    "Flame Breath",
+    "Dark Breath",
+    "Staggering Breath",
+    "Mortal Vow",
+    "Akh Afah",
+    "Hallowed Wings",
+    "Cauterize",
+    "Hallowed Plume",
+    "Wroth Flames",
+    "Akh Morn",
+    "Flame Blast",
+    "Hot Tail",
+    "Spreading Flames",
+    "Entangled Flames"
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "scenario": "UmadP5CelestriadScenario",
+  "casts": [
+    {
+      "actionId": 47938,
+      "name": "Celestriad",
+      "start": 1.017,
+      "resolve": 5.717,
+      "occurrence": 1
+    },
+    {
+      "actionId": 49742,
+      "name": "Catastrophic Choice",
+      "start": 10.183,
+      "resolve": 14.183,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47939,
+      "name": "Fire III",
+      "start": 15.067,
+      "resolve": 15.067,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47941,
+      "name": "Thunder III",
+      "start": 15.067,
+      "resolve": 15.067,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47940,
+      "name": "Blizzard III",
+      "start": 15.067,
+      "resolve": 15.067,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47946,
+      "name": "Quake",
+      "start": 15.267,
+      "resolve": 15.267,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47939,
+      "name": "Fire III",
+      "start": 21.117,
+      "resolve": 21.117,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47941,
+      "name": "Thunder III",
+      "start": 21.117,
+      "resolve": 21.117,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47940,
+      "name": "Blizzard III",
+      "start": 21.117,
+      "resolve": 21.117,
+      "occurrence": 2
+    },
+    {
+      "actionId": 49742,
+      "name": "Catastrophic Choice",
+      "start": 22.316,
+      "resolve": 26.316,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47939,
+      "name": "Fire III",
+      "start": 27.116,
+      "resolve": 27.116,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47941,
+      "name": "Thunder III",
+      "start": 27.116,
+      "resolve": 27.116,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47940,
+      "name": "Blizzard III",
+      "start": 27.116,
+      "resolve": 27.116,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47946,
+      "name": "Quake",
+      "start": 27.4,
+      "resolve": 27.4,
+      "occurrence": 2
+    }
+  ],
+  "names": [
+    "Celestriad",
+    "Catastrophic Choice",
+    "Fire III",
+    "Thunder III",
+    "Blizzard III",
+    "Quake"
+  ]
+}

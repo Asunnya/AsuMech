@@ -1,0 +1,254 @@
+{
+  "scenario": "UmadP5ExaflaresScenario",
+  "casts": [
+    {
+      "actionId": 47931,
+      "name": "Stray Apocalypse",
+      "start": 3.017,
+      "resolve": 6.717,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47932,
+      "name": "Stray Apocalypse",
+      "start": 3.017,
+      "resolve": 6.717,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47932,
+      "name": "Stray Apocalypse",
+      "start": 5.5,
+      "resolve": 9.2,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47933,
+      "name": "Stray Apocalypse",
+      "start": 7.583,
+      "resolve": 7.583,
+      "occurrence": 4
+    },
+    {
+      "actionId": 47932,
+      "name": "Stray Apocalypse",
+      "start": 8,
+      "resolve": 11.7,
+      "occurrence": 5
+    },
+    {
+      "actionId": 47933,
+      "name": "Stray Apocalypse",
+      "start": 8.1,
+      "resolve": 8.1,
+      "occurrence": 6
+    },
+    {
+      "actionId": 47933,
+      "name": "Stray Apocalypse",
+      "start": 8.617,
+      "resolve": 8.617,
+      "occurrence": 7
+    },
+    {
+      "actionId": 47933,
+      "name": "Stray Apocalypse",
+      "start": 9.133,
+      "resolve": 9.133,
+      "occurrence": 8
+    },
+    {
+      "actionId": 47933,
+      "name": "Stray Apocalypse",
+      "start": 9.65,
+      "resolve": 9.65,
+      "occurrence": 9
+    },
+    {
+      "actionId": 47933,
+      "name": "Stray Apocalypse",
+      "start": 10.15,
+      "resolve": 10.15,
+      "occurrence": 10
+    },
+    {
+      "actionId": 47932,
+      "name": "Stray Apocalypse",
+      "start": 10.5,
+      "resolve": 14.2,
+      "occurrence": 11
+    },
+    {
+      "actionId": 47933,
+      "name": "Stray Apocalypse",
+      "start": 11.117,
+      "resolve": 11.117,
+      "occurrence": 12
+    },
+    {
+      "actionId": 47933,
+      "name": "Stray Apocalypse",
+      "start": 11.633,
+      "resolve": 11.633,
+      "occurrence": 13
+    },
+    {
+      "actionId": 47933,
+      "name": "Stray Apocalypse",
+      "start": 12.15,
+      "resolve": 12.15,
+      "occurrence": 14
+    },
+    {
+      "actionId": 47933,
+      "name": "Stray Apocalypse",
+      "start": 12.65,
+      "resolve": 12.65,
+      "occurrence": 15
+    },
+    {
+      "actionId": 47932,
+      "name": "Stray Apocalypse",
+      "start": 13.017,
+      "resolve": 16.717001,
+      "occurrence": 16
+    },
+    {
+      "actionId": 47933,
+      "name": "Stray Apocalypse",
+      "start": 13.617,
+      "resolve": 13.617,
+      "occurrence": 17
+    },
+    {
+      "actionId": 47933,
+      "name": "Stray Apocalypse",
+      "start": 14.133,
+      "resolve": 14.133,
+      "occurrence": 18
+    },
+    {
+      "actionId": 47933,
+      "name": "Stray Apocalypse",
+      "start": 14.65,
+      "resolve": 14.65,
+      "occurrence": 19
+    },
+    {
+      "actionId": 47933,
+      "name": "Stray Apocalypse",
+      "start": 15.15,
+      "resolve": 15.15,
+      "occurrence": 20
+    },
+    {
+      "actionId": 47932,
+      "name": "Stray Apocalypse",
+      "start": 15.517,
+      "resolve": 19.217001,
+      "occurrence": 21
+    },
+    {
+      "actionId": 47933,
+      "name": "Stray Apocalypse",
+      "start": 16.117,
+      "resolve": 16.117,
+      "occurrence": 22
+    },
+    {
+      "actionId": 47933,
+      "name": "Stray Apocalypse",
+      "start": 16.633,
+      "resolve": 16.633,
+      "occurrence": 23
+    },
+    {
+      "actionId": 47933,
+      "name": "Stray Apocalypse",
+      "start": 17.15,
+      "resolve": 17.15,
+      "occurrence": 24
+    },
+    {
+      "actionId": 47933,
+      "name": "Stray Apocalypse",
+      "start": 17.65,
+      "resolve": 17.65,
+      "occurrence": 25
+    },
+    {
+      "actionId": 47933,
+      "name": "Stray Apocalypse",
+      "start": 18.617,
+      "resolve": 18.617,
+      "occurrence": 26
+    },
+    {
+      "actionId": 47933,
+      "name": "Stray Apocalypse",
+      "start": 19.133,
+      "resolve": 19.133,
+      "occurrence": 27
+    },
+    {
+      "actionId": 47934,
+      "name": "Stray Entropy",
+      "start": 19.217,
+      "resolve": 23.917,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47933,
+      "name": "Stray Apocalypse",
+      "start": 19.65,
+      "resolve": 19.65,
+      "occurrence": 28
+    },
+    {
+      "actionId": 47933,
+      "name": "Stray Apocalypse",
+      "start": 20.15,
+      "resolve": 20.15,
+      "occurrence": 29
+    },
+    {
+      "actionId": 47933,
+      "name": "Stray Apocalypse",
+      "start": 21.117,
+      "resolve": 21.117,
+      "occurrence": 30
+    },
+    {
+      "actionId": 47933,
+      "name": "Stray Apocalypse",
+      "start": 21.633,
+      "resolve": 21.633,
+      "occurrence": 31
+    },
+    {
+      "actionId": 47933,
+      "name": "Stray Apocalypse",
+      "start": 22.15,
+      "resolve": 22.15,
+      "occurrence": 32
+    },
+    {
+      "actionId": 47933,
+      "name": "Stray Apocalypse",
+      "start": 22.65,
+      "resolve": 22.65,
+      "occurrence": 33
+    },
+    {
+      "actionId": 47935,
+      "name": "Stray Entropy",
+      "start": 25.1,
+      "resolve": 25.1,
+      "occurrence": 2
+    }
+  ],
+  "names": [
+    "Stray Apocalypse",
+    "Stray Entropy"
+  ]
+}

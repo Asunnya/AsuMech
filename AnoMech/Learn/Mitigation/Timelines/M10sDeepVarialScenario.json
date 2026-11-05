@@ -1,0 +1,200 @@
+{
+  "scenario": "M10sDeepVarialScenario",
+  "casts": [
+    {
+      "actionId": 47249,
+      "name": "Deep Varial",
+      "start": 4.483,
+      "resolve": 9.483,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46547,
+      "name": "Deep Varial",
+      "start": 4.483,
+      "resolve": 10.983,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46528,
+      "name": "Alley-oop Inferno",
+      "start": 9.483,
+      "resolve": 13.483,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46529,
+      "name": "Alley-oop Inferno",
+      "start": 9.483,
+      "resolve": 14.183,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46587,
+      "name": "Steam Burst",
+      "start": 12.567,
+      "resolve": 15.267,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46551,
+      "name": "Awesome Splash",
+      "start": 14.333,
+      "resolve": 14.333,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46532,
+      "name": "Hot Aerial",
+      "start": 18.3,
+      "resolve": 23,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46541,
+      "name": "Sickest Take-off",
+      "start": 22.983,
+      "resolve": 26.683,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47389,
+      "name": "Hot Aerial",
+      "start": 23.566,
+      "resolve": 23.566,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47390,
+      "name": "Hot Aerial",
+      "start": 24.733,
+      "resolve": 24.733,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47389,
+      "name": "Hot Aerial",
+      "start": 25.7,
+      "resolve": 25.7,
+      "occurrence": 4
+    },
+    {
+      "actionId": 47391,
+      "name": "Hot Aerial",
+      "start": 26.866,
+      "resolve": 26.866,
+      "occurrence": 5
+    },
+    {
+      "actionId": 47389,
+      "name": "Hot Aerial",
+      "start": 27.783,
+      "resolve": 27.783,
+      "occurrence": 6
+    },
+    {
+      "actionId": 47392,
+      "name": "Hot Aerial",
+      "start": 28.95,
+      "resolve": 28.95,
+      "occurrence": 7
+    },
+    {
+      "actionId": 46542,
+      "name": "Sickest Take-off",
+      "start": 29.033,
+      "resolve": 35.733,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46540,
+      "name": "Sick Swell",
+      "start": 29.033,
+      "resolve": 35.733,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47389,
+      "name": "Hot Aerial",
+      "start": 29.833,
+      "resolve": 29.833,
+      "occurrence": 8
+    },
+    {
+      "actionId": 47393,
+      "name": "Hot Aerial",
+      "start": 31,
+      "resolve": 31,
+      "occurrence": 9
+    },
+    {
+      "actionId": 46537,
+      "name": "Cutback Blaze",
+      "start": 37.016,
+      "resolve": 41.016,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46587,
+      "name": "Steam Burst",
+      "start": 37.333,
+      "resolve": 40.033,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46544,
+      "name": "Awesome Slab",
+      "start": 38.616,
+      "resolve": 38.616,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46538,
+      "name": "Cutback Blaze",
+      "start": 42.183,
+      "resolve": 42.183,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46519,
+      "name": "Deep Impact",
+      "start": 43.25,
+      "resolve": 47.85,
+      "occurrence": 1
+    },
+    {
+      "actionId": 44486,
+      "name": "Deep Impact",
+      "start": 48.516,
+      "resolve": 48.516,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46520,
+      "name": "Divers\u0027 Dare",
+      "start": 50.649,
+      "resolve": 55.349,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46521,
+      "name": "Divers\u0027 Dare",
+      "start": 50.649,
+      "resolve": 55.349,
+      "occurrence": 2
+    }
+  ],
+  "names": [
+    "Deep Varial",
+    "Alley-oop Inferno",
+    "Steam Burst",
+    "Awesome Splash",
+    "Hot Aerial",
+    "Sickest Take-off",
+    "Sick Swell",
+    "Cutback Blaze",
+    "Awesome Slab",
+    "Deep Impact",
+    "Divers\u0027 Dare"
+  ]
+}

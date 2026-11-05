@@ -1,0 +1,183 @@
+{
+  "scenario": "DsrP6CauterizeScenario",
+  "casts": [
+    {
+      "actionId": 27971,
+      "name": "Akh Afah",
+      "start": 101.384,
+      "resolve": 109.084,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27969,
+      "name": "Akh Afah",
+      "start": 101.384,
+      "resolve": 109.084,
+      "occurrence": 2
+    },
+    {
+      "actionId": 27970,
+      "name": "Akh Afah",
+      "start": 109.569,
+      "resolve": 109.569,
+      "occurrence": 3
+    },
+    {
+      "actionId": 27972,
+      "name": "Akh Afah",
+      "start": 109.569,
+      "resolve": 109.569,
+      "occurrence": 4
+    },
+    {
+      "actionId": 27940,
+      "name": "Hallowed Wings",
+      "start": 114.053,
+      "resolve": 121.253,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27947,
+      "name": "Hot Wing",
+      "start": 116.054,
+      "resolve": 121.254,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27948,
+      "name": "Hot Wing",
+      "start": 116.054,
+      "resolve": 122.254,
+      "occurrence": 2
+    },
+    {
+      "actionId": 27941,
+      "name": "Hallowed Wings",
+      "start": 122.355,
+      "resolve": 122.355,
+      "occurrence": 2
+    },
+    {
+      "actionId": 27945,
+      "name": "Hallowed Plume",
+      "start": 122.355,
+      "resolve": 122.355,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27953,
+      "name": "Mortal Vow",
+      "start": 131.072,
+      "resolve": 131.072,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27954,
+      "name": "Dread Wyrmsbreath",
+      "start": 135.088,
+      "resolve": 141.088,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27957,
+      "name": "Great Wyrmsbreath",
+      "start": 135.088,
+      "resolve": 141.088,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27960,
+      "name": "Swirling Blizzard",
+      "start": 135.088,
+      "resolve": 141.788,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27959,
+      "name": "Ice Breath",
+      "start": 142.186,
+      "resolve": 142.186,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27958,
+      "name": "Flame Breath",
+      "start": 142.186,
+      "resolve": 142.186,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27964,
+      "name": "Holy Breath",
+      "start": 142.186,
+      "resolve": 142.186,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27965,
+      "name": "Staggering Breath",
+      "start": 142.186,
+      "resolve": 142.186,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27966,
+      "name": "Cauterize",
+      "start": 149.701,
+      "resolve": 154.401,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27967,
+      "name": "Cauterize",
+      "start": 149.701,
+      "resolve": 154.401,
+      "occurrence": 2
+    },
+    {
+      "actionId": 27968,
+      "name": "Touchdown",
+      "start": 160.815,
+      "resolve": 160.815,
+      "occurrence": 1
+    },
+    {
+      "actionId": 28903,
+      "name": "Touchdown",
+      "start": 161.698,
+      "resolve": 161.698,
+      "occurrence": 2
+    },
+    {
+      "actionId": 27937,
+      "name": "Revenge of the Horde",
+      "start": 162.948,
+      "resolve": 187.648,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27953,
+      "name": "Mortal Vow",
+      "start": 165.114,
+      "resolve": 165.114,
+      "occurrence": 2
+    }
+  ],
+  "names": [
+    "Akh Afah",
+    "Hallowed Wings",
+    "Hot Wing",
+    "Hallowed Plume",
+    "Mortal Vow",
+    "Dread Wyrmsbreath",
+    "Great Wyrmsbreath",
+    "Swirling Blizzard",
+    "Ice Breath",
+    "Flame Breath",
+    "Holy Breath",
+    "Staggering Breath",
+    "Cauterize",
+    "Touchdown",
+    "Revenge of the Horde"
+  ]
+}

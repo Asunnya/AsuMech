@@ -1,0 +1,343 @@
+{
+  "scenario": "M11sOpenerScenario",
+  "casts": [
+    {
+      "actionId": 46085,
+      "name": "",
+      "start": 0.5,
+      "resolve": 0.5,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46085,
+      "name": "",
+      "start": 3.05,
+      "resolve": 3.05,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46086,
+      "name": "Crown of Arcadia",
+      "start": 5.183,
+      "resolve": 9.882999,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46085,
+      "name": "",
+      "start": 11.117,
+      "resolve": 11.117,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46085,
+      "name": "",
+      "start": 14.15,
+      "resolve": 14.15,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46114,
+      "name": "Raw Steel Trophy",
+      "start": 15.35,
+      "resolve": 17.050001,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46090,
+      "name": "Raw Steel",
+      "start": 23.466,
+      "resolve": 23.466,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46091,
+      "name": "Raw Steel",
+      "start": 23.633,
+      "resolve": 23.633,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46092,
+      "name": "Impact",
+      "start": 24.8,
+      "resolve": 24.8,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46085,
+      "name": "",
+      "start": 27.7,
+      "resolve": 27.7,
+      "occurrence": 5
+    },
+    {
+      "actionId": 46085,
+      "name": "",
+      "start": 30.733,
+      "resolve": 30.733,
+      "occurrence": 6
+    },
+    {
+      "actionId": 46102,
+      "name": "Trophy Weapons",
+      "start": 35.066,
+      "resolve": 37.766003,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46103,
+      "name": "Assault Evolved",
+      "start": 41.933,
+      "resolve": 47.633,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46404,
+      "name": "Assault Evolved",
+      "start": 48.183,
+      "resolve": 48.183,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46105,
+      "name": "Assault Evolved",
+      "start": 48.183,
+      "resolve": 49.883,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46108,
+      "name": "Sweeping Victory",
+      "start": 49.999,
+      "resolve": 49.999,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46405,
+      "name": "Assault Evolved",
+      "start": 53.299,
+      "resolve": 53.299,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46106,
+      "name": "Assault Evolved",
+      "start": 53.299,
+      "resolve": 54.999,
+      "occurrence": 5
+    },
+    {
+      "actionId": 46109,
+      "name": "Sharp Taste",
+      "start": 55.116,
+      "resolve": 55.116,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46403,
+      "name": "Assault Evolved",
+      "start": 58.433,
+      "resolve": 58.433,
+      "occurrence": 6
+    },
+    {
+      "actionId": 46104,
+      "name": "Assault Evolved",
+      "start": 58.433,
+      "resolve": 60.133,
+      "occurrence": 7
+    },
+    {
+      "actionId": 46107,
+      "name": "Heavy Weight",
+      "start": 60.249,
+      "resolve": 60.249,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46085,
+      "name": "",
+      "start": 63.466,
+      "resolve": 63.466,
+      "occurrence": 7
+    },
+    {
+      "actionId": 46085,
+      "name": "",
+      "start": 66.5,
+      "resolve": 66.5,
+      "occurrence": 8
+    },
+    {
+      "actionId": 46084,
+      "name": "",
+      "start": 67.567,
+      "resolve": 67.567,
+      "occurrence": 9
+    },
+    {
+      "actionId": 46102,
+      "name": "Trophy Weapons",
+      "start": 69.65,
+      "resolve": 72.35,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46098,
+      "name": "Void Stardust",
+      "start": 75.835,
+      "resolve": 79.534996,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46099,
+      "name": "Cometite",
+      "start": 80.953,
+      "resolve": 83.653,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46099,
+      "name": "Cometite",
+      "start": 82.953,
+      "resolve": 85.653,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46099,
+      "name": "Cometite",
+      "start": 84.97,
+      "resolve": 87.67,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46100,
+      "name": "Comet",
+      "start": 84.97,
+      "resolve": 89.67,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46103,
+      "name": "Assault Evolved",
+      "start": 86.921,
+      "resolve": 92.620995,
+      "occurrence": 8
+    },
+    {
+      "actionId": 46403,
+      "name": "Assault Evolved",
+      "start": 93.172,
+      "resolve": 93.172,
+      "occurrence": 9
+    },
+    {
+      "actionId": 46104,
+      "name": "Assault Evolved",
+      "start": 93.172,
+      "resolve": 94.871994,
+      "occurrence": 10
+    },
+    {
+      "actionId": 46107,
+      "name": "Heavy Weight",
+      "start": 94.989,
+      "resolve": 94.989,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46404,
+      "name": "Assault Evolved",
+      "start": 98.307,
+      "resolve": 98.307,
+      "occurrence": 11
+    },
+    {
+      "actionId": 46105,
+      "name": "Assault Evolved",
+      "start": 98.307,
+      "resolve": 100.006996,
+      "occurrence": 12
+    },
+    {
+      "actionId": 46108,
+      "name": "Sweeping Victory",
+      "start": 100.124,
+      "resolve": 100.124,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46405,
+      "name": "Assault Evolved",
+      "start": 103.424,
+      "resolve": 103.424,
+      "occurrence": 13
+    },
+    {
+      "actionId": 46106,
+      "name": "Assault Evolved",
+      "start": 103.424,
+      "resolve": 105.124,
+      "occurrence": 14
+    },
+    {
+      "actionId": 46109,
+      "name": "Sharp Taste",
+      "start": 105.241,
+      "resolve": 105.241,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46099,
+      "name": "Cometite",
+      "start": 107.575,
+      "resolve": 110.274994,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46099,
+      "name": "Cometite",
+      "start": 109.576,
+      "resolve": 112.27599,
+      "occurrence": 5
+    },
+    {
+      "actionId": 46099,
+      "name": "Cometite",
+      "start": 111.576,
+      "resolve": 114.27599,
+      "occurrence": 6
+    },
+    {
+      "actionId": 46101,
+      "name": "Crushing Comet",
+      "start": 111.576,
+      "resolve": 116.27599,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46086,
+      "name": "Crown of Arcadia",
+      "start": 117.594,
+      "resolve": 122.294,
+      "occurrence": 2
+    }
+  ],
+  "names": [
+    "",
+    "Crown of Arcadia",
+    "Raw Steel Trophy",
+    "Raw Steel",
+    "Impact",
+    "Trophy Weapons",
+    "Assault Evolved",
+    "Sweeping Victory",
+    "Sharp Taste",
+    "Heavy Weight",
+    "Void Stardust",
+    "Cometite",
+    "Comet",
+    "Crushing Comet"
+  ]
+}

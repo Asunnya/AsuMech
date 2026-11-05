@@ -1,0 +1,285 @@
+{
+  "scenario": "M10sXtremeSnakingScenario",
+  "casts": [
+    {
+      "actionId": 46510,
+      "name": "Xtreme Firesnaking",
+      "start": 3.017,
+      "resolve": 7.717,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46511,
+      "name": "Xtreme Watersnaking",
+      "start": 3.017,
+      "resolve": 7.717,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46456,
+      "name": "",
+      "start": 13.317,
+      "resolve": 13.317,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46457,
+      "name": "",
+      "start": 13.317,
+      "resolve": 13.317,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46566,
+      "name": "Insane Air",
+      "start": 15.983,
+      "resolve": 22.583,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46567,
+      "name": "Insane Air",
+      "start": 15.983,
+      "resolve": 22.583,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46575,
+      "name": "Blasting Snap",
+      "start": 24.716,
+      "resolve": 24.716,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46576,
+      "name": "Plunging Snap",
+      "start": 24.716,
+      "resolve": 24.716,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46577,
+      "name": "Blasting Snap",
+      "start": 25.883,
+      "resolve": 25.883,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46578,
+      "name": "Plunging Snap",
+      "start": 25.883,
+      "resolve": 25.883,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46568,
+      "name": "Insane Air",
+      "start": 26.316,
+      "resolve": 32.916,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46569,
+      "name": "Insane Air",
+      "start": 26.316,
+      "resolve": 32.916,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46512,
+      "name": "Bailout",
+      "start": 26.333,
+      "resolve": 27.033,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46513,
+      "name": "Bailout",
+      "start": 26.333,
+      "resolve": 27.033,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46583,
+      "name": "Vertical Blast",
+      "start": 35.05,
+      "resolve": 35.05,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46584,
+      "name": "Vertical Plunge",
+      "start": 35.05,
+      "resolve": 35.05,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46585,
+      "name": "Vertical Blast",
+      "start": 36.216,
+      "resolve": 36.216,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46586,
+      "name": "Vertical Plunge",
+      "start": 36.216,
+      "resolve": 36.216,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46568,
+      "name": "Insane Air",
+      "start": 36.65,
+      "resolve": 43.25,
+      "occurrence": 5
+    },
+    {
+      "actionId": 46569,
+      "name": "Insane Air",
+      "start": 36.65,
+      "resolve": 43.25,
+      "occurrence": 6
+    },
+    {
+      "actionId": 46512,
+      "name": "Bailout",
+      "start": 36.666,
+      "resolve": 37.366,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46513,
+      "name": "Bailout",
+      "start": 36.666,
+      "resolve": 37.366,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46579,
+      "name": "Re-entry Blast",
+      "start": 45.383,
+      "resolve": 45.383,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46580,
+      "name": "Re-entry Plunge",
+      "start": 45.383,
+      "resolve": 45.383,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46581,
+      "name": "Re-entry Blast",
+      "start": 46.549,
+      "resolve": 46.549,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46582,
+      "name": "Re-entry Plunge",
+      "start": 46.549,
+      "resolve": 46.549,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46568,
+      "name": "Insane Air",
+      "start": 46.983,
+      "resolve": 53.583,
+      "occurrence": 7
+    },
+    {
+      "actionId": 46569,
+      "name": "Insane Air",
+      "start": 46.983,
+      "resolve": 53.583,
+      "occurrence": 8
+    },
+    {
+      "actionId": 46512,
+      "name": "Bailout",
+      "start": 46.999,
+      "resolve": 47.699,
+      "occurrence": 5
+    },
+    {
+      "actionId": 46513,
+      "name": "Bailout",
+      "start": 46.999,
+      "resolve": 47.699,
+      "occurrence": 6
+    },
+    {
+      "actionId": 46575,
+      "name": "Blasting Snap",
+      "start": 55.733,
+      "resolve": 55.733,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46576,
+      "name": "Plunging Snap",
+      "start": 55.733,
+      "resolve": 55.733,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46577,
+      "name": "Blasting Snap",
+      "start": 56.883,
+      "resolve": 56.883,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46578,
+      "name": "Plunging Snap",
+      "start": 56.883,
+      "resolve": 56.883,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46512,
+      "name": "Bailout",
+      "start": 57.333,
+      "resolve": 58.033,
+      "occurrence": 7
+    },
+    {
+      "actionId": 46513,
+      "name": "Bailout",
+      "start": 57.333,
+      "resolve": 58.033,
+      "occurrence": 8
+    },
+    {
+      "actionId": 46520,
+      "name": "Divers\u0027 Dare",
+      "start": 61.549,
+      "resolve": 66.249,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46521,
+      "name": "Divers\u0027 Dare",
+      "start": 61.549,
+      "resolve": 66.249,
+      "occurrence": 2
+    }
+  ],
+  "names": [
+    "Xtreme Firesnaking",
+    "Xtreme Watersnaking",
+    "",
+    "Insane Air",
+    "Blasting Snap",
+    "Plunging Snap",
+    "Bailout",
+    "Vertical Blast",
+    "Vertical Plunge",
+    "Re-entry Blast",
+    "Re-entry Plunge",
+    "Divers\u0027 Dare"
+  ]
+}

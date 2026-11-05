@@ -1,0 +1,174 @@
+{
+  "scenario": "FruP2DiamondDustScenario",
+  "casts": [
+    {
+      "actionId": 40175,
+      "name": "",
+      "start": 0.683,
+      "resolve": 0.683,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40180,
+      "name": "Mirror Image",
+      "start": 2.017,
+      "resolve": 4.717,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40197,
+      "name": "Diamond Dust",
+      "start": 7.1,
+      "resolve": 11.799999,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40198,
+      "name": "Icicle Impact",
+      "start": 14.667,
+      "resolve": 23.367,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40202,
+      "name": "Axe Kick",
+      "start": 14.967,
+      "resolve": 20.667,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40198,
+      "name": "Icicle Impact",
+      "start": 18.717,
+      "resolve": 27.417,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40206,
+      "name": "the House of Light",
+      "start": 21.717,
+      "resolve": 21.717,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40198,
+      "name": "Icicle Impact",
+      "start": 22.716,
+      "resolve": 31.416,
+      "occurrence": 3
+    },
+    {
+      "actionId": 40199,
+      "name": "Frigid Stone",
+      "start": 23.316,
+      "resolve": 23.316,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40175,
+      "name": "",
+      "start": 24.483,
+      "resolve": 24.483,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40201,
+      "name": "Frigid Needle",
+      "start": 25.35,
+      "resolve": 30.05,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40200,
+      "name": "Frigid Needle",
+      "start": 25.35,
+      "resolve": 30.05,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40208,
+      "name": "Sinbound Holy",
+      "start": 25.816,
+      "resolve": 30.515999,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40207,
+      "name": "Heavenly Strike",
+      "start": 27.616,
+      "resolve": 27.616,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40209,
+      "name": "Sinbound Holy",
+      "start": 31.716,
+      "resolve": 31.716,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40209,
+      "name": "Sinbound Holy",
+      "start": 33.283,
+      "resolve": 33.283,
+      "occurrence": 3
+    },
+    {
+      "actionId": 40209,
+      "name": "Sinbound Holy",
+      "start": 34.85,
+      "resolve": 34.85,
+      "occurrence": 4
+    },
+    {
+      "actionId": 40209,
+      "name": "Sinbound Holy",
+      "start": 36.416,
+      "resolve": 36.416,
+      "occurrence": 5
+    },
+    {
+      "actionId": 40185,
+      "name": "Shining Armor",
+      "start": 40.066,
+      "resolve": 40.066,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40184,
+      "name": "Frost Armor",
+      "start": 40.066,
+      "resolve": 40.066,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40194,
+      "name": "Twin Silence",
+      "start": 43.016,
+      "resolve": 46.216,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40195,
+      "name": "Twin Silence",
+      "start": 48.666,
+      "resolve": 48.666,
+      "occurrence": 2
+    }
+  ],
+  "names": [
+    "",
+    "Mirror Image",
+    "Diamond Dust",
+    "Icicle Impact",
+    "Axe Kick",
+    "the House of Light",
+    "Frigid Stone",
+    "Frigid Needle",
+    "Sinbound Holy",
+    "Heavenly Strike",
+    "Shining Armor",
+    "Frost Armor",
+    "Twin Silence"
+  ]
+}

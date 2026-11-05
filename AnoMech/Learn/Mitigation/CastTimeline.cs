@@ -22,6 +22,23 @@ public sealed record CastTimeline(string Scenario, List<CastEvent> Casts)
 
     public IEnumerable<string> Names => Casts.Select(c => c.Name).Distinct();
 
+    // What changed between this (embedded) timeline and a fresh recording: casts gone, casts new,
+    // casts that moved by more than `slack` seconds. Empty when the embedded one still holds.
+    public List<string> Drift(CastTimeline current, float slack = 0.25f)
+    {
+        var drift = new List<string>();
+        foreach (var c in Casts)
+        {
+            var now = current.Find(c.Name, c.Occurrence);
+            if (now is null) { drift.Add($"{c.Name} #{c.Occurrence} at {c.Start:0.0}s is gone"); continue; }
+            if (Math.Abs(now.Start - c.Start) > slack || Math.Abs(now.Resolve - c.Resolve) > slack)
+                drift.Add($"{c.Name} #{c.Occurrence} moved {c.Start:0.0}s -> {now.Start:0.0}s");
+        }
+        foreach (var c in current.Casts)
+            if (Find(c.Name, c.Occurrence) is null) drift.Add($"{c.Name} #{c.Occurrence} at {c.Start:0.0}s is new");
+        return drift;
+    }
+
     public string ToJson() => JsonSerializer.Serialize(this, Json);
     public static CastTimeline Parse(string json) => JsonSerializer.Deserialize<CastTimeline>(json, Json)!;
 

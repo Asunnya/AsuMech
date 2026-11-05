@@ -1,0 +1,182 @@
+{
+  "scenario": "DsrP5DeathScenario",
+  "casts": [
+    {
+      "actionId": 27538,
+      "name": "Death of the Heavens",
+      "start": 3.017,
+      "resolve": 6.717,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25540,
+      "name": "",
+      "start": 10.05,
+      "resolve": 10.05,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27540,
+      "name": "Deathstorm",
+      "start": 13.917,
+      "resolve": 13.917,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25557,
+      "name": "Heavy Impact",
+      "start": 16.15,
+      "resolve": 20.15,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25558,
+      "name": "Heavy Impact",
+      "start": 16.15,
+      "resolve": 21.849998,
+      "occurrence": 2
+    },
+    {
+      "actionId": 27539,
+      "name": "Spear of the Fury",
+      "start": 18.017,
+      "resolve": 23.717,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27531,
+      "name": "Twisting Dive",
+      "start": 18.017,
+      "resolve": 23.717,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27533,
+      "name": "Cauterize",
+      "start": 18.017,
+      "resolve": 23.717,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27541,
+      "name": "Wings of Salvation",
+      "start": 18.017,
+      "resolve": 23.017,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25548,
+      "name": "Lightning Storm",
+      "start": 18.017,
+      "resolve": 23.417,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25559,
+      "name": "Heavy Impact",
+      "start": 24.033,
+      "resolve": 24.033,
+      "occurrence": 3
+    },
+    {
+      "actionId": 27542,
+      "name": "Wings of Salvation",
+      "start": 24.083,
+      "resolve": 33.783,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25549,
+      "name": "Lightning Storm",
+      "start": 24.183,
+      "resolve": 24.183,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25560,
+      "name": "Heavy Impact",
+      "start": 25.916,
+      "resolve": 25.916,
+      "occurrence": 4
+    },
+    {
+      "actionId": 25561,
+      "name": "Heavy Impact",
+      "start": 27.783,
+      "resolve": 27.783,
+      "occurrence": 5
+    },
+    {
+      "actionId": 25562,
+      "name": "Heavy Impact",
+      "start": 29.666,
+      "resolve": 29.666,
+      "occurrence": 6
+    },
+    {
+      "actionId": 25310,
+      "name": "Heavensflame",
+      "start": 32.15,
+      "resolve": 38.850002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25552,
+      "name": "the Dragon\u0027s Gaze",
+      "start": 32.15,
+      "resolve": 35.850002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 27543,
+      "name": "Holy Meteor",
+      "start": 33.266,
+      "resolve": 40.966,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25308,
+      "name": "Faith Unmoving",
+      "start": 33.266,
+      "resolve": 36.966,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25553,
+      "name": "the Dragon\u0027s Gaze",
+      "start": 37.283,
+      "resolve": 37.283,
+      "occurrence": 2
+    },
+    {
+      "actionId": 25554,
+      "name": "the Dragon\u0027s Glory",
+      "start": 37.283,
+      "resolve": 37.283,
+      "occurrence": 1
+    },
+    {
+      "actionId": 25311,
+      "name": "Heavensflame",
+      "start": 39.783,
+      "resolve": 39.783,
+      "occurrence": 2
+    }
+  ],
+  "names": [
+    "Death of the Heavens",
+    "",
+    "Deathstorm",
+    "Heavy Impact",
+    "Spear of the Fury",
+    "Twisting Dive",
+    "Cauterize",
+    "Wings of Salvation",
+    "Lightning Storm",
+    "Heavensflame",
+    "the Dragon\u0027s Gaze",
+    "Holy Meteor",
+    "Faith Unmoving",
+    "the Dragon\u0027s Glory"
+  ]
+}

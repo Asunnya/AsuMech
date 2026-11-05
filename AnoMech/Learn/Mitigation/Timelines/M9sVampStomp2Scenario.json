@@ -1,0 +1,169 @@
+{
+  "scenario": "M9sVampStomp2Scenario",
+  "casts": [
+    {
+      "actionId": 45914,
+      "name": "Hardcore",
+      "start": 15.183,
+      "resolve": 17.883,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45951,
+      "name": "Hardcore",
+      "start": 15.183,
+      "resolve": 19.883,
+      "occurrence": 2
+    },
+    {
+      "actionId": 45939,
+      "name": "Pulping Pulse",
+      "start": 21.2,
+      "resolve": 24.900002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45898,
+      "name": "Vamp Stomp",
+      "start": 25.333,
+      "resolve": 29.133,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45940,
+      "name": "Vamp Stomp",
+      "start": 25.333,
+      "resolve": 30.033,
+      "occurrence": 2
+    },
+    {
+      "actionId": 45900,
+      "name": "",
+      "start": 30.8,
+      "resolve": 30.8,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45941,
+      "name": "Blast Beat",
+      "start": 33.516,
+      "resolve": 34.216,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45942,
+      "name": "Blast Beat",
+      "start": 35.45,
+      "resolve": 35.45,
+      "occurrence": 2
+    },
+    {
+      "actionId": 45942,
+      "name": "Blast Beat",
+      "start": 36.8,
+      "resolve": 36.8,
+      "occurrence": 3
+    },
+    {
+      "actionId": 45941,
+      "name": "Blast Beat",
+      "start": 37,
+      "resolve": 37.7,
+      "occurrence": 4
+    },
+    {
+      "actionId": 45942,
+      "name": "Blast Beat",
+      "start": 38.1,
+      "resolve": 38.1,
+      "occurrence": 5
+    },
+    {
+      "actionId": 45942,
+      "name": "Blast Beat",
+      "start": 38.95,
+      "resolve": 38.95,
+      "occurrence": 6
+    },
+    {
+      "actionId": 45941,
+      "name": "Blast Beat",
+      "start": 40.483,
+      "resolve": 41.183002,
+      "occurrence": 7
+    },
+    {
+      "actionId": 45902,
+      "name": "Half Moon",
+      "start": 41.533,
+      "resolve": 45.533,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45943,
+      "name": "Half Moon",
+      "start": 41.533,
+      "resolve": 46.233,
+      "occurrence": 2
+    },
+    {
+      "actionId": 45944,
+      "name": "Half Moon",
+      "start": 41.533,
+      "resolve": 49.233,
+      "occurrence": 3
+    },
+    {
+      "actionId": 45917,
+      "name": "Brutal Rain",
+      "start": 51.683,
+      "resolve": 55.183,
+      "occurrence": 1
+    },
+    {
+      "actionId": 45955,
+      "name": "Brutal Rain",
+      "start": 57.049,
+      "resolve": 57.049,
+      "occurrence": 2
+    },
+    {
+      "actionId": 45955,
+      "name": "Brutal Rain",
+      "start": 58.133,
+      "resolve": 58.133,
+      "occurrence": 3
+    },
+    {
+      "actionId": 45955,
+      "name": "Brutal Rain",
+      "start": 59.199,
+      "resolve": 59.199,
+      "occurrence": 4
+    },
+    {
+      "actionId": 45955,
+      "name": "Brutal Rain",
+      "start": 60.249,
+      "resolve": 60.249,
+      "occurrence": 5
+    },
+    {
+      "actionId": 45892,
+      "name": "Insatiable Thirst",
+      "start": 64.816,
+      "resolve": 67.316,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Hardcore",
+    "Pulping Pulse",
+    "Vamp Stomp",
+    "",
+    "Blast Beat",
+    "Half Moon",
+    "Brutal Rain",
+    "Insatiable Thirst"
+  ]
+}
