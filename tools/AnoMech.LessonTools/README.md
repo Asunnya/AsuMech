@@ -57,6 +57,10 @@ dotnet $TOOL mit-import --plan umad-ikuya --wtfdig umad --mit-plan ikuya --tabs 
 Per-step authoring context (role spots, cue candidates, strat method): `~/.claude/skills/asumech-lesson`.
 The whole plan, phases and checklist: `tools/learn-authoring-plan.md`.
 
+Reviewing in game: set the dev folder in Learn → Authoring… to the repo's `AnoMech/Learn/Lessons` (or a
+copy); edits to the JSON reload within a second, also mid-run. The window shows the current order's key,
+what the sim showed before it, and the run's rolls.
+
 Flow for a new scenario: `learn-ready` → register the plan link in `plans.json` → `author` (or
 `author-all --family`) → read the context, rewrite the drafted `rule`/`cue` in player language where
 the draft is a table → `check` → embed under `AnoMech/Learn/Lessons/<Family>/` with `draft: true`
