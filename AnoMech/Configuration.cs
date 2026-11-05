@@ -49,6 +49,10 @@ public class Configuration : IPluginConfiguration
     public string SelectedMitPlan { get; set; } = "";
     // Windows.Learn.MitAssist: 0 none, 1 reminder, 2 strict (a miss fails the run).
     public int MitPracticeAssist { get; set; } = 1;
+    // With the Reminder assist: a missed mitigation still lets the run go on, but ends the streak.
+    public bool MitFailureEndsStreak { get; set; } = false;
+    // Bots press the plan's mitigation for their columns, so the damage checks see the party mitigated.
+    public bool BotsFollowMitPlan { get; set; } = true;
     // A folder of lesson JSON files that shadow the embedded ones and reload on change (authoring).
     public string LessonDevDir { get; set; } = "";
     public string LastSelectedScenario { get; set; } = "";

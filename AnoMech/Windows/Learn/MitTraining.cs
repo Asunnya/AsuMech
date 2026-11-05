@@ -4,6 +4,7 @@ using System.Linq;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.Native.Interfaces;
+using AnoMech.Core.SimObjects;
 using AnoMech.Learn.Mitigation;
 using AnoMech.Windows.Asu;
 
@@ -77,11 +78,52 @@ internal sealed class MitTraining : IDisposable
         Plan = plan;
         Job = job;
         Column = column;
+        if (Plugin.Config.BotsFollowMitPlan) ScheduleBots(plan.Scenarios[scenarioType], timeline, game.World.Party.PlayerRole);
         var expectations = MitPlanResolver.Resolve(plan.Scenarios[scenarioType], timeline, column, job);
         Session = new MitSession(expectations, TargetRole, RecastOf);
         Session.ItemResolved += OnItemResolved;
         LastReport = null;
         LastReportTitle = $"{p.Scenario.Name} · {column} ({job})";
+    }
+
+    // The bots' columns of the plan, as sim statuses on the world's clock; the player's column is theirs.
+    private void ScheduleBots(MitScenario scenario, CastTimeline timeline, PartyRole player)
+    {
+        if (!Core.UserActions.Mitigation.Required) return;
+        var world = game.World;
+        var jobs = new Dictionary<PartyRole, string>();
+        foreach (var role in Enum.GetValues<PartyRole>())
+            if (world.Party.Get(role) is Core.SimObjects.SimPartyNpc bot && MitJobs.Abbreviation(bot.ClassJob) is { } job) jobs[role] = job;
+        var planned = PlannedMits.Schedule(scenario, timeline, jobs, player);
+        foreach (var mit in planned)
+            world.Events.Add(mit.Time, () => Apply(mit));
+        if (planned.Count > 0) Push($"Bots follow the plan: {planned.Count} mitigation(s) across {jobs.Count} seat(s).", AsuTheme.Muted);
+    }
+
+    private void Apply(PlannedMit mit)
+    {
+        var world = game.World;
+        if (world.Party.Get(mit.Role) is not { } bot || !bot.IsAlive()) return;
+        var duration = mit.Status.DurationSeconds;
+        switch (mit.Target)
+        {
+            case MitTarget.Enemy:
+                var enemies = world.Children.OfType<Core.SimObjects.SimEnemy>().Where(e => e.IsAlive()).ToList();
+                var target = enemies.FirstOrDefault(e => e.Casting.ActionId == mit.AnchorActionId) ?? enemies.FirstOrDefault();
+                target?.AddStatus(mit.Status.StatusId, duration, sourceObject: bot.GameObjectId);
+                break;
+            case MitTarget.Party:
+                foreach (var role in Enum.GetValues<PartyRole>())
+                    if (world.Party.Get(role) is { } member && member.IsAlive()) member.AddStatus(mit.Status.StatusId, duration, sourceObject: bot.GameObjectId);
+                break;
+            case MitTarget.Ally:
+                var ally = mit.Ally switch { "MT" => PartyRole.MainTank, "OT" => PartyRole.OffTank, _ => (PartyRole?)null };
+                (ally is { } a ? world.Party.Get(a) : world.Party.Get(PartyRole.MainTank))?.AddStatus(mit.Status.StatusId, duration, sourceObject: bot.GameObjectId);
+                break;
+            default:
+                bot.AddStatus(mit.Status.StatusId, duration, sourceObject: bot.GameObjectId);
+                break;
+        }
     }
 
     private void OnRunFinished(bool clean) => Close();
@@ -133,6 +175,7 @@ internal sealed class MitTraining : IDisposable
         };
         Push(text, AsuTheme.Bad);
         if (assist == MitAssist.Strict) game.World.Fail($"mitigation: {text}");
+        else if (Plugin.Config.MitFailureEndsStreak) Plugin.Practice.BreakStreak();
     }
 
     private void Push(string text, System.Numerics.Vector4 color) => Feedback.Add((text, color, DateTime.UtcNow + FeedbackDuration));

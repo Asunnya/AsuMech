@@ -69,6 +69,35 @@ public readonly record struct Mitigation(
         [2684] = new(Damage: 0.15f),   // Clarity of Corundum
         [1839] = new(Magic: 0.10f, Physical: 0.05f),   // Heart of Light
         [1931] = new(Damage: 0.80f),   // Gunmetal Soul
+
+        // Party and ally mitigation from every role, as the tooltips state them; shields are rough
+        // potency conversions like the tank ones above.
+        [1203] = new(Magic: 0.10f, Physical: 0.05f),   // Addle
+        [1195] = new(Physical: 0.10f, Magic: 0.05f),   // Feint
+        [1175] = new(Damage: 0.15f),   // Passage of Arms
+        [1873] = new(Damage: 0.10f),   // Temperance
+        [3903] = new(ShieldHp: 0.10f), // Divine Caress
+        [1218] = new(ShieldPotency: 500f),   // Divine Benison
+        [2708] = new(Damage: 0.10f),   // Aquaveil
+        [299]  = new(Damage: 0.10f),   // Sacred Soil (older row)
+        [1944] = new(Damage: 0.10f),   // Sacred Soil
+        [2711] = new(Damage: 0.10f),   // Desperate Measures (Expedient)
+        [317]  = new(Magic: 0.05f),    // Fey Illumination
+        [297]  = new(ShieldPotency: 540f),   // Galvanize
+        [3098] = new(ShieldPotency: 250f),   // Consolation
+        [849]  = new(Damage: 0.10f),   // Collective Unconscious
+        [2717] = new(Damage: 0.10f),   // Exaltation
+        [3896] = new(Damage: 0.10f),   // Sun Sign
+        [2618] = new(Damage: 0.10f),   // Kerachole
+        [3003] = new(Damage: 0.10f),   // Holos
+        [2613] = new(ShieldPotency: 200f),   // Panhaima
+        [2612] = new(ShieldPotency: 300f),   // Haima
+        [2619] = new(Damage: 0.10f),   // Taurochole
+        [2609] = new(ShieldPotency: 320f),   // Eukrasian Prognosis
+        [1934] = new(Damage: 0.10f),   // Troubadour
+        [1951] = new(Damage: 0.10f),   // Tactician
+        [1826] = new(Damage: 0.10f),   // Shield Samba
+        [2707] = new(Magic: 0.10f),    // Magick Barrier
     };
 
     // The single damage reduction that would let a full-HP target survive the same hit, 0..1:

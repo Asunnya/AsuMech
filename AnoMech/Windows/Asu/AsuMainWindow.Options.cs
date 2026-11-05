@@ -129,7 +129,7 @@ public sealed partial class AsuMainWindow
             Plugin.Config.Save();
         }
         if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
-            ImGui.SetTooltip(why ?? "Checks the plan's mitigation for your job or seat against what you press. Bots don't mitigate; nothing changes in the damage checks.");
+            ImGui.SetTooltip(why ?? "Checks the plan's mitigation for your job or seat against what you press. Bots press their columns of the plan, so the damage checks see the party mitigated.");
         if (why != null || !Plugin.Config.EnableMitigationTraining) return;
         ImGui.SameLine();
         var plan = Windows.Learn.MitTraining.PlanFor(scenario.GetType().Name);
@@ -141,6 +141,25 @@ public sealed partial class AsuMainWindow
             Plugin.Config.Save();
         }
         if (ImGui.IsItemHovered()) ImGui.SetTooltip("None: report only. Reminder: a strip with the next items and a note on each miss. Strict: a miss fails the run.");
+        if (assist == (int)Windows.Learn.MitAssist.Reminder)
+        {
+            ImGui.SameLine();
+            var ends = Plugin.Config.MitFailureEndsStreak;
+            if (ImGui.Checkbox("ends streak##mit-streak", ref ends))
+            {
+                Plugin.Config.MitFailureEndsStreak = ends;
+                Plugin.Config.Save();
+            }
+            if (ImGui.IsItemHovered()) ImGui.SetTooltip("A missed mitigation lets the run go on but resets the clean-run streak.");
+        }
+        ImGui.SameLine();
+        var bots = Plugin.Config.BotsFollowMitPlan;
+        if (ImGui.Checkbox("bots##mit-bots", ref bots))
+        {
+            Plugin.Config.BotsFollowMitPlan = bots;
+            Plugin.Config.Save();
+        }
+        if (ImGui.IsItemHovered()) ImGui.SetTooltip("Bots apply the plan's mitigation for their own columns (needs tank mitigation checks on).");
         if (plan != null)
         {
             ImGui.SameLine();

@@ -44,6 +44,9 @@ public sealed class PracticeLoop
 
     private void OnPartyMemberKilled(PartyRole role, string cause, uint? actionId, ushort? statusId) => EndStreak();
 
+    // A failure the run survives but the player should not get away with (a missed mitigation).
+    public void BreakStreak() => EndStreak();
+
     private void EndStreak()
     {
         if (!Counting) return;
