@@ -42,7 +42,7 @@ public sealed partial class AsuMainWindow : Window, IDisposable, IPanelHost
     private IScenario? Selected => Picker.Scenario;
     private static ScenarioCatalog Catalog => Plugin.Game.Catalog;
 
-    public bool IsActuallyCollapsed => false;
+    public bool IsActuallyCollapsed => minimized;
     public bool ShowingMultiplayerSetup => showMultiplayerSetup && !RunState.InSession;
     public Vector2 RightPanelAnchor { get; private set; }
     public float ScenarioPanelHeight { get; private set; }
@@ -124,6 +124,12 @@ public sealed partial class AsuMainWindow : Window, IDisposable, IPanelHost
         Picker.Reconcile(inSession, RunState.IsGuest);
         if (inSession) game.EventTimeScale = 1f;
         if (!RunState.Active) expandedDuringRun = false;
+
+        if (minimized)
+        {
+            DrawMinimized(game);
+            return;
+        }
 
         DrawToast();
         if (ShowRunStrip)

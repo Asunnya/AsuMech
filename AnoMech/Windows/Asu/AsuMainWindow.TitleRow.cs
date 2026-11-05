@@ -12,6 +12,8 @@ public sealed partial class AsuMainWindow
     private Mode mode = Mode.Practice;
     // Measured after drawing, used next frame: icon buttons are wider than a frame is tall.
     private float titleIconsWidth;
+    private float minimizedRightWidth;
+    private bool minimized;
 
     private void DrawTitleRow(Game game)
     {
@@ -46,14 +48,43 @@ public sealed partial class AsuMainWindow
         if (ImGuiComponents.IconButton("settings", FontAwesomeIcon.Cog)) plugin.ToggleConfigUi();
         if (ImGui.IsItemHovered()) ImGui.SetTooltip("Settings");
         ImGui.SameLine();
+        if (ImGuiComponents.IconButton("minimize", FontAwesomeIcon.WindowMinimize)) minimized = true;
+        if (ImGui.IsItemHovered()) ImGui.SetTooltip("Minimize");
+        ImGui.SameLine();
+        DrawCloseButton();
+        ImGui.EndGroup();
+        titleIconsWidth = ImGui.GetItemRectSize().X - (modeEnd - groupStart);
+        ImGui.Separator();
+    }
+
+    private void DrawCloseButton()
+    {
         ImGui.BeginDisabled(Plugin.Game.World.Map.IsInInstance);
         if (ImGuiComponents.IconButton("close", FontAwesomeIcon.Times)) IsOpen = false;
         ImGui.EndDisabled();
         if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
             ImGui.SetTooltip(Plugin.Game.World.Map.IsInInstance ? "Leave the instance first." : "Close");
+    }
+
+    // One line: the name, the status and the way back.
+    private void DrawMinimized(Game game)
+    {
+        ImGui.AlignTextToFramePadding();
+        ImGui.TextUnformatted("AsuMech");
+        var (label, color) = RunState.Status(game, Selected);
+        var status = $"· {label}";
+        Flow.SameLineIfFits(Flow.TextWidth(status));
+        using (AsuTheme.PushTextColor(color))
+            ImGui.TextUnformatted(status);
+
+        Flow.SameLineRight(minimizedRightWidth);
+        ImGui.BeginGroup();
+        if (ImGuiComponents.IconButton("restore", FontAwesomeIcon.WindowMaximize)) minimized = false;
+        if (ImGui.IsItemHovered()) ImGui.SetTooltip("Restore");
+        ImGui.SameLine();
+        DrawCloseButton();
         ImGui.EndGroup();
-        titleIconsWidth = ImGui.GetItemRectSize().X - (modeEnd - groupStart);
-        ImGui.Separator();
+        minimizedRightWidth = ImGui.GetItemRectSize().X;
     }
 
     private static float ModeWidth(bool compact)
