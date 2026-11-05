@@ -48,10 +48,12 @@ dotnet $TOOL wtfdig-fetch --fight umad [--path src/routes/ultimates/umad] [--bra
 dotnet $TOOL slides-fetch --deck <google id|url|file.pptx> --out work/deck [--zone FruZone --layout "Inner Circle"]
 
 # mitigation: cast timeline per scenario (embedded under Learn/Mitigation/Timelines), then a plan from a sheet, a CSV or WTFDIG
+dotnet $TOOL mit-timeline --all [--check]        # every scenario; CI (MitTimelinesTests) fails when a run drifts from its embedded timeline
 dotnet $TOOL mit-timeline --scenario UwuP1GarudaScenario --out AnoMech/Learn/Mitigation/Timelines/UwuP1GarudaScenario.json
 dotnet $TOOL mit-import --plan uwu-ethel-master --sheet-id <google sheet id> --tabs "Garuda=UwuP1GarudaScenario,Ifrit=UwuP2IfritScenario" --credits "A;B" --out AnoMech/Learn/Mitigation/Plans/uwu-ethel-master.json
 dotnet $TOOL mit-import --plan <name> --csv exported.csv --scenario UwuP1GarudaScenario --out Plans/<name>.json
-dotnet $TOOL mit-import --plan umad-ikuya --wtfdig umad --mit-plan ikuya --tabs "p1=UmadP1TeleTrouncingScenario" --out Plans/umad-ikuya.json
+dotnet $TOOL mit-import --plan umad-ikuya --wtfdig umad --mit-plan ikuya --tabs "p1=UmadP1TeleTrouncingScenario,p3=UmadP3LimitCutScenario|UmadP3BlackHoleScenario" --accept-unresolved --out Plans/umad-ikuya.json
+#   --accept-unresolved writes the rows still unresolved into the plan's knownUnresolved (read them first); CI fails on any other
 ```
 
 Per-step authoring context (role spots, cue candidates, strat method): `~/.claude/skills/asumech-lesson`.
