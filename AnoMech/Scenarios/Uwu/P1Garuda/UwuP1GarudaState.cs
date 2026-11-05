@@ -20,7 +20,7 @@ public sealed class UwuP1GarudaState
 
     public const float BubbleRadius = 6f;
 
-    private static readonly Vector3[] SatinPlumeSpots =
+    public static readonly Vector3[] SatinPlumeSpots =
     [
         new(-4f, 0f, -16f), new(4f, 0f, -16f), new(12f, 0f, -12f), new(16f, 0f, -4f),
         new(16f, 0f, 4f), new(12f, 0f, 12f), new(4f, 0f, 16f), new(-4f, 0f, 16f),

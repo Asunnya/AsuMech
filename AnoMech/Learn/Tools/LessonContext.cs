@@ -13,7 +13,7 @@ public static class LessonContext
     private static readonly string[] Roles = ["MainTank", "OffTank", "RegenHealer", "ShieldHealer", "MeleeDpsA", "MeleeDpsB", "PhysRangedDps", "CasterDps"];
 
     public static string Write(OrderDump dump, Lesson skeleton, List<MinedRule> rules, Dictionary<(string Cls, int Line, string Role), List<CueCandidate>> cues,
-        OracleReport? oracle = null, ToolboxPlan? plan = null, WaymarkLayout? waymarks = null, IReadOnlyList<Sources.WtfdigMechanic>? texts = null)
+        OracleReport? oracle = null, ToolboxPlan? plan = null, WaymarkLayout? waymarks = null, IReadOnlyList<Sources.WtfdigMechanic>? texts = null, ExampleExtraction? example = null)
     {
         var sb = new StringBuilder();
         var seeds = dump.Orders.Select(o => o.Seed).Distinct().Count();
@@ -34,6 +34,13 @@ public static class LessonContext
             foreach (var s in oracle.Disagreements)
                 sb.AppendLine($"- toolbox {s.ToolboxStep} \"{s.Label}\" vs {s.StepId}: {s.Residual:F1} m ({string.Join(", ", s.RolesOff.Select(kv => $"{kv.Key} {kv.Value:F1} m"))})");
             if (!oracle.Disagreements.Any()) sb.AppendLine("every aligned step agrees within its tolerance");
+        }
+        if (example != null)
+        {
+            sb.AppendLine();
+            sb.AppendLine($"## Example from the plan: {example.Pins.Count} roll(s) pinned, {example.Skipped.Count} left out");
+            foreach (var pin in example.Pins) sb.AppendLine($"- {pin.Property} = {pin.Value} ({pin.How})");
+            foreach (var skip in example.Skipped) sb.AppendLine($"- not pinned: {skip}");
         }
         foreach (var step in skeleton.Steps)
         {

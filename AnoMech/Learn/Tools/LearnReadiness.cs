@@ -19,7 +19,7 @@ public sealed record ReadinessRow(string Reads, Readiness Status, string Detail)
 // events rows need a dump and say so without one. Nothing here asks a scenario to change.
 public static class LearnReadiness
 {
-    public static List<ReadinessRow> Check(IScenario scenario, OrderDump? dump = null)
+    public static List<ReadinessRow> Check(IScenario scenario, OrderDump? dump = null, PinReport? pins = null)
     {
         var rows = new List<ReadinessRow>();
         var type = scenario.GetType();
@@ -59,7 +59,9 @@ public static class LearnReadiness
                 : pinnable.Count == 0 ? new("*StateOverrides", Readiness.Degraded, $"{overrides.GetType().Name} shares no name with the State: replay by example seed only")
                 : unpinnable.Count == 0 ? new("*StateOverrides", Readiness.Ok, $"every roll pinnable ({pinnable.Count})")
                 : new("*StateOverrides", Readiness.Degraded, $"pinnable: {string.Join(", ", pinnable)}; not: {string.Join(", ", unpinnable)}"));
-            rows.Add(new("State draws before pinning", Readiness.Degraded, "not checked (overrides-check); a pin may shift the seed's other rolls"));
+            rows.Add(pins is null ? new("State draws before pinning", Readiness.Degraded, "not checked (overrides-check); a pin may shift the seed's other rolls")
+                : pins.Clean ? new("State draws before pinning", Readiness.Ok, pins.Summary())
+                : new("State draws before pinning", Readiness.Degraded, pins.Summary()));
         }
 
         var presets = scenario.Phase.Zone.WaymarkPresets;

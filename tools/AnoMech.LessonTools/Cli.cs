@@ -5,6 +5,7 @@ using AnoMech.Learn.Mitigation;
 using AnoMech.Learn.Sources;
 using AnoMech.Core.Game;
 using AnoMech.Scenarios;
+using AnoMech.Tests;
 using System.Text.Json;
 
 namespace AnoMech.LessonTools;
@@ -33,7 +34,9 @@ namespace AnoMech.LessonTools;
 // wtfdig-fetch --fight umad [--path src/routes/ultimates/umad] [--branch main] --out AnoMech/Learn/Sources/wtfdig/umad.json   data.ts (+ mits.ts) -> JSON, no code run
 // mit-import --plan <name> --wtfdig umad --mit-plan ikuya --tabs "p1=UmadP1TeleTrouncingScenario,p2=UmadP2ForsakenScenario" --out Plans/<name>.json
 // slides-fetch --deck <google id|url|file.pptx> --out <dir> [--zone <ZoneType> [--layout <name>]]   text, notes and images per slide; XIVPlan links found become plans
-// learn-ready --scenario <TypeName> [--strat N] [--no-run]   what the chain can read from the scenario and how it degrades
+// example  --plan plans/<id>.json --lesson lesson.json --dump dump.json [--write]   the plan's roll as overrides values (adds -> spots/bearings, buffs -> targets)
+// overrides-check --scenario <TypeName> [--strat N] [--seed 1]   pin each roll to its own value and see whether the seed's other rolls move
+// learn-ready --scenario <TypeName> [--strat N] [--no-run]   what the chain can read from the scenario and how it degrades (runs overrides-check too)
 // status [--family <Family>]                                 scenario × strat × lesson × toolbox × example × mit × draft
 internal static class Cli
 {
@@ -61,6 +64,8 @@ internal static class Cli
                 "draft" => Draft(opts),
                 "author-all" => AuthorAll(opts),
                 "learn-ready" => LearnReady(opts),
+                "example" => ExampleCmd(opts),
+                "overrides-check" => OverridesCheckCmd(opts),
                 "wtfdig-fetch" => WtfdigFetch(opts),
                 "slides-fetch" => SlidesFetch(opts),
                 "status" => Status(opts),
@@ -204,9 +209,49 @@ internal static class Cli
         var scenario = ScenarioCatalog.Create().Scenarios.FirstOrDefault(s => s.GetType().Name == name) ?? throw new ArgumentException($"no scenario type named {name}");
         var strat = opts.TryGetValue("strat", out var st) && st.Length > 0 ? int.Parse(st) : 0;
         var dump = opts.ContainsKey("no-run") || scenario.AiStrats.Count == 0 ? null : OrderRecorder.Record(name, strat, [1], TextWriter.Null);
-        var rows = LearnReadiness.Check(scenario, dump);
+        var pins = opts.ContainsKey("no-run") || scenario.SettingsOverrides is null ? null : OverridesCheck.Run(scenario.GetType(), strat);
+        var rows = LearnReadiness.Check(scenario, dump, pins);
         Console.Write(LearnReadiness.Table(scenario, rows));
         return rows.Any(r => r.Status == Readiness.Missing) ? 1 : 0;
+    }
+
+    private static int OverridesCheckCmd(Dictionary<string, string> opts)
+    {
+        var name = Need(opts, "scenario");
+        var type = typeof(Game).Assembly.GetTypes().FirstOrDefault(t => t.Name == name) ?? throw new ArgumentException($"no scenario type named {name}");
+        var strat = opts.TryGetValue("strat", out var st) && st.Length > 0 ? int.Parse(st) : 0;
+        var seed = opts.TryGetValue("seed", out var sd) && sd.Length > 0 ? int.Parse(sd) : 1;
+        var report = OverridesCheck.Run(type, strat, seed);
+        Console.Write(report.Table());
+        return report.Clean ? 0 : 1;
+    }
+
+    private static int ExampleCmd(Dictionary<string, string> opts)
+    {
+        var plan = ToolboxPlan.Parse(File.ReadAllText(Need(opts, "plan")));
+        var lessonPath = Need(opts, "lesson");
+        var lesson = LessonLoader.Parse(File.ReadAllText(lessonPath));
+        var dump = OrderDump.Parse(File.ReadAllText(Need(opts, "dump")));
+        if (lesson.Toolbox is not { } link) throw new ArgumentException("the lesson has no toolbox block; run toolbox-import --write first");
+        var scenario = ScenarioCatalog.Create().Scenarios.FirstOrDefault(s => s.GetType().Name == lesson.Scenario) ?? throw new ArgumentException($"no scenario {lesson.Scenario}");
+        var extraction = ExtractExample(plan, lesson, link, dump, scenario);
+        if (extraction is null) { Console.WriteLine("the scenario has no SettingsOverrides: nothing to pin"); return 1; }
+        foreach (var pin in extraction.Pins) Console.WriteLine($"{pin.Property} = {pin.Value}   ({pin.How})");
+        foreach (var skip in extraction.Skipped) Console.WriteLine($"not pinned: {skip}");
+        if (opts.ContainsKey("write") && extraction.Pins.Count > 0)
+        {
+            File.WriteAllText(lessonPath, LessonSkeleton.ToJson(lesson with { Toolbox = link with { Example = extraction.Example } }));
+            Console.WriteLine($"example written to {lessonPath}");
+        }
+        return 0;
+    }
+
+    private static ExampleExtraction? ExtractExample(ToolboxPlan plan, Lesson lesson, LessonToolbox link, OrderDump dump, IScenario scenario)
+    {
+        if (scenario.SettingsOverrides is not { } overrides) return null;
+        var state = scenario.GetType().GetFields(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public)
+            .Select(f => f.FieldType).FirstOrDefault(t => t.Name.EndsWith("State", StringComparison.Ordinal));
+        return ExampleExtractor.Extract(plan, lesson, link, dump, overrides.GetType(), state);
     }
 
     private static int Status(Dictionary<string, string> opts)
@@ -565,6 +610,7 @@ internal static class Cli
 
         ToolboxPlan? plan = null;
         OracleReport? oracle = null;
+        ExampleExtraction? extraction = null;
         if (planArg != null && layout != null)
         {
             var (id, raw) = FetchPlan(planArg);
@@ -582,7 +628,14 @@ internal static class Cli
             // A lesson that already pins the plan's rolls is scored again with them pinned: that is
             // the roll the player will replay, so the residual that matters is this one.
             var previous = existingLesson ?? LessonLoader.All.FirstOrDefault(l => l.Scenario == dump.Scenario && l.Strat == dump.Strat);
-            if (previous?.Toolbox?.Example is { Count: > 0 } example)
+            var example = previous?.Toolbox?.Example is { Count: > 0 } kept ? kept : null;
+            if (example is null && ScenarioCatalog.Create().Scenarios.FirstOrDefault(s => s.GetType() == type) is { } catalogScenario)
+            {
+                extraction = ExtractExample(plan, lesson, lesson.Toolbox!, dump, catalogScenario);
+                if (extraction is { Pins.Count: > 0 }) example = extraction.Example;
+                if (extraction != null) log.WriteLine($"example from the plan: {extraction.Pins.Count} pinned ({string.Join(", ", extraction.Pins.Select(p => p.Property))}), {extraction.Skipped.Count} left out");
+            }
+            if (example is { Count: > 0 })
             {
                 var pinnedDump = OrderRecorder.Record(scenarioTypeName, strat, [oracle.ExampleSeed], TextWriter.Null, example);
                 File.WriteAllText(stem + ".pinned.dump.json", pinnedDump.ToJson());
@@ -597,7 +650,7 @@ internal static class Cli
         if (wtfdig != null && texts is { Count: > 0 } && lesson.Sources.All(s => !s.Url.Contains("wtfdig", StringComparison.OrdinalIgnoreCase)))
             lesson = lesson with { Sources = [.. lesson.Sources, new LessonSource($"WTFDIG ({wtfdig.DefaultStrat}), MIT", wtfdig.Url)] };
         File.WriteAllText(stem + ".lesson.json", LessonSkeleton.ToJson(lesson));
-        File.WriteAllText(stem + ".context.md", LessonContext.Write(dump, lesson, rules, cues, oracle, plan, layout, texts));
+        File.WriteAllText(stem + ".context.md", LessonContext.Write(dump, lesson, rules, cues, oracle, plan, layout, texts, extraction));
         return stem;
     }
 
