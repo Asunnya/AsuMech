@@ -1,0 +1,7357 @@
+{
+  "plan": "umad-ikuya",
+  "source": {
+    "title": "Ikuya Mitty",
+    "url": "https://tinyurl.com/ikuyamittydmu",
+    "credits": [
+      "WTFDIG (https://github.com/mczub/wtfdig/tree/aa79375/src/routes/ultimates/umad, MIT)"
+    ],
+    "importedAt": "2026-11-05"
+  },
+  "scenarios": {
+    "UmadP1TeleTrouncingScenario": {
+      "mechanics": [
+        {
+          "id": "revolting-ruin",
+          "label": "Revolting Ruin",
+          "columns": {
+            "MT": [
+              {
+                "reminder": "Kitchen Sink (3rd hit)",
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Intervention",
+                  "Nascent Flash",
+                  "The Blackest Night",
+                  "Heart of Corundum",
+                  "Heart of Stone"
+                ],
+                "minCount": 1
+              },
+              {
+                "reminder": "Provoke During Castbar (3rd hit)",
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Revolting Ruin\u0022"
+        },
+        {
+          "id": "mystery-magic",
+          "label": "Mystery Magic",
+          "anchor": {
+            "cast": "Mystery Magic",
+            "occurrence": 1
+          },
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Deployment Tactics"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Expedient"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Zoe",
+                  "Eukrasian Prognosis II"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Temperance"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Neutral Sect"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sun Sign"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 1": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Phys Range": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "wave-cannon",
+          "label": "Wave Cannon",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Holos"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Divine Caress"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Wave Cannon\u0022"
+        },
+        {
+          "id": "double-trouble-trap",
+          "label": "Double-Trouble Trap",
+          "anchor": {
+            "cast": "Double-trouble Trap",
+            "occurrence": 1
+          },
+          "columns": {
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Caster": [
+              {
+                "accept": [
+                  "Addle"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "light-of-judgment",
+          "label": "Light of Judgment",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Plenary Indulgence"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Collective Unconscious"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 2": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Light of Judgment\u0022"
+        },
+        {
+          "id": "hyperdrive-3x",
+          "label": "Hyperdrive (3x)",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Intervention",
+                  "Nascent Flash",
+                  "The Blackest Night",
+                  "Heart of Corundum",
+                  "Heart of Stone"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "reminder": "Kitchen Sink",
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Hyperdrive (3x)\u0022"
+        },
+        {
+          "id": "gravitas-ii-part-i",
+          "label": "Gravitas II (Part I)",
+          "columns": {
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Summon Seraph"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Macrocosmos"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Gravitas II (Part I)\u0022"
+        },
+        {
+          "id": "revolting-ruin-b",
+          "label": "Revolting Ruin",
+          "columns": {
+            "MT": [
+              {
+                "reminder": "Provoke During Castbar (3rd hit)",
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Hallowed Ground",
+                  "Holmgang",
+                  "Living Dead",
+                  "Superbolide"
+                ],
+                "note": "3rd hit",
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Revolting Ruin\u0022"
+        },
+        {
+          "id": "gravitas-ii-part-ii",
+          "label": "Gravitas II (Part II)",
+          "columns": {
+            "Scholar": [
+              {
+                "accept": [
+                  "Summon Seraph"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Fey Illumination"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Philosophia"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Liturgy of the Bell"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Gravitas II (Part II)\u0022"
+        },
+        {
+          "id": "double-trouble-trap-b",
+          "label": "Double-Trouble Trap",
+          "columns": {
+            "OT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Deployment Tactics"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Panhaima"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Zoe",
+                  "Eukrasian Prognosis II"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Phys Range": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "Double-trouble Trap has no occurrence 2"
+        },
+        {
+          "id": "light-of-judgment-b",
+          "label": "Light of Judgment",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Plenary Indulgence"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Collective Unconscious"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 1": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Light of Judgment\u0022"
+        },
+        {
+          "id": "hyperdrive-3x-b",
+          "label": "Hyperdrive (3x)",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Hallowed Ground",
+                  "Holmgang",
+                  "Living Dead",
+                  "Superbolide"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Hyperdrive (3x)\u0022"
+        },
+        {
+          "id": "double-trouble-trap-b-b",
+          "label": "Double-Trouble Trap",
+          "columns": {
+            "Scholar": [
+              {
+                "accept": [
+                  "Expedient"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Temperance"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Neutral Sect"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "Double-trouble Trap has no occurrence 3"
+        },
+        {
+          "id": "indulgent-will",
+          "label": "Indulgent Will",
+          "anchor": {
+            "cast": "Indulgent Will",
+            "occurrence": 1
+          },
+          "columns": {
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Divine Caress"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Sun Sign"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "mystery-magic-b",
+          "label": "Mystery Magic",
+          "columns": {
+            "OT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "Mystery Magic has no occurrence 2"
+        }
+      ]
+    },
+    "UmadP2ForsakenScenario": {
+      "mechanics": [
+        {
+          "id": "ultimate-embrace",
+          "label": "Ultimate Embrace",
+          "columns": {
+            "MT": [
+              {
+                "reminder": "Kitchen Sink",
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "reminder": "Kitchen Sink",
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Deployment Tactics"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Holos"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "reminder": "Assist Tanks",
+                "minCount": 1
+              }
+            ],
+            "Melee 2": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Ultimate Embrace\u0022"
+        },
+        {
+          "id": "forsaken",
+          "label": "Forsaken",
+          "anchor": {
+            "cast": "Forsaken",
+            "occurrence": 1
+          },
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Zoe",
+                  "Eukrasian Prognosis II"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Plenary Indulgence"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Collective Unconscious"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 1": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Phys Range": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Caster": [
+              {
+                "accept": [
+                  "Addle"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "towers-i",
+          "label": "Towers I",
+          "columns": {
+            "OT": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Summon Seraph"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Fey Illumination"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Panhaima"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Towers I\u0022"
+        },
+        {
+          "id": "towers-ii-past-future-s-end",
+          "label": "Towers II (Past/Future\u0027s End)",
+          "anchor": {
+            "cast": "Future\u0027s End",
+            "occurrence": 1
+          },
+          "columns": {
+            "Scholar": [
+              {
+                "accept": [
+                  "Summon Seraph"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "towers-iii-all-things-ending",
+          "label": "Towers III (All Things Ending)",
+          "anchor": {
+            "cast": "All Things Ending",
+            "occurrence": 1
+          },
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Macrocosmos"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "towers-v-all-things-ending-2",
+          "label": "Towers V (All Things Ending)",
+          "anchor": {
+            "cast": "All Things Ending",
+            "occurrence": 2
+          },
+          "columns": {
+            "Scholar": [
+              {
+                "accept": [
+                  "Expedient"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Liturgy of the Bell"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "towers-vi-past-future-s-end-2",
+          "label": "Towers VI (Past/Future\u0027s End)",
+          "anchor": {
+            "cast": "Future\u0027s End",
+            "occurrence": 2
+          },
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Summon Seraph"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Philosophia"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Plenary Indulgence"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Temperance"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Collective Unconscious"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Neutral Sect"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "towers-vii-all-things-ending-3",
+          "label": "Towers VII (All Things Ending)",
+          "anchor": {
+            "cast": "All Things Ending",
+            "occurrence": 3
+          },
+          "columns": {
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Divine Caress"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Sun Sign"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "light-of-judgment",
+          "label": "Light of Judgment",
+          "anchor": {
+            "cast": "Light of Judgment",
+            "occurrence": 1
+          },
+          "columns": {
+            "OT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Deployment Tactics"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Holos"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Zoe",
+                  "Eukrasian Prognosis II"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 1": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Phys Range": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Caster": [
+              {
+                "accept": [
+                  "Addle"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "wings-of-destruction",
+          "label": "Wings of Destruction",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "note": "Close",
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "note": "Far",
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Fey Illumination"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Summon Seraph"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Panhaima"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Plenary Indulgence"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Collective Unconscious"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 2": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Wings of Destruction\u0022"
+        },
+        {
+          "id": "ultimate-embrace-b",
+          "label": "Ultimate Embrace",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Ultimate Embrace\u0022"
+        }
+      ]
+    },
+    "UmadP3LimitCutScenario": {
+      "mechanics": [
+        {
+          "id": "bowels-of-agony-chaos",
+          "label": "Bowels of Agony (Chaos)",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Plenary Indulgence"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Collective Unconscious"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 1": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "note": "Chaos",
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Bowels of Agony (Chaos)\u0022"
+        },
+        {
+          "id": "stray-flames-tsunami",
+          "label": "Stray Flames/Tsunami",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Deployment Tactics"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Zoe",
+                  "Eukrasian Prognosis II"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Stray Flames/Tsunami\u0022"
+        },
+        {
+          "id": "thunder-iii-1st-set",
+          "label": "Thunder III (1st Set)",
+          "anchor": {
+            "cast": "Thunder III",
+            "occurrence": 1
+          },
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "first hit",
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "second hit",
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "first hit",
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "second hit",
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Expedient"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Holos"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Caster": [
+              {
+                "accept": [
+                  "Addle"
+                ],
+                "note": "Exdeath",
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "stray-flames-tsunami-b",
+          "label": "Stray Flames/Tsunami",
+          "columns": {
+            "OT": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Summon Seraph"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Temperance"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Neutral Sect"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Stray Flames/Tsunami\u0022"
+        },
+        {
+          "id": "ultima-blaster",
+          "label": "Ultima Blaster",
+          "anchor": {
+            "cast": "Ultima Blaster",
+            "occurrence": 1
+          },
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Fey Illumination"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Summon Seraph"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Panhaima"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Sun Sign"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 2": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "note": "Chaos",
+                "minCount": 1
+              }
+            ],
+            "Phys Range": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "vacuum-wave",
+          "label": "Vacuum Wave",
+          "anchor": {
+            "cast": "Vacuum Wave",
+            "occurrence": 1
+          },
+          "columns": {
+            "MT": [
+              {
+                "reminder": "LB3",
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "reminder": "LB3",
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Plenary Indulgence"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Collective Unconscious"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "cyclone",
+          "label": "Cyclone",
+          "anchor": {
+            "cast": "Cyclone",
+            "occurrence": 1
+          },
+          "columns": {
+            "White Mage": [
+              {
+                "accept": [
+                  "Divine Caress"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "thunder-iii-2nd-set-2",
+          "label": "Thunder III (2nd Set)",
+          "anchor": {
+            "cast": "Thunder III",
+            "occurrence": 2
+          },
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Hallowed Ground",
+                  "Holmgang",
+                  "Living Dead",
+                  "Superbolide"
+                ],
+                "note": "3rd hit",
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Hallowed Ground",
+                  "Holmgang",
+                  "Living Dead",
+                  "Superbolide"
+                ],
+                "note": "3rd hit",
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "the-decisive-battle",
+          "label": "The Decisive Battle",
+          "anchor": {
+            "cast": "the Decisive Battle",
+            "occurrence": 1
+          },
+          "columns": {
+            "OT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "note": "Exdeath",
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Deployment Tactics"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Zoe",
+                  "Eukrasian Prognosis II"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "thunder-iii-3rd-set-3",
+          "label": "Thunder III (3rd Set)",
+          "anchor": {
+            "cast": "Thunder III",
+            "occurrence": 3
+          },
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "second hit",
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "first hit",
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "second hit",
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "first hit",
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "thunder-iii-4th-set-4",
+          "label": "Thunder III (4th Set)",
+          "anchor": {
+            "cast": "Thunder III",
+            "occurrence": 4
+          },
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Hallowed Ground",
+                  "Holmgang",
+                  "Living Dead",
+                  "Superbolide"
+                ],
+                "note": "3rd hit",
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Hallowed Ground",
+                  "Holmgang",
+                  "Living Dead",
+                  "Superbolide"
+                ],
+                "note": "3rd hit",
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "black-holes-ii-5th-tether-set",
+          "label": "Black Holes II (5th Tether Set)",
+          "columns": {
+            "Scholar": [
+              {
+                "accept": [
+                  "Fey Illumination"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Black Holes II (5th Tether Set)\u0022"
+        },
+        {
+          "id": "black-holes-iii-6th-tether-set",
+          "label": "Black Holes III (6th Tether Set)",
+          "columns": {
+            "White Mage": [
+              {
+                "accept": [
+                  "Divine Caress"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Sun Sign"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Phys Range": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Black Holes III (6th Tether Set)\u0022"
+        },
+        {
+          "id": "black-holes-iv-10th-tether-set",
+          "label": "Black Holes IV (10th Tether Set)",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Black Holes IV (10th Tether Set)\u0022"
+        }
+      ]
+    },
+    "UmadP3BlackHoleScenario": {
+      "mechanics": [
+        {
+          "id": "bowels-of-agony-chaos",
+          "label": "Bowels of Agony (Chaos)",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Plenary Indulgence"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Collective Unconscious"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 1": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "note": "Chaos",
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Bowels of Agony (Chaos)\u0022"
+        },
+        {
+          "id": "stray-flames-tsunami",
+          "label": "Stray Flames/Tsunami",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Deployment Tactics"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Zoe",
+                  "Eukrasian Prognosis II"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Stray Flames/Tsunami\u0022"
+        },
+        {
+          "id": "thunder-iii-1st-set",
+          "label": "Thunder III (1st Set)",
+          "anchor": {
+            "cast": "Thunder III",
+            "occurrence": 1
+          },
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "first hit",
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "second hit",
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "first hit",
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "second hit",
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Expedient"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Holos"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Caster": [
+              {
+                "accept": [
+                  "Addle"
+                ],
+                "note": "Exdeath",
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "stray-flames-tsunami-b",
+          "label": "Stray Flames/Tsunami",
+          "columns": {
+            "OT": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Summon Seraph"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Temperance"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Neutral Sect"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Stray Flames/Tsunami\u0022"
+        },
+        {
+          "id": "thunder-iii-2nd-set-2",
+          "label": "Thunder III (2nd Set)",
+          "anchor": {
+            "cast": "Thunder III",
+            "occurrence": 2
+          },
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Hallowed Ground",
+                  "Holmgang",
+                  "Living Dead",
+                  "Superbolide"
+                ],
+                "note": "3rd hit",
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Hallowed Ground",
+                  "Holmgang",
+                  "Living Dead",
+                  "Superbolide"
+                ],
+                "note": "3rd hit",
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "thunder-iii-3rd-set-3",
+          "label": "Thunder III (3rd Set)",
+          "anchor": {
+            "cast": "Thunder III",
+            "occurrence": 3
+          },
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "second hit",
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "first hit",
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "second hit",
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "first hit",
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "earthquake",
+          "label": "Earthquake",
+          "anchor": {
+            "cast": "Earthquake",
+            "occurrence": 1
+          },
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Philosophia"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Macrocosmos"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 1": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "note": "Chaos",
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "shocking-impact-shockwave",
+          "label": "Shocking Impact/Shockwave",
+          "anchor": {
+            "cast": "Shocking Impact",
+            "occurrence": 1
+          },
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Plenary Indulgence"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Collective Unconscious"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "thunder-iii-4th-set-4",
+          "label": "Thunder III (4th Set)",
+          "anchor": {
+            "cast": "Thunder III",
+            "occurrence": 4
+          },
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Hallowed Ground",
+                  "Holmgang",
+                  "Living Dead",
+                  "Superbolide"
+                ],
+                "note": "3rd hit",
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Hallowed Ground",
+                  "Holmgang",
+                  "Living Dead",
+                  "Superbolide"
+                ],
+                "note": "3rd hit",
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "shocking-impact-shockwave-b",
+          "label": "Shocking Impact/Shockwave",
+          "columns": {
+            "OT": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Expedient"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Summon Seraph"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Holos"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Liturgy of the Bell"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "Shocking Impact has no occurrence 2"
+        },
+        {
+          "id": "black-holes-ii-3rd-tether-set",
+          "label": "Black Holes II (3rd Tether Set)",
+          "anchor": {
+            "cast": "Black Hole",
+            "occurrence": 1
+          },
+          "columns": {
+            "OT": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Summon Seraph"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "black-holes-ii-5th-tether-set",
+          "label": "Black Holes II (5th Tether Set)",
+          "columns": {
+            "Scholar": [
+              {
+                "accept": [
+                  "Fey Illumination"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "Black Hole has no occurrence 2"
+        },
+        {
+          "id": "thunder-iii-5th-set-5",
+          "label": "Thunder III (5th Set)",
+          "anchor": {
+            "cast": "Thunder III",
+            "occurrence": 5
+          },
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "second hit",
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "first hit",
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "second hit",
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "first hit",
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Deployment Tactics"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Zoe",
+                  "Eukrasian Prognosis II"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Panhaima"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Temperance"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Neutral Sect"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 2": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "note": "Chaos",
+                "minCount": 1
+              }
+            ],
+            "Caster": [
+              {
+                "accept": [
+                  "Addle"
+                ],
+                "note": "Exdeath",
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "black-holes-iii-6th-tether-set",
+          "label": "Black Holes III (6th Tether Set)",
+          "columns": {
+            "White Mage": [
+              {
+                "accept": [
+                  "Divine Caress"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Sun Sign"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Phys Range": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "Black Hole has no occurrence 3"
+        },
+        {
+          "id": "shocking-impact-shockwave-b-b",
+          "label": "Shocking Impact/Shockwave",
+          "columns": {
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Plenary Indulgence"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Collective Unconscious"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "Shocking Impact has no occurrence 3"
+        },
+        {
+          "id": "black-holes-iv-10th-tether-set",
+          "label": "Black Holes IV (10th Tether Set)",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "Black Hole has no occurrence 4"
+        },
+        {
+          "id": "stomp-a-mole-knock-down",
+          "label": "Stomp-a-Mole \u002B Knock Down",
+          "anchor": {
+            "cast": "Stomp-a-Mole",
+            "occurrence": 1
+          },
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Summon Seraph"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 1": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "note": "Chaos",
+                "minCount": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "UmadP4KefkaSaysScenario": {
+      "mechanics": [
+        {
+          "id": "autos",
+          "label": "Autos",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Intervention",
+                  "Nascent Flash",
+                  "The Blackest Night",
+                  "Heart of Corundum",
+                  "Heart of Stone"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Autos\u0022"
+        },
+        {
+          "id": "grand-cross",
+          "label": "Grand Cross",
+          "anchor": {
+            "cast": "Grand Cross",
+            "occurrence": 1
+          },
+          "columns": {
+            "Scholar": [
+              {
+                "accept": [
+                  "Deployment Tactics"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Philosophia"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Holos"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Plenary Indulgence"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Collective Unconscious"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 2": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "inferno-tsunami",
+          "label": "Inferno/Tsunami",
+          "anchor": {
+            "cast": "Inferno",
+            "occurrence": 1
+          },
+          "columns": {
+            "Phys Range": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "grand-cross-2",
+          "label": "Grand Cross",
+          "anchor": {
+            "cast": "Grand Cross",
+            "occurrence": 2
+          },
+          "columns": {
+            "Scholar": [
+              {
+                "accept": [
+                  "Expedient"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Fey Illumination"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Panhaima"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Temperance"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Neutral Sect"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "inferno-tsunami-2",
+          "label": "Inferno/Tsunami",
+          "anchor": {
+            "cast": "Inferno",
+            "occurrence": 2
+          },
+          "columns": {
+            "OT": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Summon Seraph"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Sun Sign"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "grand-cross-3",
+          "label": "Grand Cross",
+          "anchor": {
+            "cast": "Grand Cross",
+            "occurrence": 3
+          },
+          "columns": {
+            "OT": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Summon Seraph"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Zoe",
+                  "Eukrasian Prognosis II"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Divine Caress"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "flood-of-naught",
+          "label": "Flood of Naught",
+          "anchor": {
+            "cast": "Flood of Naught",
+            "occurrence": 1
+          },
+          "columns": {
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Liturgy of the Bell"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Macrocosmos"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "death-bolt-wave",
+          "label": "Death Bolt/Wave",
+          "anchor": {
+            "cast": "Death Bolt",
+            "occurrence": 1
+          },
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "ultima-upsurge",
+          "label": "Ultima Upsurge",
+          "anchor": {
+            "cast": "Ultima Upsurge",
+            "occurrence": 1
+          },
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Plenary Indulgence"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Collective Unconscious"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 1": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Caster": [
+              {
+                "accept": [
+                  "Addle"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "ultima-upsurge-b",
+          "label": "Ultima Upsurge",
+          "columns": {
+            "OT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "Ultima Upsurge has no occurrence 2"
+        }
+      ]
+    },
+    "UmadP5FloodScenario": {
+      "mechanics": [
+        {
+          "id": "ultima-repeater",
+          "label": "Ultima Repeater",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Deployment Tactics"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Zoe",
+                  "Eukrasian Prognosis II"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Holos"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Plenary Indulgence"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Collective Unconscious"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Phys Range": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Ultima Repeater\u0022"
+        },
+        {
+          "id": "fell-forces-3x",
+          "label": "Fell Forces (3x)",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Fell Forces (3x)\u0022"
+        },
+        {
+          "id": "chaotic-flood",
+          "label": "Chaotic Flood",
+          "anchor": {
+            "cast": "Chaotic Flood",
+            "occurrence": 1
+          },
+          "columns": {
+            "Scholar": [
+              {
+                "accept": [
+                  "Expedient"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Panhaima"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Temperance"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Neutral Sect"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "maddening-orchestra",
+          "label": "Maddening Orchestra",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              },
+              {
+                "reminder": "Provoke",
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              },
+              {
+                "reminder": "Provoke",
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Fey Illumination"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Divine Caress"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Sun Sign"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 2": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Maddening Orchestra\u0022"
+        },
+        {
+          "id": "flare-holy",
+          "label": "Flare/Holy",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Hallowed Ground",
+                  "Holmgang",
+                  "Living Dead",
+                  "Superbolide"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Hallowed Ground",
+                  "Holmgang",
+                  "Living Dead",
+                  "Superbolide"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Flare/Holy\u0022"
+        },
+        {
+          "id": "ultima-repeater-b",
+          "label": "Ultima Repeater",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Plenary Indulgence"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Collective Unconscious"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 1": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Phys Range": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Caster": [
+              {
+                "accept": [
+                  "Addle"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Ultima Repeater\u0022"
+        },
+        {
+          "id": "fell-forces-2x",
+          "label": "Fell Forces (2x)",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Fell Forces (2x)\u0022"
+        },
+        {
+          "id": "maddening-orchestra-b",
+          "label": "Maddening Orchestra",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              },
+              {
+                "reminder": "Provoke",
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "reminder": "Provoke",
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              },
+              {
+                "reminder": "Provoke",
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "reminder": "Provoke",
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Maddening Orchestra\u0022"
+        },
+        {
+          "id": "flare-holy-b",
+          "label": "Flare/Holy",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Hallowed Ground",
+                  "Holmgang",
+                  "Living Dead",
+                  "Superbolide"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Hallowed Ground",
+                  "Holmgang",
+                  "Living Dead",
+                  "Superbolide"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Flare/Holy\u0022"
+        },
+        {
+          "id": "fell-forces-3x-b",
+          "label": "Fell Forces (3x)",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "3rd hit",
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "3rd hit",
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "3rd hit",
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "3rd hit",
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "reminder": "Assist Tanks",
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Fell Forces (3x)\u0022"
+        },
+        {
+          "id": "forsaken-1st-hit",
+          "label": "Forsaken (1st Hit)",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Deployment Tactics"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Fey Illumination"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Zoe",
+                  "Eukrasian Prognosis II"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Holos"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Temperance"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Neutral Sect"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Collective Unconscious"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 2": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Forsaken (1st Hit)\u0022"
+        },
+        {
+          "id": "forsaken-bonds-2nd-hit",
+          "label": "Forsaken Bonds (2nd Hit)",
+          "columns": {
+            "Scholar": [
+              {
+                "accept": [
+                  "Summon Seraph"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Philosophia"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Liturgy of the Bell"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Forsaken Bonds (2nd Hit)\u0022"
+        },
+        {
+          "id": "forsaken-3rd-hit",
+          "label": "Forsaken (3rd Hit)",
+          "columns": {
+            "Scholar": [
+              {
+                "accept": [
+                  "Expedient"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Panhaima"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Macrocosmos"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Forsaken (3rd Hit)\u0022"
+        },
+        {
+          "id": "forsaken-5th-hit",
+          "label": "Forsaken (5th Hit)",
+          "columns": {
+            "OT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Divine Caress"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Sun Sign"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 1": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Phys Range": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Caster": [
+              {
+                "accept": [
+                  "Addle"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Forsaken (5th Hit)\u0022"
+        },
+        {
+          "id": "forsaken-bonds-6th-hit",
+          "label": "Forsaken Bonds (6th Hit)",
+          "columns": {
+            "White Mage": [
+              {
+                "accept": [
+                  "Plenary Indulgence"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Forsaken Bonds (6th Hit)\u0022"
+        },
+        {
+          "id": "forsaken-7th-hit",
+          "label": "Forsaken (7th Hit)",
+          "columns": {
+            "Scholar": [
+              {
+                "accept": [
+                  "Summon Seraph"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Forsaken (7th Hit)\u0022"
+        },
+        {
+          "id": "forsaken-bonds-8th-hit",
+          "label": "Forsaken Bonds (8th Hit)",
+          "columns": {
+            "Scholar": [
+              {
+                "accept": [
+                  "Summon Seraph"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Forsaken Bonds (8th Hit)\u0022"
+        }
+      ]
+    },
+    "UmadP5CelestriadScenario": {
+      "mechanics": [
+        {
+          "id": "ultima-repeater",
+          "label": "Ultima Repeater",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Deployment Tactics"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Zoe",
+                  "Eukrasian Prognosis II"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Holos"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Plenary Indulgence"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Collective Unconscious"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Phys Range": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Ultima Repeater\u0022"
+        },
+        {
+          "id": "fell-forces-3x",
+          "label": "Fell Forces (3x)",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Fell Forces (3x)\u0022"
+        },
+        {
+          "id": "maddening-orchestra",
+          "label": "Maddening Orchestra",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              },
+              {
+                "reminder": "Provoke",
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              },
+              {
+                "reminder": "Provoke",
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Fey Illumination"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Divine Caress"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Sun Sign"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 2": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Maddening Orchestra\u0022"
+        },
+        {
+          "id": "flare-holy",
+          "label": "Flare/Holy",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Hallowed Ground",
+                  "Holmgang",
+                  "Living Dead",
+                  "Superbolide"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Hallowed Ground",
+                  "Holmgang",
+                  "Living Dead",
+                  "Superbolide"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Flare/Holy\u0022"
+        },
+        {
+          "id": "celestriad",
+          "label": "Celestriad",
+          "anchor": {
+            "cast": "Celestriad",
+            "occurrence": 1
+          },
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Summon Seraph"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "ultima-repeater-b",
+          "label": "Ultima Repeater",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Plenary Indulgence"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Collective Unconscious"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 1": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Phys Range": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Caster": [
+              {
+                "accept": [
+                  "Addle"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Ultima Repeater\u0022"
+        },
+        {
+          "id": "fell-forces-2x",
+          "label": "Fell Forces (2x)",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Fell Forces (2x)\u0022"
+        },
+        {
+          "id": "maddening-orchestra-b",
+          "label": "Maddening Orchestra",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              },
+              {
+                "reminder": "Provoke",
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "reminder": "Provoke",
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              },
+              {
+                "reminder": "Provoke",
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "reminder": "Provoke",
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Maddening Orchestra\u0022"
+        },
+        {
+          "id": "flare-holy-b",
+          "label": "Flare/Holy",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Hallowed Ground",
+                  "Holmgang",
+                  "Living Dead",
+                  "Superbolide"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Hallowed Ground",
+                  "Holmgang",
+                  "Living Dead",
+                  "Superbolide"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Flare/Holy\u0022"
+        },
+        {
+          "id": "fell-forces-3x-b",
+          "label": "Fell Forces (3x)",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "3rd hit",
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "3rd hit",
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "3rd hit",
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "3rd hit",
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "reminder": "Assist Tanks",
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Fell Forces (3x)\u0022"
+        },
+        {
+          "id": "forsaken-1st-hit",
+          "label": "Forsaken (1st Hit)",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Deployment Tactics"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Fey Illumination"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Zoe",
+                  "Eukrasian Prognosis II"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Holos"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Temperance"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Neutral Sect"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Collective Unconscious"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 2": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Forsaken (1st Hit)\u0022"
+        },
+        {
+          "id": "forsaken-bonds-2nd-hit",
+          "label": "Forsaken Bonds (2nd Hit)",
+          "columns": {
+            "Scholar": [
+              {
+                "accept": [
+                  "Summon Seraph"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Philosophia"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Liturgy of the Bell"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Forsaken Bonds (2nd Hit)\u0022"
+        },
+        {
+          "id": "forsaken-3rd-hit",
+          "label": "Forsaken (3rd Hit)",
+          "columns": {
+            "Scholar": [
+              {
+                "accept": [
+                  "Expedient"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Panhaima"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Macrocosmos"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Forsaken (3rd Hit)\u0022"
+        },
+        {
+          "id": "forsaken-5th-hit",
+          "label": "Forsaken (5th Hit)",
+          "columns": {
+            "OT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Divine Caress"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Sun Sign"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 1": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Phys Range": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Caster": [
+              {
+                "accept": [
+                  "Addle"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Forsaken (5th Hit)\u0022"
+        },
+        {
+          "id": "forsaken-bonds-6th-hit",
+          "label": "Forsaken Bonds (6th Hit)",
+          "columns": {
+            "White Mage": [
+              {
+                "accept": [
+                  "Plenary Indulgence"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Forsaken Bonds (6th Hit)\u0022"
+        },
+        {
+          "id": "forsaken-7th-hit",
+          "label": "Forsaken (7th Hit)",
+          "columns": {
+            "Scholar": [
+              {
+                "accept": [
+                  "Summon Seraph"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Forsaken (7th Hit)\u0022"
+        },
+        {
+          "id": "forsaken-bonds-8th-hit",
+          "label": "Forsaken Bonds (8th Hit)",
+          "columns": {
+            "Scholar": [
+              {
+                "accept": [
+                  "Summon Seraph"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Forsaken Bonds (8th Hit)\u0022"
+        }
+      ]
+    },
+    "UmadP5ExaflaresScenario": {
+      "mechanics": [
+        {
+          "id": "ultima-repeater",
+          "label": "Ultima Repeater",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Deployment Tactics"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Zoe",
+                  "Eukrasian Prognosis II"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Holos"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Plenary Indulgence"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Collective Unconscious"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Phys Range": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Ultima Repeater\u0022"
+        },
+        {
+          "id": "fell-forces-3x",
+          "label": "Fell Forces (3x)",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Fell Forces (3x)\u0022"
+        },
+        {
+          "id": "maddening-orchestra",
+          "label": "Maddening Orchestra",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              },
+              {
+                "reminder": "Provoke",
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              },
+              {
+                "reminder": "Provoke",
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Fey Illumination"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Divine Caress"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Sun Sign"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 2": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Maddening Orchestra\u0022"
+        },
+        {
+          "id": "flare-holy",
+          "label": "Flare/Holy",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Hallowed Ground",
+                  "Holmgang",
+                  "Living Dead",
+                  "Superbolide"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Hallowed Ground",
+                  "Holmgang",
+                  "Living Dead",
+                  "Superbolide"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Flare/Holy\u0022"
+        },
+        {
+          "id": "ultima-repeater-b",
+          "label": "Ultima Repeater",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Plenary Indulgence"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Collective Unconscious"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 1": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Phys Range": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Caster": [
+              {
+                "accept": [
+                  "Addle"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Ultima Repeater\u0022"
+        },
+        {
+          "id": "fell-forces-2x",
+          "label": "Fell Forces (2x)",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Fell Forces (2x)\u0022"
+        },
+        {
+          "id": "stray-entropy",
+          "label": "Stray Entropy",
+          "anchor": {
+            "cast": "Stray Entropy",
+            "occurrence": 1
+          },
+          "columns": {
+            "OT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "maddening-orchestra-b",
+          "label": "Maddening Orchestra",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              },
+              {
+                "reminder": "Provoke",
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "reminder": "Provoke",
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "minCount": 1
+              },
+              {
+                "reminder": "Provoke",
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sentinel",
+                  "Guardian",
+                  "Vengeance",
+                  "Damnation",
+                  "Shadow Wall",
+                  "Shadowed Vigil",
+                  "Nebula",
+                  "Great Nebula"
+                ],
+                "minCount": 1
+              },
+              {
+                "reminder": "Provoke",
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Maddening Orchestra\u0022"
+        },
+        {
+          "id": "flare-holy-b",
+          "label": "Flare/Holy",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Hallowed Ground",
+                  "Holmgang",
+                  "Living Dead",
+                  "Superbolide"
+                ],
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Hallowed Ground",
+                  "Holmgang",
+                  "Living Dead",
+                  "Superbolide"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Flare/Holy\u0022"
+        },
+        {
+          "id": "fell-forces-3x-b",
+          "label": "Fell Forces (3x)",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "3rd hit",
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "3rd hit",
+                "minCount": 1
+              }
+            ],
+            "OT": [
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "3rd hit",
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Rampart"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sheltron",
+                  "Holy Sheltron",
+                  "Raw Intuition",
+                  "Bloodwhetting",
+                  "The Blackest Night",
+                  "Heart of Stone",
+                  "Heart of Corundum"
+                ],
+                "note": "3rd hit",
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "reminder": "Assist Tanks",
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Fell Forces (3x)\u0022"
+        },
+        {
+          "id": "forsaken-1st-hit",
+          "label": "Forsaken (1st Hit)",
+          "columns": {
+            "MT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Scholar": [
+              {
+                "accept": [
+                  "Deployment Tactics"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Fey Illumination"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Zoe",
+                  "Eukrasian Prognosis II"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Holos"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Temperance"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Neutral Sect"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Collective Unconscious"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 2": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Forsaken (1st Hit)\u0022"
+        },
+        {
+          "id": "forsaken-bonds-2nd-hit",
+          "label": "Forsaken Bonds (2nd Hit)",
+          "columns": {
+            "Scholar": [
+              {
+                "accept": [
+                  "Summon Seraph"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Philosophia"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Liturgy of the Bell"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Forsaken Bonds (2nd Hit)\u0022"
+        },
+        {
+          "id": "forsaken-3rd-hit",
+          "label": "Forsaken (3rd Hit)",
+          "columns": {
+            "Scholar": [
+              {
+                "accept": [
+                  "Expedient"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Panhaima"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Macrocosmos"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Forsaken (3rd Hit)\u0022"
+        },
+        {
+          "id": "forsaken-5th-hit",
+          "label": "Forsaken (5th Hit)",
+          "columns": {
+            "OT": [
+              {
+                "accept": [
+                  "Reprisal"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "White Mage": [
+              {
+                "accept": [
+                  "Divine Caress"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Astrologian": [
+              {
+                "accept": [
+                  "Sun Sign"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Melee 1": [
+              {
+                "accept": [
+                  "Feint"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Phys Range": [
+              {
+                "accept": [
+                  "Divine Veil",
+                  "Shake It Off",
+                  "Heart of Light",
+                  "Dark Missionary",
+                  "Troubadour",
+                  "Tactician",
+                  "Shield Samba",
+                  "Magick Barrier"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Caster": [
+              {
+                "accept": [
+                  "Addle"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Forsaken (5th Hit)\u0022"
+        },
+        {
+          "id": "forsaken-bonds-6th-hit",
+          "label": "Forsaken Bonds (6th Hit)",
+          "columns": {
+            "White Mage": [
+              {
+                "accept": [
+                  "Plenary Indulgence"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Forsaken Bonds (6th Hit)\u0022"
+        },
+        {
+          "id": "forsaken-7th-hit",
+          "label": "Forsaken (7th Hit)",
+          "columns": {
+            "Scholar": [
+              {
+                "accept": [
+                  "Summon Seraph"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Forsaken (7th Hit)\u0022"
+        },
+        {
+          "id": "forsaken-bonds-8th-hit",
+          "label": "Forsaken Bonds (8th Hit)",
+          "columns": {
+            "Scholar": [
+              {
+                "accept": [
+                  "Summon Seraph"
+                ],
+                "minCount": 1
+              },
+              {
+                "accept": [
+                  "Sacred Soil"
+                ],
+                "minCount": 1
+              }
+            ],
+            "Sage": [
+              {
+                "accept": [
+                  "Kerachole"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "unresolved": "no cast named like \u0022Forsaken Bonds (8th Hit)\u0022"
+        }
+      ]
+    }
+  },
+  "knownUnresolved": [
+    "Revolting Ruin: no cast named like \u0022Revolting Ruin\u0022",
+    "Wave Cannon: no cast named like \u0022Wave Cannon\u0022",
+    "Light of Judgment: no cast named like \u0022Light of Judgment\u0022",
+    "Hyperdrive (3x): no cast named like \u0022Hyperdrive (3x)\u0022",
+    "Gravitas II (Part I): no cast named like \u0022Gravitas II (Part I)\u0022",
+    "Gravitas II (Part II): no cast named like \u0022Gravitas II (Part II)\u0022",
+    "Double-Trouble Trap: Double-trouble Trap has no occurrence 2",
+    "Double-Trouble Trap: Double-trouble Trap has no occurrence 3",
+    "Mystery Magic: Mystery Magic has no occurrence 2",
+    "Ultimate Embrace: no cast named like \u0022Ultimate Embrace\u0022",
+    "Towers I: no cast named like \u0022Towers I\u0022",
+    "Wings of Destruction: no cast named like \u0022Wings of Destruction\u0022",
+    "Bowels of Agony (Chaos): no cast named like \u0022Bowels of Agony (Chaos)\u0022",
+    "Stray Flames/Tsunami: no cast named like \u0022Stray Flames/Tsunami\u0022",
+    "Black Holes II (5th Tether Set): no cast named like \u0022Black Holes II (5th Tether Set)\u0022",
+    "Black Holes III (6th Tether Set): no cast named like \u0022Black Holes III (6th Tether Set)\u0022",
+    "Black Holes IV (10th Tether Set): no cast named like \u0022Black Holes IV (10th Tether Set)\u0022",
+    "Shocking Impact/Shockwave: Shocking Impact has no occurrence 2",
+    "Black Holes II (5th Tether Set): Black Hole has no occurrence 2",
+    "Black Holes III (6th Tether Set): Black Hole has no occurrence 3",
+    "Shocking Impact/Shockwave: Shocking Impact has no occurrence 3",
+    "Black Holes IV (10th Tether Set): Black Hole has no occurrence 4",
+    "Autos: no cast named like \u0022Autos\u0022",
+    "Ultima Upsurge: Ultima Upsurge has no occurrence 2",
+    "Ultima Repeater: no cast named like \u0022Ultima Repeater\u0022",
+    "Fell Forces (3x): no cast named like \u0022Fell Forces (3x)\u0022",
+    "Maddening Orchestra: no cast named like \u0022Maddening Orchestra\u0022",
+    "Flare/Holy: no cast named like \u0022Flare/Holy\u0022",
+    "Fell Forces (2x): no cast named like \u0022Fell Forces (2x)\u0022",
+    "Forsaken (1st Hit): no cast named like \u0022Forsaken (1st Hit)\u0022",
+    "Forsaken Bonds (2nd Hit): no cast named like \u0022Forsaken Bonds (2nd Hit)\u0022",
+    "Forsaken (3rd Hit): no cast named like \u0022Forsaken (3rd Hit)\u0022",
+    "Forsaken (5th Hit): no cast named like \u0022Forsaken (5th Hit)\u0022",
+    "Forsaken Bonds (6th Hit): no cast named like \u0022Forsaken Bonds (6th Hit)\u0022",
+    "Forsaken (7th Hit): no cast named like \u0022Forsaken (7th Hit)\u0022",
+    "Forsaken Bonds (8th Hit): no cast named like \u0022Forsaken Bonds (8th Hit)\u0022"
+  ]
+}

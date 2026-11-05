@@ -20,6 +20,7 @@ namespace AnoMech.LessonTools;
 // mit-import --plan <name> --sheet-id <google id> --tabs "Garuda=UwuP1GarudaScenario,Ifrit=UwuP2IfritScenario" --out Plans/<name>.json [--csv-dir dir]
 //   a tab with sections: "The Ultima Weapon=DefaultScenario[Section A=ScenarioA;Section B=ScenarioB]"
 //   one exported CSV instead of a sheet: --csv <file> --scenario <TypeName or TypeName[sections]> (--tabs not needed)
+//   --accept-unresolved records the rows still unresolved as known (read them first); CI fails on any other
 // skeleton-all --out <dir> [--seeds 1] [--scenario <substring>] [--force]   every catalog strat without a lesson
 // mine     --dump dump.json [--zone <ZoneType> --layout <name>]              which rolls pick each step's spot, per role
 // cues     --dump dump.json [--window 8]                                     what preceded each order
@@ -402,6 +403,7 @@ internal static class Cli
         var sourceUrl = opts.TryGetValue("url", out var sourceArg) && sourceArg.Length > 0 ? sourceArg : sheetId.Length > 0 ? $"https://docs.google.com/spreadsheets/d/{sheetId}" : "";
         var plan = new MitPlan(name, new MitSource(title, sourceUrl, credits, DateTime.UtcNow.ToString("yyyy-MM-dd")), scenarios);
         foreach (var u in plan.UnresolvedTexts()) Console.WriteLine($"unresolved: {u}");
+        if (opts.ContainsKey("accept-unresolved")) plan = plan with { KnownUnresolved = plan.UnresolvedTexts().Distinct().ToList() };
         var outPath = Need(opts, "out");
         Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(outPath))!);
         File.WriteAllText(outPath, plan.ToJson());
@@ -436,6 +438,7 @@ internal static class Cli
         var url = source.Mits[planName]!["url"]?.GetValue<string>() ?? source.Url;
         var plan = new MitPlan(name, new MitSource(label, url, [$"WTFDIG ({source.Url}, MIT)"], DateTime.UtcNow.ToString("yyyy-MM-dd")), scenarios);
         foreach (var u in plan.UnresolvedTexts()) Console.WriteLine($"unresolved: {u}");
+        if (opts.ContainsKey("accept-unresolved")) plan = plan with { KnownUnresolved = plan.UnresolvedTexts().Distinct().ToList() };
         var outPath = Need(opts, "out");
         Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(outPath))!);
         File.WriteAllText(outPath, plan.ToJson());

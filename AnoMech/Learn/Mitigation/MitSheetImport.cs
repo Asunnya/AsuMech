@@ -111,7 +111,8 @@ public static partial class MitSheetImport
     public static List<MitItem> Items(string cell, MitAliases aliases)
     {
         var items = new List<MitItem>();
-        foreach (var rawLine in MergeContinuations(cell, aliases))
+        // "Reprisal + Party Mit" asks for both: one item each.
+        foreach (var rawLine in MergeContinuations(cell, aliases).SelectMany(l => l.Split(" + ", StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim())))
         {
             var line = rawLine;
             if (aliases.Reminders.Any(r => line.Contains(r, StringComparison.OrdinalIgnoreCase)))

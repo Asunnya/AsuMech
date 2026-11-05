@@ -96,10 +96,12 @@ public static class MitCatalog
         new(24296, "Druochole", ["SGE"], 0f, MitTarget.Ally),
         new(24294, "Soteria", ["SGE"], 15f, MitTarget.Self),
         new(24317, "Krasis", ["SGE"], 10f, MitTarget.Ally),
+        new(37035, "Philosophia", ["SGE"], 20f, MitTarget.Party),
         // WHM
         new(3569, "Asylum", ["WHM"], 24f, MitTarget.Party),
         new(7433, "Plenary Indulgence", ["WHM"], 10f, MitTarget.Party),
         new(16536, "Temperance", ["WHM"], 20f, MitTarget.Party),
+        new(37011, "Divine Caress", ["WHM"], 10f, MitTarget.Party),
         new(3571, "Assize", ["WHM"], 0f, MitTarget.Party),
         new(140, "Benediction", ["WHM"], 0f, MitTarget.Ally),
         new(137, "Regen", ["WHM"], 18f, MitTarget.Ally),
@@ -116,6 +118,7 @@ public static class MitCatalog
         new(16556, "Celestial Intersection", ["AST"], 30f, MitTarget.Ally),
         new(25873, "Exaltation", ["AST"], 8f, MitTarget.Ally),
         new(25874, "Macrocosmos", ["AST"], 15f, MitTarget.Party),
+        new(37031, "Sun Sign", ["AST"], 15f, MitTarget.Party),
         new(16552, "Divination", ["AST"], 20f, MitTarget.Party),
         // DPS support
         new(7405, "Troubadour", ["BRD"], 15f, MitTarget.Party),

@@ -266,6 +266,50 @@
     ],
     "Celestial Opposition": [
       "Celestial Opposition"
+    ],
+    "Party Mit": [
+      "Divine Veil",
+      "Shake It Off",
+      "Heart of Light",
+      "Dark Missionary",
+      "Troubadour",
+      "Tactician",
+      "Shield Samba",
+      "Magick Barrier"
+    ],
+    "Spreadlo": [
+      "Deployment Tactics"
+    ],
+    "Divine Caress": [
+      "Divine Caress"
+    ],
+    "Sun Sign": [
+      "Sun Sign"
+    ],
+    "Philosophia": [
+      "Philosophia"
+    ],
+    "90s": [
+      "Rampart"
+    ],
+    "40%": [
+      "Sentinel",
+      "Guardian",
+      "Vengeance",
+      "Damnation",
+      "Shadow Wall",
+      "Shadowed Vigil",
+      "Nebula",
+      "Great Nebula"
+    ],
+    "Short": [
+      "Sheltron",
+      "Holy Sheltron",
+      "Raw Intuition",
+      "Bloodwhetting",
+      "The Blackest Night",
+      "Heart of Stone",
+      "Heart of Corundum"
     ]
   },
   "reminders": [
@@ -283,7 +327,10 @@
     "Searing Healer",
     "SURECAST",
     "KB IMMUNE",
-    "Cutscene"
+    "Cutscene",
+    "Assist Tanks",
+    "LB3",
+    "Kitchen Sink"
   ],
   "conditions": {
     "(After Cast)": "afterCastEnd",

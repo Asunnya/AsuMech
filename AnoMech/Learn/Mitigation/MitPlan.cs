@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -26,8 +27,12 @@ public sealed record MitMechanic(string Id, string Label, MitAnchor? Anchor, Dic
 
 public sealed record MitScenario(List<MitMechanic> Mechanics);
 
-public sealed record MitPlan(string Plan, MitSource Source, Dictionary<string, MitScenario> Scenarios)
+// KnownUnresolved: rows the author read and accepted as having no cast to anchor on (a cutscene,
+// an order rolled per run, a part the scenario does not simulate); anything else unresolved fails CI.
+public sealed record MitPlan(string Plan, MitSource Source, Dictionary<string, MitScenario> Scenarios, List<string>? KnownUnresolved = null)
 {
+    public IEnumerable<string> UnknownUnresolved() => UnresolvedTexts().Where(u => !(KnownUnresolved ?? []).Contains(u));
+
     public static readonly string[] Columns = ["MT", "OT", "Scholar", "Sage", "White Mage", "Astrologian", "Melee 1", "Melee 2", "Phys Range", "Caster"];
 
     public static readonly JsonSerializerOptions Json = new()

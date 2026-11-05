@@ -48,7 +48,7 @@
         },
         {
           "id": "downburst-spiny",
-          "label": "Downburst \u0026 Spiny",
+          "label": "Downburst & Spiny",
           "anchor": {
             "cast": "Downburst",
             "occurrence": 1
@@ -238,7 +238,7 @@
             "Extras": [
               {
                 "accept": [
-                  "Nature\u0027s Minne"
+                  "Nature's Minne"
                 ],
                 "minCount": 1
               },
@@ -328,7 +328,7 @@
               }
             ]
           },
-          "unresolved": "no cast named like \u0022Cleanses\u0022"
+          "unresolved": "no cast named like \"Cleanses\""
         },
         {
           "id": "aerial-blast",
@@ -552,7 +552,7 @@
           "columns": {
             "MT": [
               {
-                "reminder": "SURECAST - KB IMMUNE - ARM\u0027S LENGTH",
+                "reminder": "SURECAST - KB IMMUNE - ARM'S LENGTH",
                 "minCount": 1
               }
             ]
@@ -608,11 +608,11 @@
               }
             ]
           },
-          "unresolved": "no cast named like \u0022Infernal Nails (Spawn)\u0022"
+          "unresolved": "no cast named like \"Infernal Nails (Spawn)\""
         },
         {
           "id": "searing-wind-ifrit-chains",
-          "label": "Searing Wind \u0026 Ifrit Chains",
+          "label": "Searing Wind & Ifrit Chains",
           "anchor": {
             "cast": "Searing Wind",
             "occurrence": 1
@@ -811,7 +811,7 @@
               },
               {
                 "accept": [
-                  "Nature\u0027s Minne"
+                  "Nature's Minne"
                 ],
                 "minCount": 1
               },
@@ -842,7 +842,7 @@
             ],
             "Scholar": [
               {
-                "reminder": "GCD Heal \u0026 Shield to full.",
+                "reminder": "GCD Heal & Shield to full.",
                 "minCount": 1
               }
             ],
@@ -984,7 +984,7 @@
         },
         {
           "id": "rock-slide-mountain-buster",
-          "label": "Rock Slide \u0026 Mountain Buster",
+          "label": "Rock Slide & Mountain Buster",
           "anchor": {
             "cast": "Mountain Buster",
             "occurrence": 1
@@ -1247,7 +1247,7 @@
               {
                 "accept": [
                   "Dismantle",
-                  "Nature\u0027s Minne",
+                  "Nature's Minne",
                   "Mantra",
                   "Curing Waltz"
                 ],
@@ -1258,7 +1258,7 @@
         },
         {
           "id": "rock-slide-mountain-buster-2",
-          "label": "Rock Slide \u0026 Mountain Buster",
+          "label": "Rock Slide & Mountain Buster",
           "anchor": {
             "cast": "Mountain Buster",
             "occurrence": 2
@@ -1294,7 +1294,7 @@
         },
         {
           "id": "rock-slide-mountain-buster-b",
-          "label": "Rock Slide \u0026 Mountain Buster",
+          "label": "Rock Slide & Mountain Buster",
           "columns": {
             "Melee 1": [
               {
@@ -1341,7 +1341,7 @@
               }
             ]
           },
-          "unresolved": "no cast named like \u0022Cutscene Prep (Use when Titan dies)\u0022"
+          "unresolved": "no cast named like \"Cutscene Prep (Use when Titan dies)\""
         },
         {
           "id": "tank-purge",
@@ -1394,7 +1394,7 @@
               }
             ]
           },
-          "unresolved": "no cast named like \u0022Tank Purge\u0022"
+          "unresolved": "no cast named like \"Tank Purge\""
         },
         {
           "id": "viscous-aetheroplasm",
@@ -1611,7 +1611,7 @@
               },
               {
                 "accept": [
-                  "Nature\u0027s Minne"
+                  "Nature's Minne"
                 ],
                 "minCount": 1
               },
@@ -1626,7 +1626,7 @@
         },
         {
           "id": "mesohigh-super-cyclone",
-          "label": "Mesohigh \u0026 Super Cyclone",
+          "label": "Mesohigh & Super Cyclone",
           "anchor": {
             "cast": "Mesohigh",
             "occurrence": 1
@@ -1684,7 +1684,7 @@
         },
         {
           "id": "mesohigh-super-cyclone-2",
-          "label": "Mesohigh \u0026 Super Cyclone",
+          "label": "Mesohigh & Super Cyclone",
           "anchor": {
             "cast": "Mesohigh",
             "occurrence": 2
@@ -2027,7 +2027,7 @@
               }
             ]
           },
-          "unresolved": "no cast named like \u0022Primal #1\u0022"
+          "unresolved": "no cast named like \"Primal #1\""
         },
         {
           "id": "primal-2",
@@ -2105,7 +2105,7 @@
               },
               {
                 "accept": [
-                  "Nature\u0027s Minne"
+                  "Nature's Minne"
                 ],
                 "minCount": 1
               },
@@ -2117,7 +2117,7 @@
               }
             ]
           },
-          "unresolved": "no cast named like \u0022Primal #2\u0022"
+          "unresolved": "no cast named like \"Primal #2\""
         },
         {
           "id": "primal-3",
@@ -2164,9 +2164,19 @@
               }
             ]
           },
-          "unresolved": "no cast named like \u0022Primal #3\u0022"
+          "unresolved": "no cast named like \"Primal #3\""
         }
       ]
     }
-  }
+  },
+  "knownUnresolved": [
+    "Cleanses: no cast named like \"Cleanses\"",
+    "Infernal Nails (Spawn): no cast named like \"Infernal Nails (Spawn)\"",
+    "Rock Slide & Mountain Buster: Mountain Buster has no occurrence 3",
+    "Cutscene Prep (Use when Titan dies): no cast named like \"Cutscene Prep (Use when Titan dies)\"",
+    "Tank Purge: no cast named like \"Tank Purge\"",
+    "Primal #1: no cast named like \"Primal #1\"",
+    "Primal #2: no cast named like \"Primal #2\"",
+    "Primal #3: no cast named like \"Primal #3\""
+  ]
 }

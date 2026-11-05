@@ -8,20 +8,6 @@ namespace AnoMech.Tests.Learn.Mitigation;
 // action is in the catalog, and only the rows known to have no cast stay unresolved.
 public class MitPlanValidationTests
 {
-    private static readonly string[] KnownUnresolved =
-    [
-        "Cleanses: no cast named like \"Cleanses\"",
-        "Infernal Nails (Spawn): no cast named like \"Infernal Nails (Spawn)\"",
-        "Rock Slide & Mountain Buster: Mountain Buster has no occurrence 3",
-        // The Ultima tab: a cutscene row, Tank Purge listed before the Predation section (the cast is Annihilation's),
-        // and the three Primal rows, whose boss order is rolled per run.
-        "Cutscene Prep (Use when Titan dies): no cast named like \"Cutscene Prep (Use when Titan dies)\"",
-        "Tank Purge: no cast named like \"Tank Purge\"",
-        "Primal #1: no cast named like \"Primal #1\"",
-        "Primal #2: no cast named like \"Primal #2\"",
-        "Primal #3: no cast named like \"Primal #3\"",
-    ];
-
     [Test]
     public void EmbeddedPlansExist()
         => Assert.That(MitTimelines.PlanNames(), Does.Contain("uwu-ethel-master"));
@@ -50,8 +36,14 @@ public class MitPlanValidationTests
     [Test]
     public void OnlyTheKnownRowsStayUnresolved()
     {
-        var plan = MitTimelines.LoadPlan("uwu-ethel-master")!;
-        Assert.That(plan.UnresolvedTexts(), Is.EquivalentTo(KnownUnresolved));
+        foreach (var name in MitTimelines.PlanNames())
+        {
+            var plan = MitTimelines.LoadPlan(name)!;
+            Assert.That(plan.UnknownUnresolved(), Is.Empty, name);
+            Assert.That(plan.KnownUnresolved ?? [], Is.SubsetOf(plan.UnresolvedTexts()), $"{name}: a known row got resolved; drop it from knownUnresolved");
+            foreach (var (scenarioType, scenario) in plan.Scenarios)
+                Assert.That(scenario.Mechanics.Any(m => m.Anchor != null), $"{name}/{scenarioType} anchors nothing");
+        }
     }
 
     [Test]
