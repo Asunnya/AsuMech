@@ -21,7 +21,7 @@ public sealed class LessonDirector : IPlayerGuidanceSink
     public const float GuidedSlowScale = 0.25f;
     public const float DefaultWindowSeconds = 6f;
 
-    private readonly Lesson lesson;
+    private Lesson lesson;
     private readonly PartyRole role;
     private readonly Action<float> setSpeed;
     private readonly MasteryStore? mastery;
@@ -66,6 +66,17 @@ public sealed class LessonDirector : IPlayerGuidanceSink
             showAt = fraction >= 1f ? float.MaxValue : order.IssuedAt + (deadline - order.IssuedAt) * fraction;
         }
         Current = new ActiveStep(order, step, new StepEvaluation(order.Target, tolerance, deadline), title, step?.RuleFor(role), step?.CueFor(role), showAt);
+        StepChanged?.Invoke(Current);
+    }
+
+    // A reloaded lesson takes over from the next order; the step in progress keeps its evaluation
+    // and only its text follows.
+    public void Reload(Lesson fresh)
+    {
+        lesson = fresh;
+        if (Current is not { } current) return;
+        var step = lesson.StepFor(current.Order.Key);
+        Current = current with { Step = step, Title = step?.Title ?? current.Order.Key.Method ?? current.Title, Rule = step?.RuleFor(role), Cue = step?.CueFor(role) };
         StepChanged?.Invoke(Current);
     }
 

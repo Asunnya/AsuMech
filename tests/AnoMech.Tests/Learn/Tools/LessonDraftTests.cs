@@ -41,14 +41,36 @@ public class LessonDraftTests
     {
         var glossary = Glossary.Parse("""{ "fields": { "NailBearing": "the nails' close pair", "FrictionTargets": "the Friction targets" }, "values": { "*": { "270": "west" }, "NailBearing": { "90": "east" } } }""");
         var table = new MinedRule("Ai", 40, 10f, "MainTank", [new MinedSpot("N wall", 0, -19, [1]), new MinedSpot("S wall", 0, 19, [2])], ["NailBearing"], new() { ["270"] = "N wall", ["90"] = "S wall" }, 2);
-        Assert.That(LessonDraft.Sentence(table, glossary), Is.EqualTo("Depends on the nails' close pair: west → N wall; east → S wall."));
-        Assert.That(Lesson.IsTable(LessonDraft.Sentence(table, glossary)), Is.True);
+        Assert.That(LessonDraft.Sentence(table, glossary), Is.EqualTo("When the nails' close pair is west, go to the north wall; when the nails' close pair is east, go to the south wall."));
+        Assert.That(LessonDraft.Sentence(table, Glossary.Empty), Is.EqualTo("When NailBearing is west, go to the north wall; when NailBearing is east, go to the south wall."));
+        var opaque = table with { Fields = ["AwakenedDash"], SpotByValue = new() { ["0"] = "N wall", ["1"] = "S wall" } };
+        Assert.That(LessonDraft.Sentence(opaque, glossary), Is.EqualTo("Depends on AwakenedDash: 0 → N wall; 1 → S wall."));
+        Assert.That(Lesson.IsTable(LessonDraft.Sentence(opaque, glossary)), Is.True);
         var relation = table with { Fields = [], SpotByValue = new(), Relation = "with NailBearing as north: NW wall" };
         Assert.That(LessonDraft.Sentence(relation, glossary), Is.EqualTo("with the nails' close pair as north: the north-west wall."));
         var membership = table with { Fields = ["FrictionTargets has MainTank"], SpotByValue = new() { ["yes"] = "N wall", ["no"] = "centre" } };
         Assert.That(LessonDraft.Sentence(membership, glossary), Is.EqualTo("If you are in the Friction targets: Go to the north wall; otherwise: Stand at the centre."));
         Assert.That(Lesson.IsTable(LessonDraft.Sentence(membership, glossary)), Is.False);
         Assert.That(Drafted().Draft, Is.True);
+    }
+
+    [Test]
+    public void TablesBecomeSentencesWhenEveryValueHasWordsAndGeometryNamesTheMethod()
+    {
+        var glossary = Glossary.Parse("""{ "fields": { "NailBearing": "the nails' close pair", "SafeSide": "the safe side" }, "values": { "SafeSide": { "1": "right", "-1": "left" } } }""");
+        var bearing = new MinedRule("Ai", 40, 10f, "MainTank", [new MinedSpot("N wall", 0, -19, [1]), new MinedSpot("S wall", 0, 19, [2])], ["NailBearing"], new() { ["270"] = "N wall", ["90"] = "S wall" }, 2);
+        Assert.That(LessonDraft.Sentence(bearing, glossary), Is.EqualTo("When the nails' close pair is west, go to the north wall; when the nails' close pair is east, go to the south wall."));
+        var pair = bearing with { Fields = ["NailBearing", "SafeSide"], SpotByValue = new() { ["270 & 1"] = "N wall", ["90 & -1"] = "at B" } };
+        Assert.That(LessonDraft.Sentence(pair, glossary), Is.EqualTo("When the nails' close pair is west and the safe side is right, go to the north wall; when the nails' close pair is east and the safe side is left, stand on waymark B."));
+        var role = bearing with { Fields = ["HowlFirst"], SpotByValue = new() { ["RegenHealer"] = "N wall", ["ShieldHealer"] = "S wall" } };
+        Assert.That(LessonDraft.Sentence(role, glossary), Does.StartWith("When HowlFirst is H1, go to the north wall"));
+        var unworded = bearing with { Fields = ["AwakenedDash"], SpotByValue = new() { ["0"] = "N wall", ["1"] = "S wall" } };
+        Assert.That(LessonDraft.Sentence(unworded, glossary), Does.StartWith("Depends on AwakenedDash"));
+        Assert.That(Lesson.IsTable(LessonDraft.Sentence(unworded, glossary)), Is.True);
+        Assert.That(Lesson.IsTable(LessonDraft.Sentence(bearing, glossary)), Is.False);
+        var geometric = bearing with { Fields = [], SpotByValue = new(), NearestField = "SatinPlumesFirst", Purity = 0.8f };
+        Assert.That(LessonDraft.Sentence(geometric, glossary, "DodgeFeathers"), Is.EqualTo("Read the strat's DodgeFeathers: the spot follows a rule the rolls alone don't show (closest roll: SatinPlumesFirst)."));
+        Assert.That(Lesson.IsTable(LessonDraft.Sentence(geometric, glossary, "DodgeFeathers")), Is.True);
     }
 
     [Test]

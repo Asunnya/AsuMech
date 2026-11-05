@@ -25,7 +25,62 @@ public static class LessonLoader
 
     private static readonly Lazy<IReadOnlyList<Lesson>> Embedded = new(LoadEmbedded);
 
-    public static IReadOnlyList<Lesson> All => Embedded.Value;
+    // Lessons read from files under DevDirectory (any depth, glossaries aside) shadow the embedded
+    // ones with the same scenario and strat, and are read again whenever a file changes, so a
+    // lesson can be reviewed in game without a build.
+    private static string? devDirectory;
+    private static Dictionary<string, DateTime> devStamps = new();
+    private static IReadOnlyList<Lesson> devLessons = [];
+    private static DateTime lastScan = DateTime.MinValue;
+    private static readonly TimeSpan ScanInterval = TimeSpan.FromSeconds(1);
+
+    public static string? DevDirectory
+    {
+        get => devDirectory;
+        set
+        {
+            devDirectory = string.IsNullOrWhiteSpace(value) ? null : value;
+            devStamps = new();
+            devLessons = [];
+            lastScan = DateTime.MinValue;
+            DevErrors = [];
+            Refresh(force: true);
+        }
+    }
+
+    public static IReadOnlyList<string> DevErrors { get; private set; } = [];
+    public static int DevCount => devLessons.Count;
+    public static DateTime LastReload { get; private set; }
+
+    public static IReadOnlyList<Lesson> All
+        => devLessons.Count == 0 ? Embedded.Value
+            : devLessons.Concat(Embedded.Value.Where(e => devLessons.All(d => d.Scenario != e.Scenario || d.Strat != e.Strat))).ToList();
+
+    // True when the dev folder changed since the last look; at most one look per second.
+    public static bool Refresh(bool force = false)
+    {
+        if (devDirectory is null) return false;
+        var now = DateTime.UtcNow;
+        if (!force && now - lastScan < ScanInterval) return false;
+        lastScan = now;
+        if (!Directory.Exists(devDirectory)) { devStamps = new(); devLessons = []; DevErrors = [$"no folder {devDirectory}"]; return false; }
+        var stamps = Directory.EnumerateFiles(devDirectory, "*.json", SearchOption.AllDirectories)
+            .Where(f => !Path.GetFileName(f).Equals(Glossary.FileName, StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(f => f, File.GetLastWriteTimeUtc);
+        if (stamps.Count == devStamps.Count && stamps.All(kv => devStamps.TryGetValue(kv.Key, out var t) && t == kv.Value)) return false;
+        devStamps = stamps;
+        var lessons = new List<Lesson>();
+        var errors = new List<string>();
+        foreach (var file in stamps.Keys.OrderBy(f => f))
+        {
+            try { lessons.Add(Parse(File.ReadAllText(file))); }
+            catch (Exception e) when (e is JsonException or InvalidDataException or IOException) { errors.Add($"{Path.GetFileName(file)}: {e.Message}"); }
+        }
+        devLessons = lessons;
+        DevErrors = errors;
+        LastReload = now;
+        return true;
+    }
 
     public static Lesson? For(IScenario scenario, IScenarioAi strat)
         => All.FirstOrDefault(l => l.Scenario == scenario.GetType().Name && l.Strat == strat.Name);

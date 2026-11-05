@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AnoMech.Core.Game.Party;
 using System.Numerics;
 
 namespace AnoMech.Learn.Tools;
@@ -29,7 +30,8 @@ public static class LessonDraft
             var stepRules = rules.Where(r => r.Cls == step.Key.Cls && r.Line == line).ToList();
             var stepCues = Roles.Where(role => cues.ContainsKey((step.Key.Cls, line, role))).ToDictionary(role => role, role => cues[(step.Key.Cls, line, role)]);
             var skip = Skips(step, previous, dump);
-            var (rule, roles) = Rules(stepRules, glossary);
+            var method = dump.Orders.FirstOrDefault(o => step.Key.Matches(o.Key))?.Method;
+            var (rule, roles) = Rules(stepRules, glossary, method);
             var cue = Cue(stepCues);
             var drafted = step with
             {
@@ -71,9 +73,9 @@ public static class LessonDraft
 
     // The description most roles share is the rule; a role a few steps away from that spot (a
     // spread) shares it too; the rest get their own line.
-    private static (string Rule, Dictionary<string, LessonRoleText> Roles) Rules(List<MinedRule> rules, Glossary glossary)
+    private static (string Rule, Dictionary<string, LessonRoleText> Roles) Rules(List<MinedRule> rules, Glossary glossary, string? method)
     {
-        string Sentence(MinedRule r) => LessonDraft.Sentence(r, glossary);
+        string Sentence(MinedRule r) => LessonDraft.Sentence(r, glossary, method);
         var byRole = rules.ToDictionary(r => r.Role, Sentence);
         if (byRole.Count == 0) return ("", new());
         var shared = byRole.Values.GroupBy(t => t).OrderByDescending(g => g.Count()).First().Key;
@@ -86,7 +88,10 @@ public static class LessonDraft
         return (shared, own);
     }
 
-    public static string Sentence(MinedRule rule, Glossary? glossary = null)
+    // A sentence when the glossary can word every roll value the rule turns on; a "Depends on"
+    // table otherwise, which the validator refuses in a reviewed lesson; "read the strat" when the
+    // rolls alone don't decide the spot.
+    public static string Sentence(MinedRule rule, Glossary? glossary = null, string? method = null)
     {
         glossary ??= Glossary.Empty;
         if (rule.Fixed) return $"{Place(rule.Spots[0].Label)}.";
@@ -95,10 +100,67 @@ public static class LessonDraft
             && rule.SpotByValue.TryGetValue("yes", out var inside) && rule.SpotByValue.TryGetValue("no", out var outside))
             return $"If you are in {glossary.Field(rule.Fields[0][..^(" has ".Length + rule.Role.Length)])}: {Place(inside)}; otherwise: {Place(outside)}.";
         if (rule.Fields.Count > 0)
+        {
+            var clauses = rule.SpotByValue.Select(kv => (Words: Conditions(kv.Key, rule.Fields, glossary), Spot: kv.Value)).ToList();
+            if (clauses.All(c => c.Words != null))
+                return string.Join("; ", clauses.Select((c, i) => $"{(i == 0 ? "When" : "when")} {c.Words}, {Lower(Place(c.Spot))}")) + ".";
             return $"Depends on {string.Join(" and ", rule.Fields.Select(f => glossary.Apply(f)))}: {string.Join("; ", rule.SpotByValue.Select(kv => $"{ValueWords(kv.Key, rule.Fields, glossary)} → {kv.Value}"))}.";
-        var closest = rule.NearestField is { } near && rule.Purity >= 0.6f ? $" (closest field: {glossary.Apply(near)})" : "";
-        return $"The spot follows a rule the rolls alone don't show; read the strat{closest}.";
+        }
+        var closest = rule.NearestField is { } near && rule.Purity >= 0.6f ? $" (closest roll: {glossary.Apply(near)})" : "";
+        return method is { Length: > 0 }
+            ? $"Read the strat's {method}: the spot follows a rule the rolls alone don't show{closest}."
+            : $"The spot follows a rule the rolls alone don't show; read the strat{closest}.";
     }
+
+    // "the nails' close pair is west and the safe side is right", or null when a value has no words.
+    private static string? Conditions(string key, List<string> fields, Glossary glossary)
+    {
+        var parts = key.Split(" & ");
+        if (parts.Length != fields.Count) return null;
+        var clauses = new List<string>();
+        for (var i = 0; i < fields.Count; i++)
+        {
+            var field = fields[i];
+            var value = parts[i];
+            var has = field.IndexOf(" has ", StringComparison.Ordinal);
+            if (has > 0)
+            {
+                var item = Words(field[..has], field[(has + 5)..], glossary) ?? field[(has + 5)..];
+                if (value == "yes") clauses.Add($"{glossary.Field(field[..has])} includes {item}");
+                else if (value == "no") clauses.Add($"{glossary.Field(field[..has])} leaves out {item}");
+                else return null;
+                continue;
+            }
+            if (Words(field, value, glossary) is not { } words) return null;
+            clauses.Add($"{glossary.Field(field)} is {words}");
+        }
+        return string.Join(" and ", clauses);
+    }
+
+    // A roll value in a player's words: the glossary's, a compass point for a bearing, a seat
+    // for a role; null for anything the player could not read off the screen.
+    private static string? Words(string field, string value, Glossary glossary)
+    {
+        var worded = glossary.Value(field, value);
+        if (worded != value) return worded;
+        if (field.EndsWith("Bearing", StringComparison.Ordinal) && float.TryParse(value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var degrees) && degrees % 45f == 0f)
+            return CompassName(degrees);
+        if (value.Length > 0 && char.IsLetter(value[0]) && Enum.TryParse<PartyRole>(value, out var role)) return Seat(role);
+        return null;
+    }
+
+    private static string Seat(PartyRole role) => role switch
+    {
+        PartyRole.MainTank => "MT", PartyRole.OffTank => "OT", PartyRole.RegenHealer => "H1", PartyRole.ShieldHealer => "H2",
+        PartyRole.MeleeDpsA => "M1", PartyRole.MeleeDpsB => "M2", PartyRole.PhysRangedDps => "R1", _ => "R2",
+    };
+
+    private static string CompassName(float degrees) => (((int)degrees % 360 + 360) % 360) switch
+    {
+        0 => "north", 45 => "north-east", 90 => "east", 135 => "south-east", 180 => "south", 225 => "south-west", 270 => "west", _ => "north-west",
+    };
+
+    private static string Lower(string sentence) => sentence.Length > 0 ? char.ToLowerInvariant(sentence[0]) + sentence[1..] : sentence;
 
     // A table key ("270 & yes") with each field's value in the glossary's words.
     private static string ValueWords(string key, List<string> fields, Glossary glossary)

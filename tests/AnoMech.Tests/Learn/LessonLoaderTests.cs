@@ -67,6 +67,41 @@ public class LessonLoaderTests
         Assert.That(Glossary.Load("NoSuchFamily").Fields, Is.Empty);
     }
 
+    [Test]
+    public void ADevFolderShadowsEmbeddedLessonsAndReloadsOnChange()
+    {
+        var dir = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "anomech-lessons-" + System.Guid.NewGuid().ToString("N"));
+        System.IO.Directory.CreateDirectory(System.IO.Path.Combine(dir, "Uwu"));
+        var scenario = Catalog.Scenarios.OfType<UwuP1GarudaScenario>().Single();
+        var embedded = LessonLoader.For(scenario, scenario.AiStrats[0])!;
+        try
+        {
+            var file = System.IO.Path.Combine(dir, "Uwu", "garuda.json");
+            System.IO.File.WriteAllText(file, """{ "scenario": "UwuP1GarudaScenario", "strat": "Zeal / The Balance", "sources": [], "draft": true, "steps": [ { "key": { "cls": "UwuP1GarudaAi", "time": 0.5 }, "rule": "from the file" } ] }""");
+            System.IO.File.WriteAllText(System.IO.Path.Combine(dir, "Uwu", "glossary.json"), """{ "fields": {} }""");
+            System.IO.File.WriteAllText(System.IO.Path.Combine(dir, "Uwu", "broken.json"), "{ not json");
+            LessonLoader.DevDirectory = dir;
+            Assert.That(LessonLoader.DevCount, Is.EqualTo(1));
+            Assert.That(LessonLoader.DevErrors, Has.Count.EqualTo(1).And.Some.Contains("broken.json"));
+            var shadowed = LessonLoader.For(scenario, scenario.AiStrats[0])!;
+            Assert.That(shadowed.Steps.Single().Rule, Is.EqualTo("from the file"));
+            Assert.That(LessonLoader.All.Count(l => l.Scenario == embedded.Scenario && l.Strat == embedded.Strat), Is.EqualTo(1));
+            Assert.That(LessonLoader.All.Count, Is.EqualTo(7));
+
+            System.IO.File.WriteAllText(file, System.IO.File.ReadAllText(file).Replace("from the file", "edited"));
+            System.IO.File.SetLastWriteTimeUtc(file, System.DateTime.UtcNow.AddSeconds(5));
+            Assert.That(LessonLoader.Refresh(force: true), Is.True);
+            Assert.That(LessonLoader.For(scenario, scenario.AiStrats[0])!.Steps.Single().Rule, Is.EqualTo("edited"));
+            Assert.That(LessonLoader.Refresh(force: true), Is.False);
+        }
+        finally
+        {
+            LessonLoader.DevDirectory = null;
+            System.IO.Directory.Delete(dir, true);
+        }
+        Assert.That(LessonLoader.For(scenario, scenario.AiStrats[0]), Is.SameAs(embedded));
+    }
+
     private sealed class Recorder : IPlayerGuidanceSink
     {
         public readonly List<GuidanceOrder> Orders = [];

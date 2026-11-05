@@ -49,6 +49,8 @@ public class Configuration : IPluginConfiguration
     public string SelectedMitPlan { get; set; } = "";
     // Windows.Learn.MitAssist: 0 none, 1 reminder, 2 strict (a miss fails the run).
     public int MitPracticeAssist { get; set; } = 1;
+    // A folder of lesson JSON files that shadow the embedded ones and reload on change (authoring).
+    public string LessonDevDir { get; set; } = "";
     public string LastSelectedScenario { get; set; } = "";
 
     // The player's own multiplayer server (see AnoMech.Relay.Host/README.md), used instead of

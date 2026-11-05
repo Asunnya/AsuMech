@@ -37,6 +37,24 @@ public class LessonDirectorTests
     }
 
     [Test]
+    public void AReloadedLessonRewordsTheStepInProgressAndKeepsItsEvaluation()
+    {
+        director.OnMove(Order(3f, new Vector3(1f, 0f, 1f), 9f));
+        var evaluation = director.Current!.Evaluation;
+        var changes = 0;
+        director.StepChanged += _ => changes++;
+        var fresh = Lesson with { Steps = [new LessonStep(new LessonStepKey("Ai", Time: 3f), Title: "reworded", Rule: "new words", Cue: "a cue")] };
+        director.Reload(fresh);
+        Assert.That(director.Current!.Title, Is.EqualTo("reworded"));
+        Assert.That(director.Current.Rule, Is.EqualTo("new words"));
+        Assert.That(director.Current.Cue, Is.EqualTo("a cue"));
+        Assert.That(director.Current.Evaluation, Is.SameAs(evaluation));
+        Assert.That(changes, Is.EqualTo(1));
+        director.OnMove(Order(1f, Vector3.Zero));
+        Assert.That(director.Current!.Step, Is.Null, "the fresh lesson has no step at 1s");
+    }
+
+    [Test]
     public void ASkippedOrderShowsNothing()
     {
         director.OnMove(Order(1f, Vector3.Zero));

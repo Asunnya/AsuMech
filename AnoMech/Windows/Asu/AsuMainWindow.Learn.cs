@@ -107,6 +107,8 @@ public sealed partial class AsuMainWindow
             Muted(Picker.SelectedAi is null ? "Pick a strat to learn." : "No lesson for this strat yet. Observe still works.");
             DrawRequestLink(FeedbackKind.Strat);
         }
+        if (ImGui.SmallButton("Authoring…##lesson-authoring")) plugin.LessonAuthoring.Toggle();
+        if (ImGui.IsItemHovered()) ImGui.SetTooltip("Step keys, cue candidates and the run's rolls while a lesson runs; lessons from a dev folder reload on save.");
         ImGui.EndGroup();
     }
 

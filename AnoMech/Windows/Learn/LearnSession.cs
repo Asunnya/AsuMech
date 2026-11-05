@@ -54,7 +54,7 @@ internal sealed class LearnSession : IDisposable
 
     public IScenario Scenario { get; }
     public IScenarioAi Strat { get; }
-    public Lesson? Lesson { get; }
+    public Lesson? Lesson { get; private set; }
     public PartyRole Role { get; }
     public LearnLevel Level { get; }
     public DrillWindow? Drill { get; }
@@ -68,6 +68,11 @@ internal sealed class LearnSession : IDisposable
     public void Tick(float deltaSeconds)
     {
         if (Ended) return;
+        if (LessonLoader.Refresh() && Lesson != null && LessonLoader.For(Scenario, Strat) is { } fresh && !ReferenceEquals(fresh, Lesson))
+        {
+            Lesson = fresh;
+            Director.Reload(fresh);
+        }
         var live = RunState.Live(game);
         watch?.Tick(live, deltaSeconds);
         if (live)
