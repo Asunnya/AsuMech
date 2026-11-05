@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -25,6 +26,18 @@ public sealed record ToolboxPlan(string Id, string Label, string Author, string 
 
     public string ToJson() => JsonSerializer.Serialize(this, Json);
     public static ToolboxPlan Parse(string json) => JsonSerializer.Deserialize<ToolboxPlan>(json, Json)!;
+
+    // Several plans for one phase (a guide split in parts) read as one, steps in the order given;
+    // the id joins theirs with '+'.
+    public static ToolboxPlan Merge(IReadOnlyList<ToolboxPlan> plans)
+    {
+        if (plans.Count == 1) return plans[0];
+        var steps = new List<ToolboxStep>();
+        foreach (var plan in plans)
+            foreach (var step in plan.Steps) steps.Add(step with { Index = steps.Count });
+        return new ToolboxPlan(string.Join("+", plans.Select(p => p.Id)), string.Join(" / ", plans.Select(p => p.Label).Where(l => l.Length > 0)),
+            string.Join(" / ", plans.Select(p => p.Author).Where(a => a.Length > 0).Distinct()), plans[0].Layout, plans[0].Scale, steps);
+    }
 }
 
 // The lesson's link to a plan: which slot each role is, and which toolbox step each lesson step shows.

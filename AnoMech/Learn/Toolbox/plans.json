@@ -1,23 +1,343 @@
 {
   "UwuP1GarudaScenario": [
-    { "url": "https://ff14.toolboxgaming.space/?id=122994122467471&preview=1", "layout": "Naur", "credits": "NAUR (naurffxiv.com/ultimate/uwu)" }
+    {
+      "url": "https://ff14.toolboxgaming.space/?id=122994122467471&preview=1",
+      "layout": "Naur",
+      "credits": "NAUR (naurffxiv.com/ultimate/uwu)"
+    }
   ],
   "UwuP2IfritScenario": [
-    { "url": "https://ff14.toolboxgaming.space/?id=562530446784261&preview=1", "layout": "Naur", "credits": "NAUR (naurffxiv.com/ultimate/uwu)" }
+    {
+      "url": "https://ff14.toolboxgaming.space/?id=562530446784261&preview=1",
+      "layout": "Naur",
+      "credits": "NAUR (naurffxiv.com/ultimate/uwu)"
+    }
   ],
   "UwuP3TitanScenario": [
-    { "url": "https://ff14.toolboxgaming.space/?id=463534803605261&preview=1", "layout": "Naur", "credits": "NAUR (naurffxiv.com/ultimate/uwu)" }
+    {
+      "url": "https://ff14.toolboxgaming.space/?id=463534803605261&preview=1",
+      "layout": "Naur",
+      "credits": "NAUR (naurffxiv.com/ultimate/uwu)"
+    }
   ],
   "PrimalRouletteScenario": [
-    { "url": "https://ff14.toolboxgaming.space/?id=430631425646261&preview=1", "layout": "Naur", "credits": "NAUR (naurffxiv.com/ultimate/uwu)" }
+    {
+      "url": "https://ff14.toolboxgaming.space/?id=430631425646261&preview=1",
+      "layout": "Naur",
+      "credits": "NAUR (naurffxiv.com/ultimate/uwu)"
+    }
   ],
   "UltimatePredationScenario": [
-    { "url": "https://ff14.toolboxgaming.space/?id=222999692467471&preview=1", "layout": "Naur", "credits": "NAUR (naurffxiv.com/ultimate/uwu)" }
+    {
+      "url": "https://ff14.toolboxgaming.space/?id=222999692467471&preview=1",
+      "layout": "Naur",
+      "credits": "NAUR (naurffxiv.com/ultimate/uwu)"
+    }
   ],
   "UltimateAnnihilationScenario": [
-    { "url": "https://ff14.toolboxgaming.space/?id=930637786646261&preview=1", "layout": "Naur", "credits": "NAUR (naurffxiv.com/ultimate/uwu)" }
+    {
+      "url": "https://ff14.toolboxgaming.space/?id=930637786646261&preview=1",
+      "layout": "Naur",
+      "credits": "NAUR (naurffxiv.com/ultimate/uwu)"
+    }
   ],
   "UltimateSuppressionScenario": [
-    { "url": "https://ff14.toolboxgaming.space/?id=830635036646261&preview=1", "layout": "Naur", "credits": "NAUR (naurffxiv.com/ultimate/uwu)" }
+    {
+      "url": "https://ff14.toolboxgaming.space/?id=830635036646261&preview=1",
+      "layout": "Naur",
+      "credits": "NAUR (naurffxiv.com/ultimate/uwu)"
+    }
+  ],
+  "UcobP1TwintaniaScenario": [
+    {
+      "url": "https://raidplan.io/plan/9WEG4AEGVdru3hyF",
+      "credits": "clees (clees.me/guides/ucob)"
+    }
+  ],
+  "UcobP2NaelScenario": [
+    {
+      "url": "https://raidplan.io/plan/9WEG4AEGVdru3hyF",
+      "credits": "clees (clees.me/guides/ucob)"
+    }
+  ],
+  "UcobP5ExaflaresScenario": [
+    {
+      "url": "https://raidplan.io/plan/9WEG4AEGVdru3hyF",
+      "credits": "clees (clees.me/guides/ucob)"
+    }
+  ],
+  "DsrP1KnightsScenario": [
+    {
+      "url": "https://ff14.toolboxgaming.space/?id=802461081524561",
+      "credits": "PF toolbox (user)"
+    }
+  ],
+  "DsrP2ThordanScenario": [
+    {
+      "url": "https://raidplan.io/plan/NDX-6bF2djrDMB-v",
+      "credits": "NAUR (Strength of the Ward)"
+    },
+    {
+      "url": "https://raidplan.io/plan/Src8CpFxCAUUuZEM",
+      "credits": "NAUR (Sanctity of the Ward)"
+    }
+  ],
+  "DsrP3NidhoggScenario": [
+    {
+      "url": "https://ff14.toolboxgaming.space/?id=267799249146271",
+      "credits": "NAUR PF toolbox"
+    }
+  ],
+  "DsrP4EyesScenario": [
+    {
+      "url": "https://ff14.toolboxgaming.space/?id=613699253336171",
+      "credits": "NA PF (snake swaps)"
+    }
+  ],
+  "DsrP5DeathScenario": [
+    {
+      "url": "https://ff14.toolboxgaming.space/?id=414790163993271",
+      "credits": "NAUR (conga, dooms anchor)"
+    }
+  ],
+  "DsrP6DoubleDragonsScenario": [
+    {
+      "url": "https://ff14.toolboxgaming.space/?id=426762112878561",
+      "credits": "NA PF (Light vs Dark)"
+    }
+  ],
+  "DsrP6CauterizeScenario": [
+    {
+      "url": "https://ff14.toolboxgaming.space/?id=426762112878561",
+      "credits": "NA PF (Light vs Dark)"
+    }
+  ],
+  "M9sVampStompScenario": [
+    {
+      "url": "https://raidplan.io/plan/c2L5iJfuYIWXk1v7",
+      "credits": "Toxic Friends (Hector)"
+    }
+  ],
+  "M9sCoffinmakerScenario": [
+    {
+      "url": "https://raidplan.io/plan/c2L5iJfuYIWXk1v7",
+      "credits": "Toxic Friends (Hector)"
+    }
+  ],
+  "M9sAetherlettingScenario": [
+    {
+      "url": "https://raidplan.io/plan/c2L5iJfuYIWXk1v7",
+      "credits": "Toxic Friends (Hector)"
+    }
+  ],
+  "M9sVampStomp2Scenario": [
+    {
+      "url": "https://raidplan.io/plan/c2L5iJfuYIWXk1v7",
+      "credits": "Toxic Friends (Hector)"
+    }
+  ],
+  "M9sFlailsScenario": [
+    {
+      "url": "https://raidplan.io/plan/c2L5iJfuYIWXk1v7",
+      "credits": "Toxic Friends (Hector)"
+    }
+  ],
+  "M9sHellInACellScenario": [
+    {
+      "url": "https://raidplan.io/plan/c2L5iJfuYIWXk1v7",
+      "credits": "Toxic Friends (Hector)"
+    }
+  ],
+  "M9sDeathmatchScenario": [
+    {
+      "url": "https://raidplan.io/plan/c2L5iJfuYIWXk1v7",
+      "credits": "Toxic Friends (Hector)"
+    }
+  ],
+  "M9sFinalScenario": [
+    {
+      "url": "https://raidplan.io/plan/c2L5iJfuYIWXk1v7",
+      "credits": "Toxic Friends (Hector)"
+    }
+  ],
+  "M10sOpenerScenario": [
+    {
+      "url": "https://raidplan.io/plan/Qy730U_dC9zSjk0X",
+      "credits": "Hector / Toxic Friends"
+    }
+  ],
+  "M10sSickestTakeoffScenario": [
+    {
+      "url": "https://raidplan.io/plan/Qy730U_dC9zSjk0X",
+      "credits": "Hector / Toxic Friends"
+    }
+  ],
+  "M10sInsaneAirScenario": [
+    {
+      "url": "https://raidplan.io/plan/Qy730U_dC9zSjk0X",
+      "credits": "Hector / Toxic Friends"
+    }
+  ],
+  "M10sSnakingScenario": [
+    {
+      "url": "https://raidplan.io/plan/Qy730U_dC9zSjk0X",
+      "credits": "Hector / Toxic Friends"
+    }
+  ],
+  "M10sDeepVarialScenario": [
+    {
+      "url": "https://raidplan.io/plan/Qy730U_dC9zSjk0X",
+      "credits": "Hector / Toxic Friends"
+    }
+  ],
+  "M10sDeepAerialScenario": [
+    {
+      "url": "https://raidplan.io/plan/Qy730U_dC9zSjk0X",
+      "credits": "Hector / Toxic Friends"
+    }
+  ],
+  "M10sArenaSplitScenario": [
+    {
+      "url": "https://raidplan.io/plan/Qy730U_dC9zSjk0X",
+      "credits": "Hector / Toxic Friends"
+    }
+  ],
+  "M10sXtremeSnakingScenario": [
+    {
+      "url": "https://raidplan.io/plan/Qy730U_dC9zSjk0X",
+      "credits": "Hector / Toxic Friends"
+    }
+  ],
+  "M10sAlleyOopTwoScenario": [
+    {
+      "url": "https://raidplan.io/plan/Qy730U_dC9zSjk0X",
+      "credits": "Hector / Toxic Friends"
+    }
+  ],
+  "M11sOpenerScenario": [
+    {
+      "url": "https://raidplan.io/plan/HJAbE7fuWodELUSB",
+      "credits": "Toxic Friends"
+    },
+    {
+      "url": "https://raidplan.io/plan/B82fx_zDqUMr5KFC",
+      "credits": "Toxic Friends (2)"
+    }
+  ],
+  "M11sUltimateWeaponsScenario": [
+    {
+      "url": "https://raidplan.io/plan/HJAbE7fuWodELUSB",
+      "credits": "Toxic Friends"
+    },
+    {
+      "url": "https://raidplan.io/plan/B82fx_zDqUMr5KFC",
+      "credits": "Toxic Friends (2)"
+    }
+  ],
+  "M11sOrbitalOmenScenario": [
+    {
+      "url": "https://raidplan.io/plan/HJAbE7fuWodELUSB",
+      "credits": "Toxic Friends"
+    },
+    {
+      "url": "https://raidplan.io/plan/B82fx_zDqUMr5KFC",
+      "credits": "Toxic Friends (2)"
+    }
+  ],
+  "M11sMeteorainScenario": [
+    {
+      "url": "https://raidplan.io/plan/HJAbE7fuWodELUSB",
+      "credits": "Toxic Friends"
+    },
+    {
+      "url": "https://raidplan.io/plan/B82fx_zDqUMr5KFC",
+      "credits": "Toxic Friends (2)"
+    }
+  ],
+  "M11sArenaSplitScenario": [
+    {
+      "url": "https://raidplan.io/plan/HJAbE7fuWodELUSB",
+      "credits": "Toxic Friends"
+    },
+    {
+      "url": "https://raidplan.io/plan/B82fx_zDqUMr5KFC",
+      "credits": "Toxic Friends (2)"
+    }
+  ],
+  "M11sEclipticScenario": [
+    {
+      "url": "https://raidplan.io/plan/HJAbE7fuWodELUSB",
+      "credits": "Toxic Friends"
+    },
+    {
+      "url": "https://raidplan.io/plan/B82fx_zDqUMr5KFC",
+      "credits": "Toxic Friends (2)"
+    }
+  ],
+  "FruP2DiamondDustScenario": [
+    {
+      "url": "https://raidplan.io/plan/PPYgcTqAr4DXZE50",
+      "credits": "Materia Raiding (materiaraiding.pages.dev/ultimate/fru)"
+    }
+  ],
+  "FruP2LightRampantScenario": [
+    {
+      "url": "https://raidplan.io/plan/pgz322Znkd_Srn8n",
+      "credits": "Materia Raiding (materiaraiding.pages.dev/ultimate/fru)"
+    }
+  ],
+  "FruP3UltimateRelativityScenario": [
+    {
+      "url": "https://raidplan.io/plan/oYnDQe4ZbVaoxA5r",
+      "credits": "Materia Raiding (materiaraiding.pages.dev/ultimate/fru)"
+    }
+  ],
+  "FruP3ApocalypseScenario": [
+    {
+      "url": "https://raidplan.io/plan/LZwXKA645GGmjEO2",
+      "credits": "Materia Raiding (materiaraiding.pages.dev/ultimate/fru)"
+    }
+  ],
+  "FruP4DarklitDragonsongScenario": [
+    {
+      "url": "https://raidplan.io/plan/pcrbL0iqrAYMKFV3",
+      "credits": "Materia Raiding (materiaraiding.pages.dev/ultimate/fru)"
+    }
+  ],
+  "FruP4CrystallizeTimeScenario": [
+    {
+      "url": "https://raidplan.io/plan/GIXItxnLI2MJma73",
+      "credits": "Materia Raiding (materiaraiding.pages.dev/ultimate/fru)"
+    }
+  ],
+  "UmadP1TeleTrouncingScenario": [
+    {
+      "url": "https://raidplan.io/plan/saC2CjTaXmSApm6y",
+      "credits": "LPDU Tele-Trouncing (via WTFDIG)"
+    }
+  ],
+  "UmadP3LimitCutScenario": [
+    {
+      "url": "https://raidplan.io/plan/vO5T6KpnHKV4tOXo",
+      "credits": "LPDU P3 (via WTFDIG)"
+    }
+  ],
+  "UmadP5FloodScenario": [
+    {
+      "url": "https://raidplan.io/plan/3wODYtApXBtYAdu0",
+      "credits": "Kefkabin P5 (via WTFDIG)"
+    }
+  ],
+  "UmadP5CelestriadScenario": [
+    {
+      "url": "https://raidplan.io/plan/3wODYtApXBtYAdu0",
+      "credits": "Kefkabin P5 (via WTFDIG)"
+    }
+  ],
+  "UmadP5ExaflaresScenario": [
+    {
+      "url": "https://raidplan.io/plan/3wODYtApXBtYAdu0",
+      "credits": "Kefkabin P5 (via WTFDIG)"
+    }
   ]
 }

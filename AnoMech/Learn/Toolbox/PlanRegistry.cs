@@ -100,6 +100,12 @@ public static class PlanRegistry
     public static IReadOnlyList<PlanEntry> For(string scenarioType) => All.TryGetValue(scenarioType, out var list) ? list : [];
 
     // The entry for a strat: one named after it, else the family-wide one with no strat named.
-    public static PlanEntry? For(string scenarioType, string strat)
-        => For(scenarioType).FirstOrDefault(e => e.Strat == strat) ?? For(scenarioType).FirstOrDefault(e => e.Strat is null);
+    public static PlanEntry? For(string scenarioType, string strat) => AllFor(scenarioType, strat).FirstOrDefault();
+
+    // Every entry for a strat (a guide split in parts): the ones named after it, else the unnamed ones.
+    public static IReadOnlyList<PlanEntry> AllFor(string scenarioType, string strat)
+    {
+        var named = For(scenarioType).Where(e => e.Strat == strat).ToList();
+        return named.Count > 0 ? named : For(scenarioType).Where(e => e.Strat is null).ToList();
+    }
 }

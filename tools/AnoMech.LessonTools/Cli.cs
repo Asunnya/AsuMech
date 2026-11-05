@@ -619,9 +619,9 @@ internal static class Cli
         var outDir = Need(opts, "out");
         Directory.CreateDirectory(outDir);
         var registered = ScenarioCatalog.Create().Scenarios.FirstOrDefault(s => s.GetType().Name == scenario) is { } found && strat < found.AiStrats.Count
-            ? PlanRegistry.For(scenario, found.AiStrats[strat].Name) : null;
-        var planArg = opts.TryGetValue("plan", out var pl) && pl.Length > 0 ? pl : registered?.Url;
-        var layoutName = opts.TryGetValue("layout", out var l) && l.Length > 0 ? l : registered?.Layout;
+            ? PlanRegistry.AllFor(scenario, found.AiStrats[strat].Name) : [];
+        var planArg = opts.TryGetValue("plan", out var pl) && pl.Length > 0 ? pl : registered.Count > 0 ? string.Join(",", registered.Select(r => r.Url)) : null;
+        var layoutName = opts.TryGetValue("layout", out var l) && l.Length > 0 ? l : registered.FirstOrDefault()?.Layout;
         var existing = opts.TryGetValue("lesson", out var lp) && lp.Length > 0 ? LessonLoader.Parse(File.ReadAllText(lp)) : null;
         var stem = AuthorOne(scenario, strat, Seeds(opts, "1..8"), outDir, null, planArg, layoutName, Console.Error, existing);
         Console.WriteLine($"dump     {stem}.dump.json");
@@ -651,11 +651,21 @@ internal static class Cli
         ExampleExtraction? extraction = null;
         if (planArg != null && layout != null)
         {
-            var (id, raw) = FetchPlan(planArg);
-            var (converted, report) = ProviderFor(planArg).Convert(raw, id, layout);
-            plan = converted;
+            // Several links (plan parts) separated by ',' become one plan.
+            var parts = planArg.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToList();
+            var converted = new List<ToolboxPlan>();
+            ImportReport? report = null;
+            foreach (var part in parts)
+            {
+                var (partId, raw) = FetchPlan(part);
+                var (partPlan, partReport) = ProviderFor(part).Convert(raw, partId, layout);
+                converted.Add(partPlan);
+                report ??= partReport;
+            }
+            plan = ToolboxPlan.Merge(converted);
+            var id = plan.Id;
             File.WriteAllText(Path.Combine(outDir, $"{id}.json"), plan.ToJson());
-            var refined = ToolboxImport.RefineRoleMap(plan, dump, report.RoleMap, out _);
+            var refined = ToolboxImport.RefineRoleMap(plan, dump, report!.RoleMap, out _);
             var steps = new Dictionary<string, int>();
             foreach (var (tb, stepId, _) in ToolboxImport.Align(plan, lesson, dump, refined))
                 if (stepId != null) steps.TryAdd(stepId, tb);
@@ -731,9 +741,10 @@ internal static class Cli
                 var dir = Path.Combine(outDir, family);
                 Directory.CreateDirectory(dir);
                 Console.Error.WriteLine($"{typeName} / {strat.Name}");
-                var registered = PlanRegistry.For(typeName, strat.Name);
+                var registered = PlanRegistry.AllFor(typeName, strat.Name);
                 var stem = AuthorOne(typeName, i, seeds, dir, $"{typeName.Replace("Scenario", "")}.{Slug(strat.Name)}",
-                    plans.GetValueOrDefault(typeName) ?? registered?.Url, layoutName ?? registered?.Layout, TextWriter.Null);
+                    plans.GetValueOrDefault(typeName) ?? (registered.Count > 0 ? string.Join(",", registered.Select(r => r.Url)) : null),
+                    layoutName ?? registered.FirstOrDefault()?.Layout, TextWriter.Null);
                 Console.WriteLine($"{stem}.lesson.json");
                 written++;
             }
