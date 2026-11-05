@@ -511,7 +511,7 @@ internal static class Cli
     }
 
     private static string Slug(string name)
-        => string.Join('-', name.ToLowerInvariant().Split(Path.GetInvalidFileNameChars().Concat([' ', '/', '(', ')', ',', '.']).ToArray(), StringSplitOptions.RemoveEmptyEntries));
+        => string.Join('-', System.Text.RegularExpressions.Regex.Split(name.ToLowerInvariant(), "[^a-z0-9]+").Where(p => p.Length > 0));
 
     private static int Check(Dictionary<string, string> opts)
     {
@@ -649,19 +649,30 @@ internal static class Cli
         ToolboxPlan? plan = null;
         OracleReport? oracle = null;
         ExampleExtraction? extraction = null;
+        string? planProblem = null;
         if (planArg != null && layout != null)
         {
-            // Several links (plan parts) separated by ',' become one plan.
+            // Several links (plan parts) separated by ',' become one plan; a part that will not import is dropped with a note.
             var parts = planArg.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToList();
             var converted = new List<ToolboxPlan>();
             ImportReport? report = null;
             foreach (var part in parts)
             {
-                var (partId, raw) = FetchPlan(part);
-                var (partPlan, partReport) = ProviderFor(part).Convert(raw, partId, layout);
-                converted.Add(partPlan);
-                report ??= partReport;
+                try
+                {
+                    var (partId, raw) = FetchPlan(part);
+                    var (partPlan, partReport) = ProviderFor(part).Convert(raw, partId, layout);
+                    converted.Add(partPlan);
+                    report ??= partReport;
+                    foreach (var w in partReport.Warnings) log.WriteLine($"plan {partId}: {w}");
+                }
+                catch (Exception e) when (e is InvalidOperationException or HttpRequestException or System.Text.Json.JsonException or InvalidDataException or ArgumentException)
+                {
+                    planProblem = $"{part}: {e.Message}";
+                    log.WriteLine($"plan skipped: {planProblem}");
+                }
             }
+            if (converted.Count == 0) goto NoPlan;
             plan = ToolboxPlan.Merge(converted);
             var id = plan.Id;
             File.WriteAllText(Path.Combine(outDir, $"{id}.json"), plan.ToJson());
@@ -693,6 +704,7 @@ internal static class Cli
                 log.WriteLine($"example pinned ({string.Join(", ", example.Keys)}): {pinned.TotalResidual:F1} m total, {pinned.Disagreements.Count()} disagree");
             }
         }
+        NoPlan:
         var wtfdig = WtfdigSource.Load(Glossary.FamilyOf(type).ToLowerInvariant());
         var texts = wtfdig?.Mechanics();
         if (wtfdig != null && texts is { Count: > 0 } && lesson.Sources.All(s => !s.Url.Contains("wtfdig", StringComparison.OrdinalIgnoreCase)))
@@ -742,11 +754,18 @@ internal static class Cli
                 Directory.CreateDirectory(dir);
                 Console.Error.WriteLine($"{typeName} / {strat.Name}");
                 var registered = PlanRegistry.AllFor(typeName, strat.Name);
-                var stem = AuthorOne(typeName, i, seeds, dir, $"{typeName.Replace("Scenario", "")}.{Slug(strat.Name)}",
-                    plans.GetValueOrDefault(typeName) ?? (registered.Count > 0 ? string.Join(",", registered.Select(r => r.Url)) : null),
-                    layoutName ?? registered.FirstOrDefault()?.Layout, TextWriter.Null);
-                Console.WriteLine($"{stem}.lesson.json");
-                written++;
+                try
+                {
+                    var stem = AuthorOne(typeName, i, seeds, dir, $"{typeName.Replace("Scenario", "")}.{Slug(strat.Name)}",
+                        plans.GetValueOrDefault(typeName) ?? (registered.Count > 0 ? string.Join(",", registered.Select(r => r.Url)) : null),
+                        layoutName ?? registered.FirstOrDefault()?.Layout, TextWriter.Null);
+                    Console.WriteLine($"{stem}.lesson.json");
+                    written++;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"FAILED {typeName} / {strat.Name}: {e.Message}");
+                }
             }
         }
         Console.WriteLine($"{written} lesson draft(s) -> {outDir}");

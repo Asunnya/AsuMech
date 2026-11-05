@@ -30,7 +30,8 @@ public static class ToolboxOracle
     public static OracleReport Check(ToolboxPlan plan, Lesson lesson, LessonToolbox link, OrderDump dump)
     {
         var seeds = dump.Orders.Select(o => o.Seed).Distinct().OrderBy(s => s).ToList();
-        var stepsById = lesson.Steps.ToDictionary(s => MasteryStore.StepId(s.Key), s => s);
+        // Two calls at one time (different lines) share an id; the first keeps it.
+        var stepsById = lesson.Steps.GroupBy(s => MasteryStore.StepId(s.Key)).ToDictionary(g => g.Key, g => g.First());
         var aligned = link.Steps.Where(kv => stepsById.ContainsKey(kv.Key) && kv.Value >= 0 && kv.Value < plan.Steps.Count)
             .Select(kv => (StepId: kv.Key, Step: stepsById[kv.Key], Toolbox: plan.Steps[kv.Value])).ToList();
         var bySeed = seeds.ToDictionary(seed => seed, seed => aligned.Select(a => Residual(a.Toolbox, a.Step, link, dump, seed)).ToList());

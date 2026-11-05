@@ -31,7 +31,8 @@ public static class ExampleExtractor
         var skipped = new List<string>();
         var seed = link.ExampleSeed ?? dump.Runs?.FirstOrDefault()?.Seed ?? 0;
         var free = dump.Runs?.FirstOrDefault(r => r.Seed == seed)?.State ?? dump.Runs?.FirstOrDefault()?.State ?? new();
-        var stepsById = lesson.Steps.ToDictionary(s => MasteryStore.StepId(s.Key), s => s);
+        // Two calls at one time (different lines) share an id; the first keeps it.
+        var stepsById = lesson.Steps.GroupBy(s => MasteryStore.StepId(s.Key)).ToDictionary(g => g.Key, g => g.First());
         var alignedSteps = link.Steps.Where(kv => stepsById.ContainsKey(kv.Key) && kv.Value >= 0 && kv.Value < plan.Steps.Count)
             .Select(kv => (Lesson: stepsById[kv.Key], Toolbox: kv.Value)).OrderBy(x => x.Toolbox).ToList();
         var roleBySlot = link.RoleMap.ToDictionary(kv => kv.Value, kv => kv.Key);

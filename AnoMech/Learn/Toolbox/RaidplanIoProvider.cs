@@ -16,6 +16,8 @@ public sealed class RaidplanIoProvider : IRaidplanProvider
     public RaidplanHost Host => RaidplanHost.RaidplanIo;
 
     private const float AbilityUnits = 100f;
+    private const float ImageSpanPx = 675f;
+    private const float AssumedArenaYalms = 40f;
     private static readonly Dictionary<string, string> Slots = new(StringComparer.OrdinalIgnoreCase)
     {
         ["MT"] = "tank1", ["ST"] = "tank2", ["OT"] = "tank2", ["H1"] = "healer1", ["H2"] = "healer2",
@@ -54,9 +56,19 @@ public sealed class RaidplanIoProvider : IRaidplanProvider
         // Waymarks keep their place across steps; the first step that draws A-D calibrates.
         var marks = Enumerable.Range(0, count)
             .Select(i => nodes.Where(n => Step(n) == i && Type(n) == "waypoint").Select(n => (Waymarks.GetValueOrDefault(Str(Attr(n), "wayId"), WaymarkSlot.A), Pos(n))).ToList())
-            .FirstOrDefault(m => m.Count(x => x.Item1 <= WaymarkSlot.D) >= 2)
-            ?? throw new InvalidOperationException("fewer than two waymarks to calibrate with");
-        var (scale, offset, residual) = ToolboxImport.Calibrate(marks, layout);
+            .FirstOrDefault(m => m.Count(x => x.Item1 <= WaymarkSlot.D) >= 2);
+        float scale, residual;
+        Vector2 offset;
+        if (marks != null) (scale, offset, residual) = ToolboxImport.Calibrate(marks, layout);
+        else
+        {
+            // No A-D drawn: the arena image is contain-fit to the 1200x675 canvas, so a square floor
+            // spans 675 px; taken for a 40-yalm arena, which the report says is a guess.
+            scale = AssumedArenaYalms / ImageSpanPx;
+            offset = -new Vector2(600f, 337.5f) * scale;
+            residual = 0f;
+            warnings.Add($"no waymarks A-D on any step: the arena image is taken for {AssumedArenaYalms:0} yalms across (unverified)");
+        }
         if (residual > 0.3f) warnings.Add($"waymark calibration residual {residual:F2} m");
 
         var notes = root.TryGetProperty("step_notes_raw", out var sn) && sn.ValueKind == JsonValueKind.Array ? sn.EnumerateArray().Select(e => e.GetString() ?? "").ToList() : [];
