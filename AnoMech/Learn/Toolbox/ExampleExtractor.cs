@@ -99,8 +99,9 @@ public static class ExampleExtractor
         foreach (var (property, stem) in bearingPairs)
         {
             var tokens = Tokens(stem);
-            var aligned = Aligned(alignedSteps, tokens);
-            var adds = aligned is null ? [] : plan.Steps[aligned.Value.Toolbox].Objects.Where(o => o.Kind is "add" or "boss" && tokens.Any(t => o.Label.Contains(t, StringComparison.OrdinalIgnoreCase))).ToList();
+            List<ToolboxObject> Named(int t) => plan.Steps[t].Objects.Where(o => o.Kind is "add" or "boss" && tokens.Any(tk => o.Label.Contains(tk, StringComparison.OrdinalIgnoreCase))).ToList();
+            var aligned = Aligned(alignedSteps, tokens, t => Named(t).Count == 1);
+            var adds = aligned is null ? [] : Named(aligned.Value.Toolbox);
             if (adds.Count == 1) pins.Add(new ExtractedPin(property.Name, F(Bearing(adds[0])), $"add \"{adds[0].Label}\" at toolbox step {aligned!.Value.Toolbox}"));
             else unnamed.Add((property, stem));
         }
@@ -108,12 +109,13 @@ public static class ExampleExtractor
         {
             var props = group.ToList();
             var tokens = Tokens(group.Key);
-            var aligned = Aligned(alignedSteps, tokens.Concat(props.SelectMany(p => Tokens(p.Stem))).Distinct().ToList());
-            if (aligned is null) { skipped.AddRange(props.Select(p => $"{p.Property.Name}: no add named like it and no aligned lesson step mentions it")); continue; }
-            var at = aligned.Value.Toolbox;
-            var numbered = plan.Steps[at].Objects.Where(o => o.Kind == "add" && Regex.IsMatch(o.Label, @"\s?\d$"))
+            IGrouping<string, ToolboxObject>? Numbered(int t) => plan.Steps[t].Objects.Where(o => o.Kind == "add" && Regex.IsMatch(o.Label, @"\s?\d$"))
                 .GroupBy(o => Regex.Replace(o.Label, @"\s?\d$", "")).FirstOrDefault(g => g.Count() == props.Count);
-            if (numbered is null) { skipped.AddRange(props.Select(p => $"{p.Property.Name}: toolbox step {at} draws no group of {props.Count} numbered adds")); continue; }
+            // Only steps that draw a group of that many numbered adds can name the roll.
+            var aligned = Aligned(alignedSteps, tokens.Concat(props.SelectMany(p => Tokens(p.Stem))).Distinct().ToList(), t => Numbered(t) != null);
+            if (aligned is null) { skipped.AddRange(props.Select(p => $"{p.Property.Name}: no add named like it and no aligned lesson step naming it draws {props.Count} numbered adds")); continue; }
+            var at = aligned.Value.Toolbox;
+            var numbered = Numbered(at)!;
             var ordered = numbered.OrderBy(o => o.Label).ToList();
             for (var i = 0; i < props.Count; i++)
                 pins.Add(new ExtractedPin(props[i].Property.Name, F(Bearing(ordered[i])), $"\"{ordered[i].Label}\" at toolbox step {at} \"{plan.Steps[at].Label}\" (assumed {ordered[i].Label} = {props[i].Stem})"));
@@ -172,9 +174,10 @@ public static class ExampleExtractor
         => Regex.Split(name, @"(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])").Where(t => t.Length >= 3 && !Noise.Contains(t)).Select(t => t.TrimEnd('s')).Distinct().ToList();
 
     // The aligned step whose title or cue names the most of the roll's words; none when nothing does.
-    private static (LessonStep Lesson, int Toolbox)? Aligned(List<(LessonStep Lesson, int Toolbox)> aligned, IReadOnlyList<string> tokens)
+    private static (LessonStep Lesson, int Toolbox)? Aligned(List<(LessonStep Lesson, int Toolbox)> aligned, IReadOnlyList<string> tokens, Func<int, bool>? usable = null)
     {
-        var best = aligned.Select(a => (a, Score: tokens.Count(t => $"{a.Lesson.Title} {a.Lesson.Cue}".Contains(t, StringComparison.OrdinalIgnoreCase))))
+        var best = aligned.Where(a => usable is null || usable(a.Toolbox))
+            .Select(a => (a, Score: tokens.Count(t => $"{a.Lesson.Title} {a.Lesson.Cue}".Contains(t, StringComparison.OrdinalIgnoreCase))))
             .Where(x => x.Score > 0).OrderByDescending(x => x.Score).ThenBy(x => x.a.Toolbox).FirstOrDefault();
         return best.Score > 0 ? best.a : null;
     }
