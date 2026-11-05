@@ -9,6 +9,8 @@ TOOL=$(find tools/AnoMech.LessonTools/bin -name AnoMech.LessonTools.dll | head -
 
 # where a scenario stands before any authoring: what the chain can read from it and how it degrades without each piece
 dotnet $TOOL learn-ready --scenario UwuP2IfritScenario [--strat 0] [--no-run]
+# pin each roll to the value a free run drew and see whether the seed's other rolls move (also part of learn-ready)
+dotnet $TOOL overrides-check --scenario UwuP1GarudaScenario [--strat 0] [--seed 1]
 # the scenario x strat matrix: lesson, draft, steps, registered plan, toolbox block, embedded plan, example seed/example, glossary, mit timeline/plan
 dotnet $TOOL status [--family Uwu]
 
@@ -30,6 +32,8 @@ dotnet $TOOL skeleton --dump garuda.dump.json --out lesson.json
 dotnet $TOOL rekey    --lesson AnoMech/Learn/Lessons/Uwu/P1Garuda.zeal-the-balance.json --dump garuda.dump.json
 dotnet $TOOL check    --lesson AnoMech/Learn/Lessons/Uwu/P1Garuda.zeal-the-balance.json --dump garuda.dump.json
 dotnet $TOOL context  --dump x.dump.json --lesson x.lesson.json --out x.context.md [--plan plans/<id>.json]
+# the plan's roll as the lesson's example: adds -> spot lists / bearings, buffs -> role lists; --write stores it (author does this when the lesson has none)
+dotnet $TOOL example  --plan plans/<id>.json --lesson x.lesson.json --dump x.dump.json [--write]
 
 # raidplans: any of these links becomes the same ToolboxPlan (viewer, alignment, oracle, example); calibration by waymarks A-D
 #   ff14.toolboxgaming.space/?id=<id>   raidplan.io/plan/<code>   ffxivstrats.io/fight/<fight>?strategy=<id>   pasted "[stgy:...]" codes (one board per step)
