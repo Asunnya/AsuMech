@@ -7,6 +7,7 @@ using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
 using AsuMech.Core.Native.Interfaces;
 using AsuMech.Windows.Asu;
+using AsuMech.Core.Native.Implementations;
 
 namespace AsuMech.Windows;
 
@@ -311,6 +312,7 @@ public class ConfigWindow : Window, IDisposable
         }
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Point this at the repo's datalogs/replays so the recordings sit next to the ACT logs.");
+        DrawSavedRecordings(recorder);
         if (configuration.RecordAlwaysTerritories.Count > 0)
         {
             ImGui.TextUnformatted($"Always recording in {configuration.RecordAlwaysTerritories.Count} dut{(configuration.RecordAlwaysTerritories.Count == 1 ? "y" : "ies")}");
@@ -328,9 +330,15 @@ public class ConfigWindow : Window, IDisposable
             configuration.Save();
         }
         if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("Gzipped and sent to the recordings server built into this build, so whoever studies the fight gets your pulls without any setup. The file stays on your disk either way.");
+            ImGui.SetTooltip("Gzipped and sent to the recordings server built into this build, so whoever studies the fight gets your pulls without any setup. A sent file is removed from your disk unless you keep a copy.");
         if (upload)
         {
+            var keep = configuration.KeepRecordingsAfterUpload;
+            if (Pills.Checkbox("Keep a copy after sending", ref keep))
+            {
+                configuration.KeepRecordingsAfterUpload = keep;
+                configuration.Save();
+            }
             var (relay, _) = configuration.RecordingsDestination();
             var peerId = relay.Length > 0 ? AsuMech.Network.RelayWire.PeerId(AsuMech.Network.RelayWire.RelayCredential(configuration.EnsurePeerSecret(), relay)).ToString() : "";
             ImGui.TextUnformatted(relay.Length > 0 ? $"Server: {relay}" : "No recordings server in this build.");
@@ -488,5 +496,30 @@ public class ConfigWindow : Window, IDisposable
         configuration.RelayAccessToken = relayPassword;
         configuration.RelayTokenOrigin = Configuration.OriginOf(configuration.ActiveRelayUrl());
         configuration.Save();
+    }
+
+    private bool confirmClearRecordings;
+
+    private void DrawSavedRecordings(PullRecorder recorder)
+    {
+        var files = AsuMech.Core.Game.Trace.RecordingFiles.List(recorder.Directory);
+        var bytes = files.Sum(f => f.Length);
+        ImGui.TextUnformatted(files.Count == 0 ? "No recordings on your disk." : $"{files.Count} recording{(files.Count == 1 ? "" : "s")} on your disk, {bytes / (1024f * 1024f):0.0} MB");
+        if (files.Count == 0) { confirmClearRecordings = false; return; }
+        ImGui.SameLine();
+        if (!confirmClearRecordings)
+        {
+            if (ImGui.SmallButton("Delete all##clear-recordings")) confirmClearRecordings = true;
+            return;
+        }
+        using (AsuTheme.PushTextColor(AsuTheme.Bad))
+            if (ImGui.SmallButton("Really delete?##clear-recordings-confirm"))
+            {
+                var deleted = AsuMech.Core.Game.Trace.RecordingFiles.DeleteAll(recorder.Directory, recorder.Writing);
+                confirmClearRecordings = false;
+                Plugin.ChatGui.Print($"[AsuMech] Deleted {deleted} recording{(deleted == 1 ? "" : "s")}.");
+            }
+        ImGui.SameLine();
+        if (ImGui.SmallButton("Cancel##clear-recordings-cancel")) confirmClearRecordings = false;
     }
 }

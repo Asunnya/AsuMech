@@ -25,6 +25,8 @@ public class Configuration : IPluginConfiguration
     public List<uint> RecordAlwaysTerritories { get; set; } = [];
     public string PullRecordingsDir { get; set; } = "";
     public bool UploadRecordings { get; set; } = true;
+    // A sent recording is deleted from disk unless this is on.
+    public bool KeepRecordingsAfterUpload { get; set; } = false;
     // Override of DefaultRecordingsRelay; both empty means no upload destination.
     public string RecordingsRelayUrl { get; set; } = "";
     public string RecordingsRelayToken { get; set; } = "";

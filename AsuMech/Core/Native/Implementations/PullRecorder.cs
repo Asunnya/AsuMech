@@ -232,6 +232,9 @@ internal sealed unsafe class PullRecorder : IDisposable
         }
     }
 
+    // The file being written, if any; a clear must leave it alone.
+    public string? Writing => writer != null ? Path : null;
+
     public string Directory => Plugin.Config.PullRecordingsDir is { Length: > 0 } dir
         ? dir
         : System.IO.Path.Combine(Plugin.PluginInterface.ConfigDirectory.FullName, "replays");
@@ -293,9 +296,26 @@ internal sealed unsafe class PullRecorder : IDisposable
         var config = Plugin.Config;
         var (relay, token) = config.RecordingsDestination();
         return Multiplayer.RecordingUploader.UploadAsync(path, relay, token, RelayWire.RelayCredential(config.EnsurePeerSecret(), relay))
-            .ContinueWith(t => Plugin.Framework.RunOnFrameworkThread(() => Chat(t.IsCompletedSuccessfully
-                ? (t.Result.Ok ? $"Upload: {t.Result.Message}" : $"Upload failed: {t.Result.Message}")
-                : $"Upload failed: {t.Exception?.GetBaseException().Message}")));
+            .ContinueWith(t => Plugin.Framework.RunOnFrameworkThread(() =>
+            {
+                if (!t.IsCompletedSuccessfully) { Chat($"Upload failed: {t.Exception?.GetBaseException().Message}"); return; }
+                if (!t.Result.Ok) { Chat($"Upload failed: {t.Result.Message}"); return; }
+                Chat($"Upload: {t.Result.Message}{(Plugin.Config.KeepRecordingsAfterUpload ? "" : DeleteSent(path))}");
+            }));
+    }
+
+    private static string DeleteSent(string path)
+    {
+        try
+        {
+            File.Delete(path);
+            return "; removed from your disk";
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            DiagnosticLog.Warn($"[PullRecorder] deleting the sent {path} failed: {e.Message}");
+            return "";
+        }
     }
 
     // ── Chat ──────────────────────────────────────────────────────────────────
