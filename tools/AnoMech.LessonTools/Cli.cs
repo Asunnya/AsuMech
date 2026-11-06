@@ -46,6 +46,9 @@ namespace AnoMech.LessonTools;
 // status [--family <Family>] [--metrics] [--write-baseline]   scenario × strat × lesson × toolbox × example × mit × draft; --metrics per family; --write-baseline refreshes tests/.../lessons-baseline.txt
 // scenario-skeleton --log <act log> --territory <id> --pull N --family <Family> --phase <Phase> [--t0 pull|first-cast|<s>] [--cx 100 --cz 100] [--out <dir>]
 //          <Family>Constants.cs, <Family>Actions.cs and <Phase>Scenario.cs from the pull: ids, one EnemyAction per action (shape from the sheet, Size from the public modules or UNVERIFIED), the timeline as logged; rolls are TODO
+// patch-diff --to <commit> [--from <commit>]   what the catalog's EnemyActions and the mitigation actions/statuses change between two
+//          xivapi/ffxiv-datamining commits (name, cast, shape, range, width, recast, omen; status name and stacks); --from defaults to
+//          the tests' DataminingCommit; exit 1 when anything changed
 // crosscheck --fight m11s [--source all|bossmod|reborn] [--update] [--out AnoMech/Learn/Sources/modules]   public hint modules (text, no compiler) -> one JSON per fight; --update moves the commit pins to the repos' heads
 // sim-timeline --scenario <TypeName> [--strat N] [--seed 1] --out <file.csv>   the headless run's own SimTimeline CSV, the shape a recording has
 // replay-diff --scenario <TypeName> --replay <file.csv|.csv.gz> [--strat N] [--seed 1] [--pull N] [--t0 s] [--window 3] [--slack 0.25]   headless run vs a recorded pull, cast by cast; exit 1 past the slack
@@ -87,6 +90,7 @@ internal static class Cli
                 "replay-diff" => ReplayDiffCmd(opts),
                 "sim-timeline" => SimTimelineCmd(opts),
                 "crosscheck" => Crosscheck(opts),
+                "patch-diff" => PatchDiffCmd(opts),
                 "scenario-skeleton" => ScenarioSkeletonCmd(opts),
                 _ => Usage(),
             };
@@ -567,6 +571,25 @@ internal static class Cli
         foreach (var note in files.Notes) Console.WriteLine($"  note: {note}");
         Console.WriteLine($"  TODO lines: {files.Scenario.Split('\n').Count(l => l.Contains("TODO")) + files.Actions.Split('\n').Count(l => l.Contains("TODO") || l.Contains("UNVERIFIED"))}");
         return 0;
+    }
+
+    private static int PatchDiffCmd(Dictionary<string, string> opts)
+    {
+        var targets = File.ReadAllText(Path.Combine(RepoRoot(), "tests", "AnoMech.Tests", "Datamining.targets"));
+        var pinned = System.Text.RegularExpressions.Regex.Match(targets, "<DataminingCommit>([0-9a-f]+)</DataminingCommit>").Groups[1].Value;
+        var from = opts.TryGetValue("from", out var f) && f.Length > 0 ? f : pinned;
+        var to = Need(opts, "to");
+        var cache = Path.Combine(RepoRoot(), "tools", "AnoMech.LessonTools", "obj", "datamining");
+        var actionsFrom = DataminingSheet.FetchAsync(from, "Action", cache).GetAwaiter().GetResult();
+        var actionsTo = DataminingSheet.FetchAsync(to, "Action", cache).GetAwaiter().GetResult();
+        var statusesFrom = DataminingSheet.FetchAsync(from, "Status", cache).GetAwaiter().GetResult();
+        var statusesTo = DataminingSheet.FetchAsync(to, "Status", cache).GetAwaiter().GetResult();
+        var actions = PatchDiff.CatalogActions();
+        var statuses = PatchDiff.MitigationStatuses();
+        var changes = PatchDiff.Compare(actionsFrom, actionsTo, statusesFrom, statusesTo, actions, statuses);
+        Console.WriteLine($"{from[..Math.Min(8, from.Length)]} -> {to[..Math.Min(8, to.Length)]}: {actions.Count} actions and {statuses.Count} statuses compared");
+        Console.Write(PatchDiff.Table(changes));
+        return changes.Count == 0 ? 0 : 1;
     }
 
     private static int SimTimelineCmd(Dictionary<string, string> opts)

@@ -62,6 +62,9 @@ dotnet $TOOL mit-timeline --from-replay <recording> --scenario M4sScenario [--pu
 # <Family>Actions.cs (one EnemyAction per enemy action, shape from the sheet, cone angle / donut hole from the public modules or UNVERIFIED)
 # and <Phase>Scenario.cs (spawns and casts at their logged times; targets, markers and tethers as TODO rolls). Players are "player N".
 dotnet $TOOL scenario-skeleton --log datalogs/m11s/Network_30301_20260923.log --territory 1325 --pull 3 --family M11s --phase Opener [--t0 pull|first-cast|<s>] [--cx 100 --cz 100] [--out work/skeleton/M11s]
+# before bumping DataminingCommit: what the catalog's EnemyActions and the mitigation actions/statuses change between two
+# xivapi/ffxiv-datamining commits (name, cast, shape, range, width, recast, omen; status name, stacks); exit 1 when anything did
+dotnet $TOOL patch-diff --to <commit> [--from <commit, default the tests' DataminingCommit>]
 # the public hint modules of one fight (Learn/Sources/modules/fights.json names repo, folder and commit per source) read as text into
 # AnoMech/Learn/Sources/modules/<fight>.json; learn-ready then shows a "module <source>" row per source and cues/draft name markers and tethers
 dotnet $TOOL crosscheck --fight m11s [--source bossmod|reborn] [--update]   # --update moves the pins to the repos' heads and rewrites fights.json
