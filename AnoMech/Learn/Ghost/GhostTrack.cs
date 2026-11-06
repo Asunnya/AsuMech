@@ -32,10 +32,14 @@ public sealed class GhostTrack
     public bool Aligned { get; private set; }
     public string? AlignedOn { get; private set; }
 
-    public GhostTrack(IReadOnlyList<GhostLane> lanes, IReadOnlyList<(float T, uint ActionId)> enemyCasts)
+    // The pull's own end, in its seconds: past it the party is walking back from a wipe.
+    public float End { get; }
+
+    public GhostTrack(IReadOnlyList<GhostLane> lanes, IReadOnlyList<(float T, uint ActionId)> enemyCasts, float end = float.MaxValue)
     {
         Lanes = lanes;
         EnemyCasts = enemyCasts;
+        End = end;
     }
 
     // The sim's clock on the pull's: the scenario's first cast that the pull also shows lines up.
@@ -66,7 +70,7 @@ public sealed class GhostTrack
         var samples = lane.Samples;
         if (samples.Count == 0) return null;
         var t = simTime + Offset;
-        if (t < samples[0].T - HoldSeconds || t > samples[^1].T + HoldSeconds) return null;
+        if (t > End || t < samples[0].T - HoldSeconds || t > samples[^1].T + HoldSeconds) return null;
         if (t <= samples[0].T) return samples[0] with { T = simTime };
         if (t >= samples[^1].T) return samples[^1] with { T = simTime };
         int lo = 0, hi = samples.Count - 1;
@@ -107,7 +111,8 @@ public sealed class GhostTrack
                 list.Add(new GhostSample(SimTimeline.Time(row), new Vector2(x - origin.X, z - origin.Z), SimTimeline.Float(row, "rot") ?? 0f));
             }
         }
-        return Build(samples.Keys.Select(a => (labels[a], jobs.GetValueOrDefault(a), (IReadOnlyList<GhostSample>)samples[a].OrderBy(s => s.T).ToList())).ToList(), casts);
+        var end = rows.Count == 0 ? 0f : rows.Max(SimTimeline.Time);
+        return Build(samples.Keys.Select(a => (labels[a], jobs.GetValueOrDefault(a), (IReadOnlyList<GhostSample>)samples[a].OrderBy(s => s.T).ToList())).ToList(), casts, end);
     }
 
     public static GhostTrack FromActPull(ActPull pull, Vector3 origin)
@@ -117,15 +122,17 @@ public sealed class GhostTrack
                 (IReadOnlyList<GhostSample>)g.OrderBy(p => p.T).Select(p => new GhostSample(p.T, new Vector2(p.Position.X - origin.X, p.Position.Z - origin.Z), p.Rotation)).ToList()))
             .ToList();
         var casts = pull.Events.OfType<ActCast>().Where(c => c.Caster.IsEnemy).Select(c => (c.T, c.ActionId)).ToList();
-        return Build(lanes, casts);
+        return Build(lanes, casts, pull.Duration);
     }
 
-    private static GhostTrack Build(List<(string Label, byte Job, IReadOnlyList<GhostSample> Samples)> players, List<(float, uint)> casts)
+    // Players are renumbered by seat: a log's own numbering counts everyone it ever met.
+    private static GhostTrack Build(List<(string Label, byte Job, IReadOnlyList<GhostSample> Samples)> players, List<(float, uint)> casts, float end)
     {
         var roles = GhostRoles.Assign(players.Select(p => (p.Label, p.Job)).ToList());
-        var lanes = players.Select(p => new GhostLane(p.Label, roles.GetValueOrDefault(p.Label), p.Job, p.Samples))
-            .OrderBy(l => l.Role ?? (PartyRole)99).ThenBy(l => l.Label, StringComparer.Ordinal).ToList();
-        return new GhostTrack(lanes, casts.OrderBy(c => c.Item1).ToList());
+        var lanes = players.Select(p => (Player: p, Role: roles.TryGetValue(p.Label, out var role) ? role : (PartyRole?)null))
+            .OrderBy(x => x.Role ?? (PartyRole)99).ThenBy(x => x.Player.Label, StringComparer.Ordinal)
+            .Select((x, i) => new GhostLane($"player {i + 1}", x.Role, x.Player.Job, x.Player.Samples)).ToList();
+        return new GhostTrack(lanes, casts.OrderBy(c => c.Item1).ToList(), end);
     }
 
     // A recording (.csv / .csv.gz) or an ACT log (.log), one pull of it.

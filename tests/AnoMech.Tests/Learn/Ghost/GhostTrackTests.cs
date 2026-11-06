@@ -61,6 +61,8 @@ public class GhostTrackTests
         Assert.That(track.At(tank, 6.4f)!.Value.Position.Y, Is.EqualTo(-11f).Within(0.01f), "between close samples it interpolates");
         Assert.That(track.At(tank, 6.6f)!.Value.Position.Y, Is.EqualTo(-12f).Within(0.01f), "held at the last sample");
         Assert.That(track.At(tank, 6.6f + GhostTrack.HoldSeconds + 0.5f), Is.Null, "faded after the hold");
+        Assert.That(track.End, Is.EqualTo(12f), "the recording's last row");
+        Assert.That(track.At(tank, 8.1f), Is.Null, "past the pull's end the party is walking back from a wipe");
         Assert.That(track.Align(new CastTimeline("Y", [new CastEvent(1, "Other", 1f, 2f, 1)])), Is.False, "nothing shared, nothing to line up on");
     }
 

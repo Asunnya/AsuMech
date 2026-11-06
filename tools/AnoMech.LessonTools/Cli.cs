@@ -46,6 +46,9 @@ namespace AnoMech.LessonTools;
 // status [--family <Family>] [--metrics] [--write-baseline]   scenario × strat × lesson × toolbox × example × mit × draft; --metrics per family; --write-baseline refreshes tests/.../lessons-baseline.txt
 // scenario-skeleton --log <act log> --territory <id> --pull N --family <Family> --phase <Phase> [--t0 pull|first-cast|<s>] [--cx 100 --cz 100] [--out <dir>]
 //          <Family>Constants.cs, <Family>Actions.cs and <Phase>Scenario.cs from the pull: ids, one EnemyAction per action (shape from the sheet, Size from the public modules or UNVERIFIED), the timeline as logged; rolls are TODO
+// static-diff --scenario <TypeName> --replay <recording .csv/.csv.gz | ACT .log> [--pull N] [--strat N] [--role R|all] [--seeds 1..8]
+//          per lesson step, where the real pull's player of each seat was when the strat has them settled, against the nearest spot the strat
+//          gives that seat over the seeds; exit 1 when any step differs
 // patch-diff --to <commit> [--from <commit>]   what the catalog's EnemyActions and the mitigation actions/statuses change between two
 //          xivapi/ffxiv-datamining commits (name, cast, shape, range, width, recast, omen; status name and stacks); --from defaults to
 //          the tests' DataminingCommit; exit 1 when anything changed
@@ -91,6 +94,7 @@ internal static class Cli
                 "sim-timeline" => SimTimelineCmd(opts),
                 "crosscheck" => Crosscheck(opts),
                 "patch-diff" => PatchDiffCmd(opts),
+                "static-diff" => StaticDiffCmd(opts),
                 "scenario-skeleton" => ScenarioSkeletonCmd(opts),
                 _ => Usage(),
             };
@@ -571,6 +575,26 @@ internal static class Cli
         foreach (var note in files.Notes) Console.WriteLine($"  note: {note}");
         Console.WriteLine($"  TODO lines: {files.Scenario.Split('\n').Count(l => l.Contains("TODO")) + files.Actions.Split('\n').Count(l => l.Contains("TODO") || l.Contains("UNVERIFIED"))}");
         return 0;
+    }
+
+    private static int StaticDiffCmd(Dictionary<string, string> opts)
+    {
+        var name = Need(opts, "scenario");
+        var scenario = ScenarioCatalog.Create().Scenarios.FirstOrDefault(s => s.GetType().Name == name) ?? throw new ArgumentException($"no scenario type named {name}");
+        var strat = opts.TryGetValue("strat", out var st) && st.Length > 0 ? int.Parse(st) : 0;
+        var zone = scenario.Phase.Zone;
+        var pull = opts.TryGetValue("pull", out var p) && p.Length > 0 ? int.Parse(p) : 1;
+        var track = AnoMech.Learn.Ghost.GhostTrack.Load(Need(opts, "replay"), zone.TerritoryId, pull, zone.Origin);
+        var timeline = MitTimelines.Load(name) ?? CastTimelines.Record(scenario.GetType(), strat, 1);
+        if (!track.Align(timeline)) throw new ArgumentException($"none of {name}'s casts are in that pull: nothing to line up on");
+        Console.WriteLine($"pull {pull}: {track.Lanes.Count} players ({string.Join(", ", track.Lanes.Select(l => $"{l.Label}={(l.Role?.ToString() ?? "?")}"))}), aligned on {track.AlignedOn}, {track.Offset:+0.0;-0.0}s into the pull");
+        var seeds = Seeds(opts, "1..8");
+        var dump = OrderRecorder.Record(name, strat, seeds, TextWriter.Null);
+        var lesson = LessonLoader.For(scenario, scenario.AiStrats[strat]);
+        var roles = opts.TryGetValue("role", out var r) && r.Length > 0 && r != "all" ? [Enum.Parse<Core.Game.Party.PartyRole>(r, true)] : Enum.GetValues<Core.Game.Party.PartyRole>();
+        var rows = AnoMech.Learn.Ghost.StaticDiff.Compare(track, lesson, dump.Orders, roles);
+        Console.Write(AnoMech.Learn.Ghost.StaticDiff.Report(rows));
+        return rows.Any(x => x.Differs) ? 1 : 0;
     }
 
     private static int PatchDiffCmd(Dictionary<string, string> opts)

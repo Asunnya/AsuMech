@@ -62,6 +62,10 @@ dotnet $TOOL mit-timeline --from-replay <recording> --scenario M4sScenario [--pu
 # <Family>Actions.cs (one EnemyAction per enemy action, shape from the sheet, cone angle / donut hole from the public modules or UNVERIFIED)
 # and <Phase>Scenario.cs (spawns and casts at their logged times; targets, markers and tethers as TODO rolls). Players are "player N".
 dotnet $TOOL scenario-skeleton --log datalogs/m11s/Network_30301_20260923.log --territory 1325 --pull 3 --family M11s --phase Opener [--t0 pull|first-cast|<s>] [--cx 100 --cz 100] [--out work/skeleton/M11s]
+# a real pull (recording or ACT .log) against the strat, seat by seat: where each real player stood when the strat has that seat settled,
+# against the nearest spot the strat gives it over the seeds. DIFF = the static does it differently; ROLL = the spot follows a roll no
+# seed matched (raise --seeds); exit 1 on any DIFF
+dotnet $TOOL static-diff --scenario M11sOpenerScenario --replay datalogs/m11s/Network_30301_20260923.log --pull 3 [--role MainTank] [--seeds 1..12]
 # before bumping DataminingCommit: what the catalog's EnemyActions and the mitigation actions/statuses change between two
 # xivapi/ffxiv-datamining commits (name, cast, shape, range, width, recast, omen; status name, stacks); exit 1 when anything did
 dotnet $TOOL patch-diff --to <commit> [--from <commit, default the tests' DataminingCommit>]
