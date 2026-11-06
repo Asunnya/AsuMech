@@ -1,0 +1,137 @@
+{
+  "scenario": "TopP2PartySynergyScenario",
+  "strat": "NA pf",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "TopP2PartySynergyAi",
+        "time": 1,
+        "line": 18
+      },
+      "title": "Conga line",
+      "cue": "Omega-M on Omega",
+      "rule": "Go to 2m south-west of the centre.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "Go to 9m west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Go to 9m east of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to 4m south-east of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Go to 6m east of the centre."
+        },
+        "CasterDps": {
+          "rule": "Go to 6m west of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP2PartySynergyAi",
+        "time": 11,
+        "line": 19
+      },
+      "title": "Attack dodge",
+      "cue": "A tether lands on another player",
+      "rule": "Read the strat\u0027s AttackDodge: the spot follows a rule the rolls alone don\u0027t show (closest roll: AttackDir).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP2PartySynergyAi",
+        "time": 16,
+        "line": 20
+      },
+      "title": "Spread positions",
+      "cue": " resolves",
+      "rule": "Read the strat\u0027s SpreadPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthA).",
+      "roles": {
+        "MeleeDpsA": {
+          "rule": "Read the strat\u0027s SpreadPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: AttackDir)."
+        },
+        "CasterDps": {
+          "rule": "Read the strat\u0027s SpreadPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: AttackDir)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP2PartySynergyAi",
+        "time": 23,
+        "line": 21
+      },
+      "title": "Knockback positions",
+      "cue": "Optimized Fire III hits you",
+      "rule": "Read the strat\u0027s KnockbackPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthA).",
+      "roles": {
+        "MainTank": {
+          "rule": "Read the strat\u0027s KnockbackPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: Order)."
+        },
+        "OffTank": {
+          "rule": "Read the strat\u0027s KnockbackPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: AttackDir)."
+        },
+        "RegenHealer": {
+          "rule": "Go to 3m west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Read the strat\u0027s KnockbackPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: Glitch)."
+        },
+        "MeleeDpsA": {
+          "rule": "Read the strat\u0027s KnockbackPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: Glitch)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP2PartySynergyAi",
+        "time": 30,
+        "line": 22
+      },
+      "title": "Stack positions",
+      "cue": "Discharger resolves",
+      "rule": "Read the strat\u0027s StackPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: AttackDir).",
+      "roles": {
+        "MainTank": {
+          "rule": "Read the strat\u0027s StackPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthA)."
+        },
+        "PhysRangedDps": {
+          "rule": "Read the strat\u0027s StackPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthA)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "324285310725761",
+    "roleMap": {
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "ShieldHealer": "healer1",
+      "MeleeDpsA": "healer2",
+      "MeleeDpsB": "dps1",
+      "PhysRangedDps": "dps2",
+      "RegenHealer": "dps3",
+      "CasterDps": "dps4"
+    },
+    "steps": {
+      "TopP2PartySynergyAi@1": 0,
+      "TopP2PartySynergyAi@16": 8,
+      "TopP2PartySynergyAi@23": 11
+    },
+    "exampleSeed": 1
+  },
+  "draft": true
+}

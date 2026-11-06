@@ -1,0 +1,224 @@
+{
+  "scenario": "M9sFinalScenario",
+  "strat": "Toxic / Hector",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "M9sFinalAi",
+        "time": 0.5,
+        "line": 27
+      },
+      "title": "Uptime",
+      "cue": "Vamp Fatale appears",
+      "rule": "Go to 8m south-west of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 5m north of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 5m north-west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Go to 8m south-east of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Go to 5m west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to 5m east of the centre."
+        },
+        "CasterDps": {
+          "rule": "Go to 8m south-east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sFinalAi",
+        "time": 1.72,
+        "line": 28
+      },
+      "title": "After vamp Fatale appears",
+      "cue": "Vamp Fatale appears",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand on waymark A."
+        },
+        "OffTank": {
+          "rule": "Stand on waymark C."
+        },
+        "RegenHealer": {
+          "rule": "Stand near waymark 4, 12m south-west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Stand near waymark 3, 12m south-east of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand on waymark D."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand on waymark B."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand near waymark 1, 12m north-west of the centre."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark 2, 12m north-east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sFinalAi",
+        "time": 23.02,
+        "line": 33
+      },
+      "title": "After blast Beat hits you",
+      "cue": "Blast Beat hits you",
+      "rule": "Depends on HalfMoon: LeftFirst \u2192 near B (E 9m); RightFirst \u2192 near D (W 9m).",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sFinalAi",
+        "time": 28.02,
+        "line": 34
+      },
+      "title": "After half Moon resolves",
+      "cue": "Half Moon resolves",
+      "rule": "Depends on HalfMoon: LeftFirst \u2192 near D (W 9m); RightFirst \u2192 near B (E 9m).",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sFinalAi",
+        "time": 31,
+        "line": 36
+      },
+      "title": "Tanks north party south for big hardcore",
+      "cue": "Half Moon resolves",
+      "rule": "Stand near waymark C, 12m south of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand near waymark A, 11m north of the centre."
+        },
+        "OffTank": {
+          "rule": "Stand near waymark A, 11m north of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sFinalAi",
+        "time": 38.2,
+        "line": 37
+      },
+      "title": "After hardcore hits you",
+      "cue": "Hardcore hits you",
+      "rule": "Go to 10m south-west of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sFinalAi",
+        "time": 47.5,
+        "line": 39
+      },
+      "title": "After sanguine Scratch cast starts",
+      "cue": "Sanguine Scratch cast starts",
+      "rule": "Stand on waymark C.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sFinalAi",
+        "time": 50.46,
+        "line": 40
+      },
+      "title": "After sanguine Scratch resolves",
+      "cue": "Sanguine Scratch resolves",
+      "rule": "Go to 8m south of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sFinalAi",
+        "time": 52.88,
+        "line": 41
+      },
+      "title": "After sanguine Scratch resolves",
+      "cue": "Sanguine Scratch resolves",
+      "rule": "Go to 8m south-east of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sFinalAi",
+        "time": 55.28,
+        "line": 42
+      },
+      "title": "After sanguine Scratch resolves",
+      "cue": "Sanguine Scratch resolves",
+      "rule": "Go to 8m east of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sFinalAi",
+        "time": 57.66,
+        "line": 43
+      },
+      "title": "After sanguine Scratch resolves",
+      "cue": "Sanguine Scratch resolves",
+      "rule": "Stand on waymark B.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sFinalAi",
+        "time": 60.1,
+        "line": 44
+      },
+      "title": "After sanguine Scratch resolves",
+      "cue": "Sanguine Scratch resolves",
+      "rule": "Go to 3m south of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "c2L5iJfuYIWXk1v7",
+    "roleMap": {
+      "MeleeDpsB": "dps4",
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "PhysRangedDps": "dps1",
+      "CasterDps": "dps2",
+      "MeleeDpsA": "dps3"
+    },
+    "steps": {
+      "M9sFinalAi@50.46": 4,
+      "M9sFinalAi@60.1": 6
+    },
+    "exampleSeed": 1
+  },
+  "draft": true
+}

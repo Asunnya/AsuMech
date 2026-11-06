@@ -1,0 +1,94 @@
+{
+  "scenario": "M10sDeepAerialScenario",
+  "strat": "Hector (Parallel)",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "M10sDeepAerialAi",
+        "time": 0.3,
+        "line": 30
+      },
+      "title": "After red Hot appears",
+      "cue": "Red Hot appears",
+      "rule": "Depends on Side: -1 \u2192 N 8m; 1 \u2192 S 8m.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "Stand at the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Stand at the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sDeepAerialAi",
+        "from": 16.33,
+        "to": 59.09,
+        "line": 39
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
+      "roles": {
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: BossesNorth)."
+        },
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: BossesNorth)."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: BossesNorth)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sDeepAerialAi",
+        "from": 21.73,
+        "to": 64.490005,
+        "line": 40
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 8m east of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sDeepAerialAi",
+        "time": 67.22,
+        "line": 42
+      },
+      "title": "After scathing Steam resolves",
+      "cue": "Scathing Steam resolves",
+      "rule": "Stand at the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "syjvfhacdxz7awet\u002BqWue79_md0YHCrnW",
+    "roleMap": {
+      "CasterDps": "dps4",
+      "OffTank": "tank1",
+      "MainTank": "tank2",
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "MeleeDpsB": "dps1",
+      "MeleeDpsA": "dps2",
+      "PhysRangedDps": "dps3"
+    },
+    "steps": {
+      "M10sDeepAerialAi@67.22": 3
+    },
+    "exampleSeed": 1
+  },
+  "draft": true
+}

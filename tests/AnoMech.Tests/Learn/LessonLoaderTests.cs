@@ -74,6 +74,7 @@ public class LessonLoaderTests
         System.IO.Directory.CreateDirectory(System.IO.Path.Combine(dir, "Uwu"));
         var scenario = Catalog.Scenarios.OfType<UwuP1GarudaScenario>().Single();
         var embedded = LessonLoader.For(scenario, scenario.AiStrats[0])!;
+        var embeddedCount = LessonLoader.All.Count;
         try
         {
             var file = System.IO.Path.Combine(dir, "Uwu", "garuda.json");
@@ -86,7 +87,7 @@ public class LessonLoaderTests
             var shadowed = LessonLoader.For(scenario, scenario.AiStrats[0])!;
             Assert.That(shadowed.Steps.Single().Rule, Is.EqualTo("from the file"));
             Assert.That(LessonLoader.All.Count(l => l.Scenario == embedded.Scenario && l.Strat == embedded.Strat), Is.EqualTo(1));
-            Assert.That(LessonLoader.All.Count, Is.EqualTo(7));
+            Assert.That(LessonLoader.All.Count, Is.EqualTo(embeddedCount));
 
             System.IO.File.WriteAllText(file, System.IO.File.ReadAllText(file).Replace("from the file", "edited"));
             System.IO.File.SetLastWriteTimeUtc(file, System.DateTime.UtcNow.AddSeconds(5));
@@ -142,10 +143,15 @@ public class LessonLoaderTests
             var scenario = Catalog.Scenarios.Single(s => s.GetType().Name == lesson.Scenario);
             var stratIndex = scenario.AiStrats.ToList().FindIndex(a => a.Name == lesson.Strat);
             var recorder = new Recorder();
-            foreach (var role in System.Enum.GetValues<PartyRole>())
-                ScenarioRun.Execute(scenario.GetType(), stratIndex, 1, new ScenarioRunOptions { PlayerRole = role, Probe = p => p.World.Guidance ??= recorder });
-            var untriggered = lesson.Steps.Where(s => !s.Skip && !recorder.Orders.Any(o => s.Key.Matches(o.Key))).Select(s => s.Title).ToList();
-            Assert.That(untriggered, Is.Empty, lesson.Scenario);
+            List<string> Untriggered() => lesson.Steps.Where(s => !s.Skip && !recorder.Orders.Any(o => s.Key.Matches(o.Key))).Select(s => s.Title ?? MasteryStore.StepId(s.Key)).ToList();
+            // A step a roll decides may need more seeds than one to show up for some role.
+            foreach (var seed in new[] { 1, 2, 3, 4, 5, 6, 7, 8 })
+            {
+                foreach (var role in System.Enum.GetValues<PartyRole>())
+                    ScenarioRun.Execute(scenario.GetType(), stratIndex, seed, new ScenarioRunOptions { PlayerRole = role, Probe = p => p.World.Guidance ??= recorder });
+                if (Untriggered().Count == 0) break;
+            }
+            Assert.That(Untriggered(), Is.Empty, $"{lesson.Scenario} / {lesson.Strat}");
         }
     }
 }

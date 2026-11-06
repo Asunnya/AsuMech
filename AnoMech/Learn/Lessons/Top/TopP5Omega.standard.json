@@ -1,0 +1,113 @@
+{
+  "scenario": "TopP5OmegaScenario",
+  "strat": "Standard",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "TopP5OmegaAi",
+        "time": 20,
+        "line": 25
+      },
+      "title": "After  hits you",
+      "cue": " hits you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: OmegaAttacks).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5OmegaAi",
+        "time": 24,
+        "line": 26
+      },
+      "title": "After  hits you",
+      "cue": " hits you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: AttackDirections).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5OmegaAi",
+        "time": 32,
+        "line": 28
+      },
+      "title": "Hello world1 pos",
+      "cue": " hits you",
+      "rule": "Read the strat\u0027s HelloWorld1Pos: the spot follows a rule the rolls alone don\u0027t show (closest roll: AttackDirections).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5OmegaAi",
+        "time": 48,
+        "line": 34
+      },
+      "title": "Gather middle",
+      "cue": "Blaster cast starts",
+      "rule": "Stand at the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5OmegaAi",
+        "time": 53,
+        "line": 35
+      },
+      "title": "Hello world2 pos",
+      "cue": "A tether lands on ",
+      "rule": "Read the strat\u0027s HelloWorld2Pos: the spot follows a rule the rolls alone don\u0027t show (closest roll: AttackDirections).",
+      "roles": {
+        "MainTank": {
+          "rule": "Read the strat\u0027s HelloWorld2Pos: the spot follows a rule the rolls alone don\u0027t show (closest roll: OmegaAttacks)."
+        },
+        "PhysRangedDps": {
+          "rule": "Read the strat\u0027s HelloWorld2Pos: the spot follows a rule the rolls alone don\u0027t show (closest roll: BettleSpawnDirection)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5OmegaAi",
+        "time": 62,
+        "line": 36
+      },
+      "title": "Initial positions",
+      "cue": "Hello, Distant World hits you",
+      "rule": "Go to 7m south of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 5m north of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 5m north of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "078384491946761",
+    "roleMap": {
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "PhysRangedDps": "dps1",
+      "MeleeDpsA": "dps2",
+      "MeleeDpsB": "dps3",
+      "CasterDps": "dps4"
+    },
+    "steps": {
+      "TopP5OmegaAi@20": 4
+    },
+    "exampleSeed": 5
+  },
+  "draft": true
+}

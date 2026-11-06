@@ -1,0 +1,652 @@
+{
+  "scenario": "DsrP2ThordanScenario",
+  "strat": "NAUR (PF)",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 0.3,
+        "line": 54
+      },
+      "title": "After king Thordan appears",
+      "cue": "King Thordan appears",
+      "rule": "Stand near waymark B, 5m south of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand near waymark 2, 6m north of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 14,
+        "line": 55
+      },
+      "title": "After king Thordan appears",
+      "cue": "King Thordan appears",
+      "rule": "Stand on waymark A.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand on waymark 3."
+        },
+        "OffTank": {
+          "rule": "Stand near waymark D, 4m south-east of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand on waymark D."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand on waymark D."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark D, 6m south-east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 16.2,
+        "line": 56
+      },
+      "title": "After ascalon\u0027s Mercy Concealed resolves",
+      "cue": "Ascalon\u0027s Mercy Concealed resolves",
+      "rule": "Stand near waymark 2, 6m north of the centre.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 37.4,
+        "line": 58
+      },
+      "title": "Move at 37.4s",
+      "rule": "with SafeLineBearing as north: the south wall.",
+      "roles": {
+        "MainTank": {
+          "rule": "with SafeLineBearing as north: 12m south of the centre."
+        },
+        "OffTank": {
+          "rule": "with SafeLineBearing as north: 12m north of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "with SafeLineBearing as north: the north wall."
+        },
+        "MeleeDpsB": {
+          "rule": "with SafeLineBearing as north: the north wall."
+        },
+        "CasterDps": {
+          "rule": "with SafeLineBearing as north: the north wall."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "from": 45.6,
+        "to": 49.19,
+        "line": 64
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "with SafeLineBearing as north: 8m south of the centre.",
+      "roles": {
+        "OffTank": {
+          "rule": "with SafeLineBearing as north: 8m north of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 45.6,
+        "line": 66
+      },
+      "title": "After lightning Storm hits you",
+      "tolerance": 2,
+      "skip": true
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 50.18,
+        "line": 67
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeBearing).",
+      "roles": {
+        "MainTank": {
+          "rule": "with SafeLineBearing as north: 5m south-west of the centre."
+        },
+        "OffTank": {
+          "rule": "with SafeLineBearing as north: 5m north-east of the centre."
+        },
+        "RegenHealer": {
+          "rule": "with SafeLineBearing as north: 8m south-west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "with SafeLineBearing as north: 8m north-east of the centre."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 52.05,
+        "line": 68
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "with SafeLineBearing as north: 14m south-west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "with SafeLineBearing as north: 14m north-east of the centre."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 53,
+        "line": 70
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Defamations).",
+      "roles": {
+        "MainTank": {
+          "rule": "with ThordanBearing as north: 12m south-east of the centre."
+        },
+        "OffTank": {
+          "rule": "with ThordanBearing as north: 12m south-west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeBearing)."
+        },
+        "MeleeDpsA": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeBearing)."
+        },
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ThordanBearing)."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ThordanBearing)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 56.95,
+        "line": 71
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "with ThordanBearing as north: 9m south-east of the centre.",
+      "roles": {
+        "OffTank": {
+          "rule": "with ThordanBearing as north: 9m south-west of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 57.7,
+        "line": 72
+      },
+      "title": "After a tether lands on you",
+      "cue": "A tether lands on you",
+      "rule": "with ThordanBearing as north: the north wall.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 62,
+        "line": 73
+      },
+      "title": "After the Dragon\u0027s Rage resolves",
+      "cue": "the Dragon\u0027s Rage resolves",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeBearing).",
+      "roles": {
+        "MeleeDpsA": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: AwayGroup)."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Defamations)."
+        },
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ThordanBearing)."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ThordanBearing)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 67.3,
+        "line": 74
+      },
+      "title": "After holy Bladedance hits you",
+      "cue": "Holy Bladedance hits you",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand near waymark C, 6m south of the centre."
+        },
+        "OffTank": {
+          "rule": "Stand near waymark A, 6m west of the centre."
+        },
+        "RegenHealer": {
+          "rule": "Stand near waymark 3, 8m north of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Stand near waymark 2, 6m north of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand near waymark 1, 6m north-west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand on waymark 2."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand on waymark 3."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark 3, 6m north of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 106.3,
+        "line": 76
+      },
+      "title": "After a marker lands on another player",
+      "cue": "A marker lands on another player",
+      "rule": "When DashBearings includes 225 and FirstTowers includes (120,18), go to the north-east wall; when DashBearings leaves out 225 and FirstTowers leaves out (120,18), go to the north-east wall; when DashBearings includes 225 and FirstTowers leaves out (120,18), go to the south-east wall; when DashBearings leaves out 225 and FirstTowers includes (120,18), go to the north-west wall.",
+      "roles": {
+        "OffTank": {
+          "rule": "When DashBearings includes 225 and FirstTowers includes (120,18), go to the south-west wall; when DashBearings leaves out 225 and FirstTowers leaves out (120,18), go to the south-west wall; when DashBearings includes 225 and FirstTowers leaves out (120,18), go to the north-west wall; when DashBearings leaves out 225 and FirstTowers includes (120,18), go to the south-east wall."
+        },
+        "ShieldHealer": {
+          "rule": "When DashBearings includes 225 and FirstTowers includes (120,18), go to the south-west wall; when DashBearings leaves out 225 and FirstTowers leaves out (120,18), go to the south-west wall; when DashBearings includes 225 and FirstTowers leaves out (120,18), go to the north-west wall; when DashBearings leaves out 225 and FirstTowers includes (120,18), go to the south-east wall."
+        },
+        "MeleeDpsA": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeBearing)."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeBearing)."
+        },
+        "PhysRangedDps": {
+          "rule": "Depends on DarkKnightSpot: (-10.6,10.6) \u2192 NE wall; (10.6,-10.6) \u2192 NE wall; (-10.6,-10.6) \u2192 SE wall; (10.6,10.6) \u2192 SE wall."
+        },
+        "CasterDps": {
+          "rule": "Depends on DarkKnightSpot: (-10.6,10.6) \u2192 SW wall; (10.6,-10.6) \u2192 SW wall; (-10.6,-10.6) \u2192 NW wall; (10.6,10.6) \u2192 NW wall."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "from": 117.22,
+        "to": 118.47,
+        "line": 78
+      },
+      "title": "After bright Flare resolves",
+      "cue": "Bright Flare resolves",
+      "rule": "If you are in AwayGroup: Go to the south wall; otherwise: Go to the north wall.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 120.6,
+        "line": 80
+      },
+      "title": "After  resolves",
+      "cue": " resolves",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "When DashBearings leaves out 45 and MeteorTargets leaves out H2, go to 10m north of the centre; when DashBearings leaves out 45 and MeteorTargets includes H2, go to 10m east of the centre; when DashBearings includes 45 and MeteorTargets includes H2, go to 10m north of the centre."
+        },
+        "OffTank": {
+          "rule": "When DashBearings leaves out 45, go to 10m south of the centre; when DashBearings includes 45, go to 10m east of the centre."
+        },
+        "RegenHealer": {
+          "rule": "Go to 10m west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "When DashBearings leaves out 45 and MeteorTargets leaves out H2, go to 10m east of the centre; when DashBearings leaves out 45 and MeteorTargets includes H2, go to 10m north of the centre; when DashBearings includes 45 and MeteorTargets includes H2, go to 10m south of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "If you are in MeteorTargets: Go to 10m south of the centre; otherwise: Go to 10m west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "When DashBearings leaves out 270 and BroadSwingFacing leaves out -0.1, go to 10m east of the centre; when DashBearings leaves out 270 and BroadSwingFacing includes -0.1, go to 10m north of the centre; when DashBearings includes 270 and BroadSwingFacing leaves out -0.1, go to 10m south of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "When BroadSwingFacing leaves out -0.1, go to 10m north of the centre; when BroadSwingFacing includes -0.1, go to 10m east of the centre."
+        },
+        "CasterDps": {
+          "rule": "When DashBearings leaves out 270 and MeteorTargets leaves out M1, go to 10m south of the centre; when DashBearings leaves out 270 and MeteorTargets includes M1, go to 10m west of the centre; when DashBearings includes 270 and MeteorTargets leaves out M1, go to 10m east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 132.4,
+        "line": 81
+      },
+      "title": "After ice Resistance Down II on you",
+      "cue": "Ice Resistance Down II on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Defamations).",
+      "roles": {
+        "OffTank": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeBearing)."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: MeteorTargets)."
+        },
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: StackTarget)."
+        },
+        "CasterDps": {
+          "rule": "When DashBearings leaves out 180 and MeteorTargets leaves out M2, go to the south-west wall; when DashBearings includes 180 and MeteorTargets includes M2, go to the south wall; when DashBearings leaves out 180 and MeteorTargets includes M2, go to the east wall; when DashBearings includes 180 and MeteorTargets leaves out M2, stand near waymark A, 5m south-west of the centre."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 136.5,
+        "line": 82
+      },
+      "title": "After ice Resistance Down II on you",
+      "cue": "Ice Resistance Down II on you",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "When MeteorTargets leaves out M1, go to the west wall; when MeteorTargets includes M1, go to 2m north-west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "When FirstTowers leaves out (0,18), go to the east wall; when FirstTowers includes (0,18), go to 2m south-east of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "When AwayGroup leaves out OT, go to 2m north-west of the centre; when AwayGroup includes OT, go to the west wall."
+        },
+        "MeleeDpsB": {
+          "rule": "When Stackers leaves out H2, go to 2m south-east of the centre; when Stackers includes H2, go to the east wall."
+        },
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: DashBearings has 180)."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: StackTarget)."
+        },
+        "MainTank": {
+          "rule": "When DashBearings includes 135 and BroadSwingFacing leaves out 0.25, go to the north wall; when DashBearings leaves out 135 and BroadSwingFacing leaves out 0.25, go to the east wall; when DashBearings leaves out 135 and BroadSwingFacing includes 0.25, go to 2m north-east of the centre."
+        },
+        "OffTank": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ThordanBearing)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "from": 136.85,
+        "to": 143.98,
+        "line": 87
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to the north wall."
+        },
+        "OffTank": {
+          "rule": "Go an eighth turn counterclockwise of SanctityThordanSpot, 19m out."
+        },
+        "CasterDps": {
+          "rule": "Go to the south wall."
+        },
+        "PhysRangedDps": {
+          "rule": "Go a quarter turn clockwise of SanctityThordanSpot, 19m out."
+        },
+        "ShieldHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ThordanBearing)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 138.7,
+        "line": 83
+      },
+      "title": "After ice Resistance Down II on you",
+      "cue": "Ice Resistance Down II on you",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MeleeDpsA": {
+          "rule": "If you are in StackTarget: Go to the north-west wall; otherwise: Go to 2m north-west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "When DashBearings leaves out 45, go to 2m south-east of the centre; when DashBearings includes 45, go to the south-east wall."
+        },
+        "PhysRangedDps": {
+          "rule": "If you are in Stackers: Go to the north-east wall; otherwise: Go to 2m north-east of the centre."
+        },
+        "CasterDps": {
+          "rule": "When DashBearings leaves out 180, go to the south-west wall; when DashBearings includes 180, go to 2m south-west of the centre."
+        },
+        "MainTank": {
+          "rule": "If you are in FirstPlungeTarget: Go to 2m north-east of the centre; otherwise: Go to the north-east wall."
+        },
+        "OffTank": {
+          "rule": "When DashBearings includes 135, go to 2m south-west of the centre; when DashBearings leaves out 135, go to the south-west wall."
+        },
+        "RegenHealer": {
+          "rule": "If you are in AwayGroup: Go to 2m north-west of the centre; otherwise: Go to the north-west wall."
+        },
+        "ShieldHealer": {
+          "rule": "If you are in SecondPlungeTarget: Go to the south-east wall; otherwise: Go to 2m south-east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 145.41,
+        "line": 89
+      },
+      "title": "After holy comet appears",
+      "cue": "holy comet appears",
+      "rule": "Go to the north wall.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to the south wall."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
+        },
+        "PhysRangedDps": {
+          "rule": "Go to the south wall."
+        },
+        "ShieldHealer": {
+          "rule": "with GuerriqueBearing as north: the east wall."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 148.3,
+        "line": 90
+      },
+      "title": "After conviction resolves",
+      "tolerance": 2.5,
+      "skip": true
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 150.5,
+        "line": 92
+      },
+      "title": "After conviction resolves",
+      "cue": "Conviction resolves",
+      "rule": "Go to 4m north of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 13m north of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 177.25,
+        "line": 93
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 11m north of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 180.95,
+        "line": 94
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Depends on BroadSwingRightFirst: [false,true] \u2192 at 3; [true,true] \u2192 at 2; [true,false] \u2192 at 2; [false,false] \u2192 at 3.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 185.65,
+        "line": 95
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 11m north of the centre.",
+      "roles": {
+        "MeleeDpsA": {
+          "rule": "When BroadSwingFacing leaves out -0.1, stand near waymark 2, 11m north of the centre; when BroadSwingFacing includes -0.1, stand near waymark 3, 10m north of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "When BroadSwingFacing leaves out -0.1, stand near waymark 2, 10m north of the centre; when BroadSwingFacing includes -0.1, stand near waymark 3, 9m north of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 189.35,
+        "line": 96
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Depends on BroadSwingRightFirst: [false,true] \u2192 near 2 (N 5m); [true,true] \u2192 N 12m; [true,false] \u2192 near 2 (N 5m); [false,false] \u2192 N 12m.",
+      "roles": {
+        "MainTank": {
+          "rule": "Depends on BroadSwingRightFirst: [false,true] \u2192 near 2 (N 6m); [true,true] \u2192 N 13m; [true,false] \u2192 near 2 (N 6m); [false,false] \u2192 N 12m."
+        },
+        "OffTank": {
+          "rule": "Depends on BroadSwingRightFirst: [false,true] \u2192 near 2 (N 6m); [true,true] \u2192 N 12m; [true,false] \u2192 near 2 (N 6m); [false,false] \u2192 N 12m."
+        },
+        "RegenHealer": {
+          "rule": "Depends on BroadSwingRightFirst: [false,true] \u2192 near 3 (N 6m); [true,true] \u2192 N 12m; [true,false] \u2192 near 3 (N 6m); [false,false] \u2192 N 12m."
+        },
+        "MeleeDpsB": {
+          "rule": "Depends on BroadSwingRightFirst: [false,true] \u2192 near 3 (N 5m); [true,true] \u2192 N 12m; [true,false] \u2192 near 3 (N 5m); [false,false] \u2192 N 12m."
+        },
+        "PhysRangedDps": {
+          "rule": "Depends on BroadSwingRightFirst: [false,true] \u2192 near 2 (N 5m); [true,true] \u2192 N 12m; [true,false] \u2192 near 2 (N 5m); [false,false] \u2192 N 11m."
+        },
+        "CasterDps": {
+          "rule": "Depends on BroadSwingRightFirst: [false,true] \u2192 near 2 (N 5m); [true,true] \u2192 N 11m; [true,false] \u2192 near 2 (N 5m); [false,false] \u2192 near 3 (N 11m)."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "NDX-6bF2djrDMB-v\u002BSrc8CpFxCAUUuZEM",
+    "roleMap": {
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "PhysRangedDps": "dps1",
+      "MeleeDpsA": "dps2",
+      "CasterDps": "dps3",
+      "MeleeDpsB": "dps4"
+    },
+    "steps": {
+      "DsrP2ThordanAi@0.3": 0
+    },
+    "exampleSeed": 1
+  },
+  "draft": true
+}

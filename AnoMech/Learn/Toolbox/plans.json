@@ -83,11 +83,15 @@
   "DsrP2ThordanScenario": [
     {
       "url": "https://raidplan.io/plan/NDX-6bF2djrDMB-v",
-      "credits": "NAUR (Strength of the Ward)"
+      "credits": "NAUR (Start + Strength of the Ward)"
+    },
+    {
+      "url": "https://raidplan.io/plan/2CYKJu6IHzBdolZu",
+      "credits": "NAUR (Sanctity pt. 1, DRK relative dodges)"
     },
     {
       "url": "https://raidplan.io/plan/Src8CpFxCAUUuZEM",
-      "credits": "NAUR (Sanctity of the Ward)"
+      "credits": "NAUR (Sanctity pt. 2, meteors)"
     }
   ],
   "DsrP3NidhoggScenario": [
@@ -306,8 +310,8 @@
   ],
   "FruP3ApocalypseScenario": [
     {
-      "url": "https://raidplan.io/plan/LZwXKA645GGmjEO2",
-      "credits": "Materia Raiding (materiaraiding.pages.dev/ultimate/fru)"
+      "url": "https://raidplan.io/plan/gU44027CtpmKs-sC",
+      "credits": "NAUR LesBin (Sextuple Apoc, G1 adjust static spreads)"
     }
   ],
   "FruP4DarklitDragonsongScenario": [
@@ -355,7 +359,12 @@
   "TopP2PartySynergyScenario": [
     {
       "url": "https://ff14.toolboxgaming.space/?id=324285310725761&preview=1",
-      "credits": "NAUR (Phase 2 toolbox, archive)",
+      "credits": "NAUR (Phase 2 toolbox)",
+      "strat": "NA pf"
+    },
+    {
+      "url": "[stgy:aWYVmREYBkoTECOsYxwInhynMvdZ31IPHphrDNhCva-Y0E5pnccin-DTHA9PcV04DuMUkGBIoOXoJJCLZYjTDGyLHYj1EjVrPsR8ca0pmyAa7K0IBFQEXFASo1zbYG4lM6Qgzofspgf6nc3itfvcjNYKp4d6L9R8nq4KcT4P1vCFkaLTVEjkAmD+gR0Jz0BJHF4mPb3h7Ho3yep9x6PUplm6w4DpJI+s1L5yncsyeNJT-NTw4duXtScujbIOWCQ7smUYe8Z3m6wR6GC5hMLq+jw2wTZIBLF1rrwU6PJoBWC9-gJCAE7220BXfs7qq9-acArmoGK8LkZUth349XYyrhy0MuZ7Cj0iPLrpENJu27AFJeyze+cxbnWE+71GeISeRfUgRVNFwuG0NB18]",
+      "credits": "NAUR Strategy Board (Monitors)",
       "strat": "NA pf"
     }
   ],
@@ -369,12 +378,32 @@
     {
       "url": "https://ff14.toolboxgaming.space/?id=107380954136761&preview=1",
       "credits": "NAUR / Materia (standard)"
+    },
+    {
+      "url": "[stgy:a-56vxyw+Uwm3PyeNbQMxFypxsWJm+KIY0K738YNWS+xAKZOlLUpM2FJXIXUoQR4-WNRT9DZ97ZUwZqcjxfzaDCoXCXWCivH1trvVMFBQb9zWMbkxb8nEbQVMIympVPQD8di3yLEhP-NeEGUMhfLQJF42+icoxbp4YwA66GHRepwGTdL-xvcRvVt23tF-W0XD9bki-HeTGsVDzOeHZFA8UujQcaxG3mNL8Mcf0iKsXSXgEenrABHKegu+K+I94XLYKQ4ReLzjCIXL9GDGzKy6t9J9AYlYucIbpgY7JSX5YskrfzLxfER0bRTISXHr4ZN5LWzR1cdCIQUCN2H0]",
+      "credits": "NAUR Strategy Board (Sigma far glitch)"
+    },
+    {
+      "url": "[stgy:aS74JQwzYRN3yMIgdXI--CI+hmi5372BqG2ryHqdimVQ4CFLDwR+-jCTzK5A75h4jdptxKECKvfee3F83QL6MYijxr0RZFGGM7MBDf2joEToedPgVdJDHmoPD5arW5plPtnm-bj12k0t+i6Ba3jtUuDeGpRR0JNzuCqaQDB+fB4yDAORid91kspPLe0NY32BYoESDcoN0PA52Na-qWmhgil9QXDSD-+9dV06ih4wpfN11ROQoM3I0KCgrcVP4A2HbLeHGZ1j+Xksk6AFBunB4Fk+anv+oZBOWy8MSFUCfzC1i5I0Ch7-pDuY3HWgK1V7EV+kdVTUKfkUPAd+b3HJaK72rVaR]",
+      "credits": "NAUR Strategy Board (Sigma mid glitch)"
+    },
+    {
+      "url": "[stgy:aDQ36EUP9jto-DDFhCOkJbiXlTeOfkKB-k7HVQFrLOf45yO1VZgoQc0mcTN0E0VtD+WGYbpKkWgEPxc2os2xRpq9o3osGMTUJAlrzPzkwZ9fpSYWyGljVr1Naa-I-FUryXhcTPqUTcd9m5wx4pc+YLJoXyZvyvw05fGYJJiy6nu5QjCb2hcj2svYAAiNgMZf-QRe9udhmuyQ7E-QlVhVf2wiUvkbz6GNqL1j3G0-LdEyHjFHR149BI1j6pMM9aB2aQfI51R16FHINyDsM28LkNfgGAsvmUk3pSpiAxwgIbSuzxX+WeKQb69rtmXtwWOxwWbioCf2Sld3Cdu64tuj7TMRsskvDY8tuxPZAkP7CL+rt13EBv6NCAoa3fonfe6aFVBp1DKt2ermiUu-guS1KjALkRU8qXUOEZPIeMCBSysqBfn2AsMnnCuzPTBaNdFS-4CtPSdyP5VDts1I1Haz0295C8wLkPjlTMANTxx3aznFiyGGBcC6DsY4143FBbYzDfAxlL]",
+      "credits": "NAUR Strategy Board (Sigma pt. 2)"
     }
   ],
   "TopP5OmegaScenario": [
     {
       "url": "https://ff14.toolboxgaming.space/?id=078384491946761&preview=1",
       "credits": "NAUR / Materia (standard)"
+    },
+    {
+      "url": "[stgy:am6PGqRVdgdyj9m9IVmMyLwBqXLhx0iMOnonYhlsDd9KKAJOnVV3J3FqnVnNcoDa0yOOqwMWBl8aVG8YybJ1+IORofRPZwKPOf0N90pcrNO75TKcA-W1m-5KKU9M2fqMemVuTMS5dPIgRcUCHC1EcZeICZTRrLPbAsNu3G5KS7W5DyUGKd8Z5OOnTeTovUaN5qG0Gf5FQPLjQd4D8MUebAZ0zXXXjAsosq4GHzjVwuR6DHb399as3Oh5kPClwR0rXBHaAb732zCSe4xqU2BiDYizSTud98zJKzK6MuKH0BPnMb9KPhr3zHsTqp+tjIN8ntbLVAc4oJPJL4sl-Dik5gDrcHyrluuH7TxfU7m3BbbKEMHRnupXLPMosy73fWzUMDYdGh-WP4spa2HIRvYKwuTG4X739M-IxsDQuL-ojhvwLAlMy8KBfUf25nnY181M0isMymd3+tnsB5XBQ84nw45X6VKpzYaStR1w+59iJDow1uDS-eFdVYLXCh2I3Wazw+5WTt-mpg34XjLi5F]",
+      "credits": "NAUR Strategy Board (Omega pt. 1)"
+    },
+    {
+      "url": "[stgy:aCkFO4KUgqDWJoCovdCsWnRTBZxnaaObF-ToDS6Jnu0AUmwr1XxEM74HWBKTybF2nHNtQBkAOS2dunEVQDbVuRwhQKuhjJR-DIbOO1a1IrUUqCbUpQIofQGJBjlUcg9yZx4pq5X7GFqOjEgA1SxI7aSHwtjrw+i3vvczDZhUwZS9Qw2dAsvI2gLk6rF0ez2cQiLqX2oOtvhJp0dcGNxTHQLwx6BgAU78ti65WVn57w17B7jSdU0Hs4lRaR0LESygnxddfsTiD2szA7NbzrQWv+JuXSM1a9ITxZgyESgA5HrMYLxh7u9+PJlKhoByuz7PGRxp2Y1lWXDuw2-ApsJbYaZjshoBcv2i2XuhNxPTs41JFlyexxOHRJY2k5RhbWIJschYUJoCKQez8Fjv+Aul173LRZdN4rrrmBHcEgGHP6-vCsbj3FgvsSetwz55n5BtisoGnVsVdnwgmp28jOiH-zQacqk57sFaexERGz++AwhonFXi+q14+i75X8O8n8cOojTpG4I0tEA2lVZULDiIAYK8ZOQw6Wy9KHWa9fse]",
+      "credits": "NAUR Strategy Board (Omega pt. 2)"
     }
   ],
   "TopP6WaveCannon2Scenario": [
@@ -443,6 +472,12 @@
     {
       "url": "https://raidplan.io/plan/ChcTBFAcFMZKFVKo",
       "credits": "Kefka Says Gazes Mid by Dank"
+    }
+  ],
+  "DsrP2MeteorsScenario": [
+    {
+      "url": "https://raidplan.io/plan/Src8CpFxCAUUuZEM",
+      "credits": "NAUR (Sanctity pt. 2, meteors)"
     }
   ]
 }

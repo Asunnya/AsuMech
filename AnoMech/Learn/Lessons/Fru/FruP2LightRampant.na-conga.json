@@ -1,0 +1,476 @@
+{
+  "scenario": "FruP2LightRampantScenario",
+  "strat": "NA \u00B7 Conga",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "FruP2LightRampantAi",
+        "time": 3,
+        "line": 27
+      },
+      "title": "After light Rampant cast starts",
+      "cue": "Light Rampant cast starts",
+      "rule": "Go to 6m north of the centre.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "Stand near waymark 1, 7m north-west of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Go to 6m south of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand near waymark 3, 7m south-east of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand near waymark 4, 7m south-west of the centre."
+        },
+        "CasterDps": {
+          "rule": "Go to 6m south of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP2LightRampantAi",
+        "time": 9.75,
+        "line": 28
+      },
+      "title": "After a marker lands on you",
+      "cue": "A marker lands on you",
+      "rule": "Go to the west wall.",
+      "roles": {
+        "MeleeDpsA": {
+          "rule": "Depends on Pairs: true \u2192 E wall; false \u2192 W wall."
+        },
+        "OffTank": {
+          "rule": "Go to the east wall."
+        },
+        "MainTank": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: InitiallySteeped has MeleeDpsA)."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to the east wall."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP2LightRampantAi",
+        "time": 10.75,
+        "line": 29
+      },
+      "title": "After a tether lands on you",
+      "cue": "A tether lands on you",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 7m north-east of the centre."
+        },
+        "OffTank": {
+          "rule": "If you are in Weights: Go to 7m south-east of the centre; otherwise: Go to 7m north-east of the centre."
+        },
+        "RegenHealer": {
+          "rule": "Depends on NorthOrbsFirst and Weights has MeleeDpsB: false \u0026 yes \u2192 NW 7m; true \u0026 no \u2192 NW 7m; false \u0026 no \u2192 near A (N 7m)."
+        },
+        "ShieldHealer": {
+          "rule": "When InitiallySteeped includes H1 and Weights leaves out MT, stand near waymark A, 7m north of the centre; when InitiallySteeped leaves out H1 and Weights leaves out MT, go to 7m north-east of the centre; when InitiallySteeped leaves out H1 and Weights includes MT, stand near waymark A, 7m north of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "When Weights includes OT, stand near waymark C, 7m south of the centre; when Weights leaves out OT, go to 7m south-east of the centre."
+        },
+        "CasterDps": {
+          "rule": "Depends on InitiallySteeped has CasterDps and Pairs: no \u0026 true \u2192 SW 7m; no \u0026 false \u2192 near C (S 7m); yes \u0026 true \u2192 near C (S 7m)."
+        },
+        "MeleeDpsA": {
+          "rule": "When Chained leaves out OT, stand near waymark C, 7m south of the centre; when Chained includes OT, go to 7m south-east of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "When InitiallySteeped includes H1 and Weights leaves out OT, go to 7m south-west of the centre; when InitiallySteeped leaves out H1 and Weights leaves out OT, go to 7m north-west of the centre; when InitiallySteeped leaves out H1 and Weights includes OT, go to 7m south-west of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP2LightRampantAi",
+        "time": 12.3,
+        "line": 30
+      },
+      "title": "After a tether lands on you",
+      "cue": "A tether lands on you",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to the north-west wall."
+        },
+        "OffTank": {
+          "rule": "If you are in Weights: Go to the south-east wall; otherwise: Go to the north-west wall."
+        },
+        "RegenHealer": {
+          "rule": "Depends on NorthOrbsFirst and Weights has MeleeDpsB: false \u0026 yes \u2192 NE wall; true \u0026 no \u2192 NE wall; false \u0026 no \u2192 S wall."
+        },
+        "ShieldHealer": {
+          "rule": "When InitiallySteeped includes H1 and Weights leaves out MT, go to the south wall; when InitiallySteeped leaves out H1 and Weights leaves out MT, go to the north-west wall; when InitiallySteeped leaves out H1 and Weights includes MT, go to the south wall."
+        },
+        "MeleeDpsB": {
+          "rule": "When Weights includes OT, go to the north wall; when Weights leaves out OT, go to the south-east wall."
+        },
+        "CasterDps": {
+          "rule": "Depends on InitiallySteeped has CasterDps and Pairs: no \u0026 true \u2192 SW wall; no \u0026 false \u2192 N wall; yes \u0026 true \u2192 N wall."
+        },
+        "MeleeDpsA": {
+          "rule": "When Chained leaves out OT, go to the north wall; when Chained includes OT, go to the south-east wall."
+        },
+        "PhysRangedDps": {
+          "rule": "When InitiallySteeped includes H1 and Weights leaves out OT, go to the south-west wall; when InitiallySteeped leaves out H1 and Weights leaves out OT, go to the north-east wall; when InitiallySteeped leaves out H1 and Weights includes OT, go to the south-west wall."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP2LightRampantAi",
+        "from": 15.55,
+        "to": 20.289999,
+        "line": 34
+      },
+      "title": "After a marker lands on you",
+      "cue": "A marker lands on you",
+      "rule": "Stand near waymark D, 13m west of the centre.",
+      "roles": {
+        "MeleeDpsA": {
+          "rule": "Depends on Pairs: true \u2192 near B (E 13m); false \u2192 near D (W 13m)."
+        },
+        "OffTank": {
+          "rule": "Stand near waymark B, 13m east of the centre."
+        },
+        "MainTank": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: InitiallySteeped has MeleeDpsA)."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand near waymark B, 13m east of the centre."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP2LightRampantAi",
+        "time": 19.1,
+        "line": 39
+      },
+      "title": "After lightsteeped on you",
+      "cue": "Lightsteeped on you",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to the north wall."
+        },
+        "OffTank": {
+          "rule": "If you are in Weights: Go to the south wall; otherwise: Go to the north wall."
+        },
+        "RegenHealer": {
+          "rule": "Depends on NorthOrbsFirst and Weights has MeleeDpsB: false \u0026 yes \u2192 N wall; true \u0026 no \u2192 N wall; false \u0026 no \u2192 S wall."
+        },
+        "ShieldHealer": {
+          "rule": "When InitiallySteeped includes H1 and Weights leaves out MT, go to the south wall; when InitiallySteeped leaves out H1 and Weights leaves out MT, go to the north wall; when InitiallySteeped leaves out H1 and Weights includes MT, go to the south wall."
+        },
+        "MeleeDpsB": {
+          "rule": "When Weights includes OT, go to the north wall; when Weights leaves out OT, go to the south wall."
+        },
+        "CasterDps": {
+          "rule": "Depends on InitiallySteeped has CasterDps and Pairs: no \u0026 true \u2192 S wall; no \u0026 false \u2192 N wall; yes \u0026 true \u2192 N wall."
+        },
+        "MeleeDpsA": {
+          "rule": "When Chained leaves out OT, go to the north wall; when Chained includes OT, go to the south wall."
+        },
+        "PhysRangedDps": {
+          "rule": "When InitiallySteeped includes H1 and Weights leaves out OT, go to the south wall; when InitiallySteeped leaves out H1 and Weights leaves out OT, go to the north wall; when InitiallySteeped leaves out H1 and Weights includes OT, go to the south wall."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP2LightRampantAi",
+        "time": 21.869999,
+        "line": 37
+      },
+      "title": "After luminous Hammer hits you",
+      "cue": "Luminous Hammer hits you",
+      "rule": "Go to the north wall.",
+      "roles": {
+        "MeleeDpsA": {
+          "rule": "Depends on Pairs: true \u2192 S wall; false \u2192 N wall."
+        },
+        "OffTank": {
+          "rule": "Go to the south wall."
+        },
+        "MainTank": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: InitiallySteeped has MeleeDpsA)."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to the south wall."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP2LightRampantAi",
+        "time": 23.3,
+        "line": 40
+      },
+      "title": "After lightsteeped on you",
+      "cue": "Lightsteeped on you",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to the north wall."
+        },
+        "OffTank": {
+          "rule": "If you are in Weights: Go to the south wall; otherwise: Go to the north wall."
+        },
+        "RegenHealer": {
+          "rule": "Depends on NorthOrbsFirst and Weights has MeleeDpsB: false \u0026 yes \u2192 N wall; true \u0026 no \u2192 N wall; false \u0026 no \u2192 S wall."
+        },
+        "ShieldHealer": {
+          "rule": "When InitiallySteeped includes H1 and Weights leaves out MT, go to the south wall; when InitiallySteeped leaves out H1 and Weights leaves out MT, go to the north wall; when InitiallySteeped leaves out H1 and Weights includes MT, go to the south wall."
+        },
+        "MeleeDpsB": {
+          "rule": "When Weights includes OT, go to the north wall; when Weights leaves out OT, go to the south wall."
+        },
+        "CasterDps": {
+          "rule": "Depends on InitiallySteeped has CasterDps and Pairs: no \u0026 true \u2192 S wall; no \u0026 false \u2192 N wall; yes \u0026 true \u2192 N wall."
+        },
+        "MeleeDpsA": {
+          "rule": "When Chained leaves out OT, go to the north wall; when Chained includes OT, go to the south wall."
+        },
+        "PhysRangedDps": {
+          "rule": "When InitiallySteeped includes H1 and Weights leaves out OT, go to the south wall; when InitiallySteeped leaves out H1 and Weights leaves out OT, go to the north wall; when InitiallySteeped leaves out H1 and Weights includes OT, go to the south wall."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP2LightRampantAi",
+        "time": 25.05,
+        "line": 41
+      },
+      "title": "After lightsteeped on you",
+      "cue": "Lightsteeped on you",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "Depends on InitiallySteeped has MeleeDpsA and NorthOrbsFirst: yes \u0026 false \u2192 N wall; yes \u0026 true \u2192 NE wall; no \u0026 false \u2192 N wall; no \u0026 true \u2192 S wall."
+        },
+        "OffTank": {
+          "rule": "Depends on NorthOrbsFirst and Chained has MainTank: false \u0026 yes \u2192 SW wall; true \u0026 yes \u2192 S wall; true \u0026 no \u2192 NE wall; false \u0026 no \u2192 SW wall."
+        },
+        "RegenHealer": {
+          "rule": "Depends on NorthOrbsFirst and Weights has MeleeDpsB: false \u0026 yes \u2192 N wall; true \u0026 no \u2192 NE wall; false \u0026 no \u2192 SW wall."
+        },
+        "ShieldHealer": {
+          "rule": "Depends on NorthOrbsFirst and Weights has MeleeDpsB: false \u0026 yes \u2192 SW wall; true \u0026 no \u2192 S wall; false \u0026 no \u2192 N wall."
+        },
+        "MeleeDpsA": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: WeightSlot)."
+        },
+        "MeleeDpsB": {
+          "rule": "Depends on NorthOrbsFirst and Chained has PhysRangedDps: false \u0026 no \u2192 N wall; true \u0026 yes \u2192 S wall; false \u0026 yes \u2192 SW wall."
+        },
+        "PhysRangedDps": {
+          "rule": "Depends on InitiallySteeped has OffTank and NorthOrbsFirst: yes \u0026 false \u2192 N wall; no \u0026 true \u2192 S wall; no \u0026 false \u2192 SW wall; yes \u0026 true \u2192 S wall."
+        },
+        "CasterDps": {
+          "rule": "Depends on InitiallySteeped has OffTank and NorthOrbsFirst: yes \u0026 false \u2192 SW wall; no \u0026 true \u2192 NE wall; no \u0026 false \u2192 N wall; yes \u0026 true \u2192 NE wall."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP2LightRampantAi",
+        "time": 27.2,
+        "line": 42
+      },
+      "title": "After lightsteeped on you",
+      "cue": "Lightsteeped on you",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "Depends on InitiallySteeped has MeleeDpsA and NorthOrbsFirst: yes \u0026 false \u2192 NE wall; yes \u0026 true \u2192 N wall; no \u0026 false \u2192 NE wall; no \u0026 true \u2192 SW wall."
+        },
+        "OffTank": {
+          "rule": "Depends on NorthOrbsFirst and Chained has MainTank: false \u0026 yes \u2192 S wall; true \u0026 yes \u2192 SW wall; true \u0026 no \u2192 N wall; false \u0026 no \u2192 S wall."
+        },
+        "RegenHealer": {
+          "rule": "Depends on NorthOrbsFirst and Weights has MeleeDpsB: false \u0026 yes \u2192 NE wall; true \u0026 no \u2192 N wall; false \u0026 no \u2192 S wall."
+        },
+        "ShieldHealer": {
+          "rule": "Depends on NorthOrbsFirst and Weights has MeleeDpsB: false \u0026 yes \u2192 S wall; true \u0026 no \u2192 SW wall; false \u0026 no \u2192 NE wall."
+        },
+        "MeleeDpsA": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: WeightSlot)."
+        },
+        "MeleeDpsB": {
+          "rule": "Depends on NorthOrbsFirst and Chained has PhysRangedDps: false \u0026 no \u2192 NE wall; true \u0026 yes \u2192 SW wall; false \u0026 yes \u2192 S wall."
+        },
+        "PhysRangedDps": {
+          "rule": "Depends on InitiallySteeped has OffTank and NorthOrbsFirst: yes \u0026 false \u2192 NE wall; no \u0026 true \u2192 SW wall; no \u0026 false \u2192 S wall; yes \u0026 true \u2192 SW wall."
+        },
+        "CasterDps": {
+          "rule": "Depends on InitiallySteeped has OffTank and NorthOrbsFirst: yes \u0026 false \u2192 S wall; no \u0026 true \u2192 N wall; no \u0026 false \u2192 NE wall; yes \u0026 true \u2192 N wall."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP2LightRampantAi",
+        "time": 30.15,
+        "line": 43
+      },
+      "title": "After lightsteeped on you",
+      "cue": "Lightsteeped on you",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "Depends on InitiallySteeped has MainTank and NorthOrbsFirst: no \u0026 false \u2192 centre; no \u0026 true \u2192 centre; yes \u0026 false \u2192 NE 6m; yes \u0026 true \u2192 near A (N 7m)."
+        },
+        "OffTank": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: InitiallySteeped has OffTank)."
+        },
+        "RegenHealer": {
+          "rule": "When InitiallySteeped includes H1 and Weights includes M2, go to 6m north-east of the centre; when InitiallySteeped includes H1 and Weights leaves out M2, stand near waymark A, 7m north of the centre; when InitiallySteeped leaves out H1 and Weights leaves out M2, stand at the centre."
+        },
+        "ShieldHealer": {
+          "rule": "When InitiallySteeped leaves out H2 and Chained includes H2, stand at the centre; when InitiallySteeped includes H2 and Chained leaves out H2, go to 6m north-east of the centre; when InitiallySteeped includes H2 and Chained includes H2, go to 6m south-west of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: WeightSlot)."
+        },
+        "MeleeDpsB": {
+          "rule": "When InitiallySteeped leaves out MT and Weights includes M2, go to 6m north-east of the centre; when InitiallySteeped leaves out MT and Weights leaves out M2, go to 6m south-west of the centre; when InitiallySteeped includes MT and Weights leaves out M2, stand at the centre; when InitiallySteeped includes MT and Weights includes M2, stand near waymark C, 7m south of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: InitiallySteeped has PhysRangedDps)."
+        },
+        "CasterDps": {
+          "rule": "If you are in InitiallySteeped: Stand near waymark A, 7m north of the centre; otherwise: Stand at the centre."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP2LightRampantAi",
+        "time": 33.85,
+        "line": 44
+      },
+      "title": "After bright Hunger resolves",
+      "cue": "Bright Hunger resolves",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "Depends on Pairs: true \u2192 near 1 (NW 7m); false \u2192 near A (N 8m)."
+        },
+        "OffTank": {
+          "rule": "Depends on Pairs: true \u2192 near 2 (NE 7m); false \u2192 near B (E 8m)."
+        },
+        "RegenHealer": {
+          "rule": "Depends on Pairs: true \u2192 near 4 (SW 7m); false \u2192 near D (W 8m)."
+        },
+        "ShieldHealer": {
+          "rule": "Depends on Pairs: true \u2192 near 3 (SE 7m); false \u2192 near C (S 8m)."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand near waymark 4, 7m south-west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand near waymark 3, 7m south-east of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand near waymark 1, 7m north-west of the centre."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark 2, 7m north-east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP2LightRampantAi",
+        "time": 37.15,
+        "line": 45
+      },
+      "title": "After banish III resolves",
+      "cue": "Banish III resolves",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand near waymark A, 8m north of the centre."
+        },
+        "OffTank": {
+          "rule": "Stand near waymark B, 8m east of the centre."
+        },
+        "RegenHealer": {
+          "rule": "Stand near waymark D, 8m west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Stand near waymark C, 8m south of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand near waymark 4, 7m south-west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand near waymark 3, 7m south-east of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand near waymark 1, 7m north-west of the centre."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark 2, 7m north-east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "pgz322Znkd_Srn8n",
+    "roleMap": {
+      "CasterDps": "dps4",
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "MeleeDpsA": "dps1",
+      "MeleeDpsB": "dps2",
+      "PhysRangedDps": "dps3"
+    },
+    "steps": {
+      "FruP2LightRampantAi@3": 0,
+      "FruP2LightRampantAi@37.15": 9
+    },
+    "exampleSeed": 1
+  },
+  "draft": true
+}

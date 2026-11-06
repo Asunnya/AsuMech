@@ -1,0 +1,233 @@
+{
+  "scenario": "M11sArenaSplitScenario",
+  "strat": "Hector",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "M11sArenaSplitAi",
+        "time": 0.5,
+        "line": 41
+      },
+      "title": "After the Tyrant appears",
+      "cue": "the Tyrant appears",
+      "rule": "Go to 3m west of the centre.",
+      "roles": {
+        "OffTank": {
+          "rule": "Go to 3m north-east of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Go to 3m south-east of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to 3m east of the centre."
+        },
+        "CasterDps": {
+          "rule": "Go to 3m east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M11sArenaSplitAi",
+        "from": 29.52,
+        "to": 61.55,
+        "line": 46
+      },
+      "title": "After explosion cast starts",
+      "cue": "Explosion cast starts",
+      "rule": "Stand near waymark 1, the north-west wall.",
+      "roles": {
+        "OffTank": {
+          "rule": "Go to the north-east wall."
+        },
+        "RegenHealer": {
+          "rule": "Go to the south-west wall."
+        },
+        "ShieldHealer": {
+          "rule": "Stand near waymark 3, the south-east wall."
+        },
+        "MeleeDpsA": {
+          "rule": "Go to the south-west wall."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to the south-east wall."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark 2, the north-east wall."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M11sArenaSplitAi",
+        "from": 40.52,
+        "to": 72.55,
+        "line": 47
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: WestShadesNear has true).",
+      "roles": {
+        "MainTank": {
+          "rule": "Depends on WestShadesNear and AvalancheSafeSide: [true,false] \u0026 1 \u2192 near B (E 8m); [true,false] \u0026 -1 \u2192 near D (W 8m); [false,true] \u0026 -1 \u2192 near D (W 8m); [false,true] \u0026 1 \u2192 near D (W 8m)."
+        },
+        "MeleeDpsA": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Avalanche)."
+        },
+        "MeleeDpsB": {
+          "rule": "Depends on WestShadesNear: [true,false] \u2192 near B (E 8m); [false,true] \u2192 at D."
+        },
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has false)."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has true)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M11sArenaSplitAi",
+        "from": 46.57,
+        "to": 82.62,
+        "line": 51
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Avalanche).",
+      "roles": {
+        "OffTank": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: WestShadesNear has true)."
+        },
+        "ShieldHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: AvalancheSafeZ)."
+        },
+        "MeleeDpsA": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter)."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: WestShadesNear)."
+        },
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter)."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has true)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M11sArenaSplitAi",
+        "time": 86.39,
+        "line": 54
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has false).",
+      "roles": {
+        "MainTank": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: WestShadesNear)."
+        },
+        "OffTank": {
+          "rule": "Depends on LinesWestOuter has true and AvalancheSafeSide: yes \u0026 1 \u2192 at B; yes \u0026 -1 \u2192 at D; no \u0026 1 \u2192 at D; no \u0026 -1 \u2192 at B."
+        },
+        "MeleeDpsA": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter)."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has true)."
+        },
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has true)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M11sArenaSplitAi",
+        "time": 103.88,
+        "line": 55
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: WestShadesNear).",
+      "roles": {
+        "OffTank": {
+          "rule": "Depends on LinesWestOuter has true and AvalancheSafeSide: yes \u0026 1 \u2192 near 2 (NE wall); yes \u0026 -1 \u2192 near 1 (NW wall); no \u0026 1 \u2192 near 1 (NW wall); no \u0026 -1 \u2192 near 2 (NE wall)."
+        },
+        "RegenHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has false)."
+        },
+        "ShieldHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has false)."
+        },
+        "MeleeDpsA": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter)."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has true)."
+        },
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has true)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M11sArenaSplitAi",
+        "time": 110.6,
+        "line": 56
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Depends on Avalanche: 0 \u2192 NE wall; 3 \u2192 NW wall; 2 \u2192 SW wall; 1 \u2192 SE wall.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M11sArenaSplitAi",
+        "time": 119.48,
+        "line": 57
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Depends on Avalanche: 0 \u2192 near 2 (NE wall); 3 \u2192 near 1 (NW wall); 2 \u2192 near 4 (SW wall); 1 \u2192 near 3 (SE wall).",
+      "tolerance": 2,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "HJAbE7fuWodELUSB\u002BB82fx_zDqUMr5KFC",
+    "roleMap": {
+      "CasterDps": "dps4",
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "MeleeDpsA": "dps1",
+      "MeleeDpsB": "dps2",
+      "PhysRangedDps": "dps3"
+    },
+    "steps": {
+      "M11sArenaSplitAi@0.5": 2,
+      "M11sArenaSplitAi@29.52-61.55": 23
+    },
+    "exampleSeed": 8
+  },
+  "draft": true
+}

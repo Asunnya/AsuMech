@@ -1,0 +1,115 @@
+{
+  "scenario": "TopP2PartySynergyScenario",
+  "strat": "LPDU",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "TopP2PartySynergyLpduAi",
+        "time": 1,
+        "line": 18
+      },
+      "title": "Light party columns",
+      "cue": "Omega-M on Omega",
+      "rule": "Go to 4m west of the centre.",
+      "roles": {
+        "OffTank": {
+          "rule": "Go to 5m north-east of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Go to 4m east of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to 4m east of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Go to 5m south-west of the centre."
+        },
+        "CasterDps": {
+          "rule": "Go to 5m south-east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP2PartySynergyLpduAi",
+        "time": 11,
+        "line": 19
+      },
+      "title": "Attack dodge",
+      "cue": "A tether lands on another player",
+      "rule": "Read the strat\u0027s AttackDodge: the spot follows a rule the rolls alone don\u0027t show (closest roll: AttackDir).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP2PartySynergyLpduAi",
+        "time": 16,
+        "line": 20
+      },
+      "title": "Spread positions",
+      "cue": " resolves",
+      "rule": "Read the strat\u0027s SpreadPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthA).",
+      "roles": {
+        "CasterDps": {
+          "rule": "Read the strat\u0027s SpreadPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: AttackDir)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP2PartySynergyLpduAi",
+        "time": 23,
+        "line": 21
+      },
+      "title": "Knockback positions",
+      "cue": "Optimized Fire III hits you",
+      "rule": "Read the strat\u0027s KnockbackPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthA).",
+      "roles": {
+        "MainTank": {
+          "rule": "Read the strat\u0027s KnockbackPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: Glitch)."
+        },
+        "RegenHealer": {
+          "rule": "Read the strat\u0027s KnockbackPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: Order)."
+        },
+        "ShieldHealer": {
+          "rule": "Read the strat\u0027s KnockbackPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: Order)."
+        },
+        "MeleeDpsA": {
+          "rule": "Read the strat\u0027s KnockbackPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: Order)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP2PartySynergyLpduAi",
+        "time": 30,
+        "line": 22
+      },
+      "title": "Stack positions",
+      "cue": "Discharger resolves",
+      "rule": "Read the strat\u0027s StackPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: AttackDir).",
+      "roles": {
+        "ShieldHealer": {
+          "rule": "Read the strat\u0027s StackPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthA)."
+        },
+        "MeleeDpsA": {
+          "rule": "Read the strat\u0027s StackPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthA)."
+        },
+        "PhysRangedDps": {
+          "rule": "Read the strat\u0027s StackPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthA)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    }
+  ],
+  "draft": true
+}

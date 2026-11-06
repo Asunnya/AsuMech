@@ -1,0 +1,248 @@
+{
+  "scenario": "DsrP6CauterizeScenario",
+  "strat": "NA PF (Light vs Dark)",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "DsrP6DoubleDragonsAi",
+        "time": 99.3,
+        "line": 70
+      },
+      "title": "After mortal Atonement on you",
+      "cue": "Mortal Atonement on you",
+      "rule": "Stand at the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP6DoubleDragonsAi",
+        "time": 101.770004,
+        "line": 71
+      },
+      "title": "After mortal Atonement on you",
+      "cue": "Mortal Atonement on you",
+      "rule": "Stand near waymark 2, 6m north of the centre.",
+      "roles": {
+        "OffTank": {
+          "rule": "Stand near waymark B, 6m south of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Stand near waymark B, 6m south of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand near waymark C, 6m south of the centre."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark B, 6m south of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP6DoubleDragonsAi",
+        "time": 110.159996,
+        "line": 72
+      },
+      "title": "After akh Afah hits you",
+      "cue": "Akh Afah hits you",
+      "rule": "Stand at the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP6DoubleDragonsAi",
+        "time": 116.4,
+        "line": 73
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP6DoubleDragonsAi",
+        "time": 123.119995,
+        "line": 74
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Stand near waymark B, 9m south of the centre.",
+      "roles": {
+        "OffTank": {
+          "rule": "Stand at the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP6DoubleDragonsAi",
+        "time": 131.45999,
+        "line": 75
+      },
+      "title": "After mortal Atonement on you",
+      "cue": "Mortal Atonement on you",
+      "rule": "Go to 3m north of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP6DoubleDragonsAi",
+        "time": 135.4,
+        "line": 76
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "Go to the north wall."
+        },
+        "ShieldHealer": {
+          "rule": "Go to the south wall."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand near waymark 3, 10m north of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand near waymark B, 10m south of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Go to the north-east wall."
+        },
+        "CasterDps": {
+          "rule": "Go to the south-west wall."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP6DoubleDragonsAi",
+        "time": 142.67,
+        "line": 77
+      },
+      "title": "After ice Breath hits you",
+      "cue": "Ice Breath hits you",
+      "rule": "Go to 15m north of the centre.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "Stand near waymark 2, 9m north of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Stand near waymark 2, 9m north of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand near waymark 3, 9m north of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand near waymark 2, 8m north of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand near waymark 2, 8m north of the centre."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark 3, 8m north of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP6DoubleDragonsAi",
+        "time": 149.8,
+        "line": 78
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to the north wall."
+        },
+        "OffTank": {
+          "rule": "Go to the north wall."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP6DoubleDragonsAi",
+        "time": 155.09999,
+        "line": 79
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to the north wall.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP6DoubleDragonsAi",
+        "time": 162.34,
+        "line": 80
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to the north wall.",
+      "roles": {
+        "CasterDps": {
+          "rule": "Go to the north-east wall."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP6DoubleDragonsAi",
+        "time": 165.5,
+        "line": 81
+      },
+      "title": "After mortal Vow hits you",
+      "cue": "Mortal Vow hits you",
+      "rule": "Go to the north wall.",
+      "tolerance": 1.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "426762112878561",
+    "roleMap": {
+      "OffTank": "tank1",
+      "MainTank": "tank2",
+      "ShieldHealer": "healer1",
+      "RegenHealer": "healer2",
+      "MeleeDpsB": "dps1",
+      "PhysRangedDps": "dps2",
+      "CasterDps": "dps3",
+      "MeleeDpsA": "dps4"
+    },
+    "steps": {
+      "DsrP6DoubleDragonsAi@99.3": 7,
+      "DsrP6DoubleDragonsAi@131.46": 33
+    },
+    "exampleSeed": 1
+  },
+  "draft": true
+}

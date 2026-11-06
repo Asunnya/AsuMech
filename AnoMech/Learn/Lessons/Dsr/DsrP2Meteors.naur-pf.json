@@ -1,0 +1,135 @@
+{
+  "scenario": "DsrP2MeteorsScenario",
+  "strat": "NAUR (PF)",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 120.6,
+        "line": 80
+      },
+      "title": "After  resolves",
+      "cue": " resolves",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "Go to 10m west of the centre."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 132.4,
+        "line": 81
+      },
+      "title": "After ice Resistance Down II on you",
+      "cue": "Ice Resistance Down II on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 136.5,
+        "line": 82
+      },
+      "title": "After ice Resistance Down II on you",
+      "cue": "Ice Resistance Down II on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "from": 136.85,
+        "to": 143.98,
+        "line": 87
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to the north wall."
+        },
+        "CasterDps": {
+          "rule": "Go to the south wall."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 138.7,
+        "line": 83
+      },
+      "title": "After ice Resistance Down II on you",
+      "cue": "Ice Resistance Down II on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 145.41,
+        "line": 89
+      },
+      "title": "After holy comet appears",
+      "cue": "holy comet appears",
+      "rule": "Go to the north wall.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to the south wall."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
+        },
+        "PhysRangedDps": {
+          "rule": "Go to the south wall."
+        },
+        "ShieldHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 148.3,
+        "line": 90
+      },
+      "title": "After conviction resolves",
+      "tolerance": 2.5,
+      "skip": true
+    },
+    {
+      "key": {
+        "cls": "DsrP2ThordanAi",
+        "time": 150.5,
+        "line": 92
+      },
+      "title": "After conviction resolves",
+      "cue": "Conviction resolves",
+      "rule": "Go to 4m north of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 13m north of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    }
+  ],
+  "draft": true
+}

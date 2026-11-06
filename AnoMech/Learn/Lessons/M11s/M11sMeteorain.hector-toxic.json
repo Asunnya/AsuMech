@@ -1,0 +1,248 @@
+{
+  "scenario": "M11sMeteorainScenario",
+  "strat": "Hector (Toxic)",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "M11sMeteorainAi",
+        "time": 0.5,
+        "line": 47
+      },
+      "title": "After the Tyrant appears",
+      "cue": "the Tyrant appears",
+      "rule": "Go to 7m north-west of the centre.",
+      "roles": {
+        "MeleeDpsA": {
+          "rule": "Go to 2m north-east of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to 2m south-west of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M11sMeteorainAi",
+        "time": 12.5,
+        "line": 48
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 7m north-east of the centre.",
+      "roles": {
+        "MeleeDpsB": {
+          "rule": "Go to 7m south-west of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M11sMeteorainAi",
+        "time": 19.31,
+        "line": 60
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShadeSides has (1,2)).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M11sMeteorainAi",
+        "time": 19.31,
+        "line": 54
+      },
+      "title": "After sprint on you",
+      "tolerance": 2,
+      "skip": true
+    },
+    {
+      "key": {
+        "cls": "M11sMeteorainAi",
+        "time": 20.51,
+        "line": 61
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 10m north-east of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M11sMeteorainAi",
+        "time": 22.52,
+        "line": 66
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 7m north-west of the centre.",
+      "roles": {
+        "ShieldHealer": {
+          "rule": "Go to 14m south-west of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M11sMeteorainAi",
+        "from": 22.76,
+        "to": 42.79,
+        "line": 99
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShadeSides has (1,2)).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M11sMeteorainAi",
+        "time": 28.53,
+        "line": 79
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShadeSides has (1,2)).",
+      "roles": {
+        "OffTank": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShadeSides has (0,2))."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M11sMeteorainAi",
+        "time": 29.24,
+        "line": 72
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 10m north-west of the centre.",
+      "roles": {
+        "PhysRangedDps": {
+          "rule": "Go to 2m west of the centre."
+        },
+        "CasterDps": {
+          "rule": "Go to 2m south of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M11sMeteorainAi",
+        "time": 30.53,
+        "line": 80
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 10m north-west of the centre.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M11sMeteorainAi",
+        "time": 32.530003,
+        "line": 85
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Stand near waymark 4, the south-west wall.",
+      "roles": {
+        "CasterDps": {
+          "rule": "Go to 7m north-east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M11sMeteorainAi",
+        "time": 38.550003,
+        "line": 94
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "When ShadeSides leaves out (3,1), go to the north wall; when ShadeSides includes (3,1), go to the east wall.",
+      "roles": {
+        "OffTank": {
+          "rule": "When ShadeSides includes (1,2) and ShadeSides includes (3,0), go to the west wall; when ShadeSides includes (1,2) and ShadeSides leaves out (3,0), go to the south wall; when ShadeSides leaves out (1,2) and ShadeSides includes (3,0), go to the west wall; when ShadeSides leaves out (1,2) and ShadeSides leaves out (3,0), go to the west wall."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M11sMeteorainAi",
+        "time": 39.21,
+        "line": 91
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to the north wall.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M11sMeteorainAi",
+        "time": 40.540005,
+        "line": 95
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 10m north-east of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M11sMeteorainAi",
+        "time": 49.18,
+        "line": 101
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to the south-west wall.",
+      "tolerance": 1.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "HJAbE7fuWodELUSB\u002BB82fx_zDqUMr5KFC",
+    "roleMap": {
+      "MeleeDpsA": "dps4",
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "ShieldHealer": "healer1",
+      "RegenHealer": "healer2",
+      "CasterDps": "dps1",
+      "MeleeDpsB": "dps2",
+      "PhysRangedDps": "dps3"
+    },
+    "steps": {
+      "M11sMeteorainAi@0.5": 10,
+      "M11sMeteorainAi@20.51": 11,
+      "M11sMeteorainAi@30.53": 12,
+      "M11sMeteorainAi@40.54": 13
+    },
+    "exampleSeed": 1
+  },
+  "draft": true
+}

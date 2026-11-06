@@ -1,0 +1,162 @@
+{
+  "scenario": "M10sAlleyOopTwoScenario",
+  "strat": "Hector (Toxic)",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "M10sAlleyOopTwoAi",
+        "time": 0.3,
+        "line": 34
+      },
+      "title": "After red Hot appears",
+      "cue": "Red Hot appears",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand on waymark A."
+        },
+        "OffTank": {
+          "rule": "Stand on waymark C."
+        },
+        "RegenHealer": {
+          "rule": "Stand on waymark D."
+        },
+        "ShieldHealer": {
+          "rule": "Stand on waymark B."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand on waymark 4."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand on waymark 3."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand on waymark 1."
+        },
+        "CasterDps": {
+          "rule": "Stand on waymark 2."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sAlleyOopTwoAi",
+        "time": 13.7,
+        "line": 35
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 14m north-east of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 14m south of the centre."
+        },
+        "RegenHealer": {
+          "rule": "Go to 15m north-west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Go to 15m east of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Go to the west wall."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to the south wall."
+        },
+        "PhysRangedDps": {
+          "rule": "Go to the north-west wall."
+        },
+        "CasterDps": {
+          "rule": "Go to the north-east wall."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sAlleyOopTwoAi",
+        "time": 16.230001,
+        "line": 36
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 3m north-east of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sAlleyOopTwoAi",
+        "time": 21.2,
+        "line": 37
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 8m south of the centre.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sAlleyOopTwoAi",
+        "from": 24.94,
+        "to": 26.95,
+        "line": 41
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 4m north-west of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sAlleyOopTwoAi",
+        "time": 26.56,
+        "line": 44
+      },
+      "title": "After sprint on you",
+      "tolerance": 2,
+      "skip": true
+    },
+    {
+      "key": {
+        "cls": "M10sAlleyOopTwoAi",
+        "time": 29.36,
+        "line": 43
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 4m south-west of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "syjvfhacdxz7awet",
+    "roleMap": {
+      "MeleeDpsA": "dps4",
+      "OffTank": "tank1",
+      "MainTank": "tank2",
+      "ShieldHealer": "healer1",
+      "RegenHealer": "healer2",
+      "MeleeDpsB": "dps1",
+      "PhysRangedDps": "dps2",
+      "CasterDps": "dps3"
+    },
+    "steps": {
+      "M10sAlleyOopTwoAi@16.23": 3,
+      "M10sAlleyOopTwoAi@24.94-26.95": 17,
+      "M10sAlleyOopTwoAi@29.36": 24
+    },
+    "exampleSeed": 1
+  },
+  "draft": true
+}

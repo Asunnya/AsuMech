@@ -1,0 +1,243 @@
+{
+  "scenario": "M10sOpenerScenario",
+  "strat": "Hector (Toxic)",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "M10sOpenerAi",
+        "time": 0.3,
+        "line": 49
+      },
+      "title": "After red Hot appears",
+      "cue": "Red Hot appears",
+      "rule": "Go to 9m north of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 2m south of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 2m south of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sOpenerAi",
+        "time": 21.4,
+        "line": 50
+      },
+      "title": "After  resolves",
+      "cue": " resolves",
+      "rule": "Go an eighth turn clockwise of CutbackOrigin, 7m out.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sOpenerAi",
+        "from": 23.07,
+        "to": 29.09,
+        "line": 54
+      },
+      "title": "After a tether lands on you",
+      "cue": "A tether lands on you",
+      "rule": "Go to the south-west wall.",
+      "roles": {
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
+        },
+        "MeleeDpsA": {
+          "rule": "Go to the north-east wall."
+        },
+        "ShieldHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sOpenerAi",
+        "from": 30.27,
+        "to": 39.98,
+        "line": 55
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 7m west of the centre.",
+      "roles": {
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
+        },
+        "MeleeDpsA": {
+          "rule": "Go to 7m east of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sOpenerAi",
+        "time": 37.82,
+        "line": 57
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 7m west of the centre.",
+      "roles": {
+        "MeleeDpsB": {
+          "rule": "Go an eighth turn clockwise of CutbackOrigin, 7m out."
+        },
+        "ShieldHealer": {
+          "rule": "Go to 7m east of the centre."
+        },
+        "MainTank": {
+          "rule": "Go to 7m east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sOpenerAi",
+        "time": 41.38,
+        "line": 58
+      },
+      "title": "After sprint on another player",
+      "cue": "Sprint on another player",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go an eighth turn counterclockwise of CutbackOrigin, 12m out."
+        },
+        "OffTank": {
+          "rule": "Go an eighth turn clockwise of CutbackOrigin, 12m out."
+        },
+        "RegenHealer": {
+          "rule": "Go an eighth turn counterclockwise of CutbackOrigin, 14m out."
+        },
+        "ShieldHealer": {
+          "rule": "Go a quarter turn clockwise of CutbackOrigin, 14m out."
+        },
+        "MeleeDpsA": {
+          "rule": "Go -4\u00B0 from CutbackOrigin, 12m out."
+        },
+        "MeleeDpsB": {
+          "rule": "Go 23\u00B0 from CutbackOrigin, 12m out."
+        },
+        "PhysRangedDps": {
+          "rule": "Go a quarter turn counterclockwise of CutbackOrigin, 20m out."
+        },
+        "CasterDps": {
+          "rule": "Go a quarter turn counterclockwise of CutbackOrigin, 16m out."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sOpenerAi",
+        "time": 53.2,
+        "line": 59
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go 1\u00B0 from CutbackOrigin, 7m out.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go 5\u00B0 from CutbackOrigin, 7m out."
+        },
+        "OffTank": {
+          "rule": "Go 3\u00B0 from CutbackOrigin, 6m out."
+        },
+        "RegenHealer": {
+          "rule": "Go 1\u00B0 from CutbackOrigin, 6m out."
+        },
+        "ShieldHealer": {
+          "rule": "Go 3\u00B0 from CutbackOrigin, 7m out."
+        },
+        "MeleeDpsB": {
+          "rule": "Go -1\u00B0 from CutbackOrigin, 6m out."
+        },
+        "CasterDps": {
+          "rule": "Go -1\u00B0 from CutbackOrigin, 7m out."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sOpenerAi",
+        "time": 63.41,
+        "line": 60
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Stand at the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sOpenerAi",
+        "from": 69.7,
+        "to": 73.729996,
+        "line": 64
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Depends on Wall: 0 \u2192 SE 6m; 3 \u2192 NE 6m; 1 \u2192 SW 6m.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "Depends on Wall: 0 \u2192 SE 6m; 3 \u2192 NE 7m; 1 \u2192 SW 6m."
+        },
+        "PhysRangedDps": {
+          "rule": "Go opposite CutbackOrigin, 6m out."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sOpenerAi",
+        "time": 83.16,
+        "line": 68
+      },
+      "title": "After divers\u0027 Dare resolves",
+      "cue": "Divers\u0027 Dare resolves",
+      "rule": "Stand at the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "syjvfhacdxz7awet",
+    "roleMap": {
+      "CasterDps": "dps4",
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "MeleeDpsB": "dps1",
+      "MeleeDpsA": "dps2",
+      "PhysRangedDps": "dps3"
+    },
+    "steps": {
+      "M10sOpenerAi@83.16": 3
+    },
+    "exampleSeed": 1
+  },
+  "draft": true
+}

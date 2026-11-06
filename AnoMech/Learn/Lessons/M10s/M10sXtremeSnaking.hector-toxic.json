@@ -1,0 +1,110 @@
+{
+  "scenario": "M10sXtremeSnakingScenario",
+  "strat": "Hector (Toxic)",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "M10sXtremeSnakingAi",
+        "time": 0.3,
+        "line": 31
+      },
+      "title": "After red Hot appears",
+      "cue": "Red Hot appears",
+      "rule": "Go to 8m west of the centre.",
+      "roles": {
+        "OffTank": {
+          "rule": "Go to 8m east of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Go to 8m east of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to 8m east of the centre."
+        },
+        "CasterDps": {
+          "rule": "Go to 8m east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sXtremeSnakingAi",
+        "time": 8.57,
+        "line": 32
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Fire).",
+      "roles": {
+        "PhysRangedDps": {
+          "rule": "If you are in Fire: Go to the south wall; otherwise: Go to the north wall."
+        },
+        "CasterDps": {
+          "rule": "If you are in Fire: Go to the south wall; otherwise: Go to the north wall."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sXtremeSnakingAi",
+        "from": 26.47,
+        "to": 47.14,
+        "line": 36
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Fire).",
+      "roles": {
+        "RegenHealer": {
+          "rule": "If you are in Fire: Go to the north-east wall; otherwise: Go to the south-west wall."
+        },
+        "ShieldHealer": {
+          "rule": "If you are in Fire: Go to the north-east wall; otherwise: Go to the south-west wall."
+        },
+        "PhysRangedDps": {
+          "rule": "If you are in Fire: Go to the south-west wall; otherwise: Go to the north-east wall."
+        },
+        "CasterDps": {
+          "rule": "If you are in Fire: Go to the south-west wall; otherwise: Go to the north-east wall."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sXtremeSnakingAi",
+        "time": 57.68,
+        "line": 38
+      },
+      "title": "After bailout cast starts",
+      "cue": "Bailout cast starts",
+      "rule": "Stand at the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "syjvfhacdxz7awet",
+    "roleMap": {
+      "CasterDps": "dps4",
+      "OffTank": "tank1",
+      "MainTank": "tank2",
+      "ShieldHealer": "healer1",
+      "RegenHealer": "healer2",
+      "MeleeDpsB": "dps1",
+      "PhysRangedDps": "dps2",
+      "MeleeDpsA": "dps3"
+    },
+    "steps": {
+      "M10sXtremeSnakingAi@57.68": 3
+    },
+    "exampleSeed": 1
+  },
+  "draft": true
+}

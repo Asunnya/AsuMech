@@ -1,0 +1,207 @@
+{
+  "scenario": "UmadP3LimitCutScenario",
+  "strat": "Standard",
+  "sources": [
+    {
+      "label": "WTFDIG (kefkabin), MIT",
+      "url": "https://github.com/mczub/wtfdig/tree/aa79375/src/routes/ultimates/umad"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "UmadP3LimitCutAi",
+        "time": 0.5,
+        "line": 24
+      },
+      "title": "Stack at bosses",
+      "cue": "Tailwind on another player",
+      "rule": "Depends on BossSpot: 3 \u2192 at 2; 1 \u2192 at 3; 7 \u2192 at 4; 5 \u2192 at 1.",
+      "roles": {
+        "OffTank": {
+          "rule": "Depends on BossSpot: 3 \u2192 near 2 (NE 9m); 1 \u2192 near 3 (SE 9m); 7 \u2192 near 4 (SW 9m); 5 \u2192 near 1 (NW 9m)."
+        },
+        "RegenHealer": {
+          "rule": "Depends on BossSpot: 3 \u2192 near 2 (NE 6m); 1 \u2192 near 3 (SE 6m); 7 \u2192 near 4 (SW 6m); 5 \u2192 near 1 (NW 6m)."
+        },
+        "ShieldHealer": {
+          "rule": "Depends on BossSpot: 3 \u2192 near 2 (NE 6m); 1 \u2192 near 3 (SE 6m); 7 \u2192 near 4 (SW 6m); 5 \u2192 near 1 (NW 6m)."
+        },
+        "MeleeDpsA": {
+          "rule": "Depends on BossSpot: 3 \u2192 near 2 (NE 7m); 1 \u2192 near 3 (SE 7m); 7 \u2192 near 4 (SW 7m); 5 \u2192 near 1 (NW 7m)."
+        },
+        "CasterDps": {
+          "rule": "Depends on BossSpot: 3 \u2192 near 2 (NE 7m); 1 \u2192 near 3 (SE 7m); 7 \u2192 near 4 (SW 7m); 5 \u2192 near 1 (NW 7m)."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3LimitCutAi",
+        "time": 4.5,
+        "line": 25
+      },
+      "title": "Bait out",
+      "cue": "Sprint on you",
+      "rule": "Depends on BossSpot: 3 \u2192 SW wall; 1 \u2192 NW wall; 7 \u2192 NE wall; 5 \u2192 SE wall.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3LimitCutAi",
+        "time": 8.3,
+        "line": 26
+      },
+      "title": "Tanks into stack",
+      "cue": " hits you",
+      "rule": "Depends on BossSpot: 3 \u2192 near 2 (NE 6m); 1 \u2192 near 3 (SE 6m); 7 \u2192 near 4 (SW 6m); 5 \u2192 near 1 (NW 6m).",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3LimitCutAi",
+        "time": 8.4,
+        "line": 27
+      },
+      "title": "Bait back",
+      "cue": "Sprint on you",
+      "rule": "Depends on BossSpot: 3 \u2192 at 2; 1 \u2192 at 3; 7 \u2192 at 4; 5 \u2192 at 1.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3LimitCutAi",
+        "time": 17.5,
+        "line": 30
+      },
+      "title": "Stack for cyclones",
+      "cue": "Ultima Blaster resolves",
+      "rule": "Depends on BossSpot: 3 \u2192 near 4 (SW 5m); 1 \u2192 near 1 (NW 5m); 7 \u2192 near 2 (NE 5m); 5 \u2192 near 3 (SE 5m).",
+      "roles": {
+        "MainTank": {
+          "rule": "Depends on BossSpot: 3 \u2192 SW 4m; 1 \u2192 NW 4m; 7 \u2192 NE 4m; 5 \u2192 SE 4m."
+        },
+        "OffTank": {
+          "rule": "Depends on BossSpot: 3 \u2192 SW 4m; 1 \u2192 NW 4m; 7 \u2192 NE 4m; 5 \u2192 E 4m."
+        },
+        "RegenHealer": {
+          "rule": "Depends on BossSpot: 3 \u2192 SW 4m; 1 \u2192 NW 4m; 7 \u2192 N 4m; 5 \u2192 E 4m."
+        },
+        "PhysRangedDps": {
+          "rule": "Depends on BossSpot: 3 \u2192 near 4 (SW 6m); 1 \u2192 near 1 (NW 6m); 7 \u2192 near 2 (NE 6m); 5 \u2192 near 3 (SE 6m)."
+        },
+        "CasterDps": {
+          "rule": "Depends on BossSpot: 3 \u2192 near 4 (SW 6m); 1 \u2192 near 1 (NW 6m); 7 \u2192 near 2 (NE 6m); 5 \u2192 near 3 (SE 6m)."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3LimitCutAi",
+        "time": 20.6,
+        "line": 31
+      },
+      "title": "Charge spots",
+      "cue": " hits you",
+      "rule": "Read the strat\u0027s ChargeSpots: the spot follows a rule the rolls alone don\u0027t show (closest roll: BossSpot).",
+      "roles": {
+        "MainTank": {
+          "rule": "Read the strat\u0027s ChargeSpots: the spot follows a rule the rolls alone don\u0027t show (closest roll: Winds has (OffTank,Tailwind))."
+        },
+        "OffTank": {
+          "rule": "Read the strat\u0027s ChargeSpots: the spot follows a rule the rolls alone don\u0027t show (closest roll: Clockwise)."
+        },
+        "ShieldHealer": {
+          "rule": "Read the strat\u0027s ChargeSpots: the spot follows a rule the rolls alone don\u0027t show (closest roll: StartSpot)."
+        },
+        "MeleeDpsB": {
+          "rule": "Read the strat\u0027s ChargeSpots: the spot follows a rule the rolls alone don\u0027t show (closest roll: Winds has (CasterDps,Headwind))."
+        },
+        "PhysRangedDps": {
+          "rule": "Depends on Clockwise and Winds has (PhysRangedDps,Headwind): true \u0026 yes \u2192 N wall; false \u0026 no \u2192 NE wall; false \u0026 yes \u2192 N wall; true \u0026 no \u2192 E wall."
+        },
+        "CasterDps": {
+          "rule": "Read the strat\u0027s ChargeSpots: the spot follows a rule the rolls alone don\u0027t show (closest roll: StartSpot)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3LimitCutAi",
+        "time": 32.7,
+        "line": 32
+      },
+      "title": "Clear for thunder",
+      "cue": " hits you",
+      "rule": "Depends on BossSpot: 3 \u2192 near 4 (SW 6m); 1 \u2192 near 1 (NW 6m); 7 \u2192 near 2 (NE 6m); 5 \u2192 near 3 (SE 6m).",
+      "roles": {
+        "OffTank": {
+          "rule": "Depends on BossSpot: 3 \u2192 near 2 (NE 11m); 1 \u2192 near 3 (SE 11m); 7 \u2192 near 4 (SW 11m); 5 \u2192 near 1 (NW 11m)."
+        },
+        "RegenHealer": {
+          "rule": "Depends on BossSpot: 3 \u2192 SW 4m; 1 \u2192 NW 4m; 7 \u2192 NE 4m; 5 \u2192 SE 4m."
+        },
+        "PhysRangedDps": {
+          "rule": "Depends on BossSpot: 3 \u2192 near 4 (SW 7m); 1 \u2192 near 1 (NW 7m); 7 \u2192 near 2 (NE 7m); 5 \u2192 near 3 (SE 7m)."
+        },
+        "CasterDps": {
+          "rule": "Depends on BossSpot: 3 \u2192 at 4; 1 \u2192 at 1; 7 \u2192 at 2; 5 \u2192 at 3."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3LimitCutAi",
+        "time": 47,
+        "line": 36
+      },
+      "title": "Stack at bosses",
+      "cue": "Epic Hero on you",
+      "rule": "Depends on BossSpot: 3 \u2192 at 2; 1 \u2192 at 3; 7 \u2192 at 4; 5 \u2192 at 1.",
+      "roles": {
+        "OffTank": {
+          "rule": "Depends on BossSpot: 3 \u2192 near 2 (NE 9m); 1 \u2192 near 3 (SE 9m); 7 \u2192 near 4 (SW 9m); 5 \u2192 near 1 (NW 9m)."
+        },
+        "RegenHealer": {
+          "rule": "Depends on BossSpot: 3 \u2192 near 2 (NE 6m); 1 \u2192 near 3 (SE 6m); 7 \u2192 near 4 (SW 6m); 5 \u2192 near 1 (NW 6m)."
+        },
+        "ShieldHealer": {
+          "rule": "Depends on BossSpot: 3 \u2192 near 2 (NE 6m); 1 \u2192 near 3 (SE 6m); 7 \u2192 near 4 (SW 6m); 5 \u2192 near 1 (NW 6m)."
+        },
+        "MeleeDpsA": {
+          "rule": "Depends on BossSpot: 3 \u2192 near 2 (NE 7m); 1 \u2192 near 3 (SE 7m); 7 \u2192 near 4 (SW 7m); 5 \u2192 near 1 (NW 7m)."
+        },
+        "CasterDps": {
+          "rule": "Depends on BossSpot: 3 \u2192 near 2 (NE 7m); 1 \u2192 near 3 (SE 7m); 7 \u2192 near 4 (SW 7m); 5 \u2192 near 1 (NW 7m)."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "stgy-f84e155d",
+    "roleMap": {
+      "MeleeDpsA": "dps1",
+      "RegenHealer": "healer1",
+      "MainTank": "tank1",
+      "ShieldHealer": "healer2",
+      "OffTank": "tank2",
+      "MeleeDpsB": "dps2"
+    },
+    "steps": {},
+    "exampleSeed": 1
+  },
+  "draft": true
+}

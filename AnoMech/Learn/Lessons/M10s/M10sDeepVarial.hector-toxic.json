@@ -1,0 +1,274 @@
+{
+  "scenario": "M10sDeepVarialScenario",
+  "strat": "Hector (Toxic)",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "M10sDeepVarialAi",
+        "time": 0.3,
+        "line": 39
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Depends on AerialLandings: [(18,18),(18,-18),(18,18),(18,-18)] \u2192 S wall; [(17.9,18),(18,-18),(18,18),(18,-18)] \u2192 SE wall; [(18,-18),(18,18),(18,-18),(18,18)] \u2192 N wall; [(17.9,-18),(18,18),(18,-18),(18,18)] \u2192 NE wall.",
+      "roles": {
+        "MainTank": {
+          "rule": "Depends on Side: 1 \u2192 S wall; -1 \u2192 N wall."
+        },
+        "OffTank": {
+          "rule": "Depends on Side: 1 \u2192 S wall; -1 \u2192 N wall."
+        },
+        "ShieldHealer": {
+          "rule": "Depends on AerialLandings: [(18,18),(18,-18),(18,18),(18,-18)] \u2192 SE wall; [(17.9,18),(18,-18),(18,18),(18,-18)] \u2192 S wall; [(18,-18),(18,18),(18,-18),(18,18)] \u2192 NE wall; [(17.9,-18),(18,18),(18,-18),(18,18)] \u2192 N wall."
+        },
+        "MeleeDpsB": {
+          "rule": "Depends on AerialLandings: [(18,18),(18,-18),(18,18),(18,-18)] \u2192 SE wall; [(17.9,18),(18,-18),(18,18),(18,-18)] \u2192 S wall; [(18,-18),(18,18),(18,-18),(18,18)] \u2192 NE wall; [(17.9,-18),(18,18),(18,-18),(18,18)] \u2192 N wall."
+        },
+        "CasterDps": {
+          "rule": "Depends on AerialLandings: [(18,18),(18,-18),(18,18),(18,-18)] \u2192 SE wall; [(17.9,18),(18,-18),(18,18),(18,-18)] \u2192 S wall; [(18,-18),(18,18),(18,-18),(18,18)] \u2192 NE wall; [(17.9,-18),(18,18),(18,-18),(18,18)] \u2192 N wall."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sDeepVarialAi",
+        "time": 4.68,
+        "line": 40
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to the south-west wall.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to the south wall."
+        },
+        "OffTank": {
+          "rule": "Go to the south wall."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sDeepVarialAi",
+        "time": 14.77,
+        "line": 41
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 10m west of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Depends on AerialLandings: [(18,18),(18,-18),(18,18),(18,-18)] \u2192 W 10m; [(17.9,18),(18,-18),(18,18),(18,-18)] \u2192 SE wall; [(18,-18),(18,18),(18,-18),(18,18)] \u2192 W 10m; [(17.9,-18),(18,18),(18,-18),(18,18)] \u2192 NE wall."
+        },
+        "OffTank": {
+          "rule": "Depends on AerialLandings: [(18,18),(18,-18),(18,18),(18,-18)] \u2192 SE wall; [(17.9,18),(18,-18),(18,18),(18,-18)] \u2192 W 10m; [(18,-18),(18,18),(18,-18),(18,18)] \u2192 NE wall; [(17.9,-18),(18,18),(18,-18),(18,18)] \u2192 W 10m."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sDeepVarialAi",
+        "time": 15.85,
+        "line": 42
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Depends on Side: 1 \u2192 NE wall; -1 \u2192 SE wall.",
+      "roles": {
+        "OffTank": {
+          "rule": "Go opposite CutbackOrigin, 25m out."
+        },
+        "MeleeDpsB": {
+          "rule": "Go opposite CutbackOrigin, 20m out."
+        },
+        "MainTank": {
+          "rule": "Go E wall of DeepBlueWall."
+        },
+        "MeleeDpsA": {
+          "rule": "Depends on Side: 1 \u2192 SE wall; -1 \u2192 NE wall."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sDeepVarialAi",
+        "time": 23.65,
+        "line": 43
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Depends on Side: 1 \u2192 NE wall; -1 \u2192 SE wall.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sDeepVarialAi",
+        "time": 25.009998,
+        "line": 44
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 4m west of the centre.",
+      "roles": {
+        "MeleeDpsB": {
+          "rule": "Go opposite CutbackOrigin, 25m out."
+        },
+        "MeleeDpsA": {
+          "rule": "Go E wall of DeepBlueWall."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sDeepVarialAi",
+        "time": 27.15,
+        "line": 50
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 4m west of the centre.",
+      "roles": {
+        "CasterDps": {
+          "rule": "Depends on Side: 1 \u2192 NE wall; -1 \u2192 SE wall."
+        },
+        "PhysRangedDps": {
+          "rule": "Depends on Side: 1 \u2192 NE wall; -1 \u2192 SE wall."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sDeepVarialAi",
+        "time": 29.230001,
+        "line": 56
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SafeSliceRotation).",
+      "roles": {
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Lane)."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Lane)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sDeepVarialAi",
+        "time": 31.289999,
+        "line": 57
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Depends on Side: 1 \u2192 near 1 (NW wall); -1 \u2192 S 13m.",
+      "roles": {
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SafeSliceRotation)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sDeepVarialAi",
+        "time": 36.93,
+        "line": 58
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SafeSliceRotation).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sDeepVarialAi",
+        "time": 38.91,
+        "line": 59
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Depends on Lane: 1 \u2192 at D; -1 \u2192 SW 5m; 0 \u2192 at D.",
+      "roles": {
+        "MainTank": {
+          "rule": "Depends on Lane: 1 \u2192 near D (W wall); -1 \u2192 W 5m; 0 \u2192 near D (W wall)."
+        },
+        "OffTank": {
+          "rule": "Depends on Lane: 1 \u2192 near D (W wall); -1 \u2192 SW 4m; 0 \u2192 near D (W wall)."
+        },
+        "RegenHealer": {
+          "rule": "Depends on Lane: 1 \u2192 near D (W 15m); -1 \u2192 SW 4m; 0 \u2192 near D (W 15m)."
+        },
+        "MeleeDpsA": {
+          "rule": "Depends on Lane: 1 \u2192 at D; -1 \u2192 SW 4m; 0 \u2192 at D."
+        },
+        "MeleeDpsB": {
+          "rule": "Depends on Lane: 1 \u2192 at D; -1 \u2192 SW 4m; 0 \u2192 at D."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sDeepVarialAi",
+        "time": 42.88,
+        "line": 60
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SafeSliceRotation).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sDeepVarialAi",
+        "time": 49.3,
+        "line": 61
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Stand at the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "syjvfhacdxz7awet",
+    "roleMap": {
+      "PhysRangedDps": "dps4",
+      "OffTank": "tank1",
+      "MainTank": "tank2",
+      "ShieldHealer": "healer1",
+      "RegenHealer": "healer2",
+      "MeleeDpsB": "dps1",
+      "MeleeDpsA": "dps2",
+      "CasterDps": "dps3"
+    },
+    "steps": {
+      "M10sDeepVarialAi@49.3": 3
+    },
+    "exampleSeed": 1
+  },
+  "draft": true
+}

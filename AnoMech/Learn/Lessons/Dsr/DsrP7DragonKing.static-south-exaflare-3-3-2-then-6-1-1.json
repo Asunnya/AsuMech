@@ -1,0 +1,345 @@
+{
+  "scenario": "DsrP7DragonKingScenario",
+  "strat": "Static south exaflare, 3/3/2 then 6/1/1",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "DsrP7DragonKingAi",
+        "time": 34.5,
+        "line": 49
+      },
+      "title": "After dragon-king Thordan appears",
+      "cue": "Dragon-king Thordan appears",
+      "rule": "Go to 11m south of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP7DragonKingAi",
+        "from": 41.53,
+        "to": 197.39,
+        "line": 59
+      },
+      "title": "After  on Dragon-king Thordan",
+      "cue": " on Dragon-king Thordan",
+      "rule": "Stand on waymark A.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP7DragonKingAi",
+        "from": 47.37,
+        "to": 206.16,
+        "line": 60
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Stand near waymark B, 8m south of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP7DragonKingAi",
+        "from": 49.139996,
+        "to": 207.93001,
+        "line": 61
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 14m south of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP7DragonKingAi",
+        "from": 52.87,
+        "to": 211.66,
+        "line": 62
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 10m south of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 11m north-west of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 11m north-east of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand at the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP7DragonKingAi",
+        "from": 56.71,
+        "to": 215.5,
+        "line": 63
+      },
+      "title": "After trinity hits you",
+      "cue": "Trinity hits you",
+      "rule": "Go to 10m south of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 11m north-west of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 11m north-east of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand at the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP7DragonKingAi",
+        "from": 59.75,
+        "to": 218.56,
+        "line": 65
+      },
+      "title": "After trinity hits you",
+      "cue": "Trinity hits you",
+      "rule": "Stand near waymark B, 9m south of the centre.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "Stand near waymark 1, 10m north-west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Stand on waymark 4."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand on waymark 1."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand on waymark 4."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand on waymark 1."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark 4, 10m north-east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP7DragonKingAi",
+        "from": 73.79,
+        "to": 234.73,
+        "line": 68
+      },
+      "title": "After akh Morn\u0027s Edge resolves",
+      "cue": "Akh Morn\u0027s Edge resolves",
+      "rule": "Go to 10m south of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 11m north-west of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 11m north-east of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand at the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP7DragonKingAi",
+        "from": 80.15,
+        "to": 241.2,
+        "line": 69
+      },
+      "title": "After trinity hits you",
+      "cue": "Trinity hits you",
+      "rule": "Go to 10m south of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 11m north-west of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 11m north-east of the centre."
+        },
+        "CasterDps": {
+          "rule": "Stand at the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP7DragonKingAi",
+        "from": 84.21001,
+        "to": 164.15001,
+        "line": 72
+      },
+      "title": "After trinity hits you",
+      "cue": "Trinity hits you",
+      "rule": "When GigaflareOrder includes [0, stand near waymark 1, 10m north-west of the centre; when GigaflareOrder leaves out [0, go to 10m south of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "When GigaflareOrder includes [0, stand near waymark 1, 11m north-west of the centre; when GigaflareOrder leaves out [0, stand near waymark B, 10m south of the centre."
+        },
+        "RegenHealer": {
+          "rule": "When GigaflareOrder includes [0, stand near waymark 1, 10m north-west of the centre; when GigaflareOrder leaves out [0, stand near waymark C, 10m south of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "When GigaflareOrder includes [0, stand on waymark 1; when GigaflareOrder leaves out [0, go to 10m south of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "When GigaflareOrder includes [0, stand near waymark 1, 10m north-west of the centre; when GigaflareOrder leaves out [0, go to 11m south of the centre."
+        },
+        "CasterDps": {
+          "rule": "When GigaflareOrder includes [0, stand near waymark 1, 10m north-west of the centre; when GigaflareOrder leaves out [0, go to 11m south of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP7DragonKingAi",
+        "from": 95.07,
+        "to": 175.06,
+        "line": 73
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: GigaflareOrder).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP7DragonKingAi",
+        "from": 99.08,
+        "to": 179.02,
+        "line": 74
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: GigaflareOrder).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP7DragonKingAi",
+        "from": 103.14,
+        "to": 183.08,
+        "line": 75
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 10m south of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 11m north-west of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 11m north-east of the centre."
+        },
+        "RegenHealer": {
+          "rule": "Stand at the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP7DragonKingAi",
+        "from": 113.39,
+        "to": 193.33,
+        "line": 76
+      },
+      "title": "After trinity hits you",
+      "cue": "Trinity hits you",
+      "rule": "Go to 10m south of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 11m north-west of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 11m north-east of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Stand at the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP7DragonKingAi",
+        "from": 147.28,
+        "to": 227.2,
+        "line": 66
+      },
+      "title": "After holmgang on another player",
+      "cue": "Holmgang on another player",
+      "rule": "Stand on waymark 1.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP7DragonKingAi",
+        "time": 247.41,
+        "line": 78
+      },
+      "title": "After trinity hits you",
+      "cue": "Trinity hits you",
+      "rule": "Stand at the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand on waymark 1."
+        },
+        "RegenHealer": {
+          "rule": "Stand near waymark B, 8m south of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Stand on waymark 4."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "448767858029561",
+    "roleMap": {
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "ShieldHealer": "healer1",
+      "RegenHealer": "healer2",
+      "CasterDps": "dps1",
+      "MeleeDpsA": "dps2",
+      "MeleeDpsB": "dps3",
+      "PhysRangedDps": "dps4"
+    },
+    "steps": {
+      "DsrP7DragonKingAi@47.37-206.16": 0
+    },
+    "exampleSeed": 1
+  },
+  "draft": true
+}

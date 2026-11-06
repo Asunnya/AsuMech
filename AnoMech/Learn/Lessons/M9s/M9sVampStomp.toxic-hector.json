@@ -1,0 +1,139 @@
+{
+  "scenario": "M9sVampStompScenario",
+  "strat": "Toxic / Hector",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "M9sVampStompAi",
+        "time": 0.5,
+        "line": 19
+      },
+      "title": "Uptime",
+      "cue": "Vamp Fatale appears",
+      "rule": "Go to 8m south-west of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 5m north of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 5m north-west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Go to 8m south-east of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Go to 5m west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to 5m east of the centre."
+        },
+        "CasterDps": {
+          "rule": "Go to 8m south-east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sVampStompAi",
+        "time": 12.5,
+        "line": 20
+      },
+      "title": "Tanks split for hardcore",
+      "cue": "Killer Voice resolves",
+      "rule": "Go to 8m south-west of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 8m north-west of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 8m north-east of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Go to 8m south-east of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Go to 5m south-west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to 5m south-east of the centre."
+        },
+        "CasterDps": {
+          "rule": "Go to 8m south-east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sVampStompAi",
+        "time": 20.3,
+        "line": 21
+      },
+      "title": "After hardcore hits you",
+      "cue": "Hardcore hits you",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand on waymark A."
+        },
+        "OffTank": {
+          "rule": "Stand on waymark C."
+        },
+        "RegenHealer": {
+          "rule": "Stand near waymark 4, 12m south-west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Stand near waymark 3, 12m south-east of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand on waymark D."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand on waymark B."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand near waymark 1, 12m north-west of the centre."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark 2, 12m north-east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sVampStompAi",
+        "time": 41.6,
+        "line": 25
+      },
+      "title": "Stack for brutal rain",
+      "cue": "Blast Beat hits you",
+      "rule": "Stand at the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "c2L5iJfuYIWXk1v7",
+    "roleMap": {
+      "MeleeDpsB": "dps4",
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "PhysRangedDps": "dps1",
+      "CasterDps": "dps2",
+      "MeleeDpsA": "dps3"
+    },
+    "steps": {
+      "M9sVampStompAi@41.6": 6
+    },
+    "exampleSeed": 1
+  },
+  "draft": true
+}

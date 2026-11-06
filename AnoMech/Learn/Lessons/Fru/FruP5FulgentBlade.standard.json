@@ -1,0 +1,86 @@
+{
+  "scenario": "FruP5FulgentBladeScenario",
+  "strat": "Standard",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "FruP5FulgentBladeAi",
+        "time": 13.2,
+        "line": 23
+      },
+      "title": "After  hits you",
+      "cue": " hits you",
+      "rule": "Go to Origin.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP5FulgentBladeAi",
+        "time": 17.2,
+        "line": 24
+      },
+      "title": "After  hits you",
+      "cue": " hits you",
+      "rule": "Go to Origin.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP5FulgentBladeAi",
+        "from": 21.65,
+        "to": 29.85,
+        "line": 28
+      },
+      "title": "After  hits you",
+      "cue": " hits you",
+      "rule": "Go to Origin.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP5FulgentBladeAi",
+        "time": 31.9,
+        "line": 30
+      },
+      "title": "After the Path of Darkness resolves",
+      "cue": "the Path of Darkness resolves",
+      "rule": "Go an eighth turn clockwise of Origin, 7m out.",
+      "roles": {
+        "OffTank": {
+          "rule": "Go an eighth turn counterclockwise of Origin, 7m out."
+        },
+        "ShieldHealer": {
+          "rule": "Go an eighth turn counterclockwise of Origin, 7m out."
+        },
+        "MeleeDpsB": {
+          "rule": "Go an eighth turn counterclockwise of Origin, 7m out."
+        },
+        "CasterDps": {
+          "rule": "Go an eighth turn counterclockwise of Origin, 7m out."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "xE5dM62WDf6sYUYf",
+    "roleMap": {
+      "CasterDps": "dps4",
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "MeleeDpsA": "dps1",
+      "MeleeDpsB": "dps2",
+      "PhysRangedDps": "dps3"
+    },
+    "steps": {},
+    "exampleSeed": 1
+  },
+  "draft": true
+}

@@ -1,0 +1,176 @@
+{
+  "scenario": "UmadP1TeleTrouncingScenario",
+  "strat": "Tele-trouncing",
+  "sources": [
+    {
+      "label": "WTFDIG (kefkabin), MIT",
+      "url": "https://github.com/mczub/wtfdig/tree/aa79375/src/routes/ultimates/umad"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "UmadP1TeleTrouncingAi",
+        "time": 7.5,
+        "line": 34
+      },
+      "title": "After tele-portent on you",
+      "cue": "Tele-portent on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: FireStackDps).",
+      "roles": {
+        "OffTank": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: DifferentPolarity has (CasterDps,false))."
+        },
+        "RegenHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ConfettiStackSupport)."
+        },
+        "ShieldHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
+        },
+        "MeleeDpsA": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ConfettiStackDps)."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ConfettiStackDps)."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ThunderRealOffset)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP1TeleTrouncingAi",
+        "time": 14.4,
+        "line": 35
+      },
+      "title": "After tele-trouncing hits you",
+      "cue": "Tele-trouncing hits you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ConfettiStackDps).",
+      "roles": {
+        "MainTank": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
+        },
+        "ShieldHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP1TeleTrouncingAi",
+        "time": 17.5,
+        "line": 38
+      },
+      "title": "After tele-trouncing hits you",
+      "cue": "Tele-trouncing hits you",
+      "rule": "Stand near waymark 1, 6m north-west of the centre.",
+      "roles": {
+        "MeleeDpsA": {
+          "rule": "Stand near waymark 3, 6m south-east of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand near waymark 3, 6m south-east of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand near waymark 3, 6m south-east of the centre."
+        },
+        "CasterDps": {
+          "rule": "Stand on waymark 3."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP1TeleTrouncingAi",
+        "time": 23.6,
+        "line": 40
+      },
+      "title": "After a tether lands on you",
+      "cue": "A tether lands on you",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand near waymark A, 9m north of the centre."
+        },
+        "OffTank": {
+          "rule": "Stand near waymark D, 9m west of the centre."
+        },
+        "RegenHealer": {
+          "rule": "Stand near waymark C, the south wall."
+        },
+        "ShieldHealer": {
+          "rule": "Stand near waymark B, the east wall."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand near waymark C, 9m south of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand near waymark B, 9m east of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand near waymark A, the north wall."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark D, the west wall."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP1TeleTrouncingAi",
+        "time": 34.6,
+        "line": 44
+      },
+      "title": "After  resolves",
+      "cue": " resolves",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "Depends on FireIsStack and DifferentPolarity has (ShieldHealer,false): true \u0026 no \u2192 near 3 (SE 9m); true \u0026 yes \u2192 near 3 (SE 9m); false \u0026 no \u2192 at 2; false \u0026 yes \u2192 centre."
+        },
+        "OffTank": {
+          "rule": "Depends on DpsGetsDifferent and FireIsLie: true \u0026 true \u2192 near 3 (SE 9m); false \u0026 false \u2192 near 3 (SE 9m); false \u0026 true \u2192 at 3."
+        },
+        "RegenHealer": {
+          "rule": "Depends on FireIsStack: true \u2192 near 3 (SE 9m); false \u2192 S wall."
+        },
+        "ShieldHealer": {
+          "rule": "Depends on FireIsStack: true \u2192 near 3 (SE 9m); false \u2192 E wall."
+        },
+        "MeleeDpsA": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ThunderRealOffset)."
+        },
+        "MeleeDpsB": {
+          "rule": "Depends on FireIsStack and ThunderRealOffset: true \u0026 1 \u2192 near 1 (NW 9m); true \u0026 0 \u2192 near 1 (NW 12m); false \u0026 0 \u2192 at 4; false \u0026 1 \u2192 E 2m."
+        },
+        "PhysRangedDps": {
+          "rule": "Depends on FireIsStack and ThunderRealOffset: true \u0026 1 \u2192 near 1 (NW 9m); true \u0026 0 \u2192 near 1 (NW 12m); false \u0026 0 \u2192 N wall; false \u0026 1 \u2192 N wall."
+        },
+        "CasterDps": {
+          "rule": "Depends on FireIsStack and ThunderRealOffset: true \u0026 1 \u2192 near 1 (NW 9m); true \u0026 0 \u2192 near 1 (NW 12m); false \u0026 0 \u2192 W wall; false \u0026 1 \u2192 W wall."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "stgy-981c446f",
+    "roleMap": {},
+    "steps": {},
+    "exampleSeed": 1
+  },
+  "draft": true
+}

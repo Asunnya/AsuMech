@@ -1,0 +1,239 @@
+{
+  "scenario": "UmadP2ForsakenScenario",
+  "strat": "[Old] zP6 South adjust",
+  "sources": [
+    {
+      "label": "WTFDIG (kefkabin), MIT",
+      "url": "https://github.com/mczub/wtfdig/tree/aa79375/src/routes/ultimates/umad"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "UmadP2ForsakenZP6SouthAdjustAiHelper",
+        "time": 1,
+        "line": 45
+      },
+      "title": "Initial lineup",
+      "cue": "Kefka appears",
+      "rule": "Stand near waymark 4, 6m south-west of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 6m west of the centre."
+        },
+        "RegenHealer": {
+          "rule": "Stand near waymark 1, 6m north-west of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Go to 6m east of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand near waymark 3, 6m south-east of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand near waymark 2, 6m north-east of the centre."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark 3, 6m south-east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2ForsakenZP6SouthAdjustAiHelper",
+        "time": 10.16,
+        "line": 46
+      },
+      "title": "After forsaken resolves",
+      "cue": "Forsaken resolves",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2ForsakenZP6SouthAdjustAiHelper",
+        "time": 25.17,
+        "line": 47
+      },
+      "title": "After  hits you",
+      "cue": " hits you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EndAttacks).",
+      "roles": {
+        "ShieldHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2ForsakenZP6SouthAdjustAiHelper",
+        "time": 33.3,
+        "line": 48
+      },
+      "title": "After spellwave resolves",
+      "cue": "Spellwave resolves",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2ForsakenZP6SouthAdjustAiHelper",
+        "time": 39.21,
+        "line": 49
+      },
+      "title": "After all Things Ending cast starts",
+      "cue": "All Things Ending cast starts",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "roles": {
+        "MainTank": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EndAttacks)."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EndAttacks)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2ForsakenZP6SouthAdjustAiHelper",
+        "time": 47.22,
+        "line": 50
+      },
+      "title": "After spelldriver resolves",
+      "cue": "Spelldriver resolves",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2ForsakenZP6SouthAdjustAiHelper",
+        "time": 54.35,
+        "line": 51
+      },
+      "title": "After sprint on another player",
+      "cue": "Sprint on another player",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2ForsakenZP6SouthAdjustAiHelper",
+        "time": 59.26,
+        "line": 52
+      },
+      "title": "After sprint on another player",
+      "cue": "Sprint on another player",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2ForsakenZP6SouthAdjustAiHelper",
+        "time": 66.4,
+        "line": 53
+      },
+      "title": "After spelldriver resolves",
+      "cue": "Spelldriver resolves",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EndAttacks).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2ForsakenZP6SouthAdjustAiHelper",
+        "time": 75.4,
+        "line": 54
+      },
+      "title": "After sprint on another player",
+      "cue": "Sprint on another player",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2ForsakenZP6SouthAdjustAiHelper",
+        "time": 81.31,
+        "line": 55
+      },
+      "title": "After all Things Ending cast starts",
+      "cue": "All Things Ending cast starts",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "roles": {
+        "MainTank": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EndAttacks)."
+        },
+        "OffTank": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EndAttacks)."
+        },
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EndAttacks)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2ForsakenZP6SouthAdjustAiHelper",
+        "time": 90.32,
+        "line": 56
+      },
+      "title": "Move at 90.3s",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2ForsakenZP6SouthAdjustAiHelper",
+        "time": 96.45,
+        "line": 61
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2ForsakenZP6SouthAdjustAiHelper",
+        "time": 101.16,
+        "line": 62
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "tolerance": 2.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "stgy-de632053",
+    "roleMap": {
+      "PhysRangedDps": "dps1",
+      "CasterDps": "dps2",
+      "MeleeDpsA": "dps3",
+      "MeleeDpsB": "dps4",
+      "MainTank": "tank1",
+      "RegenHealer": "healer1",
+      "OffTank": "tank2",
+      "ShieldHealer": "healer2"
+    },
+    "steps": {},
+    "exampleSeed": 1
+  },
+  "draft": true
+}

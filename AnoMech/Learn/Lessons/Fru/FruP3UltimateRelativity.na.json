@@ -1,0 +1,220 @@
+{
+  "scenario": "FruP3UltimateRelativityScenario",
+  "strat": "NA",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "FruP3UltimateRelativityAi",
+        "time": 1,
+        "line": 27
+      },
+      "title": "After ultimate Relativity cast starts",
+      "cue": "Ultimate Relativity cast starts",
+      "rule": "Stand at the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP3UltimateRelativityAi",
+        "time": 19.2,
+        "line": 28
+      },
+      "title": "After spell-in-Waiting: Return on you",
+      "cue": "Spell-in-Waiting: Return on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShellCrusherTarget).",
+      "roles": {
+        "OffTank": {
+          "rule": "If you are in IceHolder: Stand on waymark 3; otherwise: Stand at the centre."
+        },
+        "ShieldHealer": {
+          "rule": "When ShellCrusherTarget leaves out H2 and IceHolder leaves out H2, stand at the centre; when ShellCrusherTarget includes H2 and IceHolder includes H2, stand on waymark 3; when ShellCrusherTarget includes H2 and IceHolder leaves out H2, stand near waymark 1, 14m north-west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: IceHolder)."
+        },
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: IceHolder)."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: North)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP3UltimateRelativityAi",
+        "time": 23.9,
+        "line": 29
+      },
+      "title": "After sinbound Meltdown cast starts",
+      "cue": "Sinbound Meltdown cast starts",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: IceHolder).",
+      "roles": {
+        "RegenHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShellCrusherTarget)."
+        },
+        "ShieldHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShellCrusherTarget)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP3UltimateRelativityAi",
+        "from": 28.6,
+        "to": 49.1,
+        "line": 43
+      },
+      "title": "After return on you",
+      "cue": "Return on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: DpsIce).",
+      "roles": {
+        "OffTank": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
+        },
+        "ShieldHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShellCrusherTarget)."
+        },
+        "MeleeDpsA": {
+          "rule": "Depends on DpsIce: true \u2192 centre; false \u2192 at 4."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: IceHolder)."
+        },
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShellCrusherTarget)."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: IceHolder)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP3UltimateRelativityAi",
+        "from": 28.6,
+        "to": 49.1,
+        "line": 42
+      },
+      "title": "After fire Resistance Down II on you",
+      "tolerance": 1.5,
+      "skip": true
+    },
+    {
+      "key": {
+        "cls": "FruP3UltimateRelativityAi",
+        "time": 30.6,
+        "line": 31
+      },
+      "title": "After sinbound Meltdown resolves",
+      "cue": "Sinbound Meltdown resolves",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShellCrusherTarget).",
+      "roles": {
+        "RegenHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: IceHolder)."
+        },
+        "MeleeDpsA": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: IceHolder)."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: IceHolder)."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: IceHolder)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP3UltimateRelativityAi",
+        "time": 34,
+        "line": 32
+      },
+      "title": "After sinbound Meltdown cast starts",
+      "cue": "Sinbound Meltdown cast starts",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: IceHolder).",
+      "roles": {
+        "OffTank": {
+          "rule": "If you are in IceHolder: Stand on waymark 3; otherwise: Stand at the centre."
+        },
+        "RegenHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShellCrusherTarget)."
+        },
+        "ShieldHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShellCrusherTarget)."
+        },
+        "MeleeDpsA": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShellCrusherTarget)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP3UltimateRelativityAi",
+        "time": 45,
+        "line": 34
+      },
+      "title": "After sinbound Meltdown cast starts",
+      "cue": "Sinbound Meltdown cast starts",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShellCrusherTarget).",
+      "roles": {
+        "RegenHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: IceHolder)."
+        },
+        "MeleeDpsA": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: IceHolder)."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: IceHolder)."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: IceHolder)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP3UltimateRelativityAi",
+        "time": 55.899998,
+        "line": 37
+      },
+      "title": "After stun on you",
+      "cue": "Stun on you",
+      "rule": "Stand at the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "oYnDQe4ZbVaoxA5r",
+    "roleMap": {
+      "PhysRangedDps": "dps4",
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "MeleeDpsB": "dps1",
+      "MeleeDpsA": "dps2",
+      "CasterDps": "dps3"
+    },
+    "steps": {
+      "FruP3UltimateRelativityAi@55.9": 14
+    },
+    "exampleSeed": 7
+  },
+  "draft": true
+}

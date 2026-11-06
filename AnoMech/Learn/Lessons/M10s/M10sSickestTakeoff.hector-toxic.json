@@ -1,0 +1,153 @@
+{
+  "scenario": "M10sSickestTakeoffScenario",
+  "strat": "Hector (Toxic)",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "M10sSickestTakeoffAi",
+        "time": 0.3,
+        "line": 32
+      },
+      "title": "After deep Blue appears",
+      "cue": "Deep Blue appears",
+      "rule": "Go to 3m south of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 3m north of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sSickestTakeoffAi",
+        "time": 18.52,
+        "line": 33
+      },
+      "title": "After  hits you",
+      "cue": " hits you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LaneStart).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sSickestTakeoffAi",
+        "time": 32.27,
+        "line": 34
+      },
+      "title": "After sickest Take-off resolves",
+      "cue": "Sickest Take-off resolves",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LaneStart).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sSickestTakeoffAi",
+        "time": 34.16,
+        "line": 35
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 4m north of the centre.",
+      "roles": {
+        "OffTank": {
+          "rule": "Go to 4m south of the centre."
+        },
+        "RegenHealer": {
+          "rule": "Go to 4m west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Go to 4m east of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Go to 4m south-west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to 4m south-east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sSickestTakeoffAi",
+        "time": 46.15,
+        "line": 36
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 4m north of the centre.",
+      "roles": {
+        "OffTank": {
+          "rule": "Go to 4m south of the centre."
+        },
+        "RegenHealer": {
+          "rule": "Go to 4m west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Go to 4m east of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Go to 4m south of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to 4m east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sSickestTakeoffAi",
+        "time": 48.98,
+        "line": 37
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 2m south of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand near waymark A, 12m north of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M10sSickestTakeoffAi",
+        "time": 58.68,
+        "line": 38
+      },
+      "title": "After deep Impact hits you",
+      "cue": "Deep Impact hits you",
+      "rule": "Stand at the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "syjvfhacdxz7awet",
+    "roleMap": {
+      "PhysRangedDps": "dps4",
+      "OffTank": "tank1",
+      "MainTank": "tank2",
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "CasterDps": "dps1",
+      "MeleeDpsA": "dps2",
+      "MeleeDpsB": "dps3"
+    },
+    "steps": {
+      "M10sSickestTakeoffAi@58.68": 3
+    },
+    "exampleSeed": 1
+  },
+  "draft": true
+}

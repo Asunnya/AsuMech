@@ -1,0 +1,450 @@
+{
+  "scenario": "DsrP1KnightsScenario",
+  "strat": "Toolbox (PF)",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "DsrP1KnightsAi",
+        "time": 0.3,
+        "line": 41
+      },
+      "title": "After ser Grinnaux appears",
+      "cue": "Ser Grinnaux appears",
+      "rule": "Stand near waymark 2, 4m north of the centre.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "Stand near waymark B, 4m south of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Stand near waymark C, 4m south of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand near waymark B, 4m south-west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand near waymark C, 4m south-east of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand near waymark B, 5m south of the centre."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark C, 5m south of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP1KnightsAi",
+        "time": 16.4,
+        "line": 43
+      },
+      "title": "After a tether lands on you",
+      "cue": "A tether lands on you",
+      "rule": "Go to 4m south of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand near waymark 2, 5m north-west of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 4m north of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP1KnightsAi",
+        "time": 25,
+        "line": 44
+      },
+      "title": "After holy Bladedance hits you",
+      "cue": "Holy Bladedance hits you",
+      "rule": "Stand near waymark 2, 4m north of the centre.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "Stand near waymark B, 4m south of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Stand near waymark C, 4m south of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand near waymark B, 4m south-west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand near waymark C, 4m south-east of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand near waymark B, 5m south of the centre."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark C, 5m south of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP1KnightsAi",
+        "time": 35,
+        "line": 46
+      },
+      "title": "After hyperdimensional Slash cast starts",
+      "cue": "Hyperdimensional Slash cast starts",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "If you are in FirstSlashTargets: Stand on waymark 2; otherwise: Stand near waymark B, 5m south of the centre."
+        },
+        "OffTank": {
+          "rule": "When FirstSlashTargets includes OT and FirstSlashTargets includes MT, stand on waymark 3; when FirstSlashTargets leaves out OT and FirstSlashTargets leaves out MT, stand near waymark B, 5m south of the centre; when FirstSlashTargets includes OT and FirstSlashTargets leaves out MT, stand on waymark 2; when FirstSlashTargets leaves out OT and FirstSlashTargets includes MT, stand near waymark B, 5m south of the centre."
+        },
+        "RegenHealer": {
+          "rule": "When FirstSlashTargets leaves out H1 and FirstSlashTargets includes MT, stand near waymark B, 5m south of the centre; when FirstSlashTargets includes H1 and FirstSlashTargets leaves out MT, stand on waymark 2; when FirstSlashTargets leaves out H1 and FirstSlashTargets leaves out MT, stand near waymark B, 5m south of the centre; when FirstSlashTargets includes H1 and FirstSlashTargets includes MT, stand on waymark 1."
+        },
+        "ShieldHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: FirstSlashTargets has ShieldHealer)."
+        },
+        "MeleeDpsA": {
+          "rule": "When FirstSlashTargets includes M1 and FirstSlashTargets leaves out R2, stand on waymark 1; when FirstSlashTargets includes M1 and FirstSlashTargets includes R2, stand on waymark 3; when FirstSlashTargets leaves out M1 and FirstSlashTargets includes R2, stand near waymark B, 5m south of the centre; when FirstSlashTargets leaves out M1 and FirstSlashTargets leaves out R2, stand near waymark B, 5m south of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Depends on FirstSlashTargets has MeleeDpsB and SecondDimension: no \u0026 Empty \u2192 near B (S 5m); yes \u0026 Full \u2192 at 4; yes \u0026 Empty \u2192 at 1; no \u0026 Full \u2192 near B (S 5m)."
+        },
+        "PhysRangedDps": {
+          "rule": "When FirstSlashTargets includes R1 and FirstSlashTargets includes MT, stand on waymark 4; when FirstSlashTargets leaves out R1 and FirstSlashTargets leaves out MT, stand near waymark B, 5m south of the centre; when FirstSlashTargets includes R1 and FirstSlashTargets leaves out MT, stand on waymark 1; when FirstSlashTargets leaves out R1 and FirstSlashTargets includes MT, stand near waymark B, 5m south of the centre."
+        },
+        "CasterDps": {
+          "rule": "If you are in FirstSlashTargets: Stand on waymark 4; otherwise: Stand near waymark B, 5m south of the centre."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP1KnightsAi",
+        "time": 41.2,
+        "line": 47
+      },
+      "title": "After hyperdimensional Slash resolves",
+      "cue": "Hyperdimensional Slash resolves",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: HeavensblazeTarget).",
+      "roles": {
+        "MainTank": {
+          "rule": "If you are in FirstSlashTargets: Stand near waymark 2, 5m north of the centre; otherwise: Stand on waymark B."
+        },
+        "OffTank": {
+          "rule": "When FirstSlashTargets includes OT and FirstSlashTargets includes MT, stand near waymark 2, 5m north of the centre; when FirstSlashTargets leaves out OT and FirstSlashTargets leaves out MT, stand on waymark C; when FirstSlashTargets includes OT and FirstSlashTargets leaves out MT, stand near waymark 2, 5m north of the centre; when FirstSlashTargets leaves out OT and FirstSlashTargets includes MT, stand on waymark B."
+        },
+        "ShieldHealer": {
+          "rule": "When FirstSlashTargets leaves out H2 and FirstSlashTargets includes MT, stand on waymark C; when FirstSlashTargets includes H2 and FirstSlashTargets leaves out MT, stand near waymark 2, 5m north of the centre; when FirstSlashTargets leaves out H2 and FirstSlashTargets leaves out MT, stand on waymark A; when FirstSlashTargets includes H2 and FirstSlashTargets includes MT, stand near waymark 2, 5m north of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: FirstSlashTargets has MeleeDpsA)."
+        },
+        "PhysRangedDps": {
+          "rule": "When HeavensblazeTarget leaves out R1 and FirstSlashTargets includes R1, stand near waymark 2, 5m north of the centre; when HeavensblazeTarget leaves out R1 and FirstSlashTargets leaves out R1, stand on waymark A; when HeavensblazeTarget includes R1 and FirstSlashTargets leaves out R1, stand on waymark D."
+        },
+        "CasterDps": {
+          "rule": "If you are in FirstSlashTargets: Stand near waymark 2, 5m north of the centre; otherwise: Stand on waymark D."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP1KnightsAi",
+        "time": 48.6,
+        "line": 48
+      },
+      "title": "After hyperdimensional Slash hits you",
+      "cue": "Hyperdimensional Slash hits you",
+      "rule": "Stand near waymark 2, 4m north of the centre.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "Stand near waymark B, 4m south of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Stand near waymark C, 4m south of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand near waymark B, 4m south-west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand near waymark C, 4m south-east of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand near waymark B, 5m south of the centre."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark C, 5m south of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP1KnightsAi",
+        "time": 50.9,
+        "line": 49
+      },
+      "title": "After hyperdimensional Slash hits you",
+      "cue": "Hyperdimensional Slash hits you",
+      "rule": "with AdelphelLandingBearing as north: 5m south of the centre.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP1KnightsAi",
+        "time": 59.2,
+        "line": 50
+      },
+      "title": "After shining Blade resolves",
+      "cue": "Shining Blade resolves",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: AdelphelLandingBearing).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP1KnightsAi",
+        "time": 66,
+        "line": 52
+      },
+      "title": "After execution hits you",
+      "cue": "Execution hits you",
+      "rule": "Stand near waymark 2, 4m north of the centre.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "Stand near waymark B, 4m south of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Stand near waymark C, 4m south of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand near waymark B, 4m south-west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand near waymark C, 4m south-east of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand near waymark B, 5m south of the centre."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark C, 5m south of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP1KnightsAi",
+        "time": 77.2,
+        "line": 54
+      },
+      "title": "After heavensflame cast starts",
+      "cue": "Heavensflame cast starts",
+      "rule": "Stand at the centre.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP1KnightsAi",
+        "time": 85.6,
+        "line": 55
+      },
+      "title": "After heavensflame hits you",
+      "cue": "Heavensflame hits you",
+      "rule": "Stand near waymark 2, 4m north of the centre.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "Stand near waymark B, 4m south of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Stand near waymark C, 4m south of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand near waymark B, 4m south-west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand near waymark C, 4m south-east of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand near waymark B, 5m south of the centre."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark C, 5m south of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP1KnightsAi",
+        "time": 95.4,
+        "line": 56
+      },
+      "title": "After holiest of Holy cast starts",
+      "cue": "Holiest of Holy cast starts",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "Depends on SecondDimension: Empty \u2192 near 2 (N 4m); Full \u2192 near 2 (N 9m)."
+        },
+        "OffTank": {
+          "rule": "Depends on SecondDimension: Empty \u2192 near 3 (N 4m); Full \u2192 near 3 (N 9m)."
+        },
+        "RegenHealer": {
+          "rule": "Depends on SecondDimension: Empty \u2192 near B (S 4m); Full \u2192 near C (S 9m)."
+        },
+        "ShieldHealer": {
+          "rule": "Depends on SecondDimension: Empty \u2192 near C (S 4m); Full \u2192 near B (S 9m)."
+        },
+        "MeleeDpsA": {
+          "rule": "Depends on SecondDimension: Empty \u2192 near B (SW 4m); Full \u2192 at C."
+        },
+        "MeleeDpsB": {
+          "rule": "Depends on SecondDimension: Empty \u2192 near C (SE 4m); Full \u2192 at B."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand near waymark B, 5m south of the centre."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark C, 5m south of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP1KnightsAi",
+        "time": 100.4,
+        "line": 57
+      },
+      "title": "After holiest of Holy resolves",
+      "cue": "Holiest of Holy resolves",
+      "rule": "Stand near waymark 2, 4m north of the centre.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "Stand near waymark B, 4m south of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Stand near waymark C, 4m south of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand near waymark B, 4m south-west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand near waymark C, 4m south-east of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand near waymark B, 5m south of the centre."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark C, 5m south of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP1KnightsAi",
+        "time": 109.5,
+        "line": 59
+      },
+      "title": "After holiest Hallowing cast starts",
+      "cue": "Holiest Hallowing cast starts",
+      "rule": "Go to 11m west of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP1KnightsAi",
+        "from": 125.16,
+        "to": 140.27,
+        "line": 65
+      },
+      "title": "After shockwave resolves",
+      "cue": "Shockwave resolves",
+      "rule": "Go to 12m south-west of the centre.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP1KnightsAi",
+        "from": 128.56,
+        "to": 143.67,
+        "line": 66
+      },
+      "title": "After brightwing hits you",
+      "cue": "Brightwing hits you",
+      "rule": "Stand near waymark 1, 5m west of the centre.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP1KnightsAi",
+        "from": 133.86,
+        "to": 148.97,
+        "line": 67
+      },
+      "title": "After light Resistance Down on you",
+      "cue": "Light Resistance Down on you",
+      "rule": "Go to 11m west of the centre.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP1KnightsAi",
+        "time": 149,
+        "line": 69
+      },
+      "title": "After light Resistance Down on you",
+      "cue": "Light Resistance Down on you",
+      "rule": "Stand near waymark B, 5m south of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand near waymark 2, 6m north of the centre."
+        },
+        "OffTank": {
+          "rule": "Stand near waymark 3, 5m north of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "802461081524561",
+    "roleMap": {
+      "OffTank": "tank1",
+      "MainTank": "tank2",
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "MeleeDpsA": "dps1",
+      "PhysRangedDps": "dps2",
+      "MeleeDpsB": "dps3",
+      "CasterDps": "dps4"
+    },
+    "steps": {},
+    "exampleSeed": 1
+  },
+  "draft": true
+}

@@ -1,0 +1,191 @@
+{
+  "scenario": "FruP2DiamondDustScenario",
+  "strat": "NA \u00B7 Partner Swap",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "FruP2DiamondDustAi",
+        "time": 15.3,
+        "line": 36
+      },
+      "title": "After a marker lands on another player",
+      "cue": "A marker lands on another player",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SupportsMarked).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP2DiamondDustAi",
+        "time": 20.7,
+        "line": 37
+      },
+      "title": "After icicle Impact cast starts",
+      "cue": "Icicle Impact cast starts",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SupportsMarked).",
+      "roles": {
+        "MeleeDpsA": {
+          "rule": "Go to 4m west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to 4m south of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Go to 4m north of the centre."
+        },
+        "CasterDps": {
+          "rule": "Go to 4m east of the centre."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP2DiamondDustAi",
+        "time": 23.35,
+        "line": 38
+      },
+      "title": "After frigid Stone resolves",
+      "cue": "Frigid Stone resolves",
+      "rule": "Depends on FirstIcicle: 0 \u2192 N 3m; 3 \u2192 N 3m; 1 \u2192 SW 3m.",
+      "roles": {
+        "OffTank": {
+          "rule": "Depends on FirstIcicle: 0 \u2192 S 3m; 3 \u2192 S 3m; 1 \u2192 NE 3m."
+        },
+        "ShieldHealer": {
+          "rule": "Depends on FirstIcicle: 0 \u2192 S 3m; 3 \u2192 S 3m; 1 \u2192 NE 3m."
+        },
+        "MeleeDpsB": {
+          "rule": "Depends on FirstIcicle: 0 \u2192 S 3m; 3 \u2192 S 3m; 1 \u2192 NE 3m."
+        },
+        "CasterDps": {
+          "rule": "Depends on FirstIcicle: 0 \u2192 S 3m; 3 \u2192 S 3m; 1 \u2192 NE 3m."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP2DiamondDustAi",
+        "time": 29.05,
+        "line": 39
+      },
+      "title": "After icicle Impact resolves",
+      "cue": "Icicle Impact resolves",
+      "rule": "Depends on FirstIcicle: 0 \u2192 N wall; 3 \u2192 NW wall; 1 \u2192 SW wall.",
+      "roles": {
+        "OffTank": {
+          "rule": "Depends on FirstIcicle: 0 \u2192 S wall; 3 \u2192 SE wall; 1 \u2192 NE wall."
+        },
+        "ShieldHealer": {
+          "rule": "Depends on FirstIcicle: 0 \u2192 S wall; 3 \u2192 SE wall; 1 \u2192 NE wall."
+        },
+        "MeleeDpsB": {
+          "rule": "Depends on FirstIcicle: 0 \u2192 S wall; 3 \u2192 SE wall; 1 \u2192 NE wall."
+        },
+        "CasterDps": {
+          "rule": "Depends on FirstIcicle: 0 \u2192 S wall; 3 \u2192 SE wall; 1 \u2192 NE wall."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP2DiamondDustAi",
+        "time": 30.1,
+        "line": 40
+      },
+      "title": "After icicle Impact resolves",
+      "cue": "Icicle Impact resolves",
+      "rule": "Depends on FirstIcicle: 0 \u2192 N wall; 3 \u2192 NW wall; 1 \u2192 SW wall.",
+      "roles": {
+        "OffTank": {
+          "rule": "Depends on FirstIcicle: 0 \u2192 S wall; 3 \u2192 SE wall; 1 \u2192 NE wall."
+        },
+        "ShieldHealer": {
+          "rule": "Depends on FirstIcicle: 0 \u2192 S wall; 3 \u2192 SE wall; 1 \u2192 NE wall."
+        },
+        "MeleeDpsB": {
+          "rule": "Depends on FirstIcicle: 0 \u2192 S wall; 3 \u2192 SE wall; 1 \u2192 NE wall."
+        },
+        "CasterDps": {
+          "rule": "Depends on FirstIcicle: 0 \u2192 S wall; 3 \u2192 SE wall; 1 \u2192 NE wall."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP2DiamondDustAi",
+        "from": 31.7,
+        "to": 36.4,
+        "line": 45
+      },
+      "title": "After sinbound Holy hits you",
+      "cue": "Sinbound Holy hits you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: MirrorOctant).",
+      "roles": {
+        "OffTank": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: FirstIcicle)."
+        },
+        "ShieldHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: FirstIcicle)."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: FirstIcicle)."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: FirstIcicle)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP2DiamondDustAi",
+        "time": 37.966667,
+        "line": 47
+      },
+      "title": "After sinbound Holy hits you",
+      "cue": "Sinbound Holy hits you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: MirrorOctant).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP2DiamondDustAi",
+        "time": 52.75,
+        "line": 53
+      },
+      "title": "Move at 52.8s",
+      "rule": "Go to 4m south of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "PPYgcTqAr4DXZE50",
+    "roleMap": {
+      "CasterDps": "dps4",
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "MeleeDpsA": "dps1",
+      "MeleeDpsB": "dps2",
+      "PhysRangedDps": "dps3"
+    },
+    "steps": {
+      "FruP2DiamondDustAi@23.35": 7
+    },
+    "exampleSeed": 2
+  },
+  "draft": true
+}

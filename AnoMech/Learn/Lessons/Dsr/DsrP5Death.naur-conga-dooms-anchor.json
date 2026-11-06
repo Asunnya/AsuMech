@@ -1,0 +1,296 @@
+{
+  "scenario": "DsrP5DeathScenario",
+  "strat": "NAUR (conga, dooms anchor)",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "DsrP5DeathAi",
+        "time": 0.3,
+        "line": 41
+      },
+      "title": "After king Thordan appears",
+      "cue": "King Thordan appears",
+      "rule": "Go to 4m north of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 4m south of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP5DeathAi",
+        "time": 12,
+        "line": 42
+      },
+      "title": "After ser Guerrique appears",
+      "cue": "Ser Guerrique appears",
+      "rule": "Go to 2m south of the centre.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "with WarriorBearing as north: 6m west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "with WarriorBearing as north: 6m east of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "with WarriorBearing as north: 4m south-west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "with WarriorBearing as north: 4m south-east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP5DeathAi",
+        "time": 14.9,
+        "line": 43
+      },
+      "title": "After doom on another player",
+      "cue": "Doom on another player",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "with WarriorBearing as north: 2m south of the centre."
+        },
+        "OffTank": {
+          "rule": "Stand at the centre."
+        },
+        "RegenHealer": {
+          "rule": "with WarriorBearing as north: 6m west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "with WarriorBearing as north: 6m east of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "with WarriorBearing as north: 4m south-west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "with WarriorBearing as north: 4m south-east of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "with WarriorBearing as north: 3m south-west of the centre."
+        },
+        "CasterDps": {
+          "rule": "with WarriorBearing as north: 3m south-east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP5DeathAi",
+        "time": 16.5,
+        "line": 44
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NonDoomOrder).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP5DeathAi",
+        "time": 24.25,
+        "line": 45
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NonDoomOrder).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP5DeathAi",
+        "time": 26,
+        "line": 46
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "with WarriorBearing as north: 13m west of the centre.",
+      "roles": {
+        "ShieldHealer": {
+          "rule": "with WarriorBearing as north: 13m east of the centre."
+        },
+        "MainTank": {
+          "rule": "Go to 13m south of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
+        },
+        "OffTank": {
+          "rule": "Go to 13m south of the centre."
+        },
+        "CasterDps": {
+          "rule": "Go to 13m north of the centre."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP5DeathAi",
+        "time": 27.85,
+        "line": 47
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Dooms has OffTank)."
+        },
+        "PhysRangedDps": {
+          "rule": "with WarriorBearing as north: the south-west wall."
+        },
+        "OffTank": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeBearing)."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to the north-east wall."
+        },
+        "CasterDps": {
+          "rule": "with WarriorBearing as north: the south-east wall."
+        },
+        "MeleeDpsA": {
+          "rule": "Go to the south-east wall."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP5DeathAi",
+        "time": 30,
+        "line": 48
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Stand at the centre.",
+      "roles": {
+        "OffTank": {
+          "rule": "When Dooms includes OT and Puddles includes (12.4,14.9), go to 3m south-west of the centre; when Dooms leaves out OT and Puddles leaves out (12.4,14.9), go to 3m south-west of the centre; when Dooms includes OT and Puddles leaves out (12.4,14.9), go to 3m north-east of the centre."
+        },
+        "RegenHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Puddles has (14.9,-12.5))."
+        },
+        "ShieldHealer": {
+          "rule": "When Dooms includes R2 and Puddles leaves out (-0,20), stand at the centre; when Dooms includes R2 and Puddles includes (-0,20), go to 4m south of the centre; when Dooms leaves out R2 and Puddles includes (-0,20), stand at the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "When Dooms leaves out M1 and Dooms leaves out MT, stand at the centre; when Dooms includes M1 and Dooms leaves out MT, stand at the centre; when Dooms includes M1 and Dooms includes MT, go to 4m north of the centre; when Dooms leaves out M1 and Dooms includes MT, stand at the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NonDoomOrder)."
+        },
+        "CasterDps": {
+          "rule": "When Dooms includes H1 and Dooms includes OT, go to 3m south-east of the centre; when Dooms includes H1 and Dooms leaves out OT, go to 4m north of the centre; when Dooms leaves out H1 and Dooms leaves out OT, go to 3m south-east of the centre; when Dooms leaves out H1 and Dooms includes OT, go to 3m south-east of the centre."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP5DeathAi",
+        "time": 32.25,
+        "line": 49
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NonDoomOrder).",
+      "roles": {
+        "MainTank": {
+          "rule": "When Dooms leaves out M1 and Puddles includes (12.4,14.9), go to 3m north-west of the centre; when Dooms includes M1 and Puddles leaves out (12.4,14.9), go to 3m north-west of the centre; when Dooms leaves out M1 and Puddles leaves out (12.4,14.9), go to 3m south-east of the centre."
+        },
+        "RegenHealer": {
+          "rule": "When Dooms includes M2 and Puddles leaves out (-14.9,12.5), go to 4m west of the centre; when Dooms leaves out M2 and Puddles leaves out (-14.9,12.5), go to 4m south of the centre; when Dooms leaves out M2 and Puddles includes (-14.9,12.5), go to 4m west of the centre; when Dooms includes M2 and Puddles includes (-14.9,12.5), go to 3m north-east of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "When Dooms includes R2 and Puddles leaves out (-0,20), go to 3m north of the centre; when Dooms includes R2 and Puddles includes (-0,20), go to 4m south of the centre; when Dooms leaves out R2 and Puddles includes (-0,20), go to 3m north of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Depends on FirstDoomSquare and Puddles has (0,19.9): true \u0026 no \u2192 S 3m; false \u0026 yes \u2192 S 3m; false \u0026 no \u2192 N 4m."
+        },
+        "PhysRangedDps": {
+          "rule": "When Puddles leaves out (0,19.9) and Puddles leaves out (14.9,12.5), go to 3m north-east of the centre; when Puddles includes (0,19.9) and Puddles includes (14.9,12.5), go to 3m north-east of the centre; when Puddles leaves out (0,19.9) and Puddles includes (14.9,12.5), go to 3m south-west of the centre."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeBearing)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP5DeathAi",
+        "time": 38.13,
+        "line": 51
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: WarriorBearing).",
+      "roles": {
+        "RegenHealer": {
+          "rule": "with WarriorBearing as north: the west wall."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeBearing)."
+        },
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeBearing)."
+        },
+        "ShieldHealer": {
+          "rule": "with WarriorBearing as north: the east wall."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP5DeathAi",
+        "time": 41.5,
+        "line": 52
+      },
+      "title": "After heavensflame hits you",
+      "cue": "Heavensflame hits you",
+      "rule": "Stand at the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "414790163993271",
+    "roleMap": {
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "MeleeDpsB": "dps1",
+      "CasterDps": "dps2",
+      "PhysRangedDps": "dps3",
+      "MeleeDpsA": "dps4"
+    },
+    "steps": {
+      "DsrP5DeathAi@14.9": 1
+    },
+    "exampleSeed": 1,
+    "example": {
+      "Dooms": "[OffTank,ShieldHealer,MeleeDpsB,CasterDps]"
+    }
+  },
+  "draft": true
+}

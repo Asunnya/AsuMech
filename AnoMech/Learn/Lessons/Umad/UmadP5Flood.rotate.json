@@ -1,0 +1,57 @@
+{
+  "scenario": "UmadP5FloodScenario",
+  "strat": "Rotate",
+  "sources": [
+    {
+      "label": "WTFDIG (kefkabin), MIT",
+      "url": "https://github.com/mczub/wtfdig/tree/aa79375/src/routes/ultimates/umad"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "UmadP5FloodAi",
+        "time": 1.1,
+        "line": 38
+      },
+      "title": "After  cast starts",
+      "cue": " cast starts",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "Depends on StartQuadrant: 2 \u2192 S 5m; 1 \u2192 E 4m; 3 \u2192 W 4m; 0 \u2192 N 3m."
+        },
+        "OffTank": {
+          "rule": "Depends on StartQuadrant: 2 \u2192 S 5m; 1 \u2192 E 5m; 3 \u2192 W 3m; 0 \u2192 N 3m."
+        },
+        "RegenHealer": {
+          "rule": "Depends on StartQuadrant: 2 \u2192 S 4m; 1 \u2192 E 5m; 3 \u2192 W 3m; 0 \u2192 N 4m."
+        },
+        "ShieldHealer": {
+          "rule": "Depends on StartQuadrant: 2 \u2192 S 3m; 1 \u2192 E 5m; 3 \u2192 W 3m; 0 \u2192 N 5m."
+        },
+        "MeleeDpsA": {
+          "rule": "Depends on StartQuadrant: 2 \u2192 S 3m; 1 \u2192 E 4m; 3 \u2192 W 4m; 0 \u2192 N 5m."
+        },
+        "MeleeDpsB": {
+          "rule": "Depends on StartQuadrant: 2 \u2192 S 3m; 1 \u2192 E 3m; 3 \u2192 W 5m; 0 \u2192 N 5m."
+        },
+        "PhysRangedDps": {
+          "rule": "Depends on StartQuadrant: 2 \u2192 S 4m; 1 \u2192 E 3m; 3 \u2192 W 5m; 0 \u2192 N 4m."
+        },
+        "CasterDps": {
+          "rule": "Depends on StartQuadrant: 2 \u2192 S 5m; 1 \u2192 E 3m; 3 \u2192 W 5m; 0 \u2192 N 3m."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "3wODYtApXBtYAdu0",
+    "roleMap": {},
+    "steps": {},
+    "exampleSeed": 1
+  },
+  "draft": true
+}

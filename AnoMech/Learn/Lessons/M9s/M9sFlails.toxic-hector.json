@@ -1,0 +1,37 @@
+{
+  "scenario": "M9sFlailsScenario",
+  "strat": "Toxic / Hector",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "M9sFlailsAi",
+        "time": 0.5,
+        "line": 33
+      },
+      "title": "After vamp Fatale appears",
+      "cue": "Vamp Fatale appears",
+      "rule": "Go to 2m south of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "c2L5iJfuYIWXk1v7",
+    "roleMap": {
+      "CasterDps": "dps4",
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "MeleeDpsA": "dps1",
+      "MeleeDpsB": "dps2",
+      "PhysRangedDps": "dps3"
+    },
+    "steps": {
+      "M9sFlailsAi@0.5": 3
+    },
+    "exampleSeed": 1
+  },
+  "draft": true
+}

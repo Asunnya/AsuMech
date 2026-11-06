@@ -1,0 +1,237 @@
+{
+  "scenario": "UmadP2ForsakenScenario",
+  "strat": "Yan",
+  "sources": [
+    {
+      "label": "WTFDIG (kefkabin), MIT",
+      "url": "https://github.com/mczub/wtfdig/tree/aa79375/src/routes/ultimates/umad"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "UmadP2ForsakenYanAiHelper",
+        "time": 1,
+        "line": 46
+      },
+      "title": "Initial lineup",
+      "cue": "Kefka appears",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 4m north-west of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 4m south-west of the centre."
+        },
+        "RegenHealer": {
+          "rule": "Stand near waymark 1, 8m west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Stand near waymark 4, 8m west of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Go to 4m north-east of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to 4m south-east of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand near waymark 2, 8m east of the centre."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark 3, 8m east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2ForsakenYanAiHelper",
+        "time": 10.16,
+        "line": 47
+      },
+      "title": "After forsaken resolves",
+      "cue": "Forsaken resolves",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2ForsakenYanAiHelper",
+        "time": 25.17,
+        "line": 48
+      },
+      "title": "After  hits you",
+      "cue": " hits you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EndAttacks).",
+      "roles": {
+        "OffTank": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth)."
+        },
+        "ShieldHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2ForsakenYanAiHelper",
+        "time": 33.3,
+        "line": 49
+      },
+      "title": "After spellwave resolves",
+      "cue": "Spellwave resolves",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2ForsakenYanAiHelper",
+        "time": 39.21,
+        "line": 50
+      },
+      "title": "After all Things Ending cast starts",
+      "cue": "All Things Ending cast starts",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "roles": {
+        "OffTank": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EndAttacks)."
+        },
+        "MeleeDpsA": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EndAttacks)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2ForsakenYanAiHelper",
+        "time": 47.22,
+        "line": 51
+      },
+      "title": "After spelldriver resolves",
+      "cue": "Spelldriver resolves",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2ForsakenYanAiHelper",
+        "time": 54.35,
+        "line": 52
+      },
+      "title": "After sprint on another player",
+      "cue": "Sprint on another player",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2ForsakenYanAiHelper",
+        "time": 59.26,
+        "line": 53
+      },
+      "title": "After sprint on another player",
+      "cue": "Sprint on another player",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2ForsakenYanAiHelper",
+        "time": 65.4,
+        "line": 54
+      },
+      "title": "After spelldriver resolves",
+      "cue": "Spelldriver resolves",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EndAttacks).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2ForsakenYanAiHelper",
+        "time": 75.4,
+        "line": 55
+      },
+      "title": "After sprint on another player",
+      "cue": "Sprint on another player",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2ForsakenYanAiHelper",
+        "time": 81.31,
+        "line": 56
+      },
+      "title": "After all Things Ending cast starts",
+      "cue": "All Things Ending cast starts",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2ForsakenYanAiHelper",
+        "time": 90.32,
+        "line": 57
+      },
+      "title": "Move at 90.3s",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2ForsakenYanAiHelper",
+        "time": 96.45,
+        "line": 61
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Stand near waymark A, 10m north of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2ForsakenYanAiHelper",
+        "time": 101.16,
+        "line": 62
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EndAttacks).",
+      "tolerance": 2.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "stgy-de632053",
+    "roleMap": {
+      "MeleeDpsA": "dps1",
+      "MeleeDpsB": "dps2",
+      "PhysRangedDps": "dps3",
+      "CasterDps": "dps4",
+      "MainTank": "tank1",
+      "ShieldHealer": "healer1",
+      "OffTank": "tank2",
+      "RegenHealer": "healer2"
+    },
+    "steps": {},
+    "exampleSeed": 1
+  },
+  "draft": true
+}

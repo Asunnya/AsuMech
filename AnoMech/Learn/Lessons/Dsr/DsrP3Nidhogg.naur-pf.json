@@ -1,0 +1,547 @@
+{
+  "scenario": "DsrP3NidhoggScenario",
+  "strat": "NAUR (PF)",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "DsrP3NidhoggAi",
+        "time": 0.3,
+        "line": 50
+      },
+      "title": "After nidhogg appears",
+      "cue": "Nidhogg appears",
+      "rule": "Stand near waymark B, 6m south of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand near waymark 2, 6m north of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP3NidhoggAi",
+        "time": 23.5,
+        "line": 52
+      },
+      "title": "After dive from Grace cast starts",
+      "cue": "Dive from Grace cast starts",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SoulTetherTargets).",
+      "roles": {
+        "OffTank": {
+          "rule": "When TowerSoakers includes 4 and EyeTargets leaves out H1, go to 10m south of the centre; when TowerSoakers leaves out 4 and EyeTargets leaves out H1, stand near waymark D, 7m east of the centre; when TowerSoakers leaves out 4 and EyeTargets includes H1, stand near waymark 1, 10m north-west of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "When TowerSoakers includes 4 and EyeTargets leaves out R1, stand near waymark D, 7m east of the centre; when TowerSoakers leaves out 4 and EyeTargets includes R1, stand near waymark 4, 10m north-east of the centre; when TowerSoakers leaves out 4 and EyeTargets leaves out R1, go to 10m south of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers)."
+        },
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers)."
+        },
+        "CasterDps": {
+          "rule": "When EyeTargets leaves out M2, stand near waymark A, 7m west of the centre; when EyeTargets includes M2, stand near waymark 1, 10m north-west of the centre."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP3NidhoggAi",
+        "time": 30.5,
+        "line": 53
+      },
+      "title": "After high Jump Target on another player",
+      "cue": "High Jump Target on another player",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SoulTetherTargets).",
+      "roles": {
+        "OffTank": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeTargets)."
+        },
+        "RegenHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers)."
+        },
+        "ShieldHealer": {
+          "rule": "When LashFirst includes true and SoulTetherTargets leaves out R2, stand near waymark 2, 8m north of the centre; when LashFirst includes true and SoulTetherTargets includes R2, stand near waymark B, 7m south of the centre; when LashFirst leaves out true and SoulTetherTargets includes R2, stand near waymark 2, 8m north of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "When TowerSoakers includes 4 and EyeTargets leaves out M2, stand near waymark D, 7m east of the centre; when TowerSoakers leaves out 4 and EyeTargets leaves out M2, stand near waymark 2, 8m north of the centre; when TowerSoakers leaves out 4 and EyeTargets includes M2, stand near waymark A, 7m west of the centre; when TowerSoakers includes 4 and EyeTargets includes M2, stand near waymark 2, 8m north of the centre."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP3NidhoggAi",
+        "time": 37.5,
+        "line": 55
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeTargets).",
+      "roles": {
+        "ShieldHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SoulTetherTargets)."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SoulTetherTargets)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP3NidhoggAi",
+        "time": 41.4,
+        "line": 56
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeTargets).",
+      "roles": {
+        "ShieldHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SoulTetherTargets)."
+        },
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SoulTetherTargets)."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SoulTetherTargets)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP3NidhoggAi",
+        "time": 44.2,
+        "line": 57
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
+      "roles": {
+        "OffTank": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers has 4)."
+        },
+        "RegenHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeTargets)."
+        },
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SoulTetherTargets has RegenHealer)."
+        },
+        "ShieldHealer": {
+          "rule": "Go to 11m east of the centre."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LashFirst has true)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP3NidhoggAi",
+        "time": 44.2,
+        "line": 58
+      },
+      "title": "After sprint on you",
+      "tolerance": 2.5,
+      "skip": true
+    },
+    {
+      "key": {
+        "cls": "DsrP3NidhoggAi",
+        "time": 47.45,
+        "line": 60
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Stand near waymark 2, 8m north of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP3NidhoggAi",
+        "time": 47.5,
+        "line": 62
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Stand near waymark 2, 8m north of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP3NidhoggAi",
+        "time": 47.5,
+        "line": 63
+      },
+      "title": "After sprint on you",
+      "tolerance": 2.5,
+      "skip": true
+    },
+    {
+      "key": {
+        "cls": "DsrP3NidhoggAi",
+        "time": 53.95,
+        "line": 65
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
+      "roles": {
+        "OffTank": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers has 4)."
+        },
+        "RegenHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeTargets)."
+        },
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SoulTetherTargets has RegenHealer)."
+        },
+        "ShieldHealer": {
+          "rule": "Stand near waymark D, 7m east of the centre."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LashFirst has true)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP3NidhoggAi",
+        "time": 53.95,
+        "line": 64
+      },
+      "title": "After sprint on you",
+      "tolerance": 2.5,
+      "skip": true
+    },
+    {
+      "key": {
+        "cls": "DsrP3NidhoggAi",
+        "time": 56.6,
+        "line": 67
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Stand near waymark 2, 8m north of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP3NidhoggAi",
+        "time": 59.1,
+        "line": 69
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SoulTetherTargets).",
+      "roles": {
+        "OffTank": {
+          "rule": "When TowerSoakers leaves out 3 and EyeTargets leaves out H1, go to 4m north of the centre; when TowerSoakers includes 3 and EyeTargets leaves out H1, go to 11m north of the centre; when TowerSoakers includes 3 and EyeTargets includes H1, go to 10m west of the centre."
+        },
+        "RegenHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers)."
+        },
+        "MeleeDpsA": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers)."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers)."
+        },
+        "PhysRangedDps": {
+          "rule": "When TowerSoakers leaves out 3, go to 3m north of the centre; when TowerSoakers includes 3, stand near waymark 2, 10m north of the centre."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP3NidhoggAi",
+        "time": 62.5,
+        "line": 70
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SoulTetherTargets).",
+      "roles": {
+        "OffTank": {
+          "rule": "When TowerSoakers leaves out 3 and EyeTargets leaves out H1, go to 11m north of the centre; when TowerSoakers includes 3 and EyeTargets leaves out H1, go to 4m north of the centre; when TowerSoakers includes 3 and EyeTargets includes H1, go to 3m west of the centre."
+        },
+        "RegenHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers)."
+        },
+        "MeleeDpsA": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers)."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers)."
+        },
+        "PhysRangedDps": {
+          "rule": "Depends on LashFirst: [false,true] \u2192 near 2 (N 10m); [true,false] \u2192 N 3m; [false,false] \u2192 N 3m; [true,true] \u2192 W 10m."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP3NidhoggAi",
+        "time": 65.6,
+        "line": 71
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 11m west of the centre.",
+      "roles": {
+        "ShieldHealer": {
+          "rule": "When SoulTetherTargets leaves out R2, go to 11m east of the centre; when SoulTetherTargets includes R2, go to 11m south of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "When TowerSoakers includes 2, go to 11m south of the centre; when TowerSoakers leaves out 2, go to 11m east of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "If you are in SoulTetherTargets: Go to 11m south of the centre; otherwise: Go to 11m west of the centre."
+        },
+        "MainTank": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers has 1)."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LashFirst)."
+        },
+        "RegenHealer": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP3NidhoggAi",
+        "time": 67.6,
+        "line": 72
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Stand near waymark 2, 9m north-west of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand near waymark 2, 6m north of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP3NidhoggAi",
+        "time": 72.5,
+        "line": 73
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Stand near waymark B, 6m south of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand near waymark 2, 6m north of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP3NidhoggAi",
+        "time": 74.3,
+        "line": 75
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Stand on waymark C.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP3NidhoggAi",
+        "time": 77.8,
+        "line": 76
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers).",
+      "roles": {
+        "MainTank": {
+          "rule": "When SoulTetherTargets leaves out H1 and EyeTargets leaves out OT, go to 11m south-west of the centre; when SoulTetherTargets includes H1 and EyeTargets leaves out OT, go to 12m north-west of the centre; when SoulTetherTargets leaves out H1 and EyeTargets includes OT, go to 12m north-west of the centre; when SoulTetherTargets includes H1 and EyeTargets includes OT, go to 11m south-west of the centre."
+        },
+        "RegenHealer": {
+          "rule": "Go to 11m north-west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Go to 11m south-east of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to 11m north-west of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Go to 12m south-west of the centre."
+        },
+        "CasterDps": {
+          "rule": "Go to 11m north-east of the centre."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP3NidhoggAi",
+        "time": 84.2,
+        "line": 77
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers).",
+      "roles": {
+        "MainTank": {
+          "rule": "When SoulTetherTargets leaves out H1 and EyeTargets leaves out OT, go to the south-west wall; when SoulTetherTargets includes H1 and EyeTargets leaves out OT, go to the north-west wall; when SoulTetherTargets leaves out H1 and EyeTargets includes OT, go to the north-west wall; when SoulTetherTargets includes H1 and EyeTargets includes OT, go to the south-west wall."
+        },
+        "RegenHealer": {
+          "rule": "Go to the north-west wall."
+        },
+        "ShieldHealer": {
+          "rule": "Go to the south-east wall."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to the north-west wall."
+        },
+        "PhysRangedDps": {
+          "rule": "Go to the south-west wall."
+        },
+        "CasterDps": {
+          "rule": "Go to the north-east wall."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP3NidhoggAi",
+        "time": 86.8,
+        "line": 78
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers).",
+      "roles": {
+        "MainTank": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SoulTetherTargets)."
+        },
+        "RegenHealer": {
+          "rule": "Go to 15m west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Go to 15m east of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to 15m west of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Go to the west wall."
+        },
+        "CasterDps": {
+          "rule": "Go to the east wall."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP3NidhoggAi",
+        "from": 87.6,
+        "to": 89.6,
+        "line": 80
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand on waymark 3."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP3NidhoggAi",
+        "time": 91.3,
+        "line": 81
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Stand near waymark 2, 8m north of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand near waymark B, 6m south of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "DsrP3NidhoggAi",
+        "time": 110.5,
+        "line": 82
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Stand near waymark 2, 8m north of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "267799249146271",
+    "roleMap": {
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "MeleeDpsA": "healer1",
+      "RegenHealer": "healer2",
+      "PhysRangedDps": "dps1",
+      "MeleeDpsB": "dps2",
+      "ShieldHealer": "dps3",
+      "CasterDps": "dps4"
+    },
+    "steps": {
+      "DsrP3NidhoggAi@0.3": 0,
+      "DsrP3NidhoggAi@74.3": 10
+    },
+    "exampleSeed": 1
+  },
+  "draft": true
+}

@@ -1,0 +1,233 @@
+{
+  "scenario": "TopP5SigmaScenario",
+  "strat": "Standard",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "TopP5SigmaAi",
+        "time": 0.5,
+        "line": 33
+      },
+      "title": "Initial positions",
+      "cue": "Quickening Dynamis  on you",
+      "rule": "Go to 7m south of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 5m north of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 5m north of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5SigmaAi",
+        "time": 14.1,
+        "line": 34
+      },
+      "title": "Lineup next to omega M",
+      "cue": "A tether lands on another player",
+      "rule": "Read the strat\u0027s LineupNextToOmegaM: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthA).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5SigmaAi",
+        "time": 20,
+        "line": 35
+      },
+      "title": "Wave cannon spread",
+      "cue": "A tether lands on you",
+      "rule": "Read the strat\u0027s WaveCannonSpread: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthA).",
+      "roles": {
+        "RegenHealer": {
+          "rule": "Read the strat\u0027s WaveCannonSpread: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthB)."
+        },
+        "MeleeDpsA": {
+          "rule": "Read the strat\u0027s WaveCannonSpread: the spot follows a rule the rolls alone don\u0027t show (closest roll: FirstMissing)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5SigmaAi",
+        "time": 32,
+        "line": 36
+      },
+      "title": "Knockback pre position",
+      "cue": "Looper on you",
+      "rule": "Read the strat\u0027s KnockbackPrePosition: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthA).",
+      "roles": {
+        "MeleeDpsA": {
+          "rule": "Depends on TowerNorthFlipped and SpinnerRotation: false \u0026 CounterClockwise \u2192 E 4m; true \u0026 CounterClockwise \u2192 S 4m; true \u0026 Clockwise \u2192 NW 4m; false \u0026 Clockwise \u2192 NW 4m."
+        },
+        "MeleeDpsB": {
+          "rule": "Read the strat\u0027s KnockbackPrePosition: the spot follows a rule the rolls alone don\u0027t show (closest roll: SpinnerRotation)."
+        },
+        "PhysRangedDps": {
+          "rule": "Read the strat\u0027s KnockbackPrePosition: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthB)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5SigmaAi",
+        "time": 36,
+        "line": 37
+      },
+      "title": "Knockback position",
+      "cue": "Looper on you",
+      "rule": "Stand at the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5SigmaAi",
+        "time": 41.5,
+        "line": 38
+      },
+      "title": "Tower positions",
+      "cue": "Discharger resolves",
+      "rule": "Read the strat\u0027s TowerPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthA).",
+      "roles": {
+        "OffTank": {
+          "rule": "Depends on TowerNorthFlipped and SpinnerRotation: false \u0026 CounterClockwise \u2192 SE wall; true \u0026 CounterClockwise \u2192 NE wall; true \u0026 Clockwise \u2192 NE wall; false \u0026 Clockwise \u2192 W wall."
+        },
+        "MeleeDpsA": {
+          "rule": "Read the strat\u0027s TowerPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthB)."
+        },
+        "PhysRangedDps": {
+          "rule": "Read the strat\u0027s TowerPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: SecondMissing)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5SigmaAi",
+        "time": 44,
+        "line": 40
+      },
+      "title": "Initial positions",
+      "cue": "Twice-come Ruin on you",
+      "rule": "Go to 7m south of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 5m north of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 5m north of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5SigmaAi",
+        "time": 50,
+        "line": 41
+      },
+      "title": "Rear lasers pre position",
+      "cue": "Twice-come Ruin on you",
+      "rule": "Read the strat\u0027s RearLasersPrePosition: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthB).",
+      "roles": {
+        "ShieldHealer": {
+          "rule": "Read the strat\u0027s RearLasersPrePosition: the spot follows a rule the rolls alone don\u0027t show (closest roll: SecondMissing)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5SigmaAi",
+        "time": 58,
+        "line": 42
+      },
+      "title": "Adjust for legs",
+      "cue": "Rear Lasers resolves",
+      "rule": "Read the strat\u0027s AdjustForLegs: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthB).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5SigmaAi",
+        "time": 62,
+        "line": 43
+      },
+      "title": "Hello world positions",
+      "cue": "Rear Lasers resolves",
+      "rule": "Read the strat\u0027s HelloWorldPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthA).",
+      "roles": {
+        "OffTank": {
+          "rule": "Read the strat\u0027s HelloWorldPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthB)."
+        },
+        "RegenHealer": {
+          "rule": "Read the strat\u0027s HelloWorldPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthB)."
+        },
+        "MeleeDpsA": {
+          "rule": "Read the strat\u0027s HelloWorldPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: FirstMissing)."
+        },
+        "MeleeDpsB": {
+          "rule": "Read the strat\u0027s HelloWorldPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: FirstMissing)."
+        },
+        "CasterDps": {
+          "rule": "Read the strat\u0027s HelloWorldPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthB)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5SigmaAi",
+        "time": 73,
+        "line": 44
+      },
+      "title": "Initial positions",
+      "cue": "Quickening Dynamis  on you",
+      "rule": "Go to 7m south of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 5m north of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 5m north of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "107380954136761",
+    "roleMap": {
+      "OffTank": "tank1",
+      "MainTank": "tank2",
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "CasterDps": "dps1",
+      "PhysRangedDps": "dps2",
+      "MeleeDpsB": "dps3",
+      "MeleeDpsA": "dps4"
+    },
+    "steps": {
+      "TopP5SigmaAi@0.5": 0
+    },
+    "exampleSeed": 1
+  },
+  "draft": true
+}

@@ -1,0 +1,126 @@
+{
+  "scenario": "UcobP2NaelScenario",
+  "strat": "Stack north of Nael, rotate clockwise, fire in-out-in-in",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "UcobP2NaelAi",
+        "from": 0.3,
+        "to": 128.31001,
+        "line": 119
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 5m south of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP2NaelAi",
+        "time": 20,
+        "line": 67
+      },
+      "title": "After sprint on you",
+      "tolerance": 1.5,
+      "skip": true
+    },
+    {
+      "key": {
+        "cls": "UcobP2NaelAi",
+        "from": 48.27,
+        "to": 121.32,
+        "line": 111
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to the south wall.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP2NaelAi",
+        "time": 57.8,
+        "line": 103
+      },
+      "title": "After iceball resolves",
+      "cue": "Iceball resolves",
+      "rule": "Stand near waymark 4, 4m south of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP2NaelAi",
+        "time": 75.91,
+        "line": 102
+      },
+      "title": "After sprint on you",
+      "tolerance": 1.5,
+      "skip": true
+    },
+    {
+      "key": {
+        "cls": "UcobP2NaelAi",
+        "time": 106.22,
+        "line": 94
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "When ThunderTargets leaves out ShieldHealer] and ThunderTargets leaves out MeleeDpsB], stand near waymark D, 7m south of the centre; when ThunderTargets includes ShieldHealer] and ThunderTargets leaves out MeleeDpsB], go to 7m south-west of the centre; when ThunderTargets leaves out ShieldHealer] and ThunderTargets includes MeleeDpsB], go to 7m south-west of the centre; when ThunderTargets includes ShieldHealer] and ThunderTargets includes MeleeDpsB], stand near waymark D, 12m south of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "When ThunderTargets includes MT and ThunderTargets includes [ShieldHealer, stand near waymark D, 6m south of the centre; when ThunderTargets includes MT and ThunderTargets leaves out [ShieldHealer, stand near waymark D, 6m south of the centre; when ThunderTargets leaves out MT and ThunderTargets includes [ShieldHealer, go to 6m south-west of the centre; when ThunderTargets leaves out MT and ThunderTargets leaves out [ShieldHealer, stand near waymark D, 11m south of the centre."
+        },
+        "OffTank": {
+          "rule": "When ThunderTargets leaves out ShieldHealer] and ThunderTargets leaves out MeleeDpsB], stand near waymark D, 6m south of the centre; when ThunderTargets includes ShieldHealer] and ThunderTargets leaves out MeleeDpsB], go to 6m south-west of the centre; when ThunderTargets leaves out ShieldHealer] and ThunderTargets includes MeleeDpsB], go to 6m south-west of the centre; when ThunderTargets includes ShieldHealer] and ThunderTargets includes MeleeDpsB], stand near waymark D, 11m south of the centre."
+        },
+        "RegenHealer": {
+          "rule": "When ThunderTargets leaves out ShieldHealer] and ThunderTargets leaves out MeleeDpsB], stand near waymark D, 7m south of the centre; when ThunderTargets includes ShieldHealer] and ThunderTargets leaves out MeleeDpsB], go to 6m south-west of the centre; when ThunderTargets leaves out ShieldHealer] and ThunderTargets includes MeleeDpsB], go to 6m south-west of the centre; when ThunderTargets includes ShieldHealer] and ThunderTargets includes MeleeDpsB], stand near waymark D, 11m south of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "When ThunderTargets leaves out ShieldHealer] and ThunderTargets leaves out MeleeDpsB], stand near waymark D, 7m south of the centre; when ThunderTargets includes ShieldHealer] and ThunderTargets leaves out MeleeDpsB], go to 7m south-west of the centre; when ThunderTargets leaves out ShieldHealer] and ThunderTargets includes MeleeDpsB], go to 7m south-west of the centre; when ThunderTargets includes ShieldHealer] and ThunderTargets includes MeleeDpsB], stand near waymark D, 11m south of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "When ThunderTargets leaves out ShieldHealer] and ThunderTargets leaves out MeleeDpsB], stand near waymark D, 7m south of the centre; when ThunderTargets includes ShieldHealer] and ThunderTargets leaves out MeleeDpsB], go to 6m south-west of the centre; when ThunderTargets leaves out ShieldHealer] and ThunderTargets includes MeleeDpsB], go to 6m south-west of the centre; when ThunderTargets includes ShieldHealer] and ThunderTargets includes MeleeDpsB], stand near waymark D, 12m south of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP2NaelAi",
+        "time": 112.67,
+        "line": 101
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: RavenDiveTarget).",
+      "roles": {
+        "OffTank": {
+          "rule": "When FireTargets leaves out H2 and ThunderTargets leaves out [MeleeDpsB, stand on waymark 4; when FireTargets includes H2 and ThunderTargets includes [MeleeDpsB, stand on waymark D; when FireTargets includes H2 and ThunderTargets leaves out [MeleeDpsB, go to 5m south-west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "When FireTargets leaves out H2 and BeamTargets leaves out M2, stand on waymark 4; when FireTargets includes H2 and BeamTargets leaves out M2, stand on waymark D; when FireTargets includes H2 and BeamTargets includes M2, go to 5m south-west of the centre; when FireTargets leaves out H2 and BeamTargets includes M2, go to 13m south of the centre."
+        },
+        "CasterDps": {
+          "rule": "When FireTargets leaves out H2 and BeamTargets leaves out OT, stand on waymark 4; when FireTargets includes H2 and BeamTargets leaves out OT, go to the south wall; when FireTargets includes H2 and BeamTargets includes OT, go to 5m south-west of the centre; when FireTargets leaves out H2 and BeamTargets includes OT, go to the south-east wall."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "DpoJr4oE_kGz_gRU\u002Bvi2rSC6mwW_d_QJF",
+    "roleMap": {
+      "CasterDps": "dps4"
+    },
+    "steps": {},
+    "exampleSeed": 1
+  },
+  "draft": true
+}

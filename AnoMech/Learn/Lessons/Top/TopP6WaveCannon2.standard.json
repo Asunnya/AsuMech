@@ -1,0 +1,271 @@
+{
+  "scenario": "TopP6WaveCannon2Scenario",
+  "strat": "Standard",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "TopP6WaveCannon2Ai",
+        "time": 2,
+        "line": 21
+      },
+      "title": "After brilliant Dynamis on you",
+      "cue": "Brilliant Dynamis on you",
+      "rule": "Stand on waymark 1.",
+      "roles": {
+        "OffTank": {
+          "rule": "Stand on waymark 3."
+        },
+        "RegenHealer": {
+          "rule": "Stand on waymark 4."
+        },
+        "ShieldHealer": {
+          "rule": "Stand on waymark 2."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand on waymark 3."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand on waymark 2."
+        },
+        "CasterDps": {
+          "rule": "Stand on waymark 4."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6WaveCannon2Ai",
+        "time": 10.5,
+        "line": 22
+      },
+      "title": "After cosmo Arrow resolves",
+      "cue": "Cosmo Arrow resolves",
+      "rule": "Depends on InFirst: false \u2192 at 1; true \u2192 NE 6m.",
+      "roles": {
+        "OffTank": {
+          "rule": "Depends on InFirst: false \u2192 at 3; true \u2192 SW 6m."
+        },
+        "RegenHealer": {
+          "rule": "Depends on InFirst: false \u2192 at 4; true \u2192 NW 6m."
+        },
+        "ShieldHealer": {
+          "rule": "Depends on InFirst: false \u2192 at 2; true \u2192 SE 6m."
+        },
+        "MeleeDpsA": {
+          "rule": "Depends on InFirst: false \u2192 at 3; true \u2192 SW 6m."
+        },
+        "MeleeDpsB": {
+          "rule": "Depends on InFirst: false \u2192 at 2; true \u2192 SE 6m."
+        },
+        "CasterDps": {
+          "rule": "Depends on InFirst: false \u2192 at 4; true \u2192 NW 6m."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6WaveCannon2Ai",
+        "time": 14.5,
+        "line": 32
+      },
+      "title": "After cosmo Arrow resolves",
+      "cue": "Cosmo Arrow resolves",
+      "rule": "Stand on waymark 1.",
+      "roles": {
+        "OffTank": {
+          "rule": "Stand on waymark 3."
+        },
+        "RegenHealer": {
+          "rule": "Stand on waymark 4."
+        },
+        "ShieldHealer": {
+          "rule": "Stand on waymark 2."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand on waymark 3."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand on waymark 2."
+        },
+        "CasterDps": {
+          "rule": "Stand on waymark 4."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6WaveCannon2Ai",
+        "time": 14.5,
+        "line": 26
+      },
+      "title": "After cosmo Arrow resolves",
+      "tolerance": 2,
+      "skip": true
+    },
+    {
+      "key": {
+        "cls": "TopP6WaveCannon2Ai",
+        "time": 16.5,
+        "line": 33
+      },
+      "title": "After wave Cannon cast starts",
+      "cue": "Wave Cannon cast starts",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand near waymark A, 11m north of the centre."
+        },
+        "OffTank": {
+          "rule": "Stand near waymark C, 11m south of the centre."
+        },
+        "RegenHealer": {
+          "rule": "Stand near waymark D, 11m west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Stand near waymark B, 11m east of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand on waymark 3."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand on waymark 2."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand on waymark 1."
+        },
+        "CasterDps": {
+          "rule": "Stand on waymark 4."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6WaveCannon2Ai",
+        "time": 18.5,
+        "line": 34
+      },
+      "title": "After cosmo Arrow resolves",
+      "cue": "Cosmo Arrow resolves",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 9m north of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 9m south of the centre."
+        },
+        "RegenHealer": {
+          "rule": "Go to 9m west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Go to 9m east of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand on waymark 3."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand on waymark 2."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand on waymark 1."
+        },
+        "CasterDps": {
+          "rule": "Stand on waymark 4."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6WaveCannon2Ai",
+        "time": 18.5,
+        "line": 27
+      },
+      "title": "After cosmo Arrow resolves",
+      "tolerance": 2,
+      "skip": true
+    },
+    {
+      "key": {
+        "cls": "TopP6WaveCannon2Ai",
+        "time": 20,
+        "line": 36
+      },
+      "title": "Wild charge stack",
+      "cue": "Cosmo Arrow resolves",
+      "rule": "Stand near waymark C, 11m south of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6WaveCannon2Ai",
+        "time": 20.5,
+        "line": 28
+      },
+      "title": "After wave Cannon hits you",
+      "cue": "Wave Cannon hits you",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 9m north of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 9m south of the centre."
+        },
+        "RegenHealer": {
+          "rule": "Go to 9m west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Go to 9m east of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand on waymark 3."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand on waymark 2."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand on waymark 1."
+        },
+        "CasterDps": {
+          "rule": "Stand on waymark 4."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "829484027197761",
+    "roleMap": {
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "ShieldHealer": "healer1",
+      "RegenHealer": "healer2",
+      "PhysRangedDps": "dps1",
+      "MeleeDpsB": "dps2",
+      "MeleeDpsA": "dps3",
+      "CasterDps": "dps4"
+    },
+    "steps": {
+      "TopP6WaveCannon2Ai@2": 35,
+      "TopP6WaveCannon2Ai@10.5": 42,
+      "TopP6WaveCannon2Ai@16.5": 46,
+      "TopP6WaveCannon2Ai@18.5": 48,
+      "TopP6WaveCannon2Ai@20": 49
+    },
+    "exampleSeed": 1
+  },
+  "draft": true
+}

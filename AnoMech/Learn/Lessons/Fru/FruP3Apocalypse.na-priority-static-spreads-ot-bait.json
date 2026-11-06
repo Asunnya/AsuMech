@@ -1,0 +1,295 @@
+{
+  "scenario": "FruP3ApocalypseScenario",
+  "strat": "NA priority / static spreads / OT bait",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "FruP3ApocalypseAi",
+        "time": 2.2,
+        "line": 29
+      },
+      "title": "After spell-in-Waiting Refrain cast starts",
+      "cue": "Spell-in-Waiting Refrain cast starts",
+      "rule": "Stand near waymark D, 7m west of the centre.",
+      "roles": {
+        "OffTank": {
+          "rule": "Go to 4m south-west of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Go to 4m south-east of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to 4m north-east of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand near waymark B, 7m east of the centre."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark B, 7m east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP3ApocalypseAi",
+        "time": 16.9,
+        "line": 30
+      },
+      "title": "After apocalypse cast starts",
+      "cue": "Apocalypse cast starts",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SpiritTakerTarget).",
+      "roles": {
+        "ShieldHealer": {
+          "rule": "Stand near waymark D, 7m west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: WaterDurations has 3)."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand near waymark B, 7m east of the centre."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark B, 7m east of the centre."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP3ApocalypseAi",
+        "time": 20.2,
+        "line": 31
+      },
+      "title": "After apocalypse resolves",
+      "cue": "Apocalypse resolves",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SpiritTakerTarget).",
+      "roles": {
+        "ShieldHealer": {
+          "rule": "Go to 5m west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: WaterDurations has 3)."
+        },
+        "PhysRangedDps": {
+          "rule": "Go to 5m east of the centre."
+        },
+        "CasterDps": {
+          "rule": "Go to 5m east of the centre."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP3ApocalypseAi",
+        "time": 22.85,
+        "line": 32
+      },
+      "title": "After dark Water III resolves",
+      "cue": "Dark Water III resolves",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SpiritTakerTarget).",
+      "roles": {
+        "ShieldHealer": {
+          "rule": "Stand near waymark D, 12m west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: WaterDurations has 3)."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand near waymark B, 12m east of the centre."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark B, 12m east of the centre."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP3ApocalypseAi",
+        "time": 24.85,
+        "line": 33
+      },
+      "title": "After spirit Taker resolves",
+      "cue": "Spirit Taker resolves",
+      "rule": "Stand near waymark D, 12m west of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 5m north-west of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 5m south-west of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Go to 5m south-east of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to 5m north-east of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand near waymark B, 12m east of the centre."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark B, 12m east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP3ApocalypseAi",
+        "time": 28,
+        "line": 34
+      },
+      "title": "After  resolves",
+      "cue": " resolves",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Rotation).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP3ApocalypseAi",
+        "time": 36.05,
+        "line": 35
+      },
+      "title": "After dark Eruption hits you",
+      "cue": "Dark Eruption hits you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Rotation).",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 4m north-west of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 4m north-west of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Go to 4m south-east of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to 4m south-east of the centre."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP3ApocalypseAi",
+        "time": 37,
+        "line": 36
+      },
+      "title": "After dark Eruption hits you",
+      "cue": "Dark Eruption hits you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SpiritTakerTarget).",
+      "roles": {
+        "ShieldHealer": {
+          "rule": "Go to 4m north-west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: WaterDurations has 3)."
+        },
+        "PhysRangedDps": {
+          "rule": "Go to 4m south-east of the centre."
+        },
+        "CasterDps": {
+          "rule": "Go to 4m south-east of the centre."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP3ApocalypseAi",
+        "time": 41.7,
+        "line": 37
+      },
+      "title": "After apocalypse resolves",
+      "cue": "Apocalypse resolves",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Rotation).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP3ApocalypseAi",
+        "time": 42,
+        "line": 39
+      },
+      "title": "After dark Water III resolves",
+      "cue": "Dark Water III resolves",
+      "rule": "Stand at the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP3ApocalypseAi",
+        "time": 42,
+        "line": 38
+      },
+      "title": "After dark Water III resolves",
+      "tolerance": 2.5,
+      "skip": true
+    },
+    {
+      "key": {
+        "cls": "FruP3ApocalypseAi",
+        "time": 45.15,
+        "line": 40
+      },
+      "title": "After darkest Dance hits you",
+      "cue": "Darkest Dance hits you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Rotation).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP3ApocalypseAi",
+        "time": 48.4,
+        "line": 41
+      },
+      "title": "After darkest Dance resolves",
+      "cue": "Darkest Dance resolves",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Rotation).",
+      "roles": {
+        "MainTank": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SpiritTakerTarget)."
+        },
+        "OffTank": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Clockwise)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "LZwXKA645GGmjEO2",
+    "roleMap": {
+      "RegenHealer": "healer1",
+      "MeleeDpsA": "dps1",
+      "CasterDps": "dps4",
+      "PhysRangedDps": "dps3",
+      "OffTank": "tank2",
+      "MainTank": "tank1",
+      "ShieldHealer": "healer2",
+      "MeleeDpsB": "dps2"
+    },
+    "steps": {
+      "FruP3ApocalypseAi@41.7": 1,
+      "FruP3ApocalypseAi@42": 13
+    },
+    "exampleSeed": 1
+  },
+  "draft": true
+}

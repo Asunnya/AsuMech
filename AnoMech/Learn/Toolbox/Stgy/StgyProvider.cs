@@ -144,7 +144,7 @@ public sealed class StgyProvider : IRaidplanProvider
             steps.Add(new ToolboxStep(i, stepName, "", objects));
         }
         var title = docs[0].Doc.Name.Length > 0 && docs.Count == 1 ? docs[0].Doc.Name : docs[0].Name;
-        return (new ToolboxPlan(id, title, "", layout.Name, scale, steps), new ImportReport(docs.Count, docs.Count, false, scale, residual, roleMap, warnings));
+        return (new ToolboxPlan(id, title, "", layout.Name, scale, steps), new ImportReport(docs.Count, docs.Count, false, scale, residual, ToolboxImport.Dedupe(roleMap), warnings));
     }
 
     // AoE sizes on the board depend on the site's icon images, which the format does not carry;

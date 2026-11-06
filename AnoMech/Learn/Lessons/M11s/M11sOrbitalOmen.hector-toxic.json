@@ -1,0 +1,107 @@
+{
+  "scenario": "M11sOrbitalOmenScenario",
+  "strat": "Hector (Toxic)",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "M11sOrbitalOmenAi",
+        "time": 0.3,
+        "line": 30
+      },
+      "title": "After the Tyrant appears",
+      "cue": "the Tyrant appears",
+      "rule": "Go to 6m south of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 5m north of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 6m north-east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M11sOrbitalOmenAi",
+        "time": 12.12,
+        "line": 31
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 6m north-west of the centre.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M11sOrbitalOmenAi",
+        "time": 15.320001,
+        "line": 32
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 5m east of the centre.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M11sOrbitalOmenAi",
+        "time": 29.81,
+        "line": 33
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NorthLines).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M11sOrbitalOmenAi",
+        "time": 34.35,
+        "line": 34
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NorthLines).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M11sOrbitalOmenAi",
+        "time": 35.859997,
+        "line": 35
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NorthLines).",
+      "tolerance": 2.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "HJAbE7fuWodELUSB\u002BB82fx_zDqUMr5KFC",
+    "roleMap": {
+      "CasterDps": "dps4",
+      "OffTank": "tank1",
+      "MainTank": "tank2",
+      "ShieldHealer": "healer1",
+      "RegenHealer": "healer2",
+      "MeleeDpsA": "dps1",
+      "MeleeDpsB": "dps2",
+      "PhysRangedDps": "dps3"
+    },
+    "steps": {
+      "M11sOrbitalOmenAi@0.3": 1,
+      "M11sOrbitalOmenAi@12.12": 10,
+      "M11sOrbitalOmenAi@15.32": 29
+    },
+    "exampleSeed": 1
+  },
+  "draft": true
+}

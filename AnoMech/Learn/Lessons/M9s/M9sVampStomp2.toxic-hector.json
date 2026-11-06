@@ -1,0 +1,179 @@
+{
+  "scenario": "M9sVampStomp2Scenario",
+  "strat": "Toxic / Hector",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "M9sVampStomp2Ai",
+        "time": 0.5,
+        "line": 26
+      },
+      "title": "Uptime",
+      "cue": "Vamp Fatale appears",
+      "rule": "Go to 8m south-west of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 5m north of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 5m north-west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Go to 8m south-east of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Go to 5m west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to 5m east of the centre."
+        },
+        "CasterDps": {
+          "rule": "Go to 8m south-east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sVampStomp2Ai",
+        "time": 12.5,
+        "line": 27
+      },
+      "title": "Tanks split for hardcore",
+      "rule": "Go to 8m south-west of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 8m north-west of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 8m north-east of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Go to 8m south-east of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Go to 5m south-west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to 5m south-east of the centre."
+        },
+        "CasterDps": {
+          "rule": "Go to 8m south-east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sVampStomp2Ai",
+        "time": 21.3,
+        "line": 28
+      },
+      "title": "Wait near markers clear of pulses and stomp",
+      "cue": "Hardcore hits you",
+      "rule": "Read the strat\u0027s WaitNearMarkersClearOfPulsesAndStomp: the spot follows a rule the rolls alone don\u0027t show (closest roll: PulpingPulses).",
+      "roles": {
+        "OffTank": {
+          "rule": "Stand on waymark C."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sVampStomp2Ai",
+        "time": 25.3,
+        "line": 29
+      },
+      "title": "After curse of the Bombpyre on you",
+      "cue": "Curse of the Bombpyre on you",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand on waymark A."
+        },
+        "OffTank": {
+          "rule": "Stand on waymark C."
+        },
+        "RegenHealer": {
+          "rule": "Stand near waymark 4, 12m south-west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Stand near waymark 3, 12m south-east of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand on waymark D."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand on waymark B."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand near waymark 1, 12m north-west of the centre."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark 2, 12m north-east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sVampStomp2Ai",
+        "time": 41.6,
+        "line": 33
+      },
+      "title": "After blast Beat hits you",
+      "cue": "Blast Beat hits you",
+      "rule": "Depends on HalfMoon: LeftFirst \u2192 E 5m; RightFirst \u2192 W 5m.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sVampStomp2Ai",
+        "time": 46.6,
+        "line": 34
+      },
+      "title": "After half Moon resolves",
+      "cue": "Half Moon resolves",
+      "rule": "Depends on HalfMoon: LeftFirst \u2192 W 5m; RightFirst \u2192 E 5m.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sVampStomp2Ai",
+        "time": 49.6,
+        "line": 35
+      },
+      "title": "After half Moon resolves",
+      "cue": "Half Moon resolves",
+      "rule": "Go to 2m north of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "c2L5iJfuYIWXk1v7",
+    "roleMap": {
+      "MeleeDpsB": "dps4",
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "PhysRangedDps": "dps1",
+      "CasterDps": "dps2",
+      "MeleeDpsA": "dps3"
+    },
+    "steps": {
+      "M9sVampStomp2Ai@49.6": 6
+    },
+    "exampleSeed": 1
+  },
+  "draft": true
+}

@@ -161,6 +161,28 @@ public static class ToolboxImport
         return map;
     }
 
+    // Two slots naming one seat (two generic healer icons both read as the regen healer) take the
+    // group's seats in slot order instead, so the lesson's role map can be inverted.
+    public static Dictionary<string, string> Dedupe(Dictionary<string, string> roleMap)
+    {
+        string[][] groups = [[nameof(PartyRole.MainTank), nameof(PartyRole.OffTank)], [nameof(PartyRole.RegenHealer), nameof(PartyRole.ShieldHealer)],
+            [nameof(PartyRole.MeleeDpsA), nameof(PartyRole.MeleeDpsB), nameof(PartyRole.PhysRangedDps), nameof(PartyRole.CasterDps)]];
+        var result = new Dictionary<string, string>(roleMap);
+        foreach (var group in groups)
+        {
+            var slots = result.Where(kv => group.Contains(kv.Value)).Select(kv => kv.Key).OrderBy(k => k).ToList();
+            if (slots.Select(sl => result[sl]).Distinct().Count() == slots.Count) continue;
+            var taken = new HashSet<string>();
+            foreach (var slot in slots)
+            {
+                var role = taken.Add(result[slot]) ? result[slot] : group.First(r => !taken.Contains(r));
+                taken.Add(role);
+                result[slot] = role;
+            }
+        }
+        return result;
+    }
+
     private static ToolboxStep ConvertStep(JsonElement step, int index, float scale, Vector2 offset)
     {
         var inst = step.GetProperty("instance");

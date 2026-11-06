@@ -1,0 +1,326 @@
+{
+  "scenario": "UmadP3BlackHoleScenario",
+  "strat": "Black Hole: S\u003ED\u003EA",
+  "sources": [
+    {
+      "label": "WTFDIG (kefkabin), MIT",
+      "url": "https://github.com/mczub/wtfdig/tree/aa79375/src/routes/ultimates/umad"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "UmadP3BlackHoleAi",
+        "time": 7,
+        "line": 49
+      },
+      "title": "Stack centre tanks hold bosses centred",
+      "cue": "Epic Hero on you",
+      "rule": "Stand at the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 6m east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3BlackHoleAi",
+        "time": 11,
+        "line": 50
+      },
+      "title": "Stack centre",
+      "cue": "_rsv_5454_-1_1_0_0_S74CFC3B0_E74CFC3B0 on you",
+      "rule": "Stand at the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3BlackHoleAi",
+        "time": 18,
+        "line": 53
+      },
+      "title": "After earth Resistance Down II on you",
+      "cue": "Earth Resistance Down II on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SlapAttacks).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3BlackHoleAi",
+        "time": 25,
+        "line": 55
+      },
+      "title": "Stack centre",
+      "cue": " hits you",
+      "rule": "Stand at the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3BlackHoleAi",
+        "time": 46.5,
+        "line": 72
+      },
+      "title": "Dodge edict",
+      "cue": "Thunder III hits you",
+      "rule": "Read the strat\u0027s DodgeEdict: the spot follows a rule the rolls alone don\u0027t show (closest roll: SlapAttacks).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3BlackHoleAi",
+        "time": 50.6,
+        "line": 75
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SlapAttacks).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3BlackHoleAi",
+        "time": 56,
+        "line": 76
+      },
+      "title": "Stack centre",
+      "cue": " hits you",
+      "rule": "Stand at the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3BlackHoleAi",
+        "time": 73.1,
+        "line": 87
+      },
+      "title": "Dodge edict and look upon",
+      "cue": "Earth Resistance Down II on you",
+      "rule": "Read the strat\u0027s DodgeEdictAndLookUpon: the spot follows a rule the rolls alone don\u0027t show (closest roll: SlapAttacks).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3BlackHoleAi",
+        "time": 80,
+        "line": 88
+      },
+      "title": "Stack centre",
+      "cue": " hits you",
+      "rule": "Stand at the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3BlackHoleAi",
+        "time": 84.5,
+        "line": 90
+      },
+      "title": "Swap second thunder tanks",
+      "cue": " hits you",
+      "rule": "Read the strat\u0027s SwapSecondThunderTanks: the spot follows a rule the rolls alone don\u0027t show (closest roll: KefkaPosition has SW).",
+      "roles": {
+        "OffTank": {
+          "rule": "Read the strat\u0027s SwapSecondThunderTanks: the spot follows a rule the rolls alone don\u0027t show (closest roll: SlapAttacks)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3BlackHoleAi",
+        "time": 88,
+        "line": 96
+      },
+      "title": "Stack centre",
+      "cue": " hits you",
+      "rule": "Stand at the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3BlackHoleAi",
+        "time": 117,
+        "line": 116
+      },
+      "title": "After slap Happy cast starts",
+      "cue": "Slap Happy cast starts",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SlapAttacks).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3BlackHoleAi",
+        "time": 119.2,
+        "line": 117
+      },
+      "title": "After shockwave resolves",
+      "cue": "Shockwave resolves",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SlapAttacks).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3BlackHoleAi",
+        "time": 121.3,
+        "line": 118
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SlapAttacks).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3BlackHoleAi",
+        "time": 124,
+        "line": 119
+      },
+      "title": "Stack centre",
+      "cue": " hits you",
+      "rule": "Stand at the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3BlackHoleAi",
+        "time": 134,
+        "line": 128
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SlapAttacks).",
+      "roles": {
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: KefkaPosition has S)."
+        },
+        "MeleeDpsA": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: KefkaPosition has N)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3BlackHoleAi",
+        "time": 134,
+        "line": 127
+      },
+      "title": "After sprint on you",
+      "tolerance": 2.5,
+      "skip": true
+    },
+    {
+      "key": {
+        "cls": "UmadP3BlackHoleAi",
+        "time": 134.5,
+        "line": 129
+      },
+      "title": "After sprint on you",
+      "tolerance": 2.5,
+      "skip": true
+    },
+    {
+      "key": {
+        "cls": "UmadP3BlackHoleAi",
+        "time": 135,
+        "line": 130
+      },
+      "title": "After sprint on you",
+      "tolerance": 2.5,
+      "skip": true
+    },
+    {
+      "key": {
+        "cls": "UmadP3BlackHoleAi",
+        "time": 139,
+        "line": 131
+      },
+      "title": "Preposition for stomp",
+      "cue": "Sprint on you",
+      "rule": "Read the strat\u0027s PrepositionForStomp: the spot follows a rule the rolls alone don\u0027t show (closest roll: SlapAttacks).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3BlackHoleAi",
+        "time": 147,
+        "line": 132
+      },
+      "title": "Stomp blizzard corners",
+      "cue": " hits you",
+      "rule": "Read the strat\u0027s StompBlizzardCorners: the spot follows a rule the rolls alone don\u0027t show (closest roll: SlapAttacks).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3BlackHoleAi",
+        "time": 149.8,
+        "line": 133
+      },
+      "title": "Stomp stack and towers",
+      "cue": "Blizzard III cast starts",
+      "rule": "Read the strat\u0027s StompStackAndTowers: the spot follows a rule the rolls alone don\u0027t show (closest roll: SlapAttacks).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3BlackHoleAi",
+        "time": 152.4,
+        "line": 134
+      },
+      "title": "Stomp swap west",
+      "cue": " hits you",
+      "rule": "Read the strat\u0027s StompSwapWest: the spot follows a rule the rolls alone don\u0027t show (closest roll: SlapAttacks).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3BlackHoleAi",
+        "time": 153.7,
+        "line": 135
+      },
+      "title": "Stomp swap east",
+      "cue": " resolves",
+      "rule": "Read the strat\u0027s StompSwapEast: the spot follows a rule the rolls alone don\u0027t show (closest roll: SlapAttacks).",
+      "tolerance": 2.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "stgy-f84e155d",
+    "roleMap": {
+      "MeleeDpsA": "dps1",
+      "RegenHealer": "healer1",
+      "MainTank": "tank1",
+      "ShieldHealer": "healer2",
+      "OffTank": "tank2",
+      "MeleeDpsB": "dps2"
+    },
+    "steps": {},
+    "exampleSeed": 1
+  },
+  "draft": true
+}

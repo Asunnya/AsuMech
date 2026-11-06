@@ -39,6 +39,7 @@ namespace AnoMech.LessonTools;
 // slides-fetch --deck <google id|url|file.pptx> --out <dir> [--zone <ZoneType> [--layout <name>]]   text, notes and images per slide; XIVPlan links found become plans
 // example  --plan plans/<id>.json --lesson lesson.json --dump dump.json [--write]   the plan's roll as overrides values (adds -> spots/bearings, buffs -> targets)
 // overrides-check --scenario <TypeName> [--strat N] [--seed 1]   pin each roll to its own value and see whether the seed's other rolls move
+// links    --file AnoMech/Scenarios/Raidsplan/DSR.txt [--resolve]   every plan link, Strategy Board code, slides deck and sheet in a guide's text, with its heading; --resolve follows tinyurl
 // learn-ready --scenario <TypeName> [--strat N] [--no-run]   what the chain can read from the scenario and how it degrades (runs overrides-check too)
 // status [--family <Family>]                                 scenario × strat × lesson × toolbox × example × mit × draft
 internal static class Cli
@@ -67,6 +68,7 @@ internal static class Cli
                 "draft" => Draft(opts),
                 "author-all" => AuthorAll(opts),
                 "learn-ready" => LearnReady(opts),
+                "links" => Links(opts),
                 "example" => ExampleCmd(opts),
                 "overrides-check" => OverridesCheckCmd(opts),
                 "wtfdig-fetch" => WtfdigFetch(opts),
@@ -205,6 +207,58 @@ internal static class Cli
             : planArg.Contains("raidplan", StringComparison.OrdinalIgnoreCase) ? RaidplanHost.RaidplanIo
             : planArg.Contains("stgy", StringComparison.OrdinalIgnoreCase) ? RaidplanHost.Stgy
             : planArg.EndsWith(".xivplan", StringComparison.OrdinalIgnoreCase) || planArg.Contains("xivplan", StringComparison.OrdinalIgnoreCase) ? RaidplanHost.Xivplan : RaidplanHost.Toolbox);
+
+    // A guide pasted as text (the Raidsplan folder): what in it the chain can use, each with the
+    // nearest heading above it, so registering it in plans.json is a copy.
+    private static int Links(Dictionary<string, string> opts)
+    {
+        var text = File.ReadAllText(Need(opts, "file"));
+        var resolve = opts.ContainsKey("resolve");
+        using var http = new HttpClient(new HttpClientHandler { AllowAutoRedirect = true });
+        var heading = "";
+        var found = 0;
+        foreach (var raw in text.Split('\n'))
+        {
+            var line = raw.Trim();
+            if (line.Length == 0) continue;
+            var urls = System.Text.RegularExpressions.Regex.Matches(line, @"https?://[^\s)\]""]+").Select(m => m.Value.TrimEnd('.', ',')).ToList();
+            var codes = Learn.Toolbox.Stgy.StgyCode.Pattern.Matches(line).Select(m => m.Value).ToList();
+            if (urls.Count == 0 && codes.Count == 0)
+            {
+                if (!line.StartsWith('[')) heading = line.Length > 60 ? line[..60] : line;
+                continue;
+            }
+            foreach (var url in urls)
+            {
+                var target = url;
+                if (resolve && (url.Contains("tinyurl.com", StringComparison.OrdinalIgnoreCase) || url.Contains("bit.ly", StringComparison.OrdinalIgnoreCase)))
+                {
+                    try
+                    {
+                        using var response = http.Send(new HttpRequestMessage(HttpMethod.Head, url));
+                        target = response.RequestMessage?.RequestUri?.ToString() ?? url;
+                    }
+                    catch (HttpRequestException) { }
+                }
+                var kind = PlanRef.Parse(target).Host switch
+                {
+                    RaidplanHost.Toolbox => "toolbox", RaidplanHost.RaidplanIo => "raidplan.io", RaidplanHost.Xivplan => "xivplan", RaidplanHost.Stgy => "strategy board",
+                    _ when target.Contains("docs.google.com/presentation", StringComparison.OrdinalIgnoreCase) => "slides (slides-fetch)",
+                    _ when target.Contains("docs.google.com/spreadsheets", StringComparison.OrdinalIgnoreCase) => "sheet (mit-import --sheet-id)",
+                    _ => "other",
+                };
+                Console.WriteLine($"{kind,-28} {heading,-60} {target}");
+                found++;
+            }
+            foreach (var code in codes)
+            {
+                Console.WriteLine($"{"strategy board",-28} {heading,-60} {code[..Math.Min(40, code.Length)]}… ({code.Length} chars)");
+                found++;
+            }
+        }
+        Console.WriteLine($"{found} link(s)");
+        return 0;
+    }
 
     private static int LearnReady(Dictionary<string, string> opts)
     {

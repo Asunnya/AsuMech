@@ -161,7 +161,7 @@ public sealed class XivplanProvider : IRaidplanProvider
             }
             converted.Add(new ToolboxStep(i, steps.Count == 1 ? "Plan" : $"Step {i + 1}", "", objects));
         }
-        return (new ToolboxPlan(id, "XIVPlan", "", layout.Name, scale, converted), new ImportReport(steps.Count, steps.Count, false, scale, residual, roleMap, warnings));
+        return (new ToolboxPlan(id, "XIVPlan", "", layout.Name, scale, converted), new ImportReport(steps.Count, steps.Count, false, scale, residual, ToolboxImport.Dedupe(roleMap), warnings));
     }
 
     private static WaymarkSlot? WaymarkOf(JsonElement o)

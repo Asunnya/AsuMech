@@ -129,7 +129,7 @@ public sealed class RaidplanIoProvider : IRaidplanProvider
         foreach (var slot in Slots.Values.Distinct().Where(s => !roleMap.ContainsKey(s) && steps.Any(st => st.Objects.Any(o => o.Key == s))))
             roleMap[slot] = RoleOf(slot);
         return (new ToolboxPlan(id, Str(root, "name") is { Length: > 0 } nm ? nm : header.Split('\n')[0], Str(root, "author"), layout.Name, scale, steps),
-            new ImportReport(count, count, false, scale, residual, roleMap, warnings));
+            new ImportReport(count, count, false, scale, residual, ToolboxImport.Dedupe(roleMap), warnings));
     }
 
     // The label already says the seat; the opener refines ties within a group later.

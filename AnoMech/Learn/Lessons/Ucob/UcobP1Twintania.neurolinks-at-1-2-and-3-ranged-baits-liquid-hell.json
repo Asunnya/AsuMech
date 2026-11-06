@@ -1,0 +1,526 @@
+{
+  "scenario": "UcobP1TwintaniaScenario",
+  "strat": "Neurolinks at 1, 2 and 3, ranged baits Liquid Hell",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "UcobP1TwintaniaAi",
+        "time": 0.5,
+        "line": 52
+      },
+      "title": "After twintania appears",
+      "cue": "Twintania appears",
+      "rule": "Stand near waymark 1, 5m north of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 13m north of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 8m north-west of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP1TwintaniaAi",
+        "time": 9,
+        "line": 53
+      },
+      "title": "After plummet resolves",
+      "cue": "Plummet resolves",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "Go to 8m north-west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Go to 5m west of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand near waymark 4, 3m south-west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand near waymark 4, 3m south-east of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Go to 5m east of the centre."
+        },
+        "CasterDps": {
+          "rule": "Go to 8m north-east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP1TwintaniaAi",
+        "time": 12.72,
+        "line": 54
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Stand near waymark 1, 5m north of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 13m north of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 11m north-west of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP1TwintaniaAi",
+        "time": 24.53,
+        "line": 55
+      },
+      "title": "After death Sentence hits you",
+      "cue": "Death Sentence hits you",
+      "rule": "Stand near waymark 1, 5m north of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 8m north-west of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 13m north of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP1TwintaniaAi",
+        "time": 30.6,
+        "line": 57
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 5m west of the centre.",
+      "roles": {
+        "OffTank": {
+          "rule": "Go to 12m west of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Go to the north-east wall."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP1TwintaniaAi",
+        "from": 35.4,
+        "to": 134.37001,
+        "line": 117
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to the east wall.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP1TwintaniaAi",
+        "from": 41.24,
+        "to": 135.56,
+        "line": 122
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Stand on waymark 1.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP1TwintaniaAi",
+        "time": 44,
+        "line": 60
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to the south wall.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP1TwintaniaAi",
+        "time": 48.6,
+        "line": 62
+      },
+      "title": "After mana Hypersensitivity on you",
+      "cue": "Mana Hypersensitivity on you",
+      "rule": "Go to 5m west of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP1TwintaniaAi",
+        "time": 54.03,
+        "line": 64
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 8m south-west of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 13m south-west of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 14m south-west of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP1TwintaniaAi",
+        "time": 60.54,
+        "line": 65
+      },
+      "title": "After death Sentence hits you",
+      "cue": "Death Sentence hits you",
+      "rule": "Go to 14m south-west of the centre.",
+      "roles": {
+        "OffTank": {
+          "rule": "Go to 13m south-west of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP1TwintaniaAi",
+        "time": 63.86,
+        "line": 66
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Stand near waymark 1, 11m north of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP1TwintaniaAi",
+        "time": 66,
+        "line": 67
+      },
+      "title": "After neurolink on another player",
+      "cue": "Neurolink on another player",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "Stand near waymark 4, 4m west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Stand near waymark 4, 3m south of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand near waymark D, 8m south of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "When HatchTargets leaves out [MeleeDpsA], stand near waymark D, 12m south of the centre; when HatchTargets includes [MeleeDpsA], stand near waymark D, 8m south of the centre."
+        },
+        "CasterDps": {
+          "rule": "Go to 14m south of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "When HatchTargets leaves out [CasterDps], stand near waymark D, 12m south of the centre; when HatchTargets includes [CasterDps], go to 14m south of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP1TwintaniaAi",
+        "time": 70.060005,
+        "line": 68
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to 8m south-west of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 13m west of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "If you are in LiquidHellTarget: Stand on waymark 1; otherwise: Stand near waymark D, 8m south-west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "When TwisterTargets includes M2 and FireballTargets leaves out H2, go to 9m south-west of the centre; when TwisterTargets includes M2 and FireballTargets includes H2, stand on waymark 1; when TwisterTargets leaves out M2 and FireballTargets includes H2, go to 9m south-west of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LiquidHellTarget)."
+        },
+        "CasterDps": {
+          "rule": "When HatchTargets includes PhysRangedDps] and HatchTargets leaves out [PhysRangedDps, stand near waymark D, 8m south-west of the centre; when HatchTargets includes PhysRangedDps] and HatchTargets includes [PhysRangedDps, stand on waymark 1; when HatchTargets leaves out PhysRangedDps] and HatchTargets includes [PhysRangedDps, stand near waymark D, 8m south-west of the centre."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP1TwintaniaAi",
+        "time": 75.64,
+        "line": 69
+      },
+      "title": "After mana Hypersensitivity on you",
+      "cue": "Mana Hypersensitivity on you",
+      "rule": "Go to 8m south-west of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP1TwintaniaAi",
+        "time": 76.61,
+        "line": 71
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Stand near waymark 3, 7m south-east of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 14m south-east of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to the south-east wall."
+        },
+        "PhysRangedDps": {
+          "rule": "Go to the north-west wall."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP1TwintaniaAi",
+        "time": 85.229996,
+        "line": 73
+      },
+      "title": "After liquid Hell hits you",
+      "cue": "Liquid Hell hits you",
+      "rule": "Stand near waymark 3, 7m south-east of the centre.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP1TwintaniaAi",
+        "time": 86.42,
+        "line": 74
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "If you are in LiquidHellTarget: Go to the south-east wall; otherwise: Stand near waymark 3, 7m south-east of the centre.",
+      "roles": {
+        "MeleeDpsA": {
+          "rule": "When HatchTargets includes PhysRangedDps] and HatchTargets leaves out [PhysRangedDps, stand on waymark 1; when HatchTargets includes PhysRangedDps] and HatchTargets includes [PhysRangedDps, stand near waymark 3, 8m south-east of the centre; when HatchTargets leaves out PhysRangedDps] and HatchTargets includes [PhysRangedDps, go to the south-east wall."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LiquidHellTarget)."
+        },
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LiquidHellTarget)."
+        },
+        "CasterDps": {
+          "rule": "When FireballTargets leaves out R2 and HatchTargets leaves out [PhysRangedDps, stand near waymark 3, 8m south-east of the centre; when FireballTargets leaves out R2 and HatchTargets includes [PhysRangedDps, stand on waymark 2; when FireballTargets includes R2 and HatchTargets includes [PhysRangedDps, stand near waymark 3, 8m south-east of the centre."
+        },
+        "MainTank": {
+          "rule": "Go to the south-east wall."
+        },
+        "OffTank": {
+          "rule": "Go to the south-east wall."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP1TwintaniaAi",
+        "from": 92.78,
+        "to": 97.43,
+        "line": 216
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Go to the south-east wall.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP1TwintaniaAi",
+        "time": 95.600006,
+        "line": 76
+      },
+      "title": "After liquid Hell resolves",
+      "cue": "Liquid Hell resolves",
+      "rule": "Stand near waymark 3, 7m south-east of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP1TwintaniaAi",
+        "time": 106,
+        "line": 77
+      },
+      "title": "After death Sentence cast starts",
+      "cue": "Death Sentence cast starts",
+      "rule": "Stand near waymark 3, 7m south-east of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 14m south-east of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to the south-east wall."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP1TwintaniaAi",
+        "time": 110.47,
+        "line": 78
+      },
+      "title": "After death Sentence hits you",
+      "cue": "Death Sentence hits you",
+      "rule": "Go to the south-east wall.",
+      "roles": {
+        "OffTank": {
+          "rule": "Go to 14m south-east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP1TwintaniaAi",
+        "time": 116.16,
+        "line": 80
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MeleeDpsB": {
+          "rule": "Stand near waymark 1, 11m north of the centre."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark 2, 12m south-west of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "When HatchTargets includes [MeleeDpsA, stand near waymark 2, 12m south-west of the centre; when HatchTargets leaves out [MeleeDpsA, stand near waymark 1, 11m north of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP1TwintaniaAi",
+        "time": 118.5,
+        "line": 81
+      },
+      "title": "After neurolink on another player",
+      "cue": "Neurolink on another player",
+      "rule": "Go to the north-west wall.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "Go to 13m south-east of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Stand near waymark D, 6m south of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Go to 5m east of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP1TwintaniaAi",
+        "time": 122.35,
+        "line": 82
+      },
+      "title": "After sprint on you",
+      "cue": "Sprint on you",
+      "rule": "Stand near waymark 3, 7m south-east of the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to the south-east wall."
+        },
+        "OffTank": {
+          "rule": "Go to 14m east of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "When FireballTargets leaves out R2, stand on waymark 1; when FireballTargets includes R2, go to the west wall."
+        },
+        "PhysRangedDps": {
+          "rule": "When FireballTargets includes H1 and HatchTargets leaves out [PhysRangedDps, go to the west wall; when FireballTargets leaves out H1 and HatchTargets leaves out [PhysRangedDps, stand on waymark 2; when FireballTargets leaves out H1 and HatchTargets includes [PhysRangedDps, go to the west wall; when FireballTargets includes H1 and HatchTargets includes [PhysRangedDps, stand on waymark 1."
+        },
+        "CasterDps": {
+          "rule": "When TwisterTargets includes R2 and HatchTargets includes R2, stand on waymark 2; when TwisterTargets includes R2 and HatchTargets leaves out R2, go to the west wall; when TwisterTargets leaves out R2 and HatchTargets includes R2, go to the west wall."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP1TwintaniaAi",
+        "time": 127.92999,
+        "line": 83
+      },
+      "title": "After mana Hypersensitivity on you",
+      "cue": "Mana Hypersensitivity on you",
+      "rule": "Stand near waymark 3, 7m south-east of the centre.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP1TwintaniaAi",
+        "time": 134.37001,
+        "line": 85
+      },
+      "title": "After liquid Hell hits you",
+      "cue": "Liquid Hell hits you",
+      "rule": "Stand near waymark 3, 7m south-east of the centre.",
+      "tolerance": 2,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "9WEG4AEGVdru3hyF\u002B19yavfslOUU0l1Gp",
+    "roleMap": {},
+    "steps": {},
+    "exampleSeed": 1
+  },
+  "draft": true
+}

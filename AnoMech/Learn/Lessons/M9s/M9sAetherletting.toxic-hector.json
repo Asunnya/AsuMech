@@ -1,0 +1,159 @@
+{
+  "scenario": "M9sAetherlettingScenario",
+  "strat": "Toxic / Hector",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "M9sAetherlettingAi",
+        "time": 0.5,
+        "line": 28
+      },
+      "title": "After vamp Fatale appears",
+      "cue": "Vamp Fatale appears",
+      "rule": "Go to 3m south of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sAetherlettingAi",
+        "time": 32.6,
+        "line": 29
+      },
+      "title": "Wait near static spots clear of pulses",
+      "cue": "Pulping Pulse cast starts",
+      "rule": "Go to the south-east wall.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to the north-west wall."
+        },
+        "RegenHealer": {
+          "rule": "When PulpingPulses leaves out (0,-11), go to the south-west wall; when PulpingPulses includes (0,-11), stand near waymark 4, the south-west wall."
+        },
+        "ShieldHealer": {
+          "rule": "Go to the north-east wall."
+        },
+        "MeleeDpsA": {
+          "rule": "When PulpingPulses includes (-6.5,15.7), stand near waymark 4, the south-west wall; when PulpingPulses leaves out (-6.5,15.7), go to the south-west wall."
+        },
+        "PhysRangedDps": {
+          "rule": "When PulpingPulses includes (-5,0), stand near waymark 1, the north-west wall; when PulpingPulses leaves out (-5,0), go to the north-west wall."
+        },
+        "CasterDps": {
+          "rule": "When PulpingPulses leaves out (5,0), go to the north-east wall; when PulpingPulses includes (5,0), stand near waymark 2, the north-east wall."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sAetherlettingAi",
+        "time": 36.6,
+        "line": 30
+      },
+      "title": "After pulping Pulse resolves",
+      "cue": "Pulping Pulse resolves",
+      "rule": "Go to the north-west wall.",
+      "roles": {
+        "OffTank": {
+          "rule": "Go to the south-east wall."
+        },
+        "RegenHealer": {
+          "rule": "Go to the west wall."
+        },
+        "ShieldHealer": {
+          "rule": "Go to the east wall."
+        },
+        "MeleeDpsA": {
+          "rule": "Go to the south-west wall."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to the south-east wall."
+        },
+        "CasterDps": {
+          "rule": "Go to the north-east wall."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sAetherlettingAi",
+        "from": 50.78,
+        "to": 54.78,
+        "line": 37
+      },
+      "title": "After aetherletting resolves",
+      "cue": "Aetherletting resolves",
+      "rule": "Go to the north wall.",
+      "roles": {
+        "OffTank": {
+          "rule": "Go to the south wall."
+        },
+        "RegenHealer": {
+          "rule": "Go to the south-west wall."
+        },
+        "ShieldHealer": {
+          "rule": "Go to the north-east wall."
+        },
+        "MeleeDpsA": {
+          "rule": "Go to the south wall."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to the south-east wall."
+        },
+        "PhysRangedDps": {
+          "rule": "Go to the north-west wall."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sAetherlettingAi",
+        "from": 56.8,
+        "to": 58.78,
+        "line": 40
+      },
+      "title": "After aetherletting hits you",
+      "cue": "Aetherletting hits you",
+      "rule": "Stand at the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sAetherlettingAi",
+        "from": 57.3,
+        "to": 59.3,
+        "line": 43
+      },
+      "title": "After aetherletting hits you",
+      "tolerance": 1.5,
+      "skip": true
+    }
+  ],
+  "toolbox": {
+    "planId": "c2L5iJfuYIWXk1v7",
+    "roleMap": {
+      "CasterDps": "dps4",
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "MeleeDpsA": "dps1",
+      "MeleeDpsB": "dps2",
+      "PhysRangedDps": "dps3"
+    },
+    "steps": {
+      "M9sAetherlettingAi@0.5": 3,
+      "M9sAetherlettingAi@56.8-58.78": 6
+    },
+    "exampleSeed": 1
+  },
+  "draft": true
+}

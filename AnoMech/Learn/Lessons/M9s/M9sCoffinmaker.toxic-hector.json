@@ -1,0 +1,170 @@
+{
+  "scenario": "M9sCoffinmakerScenario",
+  "strat": "Toxic / Hector",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "M9sCoffinmakerAi",
+        "time": 7,
+        "line": 25
+      },
+      "title": "After sadistic Screech resolves",
+      "cue": "Sadistic Screech resolves",
+      "rule": "Go to 4m south of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sCoffinmakerAi",
+        "time": 17,
+        "line": 27
+      },
+      "title": "After half Moon cast starts",
+      "cue": "Half Moon cast starts",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sCoffinmakerAi",
+        "time": 21.2,
+        "line": 28
+      },
+      "title": "After half Moon resolves",
+      "cue": "Half Moon resolves",
+      "rule": "Depends on SawKill: Fast \u2192 NE 3m; Average \u2192 near B (E 8m); Slow \u2192 near B (E 8m).",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sCoffinmakerAi",
+        "time": 24.6,
+        "line": 29
+      },
+      "title": "After coffinfiller resolves",
+      "cue": "Coffinfiller resolves",
+      "rule": "Stand near waymark C, 6m south of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sCoffinmakerAi",
+        "time": 34.4,
+        "line": 31
+      },
+      "title": "After half Moon cast starts",
+      "cue": "Half Moon cast starts",
+      "rule": "When Cycles includes SawCycle { CastAt = 16.19, Boss = Placement { Position = \u003C12, 0, 0\u003E, Rotation = -1.5707964, Position2 = \u003C12, 0\u003E }, Order = RightFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], SecondWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], ShortRotation = -3.1415927, LongRotation = 0 } and Cycles leaves out SawCycle { CastAt = 16.19, Boss = Placement { Position = \u003C-12, 0, 0\u003E, Rotation = 1.5707964, Position2 = \u003C-12, 0\u003E }, Order = LeftFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], SecondWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], ShortRotation = 3.1415927, LongRotation = 6.2831855 }, go to 10m south-east of the centre; when Cycles leaves out SawCycle { CastAt = 16.19, Boss = Placement { Position = \u003C12, 0, 0\u003E, Rotation = -1.5707964, Position2 = \u003C12, 0\u003E }, Order = RightFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], SecondWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], ShortRotation = -3.1415927, LongRotation = 0 } and Cycles includes SawCycle { CastAt = 16.19, Boss = Placement { Position = \u003C-12, 0, 0\u003E, Rotation = 1.5707964, Position2 = \u003C-12, 0\u003E }, Order = LeftFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], SecondWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], ShortRotation = 3.1415927, LongRotation = 6.2831855 }, go to 7m south-west of the centre; when Cycles leaves out SawCycle { CastAt = 16.19, Boss = Placement { Position = \u003C12, 0, 0\u003E, Rotation = -1.5707964, Position2 = \u003C12, 0\u003E }, Order = RightFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], SecondWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], ShortRotation = -3.1415927, LongRotation = 0 } and Cycles leaves out SawCycle { CastAt = 16.19, Boss = Placement { Position = \u003C-12, 0, 0\u003E, Rotation = 1.5707964, Position2 = \u003C-12, 0\u003E }, Order = LeftFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], SecondWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], ShortRotation = 3.1415927, LongRotation = 6.2831855 }, go to 7m south-east of the centre.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sCoffinmakerAi",
+        "time": 38.6,
+        "line": 32
+      },
+      "title": "After half Moon resolves",
+      "cue": "Half Moon resolves",
+      "rule": "When Cycles includes SawCycle { CastAt = 16.19, Boss = Placement { Position = \u003C12, 0, 0\u003E, Rotation = -1.5707964, Position2 = \u003C12, 0\u003E }, Order = RightFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], SecondWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], ShortRotation = -3.1415927, LongRotation = 0 } and Cycles leaves out SawCycle { CastAt = 16.19, Boss = Placement { Position = \u003C-12, 0, 0\u003E, Rotation = 1.5707964, Position2 = \u003C-12, 0\u003E }, Order = LeftFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], SecondWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], ShortRotation = 3.1415927, LongRotation = 6.2831855 }, stand near waymark C, 12m south of the centre; when Cycles leaves out SawCycle { CastAt = 16.19, Boss = Placement { Position = \u003C12, 0, 0\u003E, Rotation = -1.5707964, Position2 = \u003C12, 0\u003E }, Order = RightFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], SecondWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], ShortRotation = -3.1415927, LongRotation = 0 } and Cycles includes SawCycle { CastAt = 16.19, Boss = Placement { Position = \u003C-12, 0, 0\u003E, Rotation = 1.5707964, Position2 = \u003C-12, 0\u003E }, Order = LeftFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], SecondWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], ShortRotation = 3.1415927, LongRotation = 6.2831855 }, stand near waymark C, 12m south of the centre; when Cycles leaves out SawCycle { CastAt = 16.19, Boss = Placement { Position = \u003C12, 0, 0\u003E, Rotation = -1.5707964, Position2 = \u003C12, 0\u003E }, Order = RightFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], SecondWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], ShortRotation = -3.1415927, LongRotation = 0 } and Cycles leaves out SawCycle { CastAt = 16.19, Boss = Placement { Position = \u003C-12, 0, 0\u003E, Rotation = 1.5707964, Position2 = \u003C-12, 0\u003E }, Order = LeftFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], SecondWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], ShortRotation = 3.1415927, LongRotation = 6.2831855 }, stand near waymark 3, 14m south-east of the centre.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sCoffinmakerAi",
+        "time": 42,
+        "line": 33
+      },
+      "title": "After coffinfiller resolves",
+      "cue": "Coffinfiller resolves",
+      "rule": "Go to the south wall.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sCoffinmakerAi",
+        "time": 51.8,
+        "line": 35
+      },
+      "title": "After half Moon cast starts",
+      "cue": "Half Moon cast starts",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Cycles has SawCycle { CastAt = 51, Boss = Placement { Position = \u003C0, 0, 21.8\u003E, Rotation = 3.1415927, Position2 = \u003C0, 21.8\u003E }, Order = LeftFirst, FillerActionId = 45930, FillerStartZ = 10, FirstWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], SecondWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], ShortRotation = 4.712389, LongRotation = 7.853982 }).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sCoffinmakerAi",
+        "time": 56,
+        "line": 36
+      },
+      "title": "After half Moon resolves",
+      "cue": "Half Moon resolves",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Cycles has SawCycle { CastAt = 51, Boss = Placement { Position = \u003C0, 0, 21.8\u003E, Rotation = 3.1415927, Position2 = \u003C0, 21.8\u003E }, Order = LeftFirst, FillerActionId = 45930, FillerStartZ = 10, FirstWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], SecondWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], ShortRotation = 4.712389, LongRotation = 7.853982 }).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sCoffinmakerAi",
+        "time": 62,
+        "line": 37
+      },
+      "title": "After half Moon cast starts",
+      "cue": "Half Moon cast starts",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Cycles has SawCycle { CastAt = 61.19, Boss = Placement { Position = \u003C0, 0, 21.8\u003E, Rotation = 3.1415927, Position2 = \u003C0, 21.8\u003E }, Order = RightFirst, FillerActionId = 45930, FillerStartZ = 10, FirstWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], SecondWave = \u003C\u003Ez__ReadOnlyArray\u00601[System.Single], ShortRotation = 1.5707964, LongRotation = 4.712389 }).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sCoffinmakerAi",
+        "time": 66.2,
+        "line": 38
+      },
+      "title": "After half Moon resolves",
+      "cue": "Half Moon resolves",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Satisfied).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sCoffinmakerAi",
+        "time": 70,
+        "line": 39
+      },
+      "title": "After half Moon resolves",
+      "cue": "Half Moon resolves",
+      "rule": "Go to the south wall.",
+      "tolerance": 1.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "c2L5iJfuYIWXk1v7",
+    "roleMap": {
+      "CasterDps": "dps4",
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "MeleeDpsA": "dps1",
+      "MeleeDpsB": "dps2",
+      "PhysRangedDps": "dps3"
+    },
+    "steps": {
+      "M9sCoffinmakerAi@7": 6,
+      "M9sCoffinmakerAi@17": 7
+    },
+    "exampleSeed": 1
+  },
+  "draft": true
+}
