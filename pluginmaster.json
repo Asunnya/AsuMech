@@ -2,8 +2,9 @@
     {
         "Author": "Asunnya (fork of Anomek's AnoMech)",
         "Name": "AsuMech",
-        "Punchline": "Another FFXIV mechanics simulator: a fork of AsuMech with Savage and more fights.",
-        "Description": "Asunnya's fork of AsuMech: spawns fake party members and bosses client-side so you can practice raid mechanics without a full party. Everything from AsuMech, plus Savage raids (M9S) and other fights.",
+        "Punchline": "Another FFXIV mechanics simulator: a fork of AnoMech with Savage, more Ultimates and a Learn mode.",
+        "Description": "Asunnya's fork of AnoMech: spawns fake party members and bosses client-side so you can practice raid mechanics without a full party. Everything from AnoMech, plus Savage (M9S to M11S), DSR, UCOB and UWU, and a Learn mode that guides you through each strat.",
+        "Changelog": "AnoMech is now AsuMech. Uninstall AnoMech: AsuMech imports its settings (relay, streaks, recent fights) the first time it starts. New: a Learn mode that guides you through each strat step by step, with the strat's toolbox picture and a thumbs up/down on every step; Report a problem from inside a run (a solo run pauses while you write, and the run's details are sent with it); scenario and strat requests no longer need a GitHub account; your best streak shows beside your streak. Multiplayer now uses the AsuMech server by default.",
         "InternalName": "AsuMech",
         "AssemblyVersion": "0.5.1.18",
         "RepoUrl": "https://github.com/Asunnya/AsuMech",

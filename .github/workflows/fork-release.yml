@@ -54,8 +54,10 @@ jobs:
         zip=$(find AsuMech/bin -name latest.zip -path '*Release*' | head -n 1)
         if [ -z "$zip" ]; then echo "latest.zip not found under AsuMech/bin"; find AsuMech/bin -maxdepth 3; exit 1; fi
         echo "Publishing $zip"
+        notes=$(mktemp)
+        { [ -f RELEASE_NOTES.md ] && cat RELEASE_NOTES.md && echo; echo "Built from $GITHUB_SHA"; } > "$notes"
         gh release create "v${{ steps.version.outputs.version }}" "$zip" \
-          --target "$GITHUB_SHA" --title "AsuMech ${{ steps.version.outputs.version }}" --notes "Built from $GITHUB_SHA"
+          --target "$GITHUB_SHA" --title "AsuMech ${{ steps.version.outputs.version }}" --notes-file "$notes"
 
     - name: Update pluginmaster
       shell: bash
