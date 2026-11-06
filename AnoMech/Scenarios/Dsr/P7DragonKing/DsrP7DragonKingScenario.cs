@@ -26,8 +26,9 @@ public sealed class DsrP7DragonKingScenario : IScenario
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new DsrP7DragonKingAi()];
 
-    private readonly DsrP7DragonKingStateOverrides overrides = new();
-    public object SettingsOverrides => overrides;
+    private readonly DsrP7DragonKingSettingsWindow settingsWindow = new();
+    public object SettingsOverrides => settingsWindow.Overrides;
+    public void DrawSettings() => settingsWindow.Draw();
 
     // Joins just before the boss turns targetable; the Alternative End raidwide before it is skipped.
     public const float StartAt = 34f;
@@ -57,6 +58,8 @@ public sealed class DsrP7DragonKingScenario : IScenario
     private const float AkhMornCastSeconds = 5.7f;
     private const float GigaflaresEdgeCastSeconds = 7.7f;
     private const float MornAfahsEdgeCastSeconds = 9.7f;
+    // UNVERIFIED: what a lone tank needs to live through each later Akh Morn hit without an invuln.
+    public const float KitchenSinkMitigation = 0.5f;
     private const float FacingCheckSeconds = 0.1f;
     private const float FacingTolerance = 0.03f;
     public const float MornAfahsEdgeCast = 246.91f;
@@ -84,7 +87,7 @@ public sealed class DsrP7DragonKingScenario : IScenario
     private DsrP7DragonKingState state = null!;
     private SimEnemy? thordan;
     private PartyRole topEnmity;
-    // He can't turn while casting.
+    // He can't turn from an Edge's cast until it resolves: his swings play the hits around his facing.
     private bool facingHeld;
     private readonly List<SimEnemy> spawned = [];
     private readonly Queue<SimEnemy> helperPool = [];
@@ -94,7 +97,7 @@ public sealed class DsrP7DragonKingScenario : IScenario
         world = worldParam;
         party = world.Party;
         damage = new DamageSolver(party);
-        state = new DsrP7DragonKingState(world.Rng, overrides);
+        state = new DsrP7DragonKingState(world.Rng, settingsWindow.Overrides);
         spawned.Clear();
         helperPool.Clear();
         thordan = null;
@@ -205,12 +208,12 @@ public sealed class DsrP7DragonKingScenario : IScenario
 
     // The Edge's spots are fixed by the way he faces as the cast begins. The cast locks his facing,
     // so that is when the tanks trade enmity for the Trinities that follow it.
-    private void CastEdge(uint actionId, float castSeconds, int nextTrinityPair)
+    private void CastEdge(uint actionId, float castSeconds, float resolvedAt, int nextTrinityPair)
     {
         if (thordan == null) return;
         state.Facing = thordan.Rotation;
         facingHeld = true;
-        world.Events.Add(castSeconds, () => facingHeld = false);
+        world.Events.Add(resolvedAt - world.Events.Elapsed, () => facingHeld = false);
         SwapEnmity(DsrP7DragonKingState.TopEnmityTank(nextTrinityPair));
         CastSelf(thordan, actionId, castSeconds);
     }
@@ -233,7 +236,7 @@ public sealed class DsrP7DragonKingScenario : IScenario
 
     private void CastExaflares(int cycle)
     {
-        CastEdge(ActionId.ExaflaresEdge, ExaflareCastSeconds, 3 * cycle);
+        CastEdge(ActionId.ExaflaresEdge, ExaflareCastSeconds, ExaflareFirstHits[cycle] + DsrP7DragonKingState.ExaflareDelays[^1], 3 * cycle);
         foreach (var spot in Enum.GetValues<EdgeSpot>())
         {
             var at = ToWorld(state.TurnedSpot(spot));
@@ -258,7 +261,7 @@ public sealed class DsrP7DragonKingScenario : IScenario
 
     private void CastAkhMorn(int cycle)
     {
-        CastEdge(ActionId.AkhMornsEdge, AkhMornCastSeconds, 3 * cycle + 1);
+        CastEdge(ActionId.AkhMornsEdge, AkhMornCastSeconds, AkhMornLastHit(cycle), 3 * cycle + 1);
         foreach (var spot in Enum.GetValues<EdgeSpot>())
         {
             var at = ToWorld(state.TurnedSpot(spot));
@@ -281,7 +284,8 @@ public sealed class DsrP7DragonKingScenario : IScenario
     };
 
     // UNVERIFIED: what an unsoaked first hit or a lone non-tank costs; the logs only show a lone
-    // tank living through the first hit, and through the rest only on an invuln.
+    // tank living through the first hit, and through the rest only on an invuln. A spot left empty
+    // after the first hit costs nothing: a tank leaving its spot for the six cleared.
     private void AkhMorn(int cycle, int hit)
     {
         foreach (var spot in Enum.GetValues<EdgeSpot>())
@@ -299,7 +303,8 @@ public sealed class DsrP7DragonKingScenario : IScenario
             if (hits.Count != 1) continue;
             var lone = hits[0];
             if (!IsTank(lone)) lone.Die(action, "took Akh Morn's Edge alone (stack with your group)");
-            else if (hit > 0) damage.ApplyDamage(lone, 1f, action, "held Akh Morn's Edge alone without an invuln", lethal: true);
+            else if (hit > 0 && !damage.Survives(lone, KitchenSinkMitigation))
+                damage.ApplyDamage(lone, 1f, action, "held Akh Morn's Edge alone without an invuln or enough mitigation (kitchen sink)", lethal: true);
         }
     }
 
@@ -307,7 +312,7 @@ public sealed class DsrP7DragonKingScenario : IScenario
 
     private void CastGigaflares(int cycle)
     {
-        CastEdge(ActionId.GigaflaresEdge, GigaflaresEdgeCastSeconds, 3 * cycle + 2);
+        CastEdge(ActionId.GigaflaresEdge, GigaflaresEdgeCastSeconds, GigaflareHits[cycle][^1], 3 * cycle + 2);
         for (var blast = 0; blast < 3; blast++)
         {
             var at = ToWorld(state.GigaflareSpot(cycle, blast));
@@ -372,7 +377,7 @@ public sealed class DsrP7DragonKingScenario : IScenario
 
     private void CastMornAfahsEdge()
     {
-        CastEdge(ActionId.MornAfahsEdge, MornAfahsEdgeCastSeconds, TrinityHits.Length / 2);
+        CastEdge(ActionId.MornAfahsEdge, MornAfahsEdgeCastSeconds, End, TrinityHits.Length / 2);
         foreach (var (spot, action) in new[]
                  {
                      (EdgeSpot.Party, ActionId.MornAfahsEdgePartyFirst),

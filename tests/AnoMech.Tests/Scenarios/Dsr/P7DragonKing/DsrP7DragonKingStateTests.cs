@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using AnoMech.Core.Game.Party;
 using AnoMech.Scenarios;
 using AnoMech.Scenarios.Dsr.P7DragonKing;
 
@@ -51,6 +52,16 @@ public class DsrP7DragonKingStateTests
         }
         var facingNorth = new DsrP7DragonKingState(new Rng(1));
         Assert.That(state.ExaflareRotation(0, EdgeSpot.Party) - facingNorth.ExaflareRotation(0, EdgeSpot.Party), Is.EqualTo(-MathF.PI).Within(0.001f));
+    }
+
+    [Test]
+    public void TheTanksTradeTheInvulnBetweenTheTwoSixOneOneAkhMorns()
+    {
+        var state = new DsrP7DragonKingState(new Rng(1), new DsrP7DragonKingStateOverrides { FirstInvulnTank = PartyRole.OffTank });
+        Assert.That(state.InvulnTank(1), Is.EqualTo(PartyRole.OffTank));
+        Assert.That(state.KitchenSinkTank(1), Is.EqualTo(PartyRole.MainTank));
+        Assert.That(state.InvulnTank(2), Is.EqualTo(PartyRole.MainTank));
+        Assert.That(state.KitchenSinkTank(2), Is.EqualTo(PartyRole.OffTank));
     }
 
     // The clear's three cycles: its exaflare headings, Ascalons and Gigaflare orders.
