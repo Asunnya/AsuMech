@@ -50,7 +50,7 @@
         "time": 10.16,
         "line": 46
       },
-      "title": "After forsaken resolves",
+      "title": "After Forsaken resolves",
       "cue": "Forsaken resolves",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NewNorth).",
       "tolerance": 2.5,
@@ -62,8 +62,8 @@
         "time": 25.17,
         "line": 47
       },
-      "title": "After  hits you",
-      "cue": " hits you",
+      "title": "After Spellscatter hits you",
+      "cue": "Spellscatter hits you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EndAttacks).",
       "roles": {
         "ShieldHealer": {
@@ -79,7 +79,7 @@
         "time": 33.3,
         "line": 48
       },
-      "title": "After spellwave resolves",
+      "title": "After Spellwave resolves",
       "cue": "Spellwave resolves",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NewNorth).",
       "tolerance": 2.5,
@@ -91,7 +91,7 @@
         "time": 39.21,
         "line": 49
       },
-      "title": "After all Things Ending cast starts",
+      "title": "After All Things Ending cast starts",
       "cue": "All Things Ending cast starts",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NewNorth).",
       "roles": {
@@ -111,7 +111,7 @@
         "time": 47.22,
         "line": 50
       },
-      "title": "After spelldriver resolves",
+      "title": "After Spelldriver resolves",
       "cue": "Spelldriver resolves",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NewNorth).",
       "tolerance": 2.5,
@@ -123,8 +123,8 @@
         "time": 54.35,
         "line": 51
       },
-      "title": "After sprint on another player",
-      "cue": "Sprint on another player",
+      "title": "After Spellscatter hits you",
+      "cue": "Spellscatter hits you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NewNorth).",
       "tolerance": 2.5,
       "skip": false
@@ -135,8 +135,8 @@
         "time": 59.26,
         "line": 52
       },
-      "title": "After sprint on another player",
-      "cue": "Sprint on another player",
+      "title": "After a marker lands on you",
+      "cue": "A marker lands on you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NewNorth).",
       "tolerance": 2.5,
       "skip": false
@@ -147,7 +147,7 @@
         "time": 66.4,
         "line": 53
       },
-      "title": "After spelldriver resolves",
+      "title": "After Spelldriver resolves",
       "cue": "Spelldriver resolves",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EndAttacks).",
       "tolerance": 2.5,
@@ -159,8 +159,8 @@
         "time": 75.4,
         "line": 54
       },
-      "title": "After sprint on another player",
-      "cue": "Sprint on another player",
+      "title": "After Spellscatter hits you",
+      "cue": "Spellscatter hits you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NewNorth).",
       "tolerance": 2.5,
       "skip": false
@@ -171,7 +171,7 @@
         "time": 81.31,
         "line": 55
       },
-      "title": "After all Things Ending cast starts",
+      "title": "After All Things Ending cast starts",
       "cue": "All Things Ending cast starts",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NewNorth).",
       "roles": {
@@ -205,8 +205,8 @@
         "time": 96.45,
         "line": 61
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Spellscatter hits you",
+      "cue": "Spellscatter hits you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NewNorth).",
       "tolerance": 2.5,
       "skip": false
@@ -217,8 +217,7 @@
         "time": 101.16,
         "line": 62
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "Move at 101.2s",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NewNorth).",
       "tolerance": 2.5,
       "skip": false
@@ -238,7 +237,7 @@
     },
     "steps": {},
     "exampleSeed": 1,
-    "residual": 0.0
+    "residual": 0
   },
   "draft": true
 }

@@ -81,7 +81,7 @@ public class LessonDraftTests
         Assert.That(step.Roles, Is.Null);
         Assert.That(step.Tolerance, Is.EqualTo(1.5f));
         Assert.That(step.Cue, Is.EqualTo("Slipstream cast starts"));
-        Assert.That(step.Title, Is.EqualTo("After slipstream cast starts"));
+        Assert.That(step.Title, Is.EqualTo("After Slipstream cast starts"));
     }
 
     [Test]

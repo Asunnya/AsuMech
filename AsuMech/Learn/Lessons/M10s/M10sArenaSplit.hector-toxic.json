@@ -9,7 +9,7 @@
         "time": 0.5,
         "line": 44
       },
-      "title": "After red Hot appears",
+      "title": "After Red Hot appears",
       "cue": "Red Hot appears",
       "rule": "Go to the north-west wall.",
       "roles": {
@@ -41,33 +41,33 @@
         "time": 20.81,
         "line": 45
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Alley-oop Inferno hits you",
+      "cue": "Alley-oop Inferno hits you",
       "rule": "Each role has its own spot.",
       "roles": {
         "MainTank": {
-          "rule": "Depends on FirstCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] → near D (W wall); [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] → NW 6m."
+          "rule": "Depends on FirstCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] \u2192 near D (W wall); [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] \u2192 NW 6m."
         },
         "OffTank": {
-          "rule": "Depends on FirstCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] → NE 6m; [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] → near B (E wall)."
+          "rule": "Depends on FirstCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] \u2192 NE 6m; [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] \u2192 near B (E wall)."
         },
         "RegenHealer": {
-          "rule": "Depends on FirstCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] → SW 13m; [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] → S wall."
+          "rule": "Depends on FirstCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] \u2192 SW 13m; [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] \u2192 S wall."
         },
         "ShieldHealer": {
           "rule": "If you are in PyrotationTargets: Go to 13m south-east of the centre; otherwise: Go to the south wall."
         },
         "MeleeDpsA": {
-          "rule": "Depends on FirstCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] → near D (W wall); [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] → SW 6m."
+          "rule": "Depends on FirstCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] \u2192 near D (W wall); [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] \u2192 SW 6m."
         },
         "MeleeDpsB": {
           "rule": "If you are in PyrotationTargets: Go to 6m south-east of the centre; otherwise: Stand near waymark B, the east wall."
         },
         "PhysRangedDps": {
-          "rule": "Depends on FirstCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] → NW 13m; [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] → N wall."
+          "rule": "Depends on FirstCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] \u2192 NW 13m; [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] \u2192 N wall."
         },
         "CasterDps": {
-          "rule": "Depends on FirstCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] → N wall; [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] → NE 13m."
+          "rule": "Depends on FirstCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] \u2192 N wall; [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] \u2192 NE 13m."
         }
       },
       "tolerance": 2,
@@ -79,15 +79,15 @@
         "time": 26.15,
         "line": 46
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
-      "rule": "Depends on FirstCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] → near D (W wall); [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] → W 5m.",
+      "title": "After Alley-oop Double-dip resolves",
+      "cue": "Alley-oop Double-dip resolves",
+      "rule": "Depends on FirstCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] \u2192 near D (W wall); [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] \u2192 W 5m.",
       "roles": {
         "OffTank": {
-          "rule": "Depends on FirstCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] → E 5m; [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] → near B (E wall)."
+          "rule": "Depends on FirstCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] \u2192 E 5m; [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] \u2192 near B (E wall)."
         },
         "RegenHealer": {
-          "rule": "Depends on FirstCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] → W 14m; [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] → SW wall."
+          "rule": "Depends on FirstCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] \u2192 W 14m; [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] \u2192 SW wall."
         },
         "ShieldHealer": {
           "rule": "If you are in PyrotationTargets: Go to 14m east of the centre; otherwise: Go to the south-east wall."
@@ -96,10 +96,10 @@
           "rule": "If you are in PyrotationTargets: Go to 5m east of the centre; otherwise: Stand near waymark B, the east wall."
         },
         "PhysRangedDps": {
-          "rule": "Depends on FirstCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] → W 14m; [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] → NW wall."
+          "rule": "Depends on FirstCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] \u2192 W 14m; [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] \u2192 NW wall."
         },
         "CasterDps": {
-          "rule": "Depends on FirstCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] → NE wall; [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] → E 14m."
+          "rule": "Depends on FirstCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] \u2192 NE wall; [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] \u2192 E 14m."
         }
       },
       "tolerance": 2,
@@ -111,8 +111,8 @@
         "time": 28.73,
         "line": 47
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After a marker lands on you",
+      "cue": "A marker lands on you",
       "rule": "Each role has its own spot.",
       "roles": {
         "MainTank": {
@@ -122,10 +122,10 @@
           "rule": "Go to 12m north-east of the centre."
         },
         "RegenHealer": {
-          "rule": "Depends on SecondCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] → near 4 (SW 13m); [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] → near 4 (SW 13m); [-2.52,-1.74,1.4,2.18,-0.39,0.39,0.34,1.13,-1.4,-0.62,0.96,1.74,2.75,3.53,2.02,2.8] → near 4 (SW 13m); [-2.19,-1.4,1.74,2.52,-1.13,-0.34,-0.39,0.39,-1.74,-0.96,0.62,1.4,-2.8,-2.02,2.75,3.53] → SW wall."
+          "rule": "Depends on SecondCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] \u2192 near 4 (SW 13m); [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] \u2192 near 4 (SW 13m); [-2.52,-1.74,1.4,2.18,-0.39,0.39,0.34,1.13,-1.4,-0.62,0.96,1.74,2.75,3.53,2.02,2.8] \u2192 near 4 (SW 13m); [-2.19,-1.4,1.74,2.52,-1.13,-0.34,-0.39,0.39,-1.74,-0.96,0.62,1.4,-2.8,-2.02,2.75,3.53] \u2192 SW wall."
         },
         "ShieldHealer": {
-          "rule": "Depends on SecondCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] → SE 13m; [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] → SE 13m; [-2.52,-1.74,1.4,2.18,-0.39,0.39,0.34,1.13,-1.4,-0.62,0.96,1.74,2.75,3.53,2.02,2.8] → SE wall; [-2.19,-1.4,1.74,2.52,-1.13,-0.34,-0.39,0.39,-1.74,-0.96,0.62,1.4,-2.8,-2.02,2.75,3.53] → SE 13m."
+          "rule": "Depends on SecondCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] \u2192 SE 13m; [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] \u2192 SE 13m; [-2.52,-1.74,1.4,2.18,-0.39,0.39,0.34,1.13,-1.4,-0.62,0.96,1.74,2.75,3.53,2.02,2.8] \u2192 SE wall; [-2.19,-1.4,1.74,2.52,-1.13,-0.34,-0.39,0.39,-1.74,-0.96,0.62,1.4,-2.8,-2.02,2.75,3.53] \u2192 SE 13m."
         },
         "MeleeDpsA": {
           "rule": "Go to 12m south-west of the centre."
@@ -134,10 +134,10 @@
           "rule": "Go to 12m south-east of the centre."
         },
         "PhysRangedDps": {
-          "rule": "Depends on FirstCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] → NW 13m; [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] → NW wall."
+          "rule": "Depends on FirstCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] \u2192 NW 13m; [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] \u2192 NW wall."
         },
         "CasterDps": {
-          "rule": "Depends on FirstCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] → NE wall; [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] → NE 13m."
+          "rule": "Depends on FirstCones: [-2.13,1.79,0,0.73,-1.01,1.35,3.14,2.41] \u2192 NE wall; [-1.79,2.13,-0.73,0,-1.35,1.01,-2.41,3.14] \u2192 NE 13m."
         }
       },
       "tolerance": 2,
@@ -149,8 +149,8 @@
         "time": 30.5,
         "line": 48
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After a marker lands on you",
+      "cue": "A marker lands on you",
       "rule": "Go to the north-west wall.",
       "roles": {
         "OffTank": {
@@ -181,21 +181,21 @@
         "time": 34.04,
         "line": 49
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
-      "rule": "Depends on Push: (-1,0) → W 5m; (0,1) → near 1 (NW 14m); (1,0) → W wall.",
+      "title": "After Freaky Pyrotation hits you",
+      "cue": "Freaky Pyrotation hits you",
+      "rule": "Depends on Push: (-1,0) \u2192 W 5m; (0,1) \u2192 near 1 (NW 14m); (1,0) \u2192 W wall.",
       "roles": {
         "OffTank": {
-          "rule": "Depends on Push: (-1,0) → E wall; (0,1) → near 2 (NE 14m); (1,0) → E 5m."
+          "rule": "Depends on Push: (-1,0) \u2192 E wall; (0,1) \u2192 near 2 (NE 14m); (1,0) \u2192 E 5m."
         },
         "ShieldHealer": {
-          "rule": "Depends on Push: (-1,0) → E wall; (0,1) → near 2 (NE 14m); (1,0) → E 5m."
+          "rule": "Depends on Push: (-1,0) \u2192 E wall; (0,1) \u2192 near 2 (NE 14m); (1,0) \u2192 E 5m."
         },
         "MeleeDpsB": {
-          "rule": "Depends on Push: (-1,0) → E wall; (0,1) → near 2 (NE 14m); (1,0) → E 5m."
+          "rule": "Depends on Push: (-1,0) \u2192 E wall; (0,1) \u2192 near 2 (NE 14m); (1,0) \u2192 E 5m."
         },
         "CasterDps": {
-          "rule": "Depends on Push: (-1,0) → E wall; (0,1) → near 2 (NE 14m); (1,0) → E 5m."
+          "rule": "Depends on Push: (-1,0) \u2192 E wall; (0,1) \u2192 near 2 (NE 14m); (1,0) \u2192 E 5m."
         }
       },
       "tolerance": 2,
@@ -207,8 +207,8 @@
         "time": 42.72,
         "line": 50
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Sickest Take-off resolves",
+      "cue": "Sickest Take-off resolves",
       "rule": "Go to 10m west of the centre.",
       "roles": {
         "OffTank": {
@@ -242,7 +242,7 @@
     },
     "steps": {},
     "exampleSeed": 1,
-    "residual": 0.0
+    "residual": 0
   },
   "draft": true
 }

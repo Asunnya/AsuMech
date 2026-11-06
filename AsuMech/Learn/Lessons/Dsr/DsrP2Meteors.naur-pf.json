@@ -14,8 +14,8 @@
         "time": 120.6,
         "line": 80
       },
-      "title": "After  resolves",
-      "cue": " resolves",
+      "title": "After King Thordan appears",
+      "cue": "King Thordan appears",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
       "roles": {
         "RegenHealer": {
@@ -31,7 +31,7 @@
         "time": 132.4,
         "line": 81
       },
-      "title": "After ice Resistance Down II on you",
+      "title": "After Ice Resistance Down II on you",
       "cue": "Ice Resistance Down II on you",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
       "tolerance": 2.5,
@@ -43,7 +43,7 @@
         "time": 136.5,
         "line": 82
       },
-      "title": "After ice Resistance Down II on you",
+      "title": "After Ice Resistance Down II on you",
       "cue": "Ice Resistance Down II on you",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
       "tolerance": 2.5,
@@ -56,8 +56,8 @@
         "to": 143.98,
         "line": 87
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Ice Resistance Down II on you",
+      "cue": "Ice Resistance Down II on you",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
       "roles": {
         "MainTank": {
@@ -76,7 +76,7 @@
         "time": 138.7,
         "line": 83
       },
-      "title": "After ice Resistance Down II on you",
+      "title": "After Ice Resistance Down II on you",
       "cue": "Ice Resistance Down II on you",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
       "tolerance": 2.5,
@@ -88,7 +88,7 @@
         "time": 145.41,
         "line": 89
       },
-      "title": "After holy comet appears",
+      "title": "After Holy comet appears",
       "cue": "holy comet appears",
       "rule": "Go to the north wall.",
       "roles": {
@@ -114,7 +114,7 @@
         "time": 148.3,
         "line": 90
       },
-      "title": "After conviction resolves",
+      "title": "After Conviction resolves",
       "tolerance": 2.5,
       "skip": true
     },
@@ -124,7 +124,7 @@
         "time": 150.5,
         "line": 92
       },
-      "title": "After conviction resolves",
+      "title": "After Conviction resolves",
       "cue": "Conviction resolves",
       "rule": "Go to 4m north of the centre.",
       "roles": {

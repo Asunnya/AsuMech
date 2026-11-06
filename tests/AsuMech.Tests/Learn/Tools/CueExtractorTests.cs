@@ -42,4 +42,45 @@ public class CueExtractorTests
         Assert.That(cue.Stable, Is.True);
         Assert.That(cue.SecondsBefore, Is.EqualTo(5f).Within(0.01f));
     }
+
+    [Test]
+    public void WhatThePartyDoesToItselfIsNeverACue()
+    {
+        var dump = new OrderDump("S", "A", 0,
+            [Order(1, "MainTank")],
+            [new DumpedRun(1, new(), [
+                Ev(14f, "cast", "Slipstream", "Boss"),
+                Ev(19.9f, "status", "Sprint", "", "MainTank"),
+                Ev(19.5f, "status", "Holmgang", "", "MainTank"),
+                Ev(19.6f, "status", "Reprisal", "", "Boss"),
+                Ev(19.7f, "ability", "", "Boss", "MainTank"),
+                Ev(19.8f, "ability", "attack", "Boss", "MainTank"),
+                Ev(19.85f, "ability", "Shake It Off", "OffTank", "MainTank"),
+                Ev(19f, "status", "Doom", "", "MainTank"),
+            ])]);
+        var cues = CueExtractor.Extract(dump)[("Ai", 40, "MainTank")];
+        Assert.That(cues.Select(c => c.Name), Is.EqualTo(new[] { "Doom", "Slipstream" }), "a sourceless mechanic debuff still counts");
+    }
+
+    [Test]
+    public void RecueReplacesTheSprintCueAndTheTitleDraftedFromItButKeepsWrittenOnes()
+    {
+        var dump = new OrderDump("S", "A", 0,
+            [Order(1, "MainTank")],
+            [new DumpedRun(1, new(), [Ev(16f, "cast", "Fearsome Fireball", "Boss"), Ev(19.9f, "status", "Sprint", "", "MainTank")])]);
+        var key = new AsuMech.Learn.LessonStepKey("Ai", 20f, null, null, 40);
+        AsuMech.Learn.LessonStep Step(string? title, string? cue) => new(key, title, cue, "Stand on A.", Tolerance: 2f);
+        var lesson = new AsuMech.Learn.Lesson("S", "A", [], [Step("After sprint on you", "Sprint on you"), Step("Bait the fireball", "Sprint on you"), Step("After sprint on you", null), Step("After the tower", "Tower on you")]);
+
+        var (recued, changed) = LessonDraft.Recue(lesson, dump);
+
+        Assert.That(changed, Is.EqualTo(3));
+        Assert.That(recued.Steps.Select(s => (s.Title, s.Cue)), Is.EqualTo(new (string?, string?)[]
+        {
+            ("After Fearsome Fireball cast starts", "Fearsome Fireball cast starts"),
+            ("Bait the fireball", "Fearsome Fireball cast starts"),
+            ("After Fearsome Fireball cast starts", null),
+            ("After the tower", "Tower on you"),
+        }));
+    }
 }

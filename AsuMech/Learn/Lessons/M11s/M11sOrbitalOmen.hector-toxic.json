@@ -29,8 +29,8 @@
         "time": 12.12,
         "line": 31
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Great Wall of Fire hits you",
+      "cue": "Great Wall of Fire hits you",
       "rule": "Go to 6m north-west of the centre.",
       "tolerance": 2,
       "skip": false
@@ -41,8 +41,8 @@
         "time": 15.320001,
         "line": 32
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Great Wall of Fire hits you",
+      "cue": "Great Wall of Fire hits you",
       "rule": "Go to 5m east of the centre.",
       "tolerance": 2,
       "skip": false
@@ -53,8 +53,8 @@
         "time": 29.81,
         "line": 33
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Orbital Omen cast starts",
+      "cue": "Orbital Omen cast starts",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NorthLines).",
       "tolerance": 2.5,
       "skip": false
@@ -65,8 +65,8 @@
         "time": 34.35,
         "line": 34
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Orbital Omen resolves",
+      "cue": "Orbital Omen resolves",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NorthLines).",
       "tolerance": 2.5,
       "skip": false
@@ -77,15 +77,15 @@
         "time": 35.859997,
         "line": 35
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Orbital Omen resolves",
+      "cue": "Orbital Omen resolves",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NorthLines).",
       "tolerance": 2.5,
       "skip": false
     }
   ],
   "toolbox": {
-    "planId": "HJAbE7fuWodELUSB+B82fx_zDqUMr5KFC",
+    "planId": "HJAbE7fuWodELUSB\u002BB82fx_zDqUMr5KFC",
     "roleMap": {
       "CasterDps": "dps4",
       "OffTank": "tank1",

@@ -9,7 +9,7 @@
         "time": 0.3,
         "line": 30
       },
-      "title": "After red Hot appears",
+      "title": "After Red Hot appears",
       "cue": "Red Hot appears",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,
@@ -21,7 +21,7 @@
         "time": 11.42,
         "line": 31
       },
-      "title": "After xtreme Spectacular cast starts",
+      "title": "After Xtreme Spectacular cast starts",
       "cue": "Xtreme Spectacular cast starts",
       "rule": "Stand near waymark A, the north wall.",
       "tolerance": 1.5,
@@ -33,8 +33,8 @@
         "time": 42.88,
         "line": 32
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Insane Air cast starts",
+      "cue": "Insane Air cast starts",
       "rule": "Stand near waymark A, the north wall.",
       "roles": {
         "OffTank": {
@@ -47,7 +47,7 @@
           "rule": "Stand near waymark C, the south wall."
         },
         "PhysRangedDps": {
-          "rule": "Depends on Variant: InsaneAirVariant { Name = A, Red Hot ends in the middle, RedHotMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = True, MapEffects = <>z__ReadOnlyArray`1[System.ValueTuple`3[System.Single,System.Byte,System.UInt32]] } → near A (N wall); InsaneAirVariant { Name = C, RedHotMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = False, MapEffects = <>z__ReadOnlyArray`1[System.ValueTuple`3[System.Single,System.Byte,System.UInt32]] } → N wall; InsaneAirVariant { Name = C, Red Hot ends in the middle, RedHotMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = True, MapEffects = <>z__ReadOnlyArray`1[System.ValueTuple`3[System.Single,System.Byte,System.UInt32]] } → N wall."
+          "rule": "Depends on Variant: InsaneAirVariant { Name = A, Red Hot ends in the middle, RedHotMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = True, MapEffects = \u003C\u003Ez__ReadOnlyArray\u00601[System.ValueTuple\u00603[System.Single,System.Byte,System.UInt32]] } \u2192 near A (N wall); InsaneAirVariant { Name = C, RedHotMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = False, MapEffects = \u003C\u003Ez__ReadOnlyArray\u00601[System.ValueTuple\u00603[System.Single,System.Byte,System.UInt32]] } \u2192 N wall; InsaneAirVariant { Name = C, Red Hot ends in the middle, RedHotMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = True, MapEffects = \u003C\u003Ez__ReadOnlyArray\u00601[System.ValueTuple\u00603[System.Single,System.Byte,System.UInt32]] } \u2192 N wall."
         },
         "CasterDps": {
           "rule": "Go to the south wall."
@@ -63,9 +63,9 @@
         "to": 66.8,
         "line": 36
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
-      "rule": "Depends on Variant: InsaneAirVariant { Name = A, Red Hot ends in the middle, RedHotMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = True, MapEffects = <>z__ReadOnlyArray`1[System.ValueTuple`3[System.Single,System.Byte,System.UInt32]] } → NE wall; InsaneAirVariant { Name = C, RedHotMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = False, MapEffects = <>z__ReadOnlyArray`1[System.ValueTuple`3[System.Single,System.Byte,System.UInt32]] } → NE 12m; InsaneAirVariant { Name = C, Red Hot ends in the middle, RedHotMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = True, MapEffects = <>z__ReadOnlyArray`1[System.ValueTuple`3[System.Single,System.Byte,System.UInt32]] } → NE 12m.",
+      "title": "After Blasting Snap resolves",
+      "cue": "Blasting Snap resolves",
+      "rule": "Depends on Variant: InsaneAirVariant { Name = A, Red Hot ends in the middle, RedHotMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = True, MapEffects = \u003C\u003Ez__ReadOnlyArray\u00601[System.ValueTuple\u00603[System.Single,System.Byte,System.UInt32]] } \u2192 NE wall; InsaneAirVariant { Name = C, RedHotMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = False, MapEffects = \u003C\u003Ez__ReadOnlyArray\u00601[System.ValueTuple\u00603[System.Single,System.Byte,System.UInt32]] } \u2192 NE 12m; InsaneAirVariant { Name = C, Red Hot ends in the middle, RedHotMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = True, MapEffects = \u003C\u003Ez__ReadOnlyArray\u00601[System.ValueTuple\u00603[System.Single,System.Byte,System.UInt32]] } \u2192 NE 12m.",
       "roles": {
         "MainTank": {
           "rule": "Go to the north-east wall."
@@ -74,13 +74,13 @@
           "rule": "Stand near waymark 4, the south-west wall."
         },
         "ShieldHealer": {
-          "rule": "Depends on Variant: InsaneAirVariant { Name = A, Red Hot ends in the middle, RedHotMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = True, MapEffects = <>z__ReadOnlyArray`1[System.ValueTuple`3[System.Single,System.Byte,System.UInt32]] } → SW 12m; InsaneAirVariant { Name = C, RedHotMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = False, MapEffects = <>z__ReadOnlyArray`1[System.ValueTuple`3[System.Single,System.Byte,System.UInt32]] } → SW wall; InsaneAirVariant { Name = C, Red Hot ends in the middle, RedHotMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = True, MapEffects = <>z__ReadOnlyArray`1[System.ValueTuple`3[System.Single,System.Byte,System.UInt32]] } → SW wall."
+          "rule": "Depends on Variant: InsaneAirVariant { Name = A, Red Hot ends in the middle, RedHotMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = True, MapEffects = \u003C\u003Ez__ReadOnlyArray\u00601[System.ValueTuple\u00603[System.Single,System.Byte,System.UInt32]] } \u2192 SW 12m; InsaneAirVariant { Name = C, RedHotMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = False, MapEffects = \u003C\u003Ez__ReadOnlyArray\u00601[System.ValueTuple\u00603[System.Single,System.Byte,System.UInt32]] } \u2192 SW wall; InsaneAirVariant { Name = C, Red Hot ends in the middle, RedHotMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = True, MapEffects = \u003C\u003Ez__ReadOnlyArray\u00601[System.ValueTuple\u00603[System.Single,System.Byte,System.UInt32]] } \u2192 SW wall."
         },
         "MeleeDpsB": {
-          "rule": "Depends on Variant: InsaneAirVariant { Name = A, Red Hot ends in the middle, RedHotMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = True, MapEffects = <>z__ReadOnlyArray`1[System.ValueTuple`3[System.Single,System.Byte,System.UInt32]] } → SW 12m; InsaneAirVariant { Name = C, RedHotMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = False, MapEffects = <>z__ReadOnlyArray`1[System.ValueTuple`3[System.Single,System.Byte,System.UInt32]] } → SW wall; InsaneAirVariant { Name = C, Red Hot ends in the middle, RedHotMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = True, MapEffects = <>z__ReadOnlyArray`1[System.ValueTuple`3[System.Single,System.Byte,System.UInt32]] } → SW wall."
+          "rule": "Depends on Variant: InsaneAirVariant { Name = A, Red Hot ends in the middle, RedHotMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = True, MapEffects = \u003C\u003Ez__ReadOnlyArray\u00601[System.ValueTuple\u00603[System.Single,System.Byte,System.UInt32]] } \u2192 SW 12m; InsaneAirVariant { Name = C, RedHotMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = False, MapEffects = \u003C\u003Ez__ReadOnlyArray\u00601[System.ValueTuple\u00603[System.Single,System.Byte,System.UInt32]] } \u2192 SW wall; InsaneAirVariant { Name = C, Red Hot ends in the middle, RedHotMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = True, MapEffects = \u003C\u003Ez__ReadOnlyArray\u00601[System.ValueTuple\u00603[System.Single,System.Byte,System.UInt32]] } \u2192 SW wall."
         },
         "CasterDps": {
-          "rule": "Depends on Variant: InsaneAirVariant { Name = A, Red Hot ends in the middle, RedHotMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = True, MapEffects = <>z__ReadOnlyArray`1[System.ValueTuple`3[System.Single,System.Byte,System.UInt32]] } → SW 12m; InsaneAirVariant { Name = C, RedHotMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = False, MapEffects = <>z__ReadOnlyArray`1[System.ValueTuple`3[System.Single,System.Byte,System.UInt32]] } → SW wall; InsaneAirVariant { Name = C, Red Hot ends in the middle, RedHotMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = <>z__ReadOnlyArray`1[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = True, MapEffects = <>z__ReadOnlyArray`1[System.ValueTuple`3[System.Single,System.Byte,System.UInt32]] } → SW wall."
+          "rule": "Depends on Variant: InsaneAirVariant { Name = A, Red Hot ends in the middle, RedHotMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = True, MapEffects = \u003C\u003Ez__ReadOnlyArray\u00601[System.ValueTuple\u00603[System.Single,System.Byte,System.UInt32]] } \u2192 SW 12m; InsaneAirVariant { Name = C, RedHotMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = False, MapEffects = \u003C\u003Ez__ReadOnlyArray\u00601[System.ValueTuple\u00603[System.Single,System.Byte,System.UInt32]] } \u2192 SW wall; InsaneAirVariant { Name = C, Red Hot ends in the middle, RedHotMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], DeepBlueMoves = \u003C\u003Ez__ReadOnlyArray\u00601[AsuMech.Scenarios.M10s.InsaneAir.SurfMove], RedHotEndsInTheMiddle = True, MapEffects = \u003C\u003Ez__ReadOnlyArray\u00601[System.ValueTuple\u00603[System.Single,System.Byte,System.UInt32]] } \u2192 SW wall."
         }
       },
       "tolerance": 2,
@@ -92,8 +92,8 @@
         "time": 74.36,
         "line": 38
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Re-entry Blast resolves",
+      "cue": "Re-entry Blast resolves",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,
       "skip": false

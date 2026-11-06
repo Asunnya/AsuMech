@@ -9,7 +9,7 @@
         "time": 7,
         "line": 25
       },
-      "title": "After sadistic Screech resolves",
+      "title": "After Sadistic Screech resolves",
       "cue": "Sadistic Screech resolves",
       "rule": "Go to 4m south of the centre.",
       "tolerance": 1.5,
@@ -21,7 +21,7 @@
         "time": 17,
         "line": 27
       },
-      "title": "After half Moon cast starts",
+      "title": "After Half Moon cast starts",
       "cue": "Half Moon cast starts",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat.",
       "tolerance": 2.5,
@@ -33,7 +33,7 @@
         "time": 21.2,
         "line": 28
       },
-      "title": "After half Moon resolves",
+      "title": "After Half Moon resolves",
       "cue": "Half Moon resolves",
       "rule": "Depends on SawKill: Fast → NE 3m; Average → near B (E 8m); Slow → near B (E 8m).",
       "tolerance": 2,
@@ -45,7 +45,7 @@
         "time": 24.6,
         "line": 29
       },
-      "title": "After coffinfiller resolves",
+      "title": "After Coffinfiller resolves",
       "cue": "Coffinfiller resolves",
       "rule": "Stand near waymark C, 6m south of the centre.",
       "tolerance": 1.5,
@@ -57,7 +57,7 @@
         "time": 34.4,
         "line": 31
       },
-      "title": "After half Moon cast starts",
+      "title": "After Half Moon cast starts",
       "cue": "Half Moon cast starts",
       "rule": "When Cycles includes SawCycle { CastAt = 16.19, Boss = Placement { Position = <12, 0, 0>, Rotation = -1.5707964, Position2 = <12, 0> }, Order = RightFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = -3.1415927, LongRotation = 0 } and Cycles leaves out SawCycle { CastAt = 16.19, Boss = Placement { Position = <-12, 0, 0>, Rotation = 1.5707964, Position2 = <-12, 0> }, Order = LeftFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = 3.1415927, LongRotation = 6.2831855 }, go to 10m south-east of the centre; when Cycles leaves out SawCycle { CastAt = 16.19, Boss = Placement { Position = <12, 0, 0>, Rotation = -1.5707964, Position2 = <12, 0> }, Order = RightFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = -3.1415927, LongRotation = 0 } and Cycles includes SawCycle { CastAt = 16.19, Boss = Placement { Position = <-12, 0, 0>, Rotation = 1.5707964, Position2 = <-12, 0> }, Order = LeftFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = 3.1415927, LongRotation = 6.2831855 }, go to 7m south-west of the centre; when Cycles leaves out SawCycle { CastAt = 16.19, Boss = Placement { Position = <12, 0, 0>, Rotation = -1.5707964, Position2 = <12, 0> }, Order = RightFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = -3.1415927, LongRotation = 0 } and Cycles leaves out SawCycle { CastAt = 16.19, Boss = Placement { Position = <-12, 0, 0>, Rotation = 1.5707964, Position2 = <-12, 0> }, Order = LeftFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = 3.1415927, LongRotation = 6.2831855 }, go to 7m south-east of the centre.",
       "tolerance": 2,
@@ -69,7 +69,7 @@
         "time": 38.6,
         "line": 32
       },
-      "title": "After half Moon resolves",
+      "title": "After Half Moon resolves",
       "cue": "Half Moon resolves",
       "rule": "When Cycles includes SawCycle { CastAt = 16.19, Boss = Placement { Position = <12, 0, 0>, Rotation = -1.5707964, Position2 = <12, 0> }, Order = RightFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = -3.1415927, LongRotation = 0 } and Cycles leaves out SawCycle { CastAt = 16.19, Boss = Placement { Position = <-12, 0, 0>, Rotation = 1.5707964, Position2 = <-12, 0> }, Order = LeftFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = 3.1415927, LongRotation = 6.2831855 }, stand near waymark C, 12m south of the centre; when Cycles leaves out SawCycle { CastAt = 16.19, Boss = Placement { Position = <12, 0, 0>, Rotation = -1.5707964, Position2 = <12, 0> }, Order = RightFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = -3.1415927, LongRotation = 0 } and Cycles includes SawCycle { CastAt = 16.19, Boss = Placement { Position = <-12, 0, 0>, Rotation = 1.5707964, Position2 = <-12, 0> }, Order = LeftFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = 3.1415927, LongRotation = 6.2831855 }, stand near waymark C, 12m south of the centre; when Cycles leaves out SawCycle { CastAt = 16.19, Boss = Placement { Position = <12, 0, 0>, Rotation = -1.5707964, Position2 = <12, 0> }, Order = RightFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = -3.1415927, LongRotation = 0 } and Cycles leaves out SawCycle { CastAt = 16.19, Boss = Placement { Position = <-12, 0, 0>, Rotation = 1.5707964, Position2 = <-12, 0> }, Order = LeftFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = 3.1415927, LongRotation = 6.2831855 }, stand near waymark 3, 14m south-east of the centre.",
       "tolerance": 2,
@@ -81,7 +81,7 @@
         "time": 42,
         "line": 33
       },
-      "title": "After coffinfiller resolves",
+      "title": "After Coffinfiller resolves",
       "cue": "Coffinfiller resolves",
       "rule": "Go to the south wall.",
       "tolerance": 1.5,
@@ -93,7 +93,7 @@
         "time": 51.8,
         "line": 35
       },
-      "title": "After half Moon cast starts",
+      "title": "After Half Moon cast starts",
       "cue": "Half Moon cast starts",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Cycles has SawCycle { CastAt = 51, Boss = Placement { Position = <0, 0, 21.8>, Rotation = 3.1415927, Position2 = <0, 21.8> }, Order = LeftFirst, FillerActionId = 45930, FillerStartZ = 10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = 4.712389, LongRotation = 7.853982 }).",
       "tolerance": 2.5,
@@ -105,7 +105,7 @@
         "time": 56,
         "line": 36
       },
-      "title": "After half Moon resolves",
+      "title": "After Half Moon resolves",
       "cue": "Half Moon resolves",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Cycles has SawCycle { CastAt = 51, Boss = Placement { Position = <0, 0, 21.8>, Rotation = 3.1415927, Position2 = <0, 21.8> }, Order = LeftFirst, FillerActionId = 45930, FillerStartZ = 10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = 4.712389, LongRotation = 7.853982 }).",
       "tolerance": 2.5,
@@ -117,7 +117,7 @@
         "time": 62,
         "line": 37
       },
-      "title": "After half Moon cast starts",
+      "title": "After Half Moon cast starts",
       "cue": "Half Moon cast starts",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Cycles has SawCycle { CastAt = 61.19, Boss = Placement { Position = <0, 0, 21.8>, Rotation = 3.1415927, Position2 = <0, 21.8> }, Order = RightFirst, FillerActionId = 45930, FillerStartZ = 10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = 1.5707964, LongRotation = 4.712389 }).",
       "tolerance": 2.5,
@@ -129,7 +129,7 @@
         "time": 66.2,
         "line": 38
       },
-      "title": "After half Moon resolves",
+      "title": "After Half Moon resolves",
       "cue": "Half Moon resolves",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Satisfied).",
       "tolerance": 2.5,
@@ -141,7 +141,7 @@
         "time": 70,
         "line": 39
       },
-      "title": "After half Moon resolves",
+      "title": "After Half Moon resolves",
       "cue": "Half Moon resolves",
       "rule": "Go to the south wall.",
       "tolerance": 1.5,

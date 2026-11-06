@@ -14,7 +14,7 @@
         "time": 2,
         "line": 32
       },
-      "title": "After great wyrm appears",
+      "title": "After Great wyrm appears",
       "cue": "great wyrm appears",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,
@@ -26,7 +26,7 @@
         "time": 6.65,
         "line": 33
       },
-      "title": "After akh Rhai cast starts",
+      "title": "After Akh Rhai cast starts",
       "cue": "Akh Rhai cast starts",
       "rule": "Stand near waymark 2, 8m north-east of the centre.",
       "roles": {
@@ -58,7 +58,7 @@
         "time": 14.5,
         "line": 34
       },
-      "title": "After akh Rhai resolves",
+      "title": "After Akh Rhai resolves",
       "cue": "Akh Rhai resolves",
       "rule": "Stand near waymark C, 11m south of the centre.",
       "roles": {
@@ -87,7 +87,7 @@
         "time": 24.2,
         "line": 35
       },
-      "title": "After lightsteeped on you",
+      "title": "After Lightsteeped on you",
       "cue": "Lightsteeped on you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TetherWater).",
       "roles": {
@@ -116,7 +116,7 @@
         "time": 28.2,
         "line": 36
       },
-      "title": "After lightsteeped on you",
+      "title": "After Lightsteeped on you",
       "cue": "Lightsteeped on you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TetherWater).",
       "roles": {
@@ -145,7 +145,7 @@
         "time": 33.1,
         "line": 37
       },
-      "title": "After lightsteeped on you",
+      "title": "After Lightsteeped on you",
       "cue": "Lightsteeped on you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TetherWater).",
       "roles": {
@@ -171,7 +171,7 @@
         "time": 35.65,
         "line": 38
       },
-      "title": "After lightsteeped on you",
+      "title": "After Lightsteeped on you",
       "cue": "Lightsteeped on you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Waters).",
       "roles": {
@@ -203,7 +203,7 @@
         "time": 40.6,
         "line": 40
       },
-      "title": "After hallowed Wings resolves",
+      "title": "After Hallowed Wings resolves",
       "cue": "Hallowed Wings resolves",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SpiritTakerTarget has MainTank).",
       "roles": {
@@ -220,7 +220,7 @@
         "time": 42.4,
         "line": 41
       },
-      "title": "After hallowed Wings resolves",
+      "title": "After Hallowed Wings resolves",
       "cue": "Hallowed Wings resolves",
       "rule": "Stand near waymark A, 6m north of the centre.",
       "roles": {
@@ -246,7 +246,7 @@
         "time": 45,
         "line": 42
       },
-      "title": "After somber Dance hits you",
+      "title": "After Somber Dance hits you",
       "cue": "Somber Dance hits you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SpiritTakerTarget has MainTank).",
       "roles": {
@@ -263,7 +263,7 @@
         "time": 50.15,
         "line": 43
       },
-      "title": "After edge of Oblivion cast starts",
+      "title": "After Edge of Oblivion cast starts",
       "cue": "Edge of Oblivion cast starts",
       "rule": "Stand at the centre.",
       "roles": {

@@ -9,7 +9,7 @@
         "time": 0.3,
         "line": 31
       },
-      "title": "After red Hot appears",
+      "title": "After Red Hot appears",
       "cue": "Red Hot appears",
       "rule": "Go to 8m west of the centre.",
       "roles": {
@@ -35,8 +35,8 @@
         "time": 8.57,
         "line": 32
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Xtreme Watersnaking on you",
+      "cue": "Xtreme Watersnaking on you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Fire).",
       "roles": {
         "PhysRangedDps": {
@@ -56,8 +56,8 @@
         "to": 47.14,
         "line": 36
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Bailout cast starts",
+      "cue": "Bailout cast starts",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Fire).",
       "roles": {
         "RegenHealer": {
@@ -82,7 +82,7 @@
         "time": 57.68,
         "line": 38
       },
-      "title": "After bailout cast starts",
+      "title": "After Bailout cast starts",
       "cue": "Bailout cast starts",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,

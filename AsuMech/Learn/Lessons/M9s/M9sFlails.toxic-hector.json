@@ -9,7 +9,7 @@
         "time": 0.5,
         "line": 33
       },
-      "title": "After vamp Fatale appears",
+      "title": "After Vamp Fatale appears",
       "cue": "Vamp Fatale appears",
       "rule": "Go to 2m south of the centre.",
       "tolerance": 1.5,

@@ -19,8 +19,8 @@
         "to": 128.31001,
         "line": 119
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Nael deus Darnus appears",
+      "cue": "Nael deus Darnus appears",
       "rule": "Go to 5m south of the centre.",
       "tolerance": 1.5,
       "skip": false
@@ -31,7 +31,7 @@
         "time": 20,
         "line": 67
       },
-      "title": "After sprint on you",
+      "title": "After Dalamud Dive hits you",
       "tolerance": 1.5,
       "skip": true
     },
@@ -42,8 +42,8 @@
         "to": 121.32,
         "line": 111
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Deathstorm hits you",
+      "cue": "Deathstorm hits you",
       "rule": "Go to the south wall.",
       "tolerance": 1.5,
       "skip": false
@@ -54,7 +54,7 @@
         "time": 57.8,
         "line": 103
       },
-      "title": "After iceball resolves",
+      "title": "After Iceball resolves",
       "cue": "Iceball resolves",
       "rule": "Stand near waymark 4, 4m south of the centre.",
       "tolerance": 1.5,
@@ -66,7 +66,7 @@
         "time": 75.91,
         "line": 102
       },
-      "title": "After sprint on you",
+      "title": "After Lunar Dynamo resolves",
       "tolerance": 1.5,
       "skip": true
     },
@@ -76,8 +76,8 @@
         "time": 106.22,
         "line": 94
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Iceball hits you",
+      "cue": "Iceball hits you",
       "rule": "When ThunderTargets leaves out ShieldHealer] and ThunderTargets leaves out MeleeDpsB], stand near waymark D, 7m south of the centre; when ThunderTargets includes ShieldHealer] and ThunderTargets leaves out MeleeDpsB], go to 7m south-west of the centre; when ThunderTargets leaves out ShieldHealer] and ThunderTargets includes MeleeDpsB], go to 7m south-west of the centre; when ThunderTargets includes ShieldHealer] and ThunderTargets includes MeleeDpsB], stand near waymark D, 12m south of the centre.",
       "roles": {
         "MainTank": {
@@ -105,8 +105,8 @@
         "time": 112.67,
         "line": 101
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Firescorched on you",
+      "cue": "Firescorched on you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: RavenDiveTarget).",
       "roles": {
         "OffTank": {
@@ -124,13 +124,13 @@
     }
   ],
   "toolbox": {
-    "planId": "DpoJr4oE_kGz_gRU+vi2rSC6mwW_d_QJF",
+    "planId": "DpoJr4oE_kGz_gRU\u002Bvi2rSC6mwW_d_QJF",
     "roleMap": {
       "CasterDps": "dps4"
     },
     "steps": {},
     "exampleSeed": 1,
-    "residual": 0.0
+    "residual": 0
   },
   "draft": true
 }

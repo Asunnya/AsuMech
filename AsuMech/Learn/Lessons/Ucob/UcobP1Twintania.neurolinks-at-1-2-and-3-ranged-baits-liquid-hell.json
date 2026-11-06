@@ -18,7 +18,7 @@
         "time": 0.5,
         "line": 52
       },
-      "title": "After twintania appears",
+      "title": "After Twintania appears",
       "cue": "Twintania appears",
       "rule": "Stand near waymark 1, 5m north of the centre.",
       "roles": {
@@ -38,7 +38,7 @@
         "time": 9,
         "line": 53
       },
-      "title": "After plummet resolves",
+      "title": "After Plummet resolves",
       "cue": "Plummet resolves",
       "rule": "Each role has its own spot.",
       "roles": {
@@ -70,8 +70,8 @@
         "time": 12.72,
         "line": 54
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After a marker lands on you",
+      "cue": "A marker lands on you",
       "rule": "Stand near waymark 1, 5m north of the centre.",
       "roles": {
         "MainTank": {
@@ -90,7 +90,7 @@
         "time": 24.53,
         "line": 55
       },
-      "title": "After death Sentence hits you",
+      "title": "After Death Sentence hits you",
       "cue": "Death Sentence hits you",
       "rule": "Stand near waymark 1, 5m north of the centre.",
       "roles": {
@@ -110,8 +110,8 @@
         "time": 30.6,
         "line": 57
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Slashing Resistance Down II on you",
+      "cue": "Slashing Resistance Down II on you",
       "rule": "Go to 5m west of the centre.",
       "roles": {
         "OffTank": {
@@ -131,8 +131,8 @@
         "to": 134.37001,
         "line": 117
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Liquid Hell hits you",
+      "cue": "Liquid Hell hits you",
       "rule": "Go to the east wall.",
       "tolerance": 2,
       "skip": false
@@ -144,8 +144,8 @@
         "to": 135.56,
         "line": 122
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After a marker lands on you",
+      "cue": "A marker lands on you",
       "rule": "Stand on waymark 1.",
       "tolerance": 1.5,
       "skip": false
@@ -156,8 +156,8 @@
         "time": 44,
         "line": 60
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Neurolink on another player",
+      "cue": "Neurolink on another player",
       "rule": "Go to the south wall.",
       "tolerance": 2,
       "skip": false
@@ -168,7 +168,7 @@
         "time": 48.6,
         "line": 62
       },
-      "title": "After mana Hypersensitivity on you",
+      "title": "After Mana Hypersensitivity on you",
       "cue": "Mana Hypersensitivity on you",
       "rule": "Go to 5m west of the centre.",
       "tolerance": 1.5,
@@ -180,8 +180,8 @@
         "time": 54.03,
         "line": 64
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Liquid Hell hits you",
+      "cue": "Liquid Hell hits you",
       "rule": "Go to 8m south-west of the centre.",
       "roles": {
         "MainTank": {
@@ -200,7 +200,7 @@
         "time": 60.54,
         "line": 65
       },
-      "title": "After death Sentence hits you",
+      "title": "After Death Sentence hits you",
       "cue": "Death Sentence hits you",
       "rule": "Go to 14m south-west of the centre.",
       "roles": {
@@ -217,8 +217,8 @@
         "time": 63.86,
         "line": 66
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After a marker lands on you",
+      "cue": "A marker lands on you",
       "rule": "Stand near waymark 1, 11m north of the centre.",
       "tolerance": 1.5,
       "skip": false
@@ -229,7 +229,7 @@
         "time": 66,
         "line": 67
       },
-      "title": "After neurolink on another player",
+      "title": "After Neurolink on another player",
       "cue": "Neurolink on another player",
       "rule": "Each role has its own spot.",
       "roles": {
@@ -261,8 +261,8 @@
         "time": 70.060005,
         "line": 68
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Neurolink on you",
+      "cue": "Neurolink on you",
       "rule": "Go to 8m south-west of the centre.",
       "roles": {
         "MainTank": {
@@ -290,7 +290,7 @@
         "time": 75.64,
         "line": 69
       },
-      "title": "After mana Hypersensitivity on you",
+      "title": "After Mana Hypersensitivity on you",
       "cue": "Mana Hypersensitivity on you",
       "rule": "Go to 8m south-west of the centre.",
       "tolerance": 1.5,
@@ -302,8 +302,8 @@
         "time": 76.61,
         "line": 71
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Mana Hypersensitivity on you",
+      "cue": "Mana Hypersensitivity on you",
       "rule": "Stand near waymark 3, 7m south-east of the centre.",
       "roles": {
         "MainTank": {
@@ -325,7 +325,7 @@
         "time": 85.229996,
         "line": 73
       },
-      "title": "After liquid Hell hits you",
+      "title": "After Liquid Hell hits you",
       "cue": "Liquid Hell hits you",
       "rule": "Stand near waymark 3, 7m south-east of the centre.",
       "tolerance": 2,
@@ -337,8 +337,8 @@
         "time": 86.42,
         "line": 74
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After a marker lands on you",
+      "cue": "A marker lands on you",
       "rule": "If you are in LiquidHellTarget: Go to the south-east wall; otherwise: Stand near waymark 3, 7m south-east of the centre.",
       "roles": {
         "MeleeDpsA": {
@@ -370,8 +370,8 @@
         "to": 97.43,
         "line": 216
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Liquid Hell hits you",
+      "cue": "Liquid Hell hits you",
       "rule": "Go to the south-east wall.",
       "tolerance": 1.5,
       "skip": false
@@ -382,7 +382,7 @@
         "time": 95.600006,
         "line": 76
       },
-      "title": "After liquid Hell resolves",
+      "title": "After Liquid Hell resolves",
       "cue": "Liquid Hell resolves",
       "rule": "Stand near waymark 3, 7m south-east of the centre.",
       "tolerance": 1.5,
@@ -394,7 +394,7 @@
         "time": 106,
         "line": 77
       },
-      "title": "After death Sentence cast starts",
+      "title": "After Death Sentence cast starts",
       "cue": "Death Sentence cast starts",
       "rule": "Stand near waymark 3, 7m south-east of the centre.",
       "roles": {
@@ -414,7 +414,7 @@
         "time": 110.47,
         "line": 78
       },
-      "title": "After death Sentence hits you",
+      "title": "After Death Sentence hits you",
       "cue": "Death Sentence hits you",
       "rule": "Go to the south-east wall.",
       "roles": {
@@ -431,8 +431,8 @@
         "time": 116.16,
         "line": 80
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After a marker lands on you",
+      "cue": "A marker lands on you",
       "rule": "Each role has its own spot.",
       "roles": {
         "MeleeDpsB": {
@@ -454,7 +454,7 @@
         "time": 118.5,
         "line": 81
       },
-      "title": "After neurolink on another player",
+      "title": "After Neurolink on another player",
       "cue": "Neurolink on another player",
       "rule": "Go to the north-west wall.",
       "roles": {
@@ -477,8 +477,8 @@
         "time": 122.35,
         "line": 82
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Neurolink on you",
+      "cue": "Neurolink on you",
       "rule": "Stand near waymark 3, 7m south-east of the centre.",
       "roles": {
         "MainTank": {
@@ -506,7 +506,7 @@
         "time": 127.92999,
         "line": 83
       },
-      "title": "After mana Hypersensitivity on you",
+      "title": "After Mana Hypersensitivity on you",
       "cue": "Mana Hypersensitivity on you",
       "rule": "Stand near waymark 3, 7m south-east of the centre.",
       "tolerance": 2,
@@ -518,7 +518,7 @@
         "time": 134.37001,
         "line": 85
       },
-      "title": "After liquid Hell hits you",
+      "title": "After Liquid Hell hits you",
       "cue": "Liquid Hell hits you",
       "rule": "Stand near waymark 3, 7m south-east of the centre.",
       "tolerance": 2,
@@ -526,11 +526,11 @@
     }
   ],
   "toolbox": {
-    "planId": "9WEG4AEGVdru3hyF+19yavfslOUU0l1Gp",
+    "planId": "9WEG4AEGVdru3hyF\u002B19yavfslOUU0l1Gp",
     "roleMap": {},
     "steps": {},
     "exampleSeed": 1,
-    "residual": 0.0
+    "residual": 0
   },
   "draft": true
 }

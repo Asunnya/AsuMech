@@ -89,7 +89,7 @@
         "time": 25.3,
         "line": 29
       },
-      "title": "After curse of the Bombpyre on you",
+      "title": "After Curse of the Bombpyre on you",
       "cue": "Curse of the Bombpyre on you",
       "rule": "Each role has its own spot.",
       "roles": {
@@ -127,7 +127,7 @@
         "time": 41.6,
         "line": 33
       },
-      "title": "After blast Beat hits you",
+      "title": "After Blast Beat hits you",
       "cue": "Blast Beat hits you",
       "rule": "Depends on HalfMoon: LeftFirst → E 5m; RightFirst → W 5m.",
       "tolerance": 2,
@@ -139,7 +139,7 @@
         "time": 46.6,
         "line": 34
       },
-      "title": "After half Moon resolves",
+      "title": "After Half Moon resolves",
       "cue": "Half Moon resolves",
       "rule": "Depends on HalfMoon: LeftFirst → W 5m; RightFirst → E 5m.",
       "tolerance": 2,
@@ -151,7 +151,7 @@
         "time": 49.6,
         "line": 35
       },
-      "title": "After half Moon resolves",
+      "title": "After Half Moon resolves",
       "cue": "Half Moon resolves",
       "rule": "Go to 2m north of the centre.",
       "tolerance": 1.5,

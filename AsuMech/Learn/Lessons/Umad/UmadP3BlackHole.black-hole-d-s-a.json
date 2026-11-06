@@ -1,13 +1,13 @@
 {
   "scenario": "UmadP3BlackHoleScenario",
-  "strat": "Black Hole: D>S>A",
+  "strat": "Black Hole: D\u003ES\u003EA",
   "sources": [
     {
       "label": "WTFDIG (kefkabin), MIT",
       "url": "https://github.com/mczub/wtfdig/tree/aa79375/src/routes/ultimates/umad"
     },
     {
-      "label": "NAUR Kefkabin - Strat: Tank LB3 BoA + Kefka-relative Blackholes (Slides)",
+      "label": "NAUR Kefkabin - Strat: Tank LB3 BoA \u002B Kefka-relative Blackholes (Slides)",
       "url": "https://docs.google.com/presentation/d/1w05ez7GscxTflgaMgVET42gjGryI2QSPR0zqRWXdWgI/edit?usp=sharing"
     }
   ],
@@ -47,7 +47,7 @@
         "time": 18,
         "line": 53
       },
-      "title": "After earth Resistance Down II on you",
+      "title": "After Earth Resistance Down II on you",
       "cue": "Earth Resistance Down II on you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SlapAttacks).",
       "tolerance": 2.5,
@@ -60,7 +60,7 @@
         "line": 55
       },
       "title": "Stack centre",
-      "cue": " hits you",
+      "cue": "Shockwave hits you",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,
       "skip": false
@@ -83,8 +83,8 @@
         "time": 50.6,
         "line": 75
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Lightning Resistance Down II on you",
+      "cue": "Lightning Resistance Down II on you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SlapAttacks).",
       "tolerance": 2.5,
       "skip": false
@@ -96,7 +96,7 @@
         "line": 76
       },
       "title": "Stack centre",
-      "cue": " hits you",
+      "cue": "Shockwave hits you",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,
       "skip": false
@@ -120,7 +120,7 @@
         "line": 88
       },
       "title": "Stack centre",
-      "cue": " hits you",
+      "cue": "Earth Resistance Down II on you",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,
       "skip": false
@@ -132,7 +132,7 @@
         "line": 90
       },
       "title": "Swap second thunder tanks",
-      "cue": " hits you",
+      "cue": "Thunder III hits you",
       "rule": "Read the strat's SwapSecondThunderTanks: the spot follows a rule the rolls alone don't show (closest roll: SlapAttacks).",
       "roles": {
         "OffTank": {
@@ -149,7 +149,7 @@
         "line": 96
       },
       "title": "Stack centre",
-      "cue": " hits you",
+      "cue": "Thunder III hits you",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,
       "skip": false
@@ -160,7 +160,7 @@
         "time": 117,
         "line": 116
       },
-      "title": "After slap Happy cast starts",
+      "title": "After Slap Happy cast starts",
       "cue": "Slap Happy cast starts",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SlapAttacks).",
       "tolerance": 2.5,
@@ -172,7 +172,7 @@
         "time": 119.2,
         "line": 117
       },
-      "title": "After shockwave resolves",
+      "title": "After Shockwave resolves",
       "cue": "Shockwave resolves",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SlapAttacks).",
       "tolerance": 2.5,
@@ -184,8 +184,8 @@
         "time": 121.3,
         "line": 118
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Slap Happy resolves",
+      "cue": "Slap Happy resolves",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SlapAttacks).",
       "tolerance": 2.5,
       "skip": false
@@ -197,7 +197,7 @@
         "line": 119
       },
       "title": "Stack centre",
-      "cue": " hits you",
+      "cue": "Shocking Impact hits you",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,
       "skip": false
@@ -208,8 +208,8 @@
         "time": 134,
         "line": 127
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After a tether lands on you",
+      "cue": "A tether lands on you",
       "rule": "Each role has its own spot.",
       "roles": {
         "MainTank": {
@@ -231,7 +231,7 @@
         "time": 134,
         "line": 128
       },
-      "title": "After sprint on you",
+      "title": "After a tether lands on you",
       "tolerance": 2.5,
       "skip": true
     },
@@ -241,7 +241,7 @@
         "time": 134.5,
         "line": 129
       },
-      "title": "After sprint on you",
+      "title": "After a tether lands on you",
       "tolerance": 2.5,
       "skip": true
     },
@@ -251,7 +251,7 @@
         "time": 135,
         "line": 130
       },
-      "title": "After sprint on you",
+      "title": "After a tether lands on you",
       "tolerance": 2.5,
       "skip": true
     },
@@ -262,7 +262,7 @@
         "line": 131
       },
       "title": "Preposition for stomp",
-      "cue": "Sprint on you",
+      "cue": "Nothingness hits you",
       "rule": "Read the strat's PrepositionForStomp: the spot follows a rule the rolls alone don't show (closest roll: SlapAttacks).",
       "tolerance": 2.5,
       "skip": false
@@ -274,7 +274,7 @@
         "line": 132
       },
       "title": "Stomp blizzard corners",
-      "cue": " hits you",
+      "cue": "Earth Resistance Down II on you",
       "rule": "Read the strat's StompBlizzardCorners: the spot follows a rule the rolls alone don't show (closest roll: SlapAttacks).",
       "tolerance": 2.5,
       "skip": false
@@ -298,7 +298,7 @@
         "line": 134
       },
       "title": "Stomp swap west",
-      "cue": " hits you",
+      "cue": "Knock Down hits you",
       "rule": "Read the strat's StompSwapWest: the spot follows a rule the rolls alone don't show (closest roll: SlapAttacks).",
       "tolerance": 2.5,
       "skip": false
@@ -310,7 +310,7 @@
         "line": 135
       },
       "title": "Stomp swap east",
-      "cue": " resolves",
+      "cue": "Stomp-a-Mole resolves",
       "rule": "Read the strat's StompSwapEast: the spot follows a rule the rolls alone don't show (closest roll: SlapAttacks).",
       "tolerance": 2.5,
       "skip": false
@@ -328,7 +328,7 @@
     },
     "steps": {},
     "exampleSeed": 1,
-    "residual": 0.0
+    "residual": 0
   },
   "draft": true
 }

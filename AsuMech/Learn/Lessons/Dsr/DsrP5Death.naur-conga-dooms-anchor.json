@@ -4,7 +4,7 @@
   "sources": [
     {
       "label": "NAUR - Death of the Heavens - Toolbox",
-      "url": "https://ff14.toolboxgaming.space/?id=414790163993271&preview=1"
+      "url": "https://ff14.toolboxgaming.space/?id=414790163993271\u0026preview=1"
     }
   ],
   "steps": [
@@ -14,7 +14,7 @@
         "time": 0.3,
         "line": 41
       },
-      "title": "After king Thordan appears",
+      "title": "After King Thordan appears",
       "cue": "King Thordan appears",
       "rule": "Go to 4m north of the centre.",
       "roles": {
@@ -31,7 +31,7 @@
         "time": 12,
         "line": 42
       },
-      "title": "After ser Guerrique appears",
+      "title": "After Ser Guerrique appears",
       "cue": "Ser Guerrique appears",
       "rule": "Go to 2m south of the centre.",
       "roles": {
@@ -57,7 +57,7 @@
         "time": 14.9,
         "line": 43
       },
-      "title": "After doom on another player",
+      "title": "After Doom on another player",
       "cue": "Doom on another player",
       "rule": "Each role has its own spot.",
       "roles": {
@@ -95,8 +95,8 @@
         "time": 16.5,
         "line": 44
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Doom on you",
+      "cue": "Doom on you",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NonDoomOrder).",
       "tolerance": 2.5,
       "skip": false
@@ -107,8 +107,8 @@
         "time": 24.25,
         "line": 45
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Lightning Storm hits you",
+      "cue": "Lightning Storm hits you",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NonDoomOrder).",
       "tolerance": 2.5,
       "skip": false
@@ -119,8 +119,8 @@
         "time": 26,
         "line": 46
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Lightning Storm hits you",
+      "cue": "Lightning Storm hits you",
       "rule": "with WarriorBearing as north: 13m west of the centre.",
       "roles": {
         "ShieldHealer": {
@@ -148,8 +148,8 @@
         "time": 27.85,
         "line": 47
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Heavy Impact resolves",
+      "cue": "Heavy Impact resolves",
       "rule": "Each role has its own spot.",
       "roles": {
         "MainTank": {
@@ -180,8 +180,8 @@
         "time": 30,
         "line": 48
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Heavy Impact resolves",
+      "cue": "Heavy Impact resolves",
       "rule": "Stand at the centre.",
       "roles": {
         "OffTank": {
@@ -212,8 +212,8 @@
         "time": 32.25,
         "line": 49
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After a marker lands on you",
+      "cue": "A marker lands on you",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NonDoomOrder).",
       "roles": {
         "MainTank": {
@@ -244,8 +244,8 @@
         "time": 38.13,
         "line": 51
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Burning Chains on you",
+      "cue": "Burning Chains on you",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: WarriorBearing).",
       "roles": {
         "RegenHealer": {
@@ -270,7 +270,7 @@
         "time": 41.5,
         "line": 52
       },
-      "title": "After heavensflame hits you",
+      "title": "After Heavensflame hits you",
       "cue": "Heavensflame hits you",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,

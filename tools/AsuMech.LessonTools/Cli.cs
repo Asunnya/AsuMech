@@ -57,6 +57,7 @@ namespace AsuMech.LessonTools;
 // replay-diff --scenario <TypeName> --replay <file.csv|.csv.gz> [--strat N] [--seed 1] [--pull N] [--t0 s] [--window 3] [--slack 0.25]   headless run vs a recorded pull, cast by cast; exit 1 past the slack
 // mit-timeline --from-replay <file.csv|.csv.gz> --scenario <TypeName> [--pull N] --out Timelines/<TypeName>.json   the recorded pull's casts, on the scenario's clock
 // rekey-all [--write]                                        re-records every embedded lesson's strat (1 seed) and follows moved lines; --write rewrites the lesson files; orphans fail
+// recue-all [--write]                                        re-picks cues drafted from the party's own Sprint, invulns or nameless hits; --write rewrites the lesson files
 internal static class Cli
 {
     public static int Run(string[] args)
@@ -90,6 +91,7 @@ internal static class Cli
                 "slides-fetch" => SlidesFetch(opts),
                 "status" => Status(opts),
                 "rekey-all" => RekeyAll(opts),
+                "recue-all" => RecueAll(opts),
                 "replay-diff" => ReplayDiffCmd(opts),
                 "sim-timeline" => SimTimelineCmd(opts),
                 "crosscheck" => Crosscheck(opts),
@@ -384,6 +386,35 @@ internal static class Cli
         }
         Console.WriteLine($"{files.Count} lessons, {changed} rewritten, {orphans} orphan(s)");
         return orphans == 0 ? 0 : 3;
+    }
+
+    // Re-picks the cues drafted from events CueExtractor now rules out (the party's own Sprint,
+    // invulns, nameless hits) on every lesson; --write saves them.
+    private static int RecueAll(Dictionary<string, string> opts)
+    {
+        var write = opts.ContainsKey("write");
+        var lessonsDir = Path.Combine(RepoRoot(), "AsuMech", "Learn", "Lessons");
+        var files = Directory.EnumerateFiles(lessonsDir, "*.json", SearchOption.AllDirectories).Where(f => !f.EndsWith(Glossary.FileName, StringComparison.OrdinalIgnoreCase)).ToList();
+        var total = 0;
+        foreach (var file in files)
+        {
+            var lesson = LessonLoader.Parse(File.ReadAllText(file));
+            if (!lesson.Steps.Any(s => s.Cue != null || s.Title?.StartsWith("After ", StringComparison.Ordinal) == true)) continue;
+            var scenario = ScenarioCatalog.Create().Scenarios.FirstOrDefault(s => s.GetType().Name == lesson.Scenario);
+            var strat = scenario?.AiStrats.ToList().FindIndex(a => a.Name == lesson.Strat) ?? -1;
+            if (scenario is null || strat < 0) { Console.WriteLine($"{Path.GetFileName(file)}: no scenario/strat {lesson.Scenario} / {lesson.Strat}"); continue; }
+            var dump = OrderRecorder.Record(lesson.Scenario, strat, [lesson.Toolbox?.ExampleSeed ?? 1], TextWriter.Null);
+            var family = Glossary.FamilyOf(scenario.GetType());
+            var (recued, changed) = LessonDraft.Recue(lesson, dump, ModuleSource.LoadForFamily(family));
+            if (changed == 0) continue;
+            total += changed;
+            Console.WriteLine($"{Path.GetRelativePath(lessonsDir, file)}: {changed} cue(s)");
+            foreach (var (before, after) in lesson.Steps.Zip(recued.Steps).Where(p => p.First.Cue != p.Second.Cue || p.First.Title != p.Second.Title))
+                Console.WriteLine($"    {before.Cue} -> {after.Cue ?? "(none)"}{(before.Title != after.Title ? $"   [{after.Title}]" : "")}");
+            if (write) File.WriteAllText(file, LessonSkeleton.ToJson(recued));
+        }
+        Console.WriteLine($"{total} cue(s) {(write ? "rewritten" : "to rewrite (--write)")}");
+        return 0;
     }
 
     private static float ArenaYalms(IZone zone) => zone.Arena switch

@@ -252,10 +252,44 @@ public static class LessonDraft
         return name is null ? c.Name : System.Text.RegularExpressions.Regex.Replace(name, "(?<=[a-z0-9])(?=[A-Z])|_", " ").Trim();
     }
 
+    // Steps whose cue came from something CueExtractor no longer offers get the next cue, and the
+    // title drafted from the old cue follows it; written cues and titles stay.
+    public static (Lesson Lesson, int Changed) Recue(Lesson lesson, OrderDump dump, Sources.ModuleSource? modules = null)
+    {
+        modulesInUse = modules;
+        var stale = (dump.Runs ?? []).SelectMany(r => r.Events).Where(CueExtractor.NotACue).Select(e => e.Name).Where(n => n.Length > 0).ToHashSet();
+        var cues = CueExtractor.Extract(dump);
+        var changed = 0;
+        var steps = lesson.Steps.Select(step =>
+        {
+            // A skipped step keeps no cue but still carries the title drafted from it.
+            var old = step.Cue ?? (step.Title is { Length: > 6 } t && t.StartsWith("After ", StringComparison.Ordinal) ? $"{char.ToUpperInvariant(t[6])}{t[7..]}" : null);
+            if (old is null || !IsStale(old, stale)) return step;
+            var line = step.Key.Line ?? -1;
+            var cue = Cue(Roles.Where(role => cues.ContainsKey((step.Key.Cls, line, role))).ToDictionary(role => role, role => cues[(step.Key.Cls, line, role)]));
+            changed++;
+            var draftedTitle = step.Title == AfterTitle(old) || step.Title == $"After {old[..1].ToLowerInvariant()}{old[1..]}";
+            var time = step.Key.Time ?? step.Key.From ?? 0f;
+            return step with
+            {
+                Cue = step.Cue is null ? null : cue?.Text,
+                Title = !draftedTitle ? step.Title : cue is null ? $"Move at {time:0.#}s" : AfterTitle(cue.Text),
+            };
+        }).ToList();
+        return (lesson with { Steps = steps }, changed);
+    }
+
+    private static bool IsStale(string cue, HashSet<string> partyMade)
+        => cue.Length == 0 || char.IsWhiteSpace(cue[0]) || partyMade.Any(n => cue.StartsWith(n + " on ", StringComparison.Ordinal) || cue == $"{n} hits you" || cue == $"{n} resolves");
+
+    // Only a leading article drops its capital; names keep theirs ("After Fearsome Fireball resolves").
+    private static string AfterTitle(string cue)
+        => System.Text.RegularExpressions.Regex.IsMatch(cue, "^(A|An|The) ") ? $"After {cue[..1].ToLowerInvariant()}{cue[1..]}" : $"After {cue}";
+
     private static string Title(LessonStep step, DraftCue? cue)
     {
         if (step.Title is { } t && !t.StartsWith("Move at", StringComparison.Ordinal)) return t;
-        return cue is null ? step.Title ?? "Move" : $"After {cue.Text[..1].ToLowerInvariant()}{cue.Text[1..]}";
+        return cue is null ? step.Title ?? "Move" : AfterTitle(cue.Text);
     }
 
     // Everyone on one spot is a stack; a spot nothing explains gets room; the rest is a reposition.

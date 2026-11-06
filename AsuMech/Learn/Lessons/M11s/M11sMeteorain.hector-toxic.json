@@ -29,8 +29,8 @@
         "time": 12.5,
         "line": 48
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After a marker lands on you",
+      "cue": "A marker lands on you",
       "rule": "Go to 7m north-east of the centre.",
       "roles": {
         "MeleeDpsB": {
@@ -46,8 +46,8 @@
         "time": 19.31,
         "line": 60
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Fearsome Fireball resolves",
+      "cue": "Fearsome Fireball resolves",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShadeSides has (1,2)).",
       "tolerance": 2.5,
       "skip": false
@@ -58,7 +58,7 @@
         "time": 19.31,
         "line": 54
       },
-      "title": "After sprint on you",
+      "title": "After Fearsome Fireball hits you",
       "tolerance": 2,
       "skip": true
     },
@@ -68,8 +68,8 @@
         "time": 20.51,
         "line": 61
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Cosmic Kiss resolves",
+      "cue": "Cosmic Kiss resolves",
       "rule": "Go to 10m north-east of the centre.",
       "tolerance": 1.5,
       "skip": false
@@ -80,8 +80,8 @@
         "time": 22.52,
         "line": 66
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After a marker lands on you",
+      "cue": "A marker lands on you",
       "rule": "Go to 7m north-west of the centre.",
       "roles": {
         "ShieldHealer": {
@@ -98,8 +98,8 @@
         "to": 42.79,
         "line": 99
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After a tether lands on you",
+      "cue": "A tether lands on you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShadeSides has (1,2)).",
       "tolerance": 2.5,
       "skip": false
@@ -110,8 +110,8 @@
         "time": 28.53,
         "line": 79
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Foregone Fatality hits you",
+      "cue": "Foregone Fatality hits you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShadeSides has (1,2)).",
       "roles": {
         "OffTank": {
@@ -127,8 +127,8 @@
         "time": 29.24,
         "line": 72
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Fearsome Fireball hits you",
+      "cue": "Fearsome Fireball hits you",
       "rule": "Go to 10m north-west of the centre.",
       "roles": {
         "PhysRangedDps": {
@@ -147,8 +147,8 @@
         "time": 30.53,
         "line": 80
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Cosmic Kiss resolves",
+      "cue": "Cosmic Kiss resolves",
       "rule": "Go to 10m north-west of the centre.",
       "tolerance": 2,
       "skip": false
@@ -159,8 +159,8 @@
         "time": 32.530003,
         "line": 85
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After a marker lands on you",
+      "cue": "A marker lands on you",
       "rule": "Stand near waymark 4, the south-west wall.",
       "roles": {
         "CasterDps": {
@@ -176,8 +176,8 @@
         "time": 38.550003,
         "line": 94
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Foregone Fatality hits you",
+      "cue": "Foregone Fatality hits you",
       "rule": "When ShadeSides leaves out (3,1), go to the north wall; when ShadeSides includes (3,1), go to the east wall.",
       "roles": {
         "OffTank": {
@@ -193,8 +193,8 @@
         "time": 39.21,
         "line": 91
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Fearsome Fireball hits you",
+      "cue": "Fearsome Fireball hits you",
       "rule": "Go to the north wall.",
       "tolerance": 1.5,
       "skip": false
@@ -205,8 +205,8 @@
         "time": 40.540005,
         "line": 95
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Fearsome Fireball hits you",
+      "cue": "Fearsome Fireball hits you",
       "rule": "Go to 10m north-east of the centre.",
       "tolerance": 1.5,
       "skip": false
@@ -217,15 +217,15 @@
         "time": 49.18,
         "line": 101
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Fearsome Fireball hits you",
+      "cue": "Fearsome Fireball hits you",
       "rule": "Go to the south-west wall.",
       "tolerance": 1.5,
       "skip": false
     }
   ],
   "toolbox": {
-    "planId": "HJAbE7fuWodELUSB+B82fx_zDqUMr5KFC",
+    "planId": "HJAbE7fuWodELUSB\u002BB82fx_zDqUMr5KFC",
     "roleMap": {
       "MeleeDpsA": "dps4",
       "MainTank": "tank1",

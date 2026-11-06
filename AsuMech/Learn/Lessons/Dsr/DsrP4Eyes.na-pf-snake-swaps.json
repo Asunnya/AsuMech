@@ -4,7 +4,7 @@
   "sources": [
     {
       "label": "NAUR - Toolbox: The Eyes",
-      "url": "https://ff14.toolboxgaming.space/?id=613699253336171&preview=1"
+      "url": "https://ff14.toolboxgaming.space/?id=613699253336171\u0026preview=1"
     }
   ],
   "steps": [
@@ -14,7 +14,7 @@
         "time": 0.3,
         "line": 99
       },
-      "title": "After nidhogg appears",
+      "title": "After Nidhogg appears",
       "cue": "Nidhogg appears",
       "rule": "Stand near waymark B, 9m south of the centre.",
       "tolerance": 1.5,
@@ -26,7 +26,7 @@
         "time": 18,
         "line": 100
       },
-      "title": "After soul of Friendship on you",
+      "title": "After Soul of Friendship on you",
       "cue": "Soul of Friendship on you",
       "rule": "Stand on waymark D.",
       "roles": {
@@ -59,8 +59,8 @@
         "to": 74.93,
         "line": 116
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Fangbound on you",
+      "cue": "Fangbound on you",
       "rule": "If you are in FirstRed: Go to 14m east of the centre; otherwise: Stand at the centre.",
       "roles": {
         "RegenHealer": {

@@ -4,7 +4,7 @@
   "sources": [
     {
       "label": "NAUR - P5: Run: Dynamis - Omega (Toolbox)",
-      "url": "https://ff14.toolboxgaming.space/?id=078384491946761&preview=1"
+      "url": "https://ff14.toolboxgaming.space/?id=078384491946761\u0026preview=1"
     },
     {
       "label": "NAUR - P5: Run: Dynamis - Omega (Slides)",
@@ -18,8 +18,8 @@
         "time": 20,
         "line": 25
       },
-      "title": "After  hits you",
-      "cue": " hits you",
+      "title": "After Diffuse Wave Cannon cast starts",
+      "cue": "Diffuse Wave Cannon cast starts",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: OmegaAttacks).",
       "tolerance": 2.5,
       "skip": false
@@ -30,8 +30,8 @@
         "time": 24,
         "line": 26
       },
-      "title": "After  hits you",
-      "cue": " hits you",
+      "title": "After Diffuse Wave Cannon cast starts",
+      "cue": "Diffuse Wave Cannon cast starts",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: AttackDirections).",
       "tolerance": 2.5,
       "skip": false
@@ -43,7 +43,7 @@
         "line": 28
       },
       "title": "Hello world1 pos",
-      "cue": " hits you",
+      "cue": "Oversampled Wave Cannon cast starts",
       "rule": "Read the strat's HelloWorld1Pos: the spot follows a rule the rolls alone don't show (closest roll: AttackDirections).",
       "tolerance": 2.5,
       "skip": false
@@ -102,7 +102,7 @@
     }
   ],
   "toolbox": {
-    "planId": "078384491946761+stgy-3bda4a19+stgy-7cdb9e3d",
+    "planId": "078384491946761\u002Bstgy-3bda4a19\u002Bstgy-7cdb9e3d",
     "roleMap": {
       "MainTank": "tank1",
       "OffTank": "tank2",

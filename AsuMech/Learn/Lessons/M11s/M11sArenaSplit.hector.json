@@ -36,7 +36,7 @@
         "to": 61.55,
         "line": 46
       },
-      "title": "After explosion cast starts",
+      "title": "After Explosion cast starts",
       "cue": "Explosion cast starts",
       "rule": "Stand near waymark 1, the north-west wall.",
       "roles": {
@@ -69,18 +69,18 @@
         "to": 72.55,
         "line": 47
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Explosion resolves",
+      "cue": "Explosion resolves",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: WestShadesNear has true).",
       "roles": {
         "MainTank": {
-          "rule": "Depends on WestShadesNear and AvalancheSafeSide: [true,false] & 1 → near B (E 8m); [true,false] & -1 → near D (W 8m); [false,true] & -1 → near D (W 8m); [false,true] & 1 → near D (W 8m)."
+          "rule": "Depends on WestShadesNear and AvalancheSafeSide: [true,false] \u0026 1 \u2192 near B (E 8m); [true,false] \u0026 -1 \u2192 near D (W 8m); [false,true] \u0026 -1 \u2192 near D (W 8m); [false,true] \u0026 1 \u2192 near D (W 8m)."
         },
         "MeleeDpsA": {
           "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Avalanche)."
         },
         "MeleeDpsB": {
-          "rule": "Depends on WestShadesNear: [true,false] → near B (E 8m); [false,true] → at D."
+          "rule": "Depends on WestShadesNear: [true,false] \u2192 near B (E 8m); [false,true] \u2192 at D."
         },
         "PhysRangedDps": {
           "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter has false)."
@@ -99,8 +99,8 @@
         "to": 82.62,
         "line": 51
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After a marker lands on you",
+      "cue": "A marker lands on you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Avalanche).",
       "roles": {
         "OffTank": {
@@ -131,15 +131,15 @@
         "time": 86.39,
         "line": 54
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Fire Breath hits you",
+      "cue": "Fire Breath hits you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter has false).",
       "roles": {
         "MainTank": {
           "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: WestShadesNear)."
         },
         "OffTank": {
-          "rule": "Depends on LinesWestOuter has true and AvalancheSafeSide: yes & 1 → at B; yes & -1 → at D; no & 1 → at D; no & -1 → at B."
+          "rule": "Depends on LinesWestOuter has true and AvalancheSafeSide: yes \u0026 1 \u2192 at B; yes \u0026 -1 \u2192 at D; no \u0026 1 \u2192 at D; no \u0026 -1 \u2192 at B."
         },
         "MeleeDpsA": {
           "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter)."
@@ -160,12 +160,12 @@
         "time": 103.88,
         "line": 55
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Massive Meteor hits you",
+      "cue": "Massive Meteor hits you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: WestShadesNear).",
       "roles": {
         "OffTank": {
-          "rule": "Depends on LinesWestOuter has true and AvalancheSafeSide: yes & 1 → near 2 (NE wall); yes & -1 → near 1 (NW wall); no & 1 → near 1 (NW wall); no & -1 → near 2 (NE wall)."
+          "rule": "Depends on LinesWestOuter has true and AvalancheSafeSide: yes \u0026 1 \u2192 near 2 (NE wall); yes \u0026 -1 \u2192 near 1 (NW wall); no \u0026 1 \u2192 near 1 (NW wall); no \u0026 -1 \u2192 near 2 (NE wall)."
         },
         "RegenHealer": {
           "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter has false)."
@@ -192,9 +192,9 @@
         "time": 110.6,
         "line": 56
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
-      "rule": "Depends on Avalanche: 0 → NE wall; 3 → NW wall; 2 → SW wall; 1 → SE wall.",
+      "title": "After Arcadion Avalanche resolves",
+      "cue": "Arcadion Avalanche resolves",
+      "rule": "Depends on Avalanche: 0 \u2192 NE wall; 3 \u2192 NW wall; 2 \u2192 SW wall; 1 \u2192 SE wall.",
       "tolerance": 2,
       "skip": false
     },
@@ -204,15 +204,15 @@
         "time": 119.48,
         "line": 57
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
-      "rule": "Depends on Avalanche: 0 → near 2 (NE wall); 3 → near 1 (NW wall); 2 → near 4 (SW wall); 1 → near 3 (SE wall).",
+      "title": "After Arcadion Avalanche resolves",
+      "cue": "Arcadion Avalanche resolves",
+      "rule": "Depends on Avalanche: 0 \u2192 near 2 (NE wall); 3 \u2192 near 1 (NW wall); 2 \u2192 near 4 (SW wall); 1 \u2192 near 3 (SE wall).",
       "tolerance": 2,
       "skip": false
     }
   ],
   "toolbox": {
-    "planId": "HJAbE7fuWodELUSB+B82fx_zDqUMr5KFC",
+    "planId": "HJAbE7fuWodELUSB\u002BB82fx_zDqUMr5KFC",
     "roleMap": {
       "CasterDps": "dps4",
       "MainTank": "tank1",

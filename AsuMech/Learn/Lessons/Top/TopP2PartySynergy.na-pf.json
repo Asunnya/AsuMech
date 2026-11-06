@@ -4,7 +4,7 @@
   "sources": [
     {
       "label": "NAUR - P2: Omega-M and Omega-F (Toolbox)",
-      "url": "https://ff14.toolboxgaming.space/?id=324285310725761&preview=1"
+      "url": "https://ff14.toolboxgaming.space/?id=324285310725761\u0026preview=1"
     },
     {
       "label": "NAUR - P2: Omega-M and Omega-F (Slides)",
@@ -60,7 +60,7 @@
         "line": 20
       },
       "title": "Spread positions",
-      "cue": " resolves",
+      "cue": "Superfluid on Omega",
       "rule": "Read the strat's SpreadPositions: the spot follows a rule the rolls alone don't show (closest roll: NewNorthA).",
       "roles": {
         "MeleeDpsA": {
@@ -124,7 +124,7 @@
     }
   ],
   "toolbox": {
-    "planId": "324285310725761+stgy-5b80c73a",
+    "planId": "324285310725761\u002Bstgy-5b80c73a",
     "roleMap": {
       "MainTank": "tank1",
       "OffTank": "tank2",

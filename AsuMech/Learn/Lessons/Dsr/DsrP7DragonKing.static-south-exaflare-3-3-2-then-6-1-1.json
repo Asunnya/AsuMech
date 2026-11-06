@@ -4,7 +4,7 @@
   "sources": [
     {
       "label": "NAUR - Toolbox: Dragon-King Thordan",
-      "url": "https://ff14.toolboxgaming.space/?id=448767858029561&preview=1"
+      "url": "https://ff14.toolboxgaming.space/?id=448767858029561\u0026preview=1"
     }
   ],
   "steps": [
@@ -14,7 +14,7 @@
         "time": 34.5,
         "line": 53
       },
-      "title": "After dragon-king Thordan appears",
+      "title": "After Dragon-king Thordan appears",
       "cue": "Dragon-king Thordan appears",
       "rule": "Go to 11m south of the centre.",
       "tolerance": 1.5,
@@ -27,8 +27,8 @@
         "to": 197.39,
         "line": 65
       },
-      "title": "After  on Dragon-king Thordan",
-      "cue": " on Dragon-king Thordan",
+      "title": "After Exaflare\u0027s Edge cast starts",
+      "cue": "Exaflare\u0027s Edge cast starts",
       "rule": "Stand on waymark A.",
       "tolerance": 1.5,
       "skip": false
@@ -40,8 +40,8 @@
         "to": 206.16,
         "line": 66
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Ice of Ascalon resolves",
+      "cue": "Ice of Ascalon resolves",
       "rule": "Stand near waymark B, 8m south of the centre.",
       "tolerance": 1.5,
       "skip": false
@@ -53,8 +53,8 @@
         "to": 207.93001,
         "line": 67
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Exaflare\u0027s Edge resolves",
+      "cue": "Exaflare\u0027s Edge resolves",
       "rule": "Go to 14m south of the centre.",
       "tolerance": 1.5,
       "skip": false
@@ -66,8 +66,8 @@
         "to": 211.66,
         "line": 68
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Exaflare\u0027s Edge resolves",
+      "cue": "Exaflare\u0027s Edge resolves",
       "rule": "Go to 10m south of the centre.",
       "roles": {
         "MainTank": {
@@ -90,7 +90,7 @@
         "to": 215.5,
         "line": 69
       },
-      "title": "After trinity hits you",
+      "title": "After Trinity hits you",
       "cue": "Trinity hits you",
       "rule": "Go to 10m south of the centre.",
       "roles": {
@@ -114,7 +114,7 @@
         "to": 218.56,
         "line": 71
       },
-      "title": "After trinity hits you",
+      "title": "After Trinity hits you",
       "cue": "Trinity hits you",
       "rule": "Stand near waymark B, 9m south of the centre.",
       "roles": {
@@ -147,7 +147,7 @@
         "to": 234.73,
         "line": 74
       },
-      "title": "After akh Morn\u0027s Edge resolves",
+      "title": "After Akh Morn\u0027s Edge resolves",
       "cue": "Akh Morn\u0027s Edge resolves",
       "rule": "Go to 10m south of the centre.",
       "roles": {
@@ -171,7 +171,7 @@
         "to": 241.2,
         "line": 75
       },
-      "title": "After trinity hits you",
+      "title": "After Trinity hits you",
       "cue": "Trinity hits you",
       "rule": "Go to 10m south of the centre.",
       "roles": {
@@ -195,7 +195,7 @@
         "to": 164.15001,
         "line": 78
       },
-      "title": "After trinity hits you",
+      "title": "After Trinity hits you",
       "cue": "Trinity hits you",
       "rule": "When GigaflareOrder includes [0, stand near waymark 1, 10m north-west of the centre; when GigaflareOrder leaves out [0, go to 10m south of the centre.",
       "roles": {
@@ -225,8 +225,8 @@
         "to": 175.06,
         "line": 80
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Flames of Ascalon resolves",
+      "cue": "Flames of Ascalon resolves",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: GigaflareOrder).",
       "tolerance": 2.5,
       "skip": false
@@ -238,8 +238,8 @@
         "to": 179.02,
         "line": 81
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Gigaflare\u0027s Edge resolves",
+      "cue": "Gigaflare\u0027s Edge resolves",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: GigaflareOrder).",
       "tolerance": 2.5,
       "skip": false
@@ -251,8 +251,8 @@
         "to": 183.08,
         "line": 82
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Gigaflare\u0027s Edge resolves",
+      "cue": "Gigaflare\u0027s Edge resolves",
       "rule": "Go to 10m south of the centre.",
       "roles": {
         "MainTank": {
@@ -275,7 +275,7 @@
         "to": 193.33,
         "line": 83
       },
-      "title": "After trinity hits you",
+      "title": "After Trinity hits you",
       "cue": "Trinity hits you",
       "rule": "Go to 10m south of the centre.",
       "roles": {
@@ -298,7 +298,7 @@
         "time": 247.41,
         "line": 87
       },
-      "title": "After trinity hits you",
+      "title": "After Trinity hits you",
       "cue": "Trinity hits you",
       "rule": "Stand at the centre.",
       "roles": {

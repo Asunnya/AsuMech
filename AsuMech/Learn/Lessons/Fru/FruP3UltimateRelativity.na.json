@@ -14,7 +14,7 @@
         "time": 1,
         "line": 27
       },
-      "title": "After ultimate Relativity cast starts",
+      "title": "After Ultimate Relativity cast starts",
       "cue": "Ultimate Relativity cast starts",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,
@@ -26,7 +26,7 @@
         "time": 19.2,
         "line": 28
       },
-      "title": "After spell-in-Waiting: Return on you",
+      "title": "After Spell-in-Waiting: Return on you",
       "cue": "Spell-in-Waiting: Return on you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShellCrusherTarget).",
       "roles": {
@@ -55,7 +55,7 @@
         "time": 23.9,
         "line": 29
       },
-      "title": "After sinbound Meltdown cast starts",
+      "title": "After Sinbound Meltdown cast starts",
       "cue": "Sinbound Meltdown cast starts",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: IceHolder).",
       "roles": {
@@ -76,7 +76,7 @@
         "to": 49.1,
         "line": 43
       },
-      "title": "After return on you",
+      "title": "After Return on you",
       "cue": "Return on you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: DpsIce).",
       "roles": {
@@ -109,7 +109,7 @@
         "to": 49.1,
         "line": 42
       },
-      "title": "After fire Resistance Down II on you",
+      "title": "After Fire Resistance Down II on you",
       "tolerance": 1.5,
       "skip": true
     },
@@ -119,7 +119,7 @@
         "time": 30.6,
         "line": 31
       },
-      "title": "After sinbound Meltdown resolves",
+      "title": "After Sinbound Meltdown resolves",
       "cue": "Sinbound Meltdown resolves",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShellCrusherTarget).",
       "roles": {
@@ -145,7 +145,7 @@
         "time": 34,
         "line": 32
       },
-      "title": "After sinbound Meltdown cast starts",
+      "title": "After Sinbound Meltdown cast starts",
       "cue": "Sinbound Meltdown cast starts",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: IceHolder).",
       "roles": {
@@ -171,7 +171,7 @@
         "time": 45,
         "line": 34
       },
-      "title": "After sinbound Meltdown cast starts",
+      "title": "After Sinbound Meltdown cast starts",
       "cue": "Sinbound Meltdown cast starts",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShellCrusherTarget).",
       "roles": {
@@ -197,7 +197,7 @@
         "time": 55.899998,
         "line": 37
       },
-      "title": "After stun on you",
+      "title": "After Stun on you",
       "cue": "Stun on you",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,

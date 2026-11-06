@@ -26,7 +26,7 @@
         "time": 20.7,
         "line": 37
       },
-      "title": "After icicle Impact cast starts",
+      "title": "After Icicle Impact cast starts",
       "cue": "Icicle Impact cast starts",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SupportsMarked).",
       "roles": {
@@ -52,7 +52,7 @@
         "time": 23.35,
         "line": 38
       },
-      "title": "After frigid Stone resolves",
+      "title": "After Frigid Stone resolves",
       "cue": "Frigid Stone resolves",
       "rule": "Depends on FirstIcicle: 0 → N 3m; 3 → N 3m; 1 → SW 3m.",
       "roles": {
@@ -78,7 +78,7 @@
         "time": 29.05,
         "line": 39
       },
-      "title": "After icicle Impact resolves",
+      "title": "After Icicle Impact resolves",
       "cue": "Icicle Impact resolves",
       "rule": "Depends on FirstIcicle: 0 → N wall; 3 → NW wall; 1 → SW wall.",
       "roles": {
@@ -104,7 +104,7 @@
         "time": 30.1,
         "line": 40
       },
-      "title": "After icicle Impact resolves",
+      "title": "After Icicle Impact resolves",
       "cue": "Icicle Impact resolves",
       "rule": "Depends on FirstIcicle: 0 → N wall; 3 → NW wall; 1 → SW wall.",
       "roles": {
@@ -131,7 +131,7 @@
         "to": 36.4,
         "line": 45
       },
-      "title": "After sinbound Holy hits you",
+      "title": "After Sinbound Holy hits you",
       "cue": "Sinbound Holy hits you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: MirrorOctant).",
       "roles": {
@@ -157,7 +157,7 @@
         "time": 37.966667,
         "line": 47
       },
-      "title": "After sinbound Holy hits you",
+      "title": "After Sinbound Holy hits you",
       "cue": "Sinbound Holy hits you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: MirrorOctant).",
       "tolerance": 2.5,

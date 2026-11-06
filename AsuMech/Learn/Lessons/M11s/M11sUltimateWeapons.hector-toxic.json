@@ -61,7 +61,7 @@
         "time": 26.69,
         "line": 37
       },
-      "title": "After eye of the Hurricane hits you",
+      "title": "After Eye of the Hurricane hits you",
       "cue": "Eye of the Hurricane hits you",
       "rule": "Go to 4m south of the centre.",
       "roles": {
@@ -81,7 +81,7 @@
         "time": 30.35,
         "line": 38
       },
-      "title": "After raw Steel Trophy cast starts",
+      "title": "After Raw Steel Trophy cast starts",
       "cue": "Raw Steel Trophy cast starts",
       "rule": "Depends on Mirrored: true \u2192 SW wall; false \u2192 near C (S 7m).",
       "roles": {
@@ -113,7 +113,7 @@
         "time": 40.2,
         "line": 39
       },
-      "title": "After raw Steel hits you",
+      "title": "After Raw Steel hits you",
       "cue": "Raw Steel hits you",
       "rule": "Go to 2m south of the centre.",
       "tolerance": 1.5,
@@ -125,7 +125,7 @@
         "time": 61.670002,
         "line": 40
       },
-      "title": "After ultimate Trophy Weapons resolves",
+      "title": "After Ultimate Trophy Weapons resolves",
       "cue": "Ultimate Trophy Weapons resolves",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
       "roles": {
@@ -143,8 +143,8 @@
         "to": 90.97,
         "line": 44
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Heavy Weight hits you",
+      "cue": "Heavy Weight hits you",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: OpenSide).",
       "roles": {
         "OffTank": {
@@ -169,8 +169,8 @@
         "time": 96.1,
         "line": 47
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Sweeping Victory hits you",
+      "cue": "Sweeping Victory hits you",
       "rule": "Each role has its own spot.",
       "roles": {
         "MainTank": {
@@ -207,8 +207,8 @@
         "time": 100,
         "line": 48
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Assault Evolved cast starts",
+      "cue": "Assault Evolved cast starts",
       "rule": "Go to the north wall.",
       "roles": {
         "OffTank": {
@@ -239,7 +239,7 @@
         "time": 102.85,
         "line": 50
       },
-      "title": "After powerful Gust hits you",
+      "title": "After Powerful Gust hits you",
       "cue": "Powerful Gust hits you",
       "rule": "Go to 2m south of the centre.",
       "tolerance": 1.5,

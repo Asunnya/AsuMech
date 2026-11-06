@@ -9,9 +9,9 @@
         "time": 0.3,
         "line": 30
       },
-      "title": "After red Hot appears",
+      "title": "After Red Hot appears",
       "cue": "Red Hot appears",
-      "rule": "Depends on Side: -1 → N 8m; 1 → S 8m.",
+      "rule": "Depends on Side: -1 \u2192 N 8m; 1 \u2192 S 8m.",
       "roles": {
         "RegenHealer": {
           "rule": "Stand at the centre."
@@ -30,8 +30,8 @@
         "to": 59.09,
         "line": 39
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After a tether lands on you",
+      "cue": "A tether lands on you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat.",
       "roles": {
         "MeleeDpsB": {
@@ -54,8 +54,8 @@
         "to": 64.490005,
         "line": 40
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Xtreme Wave hits you",
+      "cue": "Xtreme Wave hits you",
       "rule": "Go to 8m east of the centre.",
       "tolerance": 1.5,
       "skip": false
@@ -66,7 +66,7 @@
         "time": 67.22,
         "line": 42
       },
-      "title": "After scathing Steam resolves",
+      "title": "After Scathing Steam resolves",
       "cue": "Scathing Steam resolves",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,
@@ -74,7 +74,7 @@
     }
   ],
   "toolbox": {
-    "planId": "syjvfhacdxz7awet+qWue79_md0YHCrnW",
+    "planId": "syjvfhacdxz7awet\u002BqWue79_md0YHCrnW",
     "roleMap": {
       "CasterDps": "dps4",
       "OffTank": "tank1",

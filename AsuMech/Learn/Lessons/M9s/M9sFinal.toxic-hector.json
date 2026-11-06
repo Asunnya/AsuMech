@@ -41,7 +41,7 @@
         "time": 1.72,
         "line": 28
       },
-      "title": "After vamp Fatale appears",
+      "title": "After Vamp Fatale appears",
       "cue": "Vamp Fatale appears",
       "rule": "Each role has its own spot.",
       "roles": {
@@ -79,7 +79,7 @@
         "time": 23.02,
         "line": 33
       },
-      "title": "After blast Beat hits you",
+      "title": "After Blast Beat hits you",
       "cue": "Blast Beat hits you",
       "rule": "Depends on HalfMoon: LeftFirst → near B (E 9m); RightFirst → near D (W 9m).",
       "tolerance": 2,
@@ -91,7 +91,7 @@
         "time": 28.02,
         "line": 34
       },
-      "title": "After half Moon resolves",
+      "title": "After Half Moon resolves",
       "cue": "Half Moon resolves",
       "rule": "Depends on HalfMoon: LeftFirst → near D (W 9m); RightFirst → near B (E 9m).",
       "tolerance": 2,
@@ -123,7 +123,7 @@
         "time": 38.2,
         "line": 37
       },
-      "title": "After hardcore hits you",
+      "title": "After Hardcore hits you",
       "cue": "Hardcore hits you",
       "rule": "Go to 10m south-west of the centre.",
       "tolerance": 1.5,
@@ -135,7 +135,7 @@
         "time": 47.5,
         "line": 39
       },
-      "title": "After sanguine Scratch cast starts",
+      "title": "After Sanguine Scratch cast starts",
       "cue": "Sanguine Scratch cast starts",
       "rule": "Stand on waymark C.",
       "tolerance": 1.5,
@@ -147,7 +147,7 @@
         "time": 50.46,
         "line": 40
       },
-      "title": "After sanguine Scratch resolves",
+      "title": "After Sanguine Scratch resolves",
       "cue": "Sanguine Scratch resolves",
       "rule": "Go to 8m south of the centre.",
       "tolerance": 1.5,
@@ -159,7 +159,7 @@
         "time": 52.88,
         "line": 41
       },
-      "title": "After sanguine Scratch resolves",
+      "title": "After Sanguine Scratch resolves",
       "cue": "Sanguine Scratch resolves",
       "rule": "Go to 8m south-east of the centre.",
       "tolerance": 1.5,
@@ -171,7 +171,7 @@
         "time": 55.28,
         "line": 42
       },
-      "title": "After sanguine Scratch resolves",
+      "title": "After Sanguine Scratch resolves",
       "cue": "Sanguine Scratch resolves",
       "rule": "Go to 8m east of the centre.",
       "tolerance": 1.5,
@@ -183,7 +183,7 @@
         "time": 57.66,
         "line": 43
       },
-      "title": "After sanguine Scratch resolves",
+      "title": "After Sanguine Scratch resolves",
       "cue": "Sanguine Scratch resolves",
       "rule": "Stand on waymark B.",
       "tolerance": 1.5,
@@ -195,7 +195,7 @@
         "time": 60.1,
         "line": 44
       },
-      "title": "After sanguine Scratch resolves",
+      "title": "After Sanguine Scratch resolves",
       "cue": "Sanguine Scratch resolves",
       "rule": "Go to 3m south of the centre.",
       "tolerance": 1.5,

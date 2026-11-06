@@ -22,7 +22,7 @@
         "time": 2,
         "line": 21
       },
-      "title": "After paradise Regained cast starts",
+      "title": "After Paradise Regained cast starts",
       "cue": "Paradise Regained cast starts",
       "rule": "Depends on Rotation: 0 → near C (S 7m); 2 → NE 7m; 1 → near 1 (NW 7m).",
       "roles": {
@@ -54,7 +54,7 @@
         "time": 10,
         "line": 22
       },
-      "title": "After wings Dark and Light cast starts",
+      "title": "After Wings Dark and Light cast starts",
       "cue": "Wings Dark and Light cast starts",
       "rule": "Depends on Rotation: 0 → near C (S 10m); 2 → at B; 1 → at 1.",
       "roles": {
@@ -86,7 +86,7 @@
         "time": 16.5,
         "line": 23
       },
-      "title": "After wings Dark and Light hits you",
+      "title": "After Wings Dark and Light hits you",
       "cue": "Wings Dark and Light hits you",
       "rule": "Depends on Rotation: 0 → near A (N 8m); 2 → near 4 (SW 8m); 1 → near 3 (SE 8m).",
       "roles": {
@@ -118,7 +118,7 @@
         "time": 25.5,
         "line": 24
       },
-      "title": "After explosion resolves",
+      "title": "After Explosion resolves",
       "cue": "Explosion resolves",
       "rule": "Stand on waymark 4.",
       "roles": {
@@ -173,7 +173,7 @@
         "to": 51.9,
         "line": 30
       },
-      "title": "After light Resistance Down II on you",
+      "title": "After Light Resistance Down II on you",
       "cue": "Light Resistance Down II on you",
       "rule": "Stand near waymark C, 9m south of the centre.",
       "tolerance": 1.5,
@@ -186,7 +186,7 @@
         "to": 49.3,
         "line": 29
       },
-      "title": "After light Resistance Down II on you",
+      "title": "After Light Resistance Down II on you",
       "cue": "Light Resistance Down II on you",
       "rule": "Stand on waymark 3.",
       "roles": {

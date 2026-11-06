@@ -35,7 +35,7 @@ public static class CueExtractor
                     // One count per seed, at the latest occurrence; events on other seats blur into
                     // "another player" while the role's own stay named.
                     var inSeed = new Dictionary<(string, string, string?), float>();
-                    foreach (var e in runs[seed].Where(e => at - window <= e.Time && e.Time <= at + 0.05f))
+                    foreach (var e in runs[seed].Where(e => at - window <= e.Time && e.Time <= at + 0.05f && !NotACue(e)))
                     {
                         var target = e.Target is null ? null : e.Target == role ? role : IsRole(e.Target) ? "another player" : e.Target;
                         var key = (e.Kind, e.Name, target);
@@ -54,4 +54,18 @@ public static class CueExtractor
     }
 
     private static bool IsRole(string name) => Enum.TryParse<Core.Game.Party.PartyRole>(name, out _);
+
+    // What the party does to itself (the strat's own Sprint, an invuln, a mitigation) only shows
+    // that a bot moved; a nameless hit can't be read off the screen. The sim gives these statuses
+    // no source, like many mechanic debuffs, so they are told apart by name.
+    public static bool NotACue(DumpedEvent e)
+        => string.IsNullOrWhiteSpace(e.Name)
+           || e.Kind is "status" or "ability" && (PartyMade.Contains(e.Name) || e.Actor is { } actor && IsRole(actor));
+
+    private static readonly HashSet<string> PartyMade =
+    [
+        "Sprint", "Walking Dead", "attack",
+        .. Mitigation.MitStatuses.All.Select(m => m.StatusName),
+        .. Mitigation.MitCatalog.All.Select(m => m.Name),
+    ];
 }

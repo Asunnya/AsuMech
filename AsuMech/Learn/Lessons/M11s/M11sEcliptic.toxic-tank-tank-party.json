@@ -35,8 +35,8 @@
         "time": 23.039999,
         "line": 40
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After a marker lands on you",
+      "cue": "A marker lands on you",
       "rule": "Stand at the centre.",
       "roles": {
         "RegenHealer": {
@@ -46,7 +46,7 @@
           "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShadeForTower)."
         },
         "PhysRangedDps": {
-          "rule": "Depends on PairTetherFirst: [false,true] → NW wall; [true,true] → centre; [true,false] → centre; [false,false] → NE wall."
+          "rule": "Depends on PairTetherFirst: [false,true] \u2192 NW wall; [true,true] \u2192 centre; [true,false] \u2192 centre; [false,false] \u2192 NE wall."
         },
         "CasterDps": {
           "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShadeForTower)."
@@ -62,8 +62,8 @@
         "to": 37.02,
         "line": 49
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Mammoth Meteor resolves",
+      "cue": "Mammoth Meteor resolves",
       "rule": "Stand on waymark A.",
       "tolerance": 1.5,
       "skip": false
@@ -75,7 +75,7 @@
         "to": 41.03,
         "line": 44
       },
-      "title": "After sprint on you",
+      "title": "After Atomic Impact hits you",
       "tolerance": 2.5,
       "skip": true
     },
@@ -85,7 +85,7 @@
         "time": 39.03,
         "line": 51
       },
-      "title": "After majestic Meteor cast starts",
+      "title": "After Majestic Meteor cast starts",
       "cue": "Majestic Meteor cast starts",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,
@@ -97,24 +97,24 @@
         "time": 42.03,
         "line": 52
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Majestic Meteor resolves",
+      "cue": "Majestic Meteor resolves",
       "rule": "When SingleTowers includes 3, go to 11m south-east of the centre; when SingleTowers leaves out 3, go to 11m north-west of the centre.",
       "roles": {
         "MainTank": {
           "rule": "When SingleTowers includes 3, go to 11m south-west of the centre; when SingleTowers leaves out 3, go to 11m north-east of the centre."
         },
         "OffTank": {
-          "rule": "Depends on SingleTowers: [2,3] → NW 11m; [0,1] → SE 11m; [0,2] → SW 11m."
+          "rule": "Depends on SingleTowers: [2,3] \u2192 NW 11m; [0,1] \u2192 SE 11m; [0,2] \u2192 SW 11m."
         },
         "ShieldHealer": {
           "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SingleTowers)."
         },
         "CasterDps": {
-          "rule": "Depends on SingleTowers: [2,3] → NE 11m; [0,1] → SW 11m."
+          "rule": "Depends on SingleTowers: [2,3] \u2192 NE 11m; [0,1] \u2192 SW 11m."
         },
         "PhysRangedDps": {
-          "rule": "Depends on SingleTowers: [2,3] → NE 10m; [0,2] → SE 11m."
+          "rule": "Depends on SingleTowers: [2,3] \u2192 NE 10m; [0,2] \u2192 SE 11m."
         },
         "RegenHealer": {
           "rule": "Go to 12m north-east of the centre."
@@ -129,8 +129,8 @@
         "time": 44.100002,
         "line": 53
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Atomic Impact hits you",
+      "cue": "Atomic Impact hits you",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,
       "skip": false
@@ -141,8 +141,8 @@
         "time": 47.48,
         "line": 54
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After a tether lands on you",
+      "cue": "A tether lands on you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShadeForTower).",
       "roles": {
         "MainTank": {
@@ -152,7 +152,7 @@
           "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShadeForTower has 3)."
         },
         "ShieldHealer": {
-          "rule": "Depends on SingleTowers: [2,3] → centre; [0,1] → centre; [0,2] → SW wall."
+          "rule": "Depends on SingleTowers: [2,3] \u2192 centre; [0,1] \u2192 centre; [0,2] \u2192 SW wall."
         },
         "PhysRangedDps": {
           "rule": "When SingleTowers includes 3 and PairTetherFirst includes false, stand at the centre; when SingleTowers includes 3 and PairTetherFirst leaves out false, go to the north-east wall; when SingleTowers leaves out 3 and PairTetherFirst includes false, stand at the centre; when SingleTowers leaves out 3 and PairTetherFirst leaves out false, stand at the centre."
@@ -167,8 +167,8 @@
         "time": 49.98,
         "line": 55
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After a tether lands on you",
+      "cue": "A tether lands on you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShadeForTower).",
       "roles": {
         "MeleeDpsA": {
@@ -196,8 +196,8 @@
         "time": 54.6,
         "line": 56
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Majestic Meteowrath hits you",
+      "cue": "Majestic Meteowrath hits you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShadeForTower).",
       "roles": {
         "RegenHealer": {
@@ -207,13 +207,13 @@
           "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SingleTowers)."
         },
         "MeleeDpsB": {
-          "rule": "Depends on PairTetherFirst: [false,true] → E 2m; [true,true] → E 2m; [true,false] → W wall; [false,false] → E wall."
+          "rule": "Depends on PairTetherFirst: [false,true] \u2192 E 2m; [true,true] \u2192 E 2m; [true,false] \u2192 W wall; [false,false] \u2192 E wall."
         },
         "PhysRangedDps": {
           "rule": "When SingleTowers includes 3 and PairTetherFirst includes false, go to 5m east of the centre; when SingleTowers includes 3 and PairTetherFirst leaves out false, go to the east wall; when SingleTowers leaves out 3 and PairTetherFirst includes false, go to 5m east of the centre; when SingleTowers leaves out 3 and PairTetherFirst leaves out false, go to 5m east of the centre."
         },
         "CasterDps": {
-          "rule": "Depends on PairTetherFirst: [false,true] → E wall; [true,true] → E 2m; [true,false] → E 2m; [false,false] → W wall."
+          "rule": "Depends on PairTetherFirst: [false,true] \u2192 E wall; [true,true] \u2192 E 2m; [true,false] \u2192 E 2m; [false,false] \u2192 W wall."
         }
       },
       "tolerance": 2.5,
@@ -225,8 +225,8 @@
         "time": 59.23,
         "line": 57
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Two-way Fireball hits you",
+      "cue": "Two-way Fireball hits you",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,
       "skip": false
@@ -238,8 +238,8 @@
         "to": 115,
         "line": 62
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Heartbreak Kick cast starts",
+      "cue": "Heartbreak Kick cast starts",
       "rule": "Stand near waymark C, 8m south of the centre.",
       "roles": {
         "MainTank": {
@@ -251,7 +251,7 @@
     }
   ],
   "toolbox": {
-    "planId": "HJAbE7fuWodELUSB+B82fx_zDqUMr5KFC",
+    "planId": "HJAbE7fuWodELUSB\u002BB82fx_zDqUMr5KFC",
     "roleMap": {
       "CasterDps": "dps4",
       "MainTank": "tank1",
@@ -268,7 +268,7 @@
       "M11sEclipticAi@44.1": 19
     },
     "exampleSeed": 8,
-    "residual": 1.0
+    "residual": 1
   },
   "draft": true
 }

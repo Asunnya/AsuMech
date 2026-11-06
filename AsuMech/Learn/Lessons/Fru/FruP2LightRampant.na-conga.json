@@ -14,7 +14,7 @@
         "time": 3,
         "line": 27
       },
-      "title": "After light Rampant cast starts",
+      "title": "After Light Rampant cast starts",
       "cue": "Light Rampant cast starts",
       "rule": "Go to 6m north of the centre.",
       "roles": {
@@ -172,7 +172,7 @@
         "time": 19.1,
         "line": 39
       },
-      "title": "After lightsteeped on you",
+      "title": "After Lightsteeped on you",
       "cue": "Lightsteeped on you",
       "rule": "Each role has its own spot.",
       "roles": {
@@ -210,7 +210,7 @@
         "time": 21.869999,
         "line": 37
       },
-      "title": "After luminous Hammer hits you",
+      "title": "After Luminous Hammer hits you",
       "cue": "Luminous Hammer hits you",
       "rule": "Go to the north wall.",
       "roles": {
@@ -236,7 +236,7 @@
         "time": 23.3,
         "line": 40
       },
-      "title": "After lightsteeped on you",
+      "title": "After Lightsteeped on you",
       "cue": "Lightsteeped on you",
       "rule": "Each role has its own spot.",
       "roles": {
@@ -274,7 +274,7 @@
         "time": 25.05,
         "line": 41
       },
-      "title": "After lightsteeped on you",
+      "title": "After Lightsteeped on you",
       "cue": "Lightsteeped on you",
       "rule": "Each role has its own spot.",
       "roles": {
@@ -312,7 +312,7 @@
         "time": 27.2,
         "line": 42
       },
-      "title": "After lightsteeped on you",
+      "title": "After Lightsteeped on you",
       "cue": "Lightsteeped on you",
       "rule": "Each role has its own spot.",
       "roles": {
@@ -350,7 +350,7 @@
         "time": 30.15,
         "line": 43
       },
-      "title": "After lightsteeped on you",
+      "title": "After Lightsteeped on you",
       "cue": "Lightsteeped on you",
       "rule": "Each role has its own spot.",
       "roles": {
@@ -388,7 +388,7 @@
         "time": 33.85,
         "line": 44
       },
-      "title": "After bright Hunger resolves",
+      "title": "After Bright Hunger resolves",
       "cue": "Bright Hunger resolves",
       "rule": "Each role has its own spot.",
       "roles": {
@@ -426,7 +426,7 @@
         "time": 37.15,
         "line": 45
       },
-      "title": "After banish III resolves",
+      "title": "After Banish III resolves",
       "cue": "Banish III resolves",
       "rule": "Each role has its own spot.",
       "roles": {

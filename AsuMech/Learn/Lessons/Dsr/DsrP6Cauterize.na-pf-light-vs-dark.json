@@ -4,7 +4,7 @@
   "sources": [
     {
       "label": "NAUR - Toolbox: Double Dragon",
-      "url": "https://ff14.toolboxgaming.space/?id=426762112878561&preview=1"
+      "url": "https://ff14.toolboxgaming.space/?id=426762112878561\u0026preview=1"
     }
   ],
   "steps": [
@@ -14,7 +14,7 @@
         "time": 99.3,
         "line": 70
       },
-      "title": "After mortal Atonement on you",
+      "title": "After Mortal Atonement on you",
       "cue": "Mortal Atonement on you",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,
@@ -26,7 +26,7 @@
         "time": 101.770004,
         "line": 71
       },
-      "title": "After mortal Atonement on you",
+      "title": "After Mortal Atonement on you",
       "cue": "Mortal Atonement on you",
       "rule": "Stand near waymark 2, 6m north of the centre.",
       "roles": {
@@ -52,7 +52,7 @@
         "time": 110.159996,
         "line": 72
       },
-      "title": "After akh Afah hits you",
+      "title": "After Akh Afah hits you",
       "cue": "Akh Afah hits you",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,
@@ -64,8 +64,8 @@
         "time": 116.4,
         "line": 73
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Hot Wing cast starts",
+      "cue": "Hot Wing cast starts",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
       "tolerance": 2.5,
       "skip": false
@@ -76,8 +76,8 @@
         "time": 123.119995,
         "line": 74
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Hallowed Plume hits you",
+      "cue": "Hallowed Plume hits you",
       "rule": "Stand near waymark B, 9m south of the centre.",
       "roles": {
         "OffTank": {
@@ -99,7 +99,7 @@
         "time": 131.45999,
         "line": 75
       },
-      "title": "After mortal Atonement on you",
+      "title": "After Mortal Atonement on you",
       "cue": "Mortal Atonement on you",
       "rule": "Go to 3m north of the centre.",
       "tolerance": 1.5,
@@ -111,8 +111,8 @@
         "time": 135.4,
         "line": 76
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Mortal Atonement on you",
+      "cue": "Mortal Atonement on you",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
       "roles": {
         "RegenHealer": {
@@ -143,7 +143,7 @@
         "time": 142.67,
         "line": 77
       },
-      "title": "After ice Breath hits you",
+      "title": "After Ice Breath hits you",
       "cue": "Ice Breath hits you",
       "rule": "Go to 15m north of the centre.",
       "roles": {
@@ -175,8 +175,8 @@
         "time": 149.8,
         "line": 78
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Ice Resistance Down II on you",
+      "cue": "Ice Resistance Down II on you",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
       "roles": {
         "MainTank": {
@@ -195,8 +195,8 @@
         "time": 155.09999,
         "line": 79
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Frostbite on you",
+      "cue": "Frostbite on you",
       "rule": "Go to the north wall.",
       "tolerance": 1.5,
       "skip": false
@@ -207,8 +207,8 @@
         "time": 162.34,
         "line": 80
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Frostbite on you",
+      "cue": "Frostbite on you",
       "rule": "Go to the north wall.",
       "roles": {
         "CasterDps": {
@@ -224,7 +224,7 @@
         "time": 165.5,
         "line": 81
       },
-      "title": "After mortal Vow hits you",
+      "title": "After Mortal Vow hits you",
       "cue": "Mortal Vow hits you",
       "rule": "Go to the north wall.",
       "tolerance": 1.5,

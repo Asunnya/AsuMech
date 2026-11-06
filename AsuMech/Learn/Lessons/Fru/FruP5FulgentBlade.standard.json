@@ -22,8 +22,8 @@
         "time": 13.2,
         "line": 23
       },
-      "title": "After  hits you",
-      "cue": " hits you",
+      "title": "After the Path of Darkness cast starts",
+      "cue": "the Path of Darkness cast starts",
       "rule": "Go to Origin.",
       "tolerance": 2,
       "skip": false
@@ -34,8 +34,8 @@
         "time": 17.2,
         "line": 24
       },
-      "title": "After  hits you",
-      "cue": " hits you",
+      "title": "After the Path of Darkness cast starts",
+      "cue": "the Path of Darkness cast starts",
       "rule": "Go to Origin.",
       "tolerance": 2,
       "skip": false
@@ -47,8 +47,8 @@
         "to": 29.85,
         "line": 28
       },
-      "title": "After  hits you",
-      "cue": " hits you",
+      "title": "After the Path of Darkness resolves",
+      "cue": "the Path of Darkness resolves",
       "rule": "Go to Origin.",
       "tolerance": 2,
       "skip": false
@@ -94,7 +94,7 @@
     },
     "steps": {},
     "exampleSeed": 1,
-    "residual": 0.0
+    "residual": 0
   },
   "draft": true
 }

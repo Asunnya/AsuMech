@@ -3,7 +3,7 @@
   "strat": "NAUR (PF)",
   "sources": [
     {
-      "label": "NAUR - Start + Strength of the Ward",
+      "label": "NAUR - Start \u002B Strength of the Ward",
       "url": "https://raidplan.io/plan/NDX-6bF2djrDMB-v"
     },
     {
@@ -22,7 +22,7 @@
         "time": 0.3,
         "line": 54
       },
-      "title": "After king Thordan appears",
+      "title": "After King Thordan appears",
       "cue": "King Thordan appears",
       "rule": "Stand near waymark B, 5m south of the centre.",
       "roles": {
@@ -39,7 +39,7 @@
         "time": 14,
         "line": 55
       },
-      "title": "After king Thordan appears",
+      "title": "After King Thordan appears",
       "cue": "King Thordan appears",
       "rule": "Stand on waymark A.",
       "roles": {
@@ -68,7 +68,7 @@
         "time": 16.2,
         "line": 56
       },
-      "title": "After ascalon\u0027s Mercy Concealed resolves",
+      "title": "After Ascalon\u0027s Mercy Concealed resolves",
       "cue": "Ascalon\u0027s Mercy Concealed resolves",
       "rule": "Stand near waymark 2, 6m north of the centre.",
       "tolerance": 2,
@@ -109,8 +109,8 @@
         "to": 49.19,
         "line": 64
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Lightning Storm hits you",
+      "cue": "Lightning Storm hits you",
       "rule": "with SafeLineBearing as north: 8m south of the centre.",
       "roles": {
         "OffTank": {
@@ -126,7 +126,7 @@
         "time": 45.6,
         "line": 66
       },
-      "title": "After lightning Storm hits you",
+      "title": "After Lightning Storm hits you",
       "tolerance": 2,
       "skip": true
     },
@@ -136,8 +136,8 @@
         "time": 50.18,
         "line": 67
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Lightning Resistance Down II on you",
+      "cue": "Lightning Resistance Down II on you",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeBearing).",
       "roles": {
         "MainTank": {
@@ -162,8 +162,7 @@
         "time": 52.05,
         "line": 68
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "Move at 52.1s",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
       "roles": {
         "RegenHealer": {
@@ -182,8 +181,8 @@
         "time": 53,
         "line": 70
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After a marker lands on you",
+      "cue": "A marker lands on you",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Defamations).",
       "roles": {
         "MainTank": {
@@ -214,8 +213,8 @@
         "time": 56.95,
         "line": 71
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After a tether lands on another player",
+      "cue": "A tether lands on another player",
       "rule": "with ThordanBearing as north: 9m south-east of the centre.",
       "roles": {
         "OffTank": {
@@ -269,7 +268,7 @@
         "time": 67.3,
         "line": 74
       },
-      "title": "After holy Bladedance hits you",
+      "title": "After Holy Bladedance hits you",
       "cue": "Holy Bladedance hits you",
       "rule": "Each role has its own spot.",
       "roles": {
@@ -340,7 +339,7 @@
         "to": 118.47,
         "line": 78
       },
-      "title": "After bright Flare resolves",
+      "title": "After Bright Flare resolves",
       "cue": "Bright Flare resolves",
       "rule": "If you are in AwayGroup: Go to the south wall; otherwise: Go to the north wall.",
       "tolerance": 2,
@@ -352,8 +351,8 @@
         "time": 120.6,
         "line": 80
       },
-      "title": "After  resolves",
-      "cue": " resolves",
+      "title": "After Sacred Sever hits you",
+      "cue": "Sacred Sever hits you",
       "rule": "Each role has its own spot.",
       "roles": {
         "MainTank": {
@@ -390,7 +389,7 @@
         "time": 132.4,
         "line": 81
       },
-      "title": "After ice Resistance Down II on you",
+      "title": "After Ice Resistance Down II on you",
       "cue": "Ice Resistance Down II on you",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Defamations).",
       "roles": {
@@ -416,7 +415,7 @@
         "time": 136.5,
         "line": 82
       },
-      "title": "After ice Resistance Down II on you",
+      "title": "After Ice Resistance Down II on you",
       "cue": "Ice Resistance Down II on you",
       "rule": "Each role has its own spot.",
       "roles": {
@@ -455,8 +454,8 @@
         "to": 143.98,
         "line": 87
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Ice Resistance Down II on you",
+      "cue": "Ice Resistance Down II on you",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
       "roles": {
         "MainTank": {
@@ -484,7 +483,7 @@
         "time": 138.7,
         "line": 83
       },
-      "title": "After ice Resistance Down II on you",
+      "title": "After Ice Resistance Down II on you",
       "cue": "Ice Resistance Down II on you",
       "rule": "Each role has its own spot.",
       "roles": {
@@ -522,7 +521,7 @@
         "time": 145.41,
         "line": 89
       },
-      "title": "After holy comet appears",
+      "title": "After Holy comet appears",
       "cue": "holy comet appears",
       "rule": "Go to the north wall.",
       "roles": {
@@ -548,7 +547,7 @@
         "time": 148.3,
         "line": 90
       },
-      "title": "After conviction resolves",
+      "title": "After Conviction resolves",
       "tolerance": 2.5,
       "skip": true
     },
@@ -558,7 +557,7 @@
         "time": 150.5,
         "line": 92
       },
-      "title": "After conviction resolves",
+      "title": "After Conviction resolves",
       "cue": "Conviction resolves",
       "rule": "Go to 4m north of the centre.",
       "roles": {
@@ -575,8 +574,8 @@
         "time": 177.25,
         "line": 93
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Broad Swing cast starts",
+      "cue": "Broad Swing cast starts",
       "rule": "Go to 11m north of the centre.",
       "tolerance": 1.5,
       "skip": false
@@ -587,8 +586,8 @@
         "time": 180.95,
         "line": 94
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Broad Swing resolves",
+      "cue": "Broad Swing resolves",
       "rule": "Depends on BroadSwingRightFirst: [false,true] \u2192 at 3; [true,true] \u2192 at 2; [true,false] \u2192 at 2; [false,false] \u2192 at 3.",
       "tolerance": 2,
       "skip": false
@@ -599,8 +598,8 @@
         "time": 185.65,
         "line": 95
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Broad Swing cast starts",
+      "cue": "Broad Swing cast starts",
       "rule": "Go to 11m north of the centre.",
       "roles": {
         "MeleeDpsA": {
@@ -619,8 +618,8 @@
         "time": 189.35,
         "line": 96
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Broad Swing resolves",
+      "cue": "Broad Swing resolves",
       "rule": "Depends on BroadSwingRightFirst: [false,true] \u2192 near 2 (N 5m); [true,true] \u2192 N 12m; [true,false] \u2192 near 2 (N 5m); [false,false] \u2192 N 12m.",
       "roles": {
         "MainTank": {

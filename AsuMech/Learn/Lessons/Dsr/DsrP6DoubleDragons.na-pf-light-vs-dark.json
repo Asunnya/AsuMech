@@ -4,7 +4,7 @@
   "sources": [
     {
       "label": "NAUR - Toolbox: Double Dragon",
-      "url": "https://ff14.toolboxgaming.space/?id=426762112878561&preview=1"
+      "url": "https://ff14.toolboxgaming.space/?id=426762112878561\u0026preview=1"
     }
   ],
   "steps": [
@@ -14,7 +14,7 @@
         "time": 0.3,
         "line": 51
       },
-      "title": "After nidhogg appears",
+      "title": "After Nidhogg appears",
       "cue": "Nidhogg appears",
       "rule": "Go to 15m south of the centre.",
       "roles": {
@@ -40,8 +40,8 @@
         "time": 15.049999,
         "line": 52
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Dread Wyrmsbreath cast starts",
+      "cue": "Dread Wyrmsbreath cast starts",
       "rule": "Go to the south wall.",
       "roles": {
         "MainTank": {
@@ -72,7 +72,7 @@
         "time": 22.33,
         "line": 53
       },
-      "title": "After fire Resistance Down II on you",
+      "title": "After Fire Resistance Down II on you",
       "cue": "Fire Resistance Down II on you",
       "rule": "Each role has its own spot.",
       "roles": {
@@ -110,7 +110,7 @@
         "time": 29.4,
         "line": 54
       },
-      "title": "After wyrmclaw hits you",
+      "title": "After Wyrmclaw hits you",
       "cue": "Wyrmclaw hits you",
       "rule": "Stand near waymark 2, 6m north of the centre.",
       "roles": {
@@ -136,7 +136,7 @@
         "time": 40.96,
         "line": 55
       },
-      "title": "After akh Afah hits you",
+      "title": "After Akh Afah hits you",
       "cue": "Akh Afah hits you",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,
@@ -148,7 +148,7 @@
         "time": 46.38,
         "line": 56
       },
-      "title": "After hallowed Wings cast starts",
+      "title": "After Hallowed Wings cast starts",
       "cue": "Hallowed Wings cast starts",
       "rule": "Depends on WingsNorth: true \u2192 near B (S 6m); false \u2192 near 2 (N 7m).",
       "roles": {
@@ -180,8 +180,8 @@
         "time": 49.829998,
         "line": 57
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Cauterize cast starts",
+      "cue": "Cauterize cast starts",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: HraesvelgrDiveStart).",
       "roles": {
         "MainTank": {
@@ -197,7 +197,7 @@
         "time": 55.059998,
         "line": 58
       },
-      "title": "After hallowed Plume hits you",
+      "title": "After Hallowed Plume hits you",
       "cue": "Hallowed Plume hits you",
       "rule": "If you are in VowTarget: Stand at the centre; otherwise: Stand near waymark B, 9m south of the centre.",
       "roles": {
@@ -226,7 +226,7 @@
         "time": 63.370003,
         "line": 59
       },
-      "title": "After mortal Vow hits you",
+      "title": "After Mortal Vow hits you",
       "cue": "Mortal Vow hits you",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,
@@ -238,8 +238,8 @@
         "time": 74.71,
         "line": 60
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Akh Morn cast starts",
+      "cue": "Akh Morn cast starts",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SecondHraesvelgrStackOnRegen).",
       "tolerance": 2.5,
       "skip": false
@@ -251,8 +251,8 @@
         "to": 84.18,
         "line": 64
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Akh Morn hits you",
+      "cue": "Akh Morn hits you",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SecondHraesvelgrStackOnRegen).",
       "tolerance": 2.5,
       "skip": false
@@ -263,8 +263,8 @@
         "time": 87.74,
         "line": 66
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Wyrmclaw hits you",
+      "cue": "Wyrmclaw hits you",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: HraesvelgrDiveStart).",
       "roles": {
         "MainTank": {
@@ -292,8 +292,8 @@
         "time": 93.42,
         "line": 67
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Spreading Flames hits you",
+      "cue": "Spreading Flames hits you",
       "rule": "Stand on waymark B.",
       "roles": {
         "MainTank": {
@@ -312,7 +312,7 @@
         "time": 97.43,
         "line": 68
       },
-      "title": "After mortal Atonement on you",
+      "title": "After Mortal Atonement on you",
       "cue": "Mortal Atonement on you",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,
@@ -324,7 +324,7 @@
         "time": 99.3,
         "line": 70
       },
-      "title": "After wyrmclaw hits you",
+      "title": "After Wyrmclaw hits you",
       "tolerance": 1.5,
       "skip": true
     }

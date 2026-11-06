@@ -9,7 +9,7 @@
         "time": 0.3,
         "line": 34
       },
-      "title": "After red Hot appears",
+      "title": "After Red Hot appears",
       "cue": "Red Hot appears",
       "rule": "Each role has its own spot.",
       "roles": {
@@ -47,8 +47,8 @@
         "time": 13.7,
         "line": 35
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Alley-oop Inferno cast starts",
+      "cue": "Alley-oop Inferno cast starts",
       "rule": "Each role has its own spot.",
       "roles": {
         "MainTank": {
@@ -85,8 +85,8 @@
         "time": 16.230001,
         "line": 36
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Alley-oop Inferno hits you",
+      "cue": "Alley-oop Inferno hits you",
       "rule": "Go to 3m north-east of the centre.",
       "tolerance": 1.5,
       "skip": false
@@ -97,8 +97,8 @@
         "time": 21.2,
         "line": 37
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Steam Burst resolves",
+      "cue": "Steam Burst resolves",
       "rule": "Go to 8m south of the centre.",
       "tolerance": 2,
       "skip": false
@@ -110,8 +110,8 @@
         "to": 26.95,
         "line": 41
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Pyrotation hits you",
+      "cue": "Pyrotation hits you",
       "rule": "Go to 4m north-west of the centre.",
       "tolerance": 1.5,
       "skip": false
@@ -122,7 +122,7 @@
         "time": 26.56,
         "line": 44
       },
-      "title": "After sprint on you",
+      "title": "After Deep Impact hits you",
       "tolerance": 2,
       "skip": true
     },
@@ -132,8 +132,8 @@
         "time": 29.36,
         "line": 43
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Pyrotation hits you",
+      "cue": "Pyrotation hits you",
       "rule": "Go to 4m south-west of the centre.",
       "tolerance": 1.5,
       "skip": false

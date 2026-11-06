@@ -9,7 +9,7 @@
         "time": 0.3,
         "line": 49
       },
-      "title": "After red Hot appears",
+      "title": "After Red Hot appears",
       "cue": "Red Hot appears",
       "rule": "Go to 9m north of the centre.",
       "roles": {
@@ -29,8 +29,8 @@
         "time": 21.4,
         "line": 50
       },
-      "title": "After  resolves",
-      "cue": " resolves",
+      "title": "After Directional Disregard on Red Hot",
+      "cue": "Directional Disregard on Red Hot",
       "rule": "Go an eighth turn clockwise of CutbackOrigin, 7m out.",
       "tolerance": 2,
       "skip": false
@@ -66,8 +66,8 @@
         "to": 39.98,
         "line": 55
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Flame Floater hits you",
+      "cue": "Flame Floater hits you",
       "rule": "Go to 7m west of the centre.",
       "roles": {
         "CasterDps": {
@@ -89,8 +89,8 @@
         "time": 37.82,
         "line": 57
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Flame Floater hits you",
+      "cue": "Flame Floater hits you",
       "rule": "Go to 7m west of the centre.",
       "roles": {
         "MeleeDpsB": {
@@ -112,8 +112,8 @@
         "time": 41.38,
         "line": 58
       },
-      "title": "After sprint on another player",
-      "cue": "Sprint on another player",
+      "title": "After Flame Floater hits you",
+      "cue": "Flame Floater hits you",
       "rule": "Each role has its own spot.",
       "roles": {
         "MainTank": {
@@ -129,10 +129,10 @@
           "rule": "Go a quarter turn clockwise of CutbackOrigin, 14m out."
         },
         "MeleeDpsA": {
-          "rule": "Go -4° from CutbackOrigin, 12m out."
+          "rule": "Go -4\u00B0 from CutbackOrigin, 12m out."
         },
         "MeleeDpsB": {
-          "rule": "Go 23° from CutbackOrigin, 12m out."
+          "rule": "Go 23\u00B0 from CutbackOrigin, 12m out."
         },
         "PhysRangedDps": {
           "rule": "Go a quarter turn counterclockwise of CutbackOrigin, 20m out."
@@ -150,27 +150,27 @@
         "time": 53.2,
         "line": 59
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
-      "rule": "Go 1° from CutbackOrigin, 7m out.",
+      "title": "After Alley-oop Inferno hits you",
+      "cue": "Alley-oop Inferno hits you",
+      "rule": "Go 1\u00B0 from CutbackOrigin, 7m out.",
       "roles": {
         "MainTank": {
-          "rule": "Go 5° from CutbackOrigin, 7m out."
+          "rule": "Go 5\u00B0 from CutbackOrigin, 7m out."
         },
         "OffTank": {
-          "rule": "Go 3° from CutbackOrigin, 6m out."
+          "rule": "Go 3\u00B0 from CutbackOrigin, 6m out."
         },
         "RegenHealer": {
-          "rule": "Go 1° from CutbackOrigin, 6m out."
+          "rule": "Go 1\u00B0 from CutbackOrigin, 6m out."
         },
         "ShieldHealer": {
-          "rule": "Go 3° from CutbackOrigin, 7m out."
+          "rule": "Go 3\u00B0 from CutbackOrigin, 7m out."
         },
         "MeleeDpsB": {
-          "rule": "Go -1° from CutbackOrigin, 6m out."
+          "rule": "Go -1\u00B0 from CutbackOrigin, 6m out."
         },
         "CasterDps": {
-          "rule": "Go -1° from CutbackOrigin, 7m out."
+          "rule": "Go -1\u00B0 from CutbackOrigin, 7m out."
         }
       },
       "tolerance": 2,
@@ -182,8 +182,8 @@
         "time": 63.41,
         "line": 60
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Cutback Blaze resolves",
+      "cue": "Cutback Blaze resolves",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,
       "skip": false
@@ -195,12 +195,12 @@
         "to": 73.729996,
         "line": 64
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
-      "rule": "Depends on Wall: 0 → SE 6m; 3 → NE 6m; 1 → SW 6m.",
+      "title": "After Pyrotation hits you",
+      "cue": "Pyrotation hits you",
+      "rule": "Depends on Wall: 0 \u2192 SE 6m; 3 \u2192 NE 6m; 1 \u2192 SW 6m.",
       "roles": {
         "RegenHealer": {
-          "rule": "Depends on Wall: 0 → SE 6m; 3 → NE 7m; 1 → SW 6m."
+          "rule": "Depends on Wall: 0 \u2192 SE 6m; 3 \u2192 NE 7m; 1 \u2192 SW 6m."
         },
         "PhysRangedDps": {
           "rule": "Go opposite CutbackOrigin, 6m out."
@@ -215,7 +215,7 @@
         "time": 83.16,
         "line": 68
       },
-      "title": "After divers' Dare resolves",
+      "title": "After Divers' Dare resolves",
       "cue": "Divers' Dare resolves",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,

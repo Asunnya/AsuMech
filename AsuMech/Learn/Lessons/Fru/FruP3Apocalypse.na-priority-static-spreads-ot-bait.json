@@ -14,7 +14,7 @@
         "time": 2.2,
         "line": 29
       },
-      "title": "After spell-in-Waiting Refrain cast starts",
+      "title": "After Spell-in-Waiting Refrain cast starts",
       "cue": "Spell-in-Waiting Refrain cast starts",
       "rule": "Stand near waymark D, 7m west of the centre.",
       "roles": {
@@ -43,7 +43,7 @@
         "time": 16.9,
         "line": 30
       },
-      "title": "After apocalypse cast starts",
+      "title": "After Apocalypse cast starts",
       "cue": "Apocalypse cast starts",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SpiritTakerTarget).",
       "roles": {
@@ -69,7 +69,7 @@
         "time": 20.2,
         "line": 31
       },
-      "title": "After apocalypse resolves",
+      "title": "After Apocalypse resolves",
       "cue": "Apocalypse resolves",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SpiritTakerTarget).",
       "roles": {
@@ -95,7 +95,7 @@
         "time": 22.85,
         "line": 32
       },
-      "title": "After dark Water III resolves",
+      "title": "After Dark Water III resolves",
       "cue": "Dark Water III resolves",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SpiritTakerTarget).",
       "roles": {
@@ -121,7 +121,7 @@
         "time": 24.85,
         "line": 33
       },
-      "title": "After spirit Taker resolves",
+      "title": "After Spirit Taker resolves",
       "cue": "Spirit Taker resolves",
       "rule": "Stand near waymark D, 12m west of the centre.",
       "roles": {
@@ -153,8 +153,8 @@
         "time": 28,
         "line": 34
       },
-      "title": "After  resolves",
-      "cue": " resolves",
+      "title": "After Spirit Taker cast starts",
+      "cue": "Spirit Taker cast starts",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Rotation).",
       "tolerance": 2.5,
       "skip": false
@@ -165,7 +165,7 @@
         "time": 36.05,
         "line": 35
       },
-      "title": "After dark Eruption hits you",
+      "title": "After Dark Eruption hits you",
       "cue": "Dark Eruption hits you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Rotation).",
       "roles": {
@@ -191,7 +191,7 @@
         "time": 37,
         "line": 36
       },
-      "title": "After dark Eruption hits you",
+      "title": "After Dark Eruption hits you",
       "cue": "Dark Eruption hits you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SpiritTakerTarget).",
       "roles": {
@@ -217,7 +217,7 @@
         "time": 41.7,
         "line": 37
       },
-      "title": "After apocalypse resolves",
+      "title": "After Apocalypse resolves",
       "cue": "Apocalypse resolves",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Rotation).",
       "tolerance": 2.5,
@@ -229,7 +229,7 @@
         "time": 42,
         "line": 39
       },
-      "title": "After dark Water III resolves",
+      "title": "After Dark Water III resolves",
       "cue": "Dark Water III resolves",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,
@@ -241,7 +241,7 @@
         "time": 42,
         "line": 38
       },
-      "title": "After dark Water III resolves",
+      "title": "After Dark Water III resolves",
       "tolerance": 2.5,
       "skip": true
     },
@@ -251,7 +251,7 @@
         "time": 45.15,
         "line": 40
       },
-      "title": "After darkest Dance hits you",
+      "title": "After Darkest Dance hits you",
       "cue": "Darkest Dance hits you",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Rotation).",
       "tolerance": 2.5,
@@ -263,7 +263,7 @@
         "time": 48.4,
         "line": 41
       },
-      "title": "After darkest Dance resolves",
+      "title": "After Darkest Dance resolves",
       "cue": "Darkest Dance resolves",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Rotation).",
       "roles": {

@@ -9,7 +9,7 @@
         "time": 0.3,
         "line": 32
       },
-      "title": "After deep Blue appears",
+      "title": "After Deep Blue appears",
       "cue": "Deep Blue appears",
       "rule": "Go to 3m south of the centre.",
       "roles": {
@@ -26,8 +26,8 @@
         "time": 18.52,
         "line": 33
       },
-      "title": "After  hits you",
-      "cue": " hits you",
+      "title": "After Sickest Take-off cast starts",
+      "cue": "Sickest Take-off cast starts",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LaneStart).",
       "tolerance": 2.5,
       "skip": false
@@ -38,7 +38,7 @@
         "time": 32.27,
         "line": 34
       },
-      "title": "After sickest Take-off resolves",
+      "title": "After Sickest Take-off resolves",
       "cue": "Sickest Take-off resolves",
       "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LaneStart).",
       "tolerance": 2.5,
@@ -50,8 +50,8 @@
         "time": 34.16,
         "line": 35
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Awesome Splash hits you",
+      "cue": "Awesome Splash hits you",
       "rule": "Go to 4m north of the centre.",
       "roles": {
         "OffTank": {
@@ -79,8 +79,7 @@
         "time": 46.15,
         "line": 36
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "Move at 46.2s",
       "rule": "Go to 4m north of the centre.",
       "roles": {
         "OffTank": {
@@ -108,8 +107,8 @@
         "time": 48.98,
         "line": 37
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Reverse Alley-oop resolves",
+      "cue": "Reverse Alley-oop resolves",
       "rule": "Go to 2m south of the centre.",
       "roles": {
         "MainTank": {
@@ -125,7 +124,7 @@
         "time": 58.68,
         "line": 38
       },
-      "title": "After deep Impact hits you",
+      "title": "After Deep Impact hits you",
       "cue": "Deep Impact hits you",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,

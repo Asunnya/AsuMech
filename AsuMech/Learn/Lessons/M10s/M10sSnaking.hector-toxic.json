@@ -9,7 +9,7 @@
         "time": 0.3,
         "line": 36
       },
-      "title": "After red Hot appears",
+      "title": "After Red Hot appears",
       "cue": "Red Hot appears",
       "rule": "Go to 8m west of the centre.",
       "roles": {
@@ -35,33 +35,33 @@
         "time": 13.85,
         "line": 37
       },
-      "title": "After firesnaking resolves",
+      "title": "After Firesnaking resolves",
       "cue": "Firesnaking resolves",
       "rule": "Each role has its own spot.",
       "roles": {
         "MainTank": {
-          "rule": "Depends on FireOnTheNearest: true → near D (W 11m); false → E 13m."
+          "rule": "Depends on FireOnTheNearest: true \u2192 near D (W 11m); false \u2192 E 13m."
         },
         "OffTank": {
-          "rule": "Depends on FireOnTheNearest: true → E 13m; false → near D (W 11m)."
+          "rule": "Depends on FireOnTheNearest: true \u2192 E 13m; false \u2192 near D (W 11m)."
         },
         "RegenHealer": {
-          "rule": "Depends on FireOnTheNearest: true → W 11m; false → E wall."
+          "rule": "Depends on FireOnTheNearest: true \u2192 W 11m; false \u2192 E wall."
         },
         "ShieldHealer": {
-          "rule": "Depends on FireOnTheNearest: true → E wall; false → near D (W 11m)."
+          "rule": "Depends on FireOnTheNearest: true \u2192 E wall; false \u2192 near D (W 11m)."
         },
         "MeleeDpsA": {
-          "rule": "Depends on FireOnTheNearest: true → near D (W 11m); false → near B (E 13m)."
+          "rule": "Depends on FireOnTheNearest: true \u2192 near D (W 11m); false \u2192 near B (E 13m)."
         },
         "MeleeDpsB": {
-          "rule": "Depends on FireOnTheNearest: true → near B (E 13m); false → W 11m."
+          "rule": "Depends on FireOnTheNearest: true \u2192 near B (E 13m); false \u2192 W 11m."
         },
         "PhysRangedDps": {
-          "rule": "Depends on FireOnTheNearest: true → near D (W 11m); false → E wall."
+          "rule": "Depends on FireOnTheNearest: true \u2192 near D (W 11m); false \u2192 E wall."
         },
         "CasterDps": {
-          "rule": "Depends on FireOnTheNearest: true → E wall; false → W 11m."
+          "rule": "Depends on FireOnTheNearest: true \u2192 E wall; false \u2192 W 11m."
         }
       },
       "tolerance": 2,
@@ -73,21 +73,21 @@
         "time": 18.6,
         "line": 38
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Watersnaking on you",
+      "cue": "Watersnaking on you",
       "rule": "Go to the west wall.",
       "roles": {
         "MeleeDpsA": {
-          "rule": "Go 0° from DeepBlueCorner, 24m out."
+          "rule": "Go 0\u00B0 from DeepBlueCorner, 24m out."
         },
         "PhysRangedDps": {
-          "rule": "Go 0° from DeepBlueCorner, 22m out."
+          "rule": "Go 0\u00B0 from DeepBlueCorner, 22m out."
         },
         "MeleeDpsB": {
-          "rule": "Go 0° from DeepBlueCorner, 24m out."
+          "rule": "Go 0\u00B0 from DeepBlueCorner, 24m out."
         },
         "CasterDps": {
-          "rule": "Go 0° from DeepBlueCorner, 22m out."
+          "rule": "Go 0\u00B0 from DeepBlueCorner, 22m out."
         }
       },
       "tolerance": 2,
@@ -99,8 +99,8 @@
         "time": 26.16,
         "line": 39
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Alley-oop Inferno hits you",
+      "cue": "Alley-oop Inferno hits you",
       "rule": "Go E wall of DeepBlueCorner.",
       "tolerance": 2,
       "skip": false
@@ -111,8 +111,8 @@
         "time": 26.64,
         "line": 40
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Alley-oop Double-dip resolves",
+      "cue": "Alley-oop Double-dip resolves",
       "rule": "Go to the south-west wall.",
       "tolerance": 2,
       "skip": false
@@ -123,8 +123,8 @@
         "time": 29.279999,
         "line": 41
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Alley-oop Double-dip resolves",
+      "cue": "Alley-oop Double-dip resolves",
       "rule": "Go E wall of DeepBlueCorner.",
       "tolerance": 2,
       "skip": false
@@ -135,7 +135,7 @@
         "time": 37.62,
         "line": 42
       },
-      "title": "After hot Impact resolves",
+      "title": "After Hot Impact resolves",
       "cue": "Hot Impact resolves",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,

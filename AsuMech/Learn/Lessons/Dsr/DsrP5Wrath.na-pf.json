@@ -4,7 +4,7 @@
   "sources": [
     {
       "label": "NAUR - Wrath of the Heavens - Toolbox",
-      "url": "https://ff14.toolboxgaming.space/?id=514795714993271&preview=1"
+      "url": "https://ff14.toolboxgaming.space/?id=514795714993271\u0026preview=1"
     }
   ],
   "steps": [
@@ -14,7 +14,7 @@
         "time": 0.3,
         "line": 49
       },
-      "title": "After king Thordan appears",
+      "title": "After King Thordan appears",
       "cue": "King Thordan appears",
       "rule": "Go to 4m north of the centre.",
       "roles": {
@@ -31,7 +31,7 @@
         "time": 29.4,
         "line": 50
       },
-      "title": "After wrath of the Heavens cast starts",
+      "title": "After Wrath of the Heavens cast starts",
       "cue": "Wrath of the Heavens cast starts",
       "rule": "Go to 3m north of the centre.",
       "tolerance": 1.5,
@@ -43,8 +43,8 @@
         "time": 39.1,
         "line": 51
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After a tether lands on you",
+      "cue": "A tether lands on you",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LiquidHeaven).",
       "roles": {
         "MainTank": {
@@ -75,8 +75,8 @@
         "time": 45.15,
         "line": 52
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Skyward Leap hits you",
+      "cue": "Skyward Leap hits you",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Divebomb).",
       "roles": {
         "MainTank": {
@@ -96,8 +96,8 @@
         "to": 55.859997,
         "line": 59
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Liquid Heaven resolves",
+      "cue": "Liquid Heaven resolves",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
       "roles": {
         "RegenHealer": {
@@ -120,8 +120,8 @@
         "to": 56,
         "line": 65
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Liquid Heaven hits you",
+      "cue": "Liquid Heaven hits you",
       "rule": "Go to the north wall.",
       "roles": {
         "ShieldHealer": {
@@ -149,8 +149,8 @@
         "time": 51.4,
         "line": 53
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Liquid Heaven resolves",
+      "cue": "Liquid Heaven resolves",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,
       "skip": false
@@ -161,8 +161,8 @@
         "time": 52.300003,
         "line": 54
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After a marker lands on you",
+      "cue": "A marker lands on you",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,
       "skip": false
@@ -173,8 +173,8 @@
         "time": 56.1,
         "line": 67
       },
-      "title": "After sprint on you",
-      "cue": "Sprint on you",
+      "title": "After Liquid Heaven resolves",
+      "cue": "Liquid Heaven resolves",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: WarriorBearing).",
       "roles": {
         "RegenHealer": {
@@ -199,7 +199,7 @@
         "time": 58.84,
         "line": 68
       },
-      "title": "After chain Lightning hits you",
+      "title": "After Chain Lightning hits you",
       "cue": "Chain Lightning hits you",
       "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: DragonBearing).",
       "roles": {
@@ -231,7 +231,7 @@
         "time": 66.1,
         "line": 69
       },
-      "title": "After ancient Quaga resolves",
+      "title": "After Ancient Quaga resolves",
       "cue": "Ancient Quaga resolves",
       "rule": "Go opposite WarriorSpot, 4m out.",
       "tolerance": 2,

@@ -9,7 +9,7 @@
         "time": 0.5,
         "line": 28
       },
-      "title": "After vamp Fatale appears",
+      "title": "After Vamp Fatale appears",
       "cue": "Vamp Fatale appears",
       "rule": "Go to 3m south of the centre.",
       "tolerance": 1.5,
@@ -53,7 +53,7 @@
         "time": 36.6,
         "line": 30
       },
-      "title": "After pulping Pulse resolves",
+      "title": "After Pulping Pulse resolves",
       "cue": "Pulping Pulse resolves",
       "rule": "Go to the north-west wall.",
       "roles": {
@@ -86,7 +86,7 @@
         "to": 54.78,
         "line": 37
       },
-      "title": "After aetherletting resolves",
+      "title": "After Aetherletting resolves",
       "cue": "Aetherletting resolves",
       "rule": "Go to the north wall.",
       "roles": {
@@ -119,7 +119,7 @@
         "to": 58.78,
         "line": 40
       },
-      "title": "After aetherletting hits you",
+      "title": "After Aetherletting hits you",
       "cue": "Aetherletting hits you",
       "rule": "Stand at the centre.",
       "tolerance": 1.5,
@@ -132,7 +132,7 @@
         "to": 59.3,
         "line": 43
       },
-      "title": "After aetherletting hits you",
+      "title": "After Aetherletting hits you",
       "tolerance": 1.5,
       "skip": true
     }
