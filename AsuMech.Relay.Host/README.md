@@ -437,6 +437,17 @@ the lesson, the step, the vote and an optional comment. To read them summed per 
 asumech-relay --admin --host https://relay.yourdomain.com --admin-token <admin-token> --feedback [--out feedback.json]
 ```
 
+### Player reports
+
+The same relay takes the plugin's "Report a problem" and scenario/strat requests (`POST /reports`,
+at most 30 an hour per player): one JSON file each in `reports/` under the recordings folder, with
+the run's context (scenario, strat, role, mode, seed, run time, rolled state, lesson step, party
+positions and orders, recent actions and failures). Fetch the new ones with:
+
+```
+asumech-relay --admin --host https://relay.yourdomain.com --admin-token <admin-token> --reports --out reports
+```
+
 ### The built-in study server
 
 Players never type an address: the plugin ships with the recordings server's URL and password in

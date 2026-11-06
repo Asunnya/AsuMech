@@ -215,6 +215,11 @@ internal static class AdminConsole
             await PullRecordingsAsync(ValueOf(args, "--out") ?? "recordings");
             return;
         }
+        if (args.Contains("--reports"))
+        {
+            await PullReportsAsync(ValueOf(args, "--out") ?? "reports");
+            return;
+        }
         if (args.Contains("--feedback"))
         {
             await PullFeedbackAsync(ValueOf(args, "--out"));
@@ -252,6 +257,30 @@ internal static class AdminConsole
                 break;
             }
         }
+    }
+
+    // Every player report the relay holds that isn't in the folder yet, one JSON each.
+    private static async Task PullReportsAsync(string outDir)
+    {
+        List<RunReportInfo> list;
+        try { list = JsonSerializer.Deserialize<List<RunReportInfo>>(await http.GetStringAsync($"{host}/reports"), Json) ?? []; }
+        catch (Exception e)
+        {
+            Console.Error.WriteLine($"Listing {host}/reports failed: {e.Message} (does the relay run with --recordings-dir?)");
+            return;
+        }
+        Directory.CreateDirectory(outDir);
+        var pulled = 0;
+        foreach (var report in list)
+        {
+            var file = Path.Combine(outDir, report.Name);
+            if (File.Exists(file)) continue;
+            try { await File.WriteAllTextAsync(file, await http.GetStringAsync($"{host}/reports/{report.Name}")); }
+            catch (Exception e) { Console.Error.WriteLine($"{report.Name}: {e.Message}"); continue; }
+            pulled++;
+            Console.WriteLine($"{report.Name} ({report.Bytes:N0} bytes)");
+        }
+        Console.WriteLine($"{list.Count} on the relay, {pulled} new, in {Path.GetFullPath(outDir)}");
     }
 
     // Lesson thumbs up/down, summed per step (each player's last vote counts once) with their

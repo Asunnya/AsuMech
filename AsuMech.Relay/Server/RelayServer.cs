@@ -80,6 +80,7 @@ public sealed class RelayServer : IAsyncDisposable
 
     private readonly RelayOptions options;
     private readonly LessonFeedbackLog feedback;
+    private readonly RunReportStore reports;
     private readonly IRelayLog log;
 
     private readonly RelayRooms rooms;
@@ -127,6 +128,7 @@ public sealed class RelayServer : IAsyncDisposable
     {
         this.options = options with { TrustedProxies = [.. options.TrustedProxies], Group = [.. options.Group] };
         feedback = new LessonFeedbackLog(options.RecordingsDir is { } dir ? Path.Combine(dir, "feedback.jsonl") : null, () => DateTime.UtcNow);
+        reports = new RunReportStore(options.RecordingsDir is { } reportDir ? Path.Combine(reportDir, "reports") : null, () => DateTime.UtcNow);
         this.log = log;
         rooms = new RelayRooms(this.options);
     }
@@ -388,6 +390,12 @@ public sealed class RelayServer : IAsyncDisposable
                     await ServeAdminAsync(stream, request, handshake.Token, async () =>
                         ApplyAdminActionBody(await RelayHttp.ReadBodyAsync(stream, request, MaxAdminBodyBytes, handshake.Token), ResolveClientIp(request)));
                     return;
+                case "reports" when request.Method == "POST":
+                    await ServeReportAsync(stream, request, handshake.Token);
+                    return;
+                case "reports":
+                    await ServeAdminAsync(stream, request, handshake.Token, () => Task.FromResult(JsonSerializer.Serialize(reports.List(), RelayAdmin.Json)));
+                    return;
                 case "feedback" when request.Method == "POST":
                     await ServeFeedbackAsync(stream, request, handshake.Token);
                     return;
@@ -400,6 +408,12 @@ public sealed class RelayServer : IAsyncDisposable
                 case "recordings":
                     await ServeAdminAsync(stream, request, handshake.Token, () => Task.FromResult(JsonSerializer.Serialize(ListRecordings(), RelayAdmin.Json)));
                     return;
+            }
+            if (path.StartsWith("reports/", StringComparison.Ordinal))
+            {
+                var name = path["reports/".Length..];
+                await ServeAdminAsync(stream, request, handshake.Token, () => Task.FromResult(reports.Read(name) ?? "null"));
+                return;
             }
             if (path.StartsWith("recordings/", StringComparison.Ordinal))
             {
@@ -1068,6 +1082,31 @@ public sealed class RelayServer : IAsyncDisposable
         Interlocked.Increment(ref recordingsStored);
         log.Info($"[recordings] stored {name} ({body.Length:N0} bytes) from {ip} ({peerId})");
         await RelayHttp.WriteJsonAsync(stream, JsonSerializer.Serialize(new { name, bytes = body.Length }, RelayAdmin.Json), token, 201);
+    }
+
+    // ---- Run reports ------------------------------------------------------------------------
+
+    private async Task ServeReportAsync(Stream stream, RelayHttpRequest request, CancellationToken token)
+    {
+        Task Respond(int status) => RelayHttp.WriteStatusAsync(stream, status, token);
+        if (!reports.Enabled) { await Respond(404); return; }
+        var ip = ResolveClientIp(request);
+        if (await AdmitUploadAsync(stream, request, ip, "reports", token) is not { } peerId) return;
+        if (RelayHttp.ContentLength(request) is not { } length || length == 0 || length > RunReportWire.MaxBodyBytes) { await Respond(413); return; }
+        string body;
+        try { body = await RelayHttp.ReadBodyAsync(stream, request, RunReportWire.MaxBodyBytes, token); }
+        catch (Exception e) { log.Warn($"[reports] from {ip} ({peerId}) failed mid-body: {e.Message}"); return; }
+        var (outcome, name) = reports.Add(peerId, body);
+        switch (outcome)
+        {
+            case RunReportStore.Outcome.Stored:
+                log.Info($"[reports] stored {name} from {ip} ({peerId})");
+                await RelayHttp.WriteJsonAsync(stream, JsonSerializer.Serialize(new { name }, RelayAdmin.Json), token, 201);
+                return;
+            case RunReportStore.Outcome.Invalid: await Respond(400); return;
+            case RunReportStore.Outcome.TooMany: await Respond(429); return;
+            default: await Respond(503); return;
+        }
     }
 
     // ---- Lesson feedback ---------------------------------------------------------------------

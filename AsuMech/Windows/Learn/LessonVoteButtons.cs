@@ -69,10 +69,8 @@ internal static class LessonVoteButtons
 
     private static void Send(string lessonId, string step, string target, string key, int vote, string why)
     {
-        var config = Plugin.Config;
-        var (url, token) = config.RecordingsDestination();
+        var (url, token, secret) = StudyRelayPost.Destination();
         var feedback = new LessonFeedback(lessonId, Clip(step), target, vote, Clip(why, LessonFeedback.MaxCommentChars), PluginBuildInfo.Version);
-        var secret = RelayWire.RelayCredential(config.EnsurePeerSecret(), url);
         sending.Add(key);
         status[key] = "sending…";
         Task.Run(async () => finished.Enqueue((key, vote, await LessonFeedbackSender.SendAsync(feedback, url, token, secret))));

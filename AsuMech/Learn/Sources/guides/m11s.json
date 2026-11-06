@@ -1,0 +1,457 @@
+{
+  "fight": "M11S",
+  "family": "M11s",
+  "title": "AAC Heavyweight M3 (Savage) - M11S - The Tyrant",
+  "source": null,
+  "guide": null,
+  "captured": null,
+  "credits": "",
+  "sections": [
+    {
+      "title": "(header)",
+      "links": [
+        {
+          "label": "WTFDIG",
+          "url": "https://wtfdig.info/74/m11s#hector",
+          "kind": "other",
+          "section": "(header)",
+          "scenarios": []
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "PF vocabulary",
+      "links": [],
+      "rules": [
+        {
+          "text": "TF: the Toxic Friends raidplan, the one PF usually means.",
+          "scenarios": []
+        },
+        {
+          "text": "Kindred No Buddies: the Kindred Flatliner strat.",
+          "scenarios": []
+        },
+        {
+          "text": "Toxic No Buddies: the Toxic Friends Flatliner strat.",
+          "scenarios": []
+        },
+        {
+          "text": "No Buddies: \"buddies\" was an early Flatliner strat where the prey players paired up on tethers and mirrored their tower knockbacks. No Buddies means not doing that.",
+          "scenarios": []
+        },
+        {
+          "text": "PTT / TTT / PPP ...: order of the tower soaks at the end of the fight, P = party, T = tank (PTT = Party, Tank, Tank).",
+          "scenarios": []
+        },
+        {
+          "text": "Uptime ES / Fixed ES: the two strats for Ecliptic Stampede (the two-fold / four-fold fire mechanic); raidplans below.",
+          "scenarios": []
+        }
+      ]
+    },
+    {
+      "title": "Videos and cheat sheets",
+      "links": [
+        {
+          "label": "Hector Hectorson - M11S guide (The Tyrant)",
+          "url": "https://www.youtube.com/watch?v=w1uuwzhyf5A",
+          "kind": "video",
+          "section": "Videos and cheat sheets",
+          "scenarios": [
+            "M11sOpenerScenario",
+            "M11sUltimateWeaponsScenario",
+            "M11sOrbitalOmenScenario",
+            "M11sMeteorainScenario",
+            "M11sArenaSplitScenario",
+            "M11sEclipticScenario"
+          ]
+        },
+        {
+          "label": "WTFDIG - Hector",
+          "url": "https://wtfdig.info/74/m11s#hector",
+          "kind": "other",
+          "section": "Videos and cheat sheets",
+          "scenarios": [
+            "M11sOpenerScenario",
+            "M11sUltimateWeaponsScenario",
+            "M11sOrbitalOmenScenario",
+            "M11sMeteorainScenario",
+            "M11sArenaSplitScenario",
+            "M11sEclipticScenario"
+          ]
+        },
+        {
+          "label": "Fixed Stampede - M11S mini-guide",
+          "url": "https://www.youtube.com/watch?v=p8cL88OKEWE",
+          "kind": "video",
+          "section": "Videos and cheat sheets",
+          "scenarios": []
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "Raidplans",
+      "links": [
+        {
+          "label": "Toxic Friends - whole fight",
+          "url": "https://raidplan.io/plan/HJAbE7fuWodELUSB#15",
+          "kind": "raidplan.io",
+          "section": "Raidplans",
+          "scenarios": [
+            "M11sOpenerScenario",
+            "M11sUltimateWeaponsScenario",
+            "M11sOrbitalOmenScenario",
+            "M11sMeteorainScenario",
+            "M11sArenaSplitScenario",
+            "M11sEclipticScenario"
+          ]
+        },
+        {
+          "label": "Toxic Friends - Flatliner (Arena Split)",
+          "url": "https://raidplan.io/plan/B82fx_zDqUMr5KFC#5",
+          "kind": "raidplan.io",
+          "section": "Raidplans",
+          "scenarios": [
+            "M11sArenaSplitScenario"
+          ]
+        },
+        {
+          "label": "Kindred - Flatliner (no Kindred strat in AsuMech yet)",
+          "url": "https://raidplan.io/plan/hvbysrfwvrc55ahz#8",
+          "kind": "raidplan.io",
+          "section": "Raidplans",
+          "scenarios": []
+        },
+        {
+          "label": "Uptime Ecliptic Stampede",
+          "url": "https://raidplan.io/plan/pz_pT6oL7EgrTIEH",
+          "kind": "raidplan.io",
+          "section": "Raidplans",
+          "scenarios": [],
+          "sourceOnly": true
+        },
+        {
+          "label": "Fixed Ecliptic Stampede",
+          "url": "https://raidplan.io/plan/KXVlSGwV3zqON3CJ",
+          "kind": "raidplan.io",
+          "section": "Raidplans",
+          "scenarios": [],
+          "sourceOnly": true
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "Flatliner: which marker corner?",
+      "links": [],
+      "rules": [
+        {
+          "text": "Toxic Friends and Kindred use nearly the same Flatliner strat; the only difference is where prey stands on a static marker.",
+          "scenarios": []
+        },
+        {
+          "text": "Check whether your marker set puts prey on the INSIDE or the OUTSIDE corner of the marker, and ask your PF lead which set they placed.",
+          "scenarios": []
+        }
+      ]
+    }
+  ],
+  "mitigation": [],
+  "waymarks": [
+    {
+      "name": "Toxic Friends",
+      "mapId": 1073,
+      "local": {
+        "A": [
+          0.0,
+          0.0,
+          -10.0
+        ],
+        "B": [
+          10.0,
+          0.0,
+          0.0
+        ],
+        "C": [
+          0.0,
+          0.0,
+          10.0
+        ],
+        "D": [
+          -10.0,
+          0.0,
+          0.0
+        ],
+        "One": [
+          -16.25,
+          0.0,
+          -12.5
+        ],
+        "Two": [
+          16.25,
+          0.0,
+          -12.5
+        ],
+        "Three": [
+          16.25,
+          0.0,
+          12.5
+        ],
+        "Four": [
+          -16.25,
+          0.0,
+          12.5
+        ]
+      },
+      "closestPreset": "Toxic Friends",
+      "maxDeviation": 0.0
+    },
+    {
+      "name": "KINDRED",
+      "mapId": 1073,
+      "local": {
+        "A": [
+          -15.979,
+          0.0,
+          -19.82
+        ],
+        "B": [
+          16.166,
+          0.0,
+          -19.875
+        ],
+        "C": [
+          16.286,
+          0.0,
+          19.946
+        ],
+        "D": [
+          -16.176,
+          0.0,
+          19.855
+        ],
+        "One": [
+          -16.072,
+          0.0,
+          -12.443
+        ],
+        "Two": [
+          16.156,
+          0.0,
+          -12.456
+        ],
+        "Three": [
+          16.183,
+          0.0,
+          12.64
+        ],
+        "Four": [
+          -16.227,
+          0.0,
+          12.528
+        ]
+      },
+      "closestPreset": "Toxic Friends",
+      "maxDeviation": 20.809
+    },
+    {
+      "name": "Kindred Outside",
+      "mapId": 1073,
+      "local": {
+        "A": [
+          0.0,
+          0.0,
+          -10.0
+        ],
+        "B": [
+          10.0,
+          0.0,
+          0.0
+        ],
+        "C": [
+          0.0,
+          0.0,
+          10.0
+        ],
+        "D": [
+          -10.0,
+          0.0,
+          0.0
+        ],
+        "One": [
+          -16.0,
+          0.0,
+          -11.0
+        ],
+        "Two": [
+          16.0,
+          0.0,
+          -11.0
+        ],
+        "Three": [
+          16.0,
+          0.0,
+          11.0
+        ],
+        "Four": [
+          -16.0,
+          0.0,
+          11.0
+        ]
+      },
+      "closestPreset": "Toxic Friends",
+      "maxDeviation": 1.521
+    }
+  ],
+  "scenarios": {
+    "M11sOpenerScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/HJAbE7fuWodELUSB#15",
+          "credits": "Toxic Friends - whole fight"
+        }
+      ],
+      "sources": [
+        {
+          "label": "Hector Hectorson - M11S guide (The Tyrant)",
+          "url": "https://www.youtube.com/watch?v=w1uuwzhyf5A"
+        },
+        {
+          "label": "WTFDIG - Hector",
+          "url": "https://wtfdig.info/74/m11s#hector"
+        },
+        {
+          "label": "Toxic Friends - whole fight",
+          "url": "https://raidplan.io/plan/HJAbE7fuWodELUSB#15"
+        }
+      ],
+      "rules": []
+    },
+    "M11sUltimateWeaponsScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/HJAbE7fuWodELUSB#15",
+          "credits": "Toxic Friends - whole fight"
+        }
+      ],
+      "sources": [
+        {
+          "label": "Hector Hectorson - M11S guide (The Tyrant)",
+          "url": "https://www.youtube.com/watch?v=w1uuwzhyf5A"
+        },
+        {
+          "label": "WTFDIG - Hector",
+          "url": "https://wtfdig.info/74/m11s#hector"
+        },
+        {
+          "label": "Toxic Friends - whole fight",
+          "url": "https://raidplan.io/plan/HJAbE7fuWodELUSB#15"
+        }
+      ],
+      "rules": []
+    },
+    "M11sOrbitalOmenScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/HJAbE7fuWodELUSB#15",
+          "credits": "Toxic Friends - whole fight"
+        }
+      ],
+      "sources": [
+        {
+          "label": "Hector Hectorson - M11S guide (The Tyrant)",
+          "url": "https://www.youtube.com/watch?v=w1uuwzhyf5A"
+        },
+        {
+          "label": "WTFDIG - Hector",
+          "url": "https://wtfdig.info/74/m11s#hector"
+        },
+        {
+          "label": "Toxic Friends - whole fight",
+          "url": "https://raidplan.io/plan/HJAbE7fuWodELUSB#15"
+        }
+      ],
+      "rules": []
+    },
+    "M11sMeteorainScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/HJAbE7fuWodELUSB#15",
+          "credits": "Toxic Friends - whole fight"
+        }
+      ],
+      "sources": [
+        {
+          "label": "Hector Hectorson - M11S guide (The Tyrant)",
+          "url": "https://www.youtube.com/watch?v=w1uuwzhyf5A"
+        },
+        {
+          "label": "WTFDIG - Hector",
+          "url": "https://wtfdig.info/74/m11s#hector"
+        },
+        {
+          "label": "Toxic Friends - whole fight",
+          "url": "https://raidplan.io/plan/HJAbE7fuWodELUSB#15"
+        }
+      ],
+      "rules": []
+    },
+    "M11sArenaSplitScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/HJAbE7fuWodELUSB#15",
+          "credits": "Toxic Friends - whole fight"
+        },
+        {
+          "url": "https://raidplan.io/plan/B82fx_zDqUMr5KFC#5",
+          "credits": "Toxic Friends - Flatliner (Arena Split)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "Hector Hectorson - M11S guide (The Tyrant)",
+          "url": "https://www.youtube.com/watch?v=w1uuwzhyf5A"
+        },
+        {
+          "label": "WTFDIG - Hector",
+          "url": "https://wtfdig.info/74/m11s#hector"
+        },
+        {
+          "label": "Toxic Friends - whole fight",
+          "url": "https://raidplan.io/plan/HJAbE7fuWodELUSB#15"
+        },
+        {
+          "label": "Toxic Friends - Flatliner (Arena Split)",
+          "url": "https://raidplan.io/plan/B82fx_zDqUMr5KFC#5"
+        }
+      ],
+      "rules": []
+    },
+    "M11sEclipticScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/HJAbE7fuWodELUSB#15",
+          "credits": "Toxic Friends - whole fight"
+        }
+      ],
+      "sources": [
+        {
+          "label": "Hector Hectorson - M11S guide (The Tyrant)",
+          "url": "https://www.youtube.com/watch?v=w1uuwzhyf5A"
+        },
+        {
+          "label": "WTFDIG - Hector",
+          "url": "https://wtfdig.info/74/m11s#hector"
+        },
+        {
+          "label": "Toxic Friends - whole fight",
+          "url": "https://raidplan.io/plan/HJAbE7fuWodELUSB#15"
+        }
+      ],
+      "rules": []
+    }
+  },
+  "guideText": []
+}

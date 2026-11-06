@@ -18,20 +18,20 @@ public sealed partial class AsuMainWindow
         toastUntil = DateTime.UtcNow + ToastDuration;
     }
 
-    private static string StreakText()
-        => $"streak {Plugin.Practice.Streak}{(Plugin.Drill.StreakTarget is { } t ? $"/{t}" : "")}";
+    private static string StreakText(IScenario? scenario)
+        => $"streak {Plugin.Practice.Streak}{(Plugin.Drill.StreakTarget is { } t ? $"/{t}" : "")}{(scenario is null ? "" : BestStreakText(scenario))}";
 
     private static string BestStreakText(IScenario scenario)
         => Plugin.Drill.BestOf(scenario.FullName()) is var best and > 0 ? $" · best {best}" : "";
 
     private static string DrillLabel() => $"Drill: {(Plugin.Drill.StreakTarget is { } t ? t.ToString() : "off")}##drill";
 
-    private float StreakWidth() => Flow.TextWidth(StreakText()) + ImGui.GetStyle().ItemSpacing.X + Flow.ButtonWidth(DrillLabel());
+    private float StreakWidth() => Flow.TextWidth(StreakText(Selected)) + ImGui.GetStyle().ItemSpacing.X + Flow.ButtonWidth(DrillLabel());
 
     private void DrawStreak(bool inSession)
     {
         ImGui.AlignTextToFramePadding();
-        Muted(StreakText());
+        Muted(StreakText(Selected));
         Flow.SameLineIfFits(Flow.ButtonWidth(DrillLabel()));
         ImGui.BeginDisabled(inSession);
         bool clicked;

@@ -113,6 +113,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
             GameNatives.Install();
             opcodeUpdater = new OpcodeUpdater();
             Game = new Game();
+            Windows.Asu.RunJournal.Install(Game);
             Drill = new DrillTracker(Config.BestStreaks, Config.Save);
             Mastery = new Learn.MasteryStore(Config.Mastery, Config.Save);
             StepStats = new Learn.StepStatsStore(Config.StepStats, Config.Save);

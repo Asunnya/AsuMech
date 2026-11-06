@@ -1,7 +1,20 @@
 {
   "scenario": "M11sOrbitalOmenScenario",
   "strat": "Hector (Toxic)",
-  "sources": [],
+  "sources": [
+    {
+      "label": "Hector Hectorson - M11S guide (The Tyrant)",
+      "url": "https://www.youtube.com/watch?v=w1uuwzhyf5A"
+    },
+    {
+      "label": "WTFDIG - Hector",
+      "url": "https://wtfdig.info/74/m11s#hector"
+    },
+    {
+      "label": "Toxic Friends - whole fight",
+      "url": "https://raidplan.io/plan/HJAbE7fuWodELUSB#15"
+    }
+  ],
   "steps": [
     {
       "key": {

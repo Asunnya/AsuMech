@@ -53,7 +53,7 @@ public sealed partial class AsuMainWindow
         ImGui.SameLine();
         ImGui.AlignTextToFramePadding();
         ImGui.TextUnformatted(scenario is null ? "AsuMech" : $"{scenario.Phase.Zone.ShortName} · {scenario.DisplayName()}");
-        var status = $"{label} · {runElapsed:mm\\:ss} · {StreakText()}{(Plugin.Practice.AutoRestart ? " · loop" : "")}{(watch != null ? " · watching" : "")}{(Windows.Learn.LearnSession.Current is { Ended: false } learn ? $" · {learn.Level.ToString().ToLowerInvariant()}" : "")}";
+        var status = $"{label} · {runElapsed:mm\\:ss} · {StreakText(scenario)}{(Plugin.Practice.AutoRestart ? " · loop" : "")}{(watch != null ? " · watching" : "")}{(Windows.Learn.LearnSession.Current is { Ended: false } learn ? $" · {learn.Level.ToString().ToLowerInvariant()}" : "")}";
         Flow.SameLineIfFits(Flow.TextWidth(status));
         Muted(status);
 
@@ -76,6 +76,9 @@ public sealed partial class AsuMainWindow
         using (AsuTheme.PushTextColor(AsuTheme.Bad))
             stop = ImGui.Button("■ Stop##strip-stop", size);
         if (stop) { EndWatch(); plugin.Runs.Reset(); }
+        ImGui.SameLine();
+        if (ImGuiComponents.IconButton("strip-report", FontAwesomeIcon.Bug)) OpenFeedback(FeedbackKind.Bug);
+        if (ImGui.IsItemHovered()) ImGui.SetTooltip("Report a problem with this run");
         ImGui.SameLine();
         if (ImGuiComponents.IconButton("expand", FontAwesomeIcon.Expand)) expandedDuringRun = true;
         if (ImGui.IsItemHovered()) ImGui.SetTooltip("Show the full window");
