@@ -43,6 +43,12 @@ using AsuMech.Scenarios.Top.P2PartySynergy;
 using AsuMech.Scenarios.Top.P5Delta;
 using AsuMech.Scenarios.Top.P5Omega;
 using AsuMech.Scenarios.Top.P5Sigma;
+using AsuMech.Scenarios.Tea.P1LivingLiquid;
+using AsuMech.Scenarios.Tea.I1LimitCut;
+using AsuMech.Scenarios.Tea.I2TemporalStasis;
+using AsuMech.Scenarios.Tea.P2BjCc;
+using AsuMech.Scenarios.Tea.P3AlexanderPrime;
+using AsuMech.Scenarios.Tea.P4PerfectAlexander;
 using AsuMech.Scenarios.Top.P6WaveCannon2;
 using AsuMech.Scenarios.Ucob.P1Twintania;
 using AsuMech.Scenarios.Ucob.P2Nael;
@@ -138,6 +144,12 @@ public sealed class ScenarioCatalog
         new UltimateAnnihilationScenario(),
         new UltimateSuppressionScenario(),
         new PrimalRouletteScenario(),
+        new TeaP1LivingLiquidScenario(),
+        new TeaI1LimitCutScenario(),
+        new TeaP2BjCcScenario(),
+        new TeaI2TemporalStasisScenario(),
+        new TeaP3AlexanderPrimeScenario(),
+        new TeaP4PerfectAlexanderScenario(),
         new UcobP1TwintaniaScenario(),
         new UcobP2NaelScenario(),
         new UcobP5ExaflaresScenario(),

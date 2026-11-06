@@ -58,6 +58,8 @@ internal sealed class Navigator(INavigated walker)
     private bool followForced;
     private bool followWalking;
     private float followCooldown;
+    private float followReach;
+    private bool followToCentre;
 
     private SimTether? interceptTether;
     private float interceptMargin = 3f;   // park this many yards short of either tether endpoint
@@ -76,8 +78,10 @@ internal sealed class Navigator(INavigated walker)
     public void MoveTo(Vector3 to, float sp, float? finalRot) => SetDestination(to, sp, finalRot, forced: false);
 
     // forced: the mechanic itself is taking control (UMAD P1's Confusion), as opposed to a
-    // strat walking a bot to its spot. A null or dead target releases the follow.
-    public void Follow(SimCharacter? target, float sp, bool forced)
+    // strat walking a bot to its spot. A null or dead target releases the follow. reach: how far
+    // past touching hitboxes to stop, or past the target's centre with toCentre, whatever either
+    // hitbox is.
+    public void Follow(SimCharacter? target, float sp, bool forced, float reach = 0f, bool toCentre = false)
     {
         if (!target.IsAlive())
         {
@@ -89,6 +93,8 @@ internal sealed class Navigator(INavigated walker)
         followTarget = target;
         followForced = forced;
         followCooldown = 0f;
+        followReach = reach;
+        followToCentre = toCentre;
         interceptTether = null;
         speed = MathF.Max(0f, sp);
     }
@@ -188,7 +194,8 @@ internal sealed class Navigator(INavigated walker)
     }
 
     // held: an animation lock roots the walker in place for now; the order resumes after.
-    public void Tick(float deltaSeconds, bool held)
+    // speedFactor scales every order's speed: the walker's statuses' (MovementSpeed).
+    public void Tick(float deltaSeconds, bool held, float speedFactor = 1f)
     {
         if (held)
         {
@@ -230,7 +237,8 @@ internal sealed class Navigator(INavigated walker)
         var dx = goal.X - cur.X;
         var dz = goal.Y - cur.Z;
         var distSq = dx * dx + dz * dz;
-        var step = speed * deltaSeconds;
+        var walkSpeed = speed * speedFactor;
+        var step = walkSpeed * deltaSeconds;
 
         if (corner is { } && distSq <= step * step)
         {
@@ -247,7 +255,7 @@ internal sealed class Navigator(INavigated walker)
         {
             var rot = finalRotation ?? (distSq > 1e-6f ? MathF.Atan2(dx, dz) : walker.Rotation);
             var arrival = new Vector3(dest2.X, dest.Y, dest2.Y);
-            walker.Step(arrival, arrival, speed, arrived: true);
+            walker.Step(arrival, arrival, walkSpeed, arrived: true);
             walker.Turn(rot);
             finalRotation = null;
             Stop();
@@ -259,11 +267,11 @@ internal sealed class Navigator(INavigated walker)
             // A no-op (returns `desired`) when the field is empty or nothing blocks.
             var heading = walker.Obstacles.Steer(new Vector2(cur.X, cur.Z), desired, dist, ref steerSide);
             var next = new Vector3(cur.X + heading.X * step, cur.Y, cur.Z + heading.Y * step);
-            var lead = speed * ModelSync.LeadSeconds;
+            var lead = walkSpeed * ModelSync.LeadSeconds;
             var glide = lead >= dist
                 ? new Vector3(dest2.X, dest.Y, dest2.Y)
                 : new Vector3(cur.X + heading.X * lead, cur.Y, cur.Z + heading.Y * lead);
-            walker.Step(next, glide, speed, arrived: false);
+            walker.Step(next, glide, walkSpeed, arrived: false);
             if (walker.TurnsAlongPath) walker.Turn(MathF.Atan2(heading.X, heading.Y));
         }
     }
@@ -290,7 +298,7 @@ internal sealed class Navigator(INavigated walker)
 
         var position = walker.Position;
         var target = followTarget.Position;
-        var stopDist = walker.HitboxRadius + followTarget.HitboxRadius;
+        var stopDist = followToCentre ? followReach : walker.HitboxRadius + followTarget.HitboxRadius + followReach;
         var reach = stopDist + FollowArrivalSlack;
         var away = new Vector2(position.X - target.X, position.Z - target.Z);
         if (away.LengthSquared() <= reach * reach)

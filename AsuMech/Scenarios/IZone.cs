@@ -3,6 +3,7 @@ using System.Numerics;
 using AsuMech.Core.Game;
 using AsuMech.Core.Map;
 using AsuMech.Core.SimObjects;
+using AsuMech.Core.UserActions;
 
 namespace AsuMech.Scenarios;
 
@@ -35,6 +36,8 @@ public interface IZone
     // The floor a top-down view draws before a run sets its own fence (SimWorld.ArenaShape wins
     // while one runs); the scenarios' EnforceArenaBoundary stays the truth for deaths.
     Core.Game.Geometry.IArenaShape Arena => new Core.Game.Geometry.CircleArena(20f);
+    // When a tank LB3's status lands; null: on its recipients at the press.
+    StatusLanding? TankLimitBreakLanding => null;
 
     // Zone-wide setup, first in the cascade.
     void Run(SimWorld world) { }

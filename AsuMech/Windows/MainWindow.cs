@@ -67,7 +67,7 @@ public unsafe class MainWindow : Window, IDisposable, IPanelHost
     internal DebugMenu DebugMenu => debugMenu;
 #endif
 
-    // <Version> from AsuMech.csproj flows into the assembly version; surface it in the
+    // <Version> from AnoMech.csproj flows into the assembly version; surface it in the
     // title bar. Use a ### id so the window identity stays "MainWindow" across versions.
     private static readonly string TitleText = TitleWithVersion();
 

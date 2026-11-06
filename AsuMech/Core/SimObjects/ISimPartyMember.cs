@@ -26,6 +26,13 @@ public interface ISimPartyMember : ISimObject, IPositioned
     // Only the local player under bot control takes the status: the client moves that character at
     // its own speed. Bots are moved at the sim's speed and, like humans who didn't press Sprint, show none.
     void UseSprint(float duration) { }
+
+    byte ClassJob { get; }
+
+    // Same split as UseSprint: presses `actionId` at `target` (null: themselves) with the effects
+    // JobActions gives a player's press; one aimed at an enemy lands on it (SimEnemy.Attacked).
+    // False when KO'd, locked out of actions, or the target is gone.
+    bool UseAction(uint actionId, SimCharacter? target = null) => false;
 }
 
 // Bridges the party-member death model onto SimCharacter-typed call sites. Party
