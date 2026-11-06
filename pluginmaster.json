@@ -6,7 +6,7 @@
         "Description": "Asunnya's fork of AnoMech: spawns fake party members and bosses client-side so you can practice raid mechanics without a full party. Everything from AnoMech, plus Savage (M9S to M11S), DSR, UCOB and UWU, and a Learn mode that guides you through each strat. Questions, strats and bug reports: https://discord.gg/y6kTkdaXjz",
         "Changelog": "0.6.0.2: Guided and Assisted for UMAD P5 Celestriad and Exaflares, FRU Crystallize Time and UCOB P5 Exaflares; a Discord link in the window and the feedback popup. 0.6.0.1: a recording you sent is removed from your disk (Settings can keep a copy), and Settings can delete every saved recording. 0.6: AnoMech is now AsuMech. Uninstall AnoMech: AsuMech imports its settings (relay, streaks, recent fights) the first time it starts. New: a Learn mode that guides you through each strat step by step, with the strat's toolbox picture and a thumbs up/down on every step; Report a problem from inside a run (a solo run pauses while you write, and the run's details are sent with it); scenario and strat requests no longer need a GitHub account; your best streak shows beside your streak. Multiplayer now uses the AsuMech server by default.",
         "InternalName": "AsuMech",
-        "AssemblyVersion": "0.6.0.1",
+        "AssemblyVersion": "0.6.0.2",
         "RepoUrl": "https://github.com/Asunnya/AsuMech",
         "ApplicableVersion": "any",
         "Tags": [
@@ -18,11 +18,11 @@
         ],
         "DalamudApiLevel": 15,
         "IconUrl": "https://raw.githubusercontent.com/Asunnya/AsuMech/asunnya-release/images/icon6464.png",
-        "DownloadLinkInstall": "https://github.com/Asunnya/AsuMech/releases/latest/download/latest.zip",
-        "DownloadLinkTesting": "https://github.com/Asunnya/AsuMech/releases/latest/download/latest.zip",
-        "DownloadLinkUpdate": "https://github.com/Asunnya/AsuMech/releases/latest/download/latest.zip",
+        "DownloadLinkInstall": "https://github.com/Asunnya/AsuMech/releases/download/v0.6.0.2/latest.zip",
+        "DownloadLinkTesting": "https://github.com/Asunnya/AsuMech/releases/download/v0.6.0.2/latest.zip",
+        "DownloadLinkUpdate": "https://github.com/Asunnya/AsuMech/releases/download/v0.6.0.2/latest.zip",
         "IsHide": false,
         "IsTestingExclusive": false,
-        "LastUpdate": "1794002858"
+        "LastUpdate": "1794008123"
     }
 ]
