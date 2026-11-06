@@ -1,7 +1,20 @@
 {
   "scenario": "DsrP2ThordanScenario",
   "strat": "NAUR (PF)",
-  "sources": [],
+  "sources": [
+    {
+      "label": "NAUR - Start + Strength of the Ward",
+      "url": "https://raidplan.io/plan/NDX-6bF2djrDMB-v"
+    },
+    {
+      "label": "NAUR - Sanctity of the Ward pt. 1 - DRK-relative dodges",
+      "url": "https://raidplan.io/plan/2CYKJu6IHzBdolZu"
+    },
+    {
+      "label": "NAUR - Sanctity of the Ward pt. 2 - Meteors",
+      "url": "https://raidplan.io/plan/Src8CpFxCAUUuZEM"
+    }
+  ],
   "steps": [
     {
       "key": {

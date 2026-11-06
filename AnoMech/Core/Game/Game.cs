@@ -1,4 +1,5 @@
 using System;
+using AnoMech.Core.Game.Ai;
 using AnoMech.Core.Game.Party;
 using AnoMech.Core.Native.Interfaces;
 using AnoMech.Core.SimObjects;
@@ -21,6 +22,7 @@ public sealed class Game : IDisposable
     public IZone? Zone => instance?.Zone;
     public SessionMode? Mode => instance?.Mode;
     public IScenario? ActiveScenario => run?.Scenario;
+    public IScenarioAi? ActiveStrat => run is { SelectedAi: { } i } r && i >= 0 && i < r.Scenario.AiStrats.Count ? r.Scenario.AiStrats[i] : null;
     public bool Paused => run?.Paused ?? false;
     public SessionStatus Status => run?.Status ?? (instance is null ? SessionStatus.Offline : SessionStatus.InZone);
     // The current run, else the one that ended last, so its result outlives a Stop.

@@ -1,7 +1,16 @@
 {
   "scenario": "TopP5DeltaScenario",
   "strat": "Standard",
-  "sources": [],
+  "sources": [
+    {
+      "label": "NAUR - P5: Run: Dynamis - Delta (Toolbox)",
+      "url": "https://ff14.toolboxgaming.space/?id=732288275415761&preview=1"
+    },
+    {
+      "label": "NAUR - P5: Run: Dynamis - Delta (Slides)",
+      "url": "https://docs.google.com/presentation/d/1yjCvFiTwW19vQVdMSQ6CPYUFFgaGLCaiF0uxESCyUvo/edit?usp=sharing"
+    }
+  ],
   "steps": [
     {
       "key": {

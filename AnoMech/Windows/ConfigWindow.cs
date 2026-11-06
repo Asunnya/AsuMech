@@ -153,6 +153,9 @@ public class ConfigWindow : Window, IDisposable
 
         ImGui.Separator();
 
+        var botInspector = configuration.ShowBotInspector;
+        if (Pills.Checkbox("Explain the targeted bot", ref botInspector)) { configuration.ShowBotInspector = botInspector; configuration.Save(); }
+        if (ImGui.IsItemHovered()) ImGui.SetTooltip("Target a bot during a run to see which strat call sent it where, and the lesson's rule for that step.");
         var timelinePanel = configuration.ShowTimelinePanel;
         if (Pills.Checkbox("Show the next casts during a lesson", ref timelinePanel)) { configuration.ShowTimelinePanel = timelinePanel; configuration.Save(); }
         if (ImGui.IsItemHovered()) ImGui.SetTooltip("The scenario's embedded cast timeline with a countdown, top right, and the lesson's steps marked among the casts. Never in Exam.");

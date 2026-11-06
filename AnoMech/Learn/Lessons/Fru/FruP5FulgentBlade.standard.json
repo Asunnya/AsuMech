@@ -1,7 +1,20 @@
 {
   "scenario": "FruP5FulgentBladeScenario",
   "strat": "Standard",
-  "sources": [],
+  "sources": [
+    {
+      "label": "NAUR LesBin - UltiProject: full FRU Phase 5 guide",
+      "url": "https://slides.com/ultiproject/frup5/scroll"
+    },
+    {
+      "label": "NAUR LesBin - Advanced Exalines theory",
+      "url": "https://docs.google.com/document/d/1tJ0ANAgAwSqM1Ytc1eyRaal-ewbkGcdHmrup6sO0078/edit?tab=t.0#heading=h.kyvt2kb6brld"
+    },
+    {
+      "label": "NAUR LesBin - P5 Exawaves center-dodge guides",
+      "url": "https://docs.google.com/presentation/d/1ClPP-09eMGydyCoaxyN2x0hu_6O5CevudtTdoOh4q1g/edit#slide=id.p1"
+    }
+  ],
   "steps": [
     {
       "key": {

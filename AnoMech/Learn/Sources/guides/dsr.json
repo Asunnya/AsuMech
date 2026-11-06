@@ -1,0 +1,555 @@
+{
+  "fight": "DSR",
+  "family": "Dsr",
+  "title": "Dragonsong's Reprise (Ultimate) - DSR",
+  "source": "https://naurffxiv.com/ultimate/dsr",
+  "guide": null,
+  "captured": null,
+  "credits": "NAUR",
+  "sections": [
+    {
+      "title": "(header)",
+      "links": [
+        {
+          "label": "Source",
+          "url": "https://naurffxiv.com/ultimate/dsr",
+          "kind": "other",
+          "section": "(header)",
+          "scenarios": []
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "P1: Adelphel, Grinnaux and Charibert",
+      "links": [
+        {
+          "label": "Toolbox: Vault Knights",
+          "url": "https://ff14.toolboxgaming.space/?id=802461081524561&preview=1#1",
+          "kind": "toolbox",
+          "section": "P1: Adelphel, Grinnaux and Charibert",
+          "scenarios": [
+            "DsrP1KnightsScenario"
+          ]
+        }
+      ],
+      "rules": [
+        {
+          "text": "Interrupt order: Adel tank > phys ranged > Adel tank.",
+          "scenarios": [
+            "DsrP1KnightsScenario"
+          ]
+        },
+        {
+          "text": "Protean baits:   H > M > R > T.",
+          "scenarios": [
+            "DsrP1KnightsScenario"
+          ]
+        },
+        {
+          "text": "Puddle drops:    drop E/W, boss-relative; alternate each drop.",
+          "scenarios": [
+            "DsrP1KnightsScenario"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "P2: King Thordan",
+      "links": [
+        {
+          "label": "Start + Strength of the Ward",
+          "url": "https://raidplan.io/plan/NDX-6bF2djrDMB-v",
+          "kind": "raidplan.io",
+          "section": "P2: King Thordan",
+          "scenarios": [
+            "DsrP2ThordanScenario"
+          ]
+        },
+        {
+          "label": "Sanctity of the Ward pt. 1 - DRK-relative dodges",
+          "url": "https://raidplan.io/plan/2CYKJu6IHzBdolZu",
+          "kind": "raidplan.io",
+          "section": "P2: King Thordan",
+          "scenarios": [
+            "DsrP2ThordanScenario"
+          ]
+        },
+        {
+          "label": "Sanctity of the Ward pt. 2 - Meteors",
+          "url": "https://raidplan.io/plan/Src8CpFxCAUUuZEM",
+          "kind": "raidplan.io",
+          "section": "P2: King Thordan",
+          "scenarios": [
+            "DsrP2ThordanScenario",
+            "DsrP2MeteorsScenario"
+          ]
+        }
+      ],
+      "rules": [
+        {
+          "text": "Meteor role always takes the outer towers.",
+          "scenarios": [
+            "DsrP2ThordanScenario",
+            "DsrP2MeteorsScenario"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "P3: Nidhogg",
+      "links": [
+        {
+          "label": "Toolbox: Nidhogg",
+          "url": "https://ff14.toolboxgaming.space/?id=267799249146271&preview=1",
+          "kind": "toolbox",
+          "section": "P3: Nidhogg",
+          "scenarios": [
+            "DsrP3NidhoggScenario"
+          ]
+        }
+      ],
+      "rules": [
+        {
+          "text": "Westhogg: arrows face west.",
+          "scenarios": [
+            "DsrP3NidhoggScenario"
+          ]
+        },
+        {
+          "text": "Enumeration adjust priority: CW > CCW > Diagonal. Ranged and healers plant.",
+          "scenarios": [
+            "DsrP3NidhoggScenario"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "P4: The Eyes",
+      "links": [
+        {
+          "label": "Toolbox: The Eyes",
+          "url": "https://ff14.toolboxgaming.space/?id=613699253336171&preview=1",
+          "kind": "toolbox",
+          "section": "P4: The Eyes",
+          "scenarios": [
+            "DsrP4EyesScenario"
+          ]
+        }
+      ],
+      "rules": [
+        {
+          "text": "G1: NW / CCW.  G2: NE / CW.",
+          "scenarios": [
+            "DsrP4EyesScenario"
+          ]
+        },
+        {
+          "text": "3rd dive swaps: follow the 1st dive priority.",
+          "scenarios": [
+            "DsrP4EyesScenario"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Intermission: Rewind",
+      "links": [
+        {
+          "label": "Toolbox: Intermission",
+          "url": "https://ff14.toolboxgaming.space/?id=999851866521561&preview=1",
+          "kind": "toolbox",
+          "section": "Intermission: Rewind",
+          "scenarios": []
+        }
+      ],
+      "rules": [
+        {
+          "text": "Tank LB: as soon as Haurchefant appears.",
+          "scenarios": []
+        }
+      ]
+    },
+    {
+      "title": "P5: Dark King Thordan",
+      "links": [
+        {
+          "label": "Wrath of the Heavens - Toolbox",
+          "url": "https://ff14.toolboxgaming.space/?id=514795714993271&preview=1",
+          "kind": "toolbox",
+          "section": "P5: Dark King Thordan",
+          "scenarios": [
+            "DsrP5WrathScenario"
+          ]
+        },
+        {
+          "label": "Death of the Heavens - Toolbox",
+          "url": "https://ff14.toolboxgaming.space/?id=414790163993271&preview=1",
+          "kind": "toolbox",
+          "section": "P5: Dark King Thordan",
+          "scenarios": [
+            "DsrP5DeathScenario"
+          ]
+        }
+      ],
+      "rules": [
+        {
+          "text": "Knights on the outside: relative north.",
+          "scenarios": [
+            "DsrP5WrathScenario"
+          ]
+        },
+        {
+          "text": "Blue defamation: 4 notches NW, or the line below the marker.",
+          "scenarios": [
+            "DsrP5WrathScenario"
+          ]
+        },
+        {
+          "text": "Divebomb: opposite the WAR (behind the mage).",
+          "scenarios": [
+            "DsrP5WrathScenario"
+          ]
+        },
+        {
+          "text": "Lightnings: towards the wall; party in front of the WAR.",
+          "scenarios": [
+            "DsrP5WrathScenario"
+          ]
+        },
+        {
+          "text": "WAR: relative north.",
+          "scenarios": [
+            "DsrP5DeathScenario"
+          ]
+        },
+        {
+          "text": "Pre-quake positions depend on your spot in the conga line (numbers 1-4 from west to east, left to right): Dooms 1 and 4:   E/W middle ring Dooms 2 and 3:   NW/NE outer wall Nothing 1 and 4: E/W outer wall Nothing 2 and 3: SW/SE outer wall The Nothing players \"wrap\" around the south half of the arena, the Doom players around the north half.",
+          "scenarios": [
+            "DsrP5DeathScenario"
+          ]
+        },
+        {
+          "text": "Knockback positions: Dooms anchor, non-Dooms adjust.",
+          "scenarios": [
+            "DsrP5DeathScenario"
+          ]
+        },
+        {
+          "text": "(Source page has a \"DotH Quake Dodge\" image - not captured here.)",
+          "scenarios": [
+            "DsrP5DeathScenario"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "P6: Nidhogg and Hraesvelgr",
+      "links": [
+        {
+          "label": "Toolbox: Double Dragon",
+          "url": "https://ff14.toolboxgaming.space/?id=426762112878561&preview=1",
+          "kind": "toolbox",
+          "section": "P6: Nidhogg and Hraesvelgr",
+          "scenarios": [
+            "DsrP6DoubleDragonsScenario",
+            "DsrP6CauterizeScenario"
+          ]
+        }
+      ],
+      "rules": [
+        {
+          "text": "G1: north / Nidhogg.  G2: south / Hraesvelgr.",
+          "scenarios": [
+            "DsrP6DoubleDragonsScenario",
+            "DsrP6CauterizeScenario"
+          ]
+        },
+        {
+          "text": "Rot pass: random DPS > Tank 1 > Tank 2 > Melee > Caster.",
+          "scenarios": [
+            "DsrP6DoubleDragonsScenario",
+            "DsrP6CauterizeScenario"
+          ]
+        },
+        {
+          "text": "Tank rot priority: WAR > GNB >>>> PLD > DRK.",
+          "scenarios": [
+            "DsrP6DoubleDragonsScenario",
+            "DsrP6CauterizeScenario"
+          ]
+        },
+        {
+          "text": "(Source page has a \"Static WB2 Positions\" image - not captured here.)",
+          "scenarios": [
+            "DsrP6DoubleDragonsScenario",
+            "DsrP6CauterizeScenario"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "P7: Dragon-king Thordan",
+      "links": [
+        {
+          "label": "Toolbox: Dragon-King Thordan",
+          "url": "https://ff14.toolboxgaming.space/?id=448767858029561&preview=1",
+          "kind": "toolbox",
+          "section": "P7: Dragon-king Thordan",
+          "scenarios": [
+            "DsrP7DragonKingScenario"
+          ],
+          "layout": "NAUR"
+        }
+      ],
+      "rules": [
+        {
+          "text": "MRH trinities: G1 (numbers) first, then G2 (letters).",
+          "scenarios": [
+            "DsrP7DragonKingScenario"
+          ]
+        },
+        {
+          "text": "3-3-2 stacks: G1 NW, G2 NE, tanks south.",
+          "scenarios": [
+            "DsrP7DragonKingScenario"
+          ]
+        },
+        {
+          "text": "6-1-1 stacks: G1 and G2 NW, kitchen-sinking tank NE, invulning tank south.",
+          "scenarios": [
+            "DsrP7DragonKingScenario"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "General resources",
+      "links": [
+        {
+          "label": "Mitigation sheet (NAUR DSR mit)",
+          "url": "https://tinyurl.com/naur-dsr-mit",
+          "kind": "shortlink",
+          "section": "General resources",
+          "scenarios": []
+        }
+      ],
+      "rules": []
+    }
+  ],
+  "mitigation": [
+    {
+      "label": "Mitigation sheet (NAUR DSR mit)",
+      "url": "https://tinyurl.com/naur-dsr-mit"
+    }
+  ],
+  "waymarks": [],
+  "scenarios": {
+    "DsrP1KnightsScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=802461081524561&preview=1#1",
+          "credits": "NAUR (Toolbox: Vault Knights)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Toolbox: Vault Knights",
+          "url": "https://ff14.toolboxgaming.space/?id=802461081524561&preview=1#1"
+        }
+      ],
+      "rules": [
+        "Interrupt order: Adel tank > phys ranged > Adel tank.",
+        "Protean baits:   H > M > R > T.",
+        "Puddle drops:    drop E/W, boss-relative; alternate each drop."
+      ]
+    },
+    "DsrP2ThordanScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/NDX-6bF2djrDMB-v",
+          "credits": "NAUR (Start + Strength of the Ward)"
+        },
+        {
+          "url": "https://raidplan.io/plan/2CYKJu6IHzBdolZu",
+          "credits": "NAUR (Sanctity of the Ward pt. 1 - DRK-relative dodges)"
+        },
+        {
+          "url": "https://raidplan.io/plan/Src8CpFxCAUUuZEM",
+          "credits": "NAUR (Sanctity of the Ward pt. 2 - Meteors)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Start + Strength of the Ward",
+          "url": "https://raidplan.io/plan/NDX-6bF2djrDMB-v"
+        },
+        {
+          "label": "NAUR - Sanctity of the Ward pt. 1 - DRK-relative dodges",
+          "url": "https://raidplan.io/plan/2CYKJu6IHzBdolZu"
+        },
+        {
+          "label": "NAUR - Sanctity of the Ward pt. 2 - Meteors",
+          "url": "https://raidplan.io/plan/Src8CpFxCAUUuZEM"
+        }
+      ],
+      "rules": [
+        "Meteor role always takes the outer towers."
+      ]
+    },
+    "DsrP2MeteorsScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/Src8CpFxCAUUuZEM",
+          "credits": "NAUR (Sanctity of the Ward pt. 2 - Meteors)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Sanctity of the Ward pt. 2 - Meteors",
+          "url": "https://raidplan.io/plan/Src8CpFxCAUUuZEM"
+        }
+      ],
+      "rules": [
+        "Meteor role always takes the outer towers."
+      ]
+    },
+    "DsrP3NidhoggScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=267799249146271&preview=1",
+          "credits": "NAUR (Toolbox: Nidhogg)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Toolbox: Nidhogg",
+          "url": "https://ff14.toolboxgaming.space/?id=267799249146271&preview=1"
+        }
+      ],
+      "rules": [
+        "Westhogg: arrows face west.",
+        "Enumeration adjust priority: CW > CCW > Diagonal. Ranged and healers plant."
+      ]
+    },
+    "DsrP4EyesScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=613699253336171&preview=1",
+          "credits": "NAUR (Toolbox: The Eyes)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Toolbox: The Eyes",
+          "url": "https://ff14.toolboxgaming.space/?id=613699253336171&preview=1"
+        }
+      ],
+      "rules": [
+        "G1: NW / CCW.  G2: NE / CW.",
+        "3rd dive swaps: follow the 1st dive priority."
+      ]
+    },
+    "DsrP5WrathScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=514795714993271&preview=1",
+          "credits": "NAUR (Wrath of the Heavens - Toolbox)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Wrath of the Heavens - Toolbox",
+          "url": "https://ff14.toolboxgaming.space/?id=514795714993271&preview=1"
+        }
+      ],
+      "rules": [
+        "Knights on the outside: relative north.",
+        "Blue defamation: 4 notches NW, or the line below the marker.",
+        "Divebomb: opposite the WAR (behind the mage).",
+        "Lightnings: towards the wall; party in front of the WAR."
+      ]
+    },
+    "DsrP5DeathScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=414790163993271&preview=1",
+          "credits": "NAUR (Death of the Heavens - Toolbox)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Death of the Heavens - Toolbox",
+          "url": "https://ff14.toolboxgaming.space/?id=414790163993271&preview=1"
+        }
+      ],
+      "rules": [
+        "WAR: relative north.",
+        "Pre-quake positions depend on your spot in the conga line (numbers 1-4 from west to east, left to right): Dooms 1 and 4:   E/W middle ring Dooms 2 and 3:   NW/NE outer wall Nothing 1 and 4: E/W outer wall Nothing 2 and 3: SW/SE outer wall The Nothing players \"wrap\" around the south half of the arena, the Doom players around the north half.",
+        "Knockback positions: Dooms anchor, non-Dooms adjust.",
+        "(Source page has a \"DotH Quake Dodge\" image - not captured here.)"
+      ]
+    },
+    "DsrP6DoubleDragonsScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=426762112878561&preview=1",
+          "credits": "NAUR (Toolbox: Double Dragon)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Toolbox: Double Dragon",
+          "url": "https://ff14.toolboxgaming.space/?id=426762112878561&preview=1"
+        }
+      ],
+      "rules": [
+        "G1: north / Nidhogg.  G2: south / Hraesvelgr.",
+        "Rot pass: random DPS > Tank 1 > Tank 2 > Melee > Caster.",
+        "Tank rot priority: WAR > GNB >>>> PLD > DRK.",
+        "(Source page has a \"Static WB2 Positions\" image - not captured here.)"
+      ]
+    },
+    "DsrP6CauterizeScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=426762112878561&preview=1",
+          "credits": "NAUR (Toolbox: Double Dragon)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Toolbox: Double Dragon",
+          "url": "https://ff14.toolboxgaming.space/?id=426762112878561&preview=1"
+        }
+      ],
+      "rules": [
+        "G1: north / Nidhogg.  G2: south / Hraesvelgr.",
+        "Rot pass: random DPS > Tank 1 > Tank 2 > Melee > Caster.",
+        "Tank rot priority: WAR > GNB >>>> PLD > DRK.",
+        "(Source page has a \"Static WB2 Positions\" image - not captured here.)"
+      ]
+    },
+    "DsrP7DragonKingScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=448767858029561&preview=1",
+          "layout": "NAUR",
+          "credits": "NAUR (Toolbox: Dragon-King Thordan)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Toolbox: Dragon-King Thordan",
+          "url": "https://ff14.toolboxgaming.space/?id=448767858029561&preview=1"
+        }
+      ],
+      "rules": [
+        "MRH trinities: G1 (numbers) first, then G2 (letters).",
+        "3-3-2 stacks: G1 NW, G2 NE, tanks south.",
+        "6-1-1 stacks: G1 and G2 NW, kitchen-sinking tank NE, invulning tank south."
+      ]
+    }
+  },
+  "guideText": []
+}

@@ -5,6 +5,9 @@ by Sui, Mitama, Yabba
 Source:  https://naurffxiv.com/ultimate/top#remastered-resources
 Errors:  suiseiffxiv or dumplinhg on Discord
 ========================================================================
+@fight: TOP
+@family: Top
+@credits: NAUR
 
 ------------------------------------------------------------------------
 Videos
@@ -25,10 +28,12 @@ P1: Omega (Beetle)
   Toolbox: https://ff14.toolboxgaming.space/?id=832999250798471&preview=1
   Slides:  https://docs.google.com/presentation/d/1eOViXZYLosAFmuOWAQwAK6KwnfoC3iTQUeM6nQyKL48/edit?usp=sharing
 
+@scenarios: TopP2PartySynergyScenario
 P2: Omega-M and Omega-F
   Toolbox: https://ff14.toolboxgaming.space/?id=324285310725761&preview=1
   Slides:  https://docs.google.com/presentation/d/1j-z91BI9i2LDOtp-qQzucqittpsvkecvmG3bXPV_9xs/edit?usp=sharing
 
+@scenarios: -
 P3: Omega Reconfigured (Final Omega)
   Toolbox: https://ff14.toolboxgaming.space/?id=243183080764761&preview=1
   Slides:  https://docs.google.com/presentation/d/1ncZ3riDOf056wxkCAFto3aX-4TWOMVO4gFfrQkQNMdY/edit?usp=sharing
@@ -37,18 +42,22 @@ P4: Blue Screen
   Toolbox: https://ff14.toolboxgaming.space/?id=142998596798471&preview=1
   Slides:  https://docs.google.com/presentation/d/1wsYwsYXF9zIj2hXFJ3aTz_WLvIbaieKAApS6ExRdOsk/edit?usp=sharing
 
+@scenarios: TopP5DeltaScenario
 P5: Run: Dynamis - Delta
   Toolbox: https://ff14.toolboxgaming.space/?id=732288275415761&preview=1
   Slides:  https://docs.google.com/presentation/d/1yjCvFiTwW19vQVdMSQ6CPYUFFgaGLCaiF0uxESCyUvo/edit?usp=sharing
 
+@scenarios: TopP5SigmaScenario
 P5: Run: Dynamis - Sigma
   Toolbox: https://ff14.toolboxgaming.space/?id=107380954136761&preview=1
   Slides:  https://docs.google.com/presentation/d/1iLZQxsN1pN0YwGf1u0QtpASi2Q-PSxhJrnMZjw1246I/edit?usp=sharing
 
+@scenarios: TopP5OmegaScenario
 P5: Run: Dynamis - Omega
   Toolbox: https://ff14.toolboxgaming.space/?id=078384491946761&preview=1
   Slides:  https://docs.google.com/presentation/d/1oxxFMaGJEEgQyEgj6ENC0Y23O5Mi10Ap72h2ctPu68A/edit?usp=sharing
 
+@scenarios: TopP6WaveCannon2Scenario
 P6: Alpha Omega
   Toolbox: https://ff14.toolboxgaming.space/?id=829484027197761&preview=1
   Slides:  https://docs.google.com/presentation/d/1NjFeRT-6ORKjR8ZZzDdktTOnJwuLNGyuUif1aNvKwU8/edit?usp=sharing
@@ -70,6 +79,7 @@ Intermission
 Monitors (P3)
 [stgy:aWYVmREYBkoTECOsYxwInhynMvdZ31IPHphrDNhCva-Y0E5pnccin-DTHA9PcV04DuMUkGBIoOXoJJCLZYjTDGyLHYj1EjVrPsR8ca0pmyAa7K0IBFQEXFASo1zbYG4lM6Qgzofspgf6nc3itfvcjNYKp4d6L9R8nq4KcT4P1vCFkaLTVEjkAmD+gR0Jz0BJHF4mPb3h7Ho3yep9x6PUplm6w4DpJI+s1L5yncsyeNJT-NTw4duXtScujbIOWCQ7smUYe8Z3m6wR6GC5hMLq+jw2wTZIBLF1rrwU6PJoBWC9-gJCAE7220BXfs7qq9-acArmoGK8LkZUth349XYyrhy0MuZ7Cj0iPLrpENJu27AFJeyze+cxbnWE+71GeISeRfUgRVNFwuG0NB18]
 
+@scenarios: TopP5SigmaScenario
 P5 Sigma - far glitch
 [stgy:a-56vxyw+Uwm3PyeNbQMxFypxsWJm+KIY0K738YNWS+xAKZOlLUpM2FJXIXUoQR4-WNRT9DZ97ZUwZqcjxfzaDCoXCXWCivH1trvVMFBQb9zWMbkxb8nEbQVMIympVPQD8di3yLEhP-NeEGUMhfLQJF42+icoxbp4YwA66GHRepwGTdL-xvcRvVt23tF-W0XD9bki-HeTGsVDzOeHZFA8UujQcaxG3mNL8Mcf0iKsXSXgEenrABHKegu+K+I94XLYKQ4ReLzjCIXL9GDGzKy6t9J9AYlYucIbpgY7JSX5YskrfzLxfER0bRTISXHr4ZN5LWzR1cdCIQUCN2H0]
 
@@ -79,6 +89,7 @@ P5 Sigma - mid glitch
 P5 Sigma pt. 2
 [stgy:aDQ36EUP9jto-DDFhCOkJbiXlTeOfkKB-k7HVQFrLOf45yO1VZgoQc0mcTN0E0VtD+WGYbpKkWgEPxc2os2xRpq9o3osGMTUJAlrzPzkwZ9fpSYWyGljVr1Naa-I-FUryXhcTPqUTcd9m5wx4pc+YLJoXyZvyvw05fGYJJiy6nu5QjCb2hcj2svYAAiNgMZf-QRe9udhmuyQ7E-QlVhVf2wiUvkbz6GNqL1j3G0-LdEyHjFHR149BI1j6pMM9aB2aQfI51R16FHINyDsM28LkNfgGAsvmUk3pSpiAxwgIbSuzxX+WeKQb69rtmXtwWOxwWbioCf2Sld3Cdu64tuj7TMRsskvDY8tuxPZAkP7CL+rt13EBv6NCAoa3fonfe6aFVBp1DKt2ermiUu-guS1KjALkRU8qXUOEZPIeMCBSysqBfn2AsMnnCuzPTBaNdFS-4CtPSdyP5VDts1I1Haz0295C8wLkPjlTMANTxx3aznFiyGGBcC6DsY4143FBbYzDfAxlL]
 
+@scenarios: TopP5OmegaScenario
 P5 Omega pt. 1
 [stgy:am6PGqRVdgdyj9m9IVmMyLwBqXLhx0iMOnonYhlsDd9KKAJOnVV3J3FqnVnNcoDa0yOOqwMWBl8aVG8YybJ1+IORofRPZwKPOf0N90pcrNO75TKcA-W1m-5KKU9M2fqMemVuTMS5dPIgRcUCHC1EcZeICZTRrLPbAsNu3G5KS7W5DyUGKd8Z5OOnTeTovUaN5qG0Gf5FQPLjQd4D8MUebAZ0zXXXjAsosq4GHzjVwuR6DHb399as3Oh5kPClwR0rXBHaAb732zCSe4xqU2BiDYizSTud98zJKzK6MuKH0BPnMb9KPhr3zHsTqp+tjIN8ntbLVAc4oJPJL4sl-Dik5gDrcHyrluuH7TxfU7m3BbbKEMHRnupXLPMosy73fWzUMDYdGh-WP4spa2HIRvYKwuTG4X739M-IxsDQuL-ojhvwLAlMy8KBfUf25nnY181M0isMymd3+tnsB5XBQ84nw45X6VKpzYaStR1w+59iJDow1uDS-eFdVYLXCh2I3Wazw+5WTt-mpg34XjLi5F]
 

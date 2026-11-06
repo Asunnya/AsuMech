@@ -1,7 +1,12 @@
 {
   "scenario": "DsrP5WrathScenario",
   "strat": "NA PF",
-  "sources": [],
+  "sources": [
+    {
+      "label": "NAUR - Wrath of the Heavens - Toolbox",
+      "url": "https://ff14.toolboxgaming.space/?id=514795714993271&preview=1"
+    }
+  ],
   "steps": [
     {
       "key": {

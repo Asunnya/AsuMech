@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using System.Collections.Generic;
 using AnoMech.Core.Game;
 using AnoMech.Core.Game.Ai;
 using AnoMech.Core.Game.Party;
@@ -25,12 +27,48 @@ internal sealed class StepDrillRunner : IDisposable
     public int Runs { get; private set; }
     private float idle;
 
+    // An adaptive drill's steps still to come, and the current step's run of in-place results.
+    private readonly Queue<LessonStep> queued = new();
+    public int Streak { get; private set; }
+    public int Queued => queued.Count;
+
     public StepDrillRunner(Plugin plugin, Game game)
     {
         this.plugin = plugin;
         this.game = game;
         game.RunStarted += OnRunStarted;
+        LearnSession.ReportReady += OnReport;
         Instance = this;
+    }
+
+    // Drills each step until StepDrillPlanner.AdaptiveStreak runs in a row put the player in place,
+    // then the next; the last one done ends the drill.
+    public void StartAdaptive(LessonReport report, IReadOnlyList<LessonStep> steps)
+    {
+        if (steps.Count == 0) return;
+        queued.Clear();
+        foreach (var step in steps.Skip(1)) queued.Enqueue(step);
+        Streak = 0;
+        Start(report, steps[0]);
+    }
+
+    private void OnReport(LessonReport report)
+    {
+        if (Active is not { } spec || !ReferenceEquals(report.Lesson, spec.Lesson)) return;
+        var result = report.Results.LastOrDefault(r => ReferenceEquals(r.Step.Step, spec.Step));
+        if (result.Step is null) return;
+        Streak = result.Result == StepResult.OnTime ? Streak + 1 : 0;
+        if (Streak < StepDrillPlanner.AdaptiveStreak) return;
+        Streak = 0;
+        if (queued.Count == 0)
+        {
+            if (Runs > 0) Plugin.ChatGui.Print($"[AsuMech] Drill done: {StepDrillPlanner.AdaptiveStreak} in a row on every step.");
+            End();
+            return;
+        }
+        var next = queued.Dequeue();
+        Active = spec with { Step = next, Window = StepDrillPlanner.Window(next) };
+        Plugin.ChatGui.Print($"[AsuMech] Next in the drill: {next.Title ?? MasteryStore.StepId(next.Key)}.");
     }
 
     public void Start(LessonReport report, LessonStep step)
@@ -54,6 +92,8 @@ internal sealed class StepDrillRunner : IDisposable
     public void End()
     {
         Active = null;
+        queued.Clear();
+        Streak = 0;
         Plugin.Practice.AutoRestart = false;
     }
 
@@ -90,6 +130,7 @@ internal sealed class StepDrillRunner : IDisposable
     public void Dispose()
     {
         game.RunStarted -= OnRunStarted;
+        LearnSession.ReportReady -= OnReport;
         if (ReferenceEquals(Instance, this)) Instance = null;
     }
 }

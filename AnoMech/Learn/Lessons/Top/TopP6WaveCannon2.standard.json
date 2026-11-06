@@ -1,7 +1,16 @@
 {
   "scenario": "TopP6WaveCannon2Scenario",
   "strat": "Standard",
-  "sources": [],
+  "sources": [
+    {
+      "label": "NAUR - P6: Alpha Omega (Toolbox)",
+      "url": "https://ff14.toolboxgaming.space/?id=829484027197761&preview=1"
+    },
+    {
+      "label": "NAUR - P6: Alpha Omega (Slides)",
+      "url": "https://docs.google.com/presentation/d/1NjFeRT-6ORKjR8ZZzDdktTOnJwuLNGyuUif1aNvKwU8/edit?usp=sharing"
+    }
+  ],
   "steps": [
     {
       "key": {

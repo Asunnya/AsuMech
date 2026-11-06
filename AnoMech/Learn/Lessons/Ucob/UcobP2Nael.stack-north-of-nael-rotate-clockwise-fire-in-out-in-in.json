@@ -1,7 +1,16 @@
 {
   "scenario": "UcobP2NaelScenario",
   "strat": "Stack north of Nael, rotate clockwise, fire in-out-in-in",
-  "sources": [],
+  "sources": [
+    {
+      "label": "NAUR - Raidplan: Nael",
+      "url": "https://raidplan.io/plan/DpoJr4oE_kGz_gRU"
+    },
+    {
+      "label": "NAUR - Raidplan: Divebombs",
+      "url": "https://raidplan.io/plan/vi2rSC6mwW_d_QJF"
+    }
+  ],
   "steps": [
     {
       "key": {

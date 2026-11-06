@@ -4,10 +4,14 @@ NAUR (NA Party Finder) strats and resources
 Source:  https://naurffxiv.com/ultimate/dsr
 Detailed guide: "NAUR - Detailed DSR Guide.docx" (same folder)
 ========================================================================
+@fight: DSR
+@family: Dsr
+@credits: NAUR
 
 ------------------------------------------------------------------------
 P1: Adelphel, Grinnaux and Charibert
 ------------------------------------------------------------------------
+@scenarios: DsrP1KnightsScenario
 Toolbox: Vault Knights
   https://ff14.toolboxgaming.space/?id=802461081524561&preview=1#1
 
@@ -18,11 +22,13 @@ Toolbox: Vault Knights
 ------------------------------------------------------------------------
 P2: King Thordan
 ------------------------------------------------------------------------
+@scenarios: DsrP2ThordanScenario
 Raidplans:
   Start + Strength of the Ward
     https://raidplan.io/plan/NDX-6bF2djrDMB-v
   Sanctity of the Ward pt. 1 - DRK-relative dodges
     https://raidplan.io/plan/2CYKJu6IHzBdolZu
+@scenarios: DsrP2ThordanScenario, DsrP2MeteorsScenario
   Sanctity of the Ward pt. 2 - Meteors
     https://raidplan.io/plan/Src8CpFxCAUUuZEM
 
@@ -31,6 +37,7 @@ Raidplans:
 ------------------------------------------------------------------------
 P3: Nidhogg
 ------------------------------------------------------------------------
+@scenarios: DsrP3NidhoggScenario
 Toolbox: Nidhogg
   https://ff14.toolboxgaming.space/?id=267799249146271&preview=1
 
@@ -41,6 +48,7 @@ Toolbox: Nidhogg
 ------------------------------------------------------------------------
 P4: The Eyes
 ------------------------------------------------------------------------
+@scenarios: DsrP4EyesScenario
 Toolbox: The Eyes
   https://ff14.toolboxgaming.space/?id=613699253336171&preview=1
 
@@ -58,6 +66,7 @@ Toolbox: Intermission
 ------------------------------------------------------------------------
 P5: Dark King Thordan
 ------------------------------------------------------------------------
+@scenarios: DsrP5WrathScenario
 Wrath of the Heavens - Toolbox
   https://ff14.toolboxgaming.space/?id=514795714993271&preview=1
 
@@ -66,6 +75,7 @@ Wrath of the Heavens - Toolbox
   - Divebomb: opposite the WAR (behind the mage).
   - Lightnings: towards the wall; party in front of the WAR.
 
+@scenarios: DsrP5DeathScenario
 Death of the Heavens - Toolbox
   https://ff14.toolboxgaming.space/?id=414790163993271&preview=1
 
@@ -84,6 +94,7 @@ Death of the Heavens - Toolbox
 ------------------------------------------------------------------------
 P6: Nidhogg and Hraesvelgr
 ------------------------------------------------------------------------
+@scenarios: DsrP6DoubleDragonsScenario, DsrP6CauterizeScenario
 Toolbox: Double Dragon
   https://ff14.toolboxgaming.space/?id=426762112878561&preview=1
 
@@ -95,6 +106,8 @@ Toolbox: Double Dragon
 ------------------------------------------------------------------------
 P7: Dragon-king Thordan
 ------------------------------------------------------------------------
+@scenarios: DsrP7DragonKingScenario
+@layout: NAUR
 Toolbox: Dragon-King Thordan
   https://ff14.toolboxgaming.space/?id=448767858029561&preview=1
 

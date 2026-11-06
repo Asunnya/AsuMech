@@ -1,0 +1,438 @@
+{
+  "fight": "FRU",
+  "family": "Fru",
+  "title": "Futures Rewritten (Ultimate) - FRU",
+  "source": "https://naurffxiv.com/ultimate/fru",
+  "guide": "https://naurffxiv.com/ultimate/fru/guide",
+  "captured": null,
+  "credits": "NAUR LesBin",
+  "sections": [
+    {
+      "title": "(header)",
+      "links": [
+        {
+          "label": "Source",
+          "url": "https://naurffxiv.com/ultimate/fru",
+          "kind": "other",
+          "section": "(header)",
+          "scenarios": []
+        },
+        {
+          "label": "Guide",
+          "url": "https://naurffxiv.com/ultimate/fru/guide",
+          "kind": "other",
+          "section": "(header)",
+          "scenarios": []
+        },
+        {
+          "label": "Feedback: NAUR Discord, Feedback and Suggestions channel",
+          "url": "https://discord.com/invite/naurffxiv",
+          "kind": "other",
+          "section": "(header)",
+          "scenarios": []
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "P1: Fatebreaker",
+      "links": [
+        {
+          "label": "Entire phase - Role + Fixed Tether OR Role ONLY Utopia, Conga FoF",
+          "url": "https://tinyurl.com/lesbin-p1",
+          "kind": "shortlink",
+          "section": "P1: Fatebreaker",
+          "scenarios": []
+        },
+        {
+          "label": "Entire phase - Role + Fixed Tether OR Role ONLY Utopia, Conga FoF",
+          "url": "https://docs.google.com/presentation/d/1Pm3BkfrJqjcm7688RrNDdh4oYuYS_VmHr6ALqjbZInE/edit#slide=id.g319371557f7_0_162",
+          "kind": "slides",
+          "section": "P1: Fatebreaker",
+          "scenarios": []
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "P2: Usurper of Frost (Shiva)",
+      "links": [
+        {
+          "label": "Diamond Dust / Light Rampant - Partner Swap DD4/4 + EW Light Rampant",
+          "url": "https://tinyurl.com/lesbin-p2",
+          "kind": "shortlink",
+          "section": "P2: Usurper of Frost (Shiva)",
+          "scenarios": [
+            "FruP2DiamondDustScenario",
+            "FruP2LightRampantScenario"
+          ]
+        },
+        {
+          "label": "Diamond Dust / Light Rampant - Partner Swap DD4/4 + EW Light Rampant",
+          "url": "https://docs.google.com/presentation/d/1VqIifgNf8RzXIWb8EGGVdKvOtKk0HmhPcHIMpizYuig/edit#slide=id.g31ad41a9148_0_9",
+          "kind": "slides",
+          "section": "P2: Usurper of Frost (Shiva)",
+          "scenarios": [
+            "FruP2DiamondDustScenario",
+            "FruP2LightRampantScenario"
+          ]
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "Intermission: Ice Veil (Crystals)",
+      "links": [
+        {
+          "label": "Intermission: Ice Veil (Crystals)",
+          "url": "https://tinyurl.com/lesbin-intermission",
+          "kind": "shortlink",
+          "section": "Intermission: Ice Veil (Crystals)",
+          "scenarios": []
+        },
+        {
+          "label": "Intermission: Ice Veil (Crystals)",
+          "url": "https://docs.google.com/presentation/d/1bYN8lpz2WG7OwSIZ1ZgHKWsAN1hiPP4QMwvMrrnMs9Q/edit#slide=id.g319de1b9bc2_77_9",
+          "kind": "slides",
+          "section": "Intermission: Ice Veil (Crystals)",
+          "scenarios": []
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "P3: Oracle of Darkness (Gaia)",
+      "links": [
+        {
+          "label": "Ultimate Relativity - G1 Adjust Role Quadrant, Buddy Swaps",
+          "url": "https://tinyurl.com/lesbin-ur",
+          "kind": "shortlink",
+          "section": "P3: Oracle of Darkness (Gaia)",
+          "scenarios": [
+            "FruP3UltimateRelativityScenario"
+          ]
+        },
+        {
+          "label": "Ultimate Relativity - G1 Adjust Role Quadrant, Buddy Swaps",
+          "url": "https://docs.google.com/presentation/d/1ncHCSP8NUA_XlrdiRYVmHUgtuMiT_g0q_TpISp6KbyI/edit?usp=sharing",
+          "kind": "slides",
+          "section": "P3: Oracle of Darkness (Gaia)",
+          "scenarios": [
+            "FruP3UltimateRelativityScenario"
+          ]
+        },
+        {
+          "label": "Sextuple Apocalypse - G1 Adjust Static Spreads, Multi-Swap | Safespot Color Apoc version",
+          "url": "https://raidplan.io/plan/gU44027CtpmKs-sC",
+          "kind": "raidplan.io",
+          "section": "P3: Oracle of Darkness (Gaia)",
+          "scenarios": [
+            "FruP3ApocalypseScenario"
+          ]
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "P4: Roommates (Oracle + Usurper)",
+      "links": [
+        {
+          "label": "Darklit Dragonsong - Role Quadrant, Healer Plant NW",
+          "url": "https://tinyurl.com/lesbin-darklit",
+          "kind": "shortlink",
+          "section": "P4: Roommates (Oracle + Usurper)",
+          "scenarios": [
+            "FruP4DarklitDragonsongScenario"
+          ]
+        },
+        {
+          "label": "Darklit Dragonsong - Role Quadrant, Healer Plant NW",
+          "url": "https://docs.google.com/presentation/d/1kFM5ggrIj86Mc2EcYS5RfFgF_pawSRk7-vryQmQb2Is/edit?usp=sharing",
+          "kind": "slides",
+          "section": "P4: Roommates (Oracle + Usurper)",
+          "scenarios": [
+            "FruP4DarklitDragonsongScenario"
+          ]
+        },
+        {
+          "label": "Crystallize Time - Early Pop",
+          "url": "https://tinyurl.com/lesbin-ct",
+          "kind": "shortlink",
+          "section": "P4: Roommates (Oracle + Usurper)",
+          "scenarios": [
+            "FruP4CrystallizeTimeScenario"
+          ]
+        },
+        {
+          "label": "Crystallize Time - Early Pop",
+          "url": "https://docs.google.com/presentation/d/1dz7IPrYxMPT1Qc81aLi-s8pVQQ3AzD_P6nheLcdhH0o/edit?usp=sharing",
+          "kind": "slides",
+          "section": "P4: Roommates (Oracle + Usurper)",
+          "scenarios": [
+            "FruP4CrystallizeTimeScenario"
+          ]
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "P5: Pandora",
+      "links": [
+        {
+          "label": "UltiProject: full FRU Phase 5 guide",
+          "url": "https://slides.com/ultiproject/frup5/scroll",
+          "kind": "slides",
+          "section": "P5: Pandora",
+          "scenarios": [
+            "FruP5FulgentBladeScenario",
+            "FruP5ParadiseRegainedScenario"
+          ]
+        },
+        {
+          "label": "Advanced Exalines theory",
+          "url": "https://docs.google.com/document/d/1tJ0ANAgAwSqM1Ytc1eyRaal-ewbkGcdHmrup6sO0078/edit?tab=t.0#heading=h.kyvt2kb6brld",
+          "kind": "doc",
+          "section": "P5: Pandora",
+          "scenarios": [
+            "FruP5FulgentBladeScenario",
+            "FruP5ParadiseRegainedScenario"
+          ]
+        },
+        {
+          "label": "P5 Exawaves center-dodge guides",
+          "url": "https://docs.google.com/presentation/d/1ClPP-09eMGydyCoaxyN2x0hu_6O5CevudtTdoOh4q1g/edit#slide=id.p1",
+          "kind": "slides",
+          "section": "P5: Pandora",
+          "scenarios": [
+            "FruP5FulgentBladeScenario",
+            "FruP5ParadiseRegainedScenario"
+          ]
+        },
+        {
+          "label": "P5 Exawaves center-dodge guides",
+          "url": "https://www.youtube.com/watch?v=o1gh24Y0i_k",
+          "kind": "video",
+          "section": "P5: Pandora",
+          "scenarios": [
+            "FruP5FulgentBladeScenario",
+            "FruP5ParadiseRegainedScenario"
+          ]
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "2. GENERAL RESOURCES AND MITIGATION",
+      "links": [
+        {
+          "label": "LesBin cheatsheet (by Tenkay)",
+          "url": "https://tinyurl.com/LesBinFRUCheatsheet",
+          "kind": "shortlink",
+          "section": "2. GENERAL RESOURCES AND MITIGATION",
+          "scenarios": []
+        },
+        {
+          "label": "Clips of each mechanic + extra diagrams",
+          "url": "https://ultistrats.com/guides/fru/",
+          "kind": "other",
+          "section": "2. GENERAL RESOURCES AND MITIGATION",
+          "scenarios": []
+        },
+        {
+          "label": "Helpful echo chat macros",
+          "url": "https://pastebin.com/2h3vsmH5",
+          "kind": "other",
+          "section": "2. GENERAL RESOURCES AND MITIGATION",
+          "scenarios": []
+        },
+        {
+          "label": "Simulations",
+          "url": "https://pastebin.com/WPW4PwTC",
+          "kind": "other",
+          "section": "2. GENERAL RESOURCES AND MITIGATION",
+          "scenarios": []
+        },
+        {
+          "label": "Markers",
+          "url": "https://pastebin.com/V2DtqCWk",
+          "kind": "other",
+          "section": "2. GENERAL RESOURCES AND MITIGATION",
+          "scenarios": []
+        },
+        {
+          "label": "Archived strats (old, unused)",
+          "url": "https://pastebin.com/Gd8satrK",
+          "kind": "other",
+          "section": "2. GENERAL RESOURCES AND MITIGATION",
+          "scenarios": []
+        },
+        {
+          "label": "NAUR Room Mits",
+          "url": "https://tinyurl.com/NAUR-Room-Mits",
+          "kind": "shortlink",
+          "section": "2. GENERAL RESOURCES AND MITIGATION",
+          "scenarios": []
+        },
+        {
+          "label": "FRU Mitty",
+          "url": "https://tinyurl.com/frumitty",
+          "kind": "shortlink",
+          "section": "2. GENERAL RESOURCES AND MITIGATION",
+          "scenarios": []
+        },
+        {
+          "label": "FMBG",
+          "url": "http://mit.lesb.in/",
+          "kind": "other",
+          "section": "2. GENERAL RESOURCES AND MITIGATION",
+          "scenarios": []
+        }
+      ],
+      "rules": []
+    }
+  ],
+  "mitigation": [
+    {
+      "label": "NAUR Room Mits",
+      "url": "https://tinyurl.com/NAUR-Room-Mits"
+    },
+    {
+      "label": "FRU Mitty",
+      "url": "https://tinyurl.com/frumitty"
+    }
+  ],
+  "waymarks": [],
+  "scenarios": {
+    "FruP2DiamondDustScenario": {
+      "plans": [],
+      "sources": [
+        {
+          "label": "NAUR LesBin - Diamond Dust / Light Rampant - Partner Swap DD4/4 + EW Light Rampant",
+          "url": "https://docs.google.com/presentation/d/1VqIifgNf8RzXIWb8EGGVdKvOtKk0HmhPcHIMpizYuig/edit#slide=id.g31ad41a9148_0_9"
+        }
+      ],
+      "rules": []
+    },
+    "FruP2LightRampantScenario": {
+      "plans": [],
+      "sources": [
+        {
+          "label": "NAUR LesBin - Diamond Dust / Light Rampant - Partner Swap DD4/4 + EW Light Rampant",
+          "url": "https://docs.google.com/presentation/d/1VqIifgNf8RzXIWb8EGGVdKvOtKk0HmhPcHIMpizYuig/edit#slide=id.g31ad41a9148_0_9"
+        }
+      ],
+      "rules": []
+    },
+    "FruP3UltimateRelativityScenario": {
+      "plans": [],
+      "sources": [
+        {
+          "label": "NAUR LesBin - Ultimate Relativity - G1 Adjust Role Quadrant, Buddy Swaps",
+          "url": "https://docs.google.com/presentation/d/1ncHCSP8NUA_XlrdiRYVmHUgtuMiT_g0q_TpISp6KbyI/edit?usp=sharing"
+        }
+      ],
+      "rules": []
+    },
+    "FruP3ApocalypseScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/gU44027CtpmKs-sC",
+          "credits": "NAUR LesBin (Sextuple Apocalypse - G1 Adjust Static Spreads, Multi-Swap | Safespot Color Apoc version)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR LesBin - Sextuple Apocalypse - G1 Adjust Static Spreads, Multi-Swap | Safespot Color Apoc version",
+          "url": "https://raidplan.io/plan/gU44027CtpmKs-sC"
+        }
+      ],
+      "rules": []
+    },
+    "FruP4DarklitDragonsongScenario": {
+      "plans": [],
+      "sources": [
+        {
+          "label": "NAUR LesBin - Darklit Dragonsong - Role Quadrant, Healer Plant NW",
+          "url": "https://docs.google.com/presentation/d/1kFM5ggrIj86Mc2EcYS5RfFgF_pawSRk7-vryQmQb2Is/edit?usp=sharing"
+        }
+      ],
+      "rules": []
+    },
+    "FruP4CrystallizeTimeScenario": {
+      "plans": [],
+      "sources": [
+        {
+          "label": "NAUR LesBin - Crystallize Time - Early Pop",
+          "url": "https://docs.google.com/presentation/d/1dz7IPrYxMPT1Qc81aLi-s8pVQQ3AzD_P6nheLcdhH0o/edit?usp=sharing"
+        }
+      ],
+      "rules": []
+    },
+    "FruP5FulgentBladeScenario": {
+      "plans": [],
+      "sources": [
+        {
+          "label": "NAUR LesBin - UltiProject: full FRU Phase 5 guide",
+          "url": "https://slides.com/ultiproject/frup5/scroll"
+        },
+        {
+          "label": "NAUR LesBin - Advanced Exalines theory",
+          "url": "https://docs.google.com/document/d/1tJ0ANAgAwSqM1Ytc1eyRaal-ewbkGcdHmrup6sO0078/edit?tab=t.0#heading=h.kyvt2kb6brld"
+        },
+        {
+          "label": "NAUR LesBin - P5 Exawaves center-dodge guides",
+          "url": "https://docs.google.com/presentation/d/1ClPP-09eMGydyCoaxyN2x0hu_6O5CevudtTdoOh4q1g/edit#slide=id.p1"
+        }
+      ],
+      "rules": []
+    },
+    "FruP5ParadiseRegainedScenario": {
+      "plans": [],
+      "sources": [
+        {
+          "label": "NAUR LesBin - UltiProject: full FRU Phase 5 guide",
+          "url": "https://slides.com/ultiproject/frup5/scroll"
+        },
+        {
+          "label": "NAUR LesBin - Advanced Exalines theory",
+          "url": "https://docs.google.com/document/d/1tJ0ANAgAwSqM1Ytc1eyRaal-ewbkGcdHmrup6sO0078/edit?tab=t.0#heading=h.kyvt2kb6brld"
+        },
+        {
+          "label": "NAUR LesBin - P5 Exawaves center-dodge guides",
+          "url": "https://docs.google.com/presentation/d/1ClPP-09eMGydyCoaxyN2x0hu_6O5CevudtTdoOh4q1g/edit#slide=id.p1"
+        }
+      ],
+      "rules": []
+    }
+  },
+  "guideText": [
+    {
+      "title": "Introduction",
+      "text": "########################################################################\nWritten by Tvnariea Reksane. Status names are shown as\n\"Name (duration)\"; the site renders them as hover tooltips.\n\nWelcome to NAUR's in-depth guide for Futures Rewritten (Ultimate).\n\nThis guide will cover each phase in detail and provide tips to help you clear and understand the fight, it will not explain different strats or mechanic solutions. As such, this guide should be used in tandem with other resources such as raidplans, powerpoints, or guide videos. Credit and thanks to Tvnariea Reksane for writing this guide.\n\nIf you have any questions regarding this guide, please feel free to join our Discord and ask them. Any issues or concerns can also be reported on the GitHub repository.\n\n--- Pre-Fight Notes ---\n\nBefore reading the guide, there are a couple things to note about the fight:\n\n    To unlock FRU, you will need to have cleared \"AAC Light-Heavyweight M4 (Savage)\" and then speak to the Wandering Minstrel in Tulliyollal.\n\n    When entering the instance, all players should try to be equipped with Best in Slot (BiS) gear as well as the highest tier of food and tinctures available. BiS gear is mandatory to clear the fight and will make the fight easier and more manageable with mistakes. Feel free to refer to the NAUR - Current FFXIV Ultimate BiS Sets spreadsheet for some example sets.\n\n    To better utilize this guide, please refer to the resources found in the FRU resource page. Many resources such as raidplans, mitigation plans, cheat sheets, and more can be found there.\n\n    It should also be noted that if a player fails a mechanic in this fight, they will often receive a \"Damage Down\".\n\n        The \"Damage Down\" debuff in FRU will reduce the damage dealt by the player by 90% for 2 minutes. In most cases, it is recommended for players to die when they receive this debuff as the \"Weakness\" debuff is shorter and reduces less damage. This is not always the case as some mechanics will require you to stay alive to resolve them but good to keep in mind.\n\n    All phases and major mechanics follow the Raidplans and Toolboxes found in the FRU resource page. These links are also attached to the respective phase or mechanic headings. If a heading is underlined with a hyperlink, it will take you to the respective toolbox or raidplan."
+    },
+    {
+      "title": "P1: Fatebreaker",
+      "text": "The fight begins with Fatebreaker, the boss from E11S. The mechanics will be quite familiar if you’ve done E11S, although there are no light attacks. To clear the phase, Fatebreaker must be defeated completely.\n\nThis phase is largely uptime, with a single downtime mechanic. Unless otherwise noted, any attack other than a spread, stack, raidwide, or tankbuster inflicts a Damage Down (2m), and all spreads and stacks inflict a Magic Vulnerability Up (2s).\n\n--- Sequence 1: Cyclonic Break ---\n\nFatebreaker immediately jumps into a mechanic sequence with a Cyclonic Break cast. During this cast, he will be surrounded by either fire or lightning. This will determine whether you need to stack in pairs or spread during the mechanic. There are different audio cues for the two elements: fire is accompanied by a whooshing sound and lightning by crackling.\n\nThe attack executes a narrow (22.5°) conal spread targeting each player, without an omen. These inflict Physical Vulnerability Up (2s), so any player hit by two or more will die. The location of these cones is saved and will be used for the rest of the mechanic.\n\n2 seconds after the first cones, a second set of cones go out on the same location. These must be dodged. At the same time, players will be hit by a fire or lightning attack:\n\n    If it is fire, then each DPS will be hit by Sinsmoke, a pair stack AoE. For each dead DPS, the attack will hit a random support instead, doubling up if fewer than four players are alive.\n\n    If it is lightning, then all players will be hit by Sinsmite, a spread AoE.\n\nAfter the second set of cones and stack/spread, two more sets of cones go out, one after the other. Each is rotated clockwise from the previous by 1/16th of a circle (22.5°, i.e. one cone’s width). Like the second set, these must be dodged.\n\nPowder Mark Trail\n\nAs Cyclonic Break resolves, Fatebreaker casts Power Mark Trail, a single-target tankbuster that inflicts both Powder Mark Trail (16s) and Physical Vulnerability Up (14s). The Powder Mark Trail will explode if the tank dies or at the start of the next mechanic, while the Physical Vulnerability Up will cause subsequent auto-attacks to be lethal.\n\n--- Sequence 2: Utopian Sky ---\n\nFatebreaker recenters, faces north, and begins casting Utopian Sky, once again is surrounded by fire or lightning. As before, this signals the upcoming spread or stack, and you can also tell them apart by the audio cue.\n\nOnce the cast completes, Fatebreaker goes untargetable and disappears, and the arena is be covered in a deep fog. If you’ve played E11S, you will recognize this from Prismatic Deception. Eight Fatebreaker clones—Fatebreaker's Image—will appear just outside the arena, one in each principal direction. Due to the fog, they can only be seen if you are nearby. Right after they appear, the Powder Mark Trail from earlier will expire, causing large AoE tankbusters to hit both the player originally hit by Powder Mark Trail and the player nearest to them.\n\nThree of the clones will raise their gunblades to point straight up and begin casting Blasting Zone, while the rest will keep theirs facing downwards and at an angle before disappearing. Fatebreaker reappears just before the casts complete, and begins charging a new Cyclonic Break. The fire or lightning element need not be the same as before.\n\nWhen the Blasting Zone completes, the three clones will cleave in front of them in a line. At the same time, players will be hit by an attack depending on the element charged during the Utopian Sky cast:\n\n    Sinbound Fire III, an LP stack AoE.\n    Sinbound Thunder III, a spread AoE.\n\nWhen Fatebreaker finishes casting, the second Cyclonic Break is exactly the same as the first, except that the element is random and may be different from before.\n\nTurn of the Heavens\n\nDuring the execution of Cyclonic Break, two more clones will appear: one just north of Fatebreaker, and one at the west side of the arena. The one next to Fatebreaker casts Turn of the Heavens with either fire or lightning, while the one on the edge will cast Burnt Strike. The audio cue indicates Fatebreaker’s element.\n\nAs the cast completes:\n\n    Four Halo of Flame and four Halo of Levin appear near the outside of the arena at cardinals and intercardinals. They are always positioned with Flame halos on the west or east side, and Levin halos on the other. The halos begin casting Brightfire.\n\n    Two clones appear at random intercardinals, tethered to two random players, and begin casting Bound of Faith. The tethered players also receive: Prey and Fated Burn Mark (15s)\n\n    One more clone appears at the north end of the arena, casting Burnt Strike.\n\nAfter the new adds begin casting, the first Burnt Strike goes off, cleaving in a line from west to east. The cleave repeats immediately, but is substantially wider the second time. A few seconds later, the second Burnt Strike goes off, cleaving from north to south. The follow-up strike will hit all players with a knockback east or west, away from the center. These knockbacks cannot be resisted.\n\nShortly afterwards, all the halos explode, dealing lethal damage in a circle. The halos that do not match the element of the Turn of the Heavens cast only explode directly underneath themselves. The halos that do match will explode inside the larger circle denoted on the floor.\n\nAt the same time, the two tethered players are lifted into the air with Floating Fetters (3s), then charged by the adds and hit with Sinsmoke. Unlike earlier, this Sinsmoke is an LP stack that inflicts Mark of Mortality (2m) if it hits fewer than 4 players. If the tethered player died, a random player will be targeted instead.\n\nBurnished Glory\n\nFatebreaker reappears shortly after Sinsmoke, and is immediately targetable. The sequence wraps up with Burnished Glory, a raidwide that inflicts a heavy Bleeding (15s).\n\n--- Sequence 3: Fall of Faith ---\n\nThe third sequence begins with a Fall of Faith cast. Fatebreaker will glow with fire or lightning energy, and mark a player with a tether and Prey. The tether will glow red or blue depending on the element being charged.\n\nOver the course of the cast, three clones will appear at the NW, N, and NE edges of the arena, in that order. Each will begin casting its own Fall of Faith with its own tether and Prey, for a total of four on four different targets.\n\nWhen the casts complete, similar to the end of the previous sequence, the boss or clone will lift their target into the air with Floating Fetters (3s) and charge at them. The attack is either Sinblaze or Sinsmite, depending on the element, but with completely new mechanics:\n\n    Sinblaze hits the targeted player as well as producing a 90° cone originating from the target, aimed towards the nearest player. The entire attack is an LP stack so to satisfy the stack, there must be at least three players inside the cone, plus the main target. If there are fewer than four players total hit by the attack, it will inflict Mark of Mortality (2m).\n\n    Sinsmite hits the targeted player and produces three 120° cones originating from them, aimed towards the three nearest players. Because these are so wide, positioning is critical.\n\nBoth Sinblaze and Sinsmite inflict Magic Vulnerability Up (4s), which lasts until after the next attack in the sequence. Thus, a player hit by two consecutive attacks will die.\n\nFatebreaker completes the sequence with another Burnished Glory and another Powder Mark Trail. Note that the DoT from the Burnished Glory will make the tankbuster require more mitigation/healing than the first time.\n\n--- Sequence 4: Burnt Strike ---\n\nFatebreaker casts Burnt Strike, glowing with fire or lightning. As he does so, three towers appear along the east or west edge of the arena. The total number of players required for the towers is always 6, but the distribution is random: it could be 1/1/4, 1/2/3, or 2/2/2 in any order.\n\nThe Burnt Strike is a north-south line cleave, followed by:\n\n    For fire, all players are knocked back east or west away from the center.\n    For lightning, a second, wider line cleave.\n\nRight after the follow-up attack, the towers will go off and, at the same time, the Powder Mark Trail detonates on its target and the newest player. If a tower is missed, it explodes in a heavy raidwide with Damage Down (2m).\n\n--- Enrage ---\n\nFatebreaker now casts Burnished Glory for a third and final time, with a long castbar. If the cast succeeds, the party wipes. To proceed to the next phase, Fatebreaker must be killed before the cast completes."
+    },
+    {
+      "title": "P2: Usurper of Frost",
+      "text": "As soon as Fatebreaker dies, the arena transitions to Shiva’s arena from E8S, and Shiva herself appears. Although she looks the same, Ryne is possessed by Mitron and is called the Usurper of Frost. But everyone still calls her Shiva.\n\nThis phase is the closest that FRU has to a trio phase, with two long downtime mechanics. Unlike a traditional trio phase, however, there is a little bit of uptime mechanic sprinkled in. To complete the phase, she must be brought down below 20% health before the end of the enrage. Also, unlike in the original fight, the edge of the arena is not a cliff but stays as the traditional Ultimate deathwall.\n\nAs before, unless otherwise noted, any attack other than a spread, stack, raidwide, or tankbuster inflicts Damage Down (2m), and all spreads and stacks inflict Magic Vulnerability Up (2s) to prevent players from taking multiple hits.\n\n--- Intro ---\n\nShiva kicks things off with Quadruple Slap, a tankbuster that only actually has two hits. It’s a typical one-two buster with room for a tank swap. It inflicts a cleansable Physical Vulnerability Up (25s), forcing a swap, cleanse, or invuln.\n\nAfter one follow-up auto—which can also be lethal, thanks to the vuln—Shiva teleports to south of center, faces north, and begins casting Mirror Image. This cast has no associated attack, but summons a light-form clone, the Oracle's Reflection, directly in the center of the arena. The Usurper of Frost herself remains in ice form. The two of them will bounce around a lot during the next mechanic.\n\n--- Sequence 1: Diamond Dust ---\n\nAoE Hell\n\nOnce the Reflection appears, Shiva casts Diamond Dust, a raidwide that kicks off the real mechanic. Note that the raidwide is slightly delayed from the end of the cast. Don’t mitigate too early. Shiva herself disappears, kicking off the long downtime mechanic.\n\nThree different things happen in rapid succession:\n\n    It wouldn’t be a Shiva fight without the classic circular AoEs around the outside of the arena.\n    The Oracle's Reflection begins casting either Axe Kick or Scythe Kick.\n    Four players–all DPS or all supports–are targeted by markers with a circular yellow omen.\n\nAll of these mechanics, and more, need to be solved simultaneously.\n\n    Omens for the classic circle AoEs—the true Diamond Dust —appear in the principal directions in three waves. The first wave has two circles, appearing opposite one another.\n\n    The second wave spreads out from the first wave: If the first wave was on a pair of cardinals, then the second wave will be on the four intercardinals.\n\n    Conversely, if the first wave was on intercardinals, then the second wave will be on the four cardinals.\n\n    The third wave will hit the two remaining cardinals or intercardinals, at 90° from the first wave.\n\n    All three waves must be completely dodged.\n\n    The Oracle's Reflection’s cast will be either a point-blank (Axe Kick) or a donut (Scythe Kick). These AoEs are very big: 1. The point-blank Axe Kick goes all the way out to the outer line/circle on the floor. 2. The donut Scythe Kick extends to well within the Reflection’s hitbox. The safe area is only as wide as the small four-pointed star within the inner circle.\n\n    The two attacks can be distinguished by her voice line: Axe Kick is accompanied by “Cleave!”, and Scythe Kick by “Reap!”\n\n    At the same time as the point-blank or donut, the Reflection also shoots out four The House of Light cones at the four nearest players.\n\n    These cones, combined with the four marker AoEs, create an 8-way spread.\n\n    The four circular markers go off moments after the kick, hitting their targets with Frigid Stone at the same time as the first Diamond Dust circles go off. These drop a second set of AoEs, 8-way lines, with the omens appearing a few seconds after the Frigid Stones hit. These 8-way lines are similar to the ones during Icelit Dragonsong in phase 2 of E8S.\n\n    The Oracle's Reflection moves out towards a principal direction and begins casting Sinbound Holy, while the Usurper of Frost reappears in the center of the arena. You will likely want to pay attention to the Reflection’s location, as it’s important later.\n\n    Without any warning, the Usurper performs Heavenly Strike, a knockback raidwide, and disappears.\n\n    This is the point where the second set of Diamond Dust AoEs go off. You must get knocked back into a spot that’s safe from both the line AoEs and Diamond Dust, with the final circles going off almost simultaneous with the lines.\n\nAfter all of this, it isn’t even over.\n\nThin Ice\n\nRight after the lines go off, Sinbound Holy targets both healers with four LP stacks each, in quick succession. Each hit leaves behind a puddle that inflicts Bleeding, forcing the party to keep moving.\n\nAs players run away from Sinbound Holy, the Usurper of Frost moves to the edge of the arena, in a random principal direction.\n\nAbout 4 seconds after the last puddle drops, without any other warning, she uses Shining Armor. This is a gaze attack that inflicts Damage Down (2m) and Stun (8s). The stun will make impossible to pass the next part of the mechanic.\n\nAdditionally, the arena will become Thin Ice icy. Moving will now send a player sliding most of the way across the arena. Two bosses will also swap appearances. The Usurper of Frost changes to light form, and will remain so for the rest of the phase, at the same time as the Oracle's Reflection changes to ice form.\n\nStillness & Silence\n\nThe Usurper will disappear while the Reflection begins casting either Twin Stillness or Twin Silence. Which attack she is using is also telegraphed by her voice line (and accompanying caption): either \"In stillness freeze!\" or \"Sink into silence!\"\n\nIf she uses Stillness, she will first cleave a massive 270° in front of her, leaving only a small safe area behind. She will then cleave 90° her, hitting exactly the small area that was just safe. If she uses Silence, she does the exact opposite, first with a small cleave behind then a very large cleave in front. Both cleaves are one-shots.\n\nThe snapshot on the first attack is right at the end of the first cast bar, with the second coming earlier than you might expect. In practice, the long slide required to get behind her, versus the short slide to get in front of her, mean that you have to move slightly earlier for Stillness.\n\nThe sequence finally wraps up as the Usurper of Frost reappears, targetable, in the center of the arena.\n\n--- Sequence 2: Mirror, Mirror ---\n\nHallowed Ray\n\nImmediately after reappearing, the Usurper begins casting Hallowed Ray. This is a full-party stack line AoE on a random player.\n\nThe only thing of note is that the attack direction snapshots quite early, so it’s actually possible for the targeted player to dodge it entirely. This is not consistent, however, so it can’t be used to avoid the mechanic.\n\nMirror, Mirror\n\nHer next cast is Mirror, Mirror. This move summons three Frozen Mirrors around the edge of the arena at principal directions. There will be two red mirrors and one blue mirror. The red mirrors will always be 90° apart, but the blue mirror can be anywhere, including in between them.\n\nThe Usurper begins casting Scythe Kick which is the same as before: a large donut with a very small hole, and four protean cones at the nearest four players. At exactly the same time, however, the blue mirror will also use the exact same move. Since Scythe Kick on its own is a four-way spread, two copies of it make for an eight-way spread.\n\nRight afterwards, the two red mirrors cast Reflected Scythe Kick. Unsurprisingly, this is the exact same move. But it must be solved so that none of the players clip each other.\n\nEach of the mirrors disappears shortly after\n\nBanish III\n\nShiva’s last cast in this segment is Banish III, which she begins casting right as the Reflected Scythe Kicks. During the cast, she’ll have a ring of light above her head, with either a single orb or four orbs orbiting on it.\n\nIf there’s only one orb, the attack is a pair stack targeted on DPS. If there’s four, it’s a spread targeted on DPS. Unlike in E8S, there are no indicators over individual players’ heads.\n\n--- Sequence 3: Light Rampant ---\n\nThe infamous mechanic from E8S is back, although it’s arguably not even as bad. Naturally enough, it kicks off with a teleport to center and the Light Rampant castbar. There’s a raidwide on this one, so make sure mits and shields are up.\n\nThis mechanic makes use of the Lightsteeped debuff, given out by various attacks through the mechanic:\n  Source                  Total stacks\n  Light Rampant           6\n  First wave towers       6\n  Powerful Light stacks   8\n  Second wave tower       4\n  House of Light spread   8\n\nThis is a total of 32 stacks, which is exactly enough to give 4 Lightsteeped to every player. This is very convenient, because 5 Lightsteeped causes a wipe. Everyone must get exactly four stacks.\n\nThe initial raidwide doles out several markers and debuffs. It is believed that these are given out completely at random, with no role-based patterns.\n\n    Two players receive a pink marker with a circular AoE omen.\n\n    The remaining six players each receive Chains of Everlasting Light (10s), visibly displaying as tethers connecting them to two other players. These tethers are not yet active.\n        Two of these players receive The Weight of Light (16s), indicated by large golden orbs above their heads.\n\n    Six stacks of Lightsteeped (36s) are distributed. The players with markers each receive one stack, and the remaining four are distributed randomly amongst all eight players.\n\n    So a player with a marker can receive 1 or 2 stacks, while a player with a tether can receive 0 or 1.\n\nWhile the debuffs are mostly random, the tethers are not. The two players with golden orbs are always tethered together. Additionally, provided the players stand roughly equally spaced, the tethers will not spawn crossed.3\n\nFirst Wave Towers\n\nA moment after the cast, Shiva disappears and six towers appear. The orientation is always the same: a perfect hexagon with points to the north and south.\n\nThe markers begin going off first with a series of four Luminous Hammer attacks each. These inflict Magic Vulnerability Up (1s), but more importantly they drop lethal puddles on the ground like Sinbound Holy. Don’t stand in bad.\n\nThe towers go off simultaneously with the third set of puddles, inflicting Lightsteeped (36s). A missed tower is a heavy raidwide with a Damage Down (2m). Although the towers do not inflict a Magic Vulnerability Up themselves, they are magic damage, so players taking a tower cannot also be hit by a Luminous Hammer.\n\nAt the same time as the towers go off, the Chains of Everlasting Light expire, becoming Curse of Everlasting Light (9s). This is indicated by the orbs in the middle of the tethers growing more brightly. Unlike in the original Light Rampant, for these tethers there is no maximum distance, but if any two tethered players get too close together before the debuffs expire, they will explode and cause a wipe.\n\nOrbs\n\nThe six silver orbs that descended on the towers, Holy Lights, hover in place above the ground.\n\nThree of them, in an equilateral triangle, begin casting Burst and display large circular omens. The other three follow suit shortly after. This is very similar to the fists during the phase 4 transition of TOP, if you are familiar with that fight.\n\nAs the second wave of omens appears, the Weight of Light detonate in a small circular AoE. This is Powerful Light, a LP stack that inflicts Lightsteeped (36s). If fewer than 4 players are in the stack, it additionally inflicts Mark of Mortality (2m). A 4-stack tower also appears in the center of the arena at the same time.\n\nAfter the Powerful Light—but not right after, so don’t move too soon!—the first wave of orbs explodes. The puddles begin disappearing in the sequence they were dropped, and the second wave of orbs explodes as Shiva reappears in the center. She remains untargetable as she begins casting Banish III. The telegraph and effects are identical to the first time she used it.\n\nSecond Wave Tower\n\n4 players must soak the tower to prevent the Damage Down (2m) raidwide and receive a stack of Lightsteeped (36s). Care must be taken that nobody takes on too many stacks.\n\nBanish III resolves a few seconds later.\n\nShiva wraps the mechanic up by casting House of Light, becoming targetable at the start of the cast.\n\nHouse of Light is an 8-way cone spread. This inflicts a final stack of Lightsteeped (36s) on every player. If executed correctly, everyone should now have 4 stacks. They will fall off harmlessly during the transition to the intermission.\n\n--- Enrage ---\n\nThe phase ends with Shiva casting Absolute Zero, the enrage. If the party does not bring her below 20% HP before it completes, it deals infinite damage and wipes the party. If she is brought below 20%, however, it is only a heavy raidwide. As the transition to the intermission begins, she knocks every back from the center, so don’t stand too far out and get pushed into the wall."
+    },
+    {
+      "title": "Intermission: Crystals",
+      "text": "Assuming the Usurper of Frost was successfully brought below 20% in her phase, there’s a short intermission phase before phase 3. After the Absolute Zero cast, Shiva knocks everyone back from center and inflicts Deep Freeze on everyone, forcing you to wait for a brief scene. Shiva becomes encased in ice, just like in E8N, and the arena becomes a bright icy blue.\n\n16 seconds later, the Deep Freeze lifts, and the crystals spawn. 4 Crystals of Light spawn on the cardinals far away from the boss, while 4 Crystals of Darkness spawn on the intercardinals close to the boss. The crystal covering the Usurper of Frost is called the Ice Veil, and it almost immediately begins casting Endless Ice Age, the enrage for the phase. You must destroy the Veil before the cast completes to progress to phase 3.\n\nThe crystals are all tethered to the Ice Veil, granting it Invincibility. If you destroy all the adds, the Invincibility will be removed and the Ice Veil will fall rapidly.\n\nGaia will also appear, channeling darkness energy into the crystal in an attempt to free Ryne. It doesn’t seem to be doing much, though…\n\nCrystal Attacks\n\nThere isn’t much in the way of mechanics in this intermission. Periodically, each of the Crystals of Light will target a large, circular AoE at the nearest player, while each fo the Crystals of Darkness will target the nearest player with a narrow cone.\n\nOddly, there’s no castbar for the big circles, but the narrow cones are called Sinbound Blizzard. You must be careful about aiming the cones, because if they hit a crystal, that crystal will receive Vulnerability Down for the remainder of the phase. The Vulnerability Down lowers the damage done to a Crystal of Darkness or the Ice Veil by 80%, but makes a Crystal of Light invulnerable.\n\nWith the second wave of AoEs, the Crystals of Light will target the nearest players with passable tethers. After the third wave, the targeted players will be hit by a series of three Hiemal Ray, small circular AoEs leaving behind puddles that inflict a DoT.\n\nThe Eternal Ice Fragment\n\nIf you destroy all the crystals and the Ice Veil, then the crystal holding Shiva shatters and the transition to phase 3 begins. An interactable Eternal Ice Fragment appears on the ground just in front of Shiva, but it shatters before anyone can interact with it. If you remember your lore, one of Gaia’s key memories you saved during E12N was of Ryne and Gaia making the fragment into a necklace. Its destruction seems portentious…\n\nAnd in actual fact, while you can proceed to the end of phase 4 without the Eternal Ice Fragment, you will be unable to enter phase 5 and clear the fight. Gaia’s voice line near the end of the phase, “Is my darkness not enough?!” is the clue to the alternate solution to the phase that’s required to clear.\n\nInstead of killing the Crystals of Darkness, they must all be left alive. If all four survive while the Crystals of Light die, they will begin channeling dark energy into Gaia and the Ice Veil. Note that using caster LB3 will instantly defeat the Crystals of Darkness, so it can’t normally be used if you want to clear the fight. In order to use it safely, all four Crystals of Darkness must first be given a Vulnerability Down from Sinbound Blizzard. That said, LB3 is still a great prog tool, because the Ice Veil absolutely melts1 if all the crystals are dead and there are no consequences until after phase 4.\n\nThe Ice Veil will lose its Invincibility and gain a Vulnerability Down in its place, reducing incoming damage by 50%. Gaia’s channeling will complete successfully, and near the end of the Endless Ice Age cast, Gaia will do her enormous hammer slam from E12N and remove a full half of the Ice Veil’s health bar.\n\nIf Gaia completes the hammer attack, then instead of shattering, the Eternal Ice Fragment will be absorbed into Shiva and you will be on the path to clearing the fight. Note that leaving the dark crystals alive is not enough: if the Ice Veil is killed before Gaia delivers her attack, then Shiva will not absorb the Fragment."
+    },
+    {
+      "title": "P3: Oracle of Darkness",
+      "text": "After the Ice Veil is broken and the intermission is completed, enjoy a long break through the lead-in of The Extreme as Gaia is possessed by Loghrif’s memories and takes up her role as the Oracle of Darkness.\n\nAs you might expect, this phase reprises mechanics from phase 2 of E12S. It’s a straightforward full-uptime phase where, again, you need to get the boss below 20% before enrage to proceed to the next phase.\n\n--- Intro ---\n\nAfter the 27 seconds or so of downtime for the transition, the Oracle of Darkness—or just Gaia, as everyone calls her—becomes targetable. She kicks things off with Hell's Judgment, which inflicts damage on everyone equal to their HP-1, ignoring mitigation and shields.\n\nThe usual effect of this is to set everyone to 1, but there’s a brief gap between the moment when damage is computed and when it’s applied. If your current HP changes in this time, you won’t go to exactly 1. Pay careful attention to the cooldowns of Max HP-increasing abilities, as it’s possible to die if they fall off after the snapshot.\n\n--- Sequence 1: Ultimate Relativity ---\n\nThe first sequence is Ultimate Relativity, with its classically over-the-top cast animation. The cast is a raidwide in addition to starting the mechanic off, but unlike the Relativity casts from E12S, it seems like it is simply a normal raidwide rather than shared damage. The message “The laws of time are in chaos!” appears on the screen, although it’s purely for flavour.\n\nThe arena floor changes from dark blue to a bright teal colour for the duration of the mechanic, but this is a purely cosmetic effect.\n\nSpells-in-Waiting\n\nWhat’s actually in chaos is everyone’s debuff bars, as everyone receives three spells-in-waiting. From left to right on the debuff bar, they are as follows:\n\n    Every player receives a 10-, 20-, or 30-second Spell-in-Waiting: Dark Fire III or Spell-in-Waiting: Dark Blizzard III:\n        Two supports and one DPS each receive Spell-in-Waiting: Dark Fire III (30s).\n        One support and one DPS each receive Spell-in-Waiting: Dark Fire III (20s).\n        Two DPS and one support each receive Spell-in-Waiting: Dark Fire III (10s).\n        I lied a little bit. Either the support with Spell-in-Waiting: Dark Fire III (10s) or the DPS with Spell-in-Waiting: Dark Fire III (30s) actually receives Spell-in-Waiting: Dark Blizzard III (20s) instead. However, for the rest of the debuff breakdown, I’m going to pretend the Spell-in-Waiting: Dark Blizzard III doesn’t exist, and all players receive Spell-in-Waiting: Dark Fire III. It simplifies the explanations.\n\n    Three players receive Spell-in-Waiting: Unholy Darkness: one for 10 seconds, one for 20, and one for 30. The duration will not match their Spell-in-Waiting: Dark Fire III or Spell-in-Waiting: Dark Blizzard III, but the recipients seem otherwise random.\n\n    Every player receives a 16- or 26-second Spell-in-Waiting: Return.\n        The three players with Spell-in-Waiting: Dark Fire III (30s) receive Spell-in-Waiting: Return (26s)\n        The other five players receive Spell-in-Waiting: Return (16s).\n\n    Every player receives a 43-second Spell-in-Waiting: Shadoweye, Spell-in-Waiting: Dark Water III, or Spell-in-Waiting: Dark Eruption:\n        The three players with Spell-in-Waiting: Dark Fire III (30s) receive Spell-in-Waiting: Shadoweye (43s).\n        The DPS with Spell-in-Waiting: Dark Fire III (20s) receives Spell-in-Waiting: Dark Water III (43s).\n        The remaining four players all receive Spell-in-Waiting: Dark Eruption (43s).\n\nIt perhaps comes as a bit of a surprise how tightly role-based the assignments are, given that this is an ultimate. Thankfully, though, it means that everything apart from the three Spell-in-Waiting: Unholy Darkness can be summarized in a single small table:\n  Support:\n    2x  Spell-in-Waiting: Dark Fire III (30s), Spell-in-Waiting: Return (26s), Spell-in-Waiting: Shadoweye (43s)\n    1x  Spell-in-Waiting: Dark Fire III (20s), Spell-in-Waiting: Return (16s), Spell-in-Waiting: Dark Eruption (43s)\n    1x  (Spell-in-Waiting: Dark Fire III (10s)/Spell-in-Waiting: Dark Blizzard III (20s)) Spell-in-Waiting: Return (16s), Spell-in-Waiting: Dark Eruption (43s)\n  DPS:\n    2x  Spell-in-Waiting: Dark Fire III (10s), Spell-in-Waiting: Return (16s), Spell-in-Waiting: Shadoweye (43s)\n    1x  Spell-in-Waiting: Dark Fire III (20s), Spell-in-Waiting: Return (16s), Spell-in-Waiting: Dark Water III (43s)\n    1x  (Spell-in-Waiting: Dark Blizzard III (20s)/Spell-in-Waiting: Dark Fire III (30s)) Spell-in-Waiting: Return (26s), Spell-in-Waiting: Shadoweye (43s)\n\nWhen Spell-in-Waiting: Return expires, the position of its bearer will be recorded with a blue marker, and the bearer will receive Return. The duration of the Return debuff will be either 24 or 14 seconds, so that the Return expires 40 seconds after the start of the mechanic. A ticking clock marker also appears above all players’ heads until the rewind occurs.\n\nAt the expiry of Return, all players receive Stun (4s) and are teleported back to their recorded positions. The Spell-in-Waiting: Dark Eruption, Spell-in-Waiting: Shadoweye, and Spell-in-Waiting: Dark Water III resolve before the Stun expires, so the recorded positions must solve these debuffs. Furthermore, due to the stun, the direction of facing can’t be changed, so players must be facing the correct direction to avoid the gaze attacks immediately before the rewind begins.\n\nHourglasses\n\nIn addition to the debuffs, Ultimate Relativity summons eight Delight's Hourglass, one on each principal direction. Because of their three-lobed appearance, and the various colours they had in E12S, they’re often called “traffic lights” in the community. They are all green in this fight, however, so the anology doesn’t work so well.\n\nRight after the Hourglasses appear, Gaia casts Speed. As she does so, three yellow lines and two purple lines—with bright orbs in the middle—connect her to some of the Hourglasses. Although the orientation is random, the pattern is always the same: the three yellow lines make a Y shape, while the two purple lines are horizontal relative to the Y. Note that Gaia herself does not change facing during this cast.\n\nThe effect of Speed is to set up the order in which the Hourglasses use their one attack, Sinbound Meltdown. The yellow-marked Hourglasses make up the first wave, the unmarked ones the second wave, and the purple ones the third wave. The three waves happen approximately 16, 26, and 36 seconds after the start of the mechanic, with the first two corresponding to the expiry of the Spell-in-Waiting: Return debuffs.\n\nAs the Hourglasses cast Sinbound Meltdown, there is an advance warning with either a clockwise yellow indicator, or a counterclockwise blue indicator, randomly selected for each Hourglass. This indicates the direction the attack will rotate.\n\nThe attack itself is a laser targeted on the nearest player to the Hourglass in question. Two seconds later, the second laser fires, rotated a bit in the direction originally indicated. Eight more follow, one second apart, creating a total arc of roughly 120° across ten shots.\n\nNote that the third wave of lasers will still be firing during the rewind to snapshotted positions, so players must be careful not to snapshot in positions where they will be hit.\n\nIntermezzo\n\nAs the last set of Hourglasses are firing, Gaia casts Shell Crusher and jumps to a random player, hitting them with a full-party stack. She subsequently casts Shockwave Pulsar, a heavy raidwide, and Black Halo, a tankbuster intended to be shared by both tanks.\n\nRelativity Timeline\n  t = 0              Buffs go out\n  t + 4 s            Speed cast begins; Tethers appear\n  t + 4 s            Speed cast completes; Tethers disappear\n  t + 10 s           Spell-in-Waiting: Dark Fire III (10s) and Spell-in-Waiting: Unholy Darkness (10s) detonate\n  t + 11 s           First Sinbound Meltdown casts begin; Rotation indicators appear\n  t + 16 s           Spell-in-Waiting: Return (16s) snapshot positions; First Sinbound Meltdown lasers begin\n  t + 20 s           Spell-in-Waiting: Dark Fire III (20s), Spell-in-Waiting: Dark Blizzard III (20s), and Spell-in-Waiting: Unholy Darkness (20s) detonate\n  t + 21 s           Second Sinbound Meltdown casts begin; Rotation indicators appear\n  t + 26 s           Spell-in-Waiting: Return (26s) snapshot positions; Second Sinbound Meltdown lasers begin\n  t + 30 s           Spell-in-Waiting: Dark Fire III (30s) and Spell-in-Waiting: Unholy Darkness (30s) detonate\n  t + 31 s           Third Sinbound Meltdown casts begin; Rotation indicators appear\n  t + 36 s           Third Sinbound Meltdown lasers begin\n  t + 40 s           Players stunned and returned to snapshotted positions\n  t + 43 s           Spell-in-Waiting: Dark Eruption (43s), Spell-in-Waiting: Shadoweye (43s), and Spell-in-Waiting: Dark Water III (43s) detonate\n  Sequence complete  Gaia begins casting Shell Crusher\n\n--- Sequence 2: Sextuple Apocalypse ---\n\nGaia’s second and final mechanic sequence begins with a cast of Spell-in-Waiting: Refrain. This cast gives her the Spell-in-Waiting: Refrain buff, but is purely cosmetic. As she casts a follow-up Dark Water III, stack markers will appear over the heads of six random party members. These markers are fake-outs, and will not resolve until later. So there’s no need to stack for them now.\n\nWhen the cast resolves, six random players receive Spell-in-Waiting: Dark Water III: two for 9 seconds, two for 28 seconds, and two for 37 seconds. These timings determine which players must be in separate LP stacks when they go off. The remaining two players will not have any debuffs. The delayed spells remain visible over players’ heads as spell-in-waiting markers until they fire.\n\nMoving Lights\n\nAs Gaia completes a cast of Apocalypse, the pattern on the arena floor changes from the six large circles to an eight-way geometric design with lines along each of the four orthogonal and diagnoal axes, and a single circle around the center.\n\nFor the next segment of the mechanic, lights appear on the ground, travelling along the lines and the outer circle. When a light appears, and every two seconds afterwards, when it reaches an intersection of one of the axes with the circle, a pulse of light is emitted vertically upwards, along with an expanding white circle. Each of these circles indicates an upcoming AoE, slightly bigger than 1/3 the width of the arena, but none of them resolve yet.\n\n    First, three circles appear in a straight line through the center. From the circles on the ring, two lights appear traveling in the same direction along the ring, either clockwise or counterclockwise. From the center, two lights appear traveling along the same axis that the circles were aligned on.\n\n    When the light reach the next intersections, the second set of circles appears. In addition to the four caused by the existing lights along the outer ring, forming a sort of hourglass shape, there is a circle in the center as well.\n\n    After the circle is emitted, the lights follow the same path, further along the ring.\n\n    There are two new lights moving out of the center this time, bringing the total to six.\n\n    At the next intersections, the six circles emitted now cover most of the arena, three in a row on opposite sides of the ring. The safe area is just a line through the center, offset 45° from the original axis, away from the direction the lights are traveling. For this wave, and the following ones, there are no circles in the center, so the center of the arena becomes safe.\n\n    The lights continue their journey around the ring for each of the remaining three waves. The safe spot is the same shape each time, vaguely line-shaped through the center of the arena, but each time offset 45° from the previous in the direction the lights are rotating.\n\nAfter the sixth wave of circles, the AoEs actually begin. Note that although the circles appeared every two seconds, the first wave of AoEs is only one second after the last circle. The remaining AoEs match the timing of the lights, with two seconds between each wave.\n\nThe Oracle’s Casts\n\nGaia casts Spirit Taker, starting just before the first circles appear. When this completes, she jumps at a random player and hits them with a small circular AoE. Anyone else hit by the AoE is knocked back from the targeted player, likely into the death wall. Immediately after the circles appear, the pair of Spell-in-Waiting: Dark Water III (10s) go off.\n\nJust after the fourth wave of circles, Gaia begins to cast Dark Eruption, causing spread markers to appear above everyone’s heads. These spreads are not spells-in-waiting and go off immediately after the cast bar, right after the second wave of circle AoEs.\n\nAfter the third wave of AoEs, Gaia starts a cast of Darkest Dance, finishing immediately after the final AoEs. The pair of Spell-in-Waiting: Dark Water III (29s) goes off right before those AoEs, near the end of the castbar, so there is very little time between the stack and Darkest Dance. Gaia jumps at the player farthest away from her, hitting them with an AoE tankbuster, followed in a few seconds after by a spin attack, hitting the entire party with a strong, non-resistable knockback from Gaia’s position along with a small amount of damage.\n\nThe arena changes back to normal just after she jumps. Shortly after the knockback, the last pair of Spell-in-Waiting: Dark Water III (38s) go off, marking the end of the mechanic.\n\nApocalypse Timeline\n  t = 0              Buffs go out\n  t + 3 s            Gaia begins casting Apocalypse\n  t + 7 s            Apocalypse cast completes\n  t + 9 s            Spirit Taker cast begins\n  t + 10 s           First light circles appear; Spell-in-Waiting: Dark Water III (10s) go off\n  t + 12 s           Spirit Taker connects; Second light circles appear\n  t + 14 s           Third light circles appear\n  t + 16 s           Fourth light circles appear\n  t + 18 s           Fifth light circles appear; Dark Eruption cast begins; Spread markers appear\n  t + 20 s           Sixth light circles appear\n  t + 21 s           First AoEs go off\n  t + 23 s           Second AoEs go off; Dark Eruption goes off\n  t + 25 s           Third AoEs go off\n  t + 26 s           Darkest Dance cast begins\n  t + 27 s           Fourth AoEs go off\n  t + 29 s           Fifth AoEs go off; Spell-in-Waiting: Dark Water III (29s) go off\n  t + 31 s           Sixth AoEs go off\n  t + 32 s           Darkest Dance tankbuster connects\n  t + 35 s           Darkest Dance knocks party back\n  t + 38 s           Spell-in-Waiting: Dark Water III (38s) go off\n  Sequence complete  Gaia begins casting Shockwave Pulsar\n\n--- Enrage ---\n\nGaia casts Shockwave Pulsar a second time before diving into Memory's End, her enrage cast. There is a very brief opportunity to reposition her a little bit in between the casts, which can technically affect the initial position of the phase 4 boss, although in practice it’s unlikely you can move her far enough to make a difference. Get her below 20% HP before the end of the castbar to turn it into “only” a heavy raidwide, and clear the phase.\n\nIn E12S, the enrage cast was notable for traveling relatively slowly out from the center, allowing players to put distance between them and the Oracle of Darkness in order to get an extra fraction of a second. That niche strat unfortunately isn’t applicable here, as whether or not you advance to the next phase is determined when the cast goes off."
+    },
+    {
+      "title": "P4: Roommates",
+      "text": "After getting the Oracle of Darkness below 20% HP, and surviving Memory's End, the Usurper of Frost will reappear at either the north or south side of the arena. She will always spawn on the opposite side from where Gaia was, and is immediately targetable.\n\nThis phase is a duo phase, with the Oracle of Darkness reappearing shortly after the phase begins. In order to complete the phase, both bosses must be defeated before the end of the enrage castbars.\n\nMaterialization & Fragment of Fate\n\nShiva’s first cast is Materialization. It causes a Fragment of Fate, a crystal containing one of Gaia’s memories, to appear at the northern apex of the arena. The Fragment of Fate has an HP bar and periodically emits a raidwide called Edge of Oblivion—or Depths of Oblivion if the necklace was not saved in the intermission. If it is hit by any of the targeted or avoidable attacks in the phase, it will be destroyed; otherwise it will survive the phase.\n\nIf it does not survive the phase, then the party will get the bad-ending phase 5. To advance to the true phase 5 and clear the fight, the Fragment must survive the phase, in addition to saving the Eternal Ice Fragment in the intermission. Players must take care to ensure that no attacks ever hit it, apart from unavoidable raidwides.\n\nSummoning Hraesvelgr\n\nAfter summoning the crystal, the Usurper of Frost summons Hraesvelgr to her, just like in phase 2 of E8S. There’s no cutscene, and she remains targetable the entire time.\n\nRight when she does so, the party’s positions are snapshotted. Without any warning, the snapshotted positions are hit by a series of 10 consecutive Akh Rhai AoEs, that fire in rapid succession. They hit the same positions repeatedly, so they only need to be dodged once.\n\nDuring the Akh Rhai, she will also make autoattacks on the top two enmity targets. And at around the sixth Akh Rhai, the Fragment of Fate emits a Edge of Oblivion. The Oracle of Darkness appears and becomes targetable around the ninth AoE.\n\nHP Balancing\n\nOnce the Oracle of Darkness appears, both bosses are targetable except during the one downtime mechanic of the phase. The party must be careful to balance their HP to within 5% of each other. If their HP is ever more than 5% apart, then the two Morn Afah casts later will become lethal.\n\nAfter the second Morn Afah, there is no longer a need to balance HP. The party can freely kill the bosses in either order. There is also no need to keep the boss HP balanced in between the Morn Afah casts, as long as they are balanced when the casts go off. A tether will appear between the two bosses during the cast to visually indicate an imbalance.\n\n--- Sequence 1: Darklit Dragonsong ---\n\nThe first of two mechanic sequences is Darklit Dragonsong, cast simultaneously by both bosses. It’s mostly another variation of Light Rampant, with Gaia repeating several mechanics seen already in phase 3. During the castbar, two light party stack markers appear on random players. These are Spell-in-Waiting stacks and do not resolve immediately.\n\nThe cast itself is a very heavy raidwide originating from the Usurper of Frost, so mitigation targeted on the Oracle of Darkness will have no effect. As it resolves:\n\n    The two players with stack markers receive Spell-in-Waiting: Dark Water III (19s).\n    Everyone receives Lightsteeped (12s).\n    Four players, exactly one of whom has Spell-in-Waiting: Dark Water III, are tethered together in with Refulgent Chain (7s). The players tethered are always one tank, one healer, and two DPS, and the tethers can connect them in any order, unlike in phase 2.\n    Two towers appear, north and south of center.\n\nAbout 4 seconds before the towers go off, the Refulgent Chain expire and become Refulgent Fate (14s). Unlike in phase 2, but like in E8S, these tethers will explode if the tethered players get either too close or too far apart. The towers are the perfect distance to be safely soaked by tethered players.\n\nShiva casts The Path of Light, resolving at the same time as towers, hitting the four closest players with cones. As in phase 2, both the towers and cones inflict Lightsteeped, so one player can’t be hit by both.\n\nAs the towers and cones resolve, Gaia begins casting Spirit Taker. This is the same as in P3: when it resolves, she leaps and hits a random player with a small circular AoE. Anyone else within the circle is knocked back and probably dies. Shiva follows this up with Hallowed Wings, a half-room cleave of either the east or west side, telegraphed by a glowing wing. The Spell-in-Waiting: Dark Water III resolve just before this cleave goes off.\n\nFinally, Gaia uses Somber Dance, only a few seconds after the Hallowed Wings. As before, this is a leaping one-two tankbuster on the farthest and then nearest players. The tank swap must be done with positioning, not Provoke.\n\nAkh Morn\n\nThe sequence wraps up with Akh Morn, followed by Morn Afah. Right before, there’s another Edge of Oblivion, followed by the bosses recentering—Shiva slightly west of center, and Gaia slightly east. They cast Akh Morn simultaneously.\n\nAkh Morn is a four-hit LP stack, with Shiva hitting her main target with columns of light, and Gaia hitting hers with columns of dark. These inflict Light's Design (4s) and Darkness's Design (4s), respectively, forcing players to remain in the same stack for the entire mechanic. It will be a bad day if both bosses are targeting the same player when the attack goes off.\n\nNotably, the damage from Akh Morn pierces invulnerability but is still subject to mitigation. This allows a tank with proper mitigation to survive a hit solo, but not with an invuln.\n\nMorn Afah\n\nRight after Akh Morn, the roommates simultaneously cast Morn Afah. This is a full-party stack AoE targeted on Shiva‘s top-enmity target, but if the bosses’ HPs are more than 5% apart when the cast goes off, it’s an instakill for anyone hit. It is not a raidwide even if the HP is imbalanced, so anyone not in the radius will always survive. Like Akh Morn, it pierces invulnerability but respects other mitigations.\n\nAs the attack comes from the Usurper of Frost, targeted mitigation on the Oracle of Darkness has no effect.\n\nTo give a visual clue that HP is imbalanced, during the cast bar, a tether can appear between the two bosses. If Gaia’s HP is too high, it will be dark-coloured; if Shiva’s HP is too high, it will be light-coloured.\n\n--- Sequence 2: Crystallize Time ---\n\nGaia teleports dead center, with Shiva just south of her, and the two cast Crystallize Time, their second big mechanic. The mechanic is a combination of Relativity and, from E8S, Wyrm's Lament. After the initial raidwide, predictably, everyone’s debuff bars are again thrown into chaos. Additionally, six Sorrow's Hourglasses spawn at the centers of each of the lines on the floor.\n\nThe raidwide originates from the Oracle of Darkness, so targeted mitigation on the Usurper of Frost has no effect on it.\n\nBoth bosses will go untargetable a few seconds after the cast, for the entire mechanic. A few seconds later, the Fragment of Fate, if still alive, will use an Edge of Oblivion.\n\nThere are a lot of parts to this mechanic, so I will lay them out separately.\n\nDebuffs\n\nDebuffs are entirely random except as noted. From left to right, they are as follows:\n\n    Everyone receives a primary Spell-in-Waiting:\n        One player receives Spell-in-Waiting: Dark Water III (12s).\n        One player receives Spell-in-Waiting: Dark Eruption (14s).\n        Two players receive Spell-in-Waiting: Dark Aero III (14s).\n        Three players receive Spell-in-Waiting: Dark Blizzard III (14s).\n        One player receives Spell-in-Waiting: Unholy Darkness (17s).\n    Everyone receives a Wyrmclaw or Wyrmfang debuff.\n        Two of the three players with Spell-in-Waiting: Dark Blizzard III receive Wyrmclaw (17s).\n        The two players with Spell-in-Waiting: Dark Aero III receive Wyrmclaw (40s).\n        The remaining players receive Wyrmfang (40s).\n    Everyone receives Spell-in-Waiting: Return (33s).\n    Three players receive Spell-in-Waiting: Quietus (31s). Since all they do is cause raidwides, it is entirely irrelevant who receives them.\n\nOr in summary, leaving out the Spell-in-Waiting: Quietus (31s):\n  2x  Spell-in-Waiting: Dark Blizzard III (14s), Wyrmclaw (17s), Spell-in-Waiting: Return (33s)\n  2x  Spell-in-Waiting: Dark Aero III (14s), Wyrmclaw (40s), Spell-in-Waiting: Return (33s)\n  1x  Spell-in-Waiting: Dark Blizzard III (14s), Wyrmfang (40s), Spell-in-Waiting: Return (33s)\n  1x  Spell-in-Waiting: Dark Water III (12s), Wyrmfang (40s), Spell-in-Waiting: Return (33s)\n  1x  Spell-in-Waiting: Dark Eruption (14s), Wyrmfang (40s), Spell-in-Waiting: Return (33s)\n  1x  Spell-in-Waiting: Unholy Darkness (17s), Wyrmfang (40s), Spell-in-Waiting: Return (33s)\n\nHourglasses\n\nGaia casts Speed as in phase 3. This time, the yellow tethers always hit the north and south Hourglasses. The purple tethers will hit either the NW and SE hourglasses, or NE and SW. In other words, all three Hourglasses go off in opposite pairs, with north and south going off first.\n\nThe cast from the Hourglasses in this mechanic is Maelstrom, a circular AoE that covers the entire circle on the floor. There is a very brief omen, hardly enough to dodge.\n\nThe explosions happen concurrently with the Spell-in-Waiting debuffs resolving, towards the start of the mechanic. The hourglasses are completely inert after they explode.\n\nDrachen Wanderers\n\nTwo Drachen Wanderers—large, ghostly wyrm heads—also appear just north of the northernmost Hourglass. The Wanderers begin a slow journey around the arena, one clockwise, one counterclockwise.\n\nIf a player with Wyrmclaw makes contact with a Wanderer, it will cleanse the Wyrmclaw and explode in a circular AoE called Longing of the Lost. The size is similar to Maelstrom. This can break the Fragment of Fate.\n\nThe first time a Wyrmclaw is cleansed on a given Wanderer, it shrinks. The second time, it disappears entirely. If either Wanderer survives to make a complete lap of the arena, it will fly off to the sky and wipe the party.\n\nAdditionally, cleansing Wyrmclaw leaves behind a small blue beacon. The beacon can be used once to cleanse a Wyrmfang.\n\nIn order to resolve this part of the mechanic completely, therefore, both Wanderers must be touched twice each by players with Wyrmclaw, and the resulting beacons must each be touched by a player with Wyrmfang.\n\nExalines and Knockbacks\n\nAround the time of the second Maelstrom explosions, Shiva will teleport to either the east or west edge of the arena and cast Tidal Light.\n\nThis attack begins a large exaline that covers the entire width of the arena, and is about as thick as 1/4 of the arena’s diameter. The exaline travels across the arena away from Shiva. It is slow enough to dodge by stepping into the previous explosion before the next.\n\nIf you look closely, Shiva has a blue circle under her during this attack—the same blue circle, in fact, as players get from Spell-in-Waiting: Return. This is a visual hint that Shiva, too, will have her position rewound later in the mechanic. Remember which cardinal she appeared at.\n\nTowards the end of the first set of exalines, Shiva teleports to either the north or south edge of the arena, and repeats Tidal Light, producing a second exaline identical as the first.\n\nAs the second exaline travels across the arena, the final debuffs expire. First, the three Spell-in-Waiting: Quietus explode in three relatively small raidwides that don’t even add up to a big one. Then, the Spell-in-Waiting: Return expire, snapshotting everyone’s positions and granting Return (7s) to everyone.\n\nGaia begins another Spirit Taker, so the party must spread. And finally, Shiva teleports back to the center and casts Hallowed Wings. Before her cast completes, however, the Return debuffs expire, inflicting Stun (9s) and teleporting everyone back to their snapshotted positions. Shiva, too, is teleported—back to where she first cast Tidal Light. This will always, therefore, be the east or west cardinal. The snapshot positions must solve the upcoming attack.\n\nUnlike the earlier cast of the same name, this Hallowed Wings is a massive wild charge knockback. All players are hit, regardless of position, and are knocked away from Shiva’s cardinal about half the width of the arena.\n\nThe damage dealt by the attack is based on proximity to Shiva’s cardinal, with the closest player receiving the most damage, the second-closest receiving the second-most, etc. The person furthest away receives teh lowest amount of damage. Note, however, that this attack deals fixed damage based on position even if a player is dead; it is not a shared-damage attack. The four players in front receive a Magic Vulnerability Up (6s).\n\nThen, while everyone is still stunned, Shiva is teleported to the cardinal where she cast the second exaline, and repeats the attack. Knockback immunity (besides Inner Release) will not last long enough to protect against the second knockback, because it cannot be used during the Stun.\n\nThe damage on the second hit will be quadrupled for the players with Magic Vulnerability Up If the player fifth in line has a Magic Vulnerability Up, the damage is equal to being first in line without Magic Vulnerability Up It’s not quite tankbuster levels of damage, but it’s still enough to give a non-tank a bad time. I’ll put the exact numbers in an appendix sometime.\n\nThe players are released from stun during the second knockback, and both bosses teleport to mid and become targetable again, marking the end of the mechanic.\n\nCrystallize Time Timeline\n  t = 0              Buffs go out\n  t + 3 s            Drachen Wanderers appear; Shiva becomes untargetable\n  t + 4 s            Gaia becomes untargetable\n  t + 5 s            Edge of Oblivion raidwide\n  t + 10 s           Malestrom omens from yellow-tethered Hourglasses\n  t + 12 s           Spell-in-Waiting: Dark Water III stack and yellow-tethered Maelstroms go off\n  t + 14 s           Spell-in-Waiting: Dark Eruption circle, Spell-in-Waiting: Dark Blizzard III donut, and Spell-in-Waiting: Dark Aero III knockback go off; Safe to cleanse Wyrmclaw without breaking Fragment\n  t + 15 s           Maelstrom omens appear from non-tethered Hourglasses\n  t + 16 s           Shiva teleports to east or west\n  t + 17 s           Spell-in-Waiting: Unholy Darkness stack and non-tethered Maelstroms go off; East/west exaline omen appears; Wyrmclaw (17s) kills if not cleansed by now\n  t + 20 s           Maelstrom omens from purple-tethered Hourglasses; East/west exalines begin, firing approx. every 2 seconds\n  t + 22 s           Purple-tethered Maelstroms go off; Shiva teleports to north or south\n  t + 24 s           North/south exaline omen appears\n  t + 27 s           North/south exalines begin; East/west exalines end\n  t + 31 s           Spell-in-Waiting: Quietus raidwides go off\n  t + 33 s           Spell-in-Waiting: Return snapshots player positions; North/south exalines end\n  t + 37 s           Spirit Taker spread\n  t + 40 s           Players stunned and returned to snapshot positions; Wyrmclaw (40s) and Wyrmfang (40s) kill if not cleansed by now; Drachen Wanderers wipe party if not destroyed by now\n  t + 44 s           First Hallowed Wings knockback\n  t + 48 s           Second Hallowed Wings knockback\n  t + 52 s           Bosses become targetable\n  Sequence complete\n\n--- Enrage ---\n\nThe bosses wrap up by repeating the Akh Morn–Morn Afah sequence from earlier, followed by the enrage sequence. The Fragment of Fate also does another pulse (Edge of Oblivion) during this sequence. Only after the second Morn Afah can either of the bosses be killed; they will block at 1 HP if killed beforehand.\n\nShiva’s enrage cast is Ice Age, while Gaia’s is once again Memory's End. They go off at the same time, and either one is enough to wipe the party. If a boss is killed, however, their attack does not go off. Both bosses must be killed to advance to phase 5…\n\nwith hope that the Fragment of Fate survived…"
+    },
+    {
+      "title": "P5: Pandora",
+      "text": "After completing phase 4 with both the Usurper of Frost and the Oracle of Darkness dying, the two will become balls of light and darkness and merge together.\n\nIf the Eternal Ice Fragment was not saved in the crystal intermission, or the Fragment of Fate was destroyed in phase 4, then the transition to the bad ending will not be a cutscene and players will retain control of their characters. The phase 5 arena will appear, and the Guardian of Eden appears at the north side of the arena. It immediately casts Paradise Lost, wiping the party.\n\nIf the Fragment of Fate did survive phase 4, then the transition is a cutscene in which Ryne and Gaia’s memories fight Mitron for control. The result is Ryne and Gaia’s merged form, Pandora, the final boss of Futures Rewritten. Players will be knocked back to south of center and given Down for the Count for the minute-long (yes, really) cutscene. The arena transitions to the phase 1 arena from E12S, with Ryne and Gaia’s memories showing in the background, and Return to Oblivion kicks in. The Down for the Count fades as the final fight begins.\n\nNote that throughout this phase, Pandora attacks with light on her left side and dark on her right side. This orientation is based on her wings and never changes.\n\n--- Sequence 1: Fulgent Blade ---\n\nPandora kicks things off with Fulgent Blade, a physical raidwide that causes six lines of light and darkness to appear on the ground. The pattern of the lines is always the same, although the positioning can vary so it might look different sometimes. The six lines are always offset 45° from one another, making a sort of 3/4 circle around the middle of the arena.\n\nThese are all exalines that detonate two at a time, moving outwards from their lines of origin. Starting from one side of the 3/4-circle, the outermost two lines on one side will detonate, then the middle two, then finally the two on the other side. Each pair will be arranged so that the lines from the light and dark sides cross.\n\nBefore each line explodes, an omen appears showing the upcoming explosion, with many arrows indicating that the line AoEs are going to move. The first two exalines go off, and then they repeat in the directions indicated, perpendicular to the original line they came from. There are no omens for the subsequent explosions.\n\nThe detonations go as follows:\n      1st Wave        2nd Wave        3rd Wave        Pandora\n  1.  Omens appear\n  2.  1st explosions\n  3.  2nd explosions  Omens appear\n  4.  3rd explosions  1st explosions\n  5.  4th explosions  2nd explosions  Omens appear    Lock direction\n  6.  5th explosions  3rd explosions  1st explosions  Akh Morn …\n  7.  6th explosions  4th explosions  2nd explosions  Akh Morn …\n  8.  7th explosions  5th explosions  3rd explosions  Akh Morn …\n  9.  8th explosions  6th explosions  4th explosions  Akh Morn …\n  10.                 7th explosions  5th explosions  Akh Morn\n\nEach exaline will have a total of 8 waves of explosions, although only the first few are typically relevant.\n\nBeing hit by an exaline will likely not kill a topped player, but it will inflict both Damage Down (2m) and either Light Resistance Down II (15s) or Dark Resistance Down II (15s), giving vulnerability to the same element of the line that hit.\n\nThis is a bit hard to visualize without an image, so I will try to come back and add one, but for now text will have to do.\n\ntl;dr: It’s three waves of exalines at funny angles.\n\nAkh Morn\n\nAt about the same time as the fifth set of explosions from the last wave of exalines—or the ninth set of explosions overall—Pandora will start casting Akh Morn. This time, Akh Morn is a simple LP stack, with no penalty for understacking.\n\nThe only catch is the targeting condition: One random player on her left side is targeted by a light explosion, and one random player on her right is targeted by a dark explosion. If no player is on the correct side, it targets a random player on the other side instead. Her position locks in at the start of the cast, so players need to position themselves afterwards.\n\n--- Sequence 2: Paradise Regained ---\n\nJust before the last (irrelevant) exalines denotate, Pandora centers, faces north, and starts casting Paradise Regained. This kicks off the most complex of phase 5’s three sequences.\n\nWhen the cast completes, three 2-stack towers begin appearing, one by one, in an equilateral triangle around the center of the arena. The towers always appear S, NW, and NE, but in a random order. They will detonate in the order they appear.\n\nAs the second tower appears, Pandora begins casting Wings Dark and Light, and either her left wing will start glowing with light, or her right wing will start glowing with darkness. One player will get attached to her by a light or dark tether, matching the glowing wing.\n\nAbout 2/3 of the way through the cast, the third tower appears, and Pandora’s other wing starts glowing. Her wing and tether attacks will follow the order that the wings glowed, either light then dark, or dark then light.\n\nThe mechanic goes off in three waves: the first tower, wing, and tether; then the second tower, wing, and tether; and finally the last tower.\n\n    The towers explode in a painful raidwide with Damage Down (2m) if not soaked properly. They inflict Magic Vulnerability Up (7s), which lasts the duration of the mechanic, so whoever soaks the tower cannot soak another one, nor get hit by the tether.\n\n    The wing attack is a massive 225° tankbuster cleave that hits the entire quarter of the arena in front of Pandora, as well as the entire side of the corresponding wing. The safe zone is therefore anywhere beside or behind her and on the right or left side, depending on the wing/element.\n\n    But immediately before she executes the cleave, she turns to face the main tank, (that is, the player with top enmity).\n\n    So the safe zone is actually relative to this player. Anyone other than the top enmity player hit by this attack will receive a Damage Down (2m), so cheesing it is not an option.\n\n    Despite having a visual element, the cleave is physical and inflicts Physical Vulnerability Up (4s).\n\n    The Physical Vulnerability Up makes the follow-up cleave lethal, but not the other attacks in the sequence. The target lock-in is typical for a tankbuster, with the first target getting locked in early in the cast, and the second locking in roughly when the castbar completes.\n\n    The tether always has the same element as the cleave, and targets the farthest or nearest player other than the main tank, depending on the element. The tether moves to whoever is farthest or nearest automatically, just acting as a visual indication of who will be hit. It cannot be passed otherwise.\n\n    The actual attack is a small circular tankbuster that inflicts Magic Vulnerability Up (4s).\n\n    Thus, like the wing cleave, the same player cannot take it twice without facing lethal damage, nor can they take a tower on the same or next wave. It is, however, possible for a player hit by the first tether to safely soak the last tower.\n\nNote that the attacks don’t come out at quite the same time: the tower hits first, then the wing, then the tether, in rapid succession. It is possible to move too early and get hit twice.\n\n--- Sequence 3: Polarizing Strikes ---\n\nThe final mechanical sequence of this phase is Polarizing Strikes, which Pandora begins casting after a single autoattack. This autoattack gives her a chance to reorient towards the main tank before the next castbar locks her facing for the rest of the sequence.\n\nThe cast goes off as two line AoEs, one light and one dark. The targeting is the same as with Akh Morn earlier: light targets a random player on Pandora’s left side, while dark targets a random player on her right side. If no players are on the correct side, a random player on the other side is targeted instead.\n\nThe lines are each LP stacks, with the additional twist that the player in front—that is, closest to Pandora—is affected by Light Resistance Down II (16s) or Dark Resistance Down II (16s), for the same element they were hit by. Therefore, that player will receive lethal damage if hit by the same element again, for the remainder of the sequence.\n\nAfter the main line AoE, the line’s effect remains on the ground. After about 2 seconds, it explodes, dealing a follow-up blow to anyone caught in it. This follow-up inflicts Damage Down (2m), so get out of the way.\n\nNOTE: The actual AoE is slightly wider than the visual effects of the line make it seem. Give the line plenty of room when dodging.\n\nThis attack repeats three more times, for a total of four. The subsequent casts are entitled Polarised Paths, but the effects are identical.\n\nPandora’s Box\n\nIt couldn’t be a Pandora without a Box, would it? But the contents of Pandora's Box really aren’t that interesting. It’s just a tank LB3 check, although the visuals are stunning. Pop the LB around when the transcend your limits message shows up on the screen, and with extra mits on top, and you should be all good.\n\nLoop\n\nFrom this point, the fight loops. Pandora repeats the first three mechanics, Fulgent Blade, Paradise Regained, and Polarizing Strikes. The only difference is that the mechanics come faster the second time. Notably, Pandora will not autoattack before using Polarizing Strikes, so there is only a very narrow window to change her facing after Paradise Regained.\n\nAfter this, she uses Fulgent Blade for a third time, and this third instance is identical to the first two.\n\n--- Enrage ---\n\nFinally, frustrated with her lack of progress, Pandora begins the enrage cast, Paradise Lost. From here on, simply a DPS check to free the lesbians and earn your totems. But there is one last twist.\n\nAs the castbar reaches about halfway full, Ryne will lend her strength to the party, filling the limit gauge by about 1 1/2 bars. Assuming you haven’t used a limit break since Pandora's Box, this should completely fill the gauge. You now have a free melee LB3, but act quick, because the window of opportunity is very tight. Even a few seconds of delay and the LB will not land before the enrage cast goes off.\n\nEnjoy the spectacular enrage sequence, with rainbows literally shooting off the lesbians as you race for the finish. If you don’t make it… sorry, that’s rough. There’s a brief easter egg cutscene, at least?\n\nIf you do make it, however, enjoy the final cutscene of the fight and your chance to curse YoshiP’s cowardice. The background post-victory will make all the gposers jealous.\n\nAnd then go get one of the sickest weapons in the game, turn on that sweet “Genesis of Legends” title, and complain loudly about the lack of a framing kit.\n\nYou’ve earned it."
+    }
+  ]
+}

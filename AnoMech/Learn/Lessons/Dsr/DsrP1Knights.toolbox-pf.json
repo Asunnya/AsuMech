@@ -1,7 +1,12 @@
 {
   "scenario": "DsrP1KnightsScenario",
   "strat": "Toolbox (PF)",
-  "sources": [],
+  "sources": [
+    {
+      "label": "NAUR - Toolbox: Vault Knights",
+      "url": "https://ff14.toolboxgaming.space/?id=802461081524561&preview=1#1"
+    }
+  ],
   "steps": [
     {
       "key": {

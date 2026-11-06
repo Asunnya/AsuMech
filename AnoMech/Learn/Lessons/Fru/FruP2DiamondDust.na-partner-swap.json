@@ -1,7 +1,12 @@
 {
   "scenario": "FruP2DiamondDustScenario",
   "strat": "NA · Partner Swap",
-  "sources": [],
+  "sources": [
+    {
+      "label": "NAUR LesBin - Diamond Dust / Light Rampant - Partner Swap DD4/4 + EW Light Rampant",
+      "url": "https://docs.google.com/presentation/d/1VqIifgNf8RzXIWb8EGGVdKvOtKk0HmhPcHIMpizYuig/edit#slide=id.g31ad41a9148_0_9"
+    }
+  ],
   "steps": [
     {
       "key": {

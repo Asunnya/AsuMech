@@ -1,7 +1,12 @@
 {
   "scenario": "DsrP3NidhoggScenario",
   "strat": "NAUR (PF)",
-  "sources": [],
+  "sources": [
+    {
+      "label": "NAUR - Toolbox: Nidhogg",
+      "url": "https://ff14.toolboxgaming.space/?id=267799249146271&preview=1"
+    }
+  ],
   "steps": [
     {
       "key": {

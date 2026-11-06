@@ -1,7 +1,12 @@
 {
   "scenario": "FruP3UltimateRelativityScenario",
   "strat": "NA",
-  "sources": [],
+  "sources": [
+    {
+      "label": "NAUR LesBin - Ultimate Relativity - G1 Adjust Role Quadrant, Buddy Swaps",
+      "url": "https://docs.google.com/presentation/d/1ncHCSP8NUA_XlrdiRYVmHUgtuMiT_g0q_TpISp6KbyI/edit?usp=sharing"
+    }
+  ],
   "steps": [
     {
       "key": {

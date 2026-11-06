@@ -1,7 +1,12 @@
 {
   "scenario": "FruP3ApocalypseScenario",
   "strat": "NA priority / static spreads / OT bait",
-  "sources": [],
+  "sources": [
+    {
+      "label": "NAUR LesBin - Sextuple Apocalypse - G1 Adjust Static Spreads, Multi-Swap | Safespot Color Apoc version",
+      "url": "https://raidplan.io/plan/gU44027CtpmKs-sC"
+    }
+  ],
   "steps": [
     {
       "key": {

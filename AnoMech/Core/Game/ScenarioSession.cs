@@ -62,6 +62,7 @@ public sealed class ScenarioSession
     private SimEnemy? markHelper;
 
     public IScenario Scenario => run.Scenario;
+    public int? SelectedAi => run.SelectedAi;
     public SessionMode Mode { get; }
 
     // Set once the post-first-death freeze timer fires; Game stops ticking the sim while true.

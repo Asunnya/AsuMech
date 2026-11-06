@@ -1,0 +1,377 @@
+{
+  "fight": "UCOB",
+  "family": "Ucob",
+  "title": "The Unending Coil of Bahamut (Ultimate) - UCOB",
+  "source": null,
+  "guide": null,
+  "captured": null,
+  "credits": "NAUR",
+  "sections": [
+    {
+      "title": "P1: Twintania",
+      "links": [
+        {
+          "label": "Raidplan: Twintania",
+          "url": "https://raidplan.io/plan/9WEG4AEGVdru3hyF",
+          "kind": "raidplan.io",
+          "section": "P1: Twintania",
+          "scenarios": [
+            "UcobP1TwintaniaScenario"
+          ]
+        },
+        {
+          "label": "Guide: Stop baiting Liquid Hells on the party!!",
+          "url": "https://raidplan.io/plan/19yavfslOUU0l1Gp",
+          "kind": "raidplan.io",
+          "section": "P1: Twintania",
+          "scenarios": [
+            "UcobP1TwintaniaScenario"
+          ]
+        }
+      ],
+      "rules": [
+        {
+          "text": "Neurolink placement: normal triangle N, SW, SE (CCW, on the 1/2/3 markers).",
+          "scenarios": [
+            "UcobP1TwintaniaScenario"
+          ]
+        },
+        {
+          "text": "Both tanks and 1 healer stay out of the first stack for the LB cheese. Discuss which healer stays out.",
+          "scenarios": [
+            "UcobP1TwintaniaScenario"
+          ]
+        },
+        {
+          "text": "Liquid Hell baits: phys ranged always baits. Caster takes the hatch if phys ranged gets the first hatch.",
+          "scenarios": [
+            "UcobP1TwintaniaScenario"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "P2: Nael deus Darnus",
+      "links": [
+        {
+          "label": "Raidplan: Nael",
+          "url": "https://raidplan.io/plan/DpoJr4oE_kGz_gRU",
+          "kind": "raidplan.io",
+          "section": "P2: Nael deus Darnus",
+          "scenarios": [
+            "UcobP2NaelScenario"
+          ]
+        },
+        {
+          "label": "Raidplan: Divebombs",
+          "url": "https://raidplan.io/plan/vi2rSC6mwW_d_QJF",
+          "kind": "raidplan.io",
+          "section": "P2: Nael deus Darnus",
+          "scenarios": [
+            "UcobP2NaelScenario"
+          ]
+        }
+      ],
+      "rules": [
+        {
+          "text": "Party movement: rotate CW around the boss by default.",
+          "scenarios": [
+            "UcobP2NaelScenario"
+          ]
+        },
+        {
+          "text": "Fire order: In > Out > In (2nd fire-tether person goes out) > In.",
+          "scenarios": [
+            "UcobP2NaelScenario"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "P3: Bahamut Prime",
+      "links": [
+        {
+          "label": "Quickmarch - uptime",
+          "url": "https://raidplan.io/plan/3zSKK0DXeJgCLadx",
+          "kind": "raidplan.io",
+          "section": "P3: Bahamut Prime",
+          "scenarios": []
+        },
+        {
+          "label": "Blackfire - DPS CCW, supports CW",
+          "url": "https://raidplan.io/plan/BJPnHRQMEsmOyapB",
+          "kind": "raidplan.io",
+          "section": "P3: Bahamut Prime",
+          "scenarios": []
+        },
+        {
+          "label": "Fellruin - party neuro opposite Bahamut",
+          "url": "https://raidplan.io/plan/-83d6AilbZGqba3j",
+          "kind": "raidplan.io",
+          "section": "P3: Bahamut Prime",
+          "scenarios": []
+        },
+        {
+          "label": "Heavensfall - R1 tower under Nael",
+          "url": "https://raidplan.io/plan/NGpZ9S-3kiLsDzAY",
+          "kind": "raidplan.io",
+          "section": "P3: Bahamut Prime",
+          "scenarios": []
+        },
+        {
+          "label": "Tenstrike - jump to show you're covering the hatch; 1 is always safe for Earthshakers",
+          "url": "https://raidplan.io/plan/2wu2LOy8wKhG29Tr",
+          "kind": "raidplan.io",
+          "section": "P3: Bahamut Prime",
+          "scenarios": []
+        },
+        {
+          "label": "Grand Octet - tank LB3; without tank LB3, bait Twin CCW (left) and stack CW of Twin (right)",
+          "url": "https://raidplan.io/plan/iunTUxGNwjAGF_7K",
+          "kind": "raidplan.io",
+          "section": "P3: Bahamut Prime",
+          "scenarios": []
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "P4: Adds",
+      "links": [
+        {
+          "label": "Raidplan: Adds",
+          "url": "https://raidplan.io/plan/AMEhnLbUmlTb7ij3",
+          "kind": "raidplan.io",
+          "section": "P4: Adds",
+          "scenarios": []
+        }
+      ],
+      "rules": [
+        {
+          "text": "Discuss which boss you take (default: MT Twin, OT Nael).",
+          "scenarios": []
+        },
+        {
+          "text": "Bosses between the 1 and 3 markers, somewhat NE.",
+          "scenarios": []
+        },
+        {
+          "text": "All stacks in the center of the arena.",
+          "scenarios": []
+        }
+      ]
+    },
+    {
+      "title": "P5: Golden Bahamut",
+      "links": [
+        {
+          "label": "Raidplan: Golden Bahamut",
+          "url": "https://raidplan.io/plan/Y4WRFLhdHSQ7oLN_",
+          "kind": "raidplan.io",
+          "section": "P5: Golden Bahamut",
+          "scenarios": [
+            "UcobP5ExaflaresScenario"
+          ]
+        },
+        {
+          "label": "Video: how to mid-dodge / uptime-dodge exaflares",
+          "url": "https://www.youtube.com/watch?v=ZbrTfoIxRdE",
+          "kind": "video",
+          "section": "P5: Golden Bahamut",
+          "scenarios": [
+            "UcobP5ExaflaresScenario"
+          ]
+        }
+      ],
+      "rules": [
+        {
+          "text": "Akh Morn order: share > MT invuln > OT invuln > share.",
+          "scenarios": [
+            "UcobP5ExaflaresScenario"
+          ]
+        },
+        {
+          "text": "Shared busters: kitchen-sinked with every available mitigation.",
+          "scenarios": [
+            "UcobP5ExaflaresScenario"
+          ]
+        },
+        {
+          "text": "Mitigation plan: 60s/90s CDs: Morn Afah 1/3/5 or 2/4 2m CDs:      Morn Afah 1/4 or 2/5 Discuss with co-tank / melee / caster which Morn Afahs you cover.",
+          "scenarios": [
+            "UcobP5ExaflaresScenario"
+          ]
+        },
+        {
+          "text": "Tank LBs: none in the default plan unless it's an emergency (e.g. < 8-person stack, or invuln not up).",
+          "scenarios": [
+            "UcobP5ExaflaresScenario"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "General resources",
+      "links": [
+        {
+          "label": "Mitigation: UCoB Mitty",
+          "url": "https://tinyurl.com/ucobmitty",
+          "kind": "shortlink",
+          "section": "General resources",
+          "scenarios": []
+        },
+        {
+          "label": "Cheat sheet: LB cheese",
+          "url": "https://imgur.com/a/FNTZDGV",
+          "kind": "other",
+          "section": "General resources",
+          "scenarios": []
+        },
+        {
+          "label": "Simulation: Heavensfall solo sim",
+          "url": "https://drive.google.com/file/d/1eNgGqA4VAPT0f3wwt37n2UHqrOF4kfuI/view",
+          "kind": "other",
+          "section": "General resources",
+          "scenarios": []
+        }
+      ],
+      "rules": []
+    }
+  ],
+  "mitigation": [
+    {
+      "label": "Mitigation: UCoB Mitty",
+      "url": "https://tinyurl.com/ucobmitty"
+    }
+  ],
+  "waymarks": [
+    {
+      "name": "Good Aether Markers",
+      "mapId": 280,
+      "local": {
+        "A": [
+          20.986,
+          0.0,
+          -11.02
+        ],
+        "B": [
+          9.315,
+          0.0,
+          21.971
+        ],
+        "C": [
+          -19.999,
+          0.0,
+          11.772
+        ],
+        "D": [
+          0.0,
+          0.0,
+          9.0
+        ],
+        "One": [
+          0.0,
+          0.0,
+          -8.0
+        ],
+        "Two": [
+          -8.0,
+          0.0,
+          5.0
+        ],
+        "Three": [
+          8.0,
+          0.0,
+          5.0
+        ],
+        "Four": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "closestPreset": "Aether Markers",
+      "maxDeviation": 0.0
+    }
+  ],
+  "scenarios": {
+    "UcobP1TwintaniaScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/9WEG4AEGVdru3hyF",
+          "credits": "NAUR (Raidplan: Twintania)"
+        },
+        {
+          "url": "https://raidplan.io/plan/19yavfslOUU0l1Gp",
+          "credits": "NAUR (Guide: Stop baiting Liquid Hells on the party!!)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Raidplan: Twintania",
+          "url": "https://raidplan.io/plan/9WEG4AEGVdru3hyF"
+        },
+        {
+          "label": "NAUR - Guide: Stop baiting Liquid Hells on the party!!",
+          "url": "https://raidplan.io/plan/19yavfslOUU0l1Gp"
+        }
+      ],
+      "rules": [
+        "Neurolink placement: normal triangle N, SW, SE (CCW, on the 1/2/3 markers).",
+        "Both tanks and 1 healer stay out of the first stack for the LB cheese. Discuss which healer stays out.",
+        "Liquid Hell baits: phys ranged always baits. Caster takes the hatch if phys ranged gets the first hatch."
+      ]
+    },
+    "UcobP2NaelScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/DpoJr4oE_kGz_gRU",
+          "credits": "NAUR (Raidplan: Nael)"
+        },
+        {
+          "url": "https://raidplan.io/plan/vi2rSC6mwW_d_QJF",
+          "credits": "NAUR (Raidplan: Divebombs)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Raidplan: Nael",
+          "url": "https://raidplan.io/plan/DpoJr4oE_kGz_gRU"
+        },
+        {
+          "label": "NAUR - Raidplan: Divebombs",
+          "url": "https://raidplan.io/plan/vi2rSC6mwW_d_QJF"
+        }
+      ],
+      "rules": [
+        "Party movement: rotate CW around the boss by default.",
+        "Fire order: In > Out > In (2nd fire-tether person goes out) > In."
+      ]
+    },
+    "UcobP5ExaflaresScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/Y4WRFLhdHSQ7oLN_",
+          "credits": "NAUR (Raidplan: Golden Bahamut)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Raidplan: Golden Bahamut",
+          "url": "https://raidplan.io/plan/Y4WRFLhdHSQ7oLN_"
+        },
+        {
+          "label": "NAUR - Video: how to mid-dodge / uptime-dodge exaflares",
+          "url": "https://www.youtube.com/watch?v=ZbrTfoIxRdE"
+        }
+      ],
+      "rules": [
+        "Akh Morn order: share > MT invuln > OT invuln > share.",
+        "Shared busters: kitchen-sinked with every available mitigation.",
+        "Mitigation plan: 60s/90s CDs: Morn Afah 1/3/5 or 2/4 2m CDs:      Morn Afah 1/4 or 2/5 Discuss with co-tank / melee / caster which Morn Afahs you cover.",
+        "Tank LBs: none in the default plan unless it's an emergency (e.g. < 8-person stack, or invuln not up)."
+      ]
+    }
+  },
+  "guideText": []
+}

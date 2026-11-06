@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Numerics;
 using AnoMech.Learn;
 using AnoMech.Windows.Asu;
@@ -61,6 +62,55 @@ internal sealed class LessonReportWindow : Window, IDisposable
             if (step.Step is { Skip: false } lessonStep && ImGui.SmallButton($"Drill##{row}")) StepDrillRunner.Instance?.Start(report, lessonStep);
         }
         ImGui.EndTable();
+        DrawHits(report);
+        DrawMap(report);
+    }
+
+    // Every step with enough tries, worst first: where the player fails, how slowly they react,
+    // and whether it is getting better.
+    private static void DrawMap(LessonReport report)
+    {
+        var map = Plugin.StepStats.Map(report.Lesson, report.Role);
+        ImGui.Spacing();
+        ImGui.TextUnformatted($"Your steps as {report.Role}");
+        if (map.Count == 0)
+        {
+            using (AsuTheme.PushTextColor(AsuTheme.Muted))
+                ImGui.TextWrapped($"A step shows up here after {StepStatsStore.MinAttemptsForMap} judged tries.");
+        }
+        else if (ImGui.BeginTable("lesson-map", 5, ImGuiTableFlags.RowBg | ImGuiTableFlags.SizingStretchProp))
+        {
+            ImGui.TableSetupColumn("Step");
+            ImGui.TableSetupColumn("Fails");
+            ImGui.TableSetupColumn("Reaction");
+            ImGui.TableSetupColumn("Trend");
+            ImGui.TableSetupColumn("Usually");
+            ImGui.TableHeadersRow();
+            foreach (var t in map)
+            {
+                ImGui.TableNextRow();
+                ImGui.TableNextColumn(); ImGui.TextUnformatted($"{t.Step.Key.Time ?? t.Step.Key.From ?? 0f:0.#}s  {t.Step.Title}");
+                ImGui.TableNextColumn();
+                using (AsuTheme.PushTextColor(t.FailRate >= 0.5f ? AsuTheme.Bad : t.FailRate > 0f ? AsuTheme.Accent : AsuTheme.Ok))
+                    ImGui.TextUnformatted($"{t.FailRate:P0} of {t.Attempts}");
+                ImGui.TableNextColumn(); ImGui.TextUnformatted(t.MeanReaction is { } r ? $"{r:0.0}s" : "—");
+                ImGui.TableNextColumn();
+                ImGui.TextUnformatted(t.Trend switch { null => "—", < -0.05f => "better", > 0.05f => "worse", _ => "steady" });
+                ImGui.TableNextColumn(); ImGui.TextWrapped(t.CommonFailure ?? "");
+            }
+            ImGui.EndTable();
+        }
+        if (report.Level != LearnLevel.Exam || StepDrillRunner.Instance is not { } runner) return;
+        var worst = StepDrillPlanner.Worst(report.Lesson, report.Role, Plugin.StepStats, report);
+        if (worst.Count == 0) return;
+        ImGui.Spacing();
+        ImGui.TextWrapped($"Drill the weakest: {string.Join(", ", worst.Select(s => s.Title ?? MasteryStore.StepId(s.Key)))}, each until {StepDrillPlanner.AdaptiveStreak} in a row.");
+        using (AsuTheme.PushAccentButton())
+            if (ImGui.Button("Start the drill##adaptive-drill")) runner.StartAdaptive(report, worst);
+    }
+
+    private static void DrawHits(LessonReport report)
+    {
         if (report.Hits.Count == 0) return;
         ImGui.Spacing();
         using (AsuTheme.PushTextColor(AsuTheme.Bad))

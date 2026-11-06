@@ -59,6 +59,12 @@ public sealed partial class SimWorld : ISimObject, IDisposable
     // Hears the strat's orders to the player's slot (Learn). Null outside a lesson.
     public Game.Ai.IPlayerGuidanceSink? Guidance { get; set; }
 
+    // The last order the strat gave each seat, bots included, for the bot inspector: which call
+    // sent it where. Cleared with the run.
+    public IReadOnlyDictionary<Game.Party.PartyRole, Game.Ai.GuidanceOrder> LastOrders => lastOrders;
+    private readonly Dictionary<Game.Party.PartyRole, Game.Ai.GuidanceOrder> lastOrders = [];
+    internal void RecordOrder(Game.Ai.GuidanceOrder order) => lastOrders[order.Role] = order;
+
     public Rng Stream(string name)
     {
         if (!streams.TryGetValue(name, out var stream))
@@ -257,6 +263,7 @@ public sealed partial class SimWorld : ISimObject, IDisposable
     {
         SimEvents.Clear();
         hazards.Clear();
+        lastOrders.Clear();
         children.Despawn();
         enemyList.Clear();
         Obstacles.Clear();

@@ -1,0 +1,405 @@
+{
+  "fight": "TOP",
+  "family": "Top",
+  "title": "The Omega Protocol (Ultimate) - TOP",
+  "source": "https://naurffxiv.com/ultimate/top#remastered-resources",
+  "guide": null,
+  "captured": null,
+  "credits": "NAUR",
+  "sections": [
+    {
+      "title": "(header)",
+      "links": [
+        {
+          "label": "Source",
+          "url": "https://naurffxiv.com/ultimate/top#remastered-resources",
+          "kind": "other",
+          "section": "(header)",
+          "scenarios": []
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "Videos",
+      "links": [
+        {
+          "label": "Video guide",
+          "url": "https://youtu.be/Ijs6Ek-HzPA?si=_8fDkbSJywnueBFv",
+          "kind": "video",
+          "section": "Videos",
+          "scenarios": []
+        },
+        {
+          "label": "Top-down POV (by Sugar Plum Bun)",
+          "url": "https://www.youtube.com/watch?v=aWg-0Y2A18g",
+          "kind": "video",
+          "section": "Videos",
+          "scenarios": []
+        },
+        {
+          "label": "All-roles POV (for execution, not optimization)",
+          "url": "https://youtu.be/pdcJFF5NjO8?si=v93Zl8UZCb6nYA-X",
+          "kind": "video",
+          "section": "Videos",
+          "scenarios": []
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "Resources by phase (toolbox + slides)",
+      "links": [
+        {
+          "label": "P1: Omega (Beetle) (Toolbox)",
+          "url": "https://ff14.toolboxgaming.space/?id=832999250798471&preview=1",
+          "kind": "toolbox",
+          "section": "Resources by phase (toolbox + slides)",
+          "scenarios": []
+        },
+        {
+          "label": "P1: Omega (Beetle) (Slides)",
+          "url": "https://docs.google.com/presentation/d/1eOViXZYLosAFmuOWAQwAK6KwnfoC3iTQUeM6nQyKL48/edit?usp=sharing",
+          "kind": "slides",
+          "section": "Resources by phase (toolbox + slides)",
+          "scenarios": []
+        },
+        {
+          "label": "P2: Omega-M and Omega-F (Toolbox)",
+          "url": "https://ff14.toolboxgaming.space/?id=324285310725761&preview=1",
+          "kind": "toolbox",
+          "section": "Resources by phase (toolbox + slides)",
+          "scenarios": [
+            "TopP2PartySynergyScenario"
+          ]
+        },
+        {
+          "label": "P2: Omega-M and Omega-F (Slides)",
+          "url": "https://docs.google.com/presentation/d/1j-z91BI9i2LDOtp-qQzucqittpsvkecvmG3bXPV_9xs/edit?usp=sharing",
+          "kind": "slides",
+          "section": "Resources by phase (toolbox + slides)",
+          "scenarios": [
+            "TopP2PartySynergyScenario"
+          ]
+        },
+        {
+          "label": "P3: Omega Reconfigured (Final Omega) (Toolbox)",
+          "url": "https://ff14.toolboxgaming.space/?id=243183080764761&preview=1",
+          "kind": "toolbox",
+          "section": "Resources by phase (toolbox + slides)",
+          "scenarios": []
+        },
+        {
+          "label": "P3: Omega Reconfigured (Final Omega) (Slides)",
+          "url": "https://docs.google.com/presentation/d/1ncZ3riDOf056wxkCAFto3aX-4TWOMVO4gFfrQkQNMdY/edit?usp=sharing",
+          "kind": "slides",
+          "section": "Resources by phase (toolbox + slides)",
+          "scenarios": []
+        },
+        {
+          "label": "P4: Blue Screen (Toolbox)",
+          "url": "https://ff14.toolboxgaming.space/?id=142998596798471&preview=1",
+          "kind": "toolbox",
+          "section": "Resources by phase (toolbox + slides)",
+          "scenarios": []
+        },
+        {
+          "label": "P4: Blue Screen (Slides)",
+          "url": "https://docs.google.com/presentation/d/1wsYwsYXF9zIj2hXFJ3aTz_WLvIbaieKAApS6ExRdOsk/edit?usp=sharing",
+          "kind": "slides",
+          "section": "Resources by phase (toolbox + slides)",
+          "scenarios": []
+        },
+        {
+          "label": "P5: Run: Dynamis - Delta (Toolbox)",
+          "url": "https://ff14.toolboxgaming.space/?id=732288275415761&preview=1",
+          "kind": "toolbox",
+          "section": "Resources by phase (toolbox + slides)",
+          "scenarios": [
+            "TopP5DeltaScenario"
+          ]
+        },
+        {
+          "label": "P5: Run: Dynamis - Delta (Slides)",
+          "url": "https://docs.google.com/presentation/d/1yjCvFiTwW19vQVdMSQ6CPYUFFgaGLCaiF0uxESCyUvo/edit?usp=sharing",
+          "kind": "slides",
+          "section": "Resources by phase (toolbox + slides)",
+          "scenarios": [
+            "TopP5DeltaScenario"
+          ]
+        },
+        {
+          "label": "P5: Run: Dynamis - Sigma (Toolbox)",
+          "url": "https://ff14.toolboxgaming.space/?id=107380954136761&preview=1",
+          "kind": "toolbox",
+          "section": "Resources by phase (toolbox + slides)",
+          "scenarios": [
+            "TopP5SigmaScenario"
+          ]
+        },
+        {
+          "label": "P5: Run: Dynamis - Sigma (Slides)",
+          "url": "https://docs.google.com/presentation/d/1iLZQxsN1pN0YwGf1u0QtpASi2Q-PSxhJrnMZjw1246I/edit?usp=sharing",
+          "kind": "slides",
+          "section": "Resources by phase (toolbox + slides)",
+          "scenarios": [
+            "TopP5SigmaScenario"
+          ]
+        },
+        {
+          "label": "P5: Run: Dynamis - Omega (Toolbox)",
+          "url": "https://ff14.toolboxgaming.space/?id=078384491946761&preview=1",
+          "kind": "toolbox",
+          "section": "Resources by phase (toolbox + slides)",
+          "scenarios": [
+            "TopP5OmegaScenario"
+          ]
+        },
+        {
+          "label": "P5: Run: Dynamis - Omega (Slides)",
+          "url": "https://docs.google.com/presentation/d/1oxxFMaGJEEgQyEgj6ENC0Y23O5Mi10Ap72h2ctPu68A/edit?usp=sharing",
+          "kind": "slides",
+          "section": "Resources by phase (toolbox + slides)",
+          "scenarios": [
+            "TopP5OmegaScenario"
+          ]
+        },
+        {
+          "label": "P6: Alpha Omega (Toolbox)",
+          "url": "https://ff14.toolboxgaming.space/?id=829484027197761&preview=1",
+          "kind": "toolbox",
+          "section": "Resources by phase (toolbox + slides)",
+          "scenarios": [
+            "TopP6WaveCannon2Scenario"
+          ]
+        },
+        {
+          "label": "P6: Alpha Omega (Slides)",
+          "url": "https://docs.google.com/presentation/d/1NjFeRT-6ORKjR8ZZzDdktTOnJwuLNGyuUif1aNvKwU8/edit?usp=sharing",
+          "kind": "slides",
+          "section": "Resources by phase (toolbox + slides)",
+          "scenarios": [
+            "TopP6WaveCannon2Scenario"
+          ]
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "Mitigation",
+      "links": [
+        {
+          "label": "TOP Mitty v2",
+          "url": "https://docs.google.com/spreadsheets/d/1G0q0PHNFAFbJqE2ftparUyAcqCY-Dw9Hlzh6PpjRCKc/edit?gid=223515716#gid=223515716",
+          "kind": "sheet",
+          "section": "Mitigation",
+          "scenarios": [],
+          "sheetId": "1G0q0PHNFAFbJqE2ftparUyAcqCY-Dw9Hlzh6PpjRCKc"
+        },
+        {
+          "label": "Mitigation sheet (short link)",
+          "url": "https://bit.ly/topmit2",
+          "kind": "shortlink",
+          "section": "Mitigation",
+          "scenarios": []
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "Strategy board cheat sheets (paste into the in-game Strategy Board)",
+      "links": [
+        {
+          "label": "Intermission",
+          "url": "[stgy:aOK1X5gi086wNTdhs50fkbQSKUZDO3ef6YlgJg0IrA0ipDwc7KZQ94U4TEU4Mfs5aUpGCjccRgA56YLzEnFMq8qYetA4wbqpRaupzir36UKlhNQz3wgnZvaS8N4Nm6rDxl8tR2oUikP+o-IUoxHyGIDGQCMlU8Fwp3GvfPg7CywbUROblKYnusG736Jiy70rR49cKNb-c9A5aYx8SBODWE1veBIXyBTSOWO49Da3BVg+Ahvmy7XbQ7dEzrN8+hWx9tVDkoMZMWqCLWlNwU6h6Bg3ODgYF3v1ReAbGaXi]",
+          "kind": "stgy",
+          "section": "Strategy board cheat sheets (paste into the in-game Strategy Board)",
+          "scenarios": []
+        },
+        {
+          "label": "Monitors (P3)",
+          "url": "[stgy:aWYVmREYBkoTECOsYxwInhynMvdZ31IPHphrDNhCva-Y0E5pnccin-DTHA9PcV04DuMUkGBIoOXoJJCLZYjTDGyLHYj1EjVrPsR8ca0pmyAa7K0IBFQEXFASo1zbYG4lM6Qgzofspgf6nc3itfvcjNYKp4d6L9R8nq4KcT4P1vCFkaLTVEjkAmD+gR0Jz0BJHF4mPb3h7Ho3yep9x6PUplm6w4DpJI+s1L5yncsyeNJT-NTw4duXtScujbIOWCQ7smUYe8Z3m6wR6GC5hMLq+jw2wTZIBLF1rrwU6PJoBWC9-gJCAE7220BXfs7qq9-acArmoGK8LkZUth349XYyrhy0MuZ7Cj0iPLrpENJu27AFJeyze+cxbnWE+71GeISeRfUgRVNFwuG0NB18]",
+          "kind": "stgy",
+          "section": "Strategy board cheat sheets (paste into the in-game Strategy Board)",
+          "scenarios": []
+        },
+        {
+          "label": "P5 Sigma - far glitch",
+          "url": "[stgy:a-56vxyw+Uwm3PyeNbQMxFypxsWJm+KIY0K738YNWS+xAKZOlLUpM2FJXIXUoQR4-WNRT9DZ97ZUwZqcjxfzaDCoXCXWCivH1trvVMFBQb9zWMbkxb8nEbQVMIympVPQD8di3yLEhP-NeEGUMhfLQJF42+icoxbp4YwA66GHRepwGTdL-xvcRvVt23tF-W0XD9bki-HeTGsVDzOeHZFA8UujQcaxG3mNL8Mcf0iKsXSXgEenrABHKegu+K+I94XLYKQ4ReLzjCIXL9GDGzKy6t9J9AYlYucIbpgY7JSX5YskrfzLxfER0bRTISXHr4ZN5LWzR1cdCIQUCN2H0]",
+          "kind": "stgy",
+          "section": "Strategy board cheat sheets (paste into the in-game Strategy Board)",
+          "scenarios": [
+            "TopP5SigmaScenario"
+          ]
+        },
+        {
+          "label": "P5 Sigma - mid glitch",
+          "url": "[stgy:aS74JQwzYRN3yMIgdXI--CI+hmi5372BqG2ryHqdimVQ4CFLDwR+-jCTzK5A75h4jdptxKECKvfee3F83QL6MYijxr0RZFGGM7MBDf2joEToedPgVdJDHmoPD5arW5plPtnm-bj12k0t+i6Ba3jtUuDeGpRR0JNzuCqaQDB+fB4yDAORid91kspPLe0NY32BYoESDcoN0PA52Na-qWmhgil9QXDSD-+9dV06ih4wpfN11ROQoM3I0KCgrcVP4A2HbLeHGZ1j+Xksk6AFBunB4Fk+anv+oZBOWy8MSFUCfzC1i5I0Ch7-pDuY3HWgK1V7EV+kdVTUKfkUPAd+b3HJaK72rVaR]",
+          "kind": "stgy",
+          "section": "Strategy board cheat sheets (paste into the in-game Strategy Board)",
+          "scenarios": [
+            "TopP5SigmaScenario"
+          ]
+        },
+        {
+          "label": "P5 Sigma pt. 2",
+          "url": "[stgy:aDQ36EUP9jto-DDFhCOkJbiXlTeOfkKB-k7HVQFrLOf45yO1VZgoQc0mcTN0E0VtD+WGYbpKkWgEPxc2os2xRpq9o3osGMTUJAlrzPzkwZ9fpSYWyGljVr1Naa-I-FUryXhcTPqUTcd9m5wx4pc+YLJoXyZvyvw05fGYJJiy6nu5QjCb2hcj2svYAAiNgMZf-QRe9udhmuyQ7E-QlVhVf2wiUvkbz6GNqL1j3G0-LdEyHjFHR149BI1j6pMM9aB2aQfI51R16FHINyDsM28LkNfgGAsvmUk3pSpiAxwgIbSuzxX+WeKQb69rtmXtwWOxwWbioCf2Sld3Cdu64tuj7TMRsskvDY8tuxPZAkP7CL+rt13EBv6NCAoa3fonfe6aFVBp1DKt2ermiUu-guS1KjALkRU8qXUOEZPIeMCBSysqBfn2AsMnnCuzPTBaNdFS-4CtPSdyP5VDts1I1Haz0295C8wLkPjlTMANTxx3aznFiyGGBcC6DsY4143FBbYzDfAxlL]",
+          "kind": "stgy",
+          "section": "Strategy board cheat sheets (paste into the in-game Strategy Board)",
+          "scenarios": [
+            "TopP5SigmaScenario"
+          ]
+        },
+        {
+          "label": "P5 Omega pt. 1",
+          "url": "[stgy:am6PGqRVdgdyj9m9IVmMyLwBqXLhx0iMOnonYhlsDd9KKAJOnVV3J3FqnVnNcoDa0yOOqwMWBl8aVG8YybJ1+IORofRPZwKPOf0N90pcrNO75TKcA-W1m-5KKU9M2fqMemVuTMS5dPIgRcUCHC1EcZeICZTRrLPbAsNu3G5KS7W5DyUGKd8Z5OOnTeTovUaN5qG0Gf5FQPLjQd4D8MUebAZ0zXXXjAsosq4GHzjVwuR6DHb399as3Oh5kPClwR0rXBHaAb732zCSe4xqU2BiDYizSTud98zJKzK6MuKH0BPnMb9KPhr3zHsTqp+tjIN8ntbLVAc4oJPJL4sl-Dik5gDrcHyrluuH7TxfU7m3BbbKEMHRnupXLPMosy73fWzUMDYdGh-WP4spa2HIRvYKwuTG4X739M-IxsDQuL-ojhvwLAlMy8KBfUf25nnY181M0isMymd3+tnsB5XBQ84nw45X6VKpzYaStR1w+59iJDow1uDS-eFdVYLXCh2I3Wazw+5WTt-mpg34XjLi5F]",
+          "kind": "stgy",
+          "section": "Strategy board cheat sheets (paste into the in-game Strategy Board)",
+          "scenarios": [
+            "TopP5OmegaScenario"
+          ]
+        },
+        {
+          "label": "P5 Omega pt. 2",
+          "url": "[stgy:aCkFO4KUgqDWJoCovdCsWnRTBZxnaaObF-ToDS6Jnu0AUmwr1XxEM74HWBKTybF2nHNtQBkAOS2dunEVQDbVuRwhQKuhjJR-DIbOO1a1IrUUqCbUpQIofQGJBjlUcg9yZx4pq5X7GFqOjEgA1SxI7aSHwtjrw+i3vvczDZhUwZS9Qw2dAsvI2gLk6rF0ez2cQiLqX2oOtvhJp0dcGNxTHQLwx6BgAU78ti65WVn57w17B7jSdU0Hs4lRaR0LESygnxddfsTiD2szA7NbzrQWv+JuXSM1a9ITxZgyESgA5HrMYLxh7u9+PJlKhoByuz7PGRxp2Y1lWXDuw2-ApsJbYaZjshoBcv2i2XuhNxPTs41JFlyexxOHRJY2k5RhbWIJschYUJoCKQez8Fjv+Aul173LRZdN4rrrmBHcEgGHP6-vCsbj3FgvsSetwz55n5BtisoGnVsVdnwgmp28jOiH-zQacqk57sFaexERGz++AwhonFXi+q14+i75X8O8n8cOojTpG4I0tEA2lVZULDiIAYK8ZOQw6Wy9KHWa9fse]",
+          "kind": "stgy",
+          "section": "Strategy board cheat sheets (paste into the in-game Strategy Board)",
+          "scenarios": [
+            "TopP5OmegaScenario"
+          ]
+        }
+      ],
+      "rules": []
+    }
+  ],
+  "mitigation": [
+    {
+      "label": "TOP Mitty v2",
+      "url": "https://docs.google.com/spreadsheets/d/1G0q0PHNFAFbJqE2ftparUyAcqCY-Dw9Hlzh6PpjRCKc/edit?gid=223515716#gid=223515716",
+      "sheetId": "1G0q0PHNFAFbJqE2ftparUyAcqCY-Dw9Hlzh6PpjRCKc"
+    },
+    {
+      "label": "Mitigation sheet (short link)",
+      "url": "https://bit.ly/topmit2"
+    }
+  ],
+  "waymarks": [],
+  "scenarios": {
+    "TopP2PartySynergyScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=324285310725761&preview=1",
+          "credits": "NAUR (P2: Omega-M and Omega-F (Toolbox))"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - P2: Omega-M and Omega-F (Toolbox)",
+          "url": "https://ff14.toolboxgaming.space/?id=324285310725761&preview=1"
+        },
+        {
+          "label": "NAUR - P2: Omega-M and Omega-F (Slides)",
+          "url": "https://docs.google.com/presentation/d/1j-z91BI9i2LDOtp-qQzucqittpsvkecvmG3bXPV_9xs/edit?usp=sharing"
+        }
+      ],
+      "rules": []
+    },
+    "TopP5DeltaScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=732288275415761&preview=1",
+          "credits": "NAUR (P5: Run: Dynamis - Delta (Toolbox))"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - P5: Run: Dynamis - Delta (Toolbox)",
+          "url": "https://ff14.toolboxgaming.space/?id=732288275415761&preview=1"
+        },
+        {
+          "label": "NAUR - P5: Run: Dynamis - Delta (Slides)",
+          "url": "https://docs.google.com/presentation/d/1yjCvFiTwW19vQVdMSQ6CPYUFFgaGLCaiF0uxESCyUvo/edit?usp=sharing"
+        }
+      ],
+      "rules": []
+    },
+    "TopP5SigmaScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=107380954136761&preview=1",
+          "credits": "NAUR (P5: Run: Dynamis - Sigma (Toolbox))"
+        },
+        {
+          "url": "[stgy:a-56vxyw+Uwm3PyeNbQMxFypxsWJm+KIY0K738YNWS+xAKZOlLUpM2FJXIXUoQR4-WNRT9DZ97ZUwZqcjxfzaDCoXCXWCivH1trvVMFBQb9zWMbkxb8nEbQVMIympVPQD8di3yLEhP-NeEGUMhfLQJF42+icoxbp4YwA66GHRepwGTdL-xvcRvVt23tF-W0XD9bki-HeTGsVDzOeHZFA8UujQcaxG3mNL8Mcf0iKsXSXgEenrABHKegu+K+I94XLYKQ4ReLzjCIXL9GDGzKy6t9J9AYlYucIbpgY7JSX5YskrfzLxfER0bRTISXHr4ZN5LWzR1cdCIQUCN2H0]",
+          "credits": "NAUR (P5 Sigma - far glitch)"
+        },
+        {
+          "url": "[stgy:aS74JQwzYRN3yMIgdXI--CI+hmi5372BqG2ryHqdimVQ4CFLDwR+-jCTzK5A75h4jdptxKECKvfee3F83QL6MYijxr0RZFGGM7MBDf2joEToedPgVdJDHmoPD5arW5plPtnm-bj12k0t+i6Ba3jtUuDeGpRR0JNzuCqaQDB+fB4yDAORid91kspPLe0NY32BYoESDcoN0PA52Na-qWmhgil9QXDSD-+9dV06ih4wpfN11ROQoM3I0KCgrcVP4A2HbLeHGZ1j+Xksk6AFBunB4Fk+anv+oZBOWy8MSFUCfzC1i5I0Ch7-pDuY3HWgK1V7EV+kdVTUKfkUPAd+b3HJaK72rVaR]",
+          "credits": "NAUR (P5 Sigma - mid glitch)"
+        },
+        {
+          "url": "[stgy:aDQ36EUP9jto-DDFhCOkJbiXlTeOfkKB-k7HVQFrLOf45yO1VZgoQc0mcTN0E0VtD+WGYbpKkWgEPxc2os2xRpq9o3osGMTUJAlrzPzkwZ9fpSYWyGljVr1Naa-I-FUryXhcTPqUTcd9m5wx4pc+YLJoXyZvyvw05fGYJJiy6nu5QjCb2hcj2svYAAiNgMZf-QRe9udhmuyQ7E-QlVhVf2wiUvkbz6GNqL1j3G0-LdEyHjFHR149BI1j6pMM9aB2aQfI51R16FHINyDsM28LkNfgGAsvmUk3pSpiAxwgIbSuzxX+WeKQb69rtmXtwWOxwWbioCf2Sld3Cdu64tuj7TMRsskvDY8tuxPZAkP7CL+rt13EBv6NCAoa3fonfe6aFVBp1DKt2ermiUu-guS1KjALkRU8qXUOEZPIeMCBSysqBfn2AsMnnCuzPTBaNdFS-4CtPSdyP5VDts1I1Haz0295C8wLkPjlTMANTxx3aznFiyGGBcC6DsY4143FBbYzDfAxlL]",
+          "credits": "NAUR (P5 Sigma pt. 2)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - P5: Run: Dynamis - Sigma (Toolbox)",
+          "url": "https://ff14.toolboxgaming.space/?id=107380954136761&preview=1"
+        },
+        {
+          "label": "NAUR - P5: Run: Dynamis - Sigma (Slides)",
+          "url": "https://docs.google.com/presentation/d/1iLZQxsN1pN0YwGf1u0QtpASi2Q-PSxhJrnMZjw1246I/edit?usp=sharing"
+        }
+      ],
+      "rules": []
+    },
+    "TopP5OmegaScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=078384491946761&preview=1",
+          "credits": "NAUR (P5: Run: Dynamis - Omega (Toolbox))"
+        },
+        {
+          "url": "[stgy:am6PGqRVdgdyj9m9IVmMyLwBqXLhx0iMOnonYhlsDd9KKAJOnVV3J3FqnVnNcoDa0yOOqwMWBl8aVG8YybJ1+IORofRPZwKPOf0N90pcrNO75TKcA-W1m-5KKU9M2fqMemVuTMS5dPIgRcUCHC1EcZeICZTRrLPbAsNu3G5KS7W5DyUGKd8Z5OOnTeTovUaN5qG0Gf5FQPLjQd4D8MUebAZ0zXXXjAsosq4GHzjVwuR6DHb399as3Oh5kPClwR0rXBHaAb732zCSe4xqU2BiDYizSTud98zJKzK6MuKH0BPnMb9KPhr3zHsTqp+tjIN8ntbLVAc4oJPJL4sl-Dik5gDrcHyrluuH7TxfU7m3BbbKEMHRnupXLPMosy73fWzUMDYdGh-WP4spa2HIRvYKwuTG4X739M-IxsDQuL-ojhvwLAlMy8KBfUf25nnY181M0isMymd3+tnsB5XBQ84nw45X6VKpzYaStR1w+59iJDow1uDS-eFdVYLXCh2I3Wazw+5WTt-mpg34XjLi5F]",
+          "credits": "NAUR (P5 Omega pt. 1)"
+        },
+        {
+          "url": "[stgy:aCkFO4KUgqDWJoCovdCsWnRTBZxnaaObF-ToDS6Jnu0AUmwr1XxEM74HWBKTybF2nHNtQBkAOS2dunEVQDbVuRwhQKuhjJR-DIbOO1a1IrUUqCbUpQIofQGJBjlUcg9yZx4pq5X7GFqOjEgA1SxI7aSHwtjrw+i3vvczDZhUwZS9Qw2dAsvI2gLk6rF0ez2cQiLqX2oOtvhJp0dcGNxTHQLwx6BgAU78ti65WVn57w17B7jSdU0Hs4lRaR0LESygnxddfsTiD2szA7NbzrQWv+JuXSM1a9ITxZgyESgA5HrMYLxh7u9+PJlKhoByuz7PGRxp2Y1lWXDuw2-ApsJbYaZjshoBcv2i2XuhNxPTs41JFlyexxOHRJY2k5RhbWIJschYUJoCKQez8Fjv+Aul173LRZdN4rrrmBHcEgGHP6-vCsbj3FgvsSetwz55n5BtisoGnVsVdnwgmp28jOiH-zQacqk57sFaexERGz++AwhonFXi+q14+i75X8O8n8cOojTpG4I0tEA2lVZULDiIAYK8ZOQw6Wy9KHWa9fse]",
+          "credits": "NAUR (P5 Omega pt. 2)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - P5: Run: Dynamis - Omega (Toolbox)",
+          "url": "https://ff14.toolboxgaming.space/?id=078384491946761&preview=1"
+        },
+        {
+          "label": "NAUR - P5: Run: Dynamis - Omega (Slides)",
+          "url": "https://docs.google.com/presentation/d/1oxxFMaGJEEgQyEgj6ENC0Y23O5Mi10Ap72h2ctPu68A/edit?usp=sharing"
+        }
+      ],
+      "rules": []
+    },
+    "TopP6WaveCannon2Scenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=829484027197761&preview=1",
+          "credits": "NAUR (P6: Alpha Omega (Toolbox))"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - P6: Alpha Omega (Toolbox)",
+          "url": "https://ff14.toolboxgaming.space/?id=829484027197761&preview=1"
+        },
+        {
+          "label": "NAUR - P6: Alpha Omega (Slides)",
+          "url": "https://docs.google.com/presentation/d/1NjFeRT-6ORKjR8ZZzDdktTOnJwuLNGyuUif1aNvKwU8/edit?usp=sharing"
+        }
+      ],
+      "rules": []
+    }
+  },
+  "guideText": []
+}

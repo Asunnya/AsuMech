@@ -56,6 +56,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
     internal static PracticeLoop Practice { get; private set; } = null!;
     internal static DrillTracker Drill { get; private set; } = null!;
     internal static Learn.MasteryStore Mastery { get; private set; } = null!;
+    internal static Learn.StepStatsStore StepStats { get; private set; } = null!;
     internal static MultiplayerManager Multiplayer { get; private set; } = null!;
     internal static PullRecorder Recorder { get; private set; } = null!;
     internal RunController Runs { get; private set; } = null!;
@@ -80,6 +81,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
     private Windows.Learn.ToolboxViewer ToolboxViewer { get; init; }
     private Windows.Learn.MitOverlay MitOverlay { get; init; }
     private Windows.Learn.TimelinePanel TimelinePanel { get; init; }
+    private Windows.Learn.BotInspector BotInspector { get; init; }
     private Windows.Learn.MitTraining MitTraining { get; init; }
     internal Windows.Learn.MitReportWindow MitReport { get; init; }
     internal Windows.Learn.LessonReportWindow LessonReport { get; init; }
@@ -108,6 +110,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
             Game = new Game();
             Drill = new DrillTracker(Config.BestStreaks, Config.Save);
             Mastery = new Learn.MasteryStore(Config.Mastery, Config.Save);
+            StepStats = new Learn.StepStatsStore(Config.StepStats, Config.Save);
             // Before PracticeLoop subscribes: a reached target must turn Auto-restart off before it restarts.
             IScenario? drillScenario = null;
             Game.RunStarted += (p, _) => drillScenario = p.Scenario;
@@ -151,6 +154,8 @@ public sealed class Plugin : IAsyncDalamudPlugin
             windowSystem.AddWindow(MitOverlay);
             TimelinePanel = new Windows.Learn.TimelinePanel();
             windowSystem.AddWindow(TimelinePanel);
+            BotInspector = new Windows.Learn.BotInspector();
+            windowSystem.AddWindow(BotInspector);
             MitReport = new Windows.Learn.MitReportWindow();
             windowSystem.AddWindow(MitReport);
             LessonReport = new Windows.Learn.LessonReportWindow();

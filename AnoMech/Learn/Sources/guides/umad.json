@@ -1,0 +1,409 @@
+{
+  "fight": "UMAD",
+  "family": "Umad",
+  "title": "Dancing Mad (Ultimate) - UMAD (Kefka)",
+  "source": "https://naurffxiv.com/ultimate/kefka",
+  "guide": null,
+  "captured": "2026-11-04",
+  "credits": "NAUR Kefkabin",
+  "sections": [
+    {
+      "title": "(header)",
+      "links": [
+        {
+          "label": "Source",
+          "url": "https://naurffxiv.com/ultimate/kefka",
+          "kind": "other",
+          "section": "(header)",
+          "scenarios": []
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "Phase 1",
+      "links": [
+        {
+          "label": "Strat: Merry-Go-Round (Slides)",
+          "url": "https://docs.google.com/presentation/d/1-E2rEKa586KKiVNvtt3EAMQY2YAEVBRGcMX0WzORIq8/edit?usp=sharing",
+          "kind": "slides",
+          "section": "Phase 1",
+          "scenarios": [
+            "UmadP1TeleTrouncingScenario"
+          ]
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "Phase 2",
+      "links": [
+        {
+          "label": "Strat: AAABBBBA (3-4-1 melee flex) (Raidplan)",
+          "url": "https://raidplan.io/plan/UATE__aDcw1-bgVv",
+          "kind": "raidplan.io",
+          "section": "Phase 2",
+          "scenarios": [
+            "UmadP2ForsakenScenario"
+          ],
+          "strat": "Kroxy-Rinon 341 (melee flex)"
+        },
+        {
+          "label": "Strat: Trines (party N CW, tanks NW CCW) (Raidplan)",
+          "url": "https://raidplan.io/plan/apkh6ytq72w8pt3v",
+          "kind": "raidplan.io",
+          "section": "Phase 2",
+          "scenarios": [],
+          "strat": "Kroxy-Rinon 341 (melee flex)"
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "Phase 3",
+      "links": [
+        {
+          "label": "Strat: Tank LB3 BoA + Kefka-relative Blackholes (Slides)",
+          "url": "https://docs.google.com/presentation/d/1w05ez7GscxTflgaMgVET42gjGryI2QSPR0zqRWXdWgI/edit?usp=sharing",
+          "kind": "slides",
+          "section": "Phase 3",
+          "scenarios": [
+            "UmadP3LimitCutScenario",
+            "UmadP3BlackHoleScenario"
+          ]
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "Phase 4",
+      "links": [
+        {
+          "label": "Strat: Kefka Says (self mark) (Raidplan)",
+          "url": "https://raidplan.io/plan/ChcTBFAcFMZKFVKo",
+          "kind": "raidplan.io",
+          "section": "Phase 4",
+          "scenarios": [
+            "UmadP4KefkaSaysScenario"
+          ]
+        },
+        {
+          "label": "Tool: P4 Helper (WTFDIG)",
+          "url": "https://wtfdig.info/tools/p4-helper",
+          "kind": "other",
+          "section": "Phase 4",
+          "scenarios": [
+            "UmadP4KefkaSaysScenario"
+          ]
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "Phase 5",
+      "links": [
+        {
+          "label": "Strat: Static Forsaken Null (Raidplan)",
+          "url": "https://raidplan.io/plan/3wODYtApXBtYAdu0",
+          "kind": "raidplan.io",
+          "section": "Phase 5",
+          "scenarios": [
+            "UmadP5FloodScenario",
+            "UmadP5CelestriadScenario",
+            "UmadP5ExaflaresScenario"
+          ]
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "General resources",
+      "links": [
+        {
+          "label": "Mitigation: Ikuya Mit",
+          "url": "https://tinyurl.com/ikuyamittydmu",
+          "kind": "shortlink",
+          "section": "General resources",
+          "scenarios": []
+        },
+        {
+          "label": "WTFDIG (fight cheat sheet)",
+          "url": "https://wtfdig.info/ultimates/umad",
+          "kind": "other",
+          "section": "General resources",
+          "scenarios": []
+        },
+        {
+          "label": "Wipe analyzer",
+          "url": "https://analyzer.wtfdig.info/",
+          "kind": "other",
+          "section": "General resources",
+          "scenarios": []
+        },
+        {
+          "label": "Forsaken mini guide",
+          "url": "https://www.youtube.com/watch?v=iBMu1q1dZcA",
+          "kind": "video",
+          "section": "General resources",
+          "scenarios": [
+            "UmadP2ForsakenScenario"
+          ]
+        },
+        {
+          "label": "Stray Apocalypse (P5 exaflares) dodge mini guide",
+          "url": "https://www.youtube.com/watch?v=WFGmri3-5VA",
+          "kind": "video",
+          "section": "General resources",
+          "scenarios": [
+            "UmadP5ExaflaresScenario"
+          ]
+        },
+        {
+          "label": "Simulations: Waju Sims",
+          "url": "https://github.com/WCGH/Waju-Sims/releases",
+          "kind": "other",
+          "section": "General resources",
+          "scenarios": [
+            "UmadP5ExaflaresScenario"
+          ]
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "Strategy boards (paste into the in-game Strategy Board)",
+      "links": [
+        {
+          "label": "Phase 1 - Arrows",
+          "url": "[stgy:a4VbkvnqedaYql1cKgYD-v1TGR8hYES6gNvOqPYBgBS4rzWTDCbQq0Fkgp+QrWZmNIWoXepYorhK7rKChN-6pvrE2DaytcrTEN41bceJvArBk8N3uqtP4vu620iBV9xjVTPOUrEZvk4MJx3JGVXxpKANohPTVA6DJNOJl3zrHpP0kGLHvxortEtsgi0G3y5ljsSRUvw1TW6Q0iEGrQFOs1pWCu+Gw4nqjsH3JFHrET4hg6V-lIFqOz+q2+MnkSzKRbLwh+Bpb9j9bUm8ARogXrZqm0aidRdmmQsKYfrcr4n3uZhJDA0UqxiMo7VRzx9xvWuwdMBQxGeq4oTxa0AC7PhilxWwyAXy+SXaEQ9v6xGgz1TiCOkGY1IJt7+wOEP4EtF-Yev4+ekB7JwBKnxYfZyTIj2RiYpXGNQm1KzGOopDMX95EtI8Cxcp7OFoFjb4TfY9uLAApZu7ST3hLY8KFHR1CHGLNXjC5Xs0mXAq4jJwrjw6am6G0cnPrD2+uy5ADYRvfe40GNFwuq9Mel]",
+          "kind": "stgy",
+          "section": "Strategy boards (paste into the in-game Strategy Board)",
+          "scenarios": [
+            "UmadP1TeleTrouncingScenario"
+          ]
+        },
+        {
+          "label": "Phase 2 - Forsaken",
+          "url": "[stgy:aID8fpnZ3iexQ3f-gK5tBtz0BCpSXPtGsRqq6VaoCf8TSAdLETHCXaUDLhkqUAZHgmv1kpfEkpBRlM0tRwoDcrVBmf2xIELbURoeUBknMlDqAISMTlta0zOAh5XdGEF34OxhJTl5FAbu7WXSwN60jmaMfbttb622BvD+kRBG3HztsZqY9NSxGihrDtjMxePr8Wwb7k1aU+3NnRLanHzsf6nhP4pP7XllhrDdv-ol-j8HuSn4QU21xfjuM2mklzUD8JaHR3fEexN3NqWtafNoKTn7hcqw4fJKYB-mfhvz7Gd2GMtLRLwjan5WtLh74fJybV7zM05jORBfuxC-Azb26vmfHApa3KeNnRC-22veAlB-cg06Qc+8tGsQhsKLPjPyKsarj53LxRISjihRPzwZV0JD1Wo2jMFTaxhp6ZF3C3RCXhCe1GroIpvMi8TiF3rOu1yY0agNEKB3fBlSePT+ToKlaFcq7v4T5FrbpK5saIHLNqxJ8SpRb-3wRyMKOPvj-bg6VkTkUXrQtYgPOhXIKZKhORDPVyQsGhGf7sC1Lyvimq+LYPkZKv7PRYts8p5LSMaGV7wdNTVLb4ZKKJS3MrWntTEExdXTixrEI+U0C5DjbKQgoJozdMg0gJrKYiAE0dqgr-iTjqOgAdIwxnM8EYrXgJ4S-93BbVB7c5Wu-TgkMkfbqLuX1dwUpyzHEo2GBDZIGNhSB4zKVQV2yJnqGUIeNzzME5cjldWeeKF6s14Y1kk-eCXNhcR2XKno51s0E+LjT8fTaKLQF2]",
+          "kind": "stgy",
+          "section": "Strategy boards (paste into the in-game Strategy Board)",
+          "scenarios": [
+            "UmadP2ForsakenScenario"
+          ]
+        },
+        {
+          "label": "Phase 3 - Blackholes",
+          "url": "[stgy:aLWDb60HlUsNdEvWZViOgFvmgP4MN3i9XxfTXTLUKtD9cmF6ubfC3NF3xBvh3Qeth4TbTlzUhjnkOXACq9b0XXSdE07XOgV0C8EWE1rM5nF9V5iKu8dC5ogmeUmRWzZZVh+myTPmI8IJYrQ8aXp0QriSwi4xyXeH2gaCGSYOVnqX6OZm+UpuNua3SnNudPUw5g9XDrYXlyQtj6oKEXOMa-O5sl2msgkYzg2AYymswV7KDk4vFPF-lcg6sZPo8of4HsK65L7cYL6uIHds+aja2QJ0y-swOG6SlJoFmsQ+Jv9Y8fN091eT3xyq8tyE7abOAPXyTlApUl-MBsJpwzdMCqoLMW4YC+holj+g3XaivmFXibufUxQKBQ0fLjWQJ51MoxQZVXh520vns6gqv8woRAqPoQFZ5wIjTt+RmGb73pzzWMTfo6GodFX1Mn2qGH60aldGjXlstR1Dd44cyk2jWu3q8ZH5tXFsZncJZntQJ9aJJlb-YDaerguY8ZXiHD1zjCA6ESA2zisB+7oZ5TSiR1fmhMPAJMdrI+E8J7cW00XocZbLbDahgGaKmOBeN-0y8VU+ldZveGGS3ypGqoEi3vX4lInyXsf+ufkOy7BX6y-H7KIcdKPmdCB3vKBWFWYG8+l5HnqqHgTj4zSJRmHWosJFEKwuAlCjvySRVaST2wTuJ3]",
+          "kind": "stgy",
+          "section": "Strategy boards (paste into the in-game Strategy Board)",
+          "scenarios": [
+            "UmadP3LimitCutScenario",
+            "UmadP3BlackHoleScenario"
+          ]
+        }
+      ],
+      "rules": []
+    }
+  ],
+  "mitigation": [
+    {
+      "label": "Mitigation: Ikuya Mit",
+      "url": "https://tinyurl.com/ikuyamittydmu"
+    }
+  ],
+  "waymarks": [
+    {
+      "name": "12y Waymarks",
+      "mapId": 1094,
+      "local": {
+        "A": [
+          0.0,
+          0.0,
+          -12.0
+        ],
+        "B": [
+          12.0,
+          0.0,
+          0.0
+        ],
+        "C": [
+          0.0,
+          0.0,
+          12.0
+        ],
+        "D": [
+          -12.0,
+          0.0,
+          0.0
+        ],
+        "One": [
+          -6.0,
+          0.0,
+          -6.0
+        ],
+        "Two": [
+          6.0,
+          0.0,
+          -6.0
+        ],
+        "Three": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "Four": [
+          -6.0,
+          0.0,
+          6.0
+        ]
+      },
+      "closestPreset": "Diamond Waymarks",
+      "maxDeviation": 0.0
+    }
+  ],
+  "scenarios": {
+    "UmadP1TeleTrouncingScenario": {
+      "plans": [
+        {
+          "url": "[stgy:a4VbkvnqedaYql1cKgYD-v1TGR8hYES6gNvOqPYBgBS4rzWTDCbQq0Fkgp+QrWZmNIWoXepYorhK7rKChN-6pvrE2DaytcrTEN41bceJvArBk8N3uqtP4vu620iBV9xjVTPOUrEZvk4MJx3JGVXxpKANohPTVA6DJNOJl3zrHpP0kGLHvxortEtsgi0G3y5ljsSRUvw1TW6Q0iEGrQFOs1pWCu+Gw4nqjsH3JFHrET4hg6V-lIFqOz+q2+MnkSzKRbLwh+Bpb9j9bUm8ARogXrZqm0aidRdmmQsKYfrcr4n3uZhJDA0UqxiMo7VRzx9xvWuwdMBQxGeq4oTxa0AC7PhilxWwyAXy+SXaEQ9v6xGgz1TiCOkGY1IJt7+wOEP4EtF-Yev4+ekB7JwBKnxYfZyTIj2RiYpXGNQm1KzGOopDMX95EtI8Cxcp7OFoFjb4TfY9uLAApZu7ST3hLY8KFHR1CHGLNXjC5Xs0mXAq4jJwrjw6am6G0cnPrD2+uy5ADYRvfe40GNFwuq9Mel]",
+          "credits": "NAUR Kefkabin (Phase 1 - Arrows)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR Kefkabin - Strat: Merry-Go-Round (Slides)",
+          "url": "https://docs.google.com/presentation/d/1-E2rEKa586KKiVNvtt3EAMQY2YAEVBRGcMX0WzORIq8/edit?usp=sharing"
+        }
+      ],
+      "rules": []
+    },
+    "UmadP2ForsakenScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/UATE__aDcw1-bgVv",
+          "credits": "NAUR Kefkabin (Strat: AAABBBBA (3-4-1 melee flex) (Raidplan))",
+          "strat": "Kroxy-Rinon 341 (melee flex)"
+        },
+        {
+          "url": "[stgy:aID8fpnZ3iexQ3f-gK5tBtz0BCpSXPtGsRqq6VaoCf8TSAdLETHCXaUDLhkqUAZHgmv1kpfEkpBRlM0tRwoDcrVBmf2xIELbURoeUBknMlDqAISMTlta0zOAh5XdGEF34OxhJTl5FAbu7WXSwN60jmaMfbttb622BvD+kRBG3HztsZqY9NSxGihrDtjMxePr8Wwb7k1aU+3NnRLanHzsf6nhP4pP7XllhrDdv-ol-j8HuSn4QU21xfjuM2mklzUD8JaHR3fEexN3NqWtafNoKTn7hcqw4fJKYB-mfhvz7Gd2GMtLRLwjan5WtLh74fJybV7zM05jORBfuxC-Azb26vmfHApa3KeNnRC-22veAlB-cg06Qc+8tGsQhsKLPjPyKsarj53LxRISjihRPzwZV0JD1Wo2jMFTaxhp6ZF3C3RCXhCe1GroIpvMi8TiF3rOu1yY0agNEKB3fBlSePT+ToKlaFcq7v4T5FrbpK5saIHLNqxJ8SpRb-3wRyMKOPvj-bg6VkTkUXrQtYgPOhXIKZKhORDPVyQsGhGf7sC1Lyvimq+LYPkZKv7PRYts8p5LSMaGV7wdNTVLb4ZKKJS3MrWntTEExdXTixrEI+U0C5DjbKQgoJozdMg0gJrKYiAE0dqgr-iTjqOgAdIwxnM8EYrXgJ4S-93BbVB7c5Wu-TgkMkfbqLuX1dwUpyzHEo2GBDZIGNhSB4zKVQV2yJnqGUIeNzzME5cjldWeeKF6s14Y1kk-eCXNhcR2XKno51s0E+LjT8fTaKLQF2]",
+          "credits": "NAUR Kefkabin (Phase 2 - Forsaken)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR Kefkabin - Strat: AAABBBBA (3-4-1 melee flex) (Raidplan)",
+          "url": "https://raidplan.io/plan/UATE__aDcw1-bgVv",
+          "strat": "Kroxy-Rinon 341 (melee flex)"
+        },
+        {
+          "label": "NAUR Kefkabin - Forsaken mini guide",
+          "url": "https://www.youtube.com/watch?v=iBMu1q1dZcA"
+        }
+      ],
+      "rules": []
+    },
+    "UmadP3LimitCutScenario": {
+      "plans": [
+        {
+          "url": "[stgy:aLWDb60HlUsNdEvWZViOgFvmgP4MN3i9XxfTXTLUKtD9cmF6ubfC3NF3xBvh3Qeth4TbTlzUhjnkOXACq9b0XXSdE07XOgV0C8EWE1rM5nF9V5iKu8dC5ogmeUmRWzZZVh+myTPmI8IJYrQ8aXp0QriSwi4xyXeH2gaCGSYOVnqX6OZm+UpuNua3SnNudPUw5g9XDrYXlyQtj6oKEXOMa-O5sl2msgkYzg2AYymswV7KDk4vFPF-lcg6sZPo8of4HsK65L7cYL6uIHds+aja2QJ0y-swOG6SlJoFmsQ+Jv9Y8fN091eT3xyq8tyE7abOAPXyTlApUl-MBsJpwzdMCqoLMW4YC+holj+g3XaivmFXibufUxQKBQ0fLjWQJ51MoxQZVXh520vns6gqv8woRAqPoQFZ5wIjTt+RmGb73pzzWMTfo6GodFX1Mn2qGH60aldGjXlstR1Dd44cyk2jWu3q8ZH5tXFsZncJZntQJ9aJJlb-YDaerguY8ZXiHD1zjCA6ESA2zisB+7oZ5TSiR1fmhMPAJMdrI+E8J7cW00XocZbLbDahgGaKmOBeN-0y8VU+ldZveGGS3ypGqoEi3vX4lInyXsf+ufkOy7BX6y-H7KIcdKPmdCB3vKBWFWYG8+l5HnqqHgTj4zSJRmHWosJFEKwuAlCjvySRVaST2wTuJ3]",
+          "credits": "NAUR Kefkabin (Phase 3 - Blackholes)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR Kefkabin - Strat: Tank LB3 BoA + Kefka-relative Blackholes (Slides)",
+          "url": "https://docs.google.com/presentation/d/1w05ez7GscxTflgaMgVET42gjGryI2QSPR0zqRWXdWgI/edit?usp=sharing"
+        }
+      ],
+      "rules": []
+    },
+    "UmadP3BlackHoleScenario": {
+      "plans": [
+        {
+          "url": "[stgy:aLWDb60HlUsNdEvWZViOgFvmgP4MN3i9XxfTXTLUKtD9cmF6ubfC3NF3xBvh3Qeth4TbTlzUhjnkOXACq9b0XXSdE07XOgV0C8EWE1rM5nF9V5iKu8dC5ogmeUmRWzZZVh+myTPmI8IJYrQ8aXp0QriSwi4xyXeH2gaCGSYOVnqX6OZm+UpuNua3SnNudPUw5g9XDrYXlyQtj6oKEXOMa-O5sl2msgkYzg2AYymswV7KDk4vFPF-lcg6sZPo8of4HsK65L7cYL6uIHds+aja2QJ0y-swOG6SlJoFmsQ+Jv9Y8fN091eT3xyq8tyE7abOAPXyTlApUl-MBsJpwzdMCqoLMW4YC+holj+g3XaivmFXibufUxQKBQ0fLjWQJ51MoxQZVXh520vns6gqv8woRAqPoQFZ5wIjTt+RmGb73pzzWMTfo6GodFX1Mn2qGH60aldGjXlstR1Dd44cyk2jWu3q8ZH5tXFsZncJZntQJ9aJJlb-YDaerguY8ZXiHD1zjCA6ESA2zisB+7oZ5TSiR1fmhMPAJMdrI+E8J7cW00XocZbLbDahgGaKmOBeN-0y8VU+ldZveGGS3ypGqoEi3vX4lInyXsf+ufkOy7BX6y-H7KIcdKPmdCB3vKBWFWYG8+l5HnqqHgTj4zSJRmHWosJFEKwuAlCjvySRVaST2wTuJ3]",
+          "credits": "NAUR Kefkabin (Phase 3 - Blackholes)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR Kefkabin - Strat: Tank LB3 BoA + Kefka-relative Blackholes (Slides)",
+          "url": "https://docs.google.com/presentation/d/1w05ez7GscxTflgaMgVET42gjGryI2QSPR0zqRWXdWgI/edit?usp=sharing"
+        }
+      ],
+      "rules": []
+    },
+    "UmadP4KefkaSaysScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/ChcTBFAcFMZKFVKo",
+          "credits": "NAUR Kefkabin (Strat: Kefka Says (self mark) (Raidplan))"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR Kefkabin - Strat: Kefka Says (self mark) (Raidplan)",
+          "url": "https://raidplan.io/plan/ChcTBFAcFMZKFVKo"
+        },
+        {
+          "label": "NAUR Kefkabin - Tool: P4 Helper (WTFDIG)",
+          "url": "https://wtfdig.info/tools/p4-helper"
+        }
+      ],
+      "rules": []
+    },
+    "UmadP5FloodScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/3wODYtApXBtYAdu0",
+          "credits": "NAUR Kefkabin (Strat: Static Forsaken Null (Raidplan))"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR Kefkabin - Strat: Static Forsaken Null (Raidplan)",
+          "url": "https://raidplan.io/plan/3wODYtApXBtYAdu0"
+        }
+      ],
+      "rules": []
+    },
+    "UmadP5CelestriadScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/3wODYtApXBtYAdu0",
+          "credits": "NAUR Kefkabin (Strat: Static Forsaken Null (Raidplan))"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR Kefkabin - Strat: Static Forsaken Null (Raidplan)",
+          "url": "https://raidplan.io/plan/3wODYtApXBtYAdu0"
+        }
+      ],
+      "rules": []
+    },
+    "UmadP5ExaflaresScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/3wODYtApXBtYAdu0",
+          "credits": "NAUR Kefkabin (Strat: Static Forsaken Null (Raidplan))"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR Kefkabin - Strat: Static Forsaken Null (Raidplan)",
+          "url": "https://raidplan.io/plan/3wODYtApXBtYAdu0"
+        },
+        {
+          "label": "NAUR Kefkabin - Stray Apocalypse (P5 exaflares) dodge mini guide",
+          "url": "https://www.youtube.com/watch?v=WFGmri3-5VA"
+        },
+        {
+          "label": "NAUR Kefkabin - Simulations: Waju Sims",
+          "url": "https://github.com/WCGH/Waju-Sims/releases"
+        }
+      ],
+      "rules": []
+    }
+  },
+  "guideText": []
+}

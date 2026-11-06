@@ -1,7 +1,16 @@
 {
   "scenario": "UcobP1TwintaniaScenario",
   "strat": "Neurolinks at 1, 2 and 3, ranged baits Liquid Hell",
-  "sources": [],
+  "sources": [
+    {
+      "label": "NAUR - Raidplan: Twintania",
+      "url": "https://raidplan.io/plan/9WEG4AEGVdru3hyF"
+    },
+    {
+      "label": "NAUR - Guide: Stop baiting Liquid Hells on the party!!",
+      "url": "https://raidplan.io/plan/19yavfslOUU0l1Gp"
+    }
+  ],
   "steps": [
     {
       "key": {

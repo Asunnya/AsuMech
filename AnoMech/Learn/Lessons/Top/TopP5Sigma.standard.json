@@ -1,7 +1,16 @@
 {
   "scenario": "TopP5SigmaScenario",
   "strat": "Standard",
-  "sources": [],
+  "sources": [
+    {
+      "label": "NAUR - P5: Run: Dynamis - Sigma (Toolbox)",
+      "url": "https://ff14.toolboxgaming.space/?id=107380954136761&preview=1"
+    },
+    {
+      "label": "NAUR - P5: Run: Dynamis - Sigma (Slides)",
+      "url": "https://docs.google.com/presentation/d/1iLZQxsN1pN0YwGf1u0QtpASi2Q-PSxhJrnMZjw1246I/edit?usp=sharing"
+    }
+  ],
   "steps": [
     {
       "key": {

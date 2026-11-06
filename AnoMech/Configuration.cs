@@ -57,9 +57,13 @@ public class Configuration : IPluginConfiguration
     public List<string> RecentScenarios { get; set; } = [];
     public Dictionary<string, int> BestStreaks { get; set; } = [];
     public Dictionary<string, int> Mastery { get; set; } = [];
+    // StepStatsStore: every judged try per lesson step and role (result, reaction, distance, cause).
+    public Dictionary<string, List<AnoMech.Learn.StepAttempt>> StepStats { get; set; } = [];
 
     // Mitigation training: checks the plan's action for your column against what you pressed.
     public bool EnableMitigationTraining { get; set; } = false;
+    // BotInspector: targeting a bot during a run shows the strat call that sent it where it is.
+    public bool ShowBotInspector { get; set; } = true;
     // TimelinePanel: the next casts of the embedded timeline, top right, during a lesson.
     public bool ShowTimelinePanel { get; set; } = true;
     // HazardOverlay: the areas about to resolve, drawn on the ground, per lesson level.

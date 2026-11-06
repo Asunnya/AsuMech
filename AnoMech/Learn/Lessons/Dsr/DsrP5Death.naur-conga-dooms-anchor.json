@@ -1,7 +1,12 @@
 {
   "scenario": "DsrP5DeathScenario",
   "strat": "NAUR (conga, dooms anchor)",
-  "sources": [],
+  "sources": [
+    {
+      "label": "NAUR - Death of the Heavens - Toolbox",
+      "url": "https://ff14.toolboxgaming.space/?id=414790163993271&preview=1"
+    }
+  ],
   "steps": [
     {
       "key": {

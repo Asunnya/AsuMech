@@ -1,7 +1,12 @@
 {
   "scenario": "DsrP7DragonKingScenario",
   "strat": "Static south exaflare, 3/3/2 then 6/1/1",
-  "sources": [],
+  "sources": [
+    {
+      "label": "NAUR - Toolbox: Dragon-King Thordan",
+      "url": "https://ff14.toolboxgaming.space/?id=448767858029561&preview=1"
+    }
+  ],
   "steps": [
     {
       "key": {

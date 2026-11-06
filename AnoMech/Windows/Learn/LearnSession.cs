@@ -51,7 +51,24 @@ internal sealed class LearnSession : IDisposable
         game.World.Guidance = Director;
         game.MechanicFailed += OnMechanicFailed;
         game.World.ActionResolved += OnActionResolved;
+        Director.StepResolved += OnStepResolved;
         Current = this;
+    }
+
+    // Every judged step goes to the step stats: the lesson report's map and the adaptive drill.
+    private void OnStepResolved(ActiveStep step, StepResult result)
+    {
+        if (!Director.Judging || Lesson is not { } lesson || step.Step is not { } lessonStep) return;
+        var eval = step.Evaluation;
+        var failure = hits.LastOrDefault(h => h.StepTitle == step.Title && h.Time >= step.Order.IssuedAt)?.Phrase;
+        Plugin.StepStats.Record(lesson, Role, lessonStep.Key, new StepAttempt
+        {
+            Result = result,
+            Reaction = eval.ReactedAt is { } at ? MathF.Max(0f, at - step.Order.IssuedAt) : null,
+            Distance = eval.ResolvedDistance,
+            Failure = failure,
+            When = DateTime.UtcNow,
+        });
     }
 
     // The hits the player took this run, with the step they fell in and why they landed.
@@ -144,6 +161,7 @@ internal sealed class LearnSession : IDisposable
         }
         game.MechanicFailed -= OnMechanicFailed;
         game.World.ActionResolved -= OnActionResolved;
+        Director.StepResolved -= OnStepResolved;
         if (Drill != null) game.RunStarted -= OnRunStarted;
         if (pinned != null) ExampleOverrides.Lift(pinned, pinnedKeys);
         if (ReferenceEquals(game.World.Guidance, Director)) game.World.Guidance = null;

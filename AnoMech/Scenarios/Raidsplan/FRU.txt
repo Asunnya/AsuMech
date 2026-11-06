@@ -7,6 +7,9 @@ Pastebin last updated 2025-01-11; pages captured 2026-11-04.
 Feedback: NAUR Discord, Feedback and Suggestions channel
           https://discord.com/invite/naurffxiv
 ========================================================================
+@fight: FRU
+@family: Fru
+@credits: NAUR LesBin
 
 Contents
   1. Resources by phase (strat + links)
@@ -28,6 +31,7 @@ Entire phase - Role + Fixed Tether OR Role ONLY Utopia, Conga FoF
 ------------------------------------------------------------------------
 P2: Usurper of Frost (Shiva)
 ------------------------------------------------------------------------
+@scenarios: FruP2DiamondDustScenario, FruP2LightRampantScenario
 Diamond Dust / Light Rampant - Partner Swap DD4/4 + EW Light Rampant
   https://tinyurl.com/lesbin-p2
   https://docs.google.com/presentation/d/1VqIifgNf8RzXIWb8EGGVdKvOtKk0HmhPcHIMpizYuig/edit#slide=id.g31ad41a9148_0_9
@@ -41,10 +45,12 @@ Intermission: Ice Veil (Crystals)
 ------------------------------------------------------------------------
 P3: Oracle of Darkness (Gaia)
 ------------------------------------------------------------------------
+@scenarios: FruP3UltimateRelativityScenario
 Ultimate Relativity - G1 Adjust Role Quadrant, Buddy Swaps
   https://tinyurl.com/lesbin-ur
   https://docs.google.com/presentation/d/1ncHCSP8NUA_XlrdiRYVmHUgtuMiT_g0q_TpISp6KbyI/edit?usp=sharing
 
+@scenarios: FruP3ApocalypseScenario
 Sextuple Apocalypse - G1 Adjust Static Spreads, Multi-Swap |
 Safespot Color Apoc version
   https://raidplan.io/plan/gU44027CtpmKs-sC
@@ -52,10 +58,12 @@ Safespot Color Apoc version
 ------------------------------------------------------------------------
 P4: Roommates (Oracle + Usurper)
 ------------------------------------------------------------------------
+@scenarios: FruP4DarklitDragonsongScenario
 Darklit Dragonsong - Role Quadrant, Healer Plant NW
   https://tinyurl.com/lesbin-darklit
   https://docs.google.com/presentation/d/1kFM5ggrIj86Mc2EcYS5RfFgF_pawSRk7-vryQmQb2Is/edit?usp=sharing
 
+@scenarios: FruP4CrystallizeTimeScenario
 Crystallize Time - Early Pop
   https://tinyurl.com/lesbin-ct
   https://docs.google.com/presentation/d/1dz7IPrYxMPT1Qc81aLi-s8pVQQ3AzD_P6nheLcdhH0o/edit?usp=sharing
@@ -63,6 +71,7 @@ Crystallize Time - Early Pop
 ------------------------------------------------------------------------
 P5: Pandora
 ------------------------------------------------------------------------
+@scenarios: FruP5FulgentBladeScenario, FruP5ParadiseRegainedScenario
 UltiProject: full FRU Phase 5 guide
   https://slides.com/ultiproject/frup5/scroll
 Advanced Exalines theory

@@ -1,7 +1,12 @@
 {
   "scenario": "DsrP6CauterizeScenario",
   "strat": "NA PF (Light vs Dark)",
-  "sources": [],
+  "sources": [
+    {
+      "label": "NAUR - Toolbox: Double Dragon",
+      "url": "https://ff14.toolboxgaming.space/?id=426762112878561&preview=1"
+    }
+  ],
   "steps": [
     {
       "key": {

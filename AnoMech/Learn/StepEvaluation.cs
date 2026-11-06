@@ -18,9 +18,22 @@ public sealed class StepEvaluation(Vector3 target, float tolerance, float deadli
     public float? ResolvedDistance { get; private set; }
     public bool Within => LastDistance <= tolerance;
 
+    // When the player first closed this much on the spot since the order, or was already on it:
+    // the reaction, measured from the order (the moment the strat moves the bots).
+    public const float ReactYalms = 1f;
+    public float? FirstSampledAt { get; private set; }
+    public float? ReactedAt { get; private set; }
+    private float startDistance;
+
     public void Sample(float time, Vector3 position)
     {
         LastDistance = Vector2.Distance(new Vector2(position.X, position.Z), new Vector2(target.X, target.Z));
+        if (FirstSampledAt is null)
+        {
+            FirstSampledAt = time;
+            startDistance = LastDistance;
+        }
+        if (ReactedAt is null && (Within || LastDistance <= startDistance - ReactYalms)) ReactedAt = time;
         if (Result != null) return;
         if (time < deadline)
         {

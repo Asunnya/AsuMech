@@ -2,16 +2,22 @@
 The Weapon's Refrain (Ultimate) - UWU
 NAUR (NA Party Finder) strats and resources
 ========================================================================
+@fight: UWU
+@family: Uwu
+@credits: NAUR
+@layout: Naur
 
 ------------------------------------------------------------------------
 P1: Garuda
 ------------------------------------------------------------------------
+@scenarios: UwuP1GarudaScenario
 Toolbox: Garuda
   https://ff14.toolboxgaming.space/?id=122994122467471&preview=1
 
 ------------------------------------------------------------------------
 P2: Ifrit
 ------------------------------------------------------------------------
+@scenarios: UwuP2IfritScenario
 Toolbox: Ifrit
   https://ff14.toolboxgaming.space/?id=562530446784261&preview=1
   (Source page also links a "Quick guide to Ifrit Dashes" - URL not
@@ -20,6 +26,7 @@ Toolbox: Ifrit
 ------------------------------------------------------------------------
 P3: Titan
 ------------------------------------------------------------------------
+@scenarios: UwuP3TitanScenario
 Toolbox: Titan
   https://ff14.toolboxgaming.space/?id=463534803605261&preview=1
 
@@ -32,24 +39,31 @@ Toolbox: Titan
 ------------------------------------------------------------------------
 Intermission: Magitek Bits
 ------------------------------------------------------------------------
+@scenarios: PrimalRouletteScenario
 Toolbox: Intermission
   https://ff14.toolboxgaming.space/?id=430631425646261&preview=1
 
 ------------------------------------------------------------------------
 P4: Ultima
 ------------------------------------------------------------------------
+@scenarios: UltimatePredationScenario
 Toolbox: Predation
   https://ff14.toolboxgaming.space/?id=222999692467471&preview=1
+@scenarios: UltimateAnnihilationScenario
 Toolbox: Annihilation
   https://ff14.toolboxgaming.space/?id=930637786646261&preview=1
+@scenarios: UltimateSuppressionScenario
 Toolbox: Suppression
   https://ff14.toolboxgaming.space/?id=830635036646261&preview=1
 
+@scenarios: UltimatePredationScenario
 Videos:
   Quick Predation guide
     https://www.youtube.com/watch?v=d08-CA5zS1c
+@scenarios: UltimateSuppressionScenario
   Ultimate Suppression visual guide
     https://www.youtube.com/watch?v=PSrbDnFtIJ0
+@scenarios: PrimalRouletteScenario
   Quick guide to Primal Roulette
     https://www.youtube.com/watch?v=CHbzuXPIi-4
 
@@ -60,8 +74,10 @@ Mitigation: general mitigation sheet
   https://docs.google.com/spreadsheets/d/1Aebpp_26RpVMYL3vLzahu461BbrwXkMENNRVSoqbxYw/edit?gid=58668446#gid=58668446
 
 Simulations:
+@scenarios: UltimateSuppressionScenario
   Roblox - UWU Ultimate Suppression
     https://www.roblox.com/games/6789369178/UWU-Ultimate-Suppression
+@scenarios: -
   Pettanko Neko sims
     https://pettanko-neko.itch.io/just-like-the-simulations
 

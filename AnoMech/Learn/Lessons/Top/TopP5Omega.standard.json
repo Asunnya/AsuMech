@@ -1,7 +1,16 @@
 {
   "scenario": "TopP5OmegaScenario",
   "strat": "Standard",
-  "sources": [],
+  "sources": [
+    {
+      "label": "NAUR - P5: Run: Dynamis - Omega (Toolbox)",
+      "url": "https://ff14.toolboxgaming.space/?id=078384491946761&preview=1"
+    },
+    {
+      "label": "NAUR - P5: Run: Dynamis - Omega (Slides)",
+      "url": "https://docs.google.com/presentation/d/1oxxFMaGJEEgQyEgj6ENC0Y23O5Mi10Ap72h2ctPu68A/edit?usp=sharing"
+    }
+  ],
   "steps": [
     {
       "key": {

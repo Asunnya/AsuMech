@@ -55,8 +55,12 @@ public sealed class AiManager
                     ? PlanArrival(dist, arrival - time - MoveDeadlineSafetyMargin)
                     : (sprint, 0f);
                 var speed = sprinting ? SprintSpeed : RunSpeed;
-                if (isPlayer && world.Guidance is { } sink && partyMember is { } seat)
-                    sink.OnMove(new GuidanceOrder(GuidanceKey.Of(positions, time, $"{System.IO.Path.GetFileName(file)}:{line}"), seat.Role, target, world.Events.Elapsed, arrivalTime, sprinting));
+                if (partyMember is { } seat)
+                {
+                    var order = new GuidanceOrder(GuidanceKey.Of(positions, time, $"{System.IO.Path.GetFileName(file)}:{line}"), seat.Role, target, world.Events.Elapsed, arrivalTime, sprinting);
+                    world.RecordOrder(order);
+                    if (isPlayer && world.Guidance is { } sink) sink.OnMove(order);
+                }
 
                 if (sprinting) partyMember?.UseSprint(dist / SprintSpeed + 1f);
                 // `for`: the spot before the jitter, which each client rolls on its own stream.

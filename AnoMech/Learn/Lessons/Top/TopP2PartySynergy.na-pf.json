@@ -1,7 +1,16 @@
 {
   "scenario": "TopP2PartySynergyScenario",
   "strat": "NA pf",
-  "sources": [],
+  "sources": [
+    {
+      "label": "NAUR - P2: Omega-M and Omega-F (Toolbox)",
+      "url": "https://ff14.toolboxgaming.space/?id=324285310725761&preview=1"
+    },
+    {
+      "label": "NAUR - P2: Omega-M and Omega-F (Slides)",
+      "url": "https://docs.google.com/presentation/d/1j-z91BI9i2LDOtp-qQzucqittpsvkecvmG3bXPV_9xs/edit?usp=sharing"
+    }
+  ],
   "steps": [
     {
       "key": {

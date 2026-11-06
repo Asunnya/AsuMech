@@ -1,7 +1,12 @@
 {
   "scenario": "DsrP2MeteorsScenario",
   "strat": "NAUR (PF)",
-  "sources": [],
+  "sources": [
+    {
+      "label": "NAUR - Sanctity of the Ward pt. 2 - Meteors",
+      "url": "https://raidplan.io/plan/Src8CpFxCAUUuZEM"
+    }
+  ],
   "steps": [
     {
       "key": {

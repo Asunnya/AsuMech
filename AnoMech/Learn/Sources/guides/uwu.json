@@ -1,0 +1,362 @@
+{
+  "fight": "UWU",
+  "family": "Uwu",
+  "title": "The Weapon's Refrain (Ultimate) - UWU",
+  "source": null,
+  "guide": null,
+  "captured": null,
+  "credits": "NAUR",
+  "sections": [
+    {
+      "title": "P1: Garuda",
+      "links": [
+        {
+          "label": "Toolbox: Garuda",
+          "url": "https://ff14.toolboxgaming.space/?id=122994122467471&preview=1",
+          "kind": "toolbox",
+          "section": "P1: Garuda",
+          "scenarios": [
+            "UwuP1GarudaScenario"
+          ],
+          "layout": "Naur"
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "P2: Ifrit",
+      "links": [
+        {
+          "label": "Toolbox: Ifrit",
+          "url": "https://ff14.toolboxgaming.space/?id=562530446784261&preview=1",
+          "kind": "toolbox",
+          "section": "P2: Ifrit",
+          "scenarios": [
+            "UwuP2IfritScenario"
+          ],
+          "layout": "Naur"
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "P3: Titan",
+      "links": [
+        {
+          "label": "Toolbox: Titan",
+          "url": "https://ff14.toolboxgaming.space/?id=463534803605261&preview=1",
+          "kind": "toolbox",
+          "section": "P3: Titan",
+          "scenarios": [
+            "UwuP3TitanScenario"
+          ],
+          "layout": "Naur"
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "Intermission: Magitek Bits",
+      "links": [
+        {
+          "label": "Toolbox: Intermission",
+          "url": "https://ff14.toolboxgaming.space/?id=430631425646261&preview=1",
+          "kind": "toolbox",
+          "section": "Intermission: Magitek Bits",
+          "scenarios": [
+            "PrimalRouletteScenario"
+          ],
+          "layout": "Naur"
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "P4: Ultima",
+      "links": [
+        {
+          "label": "Toolbox: Predation",
+          "url": "https://ff14.toolboxgaming.space/?id=222999692467471&preview=1",
+          "kind": "toolbox",
+          "section": "P4: Ultima",
+          "scenarios": [
+            "UltimatePredationScenario"
+          ],
+          "layout": "Naur"
+        },
+        {
+          "label": "Toolbox: Annihilation",
+          "url": "https://ff14.toolboxgaming.space/?id=930637786646261&preview=1",
+          "kind": "toolbox",
+          "section": "P4: Ultima",
+          "scenarios": [
+            "UltimateAnnihilationScenario"
+          ],
+          "layout": "Naur"
+        },
+        {
+          "label": "Toolbox: Suppression",
+          "url": "https://ff14.toolboxgaming.space/?id=830635036646261&preview=1",
+          "kind": "toolbox",
+          "section": "P4: Ultima",
+          "scenarios": [
+            "UltimateSuppressionScenario"
+          ],
+          "layout": "Naur"
+        },
+        {
+          "label": "Quick Predation guide",
+          "url": "https://www.youtube.com/watch?v=d08-CA5zS1c",
+          "kind": "video",
+          "section": "P4: Ultima",
+          "scenarios": [
+            "UltimatePredationScenario"
+          ],
+          "layout": "Naur"
+        },
+        {
+          "label": "Ultimate Suppression visual guide",
+          "url": "https://www.youtube.com/watch?v=PSrbDnFtIJ0",
+          "kind": "video",
+          "section": "P4: Ultima",
+          "scenarios": [
+            "UltimateSuppressionScenario"
+          ],
+          "layout": "Naur"
+        },
+        {
+          "label": "Quick guide to Primal Roulette",
+          "url": "https://www.youtube.com/watch?v=CHbzuXPIi-4",
+          "kind": "video",
+          "section": "P4: Ultima",
+          "scenarios": [
+            "PrimalRouletteScenario"
+          ],
+          "layout": "Naur"
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "General resources",
+      "links": [
+        {
+          "label": "Mitigation: general mitigation sheet",
+          "url": "https://docs.google.com/spreadsheets/d/1Aebpp_26RpVMYL3vLzahu461BbrwXkMENNRVSoqbxYw/edit?gid=58668446#gid=58668446",
+          "kind": "sheet",
+          "section": "General resources",
+          "scenarios": [],
+          "layout": "Naur",
+          "sheetId": "1Aebpp_26RpVMYL3vLzahu461BbrwXkMENNRVSoqbxYw"
+        },
+        {
+          "label": "Roblox - UWU Ultimate Suppression",
+          "url": "https://www.roblox.com/games/6789369178/UWU-Ultimate-Suppression",
+          "kind": "other",
+          "section": "General resources",
+          "scenarios": [
+            "UltimateSuppressionScenario"
+          ],
+          "layout": "Naur"
+        },
+        {
+          "label": "Pettanko Neko sims",
+          "url": "https://pettanko-neko.itch.io/just-like-the-simulations",
+          "kind": "other",
+          "section": "General resources",
+          "scenarios": [],
+          "layout": "Naur"
+        }
+      ],
+      "rules": []
+    }
+  ],
+  "mitigation": [
+    {
+      "label": "Mitigation: general mitigation sheet",
+      "url": "https://docs.google.com/spreadsheets/d/1Aebpp_26RpVMYL3vLzahu461BbrwXkMENNRVSoqbxYw/edit?gid=58668446#gid=58668446",
+      "sheetId": "1Aebpp_26RpVMYL3vLzahu461BbrwXkMENNRVSoqbxYw"
+    }
+  ],
+  "waymarks": [
+    {
+      "name": "UWU",
+      "mapId": 539,
+      "local": {
+        "A": [
+          0.0,
+          0.0,
+          -6.7
+        ],
+        "B": [
+          6.7,
+          0.0,
+          0.0
+        ],
+        "C": [
+          0.0,
+          0.0,
+          6.7
+        ],
+        "D": [
+          -6.7,
+          0.0,
+          0.0
+        ],
+        "One": [
+          7.3,
+          0.0,
+          7.3
+        ],
+        "Two": [
+          0.0,
+          0.0,
+          -19.0
+        ],
+        "Three": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Four": [
+          -13.0,
+          0.0,
+          -13.0
+        ]
+      },
+      "closestPreset": "Standard",
+      "maxDeviation": 0.001
+    }
+  ],
+  "scenarios": {
+    "UwuP1GarudaScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=122994122467471&preview=1",
+          "layout": "Naur",
+          "credits": "NAUR (Toolbox: Garuda)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Toolbox: Garuda",
+          "url": "https://ff14.toolboxgaming.space/?id=122994122467471&preview=1"
+        }
+      ],
+      "rules": []
+    },
+    "UwuP2IfritScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=562530446784261&preview=1",
+          "layout": "Naur",
+          "credits": "NAUR (Toolbox: Ifrit)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Toolbox: Ifrit",
+          "url": "https://ff14.toolboxgaming.space/?id=562530446784261&preview=1"
+        }
+      ],
+      "rules": []
+    },
+    "UwuP3TitanScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=463534803605261&preview=1",
+          "layout": "Naur",
+          "credits": "NAUR (Toolbox: Titan)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Toolbox: Titan",
+          "url": "https://ff14.toolboxgaming.space/?id=463534803605261&preview=1"
+        }
+      ],
+      "rules": []
+    },
+    "PrimalRouletteScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=430631425646261&preview=1",
+          "layout": "Naur",
+          "credits": "NAUR (Toolbox: Intermission)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Toolbox: Intermission",
+          "url": "https://ff14.toolboxgaming.space/?id=430631425646261&preview=1"
+        },
+        {
+          "label": "NAUR - Quick guide to Primal Roulette",
+          "url": "https://www.youtube.com/watch?v=CHbzuXPIi-4"
+        }
+      ],
+      "rules": []
+    },
+    "UltimatePredationScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=222999692467471&preview=1",
+          "layout": "Naur",
+          "credits": "NAUR (Toolbox: Predation)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Toolbox: Predation",
+          "url": "https://ff14.toolboxgaming.space/?id=222999692467471&preview=1"
+        },
+        {
+          "label": "NAUR - Quick Predation guide",
+          "url": "https://www.youtube.com/watch?v=d08-CA5zS1c"
+        }
+      ],
+      "rules": []
+    },
+    "UltimateAnnihilationScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=930637786646261&preview=1",
+          "layout": "Naur",
+          "credits": "NAUR (Toolbox: Annihilation)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Toolbox: Annihilation",
+          "url": "https://ff14.toolboxgaming.space/?id=930637786646261&preview=1"
+        }
+      ],
+      "rules": []
+    },
+    "UltimateSuppressionScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=830635036646261&preview=1",
+          "layout": "Naur",
+          "credits": "NAUR (Toolbox: Suppression)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Toolbox: Suppression",
+          "url": "https://ff14.toolboxgaming.space/?id=830635036646261&preview=1"
+        },
+        {
+          "label": "NAUR - Ultimate Suppression visual guide",
+          "url": "https://www.youtube.com/watch?v=PSrbDnFtIJ0"
+        },
+        {
+          "label": "NAUR - Roblox - UWU Ultimate Suppression",
+          "url": "https://www.roblox.com/games/6789369178/UWU-Ultimate-Suppression"
+        }
+      ],
+      "rules": []
+    }
+  },
+  "guideText": []
+}

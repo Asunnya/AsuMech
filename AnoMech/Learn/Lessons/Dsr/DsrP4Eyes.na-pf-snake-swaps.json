@@ -1,7 +1,12 @@
 {
   "scenario": "DsrP4EyesScenario",
   "strat": "NA PF (snake swaps)",
-  "sources": [],
+  "sources": [
+    {
+      "label": "NAUR - Toolbox: The Eyes",
+      "url": "https://ff14.toolboxgaming.space/?id=613699253336171&preview=1"
+    }
+  ],
   "steps": [
     {
       "key": {

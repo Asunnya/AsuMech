@@ -2,10 +2,14 @@
 The Unending Coil of Bahamut (Ultimate) - UCOB
 NAUR (NA Party Finder) strats and resources
 ========================================================================
+@fight: UCOB
+@family: Ucob
+@credits: NAUR
 
 ------------------------------------------------------------------------
 P1: Twintania
 ------------------------------------------------------------------------
+@scenarios: UcobP1TwintaniaScenario
 Raidplan: Twintania
   https://raidplan.io/plan/9WEG4AEGVdru3hyF
 Guide: Stop baiting Liquid Hells on the party!!
@@ -27,6 +31,7 @@ Guide: Stop baiting Liquid Hells on the party!!
 ------------------------------------------------------------------------
 P2: Nael deus Darnus
 ------------------------------------------------------------------------
+@scenarios: UcobP2NaelScenario
 Raidplan: Nael
   https://raidplan.io/plan/DpoJr4oE_kGz_gRU
 Raidplan: Divebombs
@@ -66,6 +71,7 @@ Raidplan: Adds
 ------------------------------------------------------------------------
 P5: Golden Bahamut
 ------------------------------------------------------------------------
+@scenarios: UcobP5ExaflaresScenario
 Raidplan: Golden Bahamut
   https://raidplan.io/plan/Y4WRFLhdHSQ7oLN_
 Video: how to mid-dodge / uptime-dodge exaflares
