@@ -26,6 +26,8 @@ While simulating:
  
 
 
+Questions, strats and bug reports: join the [AsuMech Discord](https://discord.gg/y6kTkdaXjz).
+
 ## Installation
 
 Add this custom repository in Dalamud (`/xlsettings` → Experimental → Custom Plugin Repositories), then install AsuMech

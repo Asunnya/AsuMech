@@ -16,6 +16,7 @@ internal sealed record FeedbackIssue(string Title, string Body, string Url);
 internal static class FeedbackLinks
 {
     public const string Repository = "https://github.com/Asunnya/AsuMech";
+    public const string Discord = "https://discord.gg/y6kTkdaXjz";
 
     // GitHub answers 414 to long query strings.
     public const int MaxIssueBodyChars = 4000;

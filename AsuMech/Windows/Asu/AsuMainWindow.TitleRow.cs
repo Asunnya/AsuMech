@@ -2,6 +2,7 @@ using AsuMech.Core.Game;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Components;
+using Dalamud.Utility;
 
 namespace AsuMech.Windows.Asu;
 
@@ -42,6 +43,9 @@ public sealed partial class AsuMainWindow
         if (ModeButton(compact ? "L##mode-learn" : "Learn##mode-learn", mode == Mode.Learn, compact)) mode = Mode.Learn;
         var modeEnd = ImGui.GetItemRectMax().X;
 
+        ImGui.SameLine();
+        if (ImGuiComponents.IconButton("discord", FontAwesomeIcon.Users)) Util.OpenLink(FeedbackLinks.Discord);
+        if (ImGui.IsItemHovered()) ImGui.SetTooltip("AsuMech Discord");
         ImGui.SameLine();
         DrawFeedbackButton();
         ImGui.SameLine();

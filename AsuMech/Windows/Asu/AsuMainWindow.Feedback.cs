@@ -102,6 +102,7 @@ public sealed partial class AsuMainWindow
         Option(FeedbackKind.Scenario, "Request a scenario");
         Option(FeedbackKind.Strat, scenario is null ? "Request a strat" : $"Request a strat for {scenario}");
         Option(FeedbackKind.Bug, scenario is null ? "Report a problem" : $"Report a problem with {scenario}");
+        if (ImGui.Selectable("Talk to us on Discord ↗", false)) Util.OpenLink(FeedbackLinks.Discord);
 
         if (pendingFeedback is { } kind && feedbackPreview is { } issue)
         {
