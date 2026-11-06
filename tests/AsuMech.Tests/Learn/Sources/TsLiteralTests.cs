@@ -44,4 +44,13 @@ public class TsLiteralTests
         var data = TsLiteral.Parse("import { planA } from './mits'; export const cfg = { mitPlans: [planA] };", mits.Symbols);
         Assert.That(data["cfg"]!["mitPlans"]![0]!["planName"]!.GetValue<string>(), Is.EqualTo("a"));
     }
+
+    [Test]
+    public void LineEndingsReadTheSameFromAWindowsCheckout()
+    {
+        var crlf = TsLiteral.Parse("export const a = { tpl: `back\r\ntick`, cont: 'one \\\r\ntwo', cr: `x\ry` };")["a"]!;
+        Assert.That(crlf["tpl"]!.GetValue<string>(), Is.EqualTo("back\ntick"));
+        Assert.That(crlf["cont"]!.GetValue<string>(), Is.EqualTo("one two"));
+        Assert.That(crlf["cr"]!.GetValue<string>(), Is.EqualTo("x\ny"));
+    }
 }

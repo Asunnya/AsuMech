@@ -326,8 +326,17 @@ public static class TsLiteral
                     case 'u' when i + 5 < s.Length:
                         sb.Append((char)Convert.ToInt32(s.Substring(i + 2, 4), 16)); i += 6; break;
                     case '\n': lines++; i += 2; break;
+                    case '\r': lines++; i += i + 2 < s.Length && s[i + 2] == '\n' ? 3 : 2; break;
                     default: sb.Append(e); i += 2; break;
                 }
+                continue;
+            }
+            // As JavaScript reads source text, CRLF and a lone CR are one LF (a Windows checkout).
+            if (c == '\r')
+            {
+                lines++;
+                sb.Append('\n');
+                i += i + 1 < s.Length && s[i + 1] == '\n' ? 2 : 1;
                 continue;
             }
             if (c == '\n') lines++;
