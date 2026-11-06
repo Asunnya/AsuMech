@@ -10,6 +10,7 @@ Tags in the .txt (one per line, start of line):
     @layout: <zone preset name>                    layout for the plans.json entries that follow
     @scenarios: A, B   (or "-" for none)           scenario types the following links/rules belong to
     @strat: <name>                                 plans.json "strat" for the following links
+    @plans: -   (or "+")                           following links go to lesson sources only, not plans.json
 @scenarios / @strat / @layout reset at every section header (a "----" line, a title, a "----" line).
 
 apply only ever adds: it never removes or rewrites an existing plans.json entry or lesson source.
@@ -75,7 +76,7 @@ def parse(path):
     body = lines if guide_at is None else lines[:guide_at]
 
     sections = []
-    scope = {"scenarios": [], "strat": None, "layout": None}
+    scope = {"scenarios": [], "strat": None, "layout": None, "plans": True}
     file_layout = None
     label = None
     waymarks = []
@@ -94,7 +95,7 @@ def parse(path):
         banner = re.fullmatch(r"-{20,}|#{20,}", s)
         if banner and i + 2 < len(body) and body[i + 2].strip() == s:
             cur = new_section(body[i + 1].strip())
-            scope = {"scenarios": [], "strat": None, "layout": file_layout}
+            scope = {"scenarios": [], "strat": None, "layout": file_layout, "plans": True}
             label = None
             i += 3
             continue
@@ -108,6 +109,8 @@ def parse(path):
                 scope["scenarios"] = [] if val == "-" else [v.strip() for v in val.split(",") if v.strip()]
             elif key == "strat":
                 scope["strat"] = None if val == "-" else val
+            elif key == "plans":
+                scope["plans"] = val != "-"
             elif key == "layout":
                 scope["layout"] = None if val == "-" else val
                 if cur["title"] == "(header)": file_layout = scope["layout"]
@@ -161,6 +164,7 @@ def parse(path):
                          "scenarios": list(scope["scenarios"])}
                 if scope["strat"]: entry["strat"] = scope["strat"]
                 if scope["layout"]: entry["layout"] = scope["layout"]
+                if not scope["plans"]: entry["sourceOnly"] = True
                 if entry["kind"] == "sheet": entry["sheetId"] = sheet_id(url)
                 cur["links"].append(entry)
             i += 1
@@ -289,7 +293,7 @@ def catalog(path):
         for ln in sec["links"]:
             for sc in ln["scenarios"]:
                 e = per.setdefault(sc, {"plans": [], "sources": [], "rules": []})
-                if ln["kind"] in PLAN_KINDS:
+                if ln["kind"] in PLAN_KINDS and not ln.get("sourceOnly"):
                     plan = {"url": ln["url"]}
                     if ln.get("layout"): plan["layout"] = ln["layout"]
                     plan["credits"] = f"{credits} ({ln['label']})" if credits else ln["label"]
