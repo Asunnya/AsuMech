@@ -38,7 +38,7 @@ jobs:
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
-        base=$(sed -n 's:.*<Version>\([0-9]*\.[0-9]*\.[0-9]*\)\.[0-9]*</Version>.*:\1:p' AnoMech/AnoMech.csproj)
+        base=$(sed -n 's:.*<Version>\([0-9]*\.[0-9]*\.[0-9]*\)\.[0-9]*</Version>.*:\1:p' AsuMech/AsuMech.csproj)
         last=$(gh release list -L 1000 --json tagName -q '.[].tagName' | sed -n "s/^v${base//./\\.}\.\([0-9]*\)$/\1/p" | sort -n | tail -n 1)
         echo "version=$base.$(( ${last:--1} + 1 ))" >> "$GITHUB_OUTPUT"
 
@@ -51,8 +51,8 @@ jobs:
         GH_TOKEN: ${{ github.token }}
       # The packager drops the zip under bin/Release or bin/x64/Release depending on the solution platform.
       run: |
-        zip=$(find AnoMech/bin -name latest.zip -path '*Release*' | head -n 1)
-        if [ -z "$zip" ]; then echo "latest.zip not found under AnoMech/bin"; find AnoMech/bin -maxdepth 3; exit 1; fi
+        zip=$(find AsuMech/bin -name latest.zip -path '*Release*' | head -n 1)
+        if [ -z "$zip" ]; then echo "latest.zip not found under AsuMech/bin"; find AsuMech/bin -maxdepth 3; exit 1; fi
         echo "Publishing $zip"
         gh release create "v${{ steps.version.outputs.version }}" "$zip" \
           --target "$GITHUB_SHA" --title "AsuMech ${{ steps.version.outputs.version }}" --notes "Built from $GITHUB_SHA"

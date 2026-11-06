@@ -1,0 +1,341 @@
+{
+  "scenario": "UmadP4KefkaSaysScenario",
+  "strat": "Kefka Says",
+  "sources": [
+    {
+      "label": "WTFDIG (kefkabin), MIT",
+      "url": "https://github.com/mczub/wtfdig/tree/aa79375/src/routes/ultimates/umad"
+    },
+    {
+      "label": "NAUR Kefkabin - Strat: Kefka Says (self mark) (Raidplan)",
+      "url": "https://raidplan.io/plan/ChcTBFAcFMZKFVKo"
+    },
+    {
+      "label": "NAUR Kefkabin - Tool: P4 Helper (WTFDIG)",
+      "url": "https://wtfdig.info/tools/p4-helper"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "UmadP4KefkaSaysAi",
+        "time": 2,
+        "line": 52
+      },
+      "title": "After  hits you",
+      "cue": " hits you",
+      "rule": "Stand at the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP4KefkaSaysAi",
+        "time": 11.6,
+        "line": 53
+      },
+      "title": "After  hits you",
+      "cue": " hits you",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NeoExdeathDirection).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP4KefkaSaysAi",
+        "time": 26.4,
+        "line": 54
+      },
+      "title": "After  hits you",
+      "cue": " hits you",
+      "rule": "Depends on ChaosMysteries has ChaosMystery { Cast = ChaosCast { Action = 47903, Raidwide = EnemyAction { ActionId = 47905, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, Status = 5548, DurationFirst = 84, DurationSecond = 69, TrueSolution = EnemyAction { ActionId = 47908, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, FakeSolution = EnemyAction { ActionId = 47909, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  } }, IsTrue = True, StatusValue = 1120, Solution = EnemyAction { ActionId = 47908, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, SolutionIsChariot = False } and ManaReleaseBlizzardLockon: yes & 675 → SE 3m; no & 676 → SE 3m; no & 675 → N 5m; yes & 676 → SE 3m.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP4KefkaSaysAi",
+        "time": 41.5,
+        "line": 55
+      },
+      "title": "After  hits you",
+      "cue": " hits you",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Wave1First).",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP4KefkaSaysAi",
+        "time": 57.6,
+        "line": 57
+      },
+      "title": "After flood of Naught cast starts",
+      "cue": "Flood of Naught cast starts",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NeoExdeathDirection).",
+      "roles": {
+        "MeleeDpsA": {
+          "rule": "Depends on ChaosMysteries has ChaosMystery { Cast = ChaosCast { Action = 47903, Raidwide = EnemyAction { ActionId = 47905, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, Status = 5548, DurationFirst = 84, DurationSecond = 69, TrueSolution = EnemyAction { ActionId = 47908, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, FakeSolution = EnemyAction { ActionId = 47909, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  } }, IsTrue = True, StatusValue = 1120, Solution = EnemyAction { ActionId = 47908, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, SolutionIsChariot = False } and Wave1True: yes & false → near B (E 8m); yes & true → at 2; no & false → near A (N 8m); no & true → at 3."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP4KefkaSaysAi",
+        "time": 63,
+        "line": 58
+      },
+      "title": "After edge of Death resolves",
+      "cue": "Edge of Death resolves",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "Depends on Wave1First and Wave1True: false & false → at A; false & true → at A; true & false → at D; true & true → at A."
+        },
+        "OffTank": {
+          "rule": "Depends on Wave1First and Wave1True: false & false → at D; false & true → at A; true & false → at A; true & true → at A."
+        },
+        "RegenHealer": {
+          "rule": "Depends on ChaosMysteries has ChaosMystery { Cast = ChaosCast { Action = 47903, Raidwide = EnemyAction { ActionId = 47905, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, Status = 5548, DurationFirst = 84, DurationSecond = 69, TrueSolution = EnemyAction { ActionId = 47908, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, FakeSolution = EnemyAction { ActionId = 47909, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  } }, IsTrue = True, StatusValue = 1120, Solution = EnemyAction { ActionId = 47908, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, SolutionIsChariot = False } and Wave3True: yes & true → at A; yes & false → at D; no & true → at A; no & false → at A."
+        },
+        "ShieldHealer": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Wave1True)."
+        },
+        "MeleeDpsA": {
+          "rule": "Depends on ChaosMysteries has ChaosMystery { Cast = ChaosCast { Action = 47903, Raidwide = EnemyAction { ActionId = 47905, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, Status = 5548, DurationFirst = 84, DurationSecond = 69, TrueSolution = EnemyAction { ActionId = 47908, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, FakeSolution = EnemyAction { ActionId = 47909, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  } }, IsTrue = True, StatusValue = 1120, Solution = EnemyAction { ActionId = 47908, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, SolutionIsChariot = False } and Wave1True: yes & false → at C; yes & true → at C; no & false → at C; no & true → at B."
+        },
+        "MeleeDpsB": {
+          "rule": "Depends on ChaosMysteries has ChaosMystery { Cast = ChaosCast { Action = 47903, Raidwide = EnemyAction { ActionId = 47905, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, Status = 5548, DurationFirst = 84, DurationSecond = 69, TrueSolution = EnemyAction { ActionId = 47908, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, FakeSolution = EnemyAction { ActionId = 47909, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  } }, IsTrue = True, StatusValue = 1120, Solution = EnemyAction { ActionId = 47908, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, SolutionIsChariot = False } and Wave3True: yes & true → at C; yes & false → at B; no & true → at C; no & false → at C."
+        },
+        "PhysRangedDps": {
+          "rule": "Depends on Wave1True and Wave3True: false & true → at B; true & false → at C; true & true → at C; false & false → at C."
+        },
+        "CasterDps": {
+          "rule": "Depends on Wave1First and Wave2True: false & true → at C; true & true → at C; false & false → at B; true & false → at C."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP4KefkaSaysAi",
+        "time": 72,
+        "line": 133
+      },
+      "title": "After mana Charge on Kefka",
+      "cue": "Mana Charge on Kefka",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ChaosMysteries).",
+      "roles": {
+        "OffTank": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Wave1True)."
+        },
+        "RegenHealer": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Wave4True)."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Antilights)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP4KefkaSaysAi",
+        "time": 78.5,
+        "line": 134
+      },
+      "title": "After thrumming Thunder III cast starts",
+      "cue": "Thrumming Thunder III cast starts",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ChaosMysteries).",
+      "roles": {
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Antilights)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP4KefkaSaysAi",
+        "time": 81,
+        "line": 63
+      },
+      "title": "After death Shriek resolves",
+      "cue": "Death Shriek resolves",
+      "rule": "Stand at the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP4KefkaSaysAi",
+        "time": 88,
+        "line": 64
+      },
+      "title": "After stray Flames cast starts",
+      "cue": "Stray Flames cast starts",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "Depends on InfernoMystery: ChaosMystery { Cast = ChaosCast { Action = 47902, Raidwide = EnemyAction { ActionId = 47904, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 2.1 }, DeathExplanation = , ShownAs =  }, Status = 5547, DurationFirst = 60, DurationSecond = 45, TrueSolution = EnemyAction { ActionId = 47906, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, FakeSolution = EnemyAction { ActionId = 47907, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  } }, IsTrue = True, StatusValue = 1120, Solution = EnemyAction { ActionId = 47906, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, SolutionIsChariot = True } → at C; ChaosMystery { Cast = ChaosCast { Action = 47902, Raidwide = EnemyAction { ActionId = 47904, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 2.1 }, DeathExplanation = , ShownAs =  }, Status = 5547, DurationFirst = 60, DurationSecond = 45, TrueSolution = EnemyAction { ActionId = 47906, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, FakeSolution = EnemyAction { ActionId = 47907, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  } }, IsTrue = False, StatusValue = 1119, Solution = EnemyAction { ActionId = 47907, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, SolutionIsChariot = False } → centre."
+        },
+        "OffTank": {
+          "rule": "Depends on InfernoMystery: ChaosMystery { Cast = ChaosCast { Action = 47902, Raidwide = EnemyAction { ActionId = 47904, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 2.1 }, DeathExplanation = , ShownAs =  }, Status = 5547, DurationFirst = 60, DurationSecond = 45, TrueSolution = EnemyAction { ActionId = 47906, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, FakeSolution = EnemyAction { ActionId = 47907, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  } }, IsTrue = True, StatusValue = 1120, Solution = EnemyAction { ActionId = 47906, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, SolutionIsChariot = True } → near 3 (SE 11m); ChaosMystery { Cast = ChaosCast { Action = 47902, Raidwide = EnemyAction { ActionId = 47904, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 2.1 }, DeathExplanation = , ShownAs =  }, Status = 5547, DurationFirst = 60, DurationSecond = 45, TrueSolution = EnemyAction { ActionId = 47906, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, FakeSolution = EnemyAction { ActionId = 47907, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  } }, IsTrue = False, StatusValue = 1119, Solution = EnemyAction { ActionId = 47907, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, SolutionIsChariot = False } → centre."
+        },
+        "RegenHealer": {
+          "rule": "Depends on InfernoMystery: ChaosMystery { Cast = ChaosCast { Action = 47902, Raidwide = EnemyAction { ActionId = 47904, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 2.1 }, DeathExplanation = , ShownAs =  }, Status = 5547, DurationFirst = 60, DurationSecond = 45, TrueSolution = EnemyAction { ActionId = 47906, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, FakeSolution = EnemyAction { ActionId = 47907, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  } }, IsTrue = True, StatusValue = 1120, Solution = EnemyAction { ActionId = 47906, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, SolutionIsChariot = True } → at B; ChaosMystery { Cast = ChaosCast { Action = 47902, Raidwide = EnemyAction { ActionId = 47904, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 2.1 }, DeathExplanation = , ShownAs =  }, Status = 5547, DurationFirst = 60, DurationSecond = 45, TrueSolution = EnemyAction { ActionId = 47906, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, FakeSolution = EnemyAction { ActionId = 47907, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  } }, IsTrue = False, StatusValue = 1119, Solution = EnemyAction { ActionId = 47907, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, SolutionIsChariot = False } → centre."
+        },
+        "ShieldHealer": {
+          "rule": "Depends on InfernoMystery: ChaosMystery { Cast = ChaosCast { Action = 47902, Raidwide = EnemyAction { ActionId = 47904, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 2.1 }, DeathExplanation = , ShownAs =  }, Status = 5547, DurationFirst = 60, DurationSecond = 45, TrueSolution = EnemyAction { ActionId = 47906, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, FakeSolution = EnemyAction { ActionId = 47907, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  } }, IsTrue = True, StatusValue = 1120, Solution = EnemyAction { ActionId = 47906, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, SolutionIsChariot = True } → near 2 (NE 11m); ChaosMystery { Cast = ChaosCast { Action = 47902, Raidwide = EnemyAction { ActionId = 47904, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 2.1 }, DeathExplanation = , ShownAs =  }, Status = 5547, DurationFirst = 60, DurationSecond = 45, TrueSolution = EnemyAction { ActionId = 47906, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, FakeSolution = EnemyAction { ActionId = 47907, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  } }, IsTrue = False, StatusValue = 1119, Solution = EnemyAction { ActionId = 47907, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, SolutionIsChariot = False } → centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Depends on InfernoMystery: ChaosMystery { Cast = ChaosCast { Action = 47902, Raidwide = EnemyAction { ActionId = 47904, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 2.1 }, DeathExplanation = , ShownAs =  }, Status = 5547, DurationFirst = 60, DurationSecond = 45, TrueSolution = EnemyAction { ActionId = 47906, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, FakeSolution = EnemyAction { ActionId = 47907, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  } }, IsTrue = True, StatusValue = 1120, Solution = EnemyAction { ActionId = 47906, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, SolutionIsChariot = True } → at A; ChaosMystery { Cast = ChaosCast { Action = 47902, Raidwide = EnemyAction { ActionId = 47904, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 2.1 }, DeathExplanation = , ShownAs =  }, Status = 5547, DurationFirst = 60, DurationSecond = 45, TrueSolution = EnemyAction { ActionId = 47906, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, FakeSolution = EnemyAction { ActionId = 47907, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  } }, IsTrue = False, StatusValue = 1119, Solution = EnemyAction { ActionId = 47907, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, SolutionIsChariot = False } → centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Depends on InfernoMystery: ChaosMystery { Cast = ChaosCast { Action = 47902, Raidwide = EnemyAction { ActionId = 47904, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 2.1 }, DeathExplanation = , ShownAs =  }, Status = 5547, DurationFirst = 60, DurationSecond = 45, TrueSolution = EnemyAction { ActionId = 47906, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, FakeSolution = EnemyAction { ActionId = 47907, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  } }, IsTrue = True, StatusValue = 1120, Solution = EnemyAction { ActionId = 47906, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, SolutionIsChariot = True } → near 1 (NW 11m); ChaosMystery { Cast = ChaosCast { Action = 47902, Raidwide = EnemyAction { ActionId = 47904, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 2.1 }, DeathExplanation = , ShownAs =  }, Status = 5547, DurationFirst = 60, DurationSecond = 45, TrueSolution = EnemyAction { ActionId = 47906, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, FakeSolution = EnemyAction { ActionId = 47907, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  } }, IsTrue = False, StatusValue = 1119, Solution = EnemyAction { ActionId = 47907, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, SolutionIsChariot = False } → centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Depends on InfernoMystery: ChaosMystery { Cast = ChaosCast { Action = 47902, Raidwide = EnemyAction { ActionId = 47904, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 2.1 }, DeathExplanation = , ShownAs =  }, Status = 5547, DurationFirst = 60, DurationSecond = 45, TrueSolution = EnemyAction { ActionId = 47906, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, FakeSolution = EnemyAction { ActionId = 47907, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  } }, IsTrue = True, StatusValue = 1120, Solution = EnemyAction { ActionId = 47906, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, SolutionIsChariot = True } → at D; ChaosMystery { Cast = ChaosCast { Action = 47902, Raidwide = EnemyAction { ActionId = 47904, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 2.1 }, DeathExplanation = , ShownAs =  }, Status = 5547, DurationFirst = 60, DurationSecond = 45, TrueSolution = EnemyAction { ActionId = 47906, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, FakeSolution = EnemyAction { ActionId = 47907, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  } }, IsTrue = False, StatusValue = 1119, Solution = EnemyAction { ActionId = 47907, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, SolutionIsChariot = False } → centre."
+        },
+        "CasterDps": {
+          "rule": "Depends on InfernoMystery: ChaosMystery { Cast = ChaosCast { Action = 47902, Raidwide = EnemyAction { ActionId = 47904, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 2.1 }, DeathExplanation = , ShownAs =  }, Status = 5547, DurationFirst = 60, DurationSecond = 45, TrueSolution = EnemyAction { ActionId = 47906, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, FakeSolution = EnemyAction { ActionId = 47907, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  } }, IsTrue = True, StatusValue = 1120, Solution = EnemyAction { ActionId = 47906, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, SolutionIsChariot = True } → near 4 (SW 11m); ChaosMystery { Cast = ChaosCast { Action = 47902, Raidwide = EnemyAction { ActionId = 47904, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 2.1 }, DeathExplanation = , ShownAs =  }, Status = 5547, DurationFirst = 60, DurationSecond = 45, TrueSolution = EnemyAction { ActionId = 47906, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, FakeSolution = EnemyAction { ActionId = 47907, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  } }, IsTrue = False, StatusValue = 1119, Solution = EnemyAction { ActionId = 47907, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, SolutionIsChariot = False } → centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP4KefkaSaysAi",
+        "time": 92.5,
+        "line": 68
+      },
+      "title": "After blizzard III Blowout cast starts",
+      "cue": "Blizzard III Blowout cast starts",
+      "rule": "Each role has its own spot.",
+      "roles": {
+        "MainTank": {
+          "rule": "Depends on Wave1First and Wave1True: false & false → at D; false & true → at A; true & false → at A; true & true → at A."
+        },
+        "OffTank": {
+          "rule": "Depends on ChaosMysteries has ChaosMystery { Cast = ChaosCast { Action = 47903, Raidwide = EnemyAction { ActionId = 47905, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, Status = 5548, DurationFirst = 84, DurationSecond = 69, TrueSolution = EnemyAction { ActionId = 47908, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, FakeSolution = EnemyAction { ActionId = 47909, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  } }, IsTrue = True, StatusValue = 1120, Solution = EnemyAction { ActionId = 47908, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, SolutionIsChariot = False } and Wave1True: yes & false → at A; yes & true → at D; no & false → at A; no & true → at A."
+        },
+        "RegenHealer": {
+          "rule": "Depends on ChaosMysteries has ChaosMystery { Cast = ChaosCast { Action = 47903, Raidwide = EnemyAction { ActionId = 47905, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, Status = 5548, DurationFirst = 84, DurationSecond = 69, TrueSolution = EnemyAction { ActionId = 47908, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, FakeSolution = EnemyAction { ActionId = 47909, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  } }, IsTrue = True, StatusValue = 1120, Solution = EnemyAction { ActionId = 47908, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, SolutionIsChariot = False } and Wave1True: yes & false → at A; yes & true → at A; no & false → at A; no & true → at D."
+        },
+        "ShieldHealer": {
+          "rule": "Depends on Wave1First and Wave1True: false & false → at A; false & true → at A; true & false → at D; true & true → at A."
+        },
+        "MeleeDpsA": {
+          "rule": "Depends on ChaosMysteries has ChaosMystery { Cast = ChaosCast { Action = 47903, Raidwide = EnemyAction { ActionId = 47905, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, Status = 5548, DurationFirst = 84, DurationSecond = 69, TrueSolution = EnemyAction { ActionId = 47908, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, FakeSolution = EnemyAction { ActionId = 47909, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  } }, IsTrue = True, StatusValue = 1120, Solution = EnemyAction { ActionId = 47908, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, SolutionIsChariot = False } and Wave1True: yes & false → at C; yes & true → at C; no & false → at B; no & true → at C."
+        },
+        "MeleeDpsB": {
+          "rule": "When Antilights leaves out MysteryAntilight { Antilight = Antilight { DebuffsTrue = EnemyAction { ActionId = 50068, Cast = CastSpec { AnimationLock = 2.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlyArray`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.48 }, DeathExplanation = , ShownAs =  }, DebuffsLie = EnemyAction { ActionId = 50068, Cast = CastSpec { AnimationLock = 2.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlyArray`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.48 }, DeathExplanation = , ShownAs =  }, FloodReal = 50066, FloodFake = 50082 }, DebuffTrue = True, CastTrue = True, Action = EnemyAction { ActionId = 50068, Cast = CastSpec { AnimationLock = 2.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlyArray`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.48 }, DeathExplanation = , ShownAs =  }, ResolveFloodAction = 50066 }, stand on waymark C; when Antilights includes MysteryAntilight { Antilight = Antilight { DebuffsTrue = EnemyAction { ActionId = 50068, Cast = CastSpec { AnimationLock = 2.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlyArray`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.48 }, DeathExplanation = , ShownAs =  }, DebuffsLie = EnemyAction { ActionId = 50068, Cast = CastSpec { AnimationLock = 2.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlyArray`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.48 }, DeathExplanation = , ShownAs =  }, FloodReal = 50066, FloodFake = 50082 }, DebuffTrue = True, CastTrue = True, Action = EnemyAction { ActionId = 50068, Cast = CastSpec { AnimationLock = 2.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlyArray`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.48 }, DeathExplanation = , ShownAs =  }, ResolveFloodAction = 50066 }, stand on waymark B."
+        },
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Wave1True)."
+        },
+        "CasterDps": {
+          "rule": "Depends on ChaosMysteries has ChaosMystery { Cast = ChaosCast { Action = 47903, Raidwide = EnemyAction { ActionId = 47905, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, Status = 5548, DurationFirst = 84, DurationSecond = 69, TrueSolution = EnemyAction { ActionId = 47908, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, FakeSolution = EnemyAction { ActionId = 47909, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  } }, IsTrue = True, StatusValue = 1120, Solution = EnemyAction { ActionId = 47908, Cast = CastSpec { AnimationLock = 1.1, OmenDelay = 4, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = 6, Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlySingleElementList`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.93 }, DeathExplanation = , ShownAs =  }, SolutionIsChariot = False } and Wave2True: yes & true → at B; no & true → at C; yes & false → at C; no & false → at C."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP4KefkaSaysAi",
+        "time": 98,
+        "line": 145
+      },
+      "title": "After blizzard III Blowout resolves",
+      "cue": "Blizzard III Blowout resolves",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Antilights).",
+      "roles": {
+        "MainTank": {
+          "rule": "Depends on Wave4True: false → near 3 (SE 6m); true → N 2m."
+        },
+        "ShieldHealer": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NeoExdeathDirection)."
+        },
+        "MeleeDpsA": {
+          "rule": "Depends on Wave1First and Wave1True: false & false → S 2m; false & true → S 2m; true & false → W 6m; true & true → S 2m."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Wave1True)."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ElemTrue)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP4KefkaSaysAi",
+        "time": 102.5,
+        "line": 146
+      },
+      "title": "After  hits you",
+      "cue": " hits you",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Antilights).",
+      "roles": {
+        "MainTank": {
+          "rule": "Depends on Wave4True: false → near 3 (SE 7m); true → N 3m."
+        },
+        "OffTank": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ChaosMysteries)."
+        },
+        "ShieldHealer": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NeoExdeathDirection)."
+        },
+        "MeleeDpsA": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Antilights has MysteryAntilight { Antilight = Antilight { DebuffsTrue = EnemyAction { ActionId = 50068, Cast = CastSpec { AnimationLock = 2.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlyArray`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.48 }, DeathExplanation = , ShownAs =  }, DebuffsLie = EnemyAction { ActionId = 50068, Cast = CastSpec { AnimationLock = 2.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlyArray`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.48 }, DeathExplanation = , ShownAs =  }, FloodReal = 50066, FloodFake = 50082 }, DebuffTrue = True, CastTrue = True, Action = EnemyAction { ActionId = 50068, Cast = CastSpec { AnimationLock = 2.1, OmenDelay = 0, CastSecondsOverride = , Rotation = 0, FaceTarget = True }, Area = AreaSpec { Size = , Rotation = 0, CastTypeOverride = , ExcludeCaster = False, AdjustTargets =  }, Effects = <>z__ReadOnlyArray`1[AsuMech.Core.EnemyActions.IEnemyActionEffect], Timing = TimingSpec { ResolveSnapshotOffset = 0, DamageDelay = 0.48 }, DeathExplanation = , ShownAs =  }, ResolveFloodAction = 50066 })."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NeoExdeathDirection)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP4KefkaSaysAi",
+        "time": 106,
+        "line": 77
+      },
+      "title": "After  hits you",
+      "cue": " hits you",
+      "rule": "Stand at the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP4KefkaSaysAi",
+        "time": 111,
+        "line": 78
+      },
+      "title": "After thrumming Thunder III cast starts",
+      "cue": "Thrumming Thunder III cast starts",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NeoExdeathDirection).",
+      "tolerance": 2.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "ChcTBFAcFMZKFVKo",
+    "roleMap": {},
+    "steps": {},
+    "exampleSeed": 1,
+    "residual": 0.0
+  },
+  "draft": true
+}

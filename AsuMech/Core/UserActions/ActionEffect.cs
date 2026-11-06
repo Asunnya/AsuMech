@@ -1,0 +1,127 @@
+using System;
+using System.Collections.Generic;
+using AsuMech.Core.Game.Party;
+using AsuMech.Core.Native.Implementations;
+using AsuMech.Core.SimObjects;
+
+namespace AsuMech.Core.UserActions;
+
+// What a player action does client-side, standing in for the firewalled server response.
+// Composable: leaf effects (Gauge / Status) do the work; wrappers (Combo / Random) gate
+// them. Authored via the factory helpers in JobActions (Gauge(...), Status(...), etc.).
+internal interface IActionEffect
+{
+    void Apply(ActionContext ctx);
+}
+
+// Per-dispatch state an effect may need. The caster is the local player for a real press, or
+// a bot for SimPartyNpc.UseAction.
+internal sealed class ActionContext(uint actionId, ulong targetId, SimCharacter caster, Random rng)
+{
+    public ulong TargetId { get; } = targetId;
+    public uint ActionId { get; } = actionId;
+    public SimCharacter Caster { get; } = caster;
+    // The job gauge and combo state are the local player's alone.
+    public bool CasterIsPlayer => Caster is SimPlayer;
+    public Random Rng { get; } = rng;
+}
+
+// Leaf: add an amount to a job gauge (ResourceGauge.Add clamps to [0, Max]).
+internal sealed unsafe class GaugeEffect(ResourceGauge gauge, int amount) : IActionEffect
+{
+    public void Apply(ActionContext ctx)
+    {
+        if (!ctx.CasterIsPlayer) return;
+        using var edit = JobGaugeEdit.Begin();
+        if (edit.Gauge != null) gauge.Add(edit.Gauge, amount);
+    }
+}
+
+// Leaf: set a job gauge to an absolute value, clamped like Add.
+internal sealed unsafe class SetGaugeEffect(ResourceGauge gauge, int value) : IActionEffect
+{
+    public void Apply(ActionContext ctx)
+    {
+        if (!ctx.CasterIsPlayer) return;
+        using var edit = JobGaugeEdit.Begin();
+        if (edit.Gauge != null) gauge.Add(edit.Gauge, value - gauge.Read(edit.Gauge));
+    }
+}
+
+// Leaf: grant a status to the player for `duration` seconds (replaces any existing copy).
+// `stacks` sets Status.Param — 0 for a plain buff, or the stack count for a stacking buff
+// (Requiescat, Sacred Sight); we don't decrement per-consume yet, it just expires.
+internal sealed class StatusEffect(ushort statusId, float duration, int stacks = 0) : IActionEffect
+{
+    public void Apply(ActionContext ctx)
+    {
+        ctx.Caster.RemoveStatus(statusId);
+        ctx.Caster.AddStatusParam(statusId, stacks, duration);
+        if (ctx.Caster is ISimPartyMember member) HostReport.RoleStatus([member.Role], statusId, duration, stacks);
+    }
+}
+
+// A peer runs no scenario logic: the host decides who lives, from the statuses on its own copy
+// of each character. Only mitigation, the one kind of status the host acts on, and Sprint, which
+// every other client shows, are sent.
+internal static class HostReport
+{
+    public static bool IsReported(ushort statusId) => Mitigation.ByStatusId.ContainsKey(statusId) || statusId == SprintHandler.SprintStatusId;
+
+    public static void RoleStatus(IReadOnlyList<PartyRole> roles, ushort statusId, float duration, int stacks)
+    {
+        if (IsReported(statusId))
+            Plugin.Multiplayer?.ReportAppliedRoleStatus(roles, statusId, duration, (ushort)stacks);
+    }
+}
+
+// Leaf: grant a status to the action's friendly recipients (see ActionTargets).
+internal sealed class TargetStatusEffect(ushort statusId, float duration, int stacks = 0) : IActionEffect
+{
+    public void Apply(ActionContext ctx)
+    {
+        var roles = new List<PartyRole>();
+        foreach (var member in ActionTargets.Friendly(ctx))
+        {
+            member.RemoveStatus(statusId);
+            member.AddStatusParam(statusId, stacks, duration);
+            if (member is ISimPartyMember slot) roles.Add(slot.Role);
+        }
+        HostReport.RoleStatus(roles, statusId, duration, stacks);
+    }
+}
+
+// Leaf: debuff the enemies the action hits (Reprisal).
+internal sealed class EnemyStatusEffect(ushort statusId, float duration, int stacks = 0) : IActionEffect
+{
+    public void Apply(ActionContext ctx)
+    {
+        var enemies = ActionTargets.Hostile(ctx);
+        foreach (var enemy in enemies)
+        {
+            enemy.RemoveStatus(statusId);
+            enemy.AddStatusParam(statusId, stacks, duration);
+        }
+        Plugin.Multiplayer?.ReportAppliedEnemyStatus(enemies, statusId, duration, (ushort)stacks);
+    }
+}
+
+// Wrapper: apply the inner effects only when the action lands as a valid combo continuation.
+internal sealed class ComboEffect(IActionEffect[] inner) : IActionEffect
+{
+    public void Apply(ActionContext ctx)
+    {
+        if (!ctx.CasterIsPlayer || !PlayerCombo.IsActiveContinuation(ctx.ActionId)) return;
+        foreach (var e in inner) e.Apply(ctx);
+    }
+}
+
+// Wrapper: apply the inner effects with `chance` probability (procs, e.g. DNC feathers).
+internal sealed class RandomEffect(float chance, IActionEffect[] inner) : IActionEffect
+{
+    public void Apply(ActionContext ctx)
+    {
+        if (ctx.Rng.NextSingle() >= chance) return;
+        foreach (var e in inner) e.Apply(ctx);
+    }
+}

@@ -15,7 +15,7 @@ jobs:
     runs-on: windows-2022
 
     env:
-      Solution_Name: AnoMech
+      Solution_Name: AsuMech
 
     steps:
     - name: Checkout

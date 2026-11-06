@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Turn the guide dumps in AnoMech/Scenarios/Raidsplan/*.txt into data the Learn chain uses.
+"""Turn the guide dumps in AsuMech/Scenarios/Raidsplan/*.txt into data the Learn chain uses.
 
-    python3 tools/raidplans.py build            # one catalog per fight -> AnoMech/Learn/Sources/guides/<fight>.json
+    python3 tools/raidplans.py build            # one catalog per fight -> AsuMech/Learn/Sources/guides/<fight>.json
     python3 tools/raidplans.py check            # scenarios exist, waymarks vs zone presets, diff vs plans.json and lessons
     python3 tools/raidplans.py apply [--write]  # add missing plans.json entries and lesson sources (dry run without --write)
 
@@ -22,11 +22,11 @@ import re
 import sys
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-RAIDSPLAN = os.path.join(ROOT, "AnoMech", "Scenarios", "Raidsplan")
-SCENARIOS = os.path.join(ROOT, "AnoMech", "Scenarios")
-PLANS = os.path.join(ROOT, "AnoMech", "Learn", "Toolbox", "plans.json")
-LESSONS = os.path.join(ROOT, "AnoMech", "Learn", "Lessons")
-OUT = os.path.join(ROOT, "AnoMech", "Learn", "Sources", "guides")
+RAIDSPLAN = os.path.join(ROOT, "AsuMech", "Scenarios", "Raidsplan")
+SCENARIOS = os.path.join(ROOT, "AsuMech", "Scenarios")
+PLANS = os.path.join(ROOT, "AsuMech", "Learn", "Toolbox", "plans.json")
+LESSONS = os.path.join(ROOT, "AsuMech", "Learn", "Lessons")
+OUT = os.path.join(ROOT, "AsuMech", "Learn", "Sources", "guides")
 
 URL = re.compile(r"https?://[^\s)\]\"]+")
 STGY = re.compile(r"\[stgy:[A-Za-z0-9+\-_]+\]")

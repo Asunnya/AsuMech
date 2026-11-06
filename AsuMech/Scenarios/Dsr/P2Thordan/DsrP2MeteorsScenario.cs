@@ -1,0 +1,21 @@
+using System.Collections.Generic;
+using AsuMech.Core.Game.Ai;
+using AsuMech.Core.SimObjects;
+
+namespace AsuMech.Scenarios.Dsr.P2Thordan;
+
+// Sanctity of the Ward's meteors on their own, without playing the phase up to them.
+public sealed class DsrP2MeteorsScenario : IScenario
+{
+    private readonly DsrP2ThordanScenario thordan = new(meteorsOnly: true);
+
+    public string Name => thordan.Name;
+    public IPhase Phase => thordan.Phase;
+    public IReadOnlyList<IScenarioAi> AiStrats => thordan.AiStrats;
+    public float BgmSecondsAtStart => thordan.BgmSecondsAtStart;
+    public object SettingsOverrides => thordan.SettingsOverrides;
+    public void DrawSettings() => thordan.DrawSettings();
+
+    public void Run(SimWorld world, int? selectedAi) => thordan.Run(world, selectedAi);
+    public void Tick(float delta, float elapsed) => thordan.Tick(delta, elapsed);
+}

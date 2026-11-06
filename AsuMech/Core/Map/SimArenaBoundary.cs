@@ -1,0 +1,44 @@
+using System.Numerics;
+using AsuMech.Core.Game.Geometry;
+using AsuMech.Core.SimObjects;
+
+namespace AsuMech.Core.Map;
+
+// Per-frame arena fence. Walks every active party member each tick (player
+// included, since SimParty exposes the player slot through ActiveMembers) and
+// kills anyone outside its IArenaShape.
+//
+// One per world: SimWorld.EnforceArenaBoundary replaces any previous boundary.
+internal sealed class SimArenaBoundary : ISimObject
+{
+    private readonly SimParty party;
+    private readonly IArenaShape shape;
+    public IArenaShape Shape => shape;
+    private readonly string cause;
+
+    public bool IsAlive => true;
+    public bool IsActive => true;
+
+    internal SimArenaBoundary(SimParty party, IArenaShape shape, string cause)
+    {
+        this.party = party;
+        this.shape = shape;
+        this.cause = cause;
+    }
+
+    // Shared by the per-frame fence and
+    // external callers (teleport-to-spawn on reset) so they always agree.
+    internal bool IsOutside(Vector3 local) => shape.IsOutside(local);
+
+    public void Tick(float deltaSeconds)
+    {
+        // Member positions are scenario-local; the boundary is centered on local zero.
+        foreach (var member in party.ActiveMembers())
+        {
+            if (!IsOutside(member.Position)) continue;
+            member.Die(SimCharacterDeathExtensions.Environment, cause);
+        }
+    }
+
+    public void Despawn() { }
+}

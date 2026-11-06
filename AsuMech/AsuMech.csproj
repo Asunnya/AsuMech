@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Dalamud.NET.Sdk/15.0.0">
+
+  <PropertyGroup>
+    <Authors>Asunnya, Anomek</Authors>
+    <Version>0.5.1.0</Version>
+    <Description>Simulate ultimate raid mechanics solo client-side</Description>
+    <RootNamespace>AsuMech</RootNamespace>
+    <PackageProjectUrl>https://github.com/Asunnya/AsuMech</PackageProjectUrl>
+    <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
+    <IsPackable>false</IsPackable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../AsuMech.Relay/AsuMech.Relay.csproj" />
+    <InternalsVisibleTo Include="AsuMech.Tests" />
+    <EmbeddedResource Include="Learn/Lessons/**/*.json" />
+    <EmbeddedResource Include="Learn/Toolbox/Plans/*.json" />
+    <EmbeddedResource Include="Learn/Toolbox/plans.json" />
+    <EmbeddedResource Include="Learn/Sources/wtfdig/*.json" />
+    <EmbeddedResource Include="Learn/Sources/modules/*.json" />
+    <EmbeddedResource Include="Learn/Mitigation/Aliases.json" />
+    <EmbeddedResource Include="Learn/Mitigation/Plans/*.json" />
+    <EmbeddedResource Include="Learn/Mitigation/Timelines/*.json" />
+    <AdditionalFiles Include="BannedSymbols.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="5.6.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="NAudio.Core" Version="2.2.1" />
+    <PackageReference Include="NAudio.WinMM" Version="2.2.1" />
+    <PackageReference Include="NVorbis" Version="0.10.5" />
+  </ItemGroup>
+</Project>

@@ -5,7 +5,7 @@ repository.
 
 ## What this is
 
-AnoMech is a Dalamud plugin that simulates FFXIV ultimate-raid mechanics client-side, so players can
+AsuMech is a Dalamud plugin that simulates FFXIV ultimate-raid mechanics client-side, so players can
 practice them solo or in multiplayer. It spawns fake `BattleChara`s (party doppels and bosses) in an
 inn, drives their casts and movement, and renders the real VFX, cast bars, tethers and HUD. 
 
@@ -18,16 +18,16 @@ inn, drives their casts and movement, and renders the real VFX, cast bars, tethe
 ## Tests
 
 - The user verifies most changes in game; unit tests cover the logic that can run headless.
-- NUnit suites: `tests/AnoMech.Tests` and `tests/AnoMech.Relay.Tests`. 
+- NUnit suites: `tests/AsuMech.Tests` and `tests/AsuMech.Relay.Tests`. 
 - Scenarios run headless against fakes (`ScenarioCatalogTests`: every strat, random seeds, no
   deaths). `IGameData` in tests (`DataminingGameData`) reads real sheets from
   xivapi/ffxiv-datamining CSVs downloaded into `obj/datamining/<commit>/`; bump `DataminingCommit`
-  in `AnoMech.Tests.csproj` for a newer patch, and add a sheet to `DataminingSheet` when `IGameData`
+  in `AsuMech.Tests.csproj` for a newer patch, and add a sheet to `DataminingSheet` when `IGameData`
   starts reading it.
 - Layout: one test file per concept tested, placed in the directory that mirrors the production
-  code it covers (`AnoMech.Relay/Server/` → `tests/AnoMech.Relay.Tests/Server/`). 
+  code it covers (`AsuMech.Relay/Server/` → `tests/AsuMech.Relay.Tests/Server/`). 
   Fakes of a production interface go in a `Fakes/` folder beside that interface's package
-  (`AnoMech/Core/Native/Interfaces/` → `tests/AnoMech.Tests/Core/Native/Fakes/`);
+  (`AsuMech/Core/Native/Interfaces/` → `tests/AsuMech.Tests/Core/Native/Fakes/`);
 
 ## Comments
 
@@ -55,8 +55,8 @@ communicate that with user and try to verify first.
 
 ## Architecture
 
-- **Projects.** `AnoMech/` (the plugin), `AnoMech.Relay/` (multiplayer relay library: wire format
-  in `Network/`, server in `Server/`), `AnoMech.Relay.Host/` (standalone relay exe + Dockerfile).
+- **Projects.** `AsuMech/` (the plugin), `AsuMech.Relay/` (multiplayer relay library: wire format
+  in `Network/`, server in `Server/`), `AsuMech.Relay.Host/` (standalone relay exe + Dockerfile).
 - **Frame loop.** `Plugin.OnFrameworkUpdate` → `Natives.Tick` (first, so the zone guard runs even
   when `Game.Tick` is paused or throws) → `RunController.Tick` → `Game.Tick` (`Core/Game/Game.cs`)
   → `Multiplayer.Tick`. `Game.Tick` ticks the `InstanceSession` and checks for falls, then, unless
@@ -79,7 +79,7 @@ communicate that with user and try to verify first.
   (`Plugin.cs`, `RunController.cs`), Windows, Multiplayer and UserActions handlers may use
   `Implementations/` directly. Where Dalamud already
   has a service interface (`IFramework`, `IChatGui`, …), call `Plugin.<Service>` and stand it in via
-  `tests/AnoMech.Tests/Support/DalamudServices.cs`; `IGameData` is the exception, because Lumina
+  `tests/AsuMech.Tests/Support/DalamudServices.cs`; `IGameData` is the exception, because Lumina
   rows can't be built without game files.
 - **Native interop** walks `FFXIVClientStructs` types directly. 
 

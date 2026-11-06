@@ -15,7 +15,7 @@ lockout, so it always holds the zone-in.
 Usage:
     python tools/replay_export_duty_init.py <replay.dat> [<replay2.dat> ...] [--rs <replay.dat> ...] <output.cs>
 
-The class name comes from the output filename stem and the namespace from its path (the AnoMech
+The class name comes from the output filename stem and the namespace from its path (the AsuMech
 project dir down to the file's folder); override with --class <Name> / --namespace <A.B.C>.
 Several replays of the same duty are merged: RSV/RSF records are unioned, and the barrier, helper
 pool and snapshot must agree. A --rs replay only adds RSV/RSF records: one recorded in another client
@@ -199,7 +199,7 @@ def emit(barrier_, pool, states, rsv, rsf, out_path, class_name, namespace):
     if rsv_rows or rsf_rows:
         w("using System;")
     w("using System.Numerics;")
-    w("using AnoMech.Core.Map;")
+    w("using AsuMech.Core.Map;")
     w("")
     w(f"namespace {namespace};")
     w("")
@@ -253,12 +253,12 @@ def sanitize_identifier(stem):
 
 
 def derive_namespace(out_path):
-    """AnoMech project dir down to the file's folder, e.g. AnoMech.Scenarios.Umad."""
+    """AsuMech project dir down to the file's folder, e.g. AsuMech.Scenarios.Umad."""
     parts = os.path.normpath(os.path.abspath(out_path)).split(os.sep)
-    anchors = [i for i, p in enumerate(parts[:-1]) if p == "AnoMech"]
+    anchors = [i for i, p in enumerate(parts[:-1]) if p == "AsuMech"]
     if not anchors:
         return None
-    return ".".join(parts[anchors[-1]:-1])  # innermost 'AnoMech' .. parent of file
+    return ".".join(parts[anchors[-1]:-1])  # innermost 'AsuMech' .. parent of file
 
 
 def main(argv):
@@ -281,7 +281,7 @@ def main(argv):
 
     namespace = ns_override or derive_namespace(out_path)
     if namespace is None:
-        print("error: could not derive namespace from output path (no 'AnoMech' dir in it); pass --namespace <A.B.C>")
+        print("error: could not derive namespace from output path (no 'AsuMech' dir in it); pass --namespace <A.B.C>")
         return 2
     class_name = cls_override or sanitize_identifier(os.path.splitext(os.path.basename(out_path))[0])
 

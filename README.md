@@ -10,7 +10,7 @@ Savage raids and other fights that stay in this fork, starting with AAC Heavywei
 `/asumech` (or `/asu`; the old `/anomech` and `/ano` still work). Only one of the two plugins can be installed at a <!-- rename:keep -->
 time: uninstall AnoMech first, and its settings are imported the first time AsuMech starts. <!-- rename:keep -->
  
-Simulate FFXIV raid mechanics client-side for solo practice. Go to any Inn, open the plugin with `/anomech` and start practicing!
+Simulate FFXIV raid mechanics client-side for solo practice. Go to any Inn, open the plugin with `/asumech` and start practicing!
 
 Thanks to improvemnts by [WorstAquaPlayer](https://github.com/WorstAquaPlayer) plugin is quite stable now! No more 
 crashes after training session.
@@ -161,10 +161,10 @@ Thanks for contributors:
 * [Linqx](https://github.com/Linqx) - success/failure checkmarks
 * [Asunnya](https://github.com/Asunnya) - M9S, M10S, M11S, UWU P1 Garuda / P2 Ifrit / P3 Titan / Ultimate Annihilation, DSR P1 Knights / P2 Thordan / P3 Nidhogg / P4 Eyes / P5 Wrath / P5 Death / P6 Double Dragons / P7 Dragon-king, UCOB P1 Twintania / P2 Nael
 
-AnoMech leans heavily on the work of other Dalamud plugins. Huge thanks to their authors!  
+AsuMech leans heavily on the work of other Dalamud plugins. Huge thanks to their authors!  
 Without them, the following would not be possible:
 
-AnoMech's zone changes are built on **Hyperborea**, which served as the baseline for loading a solo duty arena.                                                                                                                                                                                   
+AsuMech's zone changes are built on **Hyperborea**, which served as the baseline for loading a solo duty arena.                                                                                                                                                                                   
 [Evernow](https://github.com/Evernow) has since improved that code and made it safer to use.                                                                                                                                                                                                      
 
 **FFXIV-RaidsRewritten** and **bossmod** were the initial inspiration for the project, though neither is part of the                                                                                                                                                                              

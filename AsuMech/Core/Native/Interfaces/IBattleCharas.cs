@@ -1,0 +1,25 @@
+using AsuMech.Core.Game;
+using AsuMech.Core.Game.Party;
+using AsuMech.Core.SimObjects;
+
+namespace AsuMech.Core.Native.Interfaces;
+
+// Creates and finds BattleCharas. Placements are world space.
+public interface IBattleCharas
+{
+    IBattleCharaProxy LocalPlayer { get; }
+
+    // The engine's own NpcSpawn handler builds the actor from a packet built from the config, a
+    // few frames later; until then the proxy doesn't exist. Its
+    // slot stays reserved until ReleaseSlot. Null when a sheet row is missing or no slot is free.
+    IBattleCharaProxy? SpawnBattleNpcFromPacket(EnemySpawnConfig config, Placement placement, out uint entityId);
+
+    // A Lalafell party doppel wearing the preset's gear, built by the engine's own PlayerSpawn
+    // handler; arrives and reserves its slot like SpawnBattleNpcFromPacket.
+    IBattleCharaProxy? SpawnDoppel(PartyMemberPreset preset, byte level, Placement placement, out uint entityId);
+
+    bool IsInCharacterManager(uint entityId);
+
+    void ReleaseSlot(int slot);
+
+}
