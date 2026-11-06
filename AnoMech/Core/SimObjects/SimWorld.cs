@@ -189,6 +189,9 @@ public sealed partial class SimWorld : ISimObject, IDisposable
     public bool IsOutsideArena(Vector3 local)
         => children.Singleton<SimArenaBoundary>()?.IsOutside(local) ?? false;
 
+    // The fence the run enforces now; null before a scenario sets one.
+    public IArenaShape? ArenaShape => children.Singleton<SimArenaBoundary>()?.Shape;
+
     // A scenario message the whole party should see (which arrow was missed, why everyone just
     // died). Printed here and mirrored to peers, which have no other channel for mid-run text.
     public event Action<string>? Announced;

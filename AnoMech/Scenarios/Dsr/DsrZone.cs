@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 using AnoMech.Core.Game;
+using AnoMech.Core.Game.Geometry;
 using AnoMech.Core.Map;
 
 namespace AnoMech.Scenarios.Dsr;
@@ -39,6 +40,7 @@ public sealed class DsrZone : IZone
     public uint TerritoryId => 968;
     public Vector3 Origin => new(100f, 0f, 100f);
     public DutyInitData DutyInitData => DutyInitData.Unknown(Origin);
+    public IArenaShape Arena => new CircleArena(DsrConstants.Geometry.ThordanArenaRadius);
 
     public IReadOnlyList<WaymarkLayout> WaymarkPresets { get; } =
         [new WaymarkLayout("DSR Phase 1", DsrConstants.Phase1Waymarks), new WaymarkLayout("NAUR", DsrConstants.NaurWaymarks)];

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 using AnoMech.Core.Game;
+using AnoMech.Core.Game.Geometry;
 using AnoMech.Core.Map;
 
 namespace AnoMech.Scenarios.M9s;
@@ -25,6 +26,7 @@ public sealed class M9sZone : IZone
     public uint TerritoryId => 1321;
     public Vector3 Origin => new(100f, 0f, 100f);
     public DutyInitData DutyInitData => DutyInitData.Unknown(Origin);
+    public IArenaShape Arena => new SquareArena(M9sConstants.Geometry.ArenaHalfWidth);
 
     public IReadOnlyList<WaymarkLayout> WaymarkPresets { get; } =
         [new WaymarkLayout("NAUR", M9sConstants.NaurWaymarks)];

@@ -153,6 +153,9 @@ public class ConfigWindow : Window, IDisposable
 
         ImGui.Separator();
 
+        var timelinePanel = configuration.ShowTimelinePanel;
+        if (Pills.Checkbox("Show the next casts during a lesson", ref timelinePanel)) { configuration.ShowTimelinePanel = timelinePanel; configuration.Save(); }
+        if (ImGui.IsItemHovered()) ImGui.SetTooltip("The scenario's embedded cast timeline with a countdown, top right, and the lesson's steps marked among the casts. Never in Exam.");
         ImGui.TextUnformatted("Show the areas about to hit, during a lesson:");
         var hazardsAssisted = configuration.ShowHazardsAssisted;
         if (Pills.Checkbox("Assisted##hazards-assisted", ref hazardsAssisted)) { configuration.ShowHazardsAssisted = hazardsAssisted; configuration.Save(); }

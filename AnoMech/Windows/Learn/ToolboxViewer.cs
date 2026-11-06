@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Numerics;
 using AnoMech.Core.Game.Party;
+using AnoMech.Core.Game.Geometry;
 using AnoMech.Learn;
 using AnoMech.Learn.Toolbox;
 using AnoMech.Windows.Asu;
@@ -19,6 +20,7 @@ internal sealed class ToolboxViewer : Window
     // Plans are calibrated by waymarks; the wall sits near 15 yalms. Enemies dragged past it are parked
     // off the arena by the author, and the toolbox's own "Main Boss" marker is unused when adds stand in.
     private const float ArenaYalms = 32f;
+    private const float ArenaMarginYalms = 2f;
     private const float ParkedYalms = 16.5f;
     private const float PlayerIconPx = 24f;
     private const float EnemyIconPx = 28f;
@@ -117,10 +119,29 @@ internal sealed class ToolboxViewer : Window
         if (size < 80f) return;
         var origin = ImGui.GetCursorScreenPos();
         var centre = origin + new Vector2(size * 0.5f);
-        var px = size / ArenaYalms;
         var draw = ImGui.GetWindowDrawList();
-        draw.AddCircleFilled(centre, size * 0.5f, AsuTheme.U32(AsuTheme.Element));
-        draw.AddCircle(centre, size * 0.5f, AsuTheme.U32(AsuTheme.Line));
+        // The run's own fence while one is up, the zone's floor before that; the view spans the
+        // floor plus a margin for objects authored past its edge.
+        var arena = LearnSession.Current is { Ended: false } live ? live.World.ArenaShape ?? live.Scenario.Phase.Zone.Arena : null;
+        var px = size / ArenaYalms;
+        switch (arena)
+        {
+            case SquareArena square:
+                px = size / (square.HalfWidth * 2f + ArenaMarginYalms * 2f);
+                var half = new Vector2(square.HalfWidth * px);
+                draw.AddRectFilled(centre - half, centre + half, AsuTheme.U32(AsuTheme.Element));
+                draw.AddRect(centre - half, centre + half, AsuTheme.U32(AsuTheme.Line));
+                break;
+            case CircleArena circle:
+                px = size / (circle.Radius * 2f + ArenaMarginYalms * 2f);
+                draw.AddCircleFilled(centre, circle.Radius * px, AsuTheme.U32(AsuTheme.Element));
+                draw.AddCircle(centre, circle.Radius * px, AsuTheme.U32(AsuTheme.Line));
+                break;
+            default:
+                draw.AddCircleFilled(centre, size * 0.5f, AsuTheme.U32(AsuTheme.Element));
+                draw.AddCircle(centre, size * 0.5f, AsuTheme.U32(AsuTheme.Line));
+                break;
+        }
         draw.AddText(new Vector2(centre.X - 4f, origin.Y), AsuTheme.U32(AsuTheme.Muted), "N");
 
         Vector2 At(ToolboxObject o) => centre + new Vector2(o.X, o.Z) * px;

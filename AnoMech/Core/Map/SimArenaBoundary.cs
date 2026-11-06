@@ -13,6 +13,7 @@ internal sealed class SimArenaBoundary : ISimObject
 {
     private readonly SimParty party;
     private readonly IArenaShape shape;
+    public IArenaShape Shape => shape;
     private readonly string cause;
 
     public bool IsAlive => true;

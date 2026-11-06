@@ -60,6 +60,8 @@ public class Configuration : IPluginConfiguration
 
     // Mitigation training: checks the plan's action for your column against what you pressed.
     public bool EnableMitigationTraining { get; set; } = false;
+    // TimelinePanel: the next casts of the embedded timeline, top right, during a lesson.
+    public bool ShowTimelinePanel { get; set; } = true;
     // HazardOverlay: the areas about to resolve, drawn on the ground, per lesson level.
     public bool ShowHazardsAssisted { get; set; } = true;
     public bool ShowHazardsGuided { get; set; } = false;

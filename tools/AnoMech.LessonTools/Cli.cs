@@ -1,3 +1,4 @@
+using System.Numerics;
 using AnoMech.Learn;
 using AnoMech.Learn.Tools;
 using AnoMech.Learn.Toolbox;
@@ -43,6 +44,8 @@ namespace AnoMech.LessonTools;
 // links    --file AnoMech/Scenarios/Raidsplan/DSR.txt [--resolve]   every plan link, Strategy Board code, slides deck and sheet in a guide's text, with its heading; --resolve follows tinyurl
 // learn-ready --scenario <TypeName> [--strat N] [--no-run]   what the chain can read from the scenario and how it degrades (runs overrides-check too)
 // status [--family <Family>] [--metrics] [--write-baseline]   scenario × strat × lesson × toolbox × example × mit × draft; --metrics per family; --write-baseline refreshes tests/.../lessons-baseline.txt
+// scenario-skeleton --log <act log> --territory <id> --pull N --family <Family> --phase <Phase> [--t0 pull|first-cast|<s>] [--cx 100 --cz 100] [--out <dir>]
+//          <Family>Constants.cs, <Family>Actions.cs and <Phase>Scenario.cs from the pull: ids, one EnemyAction per action (shape from the sheet, Size from the public modules or UNVERIFIED), the timeline as logged; rolls are TODO
 // crosscheck --fight m11s [--source all|bossmod|reborn] [--update] [--out AnoMech/Learn/Sources/modules]   public hint modules (text, no compiler) -> one JSON per fight; --update moves the commit pins to the repos' heads
 // sim-timeline --scenario <TypeName> [--strat N] [--seed 1] --out <file.csv>   the headless run's own SimTimeline CSV, the shape a recording has
 // replay-diff --scenario <TypeName> --replay <file.csv|.csv.gz> [--strat N] [--seed 1] [--pull N] [--t0 s] [--window 3] [--slack 0.25]   headless run vs a recorded pull, cast by cast; exit 1 past the slack
@@ -84,6 +87,7 @@ internal static class Cli
                 "replay-diff" => ReplayDiffCmd(opts),
                 "sim-timeline" => SimTimelineCmd(opts),
                 "crosscheck" => Crosscheck(opts),
+                "scenario-skeleton" => ScenarioSkeletonCmd(opts),
                 _ => Usage(),
             };
         }
@@ -493,6 +497,38 @@ internal static class Cli
         process.WaitForExit();
         if (process.ExitCode != 0) throw new InvalidOperationException($"git {string.Join(' ', args)} failed: {error.Trim()}");
         return output;
+    }
+
+    private static int ScenarioSkeletonCmd(Dictionary<string, string> opts)
+    {
+        var log = Need(opts, "log");
+        var territory = uint.Parse(Need(opts, "territory"));
+        var pulls = ActLog.Pulls(log, territory);
+        if (pulls.Count == 0) throw new ArgumentException($"no pull in territory {territory} in {log}");
+        var index = opts.TryGetValue("pull", out var p) && p.Length > 0 ? int.Parse(p) : pulls.Count;
+        var pull = pulls.FirstOrDefault(x => x.Index == index) ?? throw new ArgumentException($"pull {index} not found; the log has {string.Join(", ", pulls.Select(x => $"{x.Index} ({x.Duration:0}s {(x.Clear ? "clear" : "wipe")})"))}");
+        var family = Need(opts, "family");
+        var phase = Need(opts, "phase");
+        var cx = opts.TryGetValue("cx", out var cxs) && cxs.Length > 0 ? float.Parse(cxs, System.Globalization.CultureInfo.InvariantCulture) : 100f;
+        var cz = opts.TryGetValue("cz", out var czs) && czs.Length > 0 ? float.Parse(czs, System.Globalization.CultureInfo.InvariantCulture) : 100f;
+        var t0Text = opts.TryGetValue("t0", out var t) && t.Length > 0 ? t : "pull";
+        var t0 = t0Text switch
+        {
+            "pull" => 0f,
+            "first-cast" => pull.FirstCastAt ?? 0f,
+            _ => float.Parse(t0Text, System.Globalization.CultureInfo.InvariantCulture),
+        };
+        FakeGame.Install();
+        var files = ScenarioSkeleton.Generate(pull, family, phase, new Vector3(cx, 0f, cz), t0, Core.Native.Interfaces.Natives.Data, ModuleSource.LoadForFamily(family));
+        var outDir = opts.TryGetValue("out", out var o) && o.Length > 0 ? o : Path.Combine("work", "skeleton", family);
+        Directory.CreateDirectory(Path.Combine(outDir, phase));
+        File.WriteAllText(Path.Combine(outDir, $"{family}Constants.cs"), files.Constants);
+        File.WriteAllText(Path.Combine(outDir, $"{family}Actions.cs"), files.Actions);
+        File.WriteAllText(Path.Combine(outDir, phase, $"{family}{phase}Scenario.cs"), files.Scenario);
+        Console.WriteLine($"pull {pull.Index}: {pull.Duration:0}s, {(pull.Clear ? "clear" : "wipe")}, {pull.Events.Count} events, t0 {t0:0.00}s; {ScenarioSkeleton.TimelineOf(files.Scenario).Count} timeline lines -> {outDir}");
+        foreach (var note in files.Notes) Console.WriteLine($"  note: {note}");
+        Console.WriteLine($"  TODO lines: {files.Scenario.Split('\n').Count(l => l.Contains("TODO")) + files.Actions.Split('\n').Count(l => l.Contains("TODO") || l.Contains("UNVERIFIED"))}");
+        return 0;
     }
 
     private static int SimTimelineCmd(Dictionary<string, string> opts)

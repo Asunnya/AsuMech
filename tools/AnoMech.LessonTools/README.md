@@ -58,6 +58,10 @@ dotnet $TOOL mit-timeline --scenario UwuP1GarudaScenario --out AnoMech/Learn/Mit
 dotnet $TOOL replay-diff --scenario M4sScenario --replay AnoMech.Relay.Host/recordings/1232_20261105_213000_ab12cd34.csv.gz [--pull 2] [--strat 0] [--seed 1] [--t0 480] [--window 3] [--slack 0.25]
 # the recorded pull's casts as a mit timeline, on the scenario's clock (aligned the same way)
 dotnet $TOOL mit-timeline --from-replay <recording> --scenario M4sScenario [--pull 2] --out AnoMech/Learn/Mitigation/Timelines/M4sScenario.json
+# a new family's starting point from one recorded pull of the ACT log: <Family>Constants.cs (the game's names, the log's ids),
+# <Family>Actions.cs (one EnemyAction per enemy action, shape from the sheet, cone angle / donut hole from the public modules or UNVERIFIED)
+# and <Phase>Scenario.cs (spawns and casts at their logged times; targets, markers and tethers as TODO rolls). Players are "player N".
+dotnet $TOOL scenario-skeleton --log datalogs/m11s/Network_30301_20260923.log --territory 1325 --pull 3 --family M11s --phase Opener [--t0 pull|first-cast|<s>] [--cx 100 --cz 100] [--out work/skeleton/M11s]
 # the public hint modules of one fight (Learn/Sources/modules/fights.json names repo, folder and commit per source) read as text into
 # AnoMech/Learn/Sources/modules/<fight>.json; learn-ready then shows a "module <source>" row per source and cues/draft name markers and tethers
 dotnet $TOOL crosscheck --fight m11s [--source bossmod|reborn] [--update]   # --update moves the pins to the repos' heads and rewrites fights.json

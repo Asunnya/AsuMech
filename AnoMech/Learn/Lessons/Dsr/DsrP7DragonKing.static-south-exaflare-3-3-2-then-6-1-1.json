@@ -7,7 +7,7 @@
       "key": {
         "cls": "DsrP7DragonKingAi",
         "time": 34.5,
-        "line": 49
+        "line": 53
       },
       "title": "After dragon-king Thordan appears",
       "cue": "Dragon-king Thordan appears",
@@ -20,7 +20,7 @@
         "cls": "DsrP7DragonKingAi",
         "from": 41.53,
         "to": 197.39,
-        "line": 59
+        "line": 65
       },
       "title": "After  on Dragon-king Thordan",
       "cue": " on Dragon-king Thordan",
@@ -33,7 +33,7 @@
         "cls": "DsrP7DragonKingAi",
         "from": 47.37,
         "to": 206.16,
-        "line": 60
+        "line": 66
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
@@ -46,7 +46,7 @@
         "cls": "DsrP7DragonKingAi",
         "from": 49.139996,
         "to": 207.93001,
-        "line": 61
+        "line": 67
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
@@ -59,7 +59,7 @@
         "cls": "DsrP7DragonKingAi",
         "from": 52.87,
         "to": 211.66,
-        "line": 62
+        "line": 68
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
@@ -83,7 +83,7 @@
         "cls": "DsrP7DragonKingAi",
         "from": 56.71,
         "to": 215.5,
-        "line": 63
+        "line": 69
       },
       "title": "After trinity hits you",
       "cue": "Trinity hits you",
@@ -107,7 +107,7 @@
         "cls": "DsrP7DragonKingAi",
         "from": 59.75,
         "to": 218.56,
-        "line": 65
+        "line": 71
       },
       "title": "After trinity hits you",
       "cue": "Trinity hits you",
@@ -140,7 +140,7 @@
         "cls": "DsrP7DragonKingAi",
         "from": 73.79,
         "to": 234.73,
-        "line": 68
+        "line": 75
       },
       "title": "After akh Morn's Edge resolves",
       "cue": "Akh Morn's Edge resolves",
@@ -164,7 +164,7 @@
         "cls": "DsrP7DragonKingAi",
         "from": 80.15,
         "to": 241.2,
-        "line": 69
+        "line": 76
       },
       "title": "After trinity hits you",
       "cue": "Trinity hits you",
@@ -188,7 +188,7 @@
         "cls": "DsrP7DragonKingAi",
         "from": 84.21001,
         "to": 164.15001,
-        "line": 72
+        "line": 79
       },
       "title": "After trinity hits you",
       "cue": "Trinity hits you",
@@ -218,7 +218,7 @@
         "cls": "DsrP7DragonKingAi",
         "from": 95.07,
         "to": 175.06,
-        "line": 73
+        "line": 81
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
@@ -231,7 +231,7 @@
         "cls": "DsrP7DragonKingAi",
         "from": 99.08,
         "to": 179.02,
-        "line": 74
+        "line": 82
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
@@ -244,7 +244,7 @@
         "cls": "DsrP7DragonKingAi",
         "from": 103.14,
         "to": 183.08,
-        "line": 75
+        "line": 83
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
@@ -268,7 +268,7 @@
         "cls": "DsrP7DragonKingAi",
         "from": 113.39,
         "to": 193.33,
-        "line": 76
+        "line": 84
       },
       "title": "After trinity hits you",
       "cue": "Trinity hits you",
@@ -292,7 +292,7 @@
         "cls": "DsrP7DragonKingAi",
         "from": 147.28,
         "to": 227.2,
-        "line": 66
+        "line": 73
       },
       "title": "After holmgang on another player",
       "cue": "Holmgang on another player",
@@ -304,7 +304,7 @@
       "key": {
         "cls": "DsrP7DragonKingAi",
         "time": 247.41,
-        "line": 78
+        "line": 88
       },
       "title": "After trinity hits you",
       "cue": "Trinity hits you",

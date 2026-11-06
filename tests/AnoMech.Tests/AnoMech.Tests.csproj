@@ -17,6 +17,7 @@
     <None Include="Learn/Mitigation/Fixtures/*.csv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="Learn/Sources/Fixtures/*.ts" CopyToOutputDirectory="PreserveNewest" />
     <None Include="Learn/Sources/Fixtures/module-*/*.cs" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="Learn/Tools/Fixtures/*.log" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <!-- The plugin references these with Private=false because Dalamud supplies them in game; the
