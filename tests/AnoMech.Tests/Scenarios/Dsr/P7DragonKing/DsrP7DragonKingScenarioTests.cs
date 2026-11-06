@@ -1,5 +1,7 @@
+using System;
 using System.Linq;
 using System.Numerics;
+using AnoMech.Core.SimObjects;
 using AnoMech.Scenarios.Dsr.P7DragonKing;
 using static AnoMech.Core.Game.Party.PartyRole;
 using static AnoMech.Scenarios.Dsr.DsrConstants;
@@ -91,8 +93,53 @@ public class DsrP7DragonKingScenarioTests
     public void HoldingTheTankAkhMornWithoutAnInvulnKills()
         => Negative<DsrP7DragonKingScenario>(MainTank)
             .Overrides<DsrP7DragonKingStateOverrides>(Pinned)
+            .WithMitigationChecks()
             .TeleportAt(145f, to: new Vector2(0f, 9f))
             .ShouldKill(ActionId.AkhMornsEdgeTanks, MainTank);
+
+    // His swings draw the Akh Morn hits around his facing, so the tank taking enmity at the cast
+    // (south, in the rear tower) mustn't turn him until the last hit.
+    [Test]
+    public void TheDragonKingHoldsHisFacingUntilAkhMornResolves()
+        => Negative<DsrP7DragonKingScenario>(PhysRangedDps)
+            .Overrides<DsrP7DragonKingStateOverrides>(Pinned)
+            .At(DsrP7DragonKingScenario.AkhMornLastHit(1) - 0.1f, p =>
+            {
+                var thordan = p.World.Children.OfType<SimEnemy>().Single(e => e.BNpcBaseId == BNpcBaseId.DragonKingThordan);
+                Assert.That(MathF.Abs(MathF.IEEERemainder(thordan.Rotation - MathF.PI, MathF.Tau)), Is.LessThan(0.05f));
+            })
+            .ShouldKillNoOneElse();
+
+    private static readonly Vector2 SecondAkhMornSideTower = new(7.8f, -4.5f);
+
+    [Test]
+    public void KitchenSinkingTheSideTowerWithoutMitigationKills()
+        => Negative<DsrP7DragonKingScenario>(OffTank)
+            .Overrides<DsrP7DragonKingStateOverrides>(Pinned)
+            .WithMitigationChecks()
+            .TeleportAt(141f, to: SecondAkhMornSideTower)
+            .ShouldKill(ActionId.AkhMornsEdgeParty, OffTank);
+
+    // Rampart and Damnation; standing on at the front right, the next death is the first Gigaflare.
+    [Test]
+    public void KitchenSinkingTheSideTowerOnMitigationLives()
+        => Negative<DsrP7DragonKingScenario>(OffTank)
+            .Overrides<DsrP7DragonKingStateOverrides>(Pinned)
+            .WithMitigationChecks()
+            .TeleportAt(141f, to: SecondAkhMornSideTower)
+            .At(146f, p =>
+            {
+                p.Member(OffTank)!.AddStatus(1191, 20f);
+                p.Member(OffTank)!.AddStatus(3832, 20f);
+            })
+            .TeleportAt(DsrP7DragonKingScenario.AkhMornLastHit(1) + 0.3f, to: new Vector2(7.8f, -7.8f))
+            .ShouldKill(ActionId.GigaflaresEdgeFirst, OffTank);
+
+    [Test]
+    public void TheBotsClearWithTheOffTankInvulningFirst()
+        => Negative<DsrP7DragonKingScenario>(PhysRangedDps)
+            .Overrides<DsrP7DragonKingStateOverrides>(o => { Pinned(o); o.FirstInvulnTank = OffTank; })
+            .ShouldKillNoOneElse();
 
     [Test]
     public void StandingInTheMiddleForGigaflareKills()

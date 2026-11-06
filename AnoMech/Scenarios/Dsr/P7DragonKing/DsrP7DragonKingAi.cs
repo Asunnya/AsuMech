@@ -70,7 +70,6 @@ public sealed class DsrP7DragonKingAi : IScenarioAi<DsrP7DragonKingState>
 
             ai.Move(Scenario.TrinityHits[2 * exaflarePair + 1] + AfterTrinity, () => AiMove.Create(TopEnmityTankFacesHimNorth(new Vector2?[8], exaflarePair)).NaturalOrder(), jitter: 0f, sprint: true);
             ai.Move(Scenario.AkhMornCasts[c] + AfterTheCastLocks, () => AiMove.Create(AkhMornSpots(c)).NaturalOrder(), jitter: 0f, sprint: true);
-            ai.Move(Scenario.AkhMornFirstHits[c] + 0.3f, () => AiMove.Create(SideTowerTankJoinsTheSix(c)).NaturalOrder(), jitter: 0f);
             world.Events.Add(Scenario.AkhMornFirstHits[c] + 0.3f, () => InvulnTheRearTowerTank(c));
             ai.Move(Scenario.AkhMornLastHit(c) + AfterTrinity, () => AiMove.Create(TrinitySpots(akhMornPair, 0)).NaturalOrder(), jitter: 0f);
             ai.Move(Scenario.TrinityHits[2 * akhMornPair] + AfterTrinity, () => AiMove.Create(TrinitySpots(akhMornPair, 1)).NaturalOrder(), jitter: 0f);
@@ -136,27 +135,16 @@ public sealed class DsrP7DragonKingAi : IScenarioAi<DsrP7DragonKingState>
             return spots;
         }
         var six = Cluster(AkhMornSpot(cycle, EdgeSpot.Party), NonTanks);
-        six[(int)RearTowerTank(cycle)] = AkhMornSpot(cycle, EdgeSpot.Tanks);
-        six[(int)SideTowerTank(cycle)] = AkhMornSpot(cycle, EdgeSpot.SecondParty);
+        six[(int)state.InvulnTank(cycle)] = AkhMornSpot(cycle, EdgeSpot.Tanks);
+        six[(int)state.KitchenSinkTank(cycle)] = AkhMornSpot(cycle, EdgeSpot.SecondParty);
         return six;
-    }
-
-    private Vector2?[] SideTowerTankJoinsTheSix(int cycle)
-    {
-        var spots = new Vector2?[8];
-        if (cycle > 0) spots[(int)SideTowerTank(cycle)] = AkhMornSpot(cycle, EdgeSpot.Party);
-        return spots;
     }
 
     private void InvulnTheRearTowerTank(int cycle)
     {
-        if (cycle == 0 || world.Party.Get(RearTowerTank(cycle)) is not { } tank || !tank.IsAlive() || !world.Party.IsBotDriven(tank)) return;
+        if (cycle == 0 || world.Party.Get(state.InvulnTank(cycle)) is not { } tank || !tank.IsAlive() || !world.Party.IsBotDriven(tank)) return;
         DamageSolver.GiveBotInvuln(tank, Scenario.AkhMornLastHit(cycle) - Scenario.AkhMornFirstHits[cycle] + 1f);
     }
-
-    private static PartyRole RearTowerTank(int cycle) => cycle == 1 ? MainTank : OffTank;
-
-    private static PartyRole SideTowerTank(int cycle) => cycle == 1 ? OffTank : MainTank;
 
     private Vector2?[] HealersAndMainTankTakeTheFirstTowers()
     {

@@ -54,7 +54,17 @@ public sealed class DsrP7DragonKingState
         Elements = overrides.Elements ?? elements;
         var order = Enumerable.Range(0, GigaflareCycles).Select(_ => (IReadOnlyList<int>)rng.Shuffle(0, 1, 2).ToList()).ToList();
         GigaflareOrder = overrides.GigaflareOrder ?? order;
+        firstInvulnTank = overrides.FirstInvulnTank;
     }
+
+    private readonly PartyRole firstInvulnTank;
+
+    // Akh Morn cycles after the first go 6/1/1: one tank invulns the rear tower, the other kitchen
+    // sinks the side one, and they trade the next time.
+    public PartyRole InvulnTank(int cycle) => cycle % 2 == 1 ? firstInvulnTank : OtherTank(firstInvulnTank);
+    public PartyRole KitchenSinkTank(int cycle) => OtherTank(InvulnTank(cycle));
+
+    public static PartyRole OtherTank(PartyRole tank) => tank == PartyRole.MainTank ? PartyRole.OffTank : PartyRole.MainTank;
 
     public AscalonElement ExaflareElement(int cycle) => Elements[cycle * 3];
     public AscalonElement AkhMornElement(int cycle) => Elements[cycle * 3 + 1];
