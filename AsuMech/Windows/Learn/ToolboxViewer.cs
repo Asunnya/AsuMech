@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using AsuMech.Core.Game.Party;
@@ -37,6 +38,9 @@ internal sealed class ToolboxViewer : Window
     private LessonToolbox? link;
     private LessonDirector? subscribed;
     private int shown;
+    // The plan steps the lesson links, in plan order; a plan covering a whole fight shows only this
+    // mechanic's part. Empty means the lesson links none, so every step is shown.
+    private List<int> own = [];
     private bool follow = true;
     private PartyRole role;
 
@@ -59,8 +63,9 @@ internal sealed class ToolboxViewer : Window
                 subscribed.StepChanged += OnStepChanged;
                 plan = ToolboxPlans.Load(tb.PlanId);
                 link = tb;
+                own = plan is null ? [] : tb.Steps.Values.Where(i => i >= 0 && i < plan.Steps.Count).Distinct().Order().ToList();
                 role = session.Role;
-                shown = 0;
+                shown = own.Count > 0 ? own[0] : 0;
                 follow = true;
             }
             IsOpen = plan != null;
@@ -102,18 +107,20 @@ internal sealed class ToolboxViewer : Window
     public override void Draw()
     {
         if (plan is null) return;
-        shown = Math.Clamp(shown, 0, plan.Steps.Count - 1);
+        var pages = own.Count > 0 ? own : Enumerable.Range(0, plan.Steps.Count).ToList();
+        var page = Math.Max(0, pages.IndexOf(shown));
+        shown = pages[page];
         var step = plan.Steps[shown];
 
-        if (ImGuiComponents.IconButton("toolbox-prev", FontAwesomeIcon.ChevronLeft)) { shown--; follow = false; }
+        if (ImGuiComponents.IconButton("toolbox-prev", FontAwesomeIcon.ChevronLeft) && page > 0) { shown = pages[page - 1]; follow = false; }
         ImGui.SameLine();
-        if (ImGuiComponents.IconButton("toolbox-next", FontAwesomeIcon.ChevronRight)) { shown++; follow = false; }
+        if (ImGuiComponents.IconButton("toolbox-next", FontAwesomeIcon.ChevronRight) && page < pages.Count - 1) { shown = pages[page + 1]; follow = false; }
         ImGui.SameLine();
-        ImGui.TextUnformatted($"{shown + 1}/{plan.Steps.Count}  {step.Label}");
+        ImGui.TextUnformatted($"{page + 1}/{pages.Count}  {plan.Title(step)}");
         if (LearnSession.Current?.Lesson is { } lesson)
         {
             ImGui.SameLine();
-            LessonVoteButtons.Draw(lesson, $"#{shown + 1} {step.Label}", LessonFeedback.Toolbox);
+            LessonVoteButtons.Draw(lesson, $"#{shown + 1} {plan.Title(step)}", LessonFeedback.Toolbox);
         }
         if (!follow)
         {
@@ -136,7 +143,7 @@ internal sealed class ToolboxViewer : Window
         // Labels that fit beside an object stay on the map; sentences go under it, where they wrap
         // instead of running past the arena's edge.
         var avail = ImGui.GetContentRegionAvail();
-        var texts = step.Objects.Where(o => o.Kind == "text" && o.Label.Trim().Length > 0).ToList();
+        var texts = step.Objects.Where(o => o.Kind == "text" && o.Label.Trim().Length > 0 && !plan.Footer.Contains(o.Label.Trim())).ToList();
         var captions = texts.Where(o => !FitsOnMap(o.Label, avail.X)).Select(o => o.Label.Trim()).ToList();
         var note = step.Note.Length > 0 ? step.Note.Split('\n')[0] : null;
         var below = captions.Concat(note is null ? Array.Empty<string>() : [note])

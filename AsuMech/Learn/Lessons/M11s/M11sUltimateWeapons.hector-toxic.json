@@ -259,11 +259,13 @@
       "PhysRangedDps": "dps3"
     },
     "steps": {
-      "M11sUltimateWeaponsAi@0.3": 1,
-      "M11sUltimateWeaponsAi@40.2": 2
+      "M11sUltimateWeaponsAi@0.3": 6,
+      "M11sUltimateWeaponsAi@30.35": 0,
+      "M11sUltimateWeaponsAi@40.2": 1,
+      "M11sUltimateWeaponsAi@100": 7
     },
     "exampleSeed": 1,
-    "residual": 2.1421452
+    "residual": 7.9924445
   },
   "draft": true
 }

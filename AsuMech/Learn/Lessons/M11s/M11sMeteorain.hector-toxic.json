@@ -48,7 +48,7 @@
       },
       "title": "After Fearsome Fireball resolves",
       "cue": "Fearsome Fireball resolves",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShadeSides has (1,2)).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShadeSides has (1,2)).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -100,7 +100,7 @@
       },
       "title": "After a tether lands on you",
       "cue": "A tether lands on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShadeSides has (1,2)).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShadeSides has (1,2)).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -112,10 +112,10 @@
       },
       "title": "After Foregone Fatality hits you",
       "cue": "Foregone Fatality hits you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShadeSides has (1,2)).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShadeSides has (1,2)).",
       "roles": {
         "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShadeSides has (0,2))."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShadeSides has (0,2))."
         }
       },
       "tolerance": 2.5,
@@ -240,10 +240,11 @@
       "M11sMeteorainAi@0.5": 10,
       "M11sMeteorainAi@20.51": 11,
       "M11sMeteorainAi@30.53": 12,
+      "M11sMeteorainAi@38.55": 12,
       "M11sMeteorainAi@40.54": 13
     },
     "exampleSeed": 1,
-    "residual": 1.5
+    "residual": 1.2054611
   },
   "draft": true
 }

@@ -71,22 +71,22 @@
       },
       "title": "After Explosion resolves",
       "cue": "Explosion resolves",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: WestShadesNear has true).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: WestShadesNear has true).",
       "roles": {
         "MainTank": {
           "rule": "Depends on WestShadesNear and AvalancheSafeSide: [true,false] \u0026 1 \u2192 near B (E 8m); [true,false] \u0026 -1 \u2192 near D (W 8m); [false,true] \u0026 -1 \u2192 near D (W 8m); [false,true] \u0026 1 \u2192 near D (W 8m)."
         },
         "MeleeDpsA": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Avalanche)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Avalanche)."
         },
         "MeleeDpsB": {
           "rule": "Depends on WestShadesNear: [true,false] \u2192 near B (E 8m); [false,true] \u2192 at D."
         },
         "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter has false)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has false)."
         },
         "CasterDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter has true)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has true)."
         }
       },
       "tolerance": 2.5,
@@ -101,25 +101,25 @@
       },
       "title": "After a marker lands on you",
       "cue": "A marker lands on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Avalanche).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Avalanche).",
       "roles": {
         "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: WestShadesNear has true)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: WestShadesNear has true)."
         },
         "ShieldHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: AvalancheSafeZ)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: AvalancheSafeZ)."
         },
         "MeleeDpsA": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter)."
         },
         "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: WestShadesNear)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: WestShadesNear)."
         },
         "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter)."
         },
         "CasterDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter has true)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has true)."
         }
       },
       "tolerance": 2.5,
@@ -133,22 +133,22 @@
       },
       "title": "After Fire Breath hits you",
       "cue": "Fire Breath hits you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter has false).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has false).",
       "roles": {
         "MainTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: WestShadesNear)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: WestShadesNear)."
         },
         "OffTank": {
           "rule": "Depends on LinesWestOuter has true and AvalancheSafeSide: yes \u0026 1 \u2192 at B; yes \u0026 -1 \u2192 at D; no \u0026 1 \u2192 at D; no \u0026 -1 \u2192 at B."
         },
         "MeleeDpsA": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter)."
         },
         "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter has true)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has true)."
         },
         "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter has true)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has true)."
         }
       },
       "tolerance": 2.5,
@@ -162,25 +162,25 @@
       },
       "title": "After Massive Meteor hits you",
       "cue": "Massive Meteor hits you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: WestShadesNear).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: WestShadesNear).",
       "roles": {
         "OffTank": {
           "rule": "Depends on LinesWestOuter has true and AvalancheSafeSide: yes \u0026 1 \u2192 near 2 (NE wall); yes \u0026 -1 \u2192 near 1 (NW wall); no \u0026 1 \u2192 near 1 (NW wall); no \u0026 -1 \u2192 near 2 (NE wall)."
         },
         "RegenHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter has false)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has false)."
         },
         "ShieldHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter has false)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has false)."
         },
         "MeleeDpsA": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter)."
         },
         "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter has true)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has true)."
         },
         "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter has true)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has true)."
         }
       },
       "tolerance": 2.5,
@@ -224,11 +224,17 @@
       "PhysRangedDps": "dps3"
     },
     "steps": {
-      "M11sArenaSplitAi@0.5": 2,
-      "M11sArenaSplitAi@29.52-61.55": 23
+      "M11sArenaSplitAi@0.5": 14,
+      "M11sArenaSplitAi@29.52-61.55": 22,
+      "M11sArenaSplitAi@40.52-72.55": 23,
+      "M11sArenaSplitAi@46.57-82.62": 24,
+      "M11sArenaSplitAi@86.39": 25,
+      "M11sArenaSplitAi@103.88": 29,
+      "M11sArenaSplitAi@110.6": 30,
+      "M11sArenaSplitAi@119.48": 31
     },
     "exampleSeed": 8,
-    "residual": 2.1
+    "residual": 17.356615
   },
   "draft": true
 }

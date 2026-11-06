@@ -55,7 +55,7 @@
       },
       "title": "After Orbital Omen cast starts",
       "cue": "Orbital Omen cast starts",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NorthLines).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NorthLines).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -67,7 +67,7 @@
       },
       "title": "After Orbital Omen resolves",
       "cue": "Orbital Omen resolves",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NorthLines).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NorthLines).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -79,7 +79,7 @@
       },
       "title": "After Orbital Omen resolves",
       "cue": "Orbital Omen resolves",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NorthLines).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NorthLines).",
       "tolerance": 2.5,
       "skip": false
     }
@@ -97,12 +97,11 @@
       "PhysRangedDps": "dps3"
     },
     "steps": {
-      "M11sOrbitalOmenAi@0.3": 1,
-      "M11sOrbitalOmenAi@12.12": 10,
-      "M11sOrbitalOmenAi@15.32": 29
+      "M11sOrbitalOmenAi@0.3": 8,
+      "M11sOrbitalOmenAi@29.81": 9
     },
     "exampleSeed": 1,
-    "residual": 2.5
+    "residual": 3.5011957
   },
   "draft": true
 }

@@ -46,11 +46,6 @@ public sealed class SimPartyNpc : SimNpc, ISimPartyMember
         return actionId;
     }
 
-    public void UseSprint(float duration)
-    {
-        if (!ActionsLocked) SprintHandler.Apply(this, duration);
-    }
-
     public override void Despawn()
     {
         base.Despawn();

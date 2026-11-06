@@ -24,6 +24,22 @@ public sealed record ToolboxPlan(string Id, string Label, string Author, string 
         WriteIndented = false,
     };
 
+    // Texts the author put on most steps (a "Created by" credit, a legend) are a footer, not what
+    // a step says: they neither name it nor go under its picture.
+    [JsonIgnore]
+    public IReadOnlySet<string> Footer => footer ??= Steps.Count < 3 ? new HashSet<string>() : Steps
+        .SelectMany(st => st.Objects.Where(o => o.Kind == "text").Select(o => o.Label.Trim()).Distinct())
+        .GroupBy(t => t).Where(g => g.Count() * 2 > Steps.Count).Select(g => g.Key).ToHashSet();
+    private HashSet<string>? footer;
+
+    // The step's first one-line text that isn't the footer, else its imported label.
+    public string Title(ToolboxStep step)
+        => step.Objects.Where(o => o.Kind == "text" && !Footer.Contains(o.Label.Trim()))
+               .Select(o => o.Label.Trim().Split('\n')[0].Trim()).FirstOrDefault(l => l.Length is > 0 and <= MaxTitleChars)
+           ?? step.Label;
+
+    private const int MaxTitleChars = 48;
+
     public string ToJson() => JsonSerializer.Serialize(this, Json);
     public static ToolboxPlan Parse(string json) => JsonSerializer.Deserialize<ToolboxPlan>(json, Json)!;
 

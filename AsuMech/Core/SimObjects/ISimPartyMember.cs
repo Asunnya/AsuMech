@@ -23,8 +23,8 @@ public interface ISimPartyMember : ISimObject, IPositioned
     // Game.Kill calls this outside godmode. byEnvironment: no action dealt the death.
     void OnKilled(bool byEnvironment);
 
-    // A no-op for humans, who press their own Sprint; only bots cast, including a debug bot in the
-    // local player's seat.
+    // Only the local player under bot control takes the status: the client moves that character at
+    // its own speed. Bots are moved at the sim's speed and, like humans who didn't press Sprint, show none.
     void UseSprint(float duration) { }
 }
 

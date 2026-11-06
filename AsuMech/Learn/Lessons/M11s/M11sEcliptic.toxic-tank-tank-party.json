@@ -40,16 +40,16 @@
       "rule": "Stand at the centre.",
       "roles": {
         "RegenHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShadeForTower)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShadeForTower)."
         },
         "ShieldHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShadeForTower)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShadeForTower)."
         },
         "PhysRangedDps": {
           "rule": "Depends on PairTetherFirst: [false,true] \u2192 NW wall; [true,true] \u2192 centre; [true,false] \u2192 centre; [false,false] \u2192 NE wall."
         },
         "CasterDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShadeForTower)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShadeForTower)."
         }
       },
       "tolerance": 2.5,
@@ -108,7 +108,7 @@
           "rule": "Depends on SingleTowers: [2,3] \u2192 NW 11m; [0,1] \u2192 SE 11m; [0,2] \u2192 SW 11m."
         },
         "ShieldHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SingleTowers)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SingleTowers)."
         },
         "CasterDps": {
           "rule": "Depends on SingleTowers: [2,3] \u2192 NE 11m; [0,1] \u2192 SW 11m."
@@ -143,13 +143,13 @@
       },
       "title": "After a tether lands on you",
       "cue": "A tether lands on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShadeForTower).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShadeForTower).",
       "roles": {
         "MainTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SingleTowers has 3)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SingleTowers has 3)."
         },
         "RegenHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShadeForTower has 3)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShadeForTower has 3)."
         },
         "ShieldHealer": {
           "rule": "Depends on SingleTowers: [2,3] \u2192 centre; [0,1] \u2192 centre; [0,2] \u2192 SW wall."
@@ -169,22 +169,22 @@
       },
       "title": "After a tether lands on you",
       "cue": "A tether lands on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShadeForTower).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShadeForTower).",
       "roles": {
         "MeleeDpsA": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SingleTowers)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SingleTowers)."
         },
         "PhysRangedDps": {
           "rule": "Go to the north-east wall."
         },
         "ShieldHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
         },
         "RegenHealer": {
           "rule": "Go to the south-east wall."
         },
         "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: MammothNortheast)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: MammothNortheast)."
         }
       },
       "tolerance": 2.5,
@@ -198,13 +198,13 @@
       },
       "title": "After Majestic Meteowrath hits you",
       "cue": "Majestic Meteowrath hits you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShadeForTower).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShadeForTower).",
       "roles": {
         "RegenHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShadeForTower has 3)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShadeForTower has 3)."
         },
         "ShieldHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SingleTowers)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SingleTowers)."
         },
         "MeleeDpsB": {
           "rule": "Depends on PairTetherFirst: [false,true] \u2192 E 2m; [true,true] \u2192 E 2m; [true,false] \u2192 W wall; [false,false] \u2192 E wall."
@@ -264,11 +264,15 @@
     },
     "steps": {
       "M11sEclipticAi@0.5": 15,
-      "M11sEclipticAi@39.03": 16,
-      "M11sEclipticAi@44.1": 19
+      "M11sEclipticAi@29-37.02": 16,
+      "M11sEclipticAi@39.03": 17,
+      "M11sEclipticAi@42.03": 18,
+      "M11sEclipticAi@44.1": 19,
+      "M11sEclipticAi@47.48": 20,
+      "M11sEclipticAi@59.23": 21
     },
     "exampleSeed": 8,
-    "residual": 1
+    "residual": 7.3342395
   },
   "draft": true
 }

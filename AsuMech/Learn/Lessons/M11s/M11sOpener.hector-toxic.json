@@ -76,10 +76,10 @@
       },
       "title": "After Assault Evolved cast starts",
       "cue": "Assault Evolved cast starts",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Weapons has [Axe).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Weapons has [Axe).",
       "roles": {
         "MeleeDpsA": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Weapons has [Scythe)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Weapons has [Scythe)."
         }
       },
       "tolerance": 2.5,
@@ -94,19 +94,19 @@
       },
       "title": "After Sweeping Victory hits you",
       "cue": "Sweeping Victory hits you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat.",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
       "roles": {
         "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Weapons has Scythe])."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Weapons has Scythe])."
         },
         "ShieldHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Weapons has Scythe])."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Weapons has Scythe])."
         },
         "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Weapons has Scythe])."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Weapons has Scythe])."
         },
         "CasterDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Weapons has Scythe])."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Weapons has Scythe])."
         }
       },
       "tolerance": 2.5,
@@ -243,12 +243,14 @@
       "PhysRangedDps": "dps3"
     },
     "steps": {
-      "M11sOpenerAi@0.3": 1,
-      "M11sOpenerAi@25.59": 2,
-      "M11sOpenerAi@42.92-90.06": 13
+      "M11sOpenerAi@15.74": 0,
+      "M11sOpenerAi@25.59": 1,
+      "M11sOpenerAi@42.92-90.06": 2,
+      "M11sOpenerAi@50.27-100.39": 3,
+      "M11sOpenerAi@116.86": 5
     },
     "exampleSeed": 1,
-    "residual": 2.3
+    "residual": 9.03116
   },
   "draft": true
 }
