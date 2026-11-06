@@ -80,7 +80,8 @@
       "PhysRangedDps": "dps3"
     },
     "steps": {},
-    "exampleSeed": 1
+    "exampleSeed": 1,
+    "residual": 0.0
   },
   "draft": true
 }

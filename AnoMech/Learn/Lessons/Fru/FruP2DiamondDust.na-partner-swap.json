@@ -1,6 +1,6 @@
 {
   "scenario": "FruP2DiamondDustScenario",
-  "strat": "NA \u00B7 Partner Swap",
+  "strat": "NA · Partner Swap",
   "sources": [],
   "steps": [
     {
@@ -11,7 +11,7 @@
       },
       "title": "After a marker lands on another player",
       "cue": "A marker lands on another player",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SupportsMarked).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SupportsMarked).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -23,7 +23,7 @@
       },
       "title": "After icicle Impact cast starts",
       "cue": "Icicle Impact cast starts",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SupportsMarked).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SupportsMarked).",
       "roles": {
         "MeleeDpsA": {
           "rule": "Go to 4m west of the centre."
@@ -49,19 +49,19 @@
       },
       "title": "After frigid Stone resolves",
       "cue": "Frigid Stone resolves",
-      "rule": "Depends on FirstIcicle: 0 \u2192 N 3m; 3 \u2192 N 3m; 1 \u2192 SW 3m.",
+      "rule": "Depends on FirstIcicle: 0 → N 3m; 3 → N 3m; 1 → SW 3m.",
       "roles": {
         "OffTank": {
-          "rule": "Depends on FirstIcicle: 0 \u2192 S 3m; 3 \u2192 S 3m; 1 \u2192 NE 3m."
+          "rule": "Depends on FirstIcicle: 0 → S 3m; 3 → S 3m; 1 → NE 3m."
         },
         "ShieldHealer": {
-          "rule": "Depends on FirstIcicle: 0 \u2192 S 3m; 3 \u2192 S 3m; 1 \u2192 NE 3m."
+          "rule": "Depends on FirstIcicle: 0 → S 3m; 3 → S 3m; 1 → NE 3m."
         },
         "MeleeDpsB": {
-          "rule": "Depends on FirstIcicle: 0 \u2192 S 3m; 3 \u2192 S 3m; 1 \u2192 NE 3m."
+          "rule": "Depends on FirstIcicle: 0 → S 3m; 3 → S 3m; 1 → NE 3m."
         },
         "CasterDps": {
-          "rule": "Depends on FirstIcicle: 0 \u2192 S 3m; 3 \u2192 S 3m; 1 \u2192 NE 3m."
+          "rule": "Depends on FirstIcicle: 0 → S 3m; 3 → S 3m; 1 → NE 3m."
         }
       },
       "tolerance": 2,
@@ -75,19 +75,19 @@
       },
       "title": "After icicle Impact resolves",
       "cue": "Icicle Impact resolves",
-      "rule": "Depends on FirstIcicle: 0 \u2192 N wall; 3 \u2192 NW wall; 1 \u2192 SW wall.",
+      "rule": "Depends on FirstIcicle: 0 → N wall; 3 → NW wall; 1 → SW wall.",
       "roles": {
         "OffTank": {
-          "rule": "Depends on FirstIcicle: 0 \u2192 S wall; 3 \u2192 SE wall; 1 \u2192 NE wall."
+          "rule": "Depends on FirstIcicle: 0 → S wall; 3 → SE wall; 1 → NE wall."
         },
         "ShieldHealer": {
-          "rule": "Depends on FirstIcicle: 0 \u2192 S wall; 3 \u2192 SE wall; 1 \u2192 NE wall."
+          "rule": "Depends on FirstIcicle: 0 → S wall; 3 → SE wall; 1 → NE wall."
         },
         "MeleeDpsB": {
-          "rule": "Depends on FirstIcicle: 0 \u2192 S wall; 3 \u2192 SE wall; 1 \u2192 NE wall."
+          "rule": "Depends on FirstIcicle: 0 → S wall; 3 → SE wall; 1 → NE wall."
         },
         "CasterDps": {
-          "rule": "Depends on FirstIcicle: 0 \u2192 S wall; 3 \u2192 SE wall; 1 \u2192 NE wall."
+          "rule": "Depends on FirstIcicle: 0 → S wall; 3 → SE wall; 1 → NE wall."
         }
       },
       "tolerance": 2,
@@ -101,19 +101,19 @@
       },
       "title": "After icicle Impact resolves",
       "cue": "Icicle Impact resolves",
-      "rule": "Depends on FirstIcicle: 0 \u2192 N wall; 3 \u2192 NW wall; 1 \u2192 SW wall.",
+      "rule": "Depends on FirstIcicle: 0 → N wall; 3 → NW wall; 1 → SW wall.",
       "roles": {
         "OffTank": {
-          "rule": "Depends on FirstIcicle: 0 \u2192 S wall; 3 \u2192 SE wall; 1 \u2192 NE wall."
+          "rule": "Depends on FirstIcicle: 0 → S wall; 3 → SE wall; 1 → NE wall."
         },
         "ShieldHealer": {
-          "rule": "Depends on FirstIcicle: 0 \u2192 S wall; 3 \u2192 SE wall; 1 \u2192 NE wall."
+          "rule": "Depends on FirstIcicle: 0 → S wall; 3 → SE wall; 1 → NE wall."
         },
         "MeleeDpsB": {
-          "rule": "Depends on FirstIcicle: 0 \u2192 S wall; 3 \u2192 SE wall; 1 \u2192 NE wall."
+          "rule": "Depends on FirstIcicle: 0 → S wall; 3 → SE wall; 1 → NE wall."
         },
         "CasterDps": {
-          "rule": "Depends on FirstIcicle: 0 \u2192 S wall; 3 \u2192 SE wall; 1 \u2192 NE wall."
+          "rule": "Depends on FirstIcicle: 0 → S wall; 3 → SE wall; 1 → NE wall."
         }
       },
       "tolerance": 2,
@@ -128,19 +128,19 @@
       },
       "title": "After sinbound Holy hits you",
       "cue": "Sinbound Holy hits you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: MirrorOctant).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: MirrorOctant).",
       "roles": {
         "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: FirstIcicle)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: FirstIcicle)."
         },
         "ShieldHealer": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: FirstIcicle)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: FirstIcicle)."
         },
         "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: FirstIcicle)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: FirstIcicle)."
         },
         "CasterDps": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: FirstIcicle)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: FirstIcicle)."
         }
       },
       "tolerance": 2.5,
@@ -154,7 +154,7 @@
       },
       "title": "After sinbound Holy hits you",
       "cue": "Sinbound Holy hits you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: MirrorOctant).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: MirrorOctant).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -185,7 +185,8 @@
     "steps": {
       "FruP2DiamondDustAi@23.35": 7
     },
-    "exampleSeed": 2
+    "exampleSeed": 2,
+    "residual": 2.3
   },
   "draft": true
 }

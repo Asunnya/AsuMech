@@ -96,7 +96,8 @@
     "steps": {
       "DsrP4EyesAi@0.3": 0
     },
-    "exampleSeed": 1
+    "exampleSeed": 1,
+    "residual": 2.7
   },
   "draft": true
 }

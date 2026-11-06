@@ -71,22 +71,22 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: WestShadesNear has true).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: WestShadesNear has true).",
       "roles": {
         "MainTank": {
-          "rule": "Depends on WestShadesNear and AvalancheSafeSide: [true,false] \u0026 1 \u2192 near B (E 8m); [true,false] \u0026 -1 \u2192 near D (W 8m); [false,true] \u0026 -1 \u2192 near D (W 8m); [false,true] \u0026 1 \u2192 near D (W 8m)."
+          "rule": "Depends on WestShadesNear and AvalancheSafeSide: [true,false] & 1 → near B (E 8m); [true,false] & -1 → near D (W 8m); [false,true] & -1 → near D (W 8m); [false,true] & 1 → near D (W 8m)."
         },
         "MeleeDpsA": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Avalanche)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Avalanche)."
         },
         "MeleeDpsB": {
-          "rule": "Depends on WestShadesNear: [true,false] \u2192 near B (E 8m); [false,true] \u2192 at D."
+          "rule": "Depends on WestShadesNear: [true,false] → near B (E 8m); [false,true] → at D."
         },
         "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has false)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter has false)."
         },
         "CasterDps": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has true)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter has true)."
         }
       },
       "tolerance": 2.5,
@@ -101,25 +101,25 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Avalanche).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Avalanche).",
       "roles": {
         "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: WestShadesNear has true)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: WestShadesNear has true)."
         },
         "ShieldHealer": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: AvalancheSafeZ)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: AvalancheSafeZ)."
         },
         "MeleeDpsA": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter)."
         },
         "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: WestShadesNear)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: WestShadesNear)."
         },
         "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter)."
         },
         "CasterDps": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has true)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter has true)."
         }
       },
       "tolerance": 2.5,
@@ -133,22 +133,22 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has false).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter has false).",
       "roles": {
         "MainTank": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: WestShadesNear)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: WestShadesNear)."
         },
         "OffTank": {
-          "rule": "Depends on LinesWestOuter has true and AvalancheSafeSide: yes \u0026 1 \u2192 at B; yes \u0026 -1 \u2192 at D; no \u0026 1 \u2192 at D; no \u0026 -1 \u2192 at B."
+          "rule": "Depends on LinesWestOuter has true and AvalancheSafeSide: yes & 1 → at B; yes & -1 → at D; no & 1 → at D; no & -1 → at B."
         },
         "MeleeDpsA": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter)."
         },
         "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has true)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter has true)."
         },
         "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has true)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter has true)."
         }
       },
       "tolerance": 2.5,
@@ -162,25 +162,25 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: WestShadesNear).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: WestShadesNear).",
       "roles": {
         "OffTank": {
-          "rule": "Depends on LinesWestOuter has true and AvalancheSafeSide: yes \u0026 1 \u2192 near 2 (NE wall); yes \u0026 -1 \u2192 near 1 (NW wall); no \u0026 1 \u2192 near 1 (NW wall); no \u0026 -1 \u2192 near 2 (NE wall)."
+          "rule": "Depends on LinesWestOuter has true and AvalancheSafeSide: yes & 1 → near 2 (NE wall); yes & -1 → near 1 (NW wall); no & 1 → near 1 (NW wall); no & -1 → near 2 (NE wall)."
         },
         "RegenHealer": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has false)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter has false)."
         },
         "ShieldHealer": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has false)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter has false)."
         },
         "MeleeDpsA": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter)."
         },
         "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has true)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter has true)."
         },
         "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LinesWestOuter has true)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LinesWestOuter has true)."
         }
       },
       "tolerance": 2.5,
@@ -194,7 +194,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "Depends on Avalanche: 0 \u2192 NE wall; 3 \u2192 NW wall; 2 \u2192 SW wall; 1 \u2192 SE wall.",
+      "rule": "Depends on Avalanche: 0 → NE wall; 3 → NW wall; 2 → SW wall; 1 → SE wall.",
       "tolerance": 2,
       "skip": false
     },
@@ -206,13 +206,13 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "Depends on Avalanche: 0 \u2192 near 2 (NE wall); 3 \u2192 near 1 (NW wall); 2 \u2192 near 4 (SW wall); 1 \u2192 near 3 (SE wall).",
+      "rule": "Depends on Avalanche: 0 → near 2 (NE wall); 3 → near 1 (NW wall); 2 → near 4 (SW wall); 1 → near 3 (SE wall).",
       "tolerance": 2,
       "skip": false
     }
   ],
   "toolbox": {
-    "planId": "HJAbE7fuWodELUSB\u002BB82fx_zDqUMr5KFC",
+    "planId": "HJAbE7fuWodELUSB+B82fx_zDqUMr5KFC",
     "roleMap": {
       "CasterDps": "dps4",
       "MainTank": "tank1",
@@ -227,7 +227,8 @@
       "M11sArenaSplitAi@0.5": 2,
       "M11sArenaSplitAi@29.52-61.55": 23
     },
-    "exampleSeed": 8
+    "exampleSeed": 8,
+    "residual": 2.1
   },
   "draft": true
 }

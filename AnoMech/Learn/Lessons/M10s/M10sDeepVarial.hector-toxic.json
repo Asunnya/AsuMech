@@ -11,22 +11,22 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "Depends on AerialLandings: [(18,18),(18,-18),(18,18),(18,-18)] \u2192 S wall; [(17.9,18),(18,-18),(18,18),(18,-18)] \u2192 SE wall; [(18,-18),(18,18),(18,-18),(18,18)] \u2192 N wall; [(17.9,-18),(18,18),(18,-18),(18,18)] \u2192 NE wall.",
+      "rule": "Depends on AerialLandings: [(18,18),(18,-18),(18,18),(18,-18)] → S wall; [(17.9,18),(18,-18),(18,18),(18,-18)] → SE wall; [(18,-18),(18,18),(18,-18),(18,18)] → N wall; [(17.9,-18),(18,18),(18,-18),(18,18)] → NE wall.",
       "roles": {
         "MainTank": {
-          "rule": "Depends on Side: 1 \u2192 S wall; -1 \u2192 N wall."
+          "rule": "Depends on Side: 1 → S wall; -1 → N wall."
         },
         "OffTank": {
-          "rule": "Depends on Side: 1 \u2192 S wall; -1 \u2192 N wall."
+          "rule": "Depends on Side: 1 → S wall; -1 → N wall."
         },
         "ShieldHealer": {
-          "rule": "Depends on AerialLandings: [(18,18),(18,-18),(18,18),(18,-18)] \u2192 SE wall; [(17.9,18),(18,-18),(18,18),(18,-18)] \u2192 S wall; [(18,-18),(18,18),(18,-18),(18,18)] \u2192 NE wall; [(17.9,-18),(18,18),(18,-18),(18,18)] \u2192 N wall."
+          "rule": "Depends on AerialLandings: [(18,18),(18,-18),(18,18),(18,-18)] → SE wall; [(17.9,18),(18,-18),(18,18),(18,-18)] → S wall; [(18,-18),(18,18),(18,-18),(18,18)] → NE wall; [(17.9,-18),(18,18),(18,-18),(18,18)] → N wall."
         },
         "MeleeDpsB": {
-          "rule": "Depends on AerialLandings: [(18,18),(18,-18),(18,18),(18,-18)] \u2192 SE wall; [(17.9,18),(18,-18),(18,18),(18,-18)] \u2192 S wall; [(18,-18),(18,18),(18,-18),(18,18)] \u2192 NE wall; [(17.9,-18),(18,18),(18,-18),(18,18)] \u2192 N wall."
+          "rule": "Depends on AerialLandings: [(18,18),(18,-18),(18,18),(18,-18)] → SE wall; [(17.9,18),(18,-18),(18,18),(18,-18)] → S wall; [(18,-18),(18,18),(18,-18),(18,18)] → NE wall; [(17.9,-18),(18,18),(18,-18),(18,18)] → N wall."
         },
         "CasterDps": {
-          "rule": "Depends on AerialLandings: [(18,18),(18,-18),(18,18),(18,-18)] \u2192 SE wall; [(17.9,18),(18,-18),(18,18),(18,-18)] \u2192 S wall; [(18,-18),(18,18),(18,-18),(18,18)] \u2192 NE wall; [(17.9,-18),(18,18),(18,-18),(18,18)] \u2192 N wall."
+          "rule": "Depends on AerialLandings: [(18,18),(18,-18),(18,18),(18,-18)] → SE wall; [(17.9,18),(18,-18),(18,18),(18,-18)] → S wall; [(18,-18),(18,18),(18,-18),(18,18)] → NE wall; [(17.9,-18),(18,18),(18,-18),(18,18)] → N wall."
         }
       },
       "tolerance": 2,
@@ -63,10 +63,10 @@
       "rule": "Go to 10m west of the centre.",
       "roles": {
         "MainTank": {
-          "rule": "Depends on AerialLandings: [(18,18),(18,-18),(18,18),(18,-18)] \u2192 W 10m; [(17.9,18),(18,-18),(18,18),(18,-18)] \u2192 SE wall; [(18,-18),(18,18),(18,-18),(18,18)] \u2192 W 10m; [(17.9,-18),(18,18),(18,-18),(18,18)] \u2192 NE wall."
+          "rule": "Depends on AerialLandings: [(18,18),(18,-18),(18,18),(18,-18)] → W 10m; [(17.9,18),(18,-18),(18,18),(18,-18)] → SE wall; [(18,-18),(18,18),(18,-18),(18,18)] → W 10m; [(17.9,-18),(18,18),(18,-18),(18,18)] → NE wall."
         },
         "OffTank": {
-          "rule": "Depends on AerialLandings: [(18,18),(18,-18),(18,18),(18,-18)] \u2192 SE wall; [(17.9,18),(18,-18),(18,18),(18,-18)] \u2192 W 10m; [(18,-18),(18,18),(18,-18),(18,18)] \u2192 NE wall; [(17.9,-18),(18,18),(18,-18),(18,18)] \u2192 W 10m."
+          "rule": "Depends on AerialLandings: [(18,18),(18,-18),(18,18),(18,-18)] → SE wall; [(17.9,18),(18,-18),(18,18),(18,-18)] → W 10m; [(18,-18),(18,18),(18,-18),(18,18)] → NE wall; [(17.9,-18),(18,18),(18,-18),(18,18)] → W 10m."
         }
       },
       "tolerance": 2,
@@ -80,7 +80,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "Depends on Side: 1 \u2192 NE wall; -1 \u2192 SE wall.",
+      "rule": "Depends on Side: 1 → NE wall; -1 → SE wall.",
       "roles": {
         "OffTank": {
           "rule": "Go opposite CutbackOrigin, 25m out."
@@ -92,7 +92,7 @@
           "rule": "Go E wall of DeepBlueWall."
         },
         "MeleeDpsA": {
-          "rule": "Depends on Side: 1 \u2192 SE wall; -1 \u2192 NE wall."
+          "rule": "Depends on Side: 1 → SE wall; -1 → NE wall."
         }
       },
       "tolerance": 2,
@@ -106,7 +106,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "Depends on Side: 1 \u2192 NE wall; -1 \u2192 SE wall.",
+      "rule": "Depends on Side: 1 → NE wall; -1 → SE wall.",
       "tolerance": 2,
       "skip": false
     },
@@ -141,10 +141,10 @@
       "rule": "Go to 4m west of the centre.",
       "roles": {
         "CasterDps": {
-          "rule": "Depends on Side: 1 \u2192 NE wall; -1 \u2192 SE wall."
+          "rule": "Depends on Side: 1 → NE wall; -1 → SE wall."
         },
         "PhysRangedDps": {
-          "rule": "Depends on Side: 1 \u2192 NE wall; -1 \u2192 SE wall."
+          "rule": "Depends on Side: 1 → NE wall; -1 → SE wall."
         }
       },
       "tolerance": 2,
@@ -158,13 +158,13 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SafeSliceRotation).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SafeSliceRotation).",
       "roles": {
         "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Lane)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Lane)."
         },
         "CasterDps": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Lane)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Lane)."
         }
       },
       "tolerance": 2.5,
@@ -178,10 +178,10 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "Depends on Side: 1 \u2192 near 1 (NW wall); -1 \u2192 S 13m.",
+      "rule": "Depends on Side: 1 → near 1 (NW wall); -1 → S 13m.",
       "roles": {
         "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SafeSliceRotation)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SafeSliceRotation)."
         }
       },
       "tolerance": 2.5,
@@ -195,7 +195,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SafeSliceRotation).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SafeSliceRotation).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -207,22 +207,22 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "Depends on Lane: 1 \u2192 at D; -1 \u2192 SW 5m; 0 \u2192 at D.",
+      "rule": "Depends on Lane: 1 → at D; -1 → SW 5m; 0 → at D.",
       "roles": {
         "MainTank": {
-          "rule": "Depends on Lane: 1 \u2192 near D (W wall); -1 \u2192 W 5m; 0 \u2192 near D (W wall)."
+          "rule": "Depends on Lane: 1 → near D (W wall); -1 → W 5m; 0 → near D (W wall)."
         },
         "OffTank": {
-          "rule": "Depends on Lane: 1 \u2192 near D (W wall); -1 \u2192 SW 4m; 0 \u2192 near D (W wall)."
+          "rule": "Depends on Lane: 1 → near D (W wall); -1 → SW 4m; 0 → near D (W wall)."
         },
         "RegenHealer": {
-          "rule": "Depends on Lane: 1 \u2192 near D (W 15m); -1 \u2192 SW 4m; 0 \u2192 near D (W 15m)."
+          "rule": "Depends on Lane: 1 → near D (W 15m); -1 → SW 4m; 0 → near D (W 15m)."
         },
         "MeleeDpsA": {
-          "rule": "Depends on Lane: 1 \u2192 at D; -1 \u2192 SW 4m; 0 \u2192 at D."
+          "rule": "Depends on Lane: 1 → at D; -1 → SW 4m; 0 → at D."
         },
         "MeleeDpsB": {
-          "rule": "Depends on Lane: 1 \u2192 at D; -1 \u2192 SW 4m; 0 \u2192 at D."
+          "rule": "Depends on Lane: 1 → at D; -1 → SW 4m; 0 → at D."
         }
       },
       "tolerance": 2,
@@ -236,7 +236,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SafeSliceRotation).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SafeSliceRotation).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -268,7 +268,8 @@
     "steps": {
       "M10sDeepVarialAi@49.3": 3
     },
-    "exampleSeed": 1
+    "exampleSeed": 1,
+    "residual": 1.8
   },
   "draft": true
 }

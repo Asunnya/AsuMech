@@ -37,7 +37,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Fire).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Fire).",
       "roles": {
         "PhysRangedDps": {
           "rule": "If you are in Fire: Go to the south wall; otherwise: Go to the north wall."
@@ -58,7 +58,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Fire).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Fire).",
       "roles": {
         "RegenHealer": {
           "rule": "If you are in Fire: Go to the north-east wall; otherwise: Go to the south-west wall."
@@ -104,7 +104,8 @@
     "steps": {
       "M10sXtremeSnakingAi@57.68": 3
     },
-    "exampleSeed": 1
+    "exampleSeed": 1,
+    "residual": 1.8
   },
   "draft": true
 }

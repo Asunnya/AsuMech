@@ -133,7 +133,8 @@
     "steps": {
       "M9sVampStompAi@41.6": 6
     },
-    "exampleSeed": 1
+    "exampleSeed": 1,
+    "residual": 1.7
   },
   "draft": true
 }

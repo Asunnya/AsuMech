@@ -1,0 +1,70 @@
+# scenario<TAB>strat of every embedded lesson; LessonQualityTests fails when one disappears. Refresh with: status --write-baseline
+DsrP1KnightsScenario	Toolbox (PF)
+DsrP2MeteorsScenario	NAUR (PF)
+DsrP2ThordanScenario	NAUR (PF)
+DsrP3NidhoggScenario	NAUR (PF)
+DsrP4EyesScenario	NA PF (snake swaps)
+DsrP5DeathScenario	NAUR (conga, dooms anchor)
+DsrP5WrathScenario	NA PF
+DsrP6CauterizeScenario	NA PF (Light vs Dark)
+DsrP6DoubleDragonsScenario	NA PF (Light vs Dark)
+DsrP7DragonKingScenario	Static south exaflare, 3/3/2 then 6/1/1
+FruP2DiamondDustScenario	NA · Partner Swap
+FruP2LightRampantScenario	NA · Conga
+FruP3ApocalypseScenario	NA priority / static spreads / OT bait
+FruP3UltimateRelativityScenario	NA
+FruP4DarklitDragonsongScenario	NA
+FruP4DarklitDragonsongScenario	NA · you take Somber Dance
+FruP5FulgentBladeScenario	Standard
+FruP5ParadiseRegainedScenario	H first / M1-R1 NW / M2-R2 NE; lines T-M-R-H
+M10sAlleyOopTwoScenario	Hector (Toxic)
+M10sArenaSplitScenario	Hector (Toxic)
+M10sDeepAerialScenario	Hector (Parallel)
+M10sDeepVarialScenario	Hector (Toxic)
+M10sInsaneAirScenario	Hector (Toxic)
+M10sOpenerScenario	Hector (Toxic)
+M10sSickestTakeoffScenario	Hector (Toxic)
+M10sSnakingScenario	Hector (Toxic)
+M10sXtremeSnakingScenario	Hector (Toxic)
+M11sArenaSplitScenario	Hector
+M11sEclipticScenario	Toxic (Tank Tank Party)
+M11sMeteorainScenario	Hector (Toxic)
+M11sOpenerScenario	Hector (Toxic)
+M11sOrbitalOmenScenario	Hector (Toxic)
+M11sUltimateWeaponsScenario	Hector (Toxic)
+M9sAetherlettingScenario	Toxic / Hector
+M9sCoffinmakerScenario	Toxic / Hector
+M9sDeathmatchScenario	Toxic / Hector
+M9sFinalScenario	Toxic / Hector
+M9sFlailsScenario	Toxic / Hector
+M9sHellInACellScenario	Toxic / Hector
+M9sVampStomp2Scenario	Toxic / Hector
+M9sVampStompScenario	Toxic / Hector
+PrimalRouletteScenario	NAUR (party right)
+TopP2PartySynergyScenario	LPDU
+TopP2PartySynergyScenario	NA pf
+TopP5DeltaScenario	Standard
+TopP5OmegaScenario	Standard
+TopP5SigmaScenario	Standard
+TopP6WaveCannon2Scenario	Standard
+UcobP1TwintaniaScenario	Neurolinks at 1, 2 and 3, ranged baits Liquid Hell
+UcobP2NaelScenario	Stack north of Nael, rotate clockwise, fire in-out-in-in
+UltimateAnnihilationScenario	NAUR
+UltimatePredationScenario	NAUR
+UltimateSuppressionScenario	NAUR
+UmadP1TeleTrouncingScenario	Tele-trouncing
+UmadP2ForsakenScenario	[LPDU] Buddies
+UmadP2ForsakenScenario	[Old] p3Z Buddy Meow
+UmadP2ForsakenScenario	[Old] zP6 South adjust
+UmadP2ForsakenScenario	Kroxy-Rinon 341 (melee flex)
+UmadP2ForsakenScenario	South Flex 341
+UmadP2ForsakenScenario	Yan
+UmadP3BlackHoleScenario	Black Hole: D>S>A
+UmadP3BlackHoleScenario	Black Hole: S>D>A
+UmadP3LimitCutScenario	Standard
+UmadP4KefkaSaysScenario	Kefka Says
+UmadP4KefkaSaysScenario	Kefka Says, gazes: supports N / DPS S
+UmadP5FloodScenario	Rotate
+UwuP1GarudaScenario	Zeal / The Balance
+UwuP2IfritScenario	Zeal / The Balance
+UwuP3TitanScenario	Zeal / The Balance

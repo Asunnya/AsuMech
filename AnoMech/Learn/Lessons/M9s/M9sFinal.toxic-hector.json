@@ -81,7 +81,7 @@
       },
       "title": "After blast Beat hits you",
       "cue": "Blast Beat hits you",
-      "rule": "Depends on HalfMoon: LeftFirst \u2192 near B (E 9m); RightFirst \u2192 near D (W 9m).",
+      "rule": "Depends on HalfMoon: LeftFirst → near B (E 9m); RightFirst → near D (W 9m).",
       "tolerance": 2,
       "skip": false
     },
@@ -93,7 +93,7 @@
       },
       "title": "After half Moon resolves",
       "cue": "Half Moon resolves",
-      "rule": "Depends on HalfMoon: LeftFirst \u2192 near D (W 9m); RightFirst \u2192 near B (E 9m).",
+      "rule": "Depends on HalfMoon: LeftFirst → near D (W 9m); RightFirst → near B (E 9m).",
       "tolerance": 2,
       "skip": false
     },
@@ -218,7 +218,8 @@
       "M9sFinalAi@50.46": 4,
       "M9sFinalAi@60.1": 6
     },
-    "exampleSeed": 1
+    "exampleSeed": 1,
+    "residual": 2.3
   },
   "draft": true
 }

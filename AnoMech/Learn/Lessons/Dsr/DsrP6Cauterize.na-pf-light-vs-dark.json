@@ -61,7 +61,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -79,10 +79,10 @@
           "rule": "Stand at the centre."
         },
         "MeleeDpsA": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat."
         },
         "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat."
         }
       },
       "tolerance": 2.5,
@@ -108,7 +108,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat.",
       "roles": {
         "RegenHealer": {
           "rule": "Go to the north wall."
@@ -172,7 +172,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat.",
       "roles": {
         "MainTank": {
           "rule": "Go to the north wall."
@@ -242,7 +242,8 @@
       "DsrP6DoubleDragonsAi@99.3": 7,
       "DsrP6DoubleDragonsAi@131.46": 33
     },
-    "exampleSeed": 1
+    "exampleSeed": 1,
+    "residual": 3.3
   },
   "draft": true
 }

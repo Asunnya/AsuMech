@@ -92,7 +92,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NonDoomOrder).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NonDoomOrder).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -104,7 +104,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NonDoomOrder).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NonDoomOrder).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -125,7 +125,7 @@
           "rule": "Go to 13m south of the centre."
         },
         "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat."
         },
         "OffTank": {
           "rule": "Go to 13m south of the centre."
@@ -148,13 +148,13 @@
       "rule": "Each role has its own spot.",
       "roles": {
         "MainTank": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Dooms has OffTank)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Dooms has OffTank)."
         },
         "PhysRangedDps": {
           "rule": "with WarriorBearing as north: the south-west wall."
         },
         "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeBearing)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EyeBearing)."
         },
         "MeleeDpsB": {
           "rule": "Go to the north-east wall."
@@ -183,7 +183,7 @@
           "rule": "When Dooms includes OT and Puddles includes (12.4,14.9), go to 3m south-west of the centre; when Dooms leaves out OT and Puddles leaves out (12.4,14.9), go to 3m south-west of the centre; when Dooms includes OT and Puddles leaves out (12.4,14.9), go to 3m north-east of the centre."
         },
         "RegenHealer": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Puddles has (14.9,-12.5))."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Puddles has (14.9,-12.5))."
         },
         "ShieldHealer": {
           "rule": "When Dooms includes R2 and Puddles leaves out (-0,20), stand at the centre; when Dooms includes R2 and Puddles includes (-0,20), go to 4m south of the centre; when Dooms leaves out R2 and Puddles includes (-0,20), stand at the centre."
@@ -192,7 +192,7 @@
           "rule": "When Dooms leaves out M1 and Dooms leaves out MT, stand at the centre; when Dooms includes M1 and Dooms leaves out MT, stand at the centre; when Dooms includes M1 and Dooms includes MT, go to 4m north of the centre; when Dooms leaves out M1 and Dooms includes MT, stand at the centre."
         },
         "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NonDoomOrder)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NonDoomOrder)."
         },
         "CasterDps": {
           "rule": "When Dooms includes H1 and Dooms includes OT, go to 3m south-east of the centre; when Dooms includes H1 and Dooms leaves out OT, go to 4m north of the centre; when Dooms leaves out H1 and Dooms leaves out OT, go to 3m south-east of the centre; when Dooms leaves out H1 and Dooms includes OT, go to 3m south-east of the centre."
@@ -209,7 +209,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NonDoomOrder).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NonDoomOrder).",
       "roles": {
         "MainTank": {
           "rule": "When Dooms leaves out M1 and Puddles includes (12.4,14.9), go to 3m north-west of the centre; when Dooms includes M1 and Puddles leaves out (12.4,14.9), go to 3m north-west of the centre; when Dooms leaves out M1 and Puddles leaves out (12.4,14.9), go to 3m south-east of the centre."
@@ -221,13 +221,13 @@
           "rule": "When Dooms includes R2 and Puddles leaves out (-0,20), go to 3m north of the centre; when Dooms includes R2 and Puddles includes (-0,20), go to 4m south of the centre; when Dooms leaves out R2 and Puddles includes (-0,20), go to 3m north of the centre."
         },
         "MeleeDpsA": {
-          "rule": "Depends on FirstDoomSquare and Puddles has (0,19.9): true \u0026 no \u2192 S 3m; false \u0026 yes \u2192 S 3m; false \u0026 no \u2192 N 4m."
+          "rule": "Depends on FirstDoomSquare and Puddles has (0,19.9): true & no → S 3m; false & yes → S 3m; false & no → N 4m."
         },
         "PhysRangedDps": {
           "rule": "When Puddles leaves out (0,19.9) and Puddles leaves out (14.9,12.5), go to 3m north-east of the centre; when Puddles includes (0,19.9) and Puddles includes (14.9,12.5), go to 3m north-east of the centre; when Puddles leaves out (0,19.9) and Puddles includes (14.9,12.5), go to 3m south-west of the centre."
         },
         "CasterDps": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeBearing)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EyeBearing)."
         }
       },
       "tolerance": 2.5,
@@ -241,16 +241,16 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: WarriorBearing).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: WarriorBearing).",
       "roles": {
         "RegenHealer": {
           "rule": "with WarriorBearing as north: the west wall."
         },
         "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeBearing)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EyeBearing)."
         },
         "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeBearing)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EyeBearing)."
         },
         "ShieldHealer": {
           "rule": "with WarriorBearing as north: the east wall."
@@ -290,7 +290,8 @@
     "exampleSeed": 1,
     "example": {
       "Dooms": "[OffTank,ShieldHealer,MeleeDpsB,CasterDps]"
-    }
+    },
+    "residual": 4.4
   },
   "draft": true
 }

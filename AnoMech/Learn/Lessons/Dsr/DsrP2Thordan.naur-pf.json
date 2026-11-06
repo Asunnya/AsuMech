@@ -55,8 +55,8 @@
         "time": 16.2,
         "line": 56
       },
-      "title": "After ascalon\u0027s Mercy Concealed resolves",
-      "cue": "Ascalon\u0027s Mercy Concealed resolves",
+      "title": "After ascalon's Mercy Concealed resolves",
+      "cue": "Ascalon's Mercy Concealed resolves",
       "rule": "Stand near waymark 2, 6m north of the centre.",
       "tolerance": 2,
       "skip": false
@@ -125,7 +125,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeBearing).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EyeBearing).",
       "roles": {
         "MainTank": {
           "rule": "with SafeLineBearing as north: 5m south-west of the centre."
@@ -151,7 +151,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat.",
       "roles": {
         "RegenHealer": {
           "rule": "with SafeLineBearing as north: 14m south-west of the centre."
@@ -171,7 +171,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Defamations).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Defamations).",
       "roles": {
         "MainTank": {
           "rule": "with ThordanBearing as north: 12m south-east of the centre."
@@ -180,16 +180,16 @@
           "rule": "with ThordanBearing as north: 12m south-west of the centre."
         },
         "ShieldHealer": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeBearing)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EyeBearing)."
         },
         "MeleeDpsA": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeBearing)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EyeBearing)."
         },
         "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ThordanBearing)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ThordanBearing)."
         },
         "CasterDps": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ThordanBearing)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ThordanBearing)."
         }
       },
       "tolerance": 2.5,
@@ -230,21 +230,21 @@
         "time": 62,
         "line": 73
       },
-      "title": "After the Dragon\u0027s Rage resolves",
-      "cue": "the Dragon\u0027s Rage resolves",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeBearing).",
+      "title": "After the Dragon's Rage resolves",
+      "cue": "the Dragon's Rage resolves",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EyeBearing).",
       "roles": {
         "MeleeDpsA": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: AwayGroup)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: AwayGroup)."
         },
         "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Defamations)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Defamations)."
         },
         "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ThordanBearing)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ThordanBearing)."
         },
         "CasterDps": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ThordanBearing)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ThordanBearing)."
         }
       },
       "tolerance": 2.5,
@@ -305,16 +305,16 @@
           "rule": "When DashBearings includes 225 and FirstTowers includes (120,18), go to the south-west wall; when DashBearings leaves out 225 and FirstTowers leaves out (120,18), go to the south-west wall; when DashBearings includes 225 and FirstTowers leaves out (120,18), go to the north-west wall; when DashBearings leaves out 225 and FirstTowers includes (120,18), go to the south-east wall."
         },
         "MeleeDpsA": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeBearing)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EyeBearing)."
         },
         "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeBearing)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EyeBearing)."
         },
         "PhysRangedDps": {
-          "rule": "Depends on DarkKnightSpot: (-10.6,10.6) \u2192 NE wall; (10.6,-10.6) \u2192 NE wall; (-10.6,-10.6) \u2192 SE wall; (10.6,10.6) \u2192 SE wall."
+          "rule": "Depends on DarkKnightSpot: (-10.6,10.6) → NE wall; (10.6,-10.6) → NE wall; (-10.6,-10.6) → SE wall; (10.6,10.6) → SE wall."
         },
         "CasterDps": {
-          "rule": "Depends on DarkKnightSpot: (-10.6,10.6) \u2192 SW wall; (10.6,-10.6) \u2192 SW wall; (-10.6,-10.6) \u2192 NW wall; (10.6,10.6) \u2192 NW wall."
+          "rule": "Depends on DarkKnightSpot: (-10.6,10.6) → SW wall; (10.6,-10.6) → SW wall; (-10.6,-10.6) → NW wall; (10.6,10.6) → NW wall."
         }
       },
       "tolerance": 2.5,
@@ -379,16 +379,16 @@
       },
       "title": "After ice Resistance Down II on you",
       "cue": "Ice Resistance Down II on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Defamations).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Defamations).",
       "roles": {
         "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeBearing)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EyeBearing)."
         },
         "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: MeteorTargets)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: MeteorTargets)."
         },
         "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: StackTarget)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: StackTarget)."
         },
         "CasterDps": {
           "rule": "When DashBearings leaves out 180 and MeteorTargets leaves out M2, go to the south-west wall; when DashBearings includes 180 and MeteorTargets includes M2, go to the south wall; when DashBearings leaves out 180 and MeteorTargets includes M2, go to the east wall; when DashBearings includes 180 and MeteorTargets leaves out M2, stand near waymark A, 5m south-west of the centre."
@@ -420,16 +420,16 @@
           "rule": "When Stackers leaves out H2, go to 2m south-east of the centre; when Stackers includes H2, go to the east wall."
         },
         "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: DashBearings has 180)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: DashBearings has 180)."
         },
         "CasterDps": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: StackTarget)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: StackTarget)."
         },
         "MainTank": {
           "rule": "When DashBearings includes 135 and BroadSwingFacing leaves out 0.25, go to the north wall; when DashBearings leaves out 135 and BroadSwingFacing leaves out 0.25, go to the east wall; when DashBearings leaves out 135 and BroadSwingFacing includes 0.25, go to 2m north-east of the centre."
         },
         "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ThordanBearing)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ThordanBearing)."
         }
       },
       "tolerance": 2.5,
@@ -444,7 +444,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat.",
       "roles": {
         "MainTank": {
           "rule": "Go to the north wall."
@@ -459,7 +459,7 @@
           "rule": "Go a quarter turn clockwise of SanctityThordanSpot, 19m out."
         },
         "ShieldHealer": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ThordanBearing)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ThordanBearing)."
         }
       },
       "tolerance": 2.5,
@@ -517,7 +517,7 @@
           "rule": "Go to the south wall."
         },
         "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat."
         },
         "PhysRangedDps": {
           "rule": "Go to the south wall."
@@ -576,7 +576,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "Depends on BroadSwingRightFirst: [false,true] \u2192 at 3; [true,true] \u2192 at 2; [true,false] \u2192 at 2; [false,false] \u2192 at 3.",
+      "rule": "Depends on BroadSwingRightFirst: [false,true] → at 3; [true,true] → at 2; [true,false] → at 2; [false,false] → at 3.",
       "tolerance": 2,
       "skip": false
     },
@@ -608,25 +608,25 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "Depends on BroadSwingRightFirst: [false,true] \u2192 near 2 (N 5m); [true,true] \u2192 N 12m; [true,false] \u2192 near 2 (N 5m); [false,false] \u2192 N 12m.",
+      "rule": "Depends on BroadSwingRightFirst: [false,true] → near 2 (N 5m); [true,true] → N 12m; [true,false] → near 2 (N 5m); [false,false] → N 12m.",
       "roles": {
         "MainTank": {
-          "rule": "Depends on BroadSwingRightFirst: [false,true] \u2192 near 2 (N 6m); [true,true] \u2192 N 13m; [true,false] \u2192 near 2 (N 6m); [false,false] \u2192 N 12m."
+          "rule": "Depends on BroadSwingRightFirst: [false,true] → near 2 (N 6m); [true,true] → N 13m; [true,false] → near 2 (N 6m); [false,false] → N 12m."
         },
         "OffTank": {
-          "rule": "Depends on BroadSwingRightFirst: [false,true] \u2192 near 2 (N 6m); [true,true] \u2192 N 12m; [true,false] \u2192 near 2 (N 6m); [false,false] \u2192 N 12m."
+          "rule": "Depends on BroadSwingRightFirst: [false,true] → near 2 (N 6m); [true,true] → N 12m; [true,false] → near 2 (N 6m); [false,false] → N 12m."
         },
         "RegenHealer": {
-          "rule": "Depends on BroadSwingRightFirst: [false,true] \u2192 near 3 (N 6m); [true,true] \u2192 N 12m; [true,false] \u2192 near 3 (N 6m); [false,false] \u2192 N 12m."
+          "rule": "Depends on BroadSwingRightFirst: [false,true] → near 3 (N 6m); [true,true] → N 12m; [true,false] → near 3 (N 6m); [false,false] → N 12m."
         },
         "MeleeDpsB": {
-          "rule": "Depends on BroadSwingRightFirst: [false,true] \u2192 near 3 (N 5m); [true,true] \u2192 N 12m; [true,false] \u2192 near 3 (N 5m); [false,false] \u2192 N 12m."
+          "rule": "Depends on BroadSwingRightFirst: [false,true] → near 3 (N 5m); [true,true] → N 12m; [true,false] → near 3 (N 5m); [false,false] → N 12m."
         },
         "PhysRangedDps": {
-          "rule": "Depends on BroadSwingRightFirst: [false,true] \u2192 near 2 (N 5m); [true,true] \u2192 N 12m; [true,false] \u2192 near 2 (N 5m); [false,false] \u2192 N 11m."
+          "rule": "Depends on BroadSwingRightFirst: [false,true] → near 2 (N 5m); [true,true] → N 12m; [true,false] → near 2 (N 5m); [false,false] → N 11m."
         },
         "CasterDps": {
-          "rule": "Depends on BroadSwingRightFirst: [false,true] \u2192 near 2 (N 5m); [true,true] \u2192 N 11m; [true,false] \u2192 near 2 (N 5m); [false,false] \u2192 near 3 (N 11m)."
+          "rule": "Depends on BroadSwingRightFirst: [false,true] → near 2 (N 5m); [true,true] → N 11m; [true,false] → near 2 (N 5m); [false,false] → near 3 (N 11m)."
         }
       },
       "tolerance": 2,
@@ -634,7 +634,7 @@
     }
   ],
   "toolbox": {
-    "planId": "NDX-6bF2djrDMB-v\u002B2CYKJu6IHzBdolZu\u002BSrc8CpFxCAUUuZEM",
+    "planId": "NDX-6bF2djrDMB-v+2CYKJu6IHzBdolZu+Src8CpFxCAUUuZEM",
     "roleMap": {
       "RegenHealer": "healer1",
       "ShieldHealer": "healer2",
@@ -646,7 +646,8 @@
     "steps": {
       "DsrP2ThordanAi@0.3": 0
     },
-    "exampleSeed": 1
+    "exampleSeed": 1,
+    "residual": 1.3
   },
   "draft": true
 }

@@ -48,7 +48,7 @@
       },
       "title": "After forsaken resolves",
       "cue": "Forsaken resolves",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NewNorth).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -60,13 +60,13 @@
       },
       "title": "After  hits you",
       "cue": " hits you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EndAttacks).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EndAttacks).",
       "roles": {
         "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NewNorth)."
         },
         "ShieldHealer": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NewNorth)."
         }
       },
       "tolerance": 2.5,
@@ -80,7 +80,7 @@
       },
       "title": "After spellwave resolves",
       "cue": "Spellwave resolves",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NewNorth).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -92,13 +92,13 @@
       },
       "title": "After all Things Ending cast starts",
       "cue": "All Things Ending cast starts",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NewNorth).",
       "roles": {
         "MainTank": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EndAttacks)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EndAttacks)."
         },
         "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EndAttacks)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EndAttacks)."
         }
       },
       "tolerance": 2.5,
@@ -112,7 +112,7 @@
       },
       "title": "After spelldriver resolves",
       "cue": "Spelldriver resolves",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NewNorth).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -124,7 +124,7 @@
       },
       "title": "After sprint on another player",
       "cue": "Sprint on another player",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NewNorth).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -136,7 +136,7 @@
       },
       "title": "After sprint on another player",
       "cue": "Sprint on another player",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NewNorth).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -148,7 +148,7 @@
       },
       "title": "After spelldriver resolves",
       "cue": "Spelldriver resolves",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EndAttacks).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EndAttacks).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -160,7 +160,7 @@
       },
       "title": "After sprint on another player",
       "cue": "Sprint on another player",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NewNorth).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -172,13 +172,13 @@
       },
       "title": "After all Things Ending cast starts",
       "cue": "All Things Ending cast starts",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NewNorth).",
       "roles": {
         "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EndAttacks)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EndAttacks)."
         },
         "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EndAttacks)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EndAttacks)."
         }
       },
       "tolerance": 2.5,
@@ -191,7 +191,7 @@
         "line": 56
       },
       "title": "Move at 90.3s",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NewNorth).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -203,7 +203,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NewNorth).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -215,7 +215,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NewNorth).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NewNorth).",
       "tolerance": 2.5,
       "skip": false
     }
@@ -235,7 +235,8 @@
     "steps": {
       "UmadP2ForsakenLpduBuddiesAiHelper@1": 3
     },
-    "exampleSeed": 1
+    "exampleSeed": 1,
+    "residual": 2.0
   },
   "draft": true
 }

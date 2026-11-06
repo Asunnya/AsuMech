@@ -40,10 +40,10 @@
       "rule": "Go to the south wall.",
       "roles": {
         "MainTank": {
-          "rule": "Depends on Glow: Nidhogg \u2192 NW wall; Both \u2192 near 2 (N 9m); Hraesvelgr \u2192 NW wall."
+          "rule": "Depends on Glow: Nidhogg → NW wall; Both → near 2 (N 9m); Hraesvelgr → NW wall."
         },
         "OffTank": {
-          "rule": "Depends on Glow: Nidhogg \u2192 NE wall; Both \u2192 near 3 (N 9m); Hraesvelgr \u2192 NE wall."
+          "rule": "Depends on Glow: Nidhogg → NE wall; Both → near 3 (N 9m); Hraesvelgr → NE wall."
         },
         "MeleeDpsA": {
           "rule": "Stand near waymark C, 8m south of the centre."
@@ -145,25 +145,25 @@
       },
       "title": "After hallowed Wings cast starts",
       "cue": "Hallowed Wings cast starts",
-      "rule": "Depends on WingsNorth: true \u2192 near B (S 6m); false \u2192 near 2 (N 7m).",
+      "rule": "Depends on WingsNorth: true → near B (S 6m); false → near 2 (N 7m).",
       "roles": {
         "RegenHealer": {
-          "rule": "Depends on WingsNorth: true \u2192 near C (S 6m); false \u2192 near 3 (N 7m)."
+          "rule": "Depends on WingsNorth: true → near C (S 6m); false → near 3 (N 7m)."
         },
         "ShieldHealer": {
-          "rule": "Depends on WingsNorth: true \u2192 near B (S 6m); false \u2192 near 2 (N 6m)."
+          "rule": "Depends on WingsNorth: true → near B (S 6m); false → near 2 (N 6m)."
         },
         "MeleeDpsA": {
-          "rule": "Depends on WingsNorth: true \u2192 near B (S 6m); false \u2192 near 2 (N 6m)."
+          "rule": "Depends on WingsNorth: true → near B (S 6m); false → near 2 (N 6m)."
         },
         "MeleeDpsB": {
-          "rule": "Depends on WingsNorth: true \u2192 near C (S 6m); false \u2192 near 3 (N 6m)."
+          "rule": "Depends on WingsNorth: true → near C (S 6m); false → near 3 (N 6m)."
         },
         "PhysRangedDps": {
-          "rule": "Depends on WingsNorth: true \u2192 near B (S 7m); false \u2192 near 2 (N 6m)."
+          "rule": "Depends on WingsNorth: true → near B (S 7m); false → near 2 (N 6m)."
         },
         "CasterDps": {
-          "rule": "Depends on WingsNorth: true \u2192 near B (S 7m); false \u2192 near 2 (N 6m)."
+          "rule": "Depends on WingsNorth: true → near B (S 7m); false → near 2 (N 6m)."
         }
       },
       "tolerance": 2,
@@ -177,10 +177,10 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: HraesvelgrDiveStart).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: HraesvelgrDiveStart).",
       "roles": {
         "MainTank": {
-          "rule": "Depends on PlumesNear and NidhoggDivesEast: false \u0026 true \u2192 W wall; true \u0026 false \u2192 E wall; true \u0026 true \u2192 NW 4m."
+          "rule": "Depends on PlumesNear and NidhoggDivesEast: false & true → W wall; true & false → E wall; true & true → NW 4m."
         }
       },
       "tolerance": 2.5,
@@ -235,7 +235,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SecondHraesvelgrStackOnRegen).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SecondHraesvelgrStackOnRegen).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -248,7 +248,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SecondHraesvelgrStackOnRegen).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SecondHraesvelgrStackOnRegen).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -260,22 +260,22 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: HraesvelgrDiveStart).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: HraesvelgrDiveStart).",
       "roles": {
         "MainTank": {
-          "rule": "Depends on Spreads has MainTank and HotWing: yes \u0026 false \u2192 SW 15m; no \u0026 false \u2192 SE wall; no \u0026 true \u2192 E wall; yes \u0026 true \u2192 centre."
+          "rule": "Depends on Spreads has MainTank and HotWing: yes & false → SW 15m; no & false → SE wall; no & true → E wall; yes & true → centre."
         },
         "OffTank": {
           "rule": "When NidhoggTethers leaves out R2 and Spreads includes OT, go to 13m south of the centre; when NidhoggTethers includes R2 and Spreads leaves out OT, go to the south-east wall; when NidhoggTethers includes R2 and Spreads includes OT, stand at the centre; when NidhoggTethers leaves out R2 and Spreads leaves out OT, go to the east wall."
         },
         "RegenHealer": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: AkhMornTarget)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: AkhMornTarget)."
         },
         "ShieldHealer": {
-          "rule": "Depends on Spreads has ShieldHealer and HotWing: no \u0026 false \u2192 SE wall; yes \u0026 true \u2192 near A (W 7m); no \u0026 true \u2192 near D (E 8m)."
+          "rule": "Depends on Spreads has ShieldHealer and HotWing: no & false → SE wall; yes & true → near A (W 7m); no & true → near D (E 8m)."
         },
         "MeleeDpsA": {
-          "rule": "Depends on Spreads has MeleeDpsA and HotWing: no \u0026 false \u2192 SE wall; yes \u0026 false \u2192 SW wall; no \u0026 true \u2192 near D (E 8m); yes \u0026 true \u2192 W wall."
+          "rule": "Depends on Spreads has MeleeDpsA and HotWing: no & false → SE wall; yes & false → SW wall; no & true → near D (E 8m); yes & true → W wall."
         }
       },
       "tolerance": 2.5,
@@ -341,7 +341,8 @@
       "DsrP6DoubleDragonsAi@93.42": 4,
       "DsrP6DoubleDragonsAi@97.43": 7
     },
-    "exampleSeed": 1
+    "exampleSeed": 1,
+    "residual": 3.1
   },
   "draft": true
 }

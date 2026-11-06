@@ -31,7 +31,8 @@
     "steps": {
       "M9sFlailsAi@0.5": 3
     },
-    "exampleSeed": 1
+    "exampleSeed": 1,
+    "residual": 3.3
   },
   "draft": true
 }

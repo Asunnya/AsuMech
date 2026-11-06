@@ -266,7 +266,7 @@
           "rule": "When TwisterTargets includes M2 and FireballTargets leaves out H2, go to 9m south-west of the centre; when TwisterTargets includes M2 and FireballTargets includes H2, stand on waymark 1; when TwisterTargets leaves out M2 and FireballTargets includes H2, go to 9m south-west of the centre."
         },
         "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LiquidHellTarget)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LiquidHellTarget)."
         },
         "CasterDps": {
           "rule": "When HatchTargets includes PhysRangedDps] and HatchTargets leaves out [PhysRangedDps, stand near waymark D, 8m south-west of the centre; when HatchTargets includes PhysRangedDps] and HatchTargets includes [PhysRangedDps, stand on waymark 1; when HatchTargets leaves out PhysRangedDps] and HatchTargets includes [PhysRangedDps, stand near waymark D, 8m south-west of the centre."
@@ -336,10 +336,10 @@
           "rule": "When HatchTargets includes PhysRangedDps] and HatchTargets leaves out [PhysRangedDps, stand on waymark 1; when HatchTargets includes PhysRangedDps] and HatchTargets includes [PhysRangedDps, stand near waymark 3, 8m south-east of the centre; when HatchTargets leaves out PhysRangedDps] and HatchTargets includes [PhysRangedDps, go to the south-east wall."
         },
         "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LiquidHellTarget)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LiquidHellTarget)."
         },
         "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LiquidHellTarget)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LiquidHellTarget)."
         },
         "CasterDps": {
           "rule": "When FireballTargets leaves out R2 and HatchTargets leaves out [PhysRangedDps, stand near waymark 3, 8m south-east of the centre; when FireballTargets leaves out R2 and HatchTargets includes [PhysRangedDps, stand on waymark 2; when FireballTargets includes R2 and HatchTargets includes [PhysRangedDps, stand near waymark 3, 8m south-east of the centre."
@@ -517,10 +517,11 @@
     }
   ],
   "toolbox": {
-    "planId": "9WEG4AEGVdru3hyF\u002B19yavfslOUU0l1Gp",
+    "planId": "9WEG4AEGVdru3hyF+19yavfslOUU0l1Gp",
     "roleMap": {},
     "steps": {},
-    "exampleSeed": 1
+    "exampleSeed": 1,
+    "residual": 0.0
   },
   "draft": true
 }

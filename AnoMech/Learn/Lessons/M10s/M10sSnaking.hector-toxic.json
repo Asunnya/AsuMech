@@ -40,28 +40,28 @@
       "rule": "Each role has its own spot.",
       "roles": {
         "MainTank": {
-          "rule": "Depends on FireOnTheNearest: true \u2192 near D (W 11m); false \u2192 E 13m."
+          "rule": "Depends on FireOnTheNearest: true → near D (W 11m); false → E 13m."
         },
         "OffTank": {
-          "rule": "Depends on FireOnTheNearest: true \u2192 E 13m; false \u2192 near D (W 11m)."
+          "rule": "Depends on FireOnTheNearest: true → E 13m; false → near D (W 11m)."
         },
         "RegenHealer": {
-          "rule": "Depends on FireOnTheNearest: true \u2192 W 11m; false \u2192 E wall."
+          "rule": "Depends on FireOnTheNearest: true → W 11m; false → E wall."
         },
         "ShieldHealer": {
-          "rule": "Depends on FireOnTheNearest: true \u2192 E wall; false \u2192 near D (W 11m)."
+          "rule": "Depends on FireOnTheNearest: true → E wall; false → near D (W 11m)."
         },
         "MeleeDpsA": {
-          "rule": "Depends on FireOnTheNearest: true \u2192 near D (W 11m); false \u2192 near B (E 13m)."
+          "rule": "Depends on FireOnTheNearest: true → near D (W 11m); false → near B (E 13m)."
         },
         "MeleeDpsB": {
-          "rule": "Depends on FireOnTheNearest: true \u2192 near B (E 13m); false \u2192 W 11m."
+          "rule": "Depends on FireOnTheNearest: true → near B (E 13m); false → W 11m."
         },
         "PhysRangedDps": {
-          "rule": "Depends on FireOnTheNearest: true \u2192 near D (W 11m); false \u2192 E wall."
+          "rule": "Depends on FireOnTheNearest: true → near D (W 11m); false → E wall."
         },
         "CasterDps": {
-          "rule": "Depends on FireOnTheNearest: true \u2192 E wall; false \u2192 W 11m."
+          "rule": "Depends on FireOnTheNearest: true → E wall; false → W 11m."
         }
       },
       "tolerance": 2,
@@ -78,16 +78,16 @@
       "rule": "Go to the west wall.",
       "roles": {
         "MeleeDpsA": {
-          "rule": "Go 0\u00B0 from DeepBlueCorner, 24m out."
+          "rule": "Go 0° from DeepBlueCorner, 24m out."
         },
         "PhysRangedDps": {
-          "rule": "Go 0\u00B0 from DeepBlueCorner, 22m out."
+          "rule": "Go 0° from DeepBlueCorner, 22m out."
         },
         "MeleeDpsB": {
-          "rule": "Go 0\u00B0 from DeepBlueCorner, 24m out."
+          "rule": "Go 0° from DeepBlueCorner, 24m out."
         },
         "CasterDps": {
-          "rule": "Go 0\u00B0 from DeepBlueCorner, 22m out."
+          "rule": "Go 0° from DeepBlueCorner, 22m out."
         }
       },
       "tolerance": 2,
@@ -157,7 +157,8 @@
     "steps": {
       "M10sSnakingAi@37.62": 3
     },
-    "exampleSeed": 1
+    "exampleSeed": 1,
+    "residual": 1.8
   },
   "draft": true
 }

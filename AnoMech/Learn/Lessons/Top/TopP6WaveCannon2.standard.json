@@ -43,25 +43,25 @@
       },
       "title": "After cosmo Arrow resolves",
       "cue": "Cosmo Arrow resolves",
-      "rule": "Depends on InFirst: false \u2192 at 1; true \u2192 NE 6m.",
+      "rule": "Depends on InFirst: false → at 1; true → NE 6m.",
       "roles": {
         "OffTank": {
-          "rule": "Depends on InFirst: false \u2192 at 3; true \u2192 SW 6m."
+          "rule": "Depends on InFirst: false → at 3; true → SW 6m."
         },
         "RegenHealer": {
-          "rule": "Depends on InFirst: false \u2192 at 4; true \u2192 NW 6m."
+          "rule": "Depends on InFirst: false → at 4; true → NW 6m."
         },
         "ShieldHealer": {
-          "rule": "Depends on InFirst: false \u2192 at 2; true \u2192 SE 6m."
+          "rule": "Depends on InFirst: false → at 2; true → SE 6m."
         },
         "MeleeDpsA": {
-          "rule": "Depends on InFirst: false \u2192 at 3; true \u2192 SW 6m."
+          "rule": "Depends on InFirst: false → at 3; true → SW 6m."
         },
         "MeleeDpsB": {
-          "rule": "Depends on InFirst: false \u2192 at 2; true \u2192 SE 6m."
+          "rule": "Depends on InFirst: false → at 2; true → SE 6m."
         },
         "CasterDps": {
-          "rule": "Depends on InFirst: false \u2192 at 4; true \u2192 NW 6m."
+          "rule": "Depends on InFirst: false → at 4; true → NW 6m."
         }
       },
       "tolerance": 2,
@@ -265,7 +265,8 @@
       "TopP6WaveCannon2Ai@18.5": 48,
       "TopP6WaveCannon2Ai@20": 49
     },
-    "exampleSeed": 1
+    "exampleSeed": 1,
+    "residual": 2.3
   },
   "draft": true
 }

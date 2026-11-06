@@ -74,7 +74,7 @@
       },
       "title": "Wait near markers clear of pulses and stomp",
       "cue": "Hardcore hits you",
-      "rule": "Read the strat\u0027s WaitNearMarkersClearOfPulsesAndStomp: the spot follows a rule the rolls alone don\u0027t show (closest roll: PulpingPulses).",
+      "rule": "Read the strat's WaitNearMarkersClearOfPulsesAndStomp: the spot follows a rule the rolls alone don't show (closest roll: PulpingPulses).",
       "roles": {
         "OffTank": {
           "rule": "Stand on waymark C."
@@ -129,7 +129,7 @@
       },
       "title": "After blast Beat hits you",
       "cue": "Blast Beat hits you",
-      "rule": "Depends on HalfMoon: LeftFirst \u2192 E 5m; RightFirst \u2192 W 5m.",
+      "rule": "Depends on HalfMoon: LeftFirst → E 5m; RightFirst → W 5m.",
       "tolerance": 2,
       "skip": false
     },
@@ -141,7 +141,7 @@
       },
       "title": "After half Moon resolves",
       "cue": "Half Moon resolves",
-      "rule": "Depends on HalfMoon: LeftFirst \u2192 W 5m; RightFirst \u2192 E 5m.",
+      "rule": "Depends on HalfMoon: LeftFirst → W 5m; RightFirst → E 5m.",
       "tolerance": 2,
       "skip": false
     },
@@ -173,7 +173,8 @@
     "steps": {
       "M9sVampStomp2Ai@49.6": 6
     },
-    "exampleSeed": 1
+    "exampleSeed": 1,
+    "residual": 2.2
   },
   "draft": true
 }

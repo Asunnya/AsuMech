@@ -55,7 +55,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NorthLines).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NorthLines).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -67,7 +67,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NorthLines).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NorthLines).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -79,13 +79,13 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: NorthLines).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NorthLines).",
       "tolerance": 2.5,
       "skip": false
     }
   ],
   "toolbox": {
-    "planId": "HJAbE7fuWodELUSB\u002BB82fx_zDqUMr5KFC",
+    "planId": "HJAbE7fuWodELUSB+B82fx_zDqUMr5KFC",
     "roleMap": {
       "CasterDps": "dps4",
       "OffTank": "tank1",
@@ -101,7 +101,8 @@
       "M11sOrbitalOmenAi@12.12": 10,
       "M11sOrbitalOmenAi@15.32": 29
     },
-    "exampleSeed": 1
+    "exampleSeed": 1,
+    "residual": 2.5
   },
   "draft": true
 }

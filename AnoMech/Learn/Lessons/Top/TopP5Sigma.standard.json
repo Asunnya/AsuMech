@@ -31,7 +31,7 @@
       },
       "title": "Lineup next to omega M",
       "cue": "A tether lands on another player",
-      "rule": "Read the strat\u0027s LineupNextToOmegaM: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthA).",
+      "rule": "Read the strat's LineupNextToOmegaM: the spot follows a rule the rolls alone don't show (closest roll: NewNorthA).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -43,13 +43,13 @@
       },
       "title": "Wave cannon spread",
       "cue": "A tether lands on you",
-      "rule": "Read the strat\u0027s WaveCannonSpread: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthA).",
+      "rule": "Read the strat's WaveCannonSpread: the spot follows a rule the rolls alone don't show (closest roll: NewNorthA).",
       "roles": {
         "RegenHealer": {
-          "rule": "Read the strat\u0027s WaveCannonSpread: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthB)."
+          "rule": "Read the strat's WaveCannonSpread: the spot follows a rule the rolls alone don't show (closest roll: NewNorthB)."
         },
         "MeleeDpsA": {
-          "rule": "Read the strat\u0027s WaveCannonSpread: the spot follows a rule the rolls alone don\u0027t show (closest roll: FirstMissing)."
+          "rule": "Read the strat's WaveCannonSpread: the spot follows a rule the rolls alone don't show (closest roll: FirstMissing)."
         }
       },
       "tolerance": 2.5,
@@ -63,16 +63,16 @@
       },
       "title": "Knockback pre position",
       "cue": "Looper on you",
-      "rule": "Read the strat\u0027s KnockbackPrePosition: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthA).",
+      "rule": "Read the strat's KnockbackPrePosition: the spot follows a rule the rolls alone don't show (closest roll: NewNorthA).",
       "roles": {
         "MeleeDpsA": {
-          "rule": "Depends on TowerNorthFlipped and SpinnerRotation: false \u0026 CounterClockwise \u2192 E 4m; true \u0026 CounterClockwise \u2192 S 4m; true \u0026 Clockwise \u2192 NW 4m; false \u0026 Clockwise \u2192 NW 4m."
+          "rule": "Depends on TowerNorthFlipped and SpinnerRotation: false & CounterClockwise → E 4m; true & CounterClockwise → S 4m; true & Clockwise → NW 4m; false & Clockwise → NW 4m."
         },
         "MeleeDpsB": {
-          "rule": "Read the strat\u0027s KnockbackPrePosition: the spot follows a rule the rolls alone don\u0027t show (closest roll: SpinnerRotation)."
+          "rule": "Read the strat's KnockbackPrePosition: the spot follows a rule the rolls alone don't show (closest roll: SpinnerRotation)."
         },
         "PhysRangedDps": {
-          "rule": "Read the strat\u0027s KnockbackPrePosition: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthB)."
+          "rule": "Read the strat's KnockbackPrePosition: the spot follows a rule the rolls alone don't show (closest roll: NewNorthB)."
         }
       },
       "tolerance": 2.5,
@@ -98,16 +98,16 @@
       },
       "title": "Tower positions",
       "cue": "Discharger resolves",
-      "rule": "Read the strat\u0027s TowerPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthA).",
+      "rule": "Read the strat's TowerPositions: the spot follows a rule the rolls alone don't show (closest roll: NewNorthA).",
       "roles": {
         "OffTank": {
-          "rule": "Depends on TowerNorthFlipped and SpinnerRotation: false \u0026 CounterClockwise \u2192 SE wall; true \u0026 CounterClockwise \u2192 NE wall; true \u0026 Clockwise \u2192 NE wall; false \u0026 Clockwise \u2192 W wall."
+          "rule": "Depends on TowerNorthFlipped and SpinnerRotation: false & CounterClockwise → SE wall; true & CounterClockwise → NE wall; true & Clockwise → NE wall; false & Clockwise → W wall."
         },
         "MeleeDpsA": {
-          "rule": "Read the strat\u0027s TowerPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthB)."
+          "rule": "Read the strat's TowerPositions: the spot follows a rule the rolls alone don't show (closest roll: NewNorthB)."
         },
         "PhysRangedDps": {
-          "rule": "Read the strat\u0027s TowerPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: SecondMissing)."
+          "rule": "Read the strat's TowerPositions: the spot follows a rule the rolls alone don't show (closest roll: SecondMissing)."
         }
       },
       "tolerance": 2.5,
@@ -141,10 +141,10 @@
       },
       "title": "Rear lasers pre position",
       "cue": "Twice-come Ruin on you",
-      "rule": "Read the strat\u0027s RearLasersPrePosition: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthB).",
+      "rule": "Read the strat's RearLasersPrePosition: the spot follows a rule the rolls alone don't show (closest roll: NewNorthB).",
       "roles": {
         "ShieldHealer": {
-          "rule": "Read the strat\u0027s RearLasersPrePosition: the spot follows a rule the rolls alone don\u0027t show (closest roll: SecondMissing)."
+          "rule": "Read the strat's RearLasersPrePosition: the spot follows a rule the rolls alone don't show (closest roll: SecondMissing)."
         }
       },
       "tolerance": 2.5,
@@ -158,7 +158,7 @@
       },
       "title": "Adjust for legs",
       "cue": "Rear Lasers resolves",
-      "rule": "Read the strat\u0027s AdjustForLegs: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthB).",
+      "rule": "Read the strat's AdjustForLegs: the spot follows a rule the rolls alone don't show (closest roll: NewNorthB).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -170,22 +170,22 @@
       },
       "title": "Hello world positions",
       "cue": "Rear Lasers resolves",
-      "rule": "Read the strat\u0027s HelloWorldPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthA).",
+      "rule": "Read the strat's HelloWorldPositions: the spot follows a rule the rolls alone don't show (closest roll: NewNorthA).",
       "roles": {
         "OffTank": {
-          "rule": "Read the strat\u0027s HelloWorldPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthB)."
+          "rule": "Read the strat's HelloWorldPositions: the spot follows a rule the rolls alone don't show (closest roll: NewNorthB)."
         },
         "RegenHealer": {
-          "rule": "Read the strat\u0027s HelloWorldPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthB)."
+          "rule": "Read the strat's HelloWorldPositions: the spot follows a rule the rolls alone don't show (closest roll: NewNorthB)."
         },
         "MeleeDpsA": {
-          "rule": "Read the strat\u0027s HelloWorldPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: FirstMissing)."
+          "rule": "Read the strat's HelloWorldPositions: the spot follows a rule the rolls alone don't show (closest roll: FirstMissing)."
         },
         "MeleeDpsB": {
-          "rule": "Read the strat\u0027s HelloWorldPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: FirstMissing)."
+          "rule": "Read the strat's HelloWorldPositions: the spot follows a rule the rolls alone don't show (closest roll: FirstMissing)."
         },
         "CasterDps": {
-          "rule": "Read the strat\u0027s HelloWorldPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthB)."
+          "rule": "Read the strat's HelloWorldPositions: the spot follows a rule the rolls alone don't show (closest roll: NewNorthB)."
         }
       },
       "tolerance": 2.5,
@@ -213,7 +213,7 @@
     }
   ],
   "toolbox": {
-    "planId": "107380954136761\u002Bstgy-f3f6e30d\u002Bstgy-cd5e154e\u002Bstgy-74f579c7",
+    "planId": "107380954136761+stgy-f3f6e30d+stgy-cd5e154e+stgy-74f579c7",
     "roleMap": {
       "OffTank": "tank1",
       "MainTank": "tank2",
@@ -227,7 +227,8 @@
     "steps": {
       "TopP5SigmaAi@0.5": 0
     },
-    "exampleSeed": 1
+    "exampleSeed": 1,
+    "residual": 3.3
   },
   "draft": true
 }

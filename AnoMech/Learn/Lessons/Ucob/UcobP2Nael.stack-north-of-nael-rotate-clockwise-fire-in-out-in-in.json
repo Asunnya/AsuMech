@@ -98,7 +98,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: RavenDiveTarget).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: RavenDiveTarget).",
       "roles": {
         "OffTank": {
           "rule": "When FireTargets leaves out H2 and ThunderTargets leaves out [MeleeDpsB, stand on waymark 4; when FireTargets includes H2 and ThunderTargets includes [MeleeDpsB, stand on waymark D; when FireTargets includes H2 and ThunderTargets leaves out [MeleeDpsB, go to 5m south-west of the centre."
@@ -115,12 +115,13 @@
     }
   ],
   "toolbox": {
-    "planId": "DpoJr4oE_kGz_gRU\u002Bvi2rSC6mwW_d_QJF",
+    "planId": "DpoJr4oE_kGz_gRU+vi2rSC6mwW_d_QJF",
     "roleMap": {
       "CasterDps": "dps4"
     },
     "steps": {},
-    "exampleSeed": 1
+    "exampleSeed": 1,
+    "residual": 0.0
   },
   "draft": true
 }

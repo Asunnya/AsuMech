@@ -156,7 +156,8 @@
       "M10sAlleyOopTwoAi@24.94-26.95": 17,
       "M10sAlleyOopTwoAi@29.36": 24
     },
-    "exampleSeed": 1
+    "exampleSeed": 1,
+    "residual": 2.5
   },
   "draft": true
 }

@@ -11,7 +11,7 @@
       },
       "title": "After red Hot appears",
       "cue": "Red Hot appears",
-      "rule": "Depends on Side: -1 \u2192 N 8m; 1 \u2192 S 8m.",
+      "rule": "Depends on Side: -1 → N 8m; 1 → S 8m.",
       "roles": {
         "RegenHealer": {
           "rule": "Stand at the centre."
@@ -32,16 +32,16 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat.",
       "roles": {
         "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: BossesNorth)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: BossesNorth)."
         },
         "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: BossesNorth)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: BossesNorth)."
         },
         "CasterDps": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: BossesNorth)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: BossesNorth)."
         }
       },
       "tolerance": 2.5,
@@ -74,7 +74,7 @@
     }
   ],
   "toolbox": {
-    "planId": "syjvfhacdxz7awet\u002BqWue79_md0YHCrnW",
+    "planId": "syjvfhacdxz7awet+qWue79_md0YHCrnW",
     "roleMap": {
       "CasterDps": "dps4",
       "OffTank": "tank1",
@@ -88,7 +88,8 @@
     "steps": {
       "M10sDeepAerialAi@67.22": 3
     },
-    "exampleSeed": 1
+    "exampleSeed": 1,
+    "residual": 1.8
   },
   "draft": true
 }

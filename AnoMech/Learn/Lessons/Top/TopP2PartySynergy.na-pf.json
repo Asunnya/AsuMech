@@ -40,7 +40,7 @@
       },
       "title": "Attack dodge",
       "cue": "A tether lands on another player",
-      "rule": "Read the strat\u0027s AttackDodge: the spot follows a rule the rolls alone don\u0027t show (closest roll: AttackDir).",
+      "rule": "Read the strat's AttackDodge: the spot follows a rule the rolls alone don't show (closest roll: AttackDir).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -52,13 +52,13 @@
       },
       "title": "Spread positions",
       "cue": " resolves",
-      "rule": "Read the strat\u0027s SpreadPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthA).",
+      "rule": "Read the strat's SpreadPositions: the spot follows a rule the rolls alone don't show (closest roll: NewNorthA).",
       "roles": {
         "MeleeDpsA": {
-          "rule": "Read the strat\u0027s SpreadPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: AttackDir)."
+          "rule": "Read the strat's SpreadPositions: the spot follows a rule the rolls alone don't show (closest roll: AttackDir)."
         },
         "CasterDps": {
-          "rule": "Read the strat\u0027s SpreadPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: AttackDir)."
+          "rule": "Read the strat's SpreadPositions: the spot follows a rule the rolls alone don't show (closest roll: AttackDir)."
         }
       },
       "tolerance": 2.5,
@@ -72,22 +72,22 @@
       },
       "title": "Knockback positions",
       "cue": "Optimized Fire III hits you",
-      "rule": "Read the strat\u0027s KnockbackPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthA).",
+      "rule": "Read the strat's KnockbackPositions: the spot follows a rule the rolls alone don't show (closest roll: NewNorthA).",
       "roles": {
         "MainTank": {
-          "rule": "Read the strat\u0027s KnockbackPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: Order)."
+          "rule": "Read the strat's KnockbackPositions: the spot follows a rule the rolls alone don't show (closest roll: Order)."
         },
         "OffTank": {
-          "rule": "Read the strat\u0027s KnockbackPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: AttackDir)."
+          "rule": "Read the strat's KnockbackPositions: the spot follows a rule the rolls alone don't show (closest roll: AttackDir)."
         },
         "RegenHealer": {
           "rule": "Go to 3m west of the centre."
         },
         "ShieldHealer": {
-          "rule": "Read the strat\u0027s KnockbackPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: Glitch)."
+          "rule": "Read the strat's KnockbackPositions: the spot follows a rule the rolls alone don't show (closest roll: Glitch)."
         },
         "MeleeDpsA": {
-          "rule": "Read the strat\u0027s KnockbackPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: Glitch)."
+          "rule": "Read the strat's KnockbackPositions: the spot follows a rule the rolls alone don't show (closest roll: Glitch)."
         }
       },
       "tolerance": 2.5,
@@ -101,13 +101,13 @@
       },
       "title": "Stack positions",
       "cue": "Discharger resolves",
-      "rule": "Read the strat\u0027s StackPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: AttackDir).",
+      "rule": "Read the strat's StackPositions: the spot follows a rule the rolls alone don't show (closest roll: AttackDir).",
       "roles": {
         "MainTank": {
-          "rule": "Read the strat\u0027s StackPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthA)."
+          "rule": "Read the strat's StackPositions: the spot follows a rule the rolls alone don't show (closest roll: NewNorthA)."
         },
         "PhysRangedDps": {
-          "rule": "Read the strat\u0027s StackPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: NewNorthA)."
+          "rule": "Read the strat's StackPositions: the spot follows a rule the rolls alone don't show (closest roll: NewNorthA)."
         }
       },
       "tolerance": 2.5,
@@ -115,7 +115,7 @@
     }
   ],
   "toolbox": {
-    "planId": "324285310725761\u002Bstgy-5b80c73a",
+    "planId": "324285310725761+stgy-5b80c73a",
     "roleMap": {
       "MainTank": "tank1",
       "OffTank": "tank2",
@@ -131,7 +131,8 @@
       "TopP2PartySynergyAi@16": 8,
       "TopP2PartySynergyAi@23": 11
     },
-    "exampleSeed": 1
+    "exampleSeed": 1,
+    "residual": 2.7
   },
   "draft": true
 }

@@ -31,13 +31,13 @@
       },
       "title": "Tether pre position",
       "cue": "A tether lands on another player",
-      "rule": "Read the strat\u0027s TetherPrePosition: the spot follows a rule the rolls alone don\u0027t show (closest roll: ArmHandedness).",
+      "rule": "Read the strat's TetherPrePosition: the spot follows a rule the rolls alone don't show (closest roll: ArmHandedness).",
       "roles": {
         "MeleeDpsA": {
-          "rule": "Read the strat\u0027s TetherPrePosition: the spot follows a rule the rolls alone don\u0027t show (closest roll: PlayerMonitorRole)."
+          "rule": "Read the strat's TetherPrePosition: the spot follows a rule the rolls alone don't show (closest roll: PlayerMonitorRole)."
         },
         "CasterDps": {
-          "rule": "Read the strat\u0027s TetherPrePosition: the spot follows a rule the rolls alone don\u0027t show (closest roll: PlayerMonitorRole)."
+          "rule": "Read the strat's TetherPrePosition: the spot follows a rule the rolls alone don't show (closest roll: PlayerMonitorRole)."
         }
       },
       "tolerance": 2.5,
@@ -51,22 +51,22 @@
       },
       "title": "Fist resolve slots",
       "cue": "Archive Peripheral resolves",
-      "rule": "Read the strat\u0027s FistResolveSlots: the spot follows a rule the rolls alone don\u0027t show (closest roll: EyeSpawn).",
+      "rule": "Read the strat's FistResolveSlots: the spot follows a rule the rolls alone don't show (closest roll: EyeSpawn).",
       "roles": {
         "ShieldHealer": {
-          "rule": "Read the strat\u0027s FistResolveSlots: the spot follows a rule the rolls alone don\u0027t show (closest roll: PlayerMonitorIndex)."
+          "rule": "Read the strat's FistResolveSlots: the spot follows a rule the rolls alone don't show (closest roll: PlayerMonitorIndex)."
         },
         "MeleeDpsA": {
-          "rule": "Read the strat\u0027s FistResolveSlots: the spot follows a rule the rolls alone don\u0027t show (closest roll: PlayerMonitorIndex)."
+          "rule": "Read the strat's FistResolveSlots: the spot follows a rule the rolls alone don't show (closest roll: PlayerMonitorIndex)."
         },
         "MainTank": {
-          "rule": "Read the strat\u0027s FistResolveSlots: the spot follows a rule the rolls alone don\u0027t show (closest roll: BeyondDefenseTarget)."
+          "rule": "Read the strat's FistResolveSlots: the spot follows a rule the rolls alone don't show (closest roll: BeyondDefenseTarget)."
         },
         "OffTank": {
-          "rule": "Depends on EyeSpawn: North \u2192 W 10m; South \u2192 E 10m."
+          "rule": "Depends on EyeSpawn: North → W 10m; South → E 10m."
         },
         "MeleeDpsB": {
-          "rule": "Read the strat\u0027s FistResolveSlots: the spot follows a rule the rolls alone don\u0027t show (closest roll: PlayerMonitorIndex)."
+          "rule": "Read the strat's FistResolveSlots: the spot follows a rule the rolls alone don't show (closest roll: PlayerMonitorIndex)."
         }
       },
       "tolerance": 2.5,
@@ -92,7 +92,7 @@
           "rule": "Go to 10m west of the centre."
         },
         "RegenHealer": {
-          "rule": "Read the strat\u0027s TetherResolveStep: the spot follows a rule the rolls alone don\u0027t show."
+          "rule": "Read the strat's TetherResolveStep: the spot follows a rule the rolls alone don't show."
         },
         "MeleeDpsA": {
           "rule": "Go to 10m west of the centre."
@@ -109,13 +109,13 @@
       },
       "title": "Hyper pulse bait arms",
       "cue": "Thrice-come Ruin on you",
-      "rule": "Read the strat\u0027s HyperPulseBaitArms: the spot follows a rule the rolls alone don\u0027t show (closest roll: ArmHandedness).",
+      "rule": "Read the strat's HyperPulseBaitArms: the spot follows a rule the rolls alone don't show (closest roll: ArmHandedness).",
       "roles": {
         "MeleeDpsA": {
-          "rule": "Read the strat\u0027s HyperPulseBaitArms: the spot follows a rule the rolls alone don\u0027t show (closest roll: PlayerMonitorRole)."
+          "rule": "Read the strat's HyperPulseBaitArms: the spot follows a rule the rolls alone don't show (closest roll: PlayerMonitorRole)."
         },
         "PhysRangedDps": {
-          "rule": "Read the strat\u0027s HyperPulseBaitArms: the spot follows a rule the rolls alone don\u0027t show (closest roll: NearWorldRole)."
+          "rule": "Read the strat's HyperPulseBaitArms: the spot follows a rule the rolls alone don't show (closest roll: NearWorldRole)."
         }
       },
       "tolerance": 2.5,
@@ -129,13 +129,13 @@
       },
       "title": "Hyper pulse dodge",
       "cue": "Thrice-come Ruin on you",
-      "rule": "Read the strat\u0027s HyperPulseDodge: the spot follows a rule the rolls alone don\u0027t show (closest roll: ArmHandedness).",
+      "rule": "Read the strat's HyperPulseDodge: the spot follows a rule the rolls alone don't show (closest roll: ArmHandedness).",
       "roles": {
         "MainTank": {
-          "rule": "Read the strat\u0027s HyperPulseDodge: the spot follows a rule the rolls alone don\u0027t show (closest roll: BeyondDefenseTarget)."
+          "rule": "Read the strat's HyperPulseDodge: the spot follows a rule the rolls alone don't show (closest roll: BeyondDefenseTarget)."
         },
         "PhysRangedDps": {
-          "rule": "Read the strat\u0027s HyperPulseDodge: the spot follows a rule the rolls alone don\u0027t show (closest roll: NearWorldRole)."
+          "rule": "Read the strat's HyperPulseDodge: the spot follows a rule the rolls alone don't show (closest roll: NearWorldRole)."
         }
       },
       "tolerance": 2.5,
@@ -152,28 +152,28 @@
       "rule": "Each role has its own spot.",
       "roles": {
         "MainTank": {
-          "rule": "Read the strat\u0027s MonitorPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: PlayerMonitorIndex)."
+          "rule": "Read the strat's MonitorPositions: the spot follows a rule the rolls alone don't show (closest roll: PlayerMonitorIndex)."
         },
         "OffTank": {
-          "rule": "Read the strat\u0027s MonitorPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: EyeSpawn)."
+          "rule": "Read the strat's MonitorPositions: the spot follows a rule the rolls alone don't show (closest roll: EyeSpawn)."
         },
         "RegenHealer": {
-          "rule": "Read the strat\u0027s MonitorPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: FarWorldRole)."
+          "rule": "Read the strat's MonitorPositions: the spot follows a rule the rolls alone don't show (closest roll: FarWorldRole)."
         },
         "ShieldHealer": {
-          "rule": "Read the strat\u0027s MonitorPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: ArmHandedness)."
+          "rule": "Read the strat's MonitorPositions: the spot follows a rule the rolls alone don't show (closest roll: ArmHandedness)."
         },
         "MeleeDpsA": {
-          "rule": "Read the strat\u0027s MonitorPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: OmegaMonitorSide)."
+          "rule": "Read the strat's MonitorPositions: the spot follows a rule the rolls alone don't show (closest roll: OmegaMonitorSide)."
         },
         "PhysRangedDps": {
-          "rule": "Read the strat\u0027s MonitorPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: PlayerMonitorRole)."
+          "rule": "Read the strat's MonitorPositions: the spot follows a rule the rolls alone don't show (closest roll: PlayerMonitorRole)."
         },
         "MeleeDpsB": {
-          "rule": "Read the strat\u0027s MonitorPositions: the spot follows a rule the rolls alone don\u0027t show."
+          "rule": "Read the strat's MonitorPositions: the spot follows a rule the rolls alone don't show."
         },
         "CasterDps": {
-          "rule": "Read the strat\u0027s MonitorPositions: the spot follows a rule the rolls alone don\u0027t show (closest roll: NearWorldTetherIndex)."
+          "rule": "Read the strat's MonitorPositions: the spot follows a rule the rolls alone don't show (closest roll: NearWorldTetherIndex)."
         }
       },
       "tolerance": 2.5,
@@ -190,10 +190,10 @@
       "rule": "Stand near waymark B, 15m east of the centre.",
       "roles": {
         "MeleeDpsB": {
-          "rule": "Read the strat\u0027s MonitorAdjustment: the spot follows a rule the rolls alone don\u0027t show (closest roll: SwivelCannonSide)."
+          "rule": "Read the strat's MonitorAdjustment: the spot follows a rule the rolls alone don't show (closest roll: SwivelCannonSide)."
         },
         "ShieldHealer": {
-          "rule": "Read the strat\u0027s MonitorAdjustment: the spot follows a rule the rolls alone don\u0027t show."
+          "rule": "Read the strat's MonitorAdjustment: the spot follows a rule the rolls alone don't show."
         },
         "MeleeDpsA": {
           "rule": "Stand near waymark D, 12m west of the centre."
@@ -210,7 +210,7 @@
       },
       "title": "Swivel dodge",
       "cue": "Twice-come Ruin on you",
-      "rule": "Read the strat\u0027s SwivelDodge: the spot follows a rule the rolls alone don\u0027t show (closest roll: ArmHandedness).",
+      "rule": "Read the strat's SwivelDodge: the spot follows a rule the rolls alone don't show (closest roll: ArmHandedness).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -222,7 +222,7 @@
       },
       "title": "Rescue unsafe",
       "cue": "Swivel Cannon cast starts",
-      "rule": "Read the strat\u0027s RescueUnsafe: the spot follows a rule the rolls alone don\u0027t show.",
+      "rule": "Read the strat's RescueUnsafe: the spot follows a rule the rolls alone don't show.",
       "roles": {
         "MainTank": {
           "rule": "Go to 10m west of the centre."
@@ -248,19 +248,19 @@
       },
       "title": "Return to middle",
       "cue": "Thrice-come Ruin on you",
-      "rule": "Read the strat\u0027s ReturnToMiddle: the spot follows a rule the rolls alone don\u0027t show (closest roll: ArmHandedness).",
+      "rule": "Read the strat's ReturnToMiddle: the spot follows a rule the rolls alone don't show (closest roll: ArmHandedness).",
       "roles": {
         "MainTank": {
-          "rule": "Read the strat\u0027s ReturnToMiddle: the spot follows a rule the rolls alone don\u0027t show (closest roll: OmegaMonitorSide)."
+          "rule": "Read the strat's ReturnToMiddle: the spot follows a rule the rolls alone don't show (closest roll: OmegaMonitorSide)."
         },
         "OffTank": {
-          "rule": "Read the strat\u0027s ReturnToMiddle: the spot follows a rule the rolls alone don\u0027t show (closest roll: PlayerMonitorIndex)."
+          "rule": "Read the strat's ReturnToMiddle: the spot follows a rule the rolls alone don't show (closest roll: PlayerMonitorIndex)."
         },
         "ShieldHealer": {
-          "rule": "Read the strat\u0027s ReturnToMiddle: the spot follows a rule the rolls alone don\u0027t show (closest roll: OmegaMonitorSide)."
+          "rule": "Read the strat's ReturnToMiddle: the spot follows a rule the rolls alone don't show (closest roll: OmegaMonitorSide)."
         },
         "MeleeDpsB": {
-          "rule": "Depends on OmegaMonitorSide: Right \u2192 N 7m; Left \u2192 S 6m."
+          "rule": "Depends on OmegaMonitorSide: Right → N 7m; Left → S 6m."
         }
       },
       "tolerance": 2.5,
@@ -274,7 +274,7 @@
       },
       "title": "Tank forward",
       "cue": "Thrice-come Ruin on you",
-      "rule": "Depends on OmegaMonitorSide: Right \u2192 S 8m; Left \u2192 N 8m.",
+      "rule": "Depends on OmegaMonitorSide: Right → S 8m; Left → N 8m.",
       "tolerance": 2,
       "skip": false
     },
@@ -286,19 +286,19 @@
       },
       "title": "Break last tether",
       "cue": "Quickening Dynamis  on you",
-      "rule": "Read the strat\u0027s BreakLastTether: the spot follows a rule the rolls alone don\u0027t show (closest roll: OmegaMonitorSide).",
+      "rule": "Read the strat's BreakLastTether: the spot follows a rule the rolls alone don't show (closest roll: OmegaMonitorSide).",
       "roles": {
         "MainTank": {
           "rule": "Go to 5m north-west of the centre."
         },
         "PhysRangedDps": {
-          "rule": "Depends on OmegaMonitorSide: Right \u2192 NW 5m; Left \u2192 SE 5m."
+          "rule": "Depends on OmegaMonitorSide: Right → NW 5m; Left → SE 5m."
         },
         "MeleeDpsA": {
-          "rule": "Read the strat\u0027s BreakLastTether: the spot follows a rule the rolls alone don\u0027t show."
+          "rule": "Read the strat's BreakLastTether: the spot follows a rule the rolls alone don't show."
         },
         "CasterDps": {
-          "rule": "Read the strat\u0027s BreakLastTether: the spot follows a rule the rolls alone don\u0027t show."
+          "rule": "Read the strat's BreakLastTether: the spot follows a rule the rolls alone don't show."
         },
         "ShieldHealer": {
           "rule": "Go to 5m north-east of the centre."
@@ -325,7 +325,8 @@
       "TopP5DeltaAi@40": 12,
       "TopP5DeltaAi@61": 25
     },
-    "exampleSeed": 1
+    "exampleSeed": 1,
+    "residual": 2.8
   },
   "draft": true
 }

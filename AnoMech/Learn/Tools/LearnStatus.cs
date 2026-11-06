@@ -55,5 +55,31 @@ public static class LearnStatus
         return sb.ToString();
     }
 
+    // Per family: how much of the drafted text still needs a human (tables, geometric steps), how
+    // many steps carry a cue, how far the plans sit from the strats, and how much is reviewed.
+    public static string Metrics(IEnumerable<Lesson> lessons)
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine($"{"family",-6} lessons reviewed  steps  sentences  cues  mean residual (plans)");
+        foreach (var family in lessons.GroupBy(l => FamilyFromScenario(l.Scenario)).OrderBy(g => g.Key))
+        {
+            var steps = family.SelectMany(l => l.Steps.Where(s => !s.Skip)).ToList();
+            var rules = steps.SelectMany(s => new[] { s.Rule }.Concat(s.Roles?.Values.Select(r => r.Rule) ?? [])).Where(r => !string.IsNullOrWhiteSpace(r)).ToList();
+            var sentences = rules.Count == 0 ? 0f : 100f * rules.Count(r => !Lesson.IsTable(r)) / rules.Count;
+            var cues = steps.Count == 0 ? 0f : 100f * steps.Count(s => !string.IsNullOrWhiteSpace(s.Cue) || (s.Roles?.Values.Any(r => !string.IsNullOrWhiteSpace(r.Cue)) ?? false)) / steps.Count;
+            var residuals = family.Select(l => l.Toolbox?.Residual).OfType<float>().ToList();
+            sb.AppendLine($"{family.Key,-6} {family.Count(),7} {family.Count(l => !l.Draft),8}  {steps.Count,5}  {sentences,8:0}%  {cues,3:0}%  {(residuals.Count == 0 ? "-" : $"{residuals.Average():0.0} m ({residuals.Count})")}");
+        }
+        return sb.ToString();
+    }
+
+    // "UwuP1GarudaScenario" -> "Uwu", "UltimatePredationScenario" -> "Uwu" by its known prefixes.
+    private static string FamilyFromScenario(string scenario)
+    {
+        foreach (var family in new[] { "Umad", "Fru", "Top", "Uwu", "Ucob", "Dsr", "M9s", "M10s", "M11s" })
+            if (scenario.StartsWith(family, System.StringComparison.Ordinal)) return family;
+        return scenario.StartsWith("Ultimate", System.StringComparison.Ordinal) || scenario.StartsWith("PrimalRoulette", System.StringComparison.Ordinal) ? "Uwu" : "?";
+    }
+
     private static string M(bool b) => b ? "yes" : "-";
 }

@@ -31,25 +31,25 @@
       },
       "title": "After a marker lands on you",
       "cue": "A marker lands on you",
-      "rule": "Depends on OpenSide: 0 \u2192 at D; 3 \u2192 at A; 1 \u2192 at C.",
+      "rule": "Depends on OpenSide: 0 → at D; 3 → at A; 1 → at C.",
       "roles": {
         "OffTank": {
-          "rule": "Depends on OpenSide: 0 \u2192 at B; 3 \u2192 at C; 1 \u2192 at A."
+          "rule": "Depends on OpenSide: 0 → at B; 3 → at C; 1 → at A."
         },
         "RegenHealer": {
-          "rule": "Depends on OpenSide: 0 \u2192 S wall; 3 \u2192 NW wall; 1 \u2192 E wall."
+          "rule": "Depends on OpenSide: 0 → S wall; 3 → NW wall; 1 → E wall."
         },
         "ShieldHealer": {
-          "rule": "Depends on OpenSide: 0 \u2192 S wall; 3 \u2192 W wall; 1 \u2192 NE wall."
+          "rule": "Depends on OpenSide: 0 → S wall; 3 → W wall; 1 → NE wall."
         },
         "MeleeDpsB": {
-          "rule": "Depends on OpenSide: 0 \u2192 at B; 3 \u2192 at C; 1 \u2192 at A."
+          "rule": "Depends on OpenSide: 0 → at B; 3 → at C; 1 → at A."
         },
         "PhysRangedDps": {
-          "rule": "Depends on OpenSide: 0 \u2192 SW wall; 3 \u2192 W wall; 1 \u2192 SE wall."
+          "rule": "Depends on OpenSide: 0 → SW wall; 3 → W wall; 1 → SE wall."
         },
         "CasterDps": {
-          "rule": "Depends on OpenSide: 0 \u2192 S wall; 3 \u2192 SW wall; 1 \u2192 E wall."
+          "rule": "Depends on OpenSide: 0 → S wall; 3 → SW wall; 1 → E wall."
         }
       },
       "tolerance": 2,
@@ -83,25 +83,25 @@
       },
       "title": "After raw Steel Trophy cast starts",
       "cue": "Raw Steel Trophy cast starts",
-      "rule": "Depends on Mirrored: true \u2192 SW wall; false \u2192 near C (S 7m).",
+      "rule": "Depends on Mirrored: true → SW wall; false → near C (S 7m).",
       "roles": {
         "MainTank": {
-          "rule": "Depends on Mirrored: true \u2192 near A (N 6m); false \u2192 NW 7m."
+          "rule": "Depends on Mirrored: true → near A (N 6m); false → NW 7m."
         },
         "OffTank": {
-          "rule": "Depends on Mirrored: true \u2192 near A (N 6m); false \u2192 NE 7m."
+          "rule": "Depends on Mirrored: true → near A (N 6m); false → NE 7m."
         },
         "ShieldHealer": {
-          "rule": "Depends on Mirrored: true \u2192 SE wall; false \u2192 near C (S 7m)."
+          "rule": "Depends on Mirrored: true → SE wall; false → near C (S 7m)."
         },
         "MeleeDpsA": {
-          "rule": "Depends on Mirrored: true \u2192 SW 7m; false \u2192 near C (S 7m)."
+          "rule": "Depends on Mirrored: true → SW 7m; false → near C (S 7m)."
         },
         "MeleeDpsB": {
-          "rule": "Depends on Mirrored: true \u2192 SE 7m; false \u2192 near C (S 7m)."
+          "rule": "Depends on Mirrored: true → SE 7m; false → near C (S 7m)."
         },
         "CasterDps": {
-          "rule": "Depends on Mirrored: true \u2192 SE wall; false \u2192 near C (S 7m)."
+          "rule": "Depends on Mirrored: true → SE wall; false → near C (S 7m)."
         }
       },
       "tolerance": 2,
@@ -127,10 +127,10 @@
       },
       "title": "After ultimate Trophy Weapons resolves",
       "cue": "Ultimate Trophy Weapons resolves",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat.",
       "roles": {
         "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: HeavyWeightTarget)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: HeavyWeightTarget)."
         }
       },
       "tolerance": 2.5,
@@ -145,19 +145,19 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: OpenSide).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: OpenSide).",
       "roles": {
         "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat."
         },
         "ShieldHealer": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat."
         },
         "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat."
         },
         "CasterDps": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat."
         }
       },
       "tolerance": 2.5,
@@ -172,19 +172,19 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: HeavyWeightTarget).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: HeavyWeightTarget).",
       "roles": {
         "MainTank": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: AxeTrophy)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: AxeTrophy)."
         },
         "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: OpenSide)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: OpenSide)."
         },
         "RegenHealer": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: OpenSide)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: OpenSide)."
         },
         "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: OpenSide)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: OpenSide)."
         }
       },
       "tolerance": 2.5,
@@ -236,7 +236,7 @@
     }
   ],
   "toolbox": {
-    "planId": "HJAbE7fuWodELUSB\u002BB82fx_zDqUMr5KFC",
+    "planId": "HJAbE7fuWodELUSB+B82fx_zDqUMr5KFC",
     "roleMap": {
       "CasterDps": "dps4",
       "MainTank": "tank1",
@@ -251,7 +251,8 @@
       "M11sUltimateWeaponsAi@0.3": 1,
       "M11sUltimateWeaponsAi@40.2": 2
     },
-    "exampleSeed": 1
+    "exampleSeed": 1,
+    "residual": 2.1
   },
   "draft": true
 }

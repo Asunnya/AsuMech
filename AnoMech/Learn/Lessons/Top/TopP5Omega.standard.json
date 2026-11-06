@@ -11,7 +11,7 @@
       },
       "title": "After  hits you",
       "cue": " hits you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: OmegaAttacks).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: OmegaAttacks).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -23,7 +23,7 @@
       },
       "title": "After  hits you",
       "cue": " hits you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: AttackDirections).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: AttackDirections).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -35,7 +35,7 @@
       },
       "title": "Hello world1 pos",
       "cue": " hits you",
-      "rule": "Read the strat\u0027s HelloWorld1Pos: the spot follows a rule the rolls alone don\u0027t show (closest roll: AttackDirections).",
+      "rule": "Read the strat's HelloWorld1Pos: the spot follows a rule the rolls alone don't show (closest roll: AttackDirections).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -59,13 +59,13 @@
       },
       "title": "Hello world2 pos",
       "cue": "A tether lands on ",
-      "rule": "Read the strat\u0027s HelloWorld2Pos: the spot follows a rule the rolls alone don\u0027t show (closest roll: AttackDirections).",
+      "rule": "Read the strat's HelloWorld2Pos: the spot follows a rule the rolls alone don't show (closest roll: AttackDirections).",
       "roles": {
         "MainTank": {
-          "rule": "Read the strat\u0027s HelloWorld2Pos: the spot follows a rule the rolls alone don\u0027t show (closest roll: OmegaAttacks)."
+          "rule": "Read the strat's HelloWorld2Pos: the spot follows a rule the rolls alone don't show (closest roll: OmegaAttacks)."
         },
         "PhysRangedDps": {
-          "rule": "Read the strat\u0027s HelloWorld2Pos: the spot follows a rule the rolls alone don\u0027t show (closest roll: BettleSpawnDirection)."
+          "rule": "Read the strat's HelloWorld2Pos: the spot follows a rule the rolls alone don't show (closest roll: BettleSpawnDirection)."
         }
       },
       "tolerance": 2.5,
@@ -93,7 +93,7 @@
     }
   ],
   "toolbox": {
-    "planId": "078384491946761\u002Bstgy-3bda4a19\u002Bstgy-7cdb9e3d",
+    "planId": "078384491946761+stgy-3bda4a19+stgy-7cdb9e3d",
     "roleMap": {
       "MainTank": "tank1",
       "OffTank": "tank2",
@@ -107,7 +107,8 @@
     "steps": {
       "TopP5OmegaAi@20": 4
     },
-    "exampleSeed": 5
+    "exampleSeed": 5,
+    "residual": 1.9
   },
   "draft": true
 }

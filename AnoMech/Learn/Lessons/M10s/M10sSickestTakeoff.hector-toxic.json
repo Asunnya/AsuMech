@@ -28,7 +28,7 @@
       },
       "title": "After  hits you",
       "cue": " hits you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LaneStart).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LaneStart).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -40,7 +40,7 @@
       },
       "title": "After sickest Take-off resolves",
       "cue": "Sickest Take-off resolves",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LaneStart).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LaneStart).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -147,7 +147,8 @@
     "steps": {
       "M10sSickestTakeoffAi@58.68": 3
     },
-    "exampleSeed": 1
+    "exampleSeed": 1,
+    "residual": 1.8
   },
   "draft": true
 }

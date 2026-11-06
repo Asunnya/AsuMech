@@ -41,7 +41,8 @@ namespace AnoMech.LessonTools;
 // overrides-check --scenario <TypeName> [--strat N] [--seed 1]   pin each roll to its own value and see whether the seed's other rolls move
 // links    --file AnoMech/Scenarios/Raidsplan/DSR.txt [--resolve]   every plan link, Strategy Board code, slides deck and sheet in a guide's text, with its heading; --resolve follows tinyurl
 // learn-ready --scenario <TypeName> [--strat N] [--no-run]   what the chain can read from the scenario and how it degrades (runs overrides-check too)
-// status [--family <Family>]                                 scenario × strat × lesson × toolbox × example × mit × draft
+// status [--family <Family>] [--metrics] [--write-baseline]   scenario × strat × lesson × toolbox × example × mit × draft; --metrics per family; --write-baseline refreshes tests/.../lessons-baseline.txt
+// rekey-all [--write]                                        re-records every embedded lesson's strat (1 seed) and follows moved lines; --write rewrites the lesson files; orphans fail
 internal static class Cli
 {
     public static int Run(string[] args)
@@ -74,6 +75,7 @@ internal static class Cli
                 "wtfdig-fetch" => WtfdigFetch(opts),
                 "slides-fetch" => SlidesFetch(opts),
                 "status" => Status(opts),
+                "rekey-all" => RekeyAll(opts),
                 _ => Usage(),
             };
         }
@@ -316,7 +318,48 @@ internal static class Cli
         var rows = LearnStatus.Rows(ScenarioCatalog.Create());
         if (opts.TryGetValue("family", out var family) && family.Length > 0) rows = rows.Where(r => r.Family.Equals(family, StringComparison.OrdinalIgnoreCase)).ToList();
         Console.Write(LearnStatus.Table(rows));
+        if (opts.ContainsKey("metrics")) Console.Write(LearnStatus.Metrics(LessonLoader.All));
+        if (opts.ContainsKey("write-baseline"))
+        {
+            var path = Path.Combine(RepoRoot(), "tests", "AnoMech.Tests", "Learn", "lessons-baseline.txt");
+            File.WriteAllLines(path, new[] { "# scenario<TAB>strat of every embedded lesson; LessonQualityTests fails when one disappears. Refresh with: status --write-baseline" }
+                .Concat(LessonLoader.All.OrderBy(l => l.Scenario).ThenBy(l => l.Strat).Select(l => $"{l.Scenario}\t{l.Strat}")));
+            Console.WriteLine($"baseline -> {path} ({LessonLoader.All.Count} lessons)");
+        }
         return 0;
+    }
+
+    private static string RepoRoot()
+    {
+        var dir = new DirectoryInfo(AppContext.BaseDirectory);
+        while (dir != null && !File.Exists(Path.Combine(dir.FullName, "AnoMech.sln"))) dir = dir.Parent;
+        return dir?.FullName ?? Directory.GetCurrentDirectory();
+    }
+
+    // After a strat edit: every embedded lesson's keys follow the moved lines; a key whose call is
+    // gone is an orphan and needs a human.
+    private static int RekeyAll(Dictionary<string, string> opts)
+    {
+        var write = opts.ContainsKey("write");
+        var lessonsDir = Path.Combine(RepoRoot(), "AnoMech", "Learn", "Lessons");
+        var files = Directory.EnumerateFiles(lessonsDir, "*.json", SearchOption.AllDirectories).Where(f => !f.EndsWith(Glossary.FileName, StringComparison.OrdinalIgnoreCase)).ToList();
+        var orphans = 0;
+        var changed = 0;
+        foreach (var file in files)
+        {
+            var lesson = LessonLoader.Parse(File.ReadAllText(file));
+            var scenario = ScenarioCatalog.Create().Scenarios.FirstOrDefault(s => s.GetType().Name == lesson.Scenario);
+            var strat = scenario?.AiStrats.ToList().FindIndex(a => a.Name == lesson.Strat) ?? -1;
+            if (scenario is null || strat < 0) { Console.WriteLine($"{Path.GetFileName(file)}: no scenario/strat {lesson.Scenario} / {lesson.Strat}"); orphans++; continue; }
+            var dump = OrderRecorder.Record(lesson.Scenario, strat, [lesson.Toolbox?.ExampleSeed ?? 1], TextWriter.Null);
+            var (rekeyed, lost) = LessonSkeleton.Rekey(lesson, dump);
+            var moved = rekeyed.Steps.Zip(lesson.Steps).Count(p => p.First.Key != p.Second.Key);
+            if (lost.Count > 0 || moved > 0) Console.WriteLine($"{Path.GetRelativePath(lessonsDir, file)}: {moved} key(s) moved, {lost.Count} orphan(s){(lost.Count > 0 ? ": " + string.Join(", ", lost.Select(o => o.Title ?? MasteryStore.StepId(o.Key))) : "")}");
+            orphans += lost.Count;
+            if (moved > 0 && write) { File.WriteAllText(file, LessonSkeleton.ToJson(rekeyed)); changed++; }
+        }
+        Console.WriteLine($"{files.Count} lessons, {changed} rewritten, {orphans} orphan(s)");
+        return orphans == 0 ? 0 : 3;
     }
 
     private static int ToolboxImportCmd(Dictionary<string, string> opts)
@@ -652,11 +695,13 @@ internal static class Cli
         }
         if (opts.ContainsKey("write"))
         {
-            File.WriteAllText(lessonPath, LessonSkeleton.ToJson(lesson with { Toolbox = link with { ExampleSeed = report.ExampleSeed } }));
+            File.WriteAllText(lessonPath, LessonSkeleton.ToJson(lesson with { Toolbox = link with { ExampleSeed = report.ExampleSeed, Residual = MeanResidual(report) } }));
             Console.WriteLine($"exampleSeed {report.ExampleSeed} written to {lessonPath}");
         }
         return report.Disagreements.Any() ? 1 : 0;
     }
+
+    private static float MeanResidual(OracleReport report) => report.Steps.Count == 0 ? 0f : report.TotalResidual / report.Steps.Count;
 
     private static void PrintOracle(OracleReport report)
     {
@@ -736,7 +781,7 @@ internal static class Cli
                 if (stepId != null) steps.TryAdd(stepId, tb);
             var link = new LessonToolbox(id, refined.ToDictionary(kv => kv.Value, kv => kv.Key), steps);
             oracle = ToolboxOracle.Check(plan, lesson, link, dump);
-            lesson = lesson with { Toolbox = link with { ExampleSeed = oracle.ExampleSeed } };
+            lesson = lesson with { Toolbox = link with { ExampleSeed = oracle.ExampleSeed, Residual = MeanResidual(oracle) } };
             log.WriteLine($"toolbox {id}: {plan.Steps.Count} steps, {steps.Count} aligned, example seed {oracle.ExampleSeed}, {oracle.Disagreements.Count()} disagree");
             // A lesson that already pins the plan's rolls is scored again with them pinned: that is
             // the roll the player will replay, so the residual that matters is this one.
@@ -753,7 +798,7 @@ internal static class Cli
                 var pinnedDump = OrderRecorder.Record(scenarioTypeName, strat, [oracle.ExampleSeed], TextWriter.Null, example);
                 File.WriteAllText(stem + ".pinned.dump.json", pinnedDump.ToJson());
                 var pinned = ToolboxOracle.Check(plan, lesson, lesson.Toolbox!, pinnedDump);
-                lesson = lesson with { Toolbox = lesson.Toolbox! with { Example = new Dictionary<string, string>(example) } };
+                lesson = lesson with { Toolbox = lesson.Toolbox! with { Example = new Dictionary<string, string>(example), Residual = MeanResidual(pinned) } };
                 oracle = pinned;
                 log.WriteLine($"example pinned ({string.Join(", ", example.Keys)}): {pinned.TotalResidual:F1} m total, {pinned.Disagreements.Count()} disagree");
             }

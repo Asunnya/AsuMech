@@ -1,6 +1,6 @@
 {
   "scenario": "UmadP3BlackHoleScenario",
-  "strat": "Black Hole: S\u003ED\u003EA",
+  "strat": "Black Hole: S>D>A",
   "sources": [
     {
       "label": "WTFDIG (kefkabin), MIT",
@@ -45,7 +45,7 @@
       },
       "title": "After earth Resistance Down II on you",
       "cue": "Earth Resistance Down II on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SlapAttacks).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SlapAttacks).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -69,7 +69,7 @@
       },
       "title": "Dodge edict",
       "cue": "Thunder III hits you",
-      "rule": "Read the strat\u0027s DodgeEdict: the spot follows a rule the rolls alone don\u0027t show (closest roll: SlapAttacks).",
+      "rule": "Read the strat's DodgeEdict: the spot follows a rule the rolls alone don't show (closest roll: SlapAttacks).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -81,7 +81,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SlapAttacks).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SlapAttacks).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -105,7 +105,7 @@
       },
       "title": "Dodge edict and look upon",
       "cue": "Earth Resistance Down II on you",
-      "rule": "Read the strat\u0027s DodgeEdictAndLookUpon: the spot follows a rule the rolls alone don\u0027t show (closest roll: SlapAttacks).",
+      "rule": "Read the strat's DodgeEdictAndLookUpon: the spot follows a rule the rolls alone don't show (closest roll: SlapAttacks).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -129,10 +129,10 @@
       },
       "title": "Swap second thunder tanks",
       "cue": " hits you",
-      "rule": "Read the strat\u0027s SwapSecondThunderTanks: the spot follows a rule the rolls alone don\u0027t show (closest roll: KefkaPosition has SW).",
+      "rule": "Read the strat's SwapSecondThunderTanks: the spot follows a rule the rolls alone don't show (closest roll: KefkaPosition has SW).",
       "roles": {
         "OffTank": {
-          "rule": "Read the strat\u0027s SwapSecondThunderTanks: the spot follows a rule the rolls alone don\u0027t show (closest roll: SlapAttacks)."
+          "rule": "Read the strat's SwapSecondThunderTanks: the spot follows a rule the rolls alone don't show (closest roll: SlapAttacks)."
         }
       },
       "tolerance": 2.5,
@@ -158,7 +158,7 @@
       },
       "title": "After slap Happy cast starts",
       "cue": "Slap Happy cast starts",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SlapAttacks).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SlapAttacks).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -170,7 +170,7 @@
       },
       "title": "After shockwave resolves",
       "cue": "Shockwave resolves",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SlapAttacks).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SlapAttacks).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -182,7 +182,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SlapAttacks).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SlapAttacks).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -206,13 +206,13 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SlapAttacks).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SlapAttacks).",
       "roles": {
         "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: KefkaPosition has S)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: KefkaPosition has S)."
         },
         "MeleeDpsA": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: KefkaPosition has N)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: KefkaPosition has N)."
         }
       },
       "tolerance": 2.5,
@@ -256,7 +256,7 @@
       },
       "title": "Preposition for stomp",
       "cue": "Sprint on you",
-      "rule": "Read the strat\u0027s PrepositionForStomp: the spot follows a rule the rolls alone don\u0027t show (closest roll: SlapAttacks).",
+      "rule": "Read the strat's PrepositionForStomp: the spot follows a rule the rolls alone don't show (closest roll: SlapAttacks).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -268,7 +268,7 @@
       },
       "title": "Stomp blizzard corners",
       "cue": " hits you",
-      "rule": "Read the strat\u0027s StompBlizzardCorners: the spot follows a rule the rolls alone don\u0027t show (closest roll: SlapAttacks).",
+      "rule": "Read the strat's StompBlizzardCorners: the spot follows a rule the rolls alone don't show (closest roll: SlapAttacks).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -280,7 +280,7 @@
       },
       "title": "Stomp stack and towers",
       "cue": "Blizzard III cast starts",
-      "rule": "Read the strat\u0027s StompStackAndTowers: the spot follows a rule the rolls alone don\u0027t show (closest roll: SlapAttacks).",
+      "rule": "Read the strat's StompStackAndTowers: the spot follows a rule the rolls alone don't show (closest roll: SlapAttacks).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -292,7 +292,7 @@
       },
       "title": "Stomp swap west",
       "cue": " hits you",
-      "rule": "Read the strat\u0027s StompSwapWest: the spot follows a rule the rolls alone don\u0027t show (closest roll: SlapAttacks).",
+      "rule": "Read the strat's StompSwapWest: the spot follows a rule the rolls alone don't show (closest roll: SlapAttacks).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -304,7 +304,7 @@
       },
       "title": "Stomp swap east",
       "cue": " resolves",
-      "rule": "Read the strat\u0027s StompSwapEast: the spot follows a rule the rolls alone don\u0027t show (closest roll: SlapAttacks).",
+      "rule": "Read the strat's StompSwapEast: the spot follows a rule the rolls alone don't show (closest roll: SlapAttacks).",
       "tolerance": 2.5,
       "skip": false
     }
@@ -320,7 +320,8 @@
       "MeleeDpsB": "dps2"
     },
     "steps": {},
-    "exampleSeed": 1
+    "exampleSeed": 1,
+    "residual": 0.0
   },
   "draft": true
 }

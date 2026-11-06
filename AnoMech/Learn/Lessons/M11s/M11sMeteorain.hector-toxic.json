@@ -48,7 +48,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShadeSides has (1,2)).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShadeSides has (1,2)).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -100,7 +100,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShadeSides has (1,2)).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShadeSides has (1,2)).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -112,10 +112,10 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShadeSides has (1,2)).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShadeSides has (1,2)).",
       "roles": {
         "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: ShadeSides has (0,2))."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShadeSides has (0,2))."
         }
       },
       "tolerance": 2.5,
@@ -225,7 +225,7 @@
     }
   ],
   "toolbox": {
-    "planId": "HJAbE7fuWodELUSB\u002BB82fx_zDqUMr5KFC",
+    "planId": "HJAbE7fuWodELUSB+B82fx_zDqUMr5KFC",
     "roleMap": {
       "MeleeDpsA": "dps4",
       "MainTank": "tank1",
@@ -242,7 +242,8 @@
       "M11sMeteorainAi@30.53": 12,
       "M11sMeteorainAi@40.54": 13
     },
-    "exampleSeed": 1
+    "exampleSeed": 1,
+    "residual": 1.5
   },
   "draft": true
 }

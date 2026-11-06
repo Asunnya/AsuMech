@@ -23,7 +23,7 @@
       },
       "title": "After pulping Pulse cast starts",
       "cue": "Pulping Pulse cast starts",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerBearings has [0).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TowerBearings has [0).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -35,7 +35,7 @@
       },
       "title": "After hell in a Cell cast starts",
       "cue": "Hell in a Cell cast starts",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerBearings).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TowerBearings).",
       "roles": {
         "MainTank": {
           "rule": "Stand on waymark A."
@@ -44,16 +44,16 @@
           "rule": "When TowerBearings includes 225, go to 6m east of the centre; when TowerBearings leaves out 225, go to 6m west of the centre."
         },
         "RegenHealer": {
-          "rule": "Depends on TowerBearings: [[0,45,180,270],[90,135,225,315]] \u2192 near 2 (NE 12m); [[0,90,180,225],[45,135,270,315]] \u2192 at B; [[0,135,225,315],[45,90,180,270]] \u2192 near 3 (SE 12m)."
+          "rule": "Depends on TowerBearings: [[0,45,180,270],[90,135,225,315]] → near 2 (NE 12m); [[0,90,180,225],[45,135,270,315]] → at B; [[0,135,225,315],[45,90,180,270]] → near 3 (SE 12m)."
         },
         "ShieldHealer": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerBearings has 45)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TowerBearings has 45)."
         },
         "MeleeDpsA": {
-          "rule": "Depends on TowerBearings: [[0,45,180,270],[90,135,225,315]] \u2192 at C; [[0,90,180,225],[45,135,270,315]] \u2192 at C; [[0,135,225,315],[45,90,180,270]] \u2192 near 4 (SW 12m)."
+          "rule": "Depends on TowerBearings: [[0,45,180,270],[90,135,225,315]] → at C; [[0,90,180,225],[45,135,270,315]] → at C; [[0,135,225,315],[45,90,180,270]] → near 4 (SW 12m)."
         },
         "PhysRangedDps": {
-          "rule": "Depends on TowerBearings: [[0,45,180,270],[90,135,225,315]] \u2192 at D; [[0,90,180,225],[45,135,270,315]] \u2192 near 4 (SW 12m); [[0,135,225,315],[45,90,180,270]] \u2192 near 1 (NW 12m)."
+          "rule": "Depends on TowerBearings: [[0,45,180,270],[90,135,225,315]] → at D; [[0,90,180,225],[45,135,270,315]] → near 4 (SW 12m); [[0,135,225,315],[45,90,180,270]] → near 1 (NW 12m)."
         }
       },
       "tolerance": 2.5,
@@ -67,13 +67,13 @@
       },
       "title": "After charnel cell appears",
       "cue": "charnel cell appears",
-      "rule": "Depends on TowerBearings has 270] and UltrasonicOrder: yes \u0026 [[Spread,Amp],[Spread,Amp]] \u2192 E 6m; no \u0026 [[Spread,Amp],[Spread,Amp]] \u2192 W 6m; yes \u0026 [[Amp,Spread],[Amp,Spread]] \u2192 W 6m.",
+      "rule": "Depends on TowerBearings has 270] and UltrasonicOrder: yes & [[Spread,Amp],[Spread,Amp]] → E 6m; no & [[Spread,Amp],[Spread,Amp]] → W 6m; yes & [[Amp,Spread],[Amp,Spread]] → W 6m.",
       "roles": {
         "OffTank": {
           "rule": "When TowerBearings includes 225, go to 6m east of the centre; when TowerBearings leaves out 225, go to 6m west of the centre."
         },
         "ShieldHealer": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: UltrasonicOrder)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: UltrasonicOrder)."
         }
       },
       "tolerance": 2.5,
@@ -87,7 +87,7 @@
       },
       "title": "After hell in a Cell cast starts",
       "cue": "Hell in a Cell cast starts",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: UltrasonicOrder).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: UltrasonicOrder).",
       "roles": {
         "MainTank": {
           "rule": "When TowerBearings includes 225, go to 6m north of the centre; when TowerBearings leaves out 225, go to 6m south-west of the centre."
@@ -96,13 +96,13 @@
           "rule": "When TowerBearings includes 45, stand on waymark B; when TowerBearings leaves out 45, stand near waymark 2, 12m north-east of the centre."
         },
         "ShieldHealer": {
-          "rule": "Depends on TowerBearings: [[0,45,180,270],[90,135,225,315]] \u2192 near 3 (SE 12m); [[0,90,180,225],[45,135,270,315]] \u2192 near 3 (SE 12m); [[0,135,225,315],[45,90,180,270]] \u2192 at B."
+          "rule": "Depends on TowerBearings: [[0,45,180,270],[90,135,225,315]] → near 3 (SE 12m); [[0,90,180,225],[45,135,270,315]] → near 3 (SE 12m); [[0,135,225,315],[45,90,180,270]] → at B."
         },
         "MeleeDpsB": {
-          "rule": "Depends on TowerBearings: [[0,45,180,270],[90,135,225,315]] \u2192 near 4 (SW 12m); [[0,90,180,225],[45,135,270,315]] \u2192 at D; [[0,135,225,315],[45,90,180,270]] \u2192 at C."
+          "rule": "Depends on TowerBearings: [[0,45,180,270],[90,135,225,315]] → near 4 (SW 12m); [[0,90,180,225],[45,135,270,315]] → at D; [[0,135,225,315],[45,90,180,270]] → at C."
         },
         "CasterDps": {
-          "rule": "Depends on TowerBearings: [[0,45,180,270],[90,135,225,315]] \u2192 near 1 (NW 12m); [[0,90,180,225],[45,135,270,315]] \u2192 near 1 (NW 12m); [[0,135,225,315],[45,90,180,270]] \u2192 at D."
+          "rule": "Depends on TowerBearings: [[0,45,180,270],[90,135,225,315]] → near 1 (NW 12m); [[0,90,180,225],[45,135,270,315]] → near 1 (NW 12m); [[0,135,225,315],[45,90,180,270]] → at D."
         }
       },
       "tolerance": 2.5,
@@ -116,13 +116,13 @@
       },
       "title": "After charnel cell appears",
       "cue": "charnel cell appears",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerBearings has 45).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TowerBearings has 45).",
       "roles": {
         "MainTank": {
           "rule": "When TowerBearings includes 225, go to 6m north of the centre; when TowerBearings leaves out 225, go to 6m south-west of the centre."
         },
         "RegenHealer": {
-          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: UltrasonicOrder)."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: UltrasonicOrder)."
         }
       },
       "tolerance": 2.5,
@@ -136,7 +136,7 @@
       },
       "title": "After pulping Pulse cast starts",
       "cue": "Pulping Pulse cast starts",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerBearings has 270]).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TowerBearings has 270]).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -148,7 +148,7 @@
       },
       "title": "After pulping Pulse resolves",
       "cue": "Pulping Pulse resolves",
-      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerBearings has [0).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TowerBearings has [0).",
       "tolerance": 2.5,
       "skip": false
     }
@@ -170,7 +170,8 @@
       "M9sHellInACellAi@27.8": 10,
       "M9sHellInACellAi@50.2": 14
     },
-    "exampleSeed": 1
+    "exampleSeed": 1,
+    "residual": 3.4
   },
   "draft": true
 }

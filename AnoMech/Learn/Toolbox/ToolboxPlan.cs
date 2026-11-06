@@ -44,5 +44,7 @@ public sealed record ToolboxPlan(string Id, string Label, string Author, string 
 // Example: the rolls the plan draws, as the scenario's *StateOverrides property names and values
 // ("SuparnaSongBearing": "270", "SatinPlumesFirst": "[(16,-4),(-4,16),(-12,-12),(-16,4)]"), pinned
 // for a replay on top of ExampleSeed.
+// Residual: the oracle's mean distance (m) between the plan and the strat over the aligned steps when
+// the lesson was authored; CI refuses a lesson that drifts past it by more than a metre.
 public sealed record LessonToolbox(string PlanId, Dictionary<string, string> RoleMap, Dictionary<string, int> Steps, int? ExampleSeed = null,
-    Dictionary<string, string>? Example = null);
+    Dictionary<string, string>? Example = null, float? Residual = null);
