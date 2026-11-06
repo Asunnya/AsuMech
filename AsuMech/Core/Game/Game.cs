@@ -24,6 +24,10 @@ public sealed class Game : IDisposable
     public IScenario? ActiveScenario => run?.Scenario;
     public IScenarioAi? ActiveStrat => run is { SelectedAi: { } i } r && i >= 0 && i < r.Scenario.AiStrats.Count ? r.Scenario.AiStrats[i] : null;
     public bool Paused => run?.Paused ?? false;
+
+    // Stops the run's clock without ending it (a report being written); nothing scheduled fires
+    // and nothing moves until it's released. The client's own animations keep playing.
+    public bool Held { get; set; }
     public SessionStatus Status => run?.Status ?? (instance is null ? SessionStatus.Offline : SessionStatus.InZone);
     // The current run, else the one that ended last, so its result outlives a Stop.
     public ScenarioSession? LastRun => run ?? endedRun;
@@ -150,6 +154,7 @@ public sealed class Game : IDisposable
         run.Finished += OnRunFinished;
         run.MechanicFailed += OnMechanicFailed;
         run.Start();
+        Held = false;
         RunStarted?.Invoke(p, instance.Mode == SessionMode.Local);
         return null;
     }
@@ -186,7 +191,7 @@ public sealed class Game : IDisposable
         instance?.Tick(deltaSeconds);
         if (instance?.CatchFall() == true && run is not null)
             World.Party.Player?.Die(SimCharacterDeathExtensions.Environment, "Fell off the arena");
-        if (Paused) return;
+        if (Paused || Held) return;
         Events.Tick(deltaSeconds * EventTimeScale);
         World.Tick(deltaSeconds * EventTimeScale);
         run?.Tick(deltaSeconds * EventTimeScale);
@@ -228,7 +233,11 @@ public sealed class Game : IDisposable
         World.Dispose();
     }
     
-    private void OnRunFinished(bool clean) => RunFinished?.Invoke(clean);
+    private void OnRunFinished(bool clean)
+    {
+        Held = false;
+        RunFinished?.Invoke(clean);
+    }
     private void OnMechanicFailed(string reason) => MechanicFailed?.Invoke(reason);
     
 

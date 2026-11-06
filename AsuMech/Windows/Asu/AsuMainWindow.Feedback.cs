@@ -32,9 +32,27 @@ public sealed partial class AsuMainWindow
     // Opened from the window root: a request link can sit inside another popup.
     private void OpenFeedback(FeedbackKind? kind)
     {
+        Choose(kind);
+        openFeedbackNextFrame = true;
+    }
+
+    // A problem report holds a solo run and takes the run's picture right away, so the report
+    // shows the moment the player saw the problem, not the moment they finished writing.
+    private void Choose(FeedbackKind? kind)
+    {
         pendingFeedback = kind;
         feedbackPreview = kind is { } k ? FeedbackLinks.Build(k, FeedbackContextNow()) : null;
-        openFeedbackNextFrame = true;
+        pendingReport = kind is { } chosen ? RunReport.Build(WireKind(chosen), "", Selected, Picker.SelectedAi?.Name) : null;
+        Plugin.Game.Held = kind == FeedbackKind.Bug && RunState.Live(Plugin.Game) && !RunState.InSession;
+    }
+
+    private System.Text.Json.Nodes.JsonObject? pendingReport;
+
+    // The popup only draws while this window does; closing the window must not leave the run held.
+    public override void OnClose()
+    {
+        Plugin.Game.Held = false;
+        base.OnClose();
     }
 
     private bool openFeedbackNextFrame;
@@ -75,7 +93,11 @@ public sealed partial class AsuMainWindow
             feedbackSaved = null;
         }
         ImGui.SetNextWindowSize(new Vector2(FeedbackPopupPx * AsuTheme.Scale, 0f));
-        if (!ImGui.BeginPopup("feedback-popup")) return;
+        if (!ImGui.BeginPopup("feedback-popup"))
+        {
+            Plugin.Game.Held = false;
+            return;
+        }
         var scenario = (Plugin.Game.LastRun?.Scenario ?? Selected)?.DisplayName();
         Option(FeedbackKind.Scenario, "Request a scenario");
         Option(FeedbackKind.Strat, scenario is null ? "Request a strat" : $"Request a strat for {scenario}");
@@ -91,6 +113,9 @@ public sealed partial class AsuMainWindow
                     FeedbackKind.Strat => "Which strat? A raidplan, toolbox or guide link helps most.",
                     _ => "What happened, and what did you expect? The run's details (time, mechanic, rolls, positions) are added for you. No names are sent.",
                 });
+            if (Plugin.Game.Held)
+                using (AsuTheme.PushTextColor(AsuTheme.Accent))
+                    ImGui.TextWrapped("The run is paused while you write; it goes on when this closes.");
             ImGui.InputTextMultiline("##feedback-text", ref feedbackText, RunReportWire.MaxTextChars, new Vector2(-1f, ImGui.GetTextLineHeight() * 5f));
             bool send;
             ImGui.BeginDisabled(feedbackSending || feedbackText.Trim().Length == 0);
@@ -116,7 +141,8 @@ public sealed partial class AsuMainWindow
 
     private void SendFeedback(FeedbackKind kind)
     {
-        var report = RunReport.Build(WireKind(kind), feedbackText.Trim(), Selected, Picker.SelectedAi?.Name);
+        var report = pendingReport ?? RunReport.Build(WireKind(kind), "", Selected, Picker.SelectedAi?.Name);
+        report["text"] = feedbackText.Trim();
         try { feedbackSaved = RunReport.Save(report); }
         catch (System.Exception e) { feedbackSaved = null; Core.DiagnosticLog.Warn($"[Feedback] saving the report failed: {e.Message}"); }
         var json = report.ToJsonString();
@@ -128,10 +154,6 @@ public sealed partial class AsuMainWindow
 
     private void Option(FeedbackKind kind, string label)
     {
-        if (ImGui.Selectable(label, pendingFeedback == kind))
-        {
-            pendingFeedback = kind;
-            feedbackPreview = FeedbackLinks.Build(kind, FeedbackContextNow());
-        }
+        if (ImGui.Selectable(label, pendingFeedback == kind, ImGuiSelectableFlags.DontClosePopups) && pendingFeedback != kind) Choose(kind);
     }
 }
