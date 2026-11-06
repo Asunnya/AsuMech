@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -27,9 +28,18 @@ internal sealed class RollSelectorWindow : Window
         SizeCondition = ImGuiCond.FirstUseEver;
     }
 
+    private IDisposable? theme;
+
+    public override void PreDraw() => theme = AsuTheme.Push();
+
+    public override void PostDraw()
+    {
+        theme?.Dispose();
+        theme = null;
+    }
+
     public override void Draw()
     {
-        using var theme = AsuTheme.Push();
         var picker = plugin.Picker;
         if (picker.Scenario is not { } scenario)
         {

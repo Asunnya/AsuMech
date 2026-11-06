@@ -425,6 +425,18 @@ That lists `GET /recordings`, downloads every file not already in `--out` and ex
 the `.csv` the plugin wrote; run it again after each raid night. `GET /recordings/<name>` serves
 one file. Both need the `X-AsuMech-Admin-Token` header, like the other admin endpoints.
 
+### Lesson feedback
+
+A relay with `--recordings-dir` also takes the Learn module's thumbs up/down on a lesson step's
+text or toolbox picture (`POST /feedback`), from every player the token lets in (the
+`--recordings-from` list doesn't apply), at most 120 an hour per player. They go to
+`feedback.jsonl` in the recordings folder: time, the first 8 characters of the player's relay id,
+the lesson, the step, the vote and an optional comment. To read them summed per step:
+
+```
+asumech-relay --admin --host https://relay.yourdomain.com --admin-token <admin-token> --feedback [--out feedback.json]
+```
+
 ### The built-in study server
 
 Players never type an address: the plugin ships with the recordings server's URL and password in

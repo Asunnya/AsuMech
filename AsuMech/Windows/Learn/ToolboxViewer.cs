@@ -5,8 +5,11 @@ using AsuMech.Core.Game.Party;
 using AsuMech.Core.Game.Geometry;
 using AsuMech.Learn;
 using AsuMech.Learn.Toolbox;
+using AsuMech.Network;
 using AsuMech.Windows.Asu;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface;
+using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
 
@@ -27,6 +30,8 @@ internal sealed class ToolboxViewer : Window
     private const float OpacitySliderPx = 90f;
     private const float MinOpacity = 0.1f;
     private const float OtherRoleAlpha = 0.3f;
+    private const float MinMapPx = 120f;
+    private const float MaxMapLabelFraction = 0.4f;
 
     private ToolboxPlan? plan;
     private LessonToolbox? link;
@@ -37,7 +42,6 @@ internal sealed class ToolboxViewer : Window
 
     public ToolboxViewer() : base("Toolbox###AsuMechToolbox")
     {
-        Flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse;
         Size = new Vector2(DefaultSizePx, DefaultSizePx + 120f);
         SizeCondition = ImGuiCond.FirstUseEver;
         RespectCloseHotkey = false;
@@ -85,18 +89,32 @@ internal sealed class ToolboxViewer : Window
         if (link.Steps.TryGetValue(MasteryStore.StepId(step.Step.Key), out var index)) shown = index;
     }
 
+    private IDisposable? theme;
+
+    public override void PreDraw() => theme = AsuTheme.Push();
+
+    public override void PostDraw()
+    {
+        theme?.Dispose();
+        theme = null;
+    }
+
     public override void Draw()
     {
         if (plan is null) return;
-        using var theme = AsuTheme.Push();
         shown = Math.Clamp(shown, 0, plan.Steps.Count - 1);
         var step = plan.Steps[shown];
 
-        if (ImGui.SmallButton("◀")) { shown--; follow = false; }
+        if (ImGuiComponents.IconButton("toolbox-prev", FontAwesomeIcon.ChevronLeft)) { shown--; follow = false; }
         ImGui.SameLine();
-        if (ImGui.SmallButton("▶")) { shown++; follow = false; }
+        if (ImGuiComponents.IconButton("toolbox-next", FontAwesomeIcon.ChevronRight)) { shown++; follow = false; }
         ImGui.SameLine();
         ImGui.TextUnformatted($"{shown + 1}/{plan.Steps.Count}  {step.Label}");
+        if (LearnSession.Current?.Lesson is { } lesson)
+        {
+            ImGui.SameLine();
+            LessonVoteButtons.Draw(lesson, $"#{shown + 1} {step.Label}", LessonFeedback.Toolbox);
+        }
         if (!follow)
         {
             ImGui.SameLine();
@@ -115,11 +133,19 @@ internal sealed class ToolboxViewer : Window
             if (ImGui.IsItemDeactivatedAfterEdit()) config.Save();
         }
 
-        var size = Math.Min(ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y - ImGui.GetTextLineHeightWithSpacing() * 2);
-        if (size < 80f) return;
+        // Labels that fit beside an object stay on the map; sentences go under it, where they wrap
+        // instead of running past the arena's edge.
+        var avail = ImGui.GetContentRegionAvail();
+        var texts = step.Objects.Where(o => o.Kind == "text" && o.Label.Trim().Length > 0).ToList();
+        var captions = texts.Where(o => !FitsOnMap(o.Label, avail.X)).Select(o => o.Label.Trim()).ToList();
+        var note = step.Note.Length > 0 ? step.Note.Split('\n')[0] : null;
+        var below = captions.Concat(note is null ? Array.Empty<string>() : [note])
+            .Sum(t => ImGui.CalcTextSize(t, false, avail.X).Y + ImGui.GetStyle().ItemSpacing.Y);
+        var size = Math.Max(MinMapPx * ImGuiHelpers.GlobalScale, Math.Min(avail.X, avail.Y - below));
         var origin = ImGui.GetCursorScreenPos();
         var centre = origin + new Vector2(size * 0.5f);
         var draw = ImGui.GetWindowDrawList();
+        draw.PushClipRect(origin, origin + new Vector2(size), true);
         // The run's own fence while one is up, the zone's floor before that; the view spans the
         // floor plus a margin for objects authored past its edge.
         var arena = LearnSession.Current is { Ended: false } live ? live.World.ArenaShape ?? live.Scenario.Phase.Zone.Arena : null;
@@ -157,21 +183,31 @@ internal sealed class ToolboxViewer : Window
             DrawEnemy(draw, o, At(o), px);
         }
         foreach (var o in step.Objects.Where(o => o.Kind == "player")) DrawPlayer(draw, o, At(o));
-        foreach (var o in step.Objects.Where(o => o.Kind == "text"))
-            draw.AddText(At(o), AsuTheme.U32(AsuTheme.Text), o.Label);
+        foreach (var o in texts.Where(o => FitsOnMap(o.Label, avail.X)))
+        {
+            var label = o.Label.Trim();
+            var w = ImGui.CalcTextSize(label).X;
+            var at = At(o) - new Vector2(w * 0.5f, ImGui.GetTextLineHeight() * 0.5f);
+            at.X = Math.Clamp(at.X, origin.X, origin.X + size - w);
+            draw.AddText(at, AsuTheme.U32(AsuTheme.Text), label);
+        }
+        draw.PopClipRect();
         ImGui.Dummy(new Vector2(size));
 
-        if (step.Note.Length > 0)
-            using (AsuTheme.PushTextColor(AsuTheme.Muted))
-                ImGui.TextWrapped(step.Note.Split('\n')[0]);
+        using (AsuTheme.PushTextColor(AsuTheme.Muted))
+            foreach (var text in note is null ? captions : [.. captions, note])
+                ImGui.TextWrapped(text);
     }
+
+    private static bool FitsOnMap(string label, float width)
+        => !label.Contains('\n') && ImGui.CalcTextSize(label.Trim()).X <= width * MaxMapLabelFraction;
 
     private static void DrawEnemy(ImDrawListPtr draw, ToolboxObject o, Vector2 at, float px)
     {
         var hitbox = Math.Max(4f, o.Width * 0.5f * px);
         draw.AddCircle(at, hitbox, AsuTheme.U32(AsuTheme.Bad with { W = 0.6f }), 32, 1.5f);
         var r = EnemyIconPx * 0.5f * ImGuiHelpers.GlobalScale;
-        if (JobIcons.Enemy() is { } icon)
+        if (JobIcons.Enemy(o.Kind == "boss") is { } icon)
             draw.AddImage(icon.Handle, at - new Vector2(r), at + new Vector2(r));
         else
             draw.AddCircleFilled(at, r * 0.5f, AsuTheme.U32(AsuTheme.Bad));
@@ -188,8 +224,8 @@ internal sealed class ToolboxViewer : Window
         else
         {
             draw.AddCircleFilled(at, r, AsuTheme.U32((mine ? AsuTheme.Accent : AsuTheme.Text) with { W = alpha }));
-            var label = o.Job is { Length: > 0 } ? o.Job : o.Key;
-            draw.AddText(at + new Vector2(r + 2f, -ImGui.GetTextLineHeight() * 0.5f), AsuTheme.U32(mine ? AsuTheme.Text : AsuTheme.Muted), label);
+            if (mine)
+                draw.AddText(at + new Vector2(r + 2f, -ImGui.GetTextLineHeight() * 0.5f), AsuTheme.U32(AsuTheme.Text), o.Job is { Length: > 0 } ? o.Job : o.Key);
         }
         if (mine) draw.AddCircle(at, r + 2f, AsuTheme.U32(AsuTheme.Accent), 24, 2f);
         if (o.Buffs is { Count: > 0 })

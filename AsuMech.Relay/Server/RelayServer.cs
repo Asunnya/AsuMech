@@ -79,6 +79,7 @@ public sealed class RelayServer : IAsyncDisposable
     // ---- Live state ---------------------------------------------------------------------
 
     private readonly RelayOptions options;
+    private readonly LessonFeedbackLog feedback;
     private readonly IRelayLog log;
 
     private readonly RelayRooms rooms;
@@ -125,6 +126,7 @@ public sealed class RelayServer : IAsyncDisposable
     public RelayServer(RelayOptions options, IRelayLog log)
     {
         this.options = options with { TrustedProxies = [.. options.TrustedProxies], Group = [.. options.Group] };
+        feedback = new LessonFeedbackLog(options.RecordingsDir is { } dir ? Path.Combine(dir, "feedback.jsonl") : null, () => DateTime.UtcNow);
         this.log = log;
         rooms = new RelayRooms(this.options);
     }
@@ -385,6 +387,12 @@ public sealed class RelayServer : IAsyncDisposable
                 case "admin/action":
                     await ServeAdminAsync(stream, request, handshake.Token, async () =>
                         ApplyAdminActionBody(await RelayHttp.ReadBodyAsync(stream, request, MaxAdminBodyBytes, handshake.Token), ResolveClientIp(request)));
+                    return;
+                case "feedback" when request.Method == "POST":
+                    await ServeFeedbackAsync(stream, request, handshake.Token);
+                    return;
+                case "feedback":
+                    await ServeAdminAsync(stream, request, handshake.Token, () => Task.FromResult(JsonSerializer.Serialize(feedback.ReadAll(), LessonFeedback.Json)));
                     return;
                 case "recordings" when request.Method == "POST":
                     await ServeRecordingUploadAsync(stream, request, handshake.Token);
@@ -960,6 +968,38 @@ public sealed class RelayServer : IAsyncDisposable
 
     public List<SessionInfo> GetSessions() => rooms.Snapshot();
 
+    // The front door every upload shares with a join: paused, banned, TLS, Origin, lockout, token,
+    // peer credential. Answers the refusal itself; null means refused.
+    private async Task<Guid?> AdmitUploadAsync(Stream stream, RelayHttpRequest request, IPAddress ip, string what, CancellationToken token)
+    {
+        Task Respond(int status) => RelayHttp.WriteStatusAsync(stream, status, token);
+        var key = AbuseKey(ip);
+        if (!acceptingConnections) { CountRejection(ref rejectedPaused, "relay paused by admin", ip, what); await Respond(503); return null; }
+        if (IsBanned(key)) { CountRejection(ref rejectedBanned, "banned", ip, what); await Respond(403); return null; }
+        if ((options.RequireTls || options.AccessToken != null) && !IsRequestEncrypted(request))
+        {
+            CountRejection(ref rejectedUnencrypted, "unencrypted", ip, what);
+            await Respond(426);
+            return null;
+        }
+        if (!string.IsNullOrEmpty(request.Header("Origin"))) { CountRejection(ref rejectedOrigin, "origin header present", ip, what); await Respond(403); return null; }
+        if (IsLockedOut(JoinLockoutUntilByIp, key)) { CountRejection(ref rejectedJoinLockout, "auth locked out", ip, what); await Respond(429); return null; }
+        if (options.AccessToken != null && !IsValidToken(request.RelayHeader(RelayHeaders.RelayToken), options.AccessToken))
+        {
+            CountRejection(ref rejectedBadToken, "bad token", ip, what);
+            RecordFailedAuth(FailedJoinsByIp, JoinLockoutUntilByIp, key, what);
+            await Respond(401);
+            return null;
+        }
+        if (AuthenticatePeer(request.RelayHeader(RelayHeaders.Protocol), request.RelayHeader(RelayHeaders.PeerSecret)) is not { } peerId)
+        {
+            CountRejection(ref rejectedBadProtocol, "missing or wrong protocol version or peer credential", ip, what);
+            await Respond(400);
+            return null;
+        }
+        return peerId;
+    }
+
     // ---- Recordings ------------------------------------------------------------------------
 
     // The same front door as a join (paused, banned, TLS, Origin, lockout, token, peer
@@ -971,30 +1011,7 @@ public sealed class RelayServer : IAsyncDisposable
         Task Respond(int status) => RelayHttp.WriteStatusAsync(stream, status, token);
         if (options.RecordingsDir is null) { await Respond(404); return; }
         var ip = ResolveClientIp(request);
-        var key = AbuseKey(ip);
-        if (!acceptingConnections) { CountRejection(ref rejectedPaused, "relay paused by admin", ip, "recordings"); await Respond(503); return; }
-        if (IsBanned(key)) { CountRejection(ref rejectedBanned, "banned", ip, "recordings"); await Respond(403); return; }
-        if ((options.RequireTls || options.AccessToken != null) && !IsRequestEncrypted(request))
-        {
-            CountRejection(ref rejectedUnencrypted, "unencrypted", ip, "recordings");
-            await Respond(426);
-            return;
-        }
-        if (!string.IsNullOrEmpty(request.Header("Origin"))) { CountRejection(ref rejectedOrigin, "origin header present", ip, "recordings"); await Respond(403); return; }
-        if (IsLockedOut(JoinLockoutUntilByIp, key)) { CountRejection(ref rejectedJoinLockout, "auth locked out", ip, "recordings"); await Respond(429); return; }
-        if (options.AccessToken != null && !IsValidToken(request.RelayHeader(RelayHeaders.RelayToken), options.AccessToken))
-        {
-            CountRejection(ref rejectedBadToken, "bad token", ip, "recordings");
-            RecordFailedAuth(FailedJoinsByIp, JoinLockoutUntilByIp, key, "recordings");
-            await Respond(401);
-            return;
-        }
-        if (AuthenticatePeer(request.RelayHeader(RelayHeaders.Protocol), request.RelayHeader(RelayHeaders.PeerSecret)) is not { } peerId)
-        {
-            CountRejection(ref rejectedBadProtocol, "missing or wrong protocol version or peer credential", ip, "recordings");
-            await Respond(400);
-            return;
-        }
+        if (await AdmitUploadAsync(stream, request, ip, "recordings", token) is not { } peerId) return;
         if (options.RecordingsFrom.Count > 0 && !options.RecordingsFrom.Contains(peerId))
         {
             Interlocked.Increment(ref recordingsRejected);
@@ -1051,6 +1068,30 @@ public sealed class RelayServer : IAsyncDisposable
         Interlocked.Increment(ref recordingsStored);
         log.Info($"[recordings] stored {name} ({body.Length:N0} bytes) from {ip} ({peerId})");
         await RelayHttp.WriteJsonAsync(stream, JsonSerializer.Serialize(new { name, bytes = body.Length }, RelayAdmin.Json), token, 201);
+    }
+
+    // ---- Lesson feedback ---------------------------------------------------------------------
+
+    // Open to every peer the token lets in (no --recordings-from list): any player may vote.
+    private async Task ServeFeedbackAsync(Stream stream, RelayHttpRequest request, CancellationToken token)
+    {
+        Task Respond(int status) => RelayHttp.WriteStatusAsync(stream, status, token);
+        if (!feedback.Enabled) { await Respond(404); return; }
+        var ip = ResolveClientIp(request);
+        if (await AdmitUploadAsync(stream, request, ip, "feedback", token) is not { } peerId) return;
+        if (RelayHttp.ContentLength(request) is not { } length || length == 0 || length > LessonFeedback.MaxBodyBytes) { await Respond(413); return; }
+        string body;
+        try { body = await RelayHttp.ReadBodyAsync(stream, request, LessonFeedback.MaxBodyBytes, token); }
+        catch (Exception e) { log.Warn($"[feedback] from {ip} ({peerId}) failed mid-body: {e.Message}"); return; }
+        switch (feedback.Add(peerId, body))
+        {
+            case LessonFeedbackLog.Outcome.Stored:
+                await RelayHttp.WriteJsonAsync(stream, "{}", token, 201);
+                return;
+            case LessonFeedbackLog.Outcome.Invalid: await Respond(400); return;
+            case LessonFeedbackLog.Outcome.TooMany: await Respond(429); return;
+            default: await Respond(503); return;
+        }
     }
 
     private static readonly System.Text.RegularExpressions.Regex RecordingNamePattern = new("^[A-Za-z0-9][A-Za-z0-9_.-]{0,79}$");

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Numerics;
 using AsuMech.Learn.Mitigation;
@@ -16,9 +17,18 @@ internal sealed class MitReportWindow : Window
         SizeCondition = ImGuiCond.FirstUseEver;
     }
 
+    private IDisposable? theme;
+
+    public override void PreDraw() => theme = AsuTheme.Push();
+
+    public override void PostDraw()
+    {
+        theme?.Dispose();
+        theme = null;
+    }
+
     public override void Draw()
     {
-        using var theme = AsuTheme.Push();
         if (MitTraining.Instance is not { LastReport: { } report } training)
         {
             ImGui.TextUnformatted("No run with mitigation training yet.");

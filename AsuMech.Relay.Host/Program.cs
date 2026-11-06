@@ -215,6 +215,11 @@ internal static class AdminConsole
             await PullRecordingsAsync(ValueOf(args, "--out") ?? "recordings");
             return;
         }
+        if (args.Contains("--feedback"))
+        {
+            await PullFeedbackAsync(ValueOf(args, "--out"));
+            return;
+        }
 
         var showSessions = false;
         while (true)
@@ -247,6 +252,23 @@ internal static class AdminConsole
                 break;
             }
         }
+    }
+
+    // Lesson thumbs up/down, summed per step (each player's last vote counts once) with their
+    // comments; --out also saves the raw entries as JSON.
+    private static async Task PullFeedbackAsync(string? outFile)
+    {
+        string json;
+        try { json = await http.GetStringAsync($"{host}/feedback"); }
+        catch (Exception e)
+        {
+            Console.Error.WriteLine($"Reading {host}/feedback failed: {e.Message} (does the relay run with --recordings-dir?)");
+            return;
+        }
+        var entries = JsonSerializer.Deserialize<List<StoredLessonFeedback>>(json, LessonFeedback.Json) ?? [];
+        if (outFile != null) await File.WriteAllTextAsync(outFile, json);
+        foreach (var line in LessonFeedbackSummary.Lines(entries)) Console.WriteLine(line);
+        Console.WriteLine($"{entries.Count} vote(s){(outFile != null ? $", saved to {Path.GetFullPath(outFile)}" : "")}");
     }
 
     // Every recording the relay holds that isn't in the folder yet, expanded back to the CSV the

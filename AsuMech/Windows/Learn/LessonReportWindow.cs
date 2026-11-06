@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Numerics;
 using AsuMech.Learn;
+using AsuMech.Network;
 using AsuMech.Windows.Asu;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Windowing;
@@ -26,9 +27,18 @@ internal sealed class LessonReportWindow : Window, IDisposable
         if (report.Level == LearnLevel.Exam) IsOpen = true;
     }
 
+    private IDisposable? theme;
+
+    public override void PreDraw() => theme = AsuTheme.Push();
+
+    public override void PostDraw()
+    {
+        theme?.Dispose();
+        theme = null;
+    }
+
     public override void Draw()
     {
-        using var theme = AsuTheme.Push();
         if (LearnSession.LastReport is not { } report)
         {
             ImGui.TextUnformatted("No judged lesson run yet.");
@@ -37,11 +47,12 @@ internal sealed class LessonReportWindow : Window, IDisposable
         ImGui.TextUnformatted(report.Title);
         using (AsuTheme.PushTextColor(report.InPlace == report.Results.Count ? AsuTheme.Ok : AsuTheme.Accent))
             ImGui.TextUnformatted(report.Summary);
-        if (!ImGui.BeginTable("lesson-report", 5, ImGuiTableFlags.RowBg | ImGuiTableFlags.ScrollY | ImGuiTableFlags.SizingStretchProp)) return;
+        if (!ImGui.BeginTable("lesson-report", 6, ImGuiTableFlags.RowBg | ImGuiTableFlags.ScrollY | ImGuiTableFlags.SizingStretchProp)) return;
         ImGui.TableSetupColumn("Step");
         ImGui.TableSetupColumn("Result");
         ImGui.TableSetupColumn("Arrived");
         ImGui.TableSetupColumn("Off by");
+        ImGui.TableSetupColumn("Text clear?", ImGuiTableColumnFlags.WidthFixed);
         ImGui.TableSetupColumn("", ImGuiTableColumnFlags.WidthFixed);
         ImGui.TableHeadersRow();
         var row = 0;
@@ -58,6 +69,8 @@ internal sealed class LessonReportWindow : Window, IDisposable
             ImGui.TextUnformatted(eval.ArrivedAt is { } at ? $"{at - eval.Deadline:+0.0;-0.0}s" : "—");
             ImGui.TableNextColumn();
             ImGui.TextUnformatted(result == StepResult.OnTime || eval.ResolvedDistance is not { } d ? "" : $"{d:0.0} yalms");
+            ImGui.TableNextColumn();
+            if (step.Step is { } voted) LessonVoteButtons.Draw(report.Lesson, MasteryStore.StepId(voted.Key), LessonFeedback.Text);
             ImGui.TableNextColumn();
             if (step.Step is { Skip: false } lessonStep && ImGui.SmallButton($"Drill##{row}")) StepDrillRunner.Instance?.Start(report, lessonStep);
         }

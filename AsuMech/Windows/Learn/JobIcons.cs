@@ -8,7 +8,9 @@ namespace AsuMech.Windows.Learn;
 internal static class JobIcons
 {
     private const uint IconBase = 062100;
-    private const uint EnemyIcon = 060951;
+    // Strategy Board (TofuObject) markers: Large Enemy for the boss, Small Enemy for adds.
+    private const uint BossIcon = 240103;
+    private const uint AddIcon = 240101;
 
     private static readonly Dictionary<string, uint> Rows = new()
     {
@@ -21,7 +23,7 @@ internal static class JobIcons
     public static IDalamudTextureWrap? Get(string? job)
         => job != null && Rows.TryGetValue(job.ToUpperInvariant(), out var row) ? Icon(IconBase + row) : null;
 
-    public static IDalamudTextureWrap? Enemy() => Icon(EnemyIcon);
+    public static IDalamudTextureWrap? Enemy(bool boss) => Icon(boss ? BossIcon : AddIcon);
 
     private static IDalamudTextureWrap? Icon(uint id)
         => Plugin.TextureProvider.GetFromGameIcon(new GameIconLookup(id)).TryGetWrap(out var wrap, out _) ? wrap : null;

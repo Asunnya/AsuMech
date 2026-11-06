@@ -59,6 +59,8 @@ public class Configuration : IPluginConfiguration
     public List<string> RecentScenarios { get; set; } = [];
     public Dictionary<string, int> BestStreaks { get; set; } = [];
     public Dictionary<string, int> Mastery { get; set; } = [];
+    // LessonVoteButtons: the player's last vote per "target|lesson|step", +1 or -1.
+    public Dictionary<string, int> LessonVotes { get; set; } = [];
     // StepStatsStore: every judged try per lesson step and role (result, reaction, distance, cause).
     public Dictionary<string, List<AsuMech.Learn.StepAttempt>> StepStats { get; set; } = [];
     // RollHistory: each finished run's pinnable rolls and whether it was clean, per scenario and strat.
