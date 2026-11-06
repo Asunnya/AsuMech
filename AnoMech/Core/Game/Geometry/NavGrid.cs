@@ -104,6 +104,15 @@ public sealed class NavGrid
         var goal = CellOf(to);
         if (blocked[goal.X, goal.Z]) return null;
         if (SegmentClear(from, to)) return [to];
+        // A start inside a keep-out (an obstacle that rose on the walker) first steps to the
+        // nearest free cell, which lies outward; the route runs from there.
+        Vector2? escape = null;
+        if (blocked[start.X, start.Z])
+        {
+            if (NearestFree(start, from) is not { } free) return null;
+            escape = Center(free.X, free.Z);
+            start = free;
+        }
         var n = Cells;
         var g = new float[n, n];
         var cameFrom = new int[n, n];
@@ -151,10 +160,28 @@ public sealed class NavGrid
             at = (prev / n, prev % n);
         }
         cells.Reverse();
-        var points = new List<Vector2>(cells.Count + 1);
+        var points = new List<Vector2>(cells.Count + 2);
+        if (escape is { } e) points.Add(e);
         foreach (var c in cells) points.Add(Center(c.X, c.Z));
         if (points.Count > 0) points[^1] = to;
         return Pull(from, points);
+    }
+
+    private (int X, int Z)? NearestFree((int X, int Z) start, Vector2 from)
+    {
+        const int reach = 24;
+        (int X, int Z)? best = null;
+        var bestDistance = float.MaxValue;
+        for (var dx = -reach; dx <= reach; dx++)
+        for (var dz = -reach; dz <= reach; dz++)
+        {
+            var x = start.X + dx;
+            var z = start.Z + dz;
+            if (x < 0 || z < 0 || x >= Cells || z >= Cells || blocked[x, z]) continue;
+            var d = Vector2.DistanceSquared(Center(x, z), from);
+            if (d < bestDistance) { bestDistance = d; best = (x, z); }
+        }
+        return best;
     }
 
     private float Heuristic((int X, int Z) a, (int X, int Z) b)

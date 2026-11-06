@@ -1,0 +1,82 @@
+========================================================================
+The Weapon's Refrain (Ultimate) - UWU
+NAUR (NA Party Finder) strats and resources
+========================================================================
+
+------------------------------------------------------------------------
+P1: Garuda
+------------------------------------------------------------------------
+Toolbox: Garuda
+  https://ff14.toolboxgaming.space/?id=122994122467471&preview=1
+
+------------------------------------------------------------------------
+P2: Ifrit
+------------------------------------------------------------------------
+Toolbox: Ifrit
+  https://ff14.toolboxgaming.space/?id=562530446784261&preview=1
+  (Source page also links a "Quick guide to Ifrit Dashes" - URL not
+  captured.)
+
+------------------------------------------------------------------------
+P3: Titan
+------------------------------------------------------------------------
+Toolbox: Titan
+  https://ff14.toolboxgaming.space/?id=463534803605261&preview=1
+
+  Note: NA PF usually expects an automarker (AM, "Allagan Melon",
+  third-party tool) for Titan's Gaols. ToS-friendly options exist
+  (e.g. self-marking macros) but are very rare in NA PF and better
+  suited to statics. The source links a pastebin with example
+  non-automarker macros (URL not captured).
+
+------------------------------------------------------------------------
+Intermission: Magitek Bits
+------------------------------------------------------------------------
+Toolbox: Intermission
+  https://ff14.toolboxgaming.space/?id=430631425646261&preview=1
+
+------------------------------------------------------------------------
+P4: Ultima
+------------------------------------------------------------------------
+Toolbox: Predation
+  https://ff14.toolboxgaming.space/?id=222999692467471&preview=1
+Toolbox: Annihilation
+  https://ff14.toolboxgaming.space/?id=930637786646261&preview=1
+Toolbox: Suppression
+  https://ff14.toolboxgaming.space/?id=830635036646261&preview=1
+
+Videos:
+  Quick Predation guide
+    https://www.youtube.com/watch?v=d08-CA5zS1c
+  Ultimate Suppression visual guide
+    https://www.youtube.com/watch?v=PSrbDnFtIJ0
+  Quick guide to Primal Roulette
+    https://www.youtube.com/watch?v=CHbzuXPIi-4
+
+------------------------------------------------------------------------
+General resources
+------------------------------------------------------------------------
+Mitigation: general mitigation sheet
+  https://docs.google.com/spreadsheets/d/1Aebpp_26RpVMYL3vLzahu461BbrwXkMENNRVSoqbxYw/edit?gid=58668446#gid=58668446
+
+Simulations:
+  Roblox - UWU Ultimate Suppression
+    https://www.roblox.com/games/6789369178/UWU-Ultimate-Suppression
+  Pettanko Neko sims
+    https://pettanko-neko.itch.io/just-like-the-simulations
+
+------------------------------------------------------------------------
+Waymarks (WaymarkPresetPlugin JSON)
+------------------------------------------------------------------------
+{
+  "Name": "UWU",
+  "MapID": 539,
+  "A": { "X": 100.0, "Y": 0.0, "Z": 93.3, "ID": 0, "Active": true },
+  "B": { "X": 106.7, "Y": 0.0, "Z": 100.0, "ID": 1, "Active": true },
+  "C": { "X": 100.0, "Y": 0.0, "Z": 106.7, "ID": 2, "Active": true },
+  "D": { "X": 93.3, "Y": 0.0, "Z": 100.0, "ID": 3, "Active": true },
+  "One": { "X": 107.3, "Y": 0.0, "Z": 107.3, "ID": 4, "Active": true },
+  "Two": { "X": 100.0, "Y": 0.0, "Z": 81.0, "ID": 5, "Active": true },
+  "Three": { "X": 100.0, "Y": 0.0, "Z": 100.0, "ID": 6, "Active": true },
+  "Four": { "X": 87.0, "Y": 0.0, "Z": 87.0, "ID": 7, "Active": true }
+}

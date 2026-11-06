@@ -1,0 +1,107 @@
+========================================================================
+The Unending Coil of Bahamut (Ultimate) - UCOB
+NAUR (NA Party Finder) strats and resources
+========================================================================
+
+------------------------------------------------------------------------
+P1: Twintania
+------------------------------------------------------------------------
+Raidplan: Twintania
+  https://raidplan.io/plan/9WEG4AEGVdru3hyF
+Guide: Stop baiting Liquid Hells on the party!!
+  https://raidplan.io/plan/19yavfslOUU0l1Gp
+
+  Prepull setup:
+      L1 | R1   tanks
+      L2 | R2   healers
+      L3 | R3   melee
+      L4 | R4   ranged
+
+  - Neurolink placement: normal triangle N, SW, SE (CCW, on the 1/2/3
+    markers).
+  - Both tanks and 1 healer stay out of the first stack for the LB
+    cheese. Discuss which healer stays out.
+  - Liquid Hell baits: phys ranged always baits. Caster takes the hatch
+    if phys ranged gets the first hatch.
+
+------------------------------------------------------------------------
+P2: Nael deus Darnus
+------------------------------------------------------------------------
+Raidplan: Nael
+  https://raidplan.io/plan/DpoJr4oE_kGz_gRU
+Raidplan: Divebombs
+  https://raidplan.io/plan/vi2rSC6mwW_d_QJF
+
+  - Party movement: rotate CW around the boss by default.
+  - Fire order: In > Out > In (2nd fire-tether person goes out) > In.
+
+------------------------------------------------------------------------
+P3: Bahamut Prime
+------------------------------------------------------------------------
+Quickmarch - uptime
+  https://raidplan.io/plan/3zSKK0DXeJgCLadx
+Blackfire - DPS CCW, supports CW
+  https://raidplan.io/plan/BJPnHRQMEsmOyapB
+Fellruin - party neuro opposite Bahamut
+  https://raidplan.io/plan/-83d6AilbZGqba3j
+Heavensfall - R1 tower under Nael
+  https://raidplan.io/plan/NGpZ9S-3kiLsDzAY
+Tenstrike - jump to show you're covering the hatch; 1 is always safe
+for Earthshakers
+  https://raidplan.io/plan/2wu2LOy8wKhG29Tr
+Grand Octet - tank LB3; without tank LB3, bait Twin CCW (left) and
+stack CW of Twin (right)
+  https://raidplan.io/plan/iunTUxGNwjAGF_7K
+
+------------------------------------------------------------------------
+P4: Adds
+------------------------------------------------------------------------
+Raidplan: Adds
+  https://raidplan.io/plan/AMEhnLbUmlTb7ij3
+
+  - Discuss which boss you take (default: MT Twin, OT Nael).
+  - Bosses between the 1 and 3 markers, somewhat NE.
+  - All stacks in the center of the arena.
+
+------------------------------------------------------------------------
+P5: Golden Bahamut
+------------------------------------------------------------------------
+Raidplan: Golden Bahamut
+  https://raidplan.io/plan/Y4WRFLhdHSQ7oLN_
+Video: how to mid-dodge / uptime-dodge exaflares
+  https://www.youtube.com/watch?v=ZbrTfoIxRdE
+
+  - Akh Morn order: share > MT invuln > OT invuln > share.
+  - Shared busters: kitchen-sinked with every available mitigation.
+  - Mitigation plan:
+      60s/90s CDs: Morn Afah 1/3/5 or 2/4
+      2m CDs:      Morn Afah 1/4 or 2/5
+    Discuss with co-tank / melee / caster which Morn Afahs you cover.
+  - Tank LBs: none in the default plan unless it's an emergency
+    (e.g. < 8-person stack, or invuln not up).
+
+------------------------------------------------------------------------
+General resources
+------------------------------------------------------------------------
+Mitigation: UCoB Mitty
+  https://tinyurl.com/ucobmitty
+Cheat sheet: LB cheese
+  https://imgur.com/a/FNTZDGV
+Simulation: Heavensfall solo sim
+  https://drive.google.com/file/d/1eNgGqA4VAPT0f3wwt37n2UHqrOF4kfuI/view
+
+------------------------------------------------------------------------
+Waymarks (WaymarkPresetPlugin JSON)
+------------------------------------------------------------------------
+{
+  "Name": "Good Aether Markers",
+  "MapID": 280,
+  "A": { "X": 20.986, "Y": 0.0, "Z": -11.02, "ID": 0, "Active": true },
+  "B": { "X": 9.315, "Y": 0.0, "Z": 21.971, "ID": 1, "Active": true },
+  "C": { "X": -19.999, "Y": 0.0, "Z": 11.772, "ID": 2, "Active": true },
+  "D": { "X": 0.0, "Y": 0.0, "Z": 9.0, "ID": 3, "Active": true },
+  "One": { "X": 0.0, "Y": 0.0, "Z": -8.0, "ID": 4, "Active": true },
+  "Two": { "X": -8.0, "Y": 0.0, "Z": 5.0, "ID": 5, "Active": true },
+  "Three": { "X": 8.0, "Y": 0.0, "Z": 5.0, "ID": 6, "Active": true },
+  "Four": { "X": 0.0, "Y": 0.0, "Z": 0.0, "ID": 7, "Active": true }
+}
