@@ -35,9 +35,9 @@ REWRITES = [
 PROTECTED = re.compile(r"###AnoMech\w*|anomek[/:]AnoMech|Anomek's AnoMech|fork of AnoMech|from AnoMech")
 RENAMES = [(re.compile(OLD), NEW), (re.compile(OLD.lower()), NEW.lower())]
 
-# pluginmaster.json and RELEASE_NOTES.md are the fork's own and name AnoMech on purpose (the
-# changelog tells players to uninstall it).
-SKIP_FILES = {"LICENSE", "LICENSE.md", "tools/asumech_rename.py", "tools/asumech-independence.md", "pluginmaster.json", "RELEASE_NOTES.md"}
+# pluginmaster.json is the fork's own and names AnoMech on purpose (the changelog tells players to
+# uninstall it).
+SKIP_FILES = {"LICENSE", "LICENSE.md", "tools/asumech_rename.py", "pluginmaster.json"}
 SKIP_PREFIXES = ("datalogs/",)
 
 
