@@ -57,6 +57,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
     internal static DrillTracker Drill { get; private set; } = null!;
     internal static Learn.MasteryStore Mastery { get; private set; } = null!;
     internal static Learn.StepStatsStore StepStats { get; private set; } = null!;
+    internal static Learn.RollHistory Rolls { get; private set; } = null!;
     internal static MultiplayerManager Multiplayer { get; private set; } = null!;
     internal static PullRecorder Recorder { get; private set; } = null!;
     internal RunController Runs { get; private set; } = null!;
@@ -82,6 +83,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
     private Windows.Learn.MitOverlay MitOverlay { get; init; }
     private Windows.Learn.TimelinePanel TimelinePanel { get; init; }
     private Windows.Learn.BotInspector BotInspector { get; init; }
+    internal Windows.Learn.RollSelectorWindow RollSelector { get; init; } = null!;
     private Windows.Learn.MitTraining MitTraining { get; init; }
     internal Windows.Learn.MitReportWindow MitReport { get; init; }
     internal Windows.Learn.LessonReportWindow LessonReport { get; init; }
@@ -111,6 +113,15 @@ public sealed class Plugin : IAsyncDalamudPlugin
             Drill = new DrillTracker(Config.BestStreaks, Config.Save);
             Mastery = new Learn.MasteryStore(Config.Mastery, Config.Save);
             StepStats = new Learn.StepStatsStore(Config.StepStats, Config.Save);
+            Rolls = new Learn.RollHistory(Config.RollHistory, Config.Save);
+            // The rolls are read at the end, where the run's State still holds them.
+            Game.RunFinished += clean =>
+            {
+                if (Game.LastRun is not { } finished || Game.Mode != SessionMode.Local) return;
+                var strat = finished.SelectedAi is { } i && i >= 0 && i < finished.Scenario.AiStrats.Count ? finished.Scenario.AiStrats[i] : null;
+                try { Rolls.Record(Learn.RollHistory.Key(finished.Scenario, strat), Learn.RollHistory.Pinnable(finished.Scenario), clean); }
+                catch (Exception e) { DiagnosticLog.Warn($"[RollHistory] {e.Message}"); }
+            };
             // Before PracticeLoop subscribes: a reached target must turn Auto-restart off before it restarts.
             IScenario? drillScenario = null;
             Game.RunStarted += (p, _) => drillScenario = p.Scenario;
@@ -156,6 +167,8 @@ public sealed class Plugin : IAsyncDalamudPlugin
             windowSystem.AddWindow(TimelinePanel);
             BotInspector = new Windows.Learn.BotInspector();
             windowSystem.AddWindow(BotInspector);
+            RollSelector = new Windows.Learn.RollSelectorWindow(this);
+            windowSystem.AddWindow(RollSelector);
             MitReport = new Windows.Learn.MitReportWindow();
             windowSystem.AddWindow(MitReport);
             LessonReport = new Windows.Learn.LessonReportWindow();
@@ -174,7 +187,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
 
             CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
             {
-                HelpMessage = "Open AnoMech. Subcommands: config, mp, start, reset, leave, rec, rec stop"
+                HelpMessage = "Open AnoMech. Subcommands: config, mp, start, reset, leave, rec, rec stop, rolls"
             });
             CommandManager.AddHandler(CommandAlias, new CommandInfo(OnCommand)
             {
@@ -182,7 +195,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
             });
             CommandManager.AddHandler(AsuMechCommand, new CommandInfo(OnCommand)
             {
-                HelpMessage = "Open AsuMech. Subcommands: config, mp, start, reset, leave, rec, rec stop"
+                HelpMessage = "Open AsuMech. Subcommands: config, mp, start, reset, leave, rec, rec stop, rolls"
             });
             CommandManager.AddHandler(AsuMechAlias, new CommandInfo(OnCommand)
             {
@@ -430,6 +443,9 @@ public sealed class Plugin : IAsyncDalamudPlugin
                 break;
             case "rec stop":
                 Recorder.Disarm();
+                break;
+            case "rolls":
+                RollSelector.Toggle();
                 break;
             default:
                 MainUi.Toggle();

@@ -59,6 +59,8 @@ public class Configuration : IPluginConfiguration
     public Dictionary<string, int> Mastery { get; set; } = [];
     // StepStatsStore: every judged try per lesson step and role (result, reaction, distance, cause).
     public Dictionary<string, List<AnoMech.Learn.StepAttempt>> StepStats { get; set; } = [];
+    // RollHistory: each finished run's pinnable rolls and whether it was clean, per scenario and strat.
+    public Dictionary<string, List<AnoMech.Learn.RollRun>> RollHistory { get; set; } = [];
 
     // Mitigation training: checks the plan's action for your column against what you pressed.
     public bool EnableMitigationTraining { get; set; } = false;

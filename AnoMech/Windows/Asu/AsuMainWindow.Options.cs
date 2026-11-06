@@ -195,6 +195,8 @@ public sealed partial class AsuMainWindow
             ScenarioSetupUi.DrawSetupGrid(Picker, inSession, RunState.IsGuest);
         if (ImGui.CollapsingHeader("Scenario settings###asu-scenario-settings"))
         {
+            if (!inSession && ImGui.SmallButton("Practise by rolls##asu-rolls")) plugin.RollSelector.Toggle();
+            if (ImGui.IsItemHovered()) ImGui.SetTooltip("Which roll values you fail on most, from your finished runs; pin the worst for practice.");
             if (inSession)
                 multiplayerUi.DrawScenarioSettings(scenario);
             else
