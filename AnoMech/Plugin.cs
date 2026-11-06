@@ -84,6 +84,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
     private Windows.Learn.TimelinePanel TimelinePanel { get; init; }
     private Windows.Learn.BotInspector BotInspector { get; init; }
     internal Windows.Learn.RollSelectorWindow RollSelector { get; init; } = null!;
+    private Windows.Learn.GhostOverlay GhostOverlay { get; init; }
     private Windows.Learn.MitTraining MitTraining { get; init; }
     internal Windows.Learn.MitReportWindow MitReport { get; init; }
     internal Windows.Learn.LessonReportWindow LessonReport { get; init; }
@@ -169,6 +170,8 @@ public sealed class Plugin : IAsyncDalamudPlugin
             windowSystem.AddWindow(BotInspector);
             RollSelector = new Windows.Learn.RollSelectorWindow(this);
             windowSystem.AddWindow(RollSelector);
+            GhostOverlay = new Windows.Learn.GhostOverlay();
+            windowSystem.AddWindow(GhostOverlay);
             MitReport = new Windows.Learn.MitReportWindow();
             windowSystem.AddWindow(MitReport);
             LessonReport = new Windows.Learn.LessonReportWindow();

@@ -11,8 +11,12 @@ namespace AnoMech.Learn.Tools;
 // between combat start and end, times in seconds from the pull's start. Positions are the log's
 // (X, Y, Z) with Y up, as the game's; a scenario's local frame is the caller's business. Players
 // are "player 1", "player 2", ... in order of appearance: their names never leave the log.
-public sealed record ActPull(int Index, uint Territory, DateTime Start, DateTime End, bool Clear, List<ActEvent> Events)
+public sealed record ActPull(int Index, uint Territory, DateTime Start, DateTime End, bool Clear, List<ActEvent> Events,
+    IReadOnlyDictionary<uint, byte>? PlayerJobs = null)
 {
+    // Each player's ClassJob, from the zone's combatant lines, which come before the pull.
+    public IReadOnlyDictionary<uint, byte> Jobs => PlayerJobs ?? new Dictionary<uint, byte>();
+
     public float Duration => (float)(End - Start).TotalSeconds;
 
     // The first enemy cast, which the skeleton's clock starts on.
@@ -37,6 +41,9 @@ public sealed record ActMarker(float T, ActActor Target, uint MarkerId) : ActEve
 public sealed record ActTether(float T, ActActor Source, ActActor Target, ushort TetherId) : ActEvent(T);
 public sealed record ActDirector(float T, uint Instance, uint Command, uint[] Params) : ActEvent(T);
 public sealed record ActMapEffect(float T, uint Instance, uint Flags, byte Index) : ActEvent(T);
+// Where a player was: from the combatant-memory lines (261, every move) when the log has them,
+// else from their own abilities and the hits they took (21/22, a few a second at best).
+public sealed record ActPose(float T, ActActor Actor, Vector3 Position, float Rotation) : ActEvent(T);
 
 public static class ActLog
 {
@@ -53,6 +60,9 @@ public static class ActLog
     {
         var pulls = new List<ActPull>();
         uint zone = 0;
+        // Declared ahead of Close, which reads them.
+        Dictionary<string, string> players = new(StringComparer.Ordinal);
+        Dictionary<uint, byte> jobs = [];
         var inCombat = false;
         var sawCombatFlag = false;
         DateTime? start = null;
@@ -62,15 +72,14 @@ public static class ActLog
         void Close(DateTime end)
         {
             if (start is not { } s || pending is null) return;
-            var events = pending.Select(p => Parse(p, s)).OfType<ActEvent>().OrderBy(e => e.T).ToList();
-            pulls.Add(new ActPull(pulls.Count + 1, zone, s, end, clear, events));
+            var events = pending.Select(p => Parse(p, s)).OfType<ActEvent>().Concat(pending.SelectMany(p => Poses(p, s, players))).OrderBy(e => e.T).ToList();
+            pulls.Add(new ActPull(pulls.Count + 1, zone, s, end, clear, events, new Dictionary<uint, byte>(jobs)));
             start = null;
             pending = null;
             clear = false;
         }
 
         var lastTime = DateTime.MinValue;
-        var players = new Dictionary<string, string>(StringComparer.Ordinal);
         foreach (var raw in lines)
         {
             var parts = raw.Split('|');
@@ -86,6 +95,7 @@ public static class ActLog
             if (zone != territory) continue;
             var time = Time(parts[1]);
             lastTime = time;
+            NoteJob(parts, jobs);
             switch (op)
             {
                 case "260":
@@ -154,15 +164,71 @@ public static class ActLog
         }
     }
 
-    // Every (id, name) pair of a player on the line gets the player's number instead of the name.
+    // The line kinds that carry (id, name) pairs; others put a key or a number after an id.
+    private static readonly HashSet<string> NamedPairs = ["03", "04", "20", "21", "22", "23", "24", "25", "26", "27", "30", "34", "35", "36", "37", "38", "39"];
+
+    // Every (id, name) pair of a player on the line gets the player's number instead of the name;
+    // a combatant-memory line's Name key does too.
     private static void Anonymize(string[] parts, Dictionary<string, string> players)
     {
+        string Label(string id)
+        {
+            if (!players.TryGetValue(id, out var label)) label = players[id] = $"player {players.Count + 1}";
+            return label;
+        }
+        if (parts[0] == "261")
+        {
+            if (parts.Length > 3 && IsPlayerId(parts[3]))
+                for (var i = 4; i + 1 < parts.Length; i += 2)
+                    if (parts[i] == "Name") parts[i + 1] = Label(parts[3]);
+            return;
+        }
+        if (!NamedPairs.Contains(parts[0])) return;
         for (var i = 2; i + 1 < parts.Length; i++)
         {
-            if (parts[i].Length != 8 || !parts[i].StartsWith("10", StringComparison.Ordinal) || parts[i + 1].Length == 0) continue;
-            if (!uint.TryParse(parts[i], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out _)) continue;
-            if (!players.TryGetValue(parts[i], out var label)) label = players[parts[i]] = $"player {players.Count + 1}";
-            parts[i + 1] = label;
+            if (!IsPlayerId(parts[i]) || parts[i + 1].Length == 0) continue;
+            parts[i + 1] = Label(parts[i]);
+        }
+    }
+
+    private static bool IsPlayerId(string text)
+        => text.Length == 8 && text.StartsWith("10", StringComparison.Ordinal) && uint.TryParse(text, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out _);
+
+    // A player's ClassJob: hex on an AddCombatant line, decimal under a combatant-memory Job key.
+    private static void NoteJob(string[] p, Dictionary<uint, byte> jobs)
+    {
+        if (p[0] == "03" && p.Length > 4 && IsPlayerId(p[2])) jobs[Hex(p[2])] = (byte)Hex(p[4]);
+        else if (p[0] == "261" && p.Length > 3 && IsPlayerId(p[3]))
+            for (var i = 4; i + 1 < p.Length; i += 2)
+                if (p[i] == "Job" && byte.TryParse(p[i + 1], NumberStyles.Integer, CultureInfo.InvariantCulture, out var job) && job != 0) jobs[Hex(p[3])] = job;
+    }
+
+    private static IEnumerable<ActPose> Poses(string[] p, DateTime start, Dictionary<string, string> players)
+    {
+        var t = (float)(Time(p[1]) - start).TotalSeconds;
+        switch (p[0])
+        {
+            case "261" when p.Length > 3 && IsPlayerId(p[3]):
+            {
+                float? x = null, z = null, y = null, heading = null;
+                for (var i = 4; i + 1 < p.Length; i += 2)
+                    switch (p[i])
+                    {
+                        case "PosX": x = F(p[i + 1]); break;
+                        case "PosY": z = F(p[i + 1]); break;
+                        case "PosZ": y = F(p[i + 1]); break;
+                        case "Heading": heading = F(p[i + 1]); break;
+                    }
+                if (x is { } px && z is { } pz)
+                    yield return new ActPose(t, new ActActor(Hex(p[3]), players.GetValueOrDefault(p[3], "")), new Vector3(px, y ?? 0f, pz), heading ?? 0f);
+                break;
+            }
+            case "21" or "22" when p.Length > 43:
+            {
+                if (Actor(p, 2) is { IsPlayer: true } source && p[40].Length > 0) yield return new ActPose(t, source, Pos(p, 40), F(p[43]));
+                if (Actor(p, 6) is { IsPlayer: true } target && p[30].Length > 0 && target.Id != Actor(p, 2)?.Id) yield return new ActPose(t, target, Pos(p, 30), F(p[33]));
+                break;
+            }
         }
     }
 

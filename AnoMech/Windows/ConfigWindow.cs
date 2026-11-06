@@ -153,6 +153,22 @@ public class ConfigWindow : Window, IDisposable
 
         ImGui.Separator();
 
+        var ghost = configuration.ShowGhost;
+        if (Pills.Checkbox("Show a real pull's party beside the sim", ref ghost)) { configuration.ShowGhost = ghost; configuration.Save(); }
+        if (ImGui.IsItemHovered()) ImGui.SetTooltip("Rings where a real group stood at each moment, from a recorded pull (.csv / .csv.gz) or an ACT log (.log). A reference, not the answer.");
+        if (ghost)
+        {
+            var source = configuration.GhostSource;
+            ImGui.SetNextItemWidth(260f * ImGuiHelpers.GlobalScale);
+            if (ImGui.InputTextWithHint("File##ghost-source", "recording .csv/.csv.gz or ACT .log", ref source, 400)) { configuration.GhostSource = source; configuration.Save(); }
+            var pull = configuration.GhostPull;
+            ImGui.SetNextItemWidth(90f * ImGuiHelpers.GlobalScale);
+            if (ImGui.InputInt("Pull##ghost-pull", ref pull)) { configuration.GhostPull = Math.Max(1, pull); configuration.Save(); }
+            ImGui.SameLine();
+            var onlyMine = configuration.GhostOnlyMine;
+            if (Pills.Checkbox("Only my seat##ghost-mine", ref onlyMine)) { configuration.GhostOnlyMine = onlyMine; configuration.Save(); }
+            using (AsuTheme.PushTextColor(AsuTheme.Muted)) ImGui.TextWrapped(Learn.GhostOverlay.Status);
+        }
         var botInspector = configuration.ShowBotInspector;
         if (Pills.Checkbox("Explain the targeted bot", ref botInspector)) { configuration.ShowBotInspector = botInspector; configuration.Save(); }
         if (ImGui.IsItemHovered()) ImGui.SetTooltip("Target a bot during a run to see which strat call sent it where, and the lesson's rule for that step.");

@@ -64,6 +64,7 @@ internal sealed unsafe class PullRecorder : IDisposable
 
     // Recording state, cleared on Start.
     private readonly Dictionary<uint, string> names = [];
+    private readonly HashSet<uint> announced = [];
     private readonly Dictionary<uint, (uint Caster, uint ActionId)> effects = [];
     private readonly Dictionary<uint, HashSet<(ushort StatusId, uint Source)>> statuses = [];
     private readonly Dictionary<uint, (Vector3 Position, float Rotation)> poses = [];
@@ -251,6 +252,7 @@ internal sealed unsafe class PullRecorder : IDisposable
             return;
         }
         names.Clear();
+        announced.Clear();
         effects.Clear();
         statuses.Clear();
         poses.Clear();
@@ -261,7 +263,7 @@ internal sealed unsafe class PullRecorder : IDisposable
         timeline = new SimTimeline(writer) { Clock = () => (float)clock.Elapsed.TotalSeconds };
         var place = Plugin.DataManager.GetExcelSheet<LuminaTerritoryType>()?.GetRowOrDefault(territory)?.PlaceName.ValueNullable?.Name.ExtractText() ?? "";
         var player = Plugin.ObjectTable.LocalPlayer;
-        timeline.Add("recording", player?.EntityId ?? 0, player?.Name.TextValue ?? "", territory.ToString(), place,
+        timeline.Add("recording", player?.EntityId ?? 0, player is null ? "" : PlayerLabel(player.EntityId), territory.ToString(), place,
             detail: $"started={DateTime.Now:O} game={new string(FFXIVClientStructs.FFXIV.Client.System.Framework.Framework.Instance()->GameVersionString)} missing_hooks={string.Join("/", missingHooks)}");
         foreach (var hook in hooks) hook.Enable();
         DiagnosticLog.Info($"[PullRecorder] recording {place} ({territory}) to {Path}");
@@ -329,7 +331,12 @@ internal sealed unsafe class PullRecorder : IDisposable
             seen.Add(id);
             if (obj is IBattleChara) DiffStatuses(id, (BattleChara*)obj.Address);
             if (!samplePoses) continue;
-            if (!names.ContainsKey(id)) names[id] = obj.Name.TextValue;
+            if (id >> 28 == 1)
+            {
+                if (obj is ICharacter character && announced.Add(id))
+                    timeline!.Add("member", id, PlayerLabel(id), character.ClassJob.RowId.ToString(), "ClassJob");
+            }
+            else if (!names.ContainsKey(id)) names[id] = obj.Name.TextValue;
             SamplePose(obj);
         }
         foreach (var gone in present.Where(id => !seen.Contains(id)))
@@ -548,8 +555,7 @@ internal sealed unsafe class PullRecorder : IDisposable
         spawnPlayerHook!.Original(targetId, packet);
         if (!Begin()) return;
         ref var c = ref packet->Common;
-        var name = c.NameString;
-        names[targetId] = name;
+        var name = PlayerLabel(targetId);
         timeline!.Add("spawn_player", targetId, name, c.ClassJobId.ToString(), "ClassJob", position: c.Position, rotation: MathUtil.DequantizeRotation(c.Rotation),
             detail: $"level={c.Level} hp={c.HealthPoints}/{c.MaxHealthPoints} world={packet->HomeWorldId}");
     }
@@ -607,9 +613,19 @@ internal sealed unsafe class PullRecorder : IDisposable
 
     private static uint Id(GameObjectId id) => id.ObjectId is var objectId and not (0 or NoTarget) ? objectId : 0;
 
+    // Players are numbered in the order the recording meets them; their names never reach a file
+    // that may be sent to someone else.
+    private string PlayerLabel(uint entityId)
+    {
+        if (!names.TryGetValue(entityId, out var label))
+            names[entityId] = label = $"player {names.Keys.Count(id => id >> 28 == 1) + 1}";
+        return label;
+    }
+
     private string NameOf(uint entityId)
     {
         if (entityId is 0 or NoTarget) return "";
+        if (entityId >> 28 == 1) return PlayerLabel(entityId);
         if (names.TryGetValue(entityId, out var name)) return name;
         name = Plugin.ObjectTable.SearchByEntityId(entityId)?.Name.TextValue ?? "";
         if (name.Length > 0) names[entityId] = name;

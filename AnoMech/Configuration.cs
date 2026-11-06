@@ -64,6 +64,12 @@ public class Configuration : IPluginConfiguration
 
     // Mitigation training: checks the plan's action for your column against what you pressed.
     public bool EnableMitigationTraining { get; set; } = false;
+    // GhostOverlay: a real pull's party (a PullRecorder CSV or an ACT log, one of its pulls) drawn
+    // beside the sim's, lined up on the scenario's first cast the pull also has.
+    public bool ShowGhost { get; set; } = false;
+    public string GhostSource { get; set; } = "";
+    public int GhostPull { get; set; } = 1;
+    public bool GhostOnlyMine { get; set; } = false;
     // BotInspector: targeting a bot during a run shows the strat call that sent it where it is.
     public bool ShowBotInspector { get; set; } = true;
     // TimelinePanel: the next casts of the embedded timeline, top right, during a lesson.
