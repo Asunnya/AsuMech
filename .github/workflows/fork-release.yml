@@ -63,7 +63,10 @@ jobs:
       shell: bash
       run: |
         version="${{ steps.version.outputs.version }}"
-        sed -i "s/\"AssemblyVersion\": \"[^\"]*\"/\"AssemblyVersion\": \"$version\"/; s/\"LastUpdate\": \"[^\"]*\"/\"LastUpdate\": \"$(date +%s)\"/" pluginmaster.json
+        # The links name the version: a client still holding the previous pluginmaster then gets the
+        # zip it expects, instead of "latest" moving under it and the install failing on a mismatch.
+        url="https://github.com/${{ github.repository }}/releases/download/v$version/latest.zip"
+        sed -i "s/\"AssemblyVersion\": \"[^\"]*\"/\"AssemblyVersion\": \"$version\"/; s/\"LastUpdate\": \"[^\"]*\"/\"LastUpdate\": \"$(date +%s)\"/; s#\"\(DownloadLink[A-Za-z]*\)\": \"[^\"]*\"#\"\\1\": \"$url\"#" pluginmaster.json
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git add pluginmaster.json
