@@ -38,6 +38,21 @@ public class DsrP7DragonKingStateTests
         }
     }
 
+    [Test]
+    public void TheEdgeSpotsTurnWithTheDragonKing()
+    {
+        var state = new DsrP7DragonKingState(new Rng(1)) { Facing = 0f };
+        foreach (var spot in Enum.GetValues<EdgeSpot>())
+        {
+            var turned = state.TurnedSpot(spot);
+            var north = DsrP7DragonKingState.Spot(spot);
+            Assert.That(turned.X, Is.EqualTo(-north.X).Within(0.001f));
+            Assert.That(turned.Y, Is.EqualTo(-north.Y).Within(0.001f));
+        }
+        var facingNorth = new DsrP7DragonKingState(new Rng(1));
+        Assert.That(state.ExaflareRotation(0, EdgeSpot.Party) - facingNorth.ExaflareRotation(0, EdgeSpot.Party), Is.EqualTo(-MathF.PI).Within(0.001f));
+    }
+
     // The clear's three cycles: its exaflare headings, Ascalons and Gigaflare orders.
     internal static DsrP7DragonKingStateOverrides Pinned() => new()
     {

@@ -15,8 +15,9 @@ using static AnoMech.Scenarios.Dsr.DsrConstants;
 namespace AnoMech.Scenarios.Dsr.P7DragonKing;
 
 // The Dragon-king from Alternative End to Morn Afah's Edge: three cycles of Exaflare's, Akh Morn's
-// and Gigaflare's Edge, each followed by two Trinities, the third cycle without Gigaflare. His HP
-// is not simulated. The run ends as Morn Afah's Edge's first towers land: they kill whoever soaks
+// and Gigaflare's Edge, each followed by two Trinities, the third cycle without Gigaflare. He stays
+// in the middle facing the tank at the top of enmity, and each Edge is laid out around the way he
+// faces as its cast begins. His HP is not simulated. The run ends as Morn Afah's Edge's first towers land: they kill whoever soaks
 // them, and the enrage wipes whatever happens.
 public sealed class DsrP7DragonKingScenario : IScenario
 {
@@ -40,6 +41,9 @@ public sealed class DsrP7DragonKingScenario : IScenario
     public const float AkhMornHitInterval = 1.07f;
     public static readonly float[] GigaflareCasts = [85.86f, 165.81f];
     public static readonly float[][] GigaflareHits = [[94.82f, 98.83f, 102.84f], [174.81f, 178.77f, 182.78f]];
+    // UNVERIFIED: retail starts all three casts together; the telegraphs come up one by one so the
+    // order, and with it the way around, reads before the first blast.
+    public const float GigaflareOmenStagger = 1f;
     private static readonly float[] GigaflareCastSeconds = [8.7f, 12.7f, 16.7f];
     private static readonly uint[] GigaflareActions = [ActionId.GigaflaresEdgeFirst, ActionId.GigaflaresEdgeSecond, ActionId.GigaflaresEdgeThird];
     // Exaflare, Akh Morn and Gigaflare of each cycle, in the order of DsrP7DragonKingState.Elements.
@@ -49,6 +53,12 @@ public sealed class DsrP7DragonKingScenario : IScenario
     public static readonly float[] TrinityHits =
         [55.40f, 59.45f, 79.85f, 83.91f, 113.09f, 117.14f, 134.29f, 138.34f, 159.80f, 163.85f, 193.03f, 197.09f, 214.25f, 218.26f, 240.90f, 244.95f];
     private const float TrinitySwingLead = 1.07f;
+    private const float ExaflareCastSeconds = 5.7f;
+    private const float AkhMornCastSeconds = 5.7f;
+    private const float GigaflaresEdgeCastSeconds = 7.7f;
+    private const float MornAfahsEdgeCastSeconds = 9.7f;
+    private const float FacingCheckSeconds = 0.1f;
+    private const float FacingTolerance = 0.03f;
     public const float MornAfahsEdgeCast = 246.91f;
     public const float MornAfahsEdgeFirstTowers = 257.60f;
     public const float End = MornAfahsEdgeFirstTowers - 0.1f;
@@ -73,6 +83,9 @@ public sealed class DsrP7DragonKingScenario : IScenario
     private DamageSolver damage = null!;
     private DsrP7DragonKingState state = null!;
     private SimEnemy? thordan;
+    private PartyRole topEnmity;
+    // He can't turn while casting.
+    private bool facingHeld;
     private readonly List<SimEnemy> spawned = [];
     private readonly Queue<SimEnemy> helperPool = [];
 
@@ -85,6 +98,8 @@ public sealed class DsrP7DragonKingScenario : IScenario
         spawned.Clear();
         helperPool.Clear();
         thordan = null;
+        topEnmity = DsrP7DragonKingState.TopEnmityTank(0);
+        facingHeld = false;
 
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<DsrP7DragonKingState>)AiStrats[idx]).Run(state, world);
@@ -95,6 +110,7 @@ public sealed class DsrP7DragonKingScenario : IScenario
         world.Events.Add(StartAt, FillHelperPool);
         world.Events.Add(StartAt, () => world.Map.DirectorUpdate(ArenaDirector.MapChange, ArenaDirector.ThordanMap));
         world.Events.Add(Targetable, () => thordan?.SetTargetable(true));
+        world.Events.Add(Targetable, FaceTheTopOfEnmity);
         world.Events.Add(35.99f, () => world.Map.DirectorUpdate(ArenaDirector.Layout, 1U, ArenaDirector.DragonKingLayout));
 
         for (var i = 0; i < EdgeCasts.Length; i++)
@@ -110,11 +126,14 @@ public sealed class DsrP7DragonKingScenario : IScenario
             world.Events.Add(ExaflareCasts[c], () => CastExaflares(c));
             world.Events.Add(ExaflareFirstHits[c] - 0.93f, () => PlayEffect(thordan, ActionId.ExaflaresEdge, 1.1f));
             foreach (var spot in Enum.GetValues<EdgeSpot>())
-                foreach (var explosion in state.ExaflareExplosions(c, spot))
+            {
+                var explosions = state.ExaflareExplosions(c, spot).ToList();
+                for (var k = 0; k < explosions.Count; k++)
                 {
-                    var (s, e) = (spot, explosion);
-                    world.Events.Add(ExaflareFirstHits[c] + e.Delay, () => Exaflare(c, s, e));
+                    var (s, index) = (spot, k);
+                    world.Events.Add(ExaflareFirstHits[c] + explosions[k].Delay, () => Exaflare(c, s, index));
                 }
+            }
 
             world.Events.Add(AkhMornCasts[c], () => CastAkhMorn(c));
             world.Events.Add(AkhMornFirstHits[c] - 0.72f, () => PlayEffect(thordan, ActionId.AkhMornsEdge, 1.1f));
@@ -139,9 +158,14 @@ public sealed class DsrP7DragonKingScenario : IScenario
 
         for (var i = 0; i < TrinityHits.Length; i++)
         {
-            var darkOnMainTank = i / 2 % 2 == 0;
+            var darkTank = DsrP7DragonKingState.TopEnmityTank(i / 2);
             world.Events.Add(TrinityHits[i] - TrinitySwingLead, () => PlayEffect(thordan, ActionId.Trinity, 1.1f));
-            world.Events.Add(TrinityHits[i], () => Trinity(darkOnMainTank));
+            world.Events.Add(TrinityHits[i], () => Trinity(darkTank));
+            if (i % 2 == 1)
+            {
+                var next = DsrP7DragonKingState.TopEnmityTank(i / 2 + 1);
+                world.Events.Add(TrinityHits[i] + 0.05f, () => SwapEnmity(next));
+            }
         }
 
         world.Events.Add(MornAfahsEdgeCast, CastMornAfahsEdge);
@@ -167,6 +191,34 @@ public sealed class DsrP7DragonKingScenario : IScenario
         if (thordan != null) spawned.Add(thordan);
     }
 
+    // The tanks trade enmity after each pair of Trinities; he turns to the new top.
+    private void SwapEnmity(PartyRole tank)
+    {
+        topEnmity = tank;
+        thordan?.SetTarget(party.Get(tank), follow: false);
+    }
+
+    private void FaceTheTopOfEnmity()
+    {
+        if (thordan == null) return;
+        if (!facingHeld && party.Get(topEnmity) is { } tank && tank.IsAlive())
+        {
+            var want = RotationTowards(thordan.Position, tank.Position);
+            if (MathF.Abs(MathF.IEEERemainder(want - thordan.Rotation, MathF.Tau)) > FacingTolerance) thordan.SetRotation(want);
+        }
+        world.Events.Add(FacingCheckSeconds, FaceTheTopOfEnmity);
+    }
+
+    // The Edge's spots are fixed by the way he faces as the cast begins.
+    private void CastEdge(uint actionId, float castSeconds)
+    {
+        if (thordan == null) return;
+        state.Facing = thordan.Rotation;
+        facingHeld = true;
+        world.Events.Add(castSeconds, () => facingHeld = false);
+        CastSelf(thordan, actionId, castSeconds);
+    }
+
     private void Glow(AscalonElement element)
         => thordan?.AddStatusParam(StatusId.AscalonGlow, element == AscalonElement.Flames ? StatusId.FlamesGlow : StatusId.IceGlow);
 
@@ -185,10 +237,10 @@ public sealed class DsrP7DragonKingScenario : IScenario
 
     private void CastExaflares(int cycle)
     {
-        CastSelf(thordan, ActionId.ExaflaresEdge, 5.7f);
+        CastEdge(ActionId.ExaflaresEdge, ExaflareCastSeconds);
         foreach (var spot in Enum.GetValues<EdgeSpot>())
         {
-            var at = ToWorld(DsrP7DragonKingState.Spot(spot));
+            var at = ToWorld(state.TurnedSpot(spot));
             var rotation = state.ExaflareRotation(cycle, spot);
             if (TakeHelper(new Placement(at, rotation)) is not { } helper) continue;
             helper.NativeCast(ActionId.ExaflaresEdgeFirst, ActionType.Action, 0f, 6.6f, false, rotation: rotation, position: at);
@@ -196,8 +248,9 @@ public sealed class DsrP7DragonKingScenario : IScenario
         }
     }
 
-    private void Exaflare(int cycle, EdgeSpot spot, Explosion explosion)
+    private void Exaflare(int cycle, EdgeSpot spot, int index)
     {
+        var explosion = state.ExaflareExplosions(cycle, spot).ElementAt(index);
         var action = explosion.Delay == 0f ? ActionId.ExaflaresEdgeFirst : ActionId.ExaflaresEdgeStep;
         var at = ToWorld(explosion.At);
         PlayFromHelper(action, at, state.ExaflareRotation(cycle, spot));
@@ -209,10 +262,10 @@ public sealed class DsrP7DragonKingScenario : IScenario
 
     private void CastAkhMorn(int cycle)
     {
-        CastSelf(thordan, ActionId.AkhMornsEdge, 5.7f);
+        CastEdge(ActionId.AkhMornsEdge, AkhMornCastSeconds);
         foreach (var spot in Enum.GetValues<EdgeSpot>())
         {
-            var at = ToWorld(DsrP7DragonKingState.Spot(spot));
+            var at = ToWorld(state.TurnedSpot(spot));
             if (TakeHelper(new Placement(at, 0f)) is not { } helper) continue;
             helper.NativeCast(AkhMornFirstAction(spot), ActionType.Action, 0f, 6.4f, false, targetId: helper.GameObjectId, position: at);
             akhMornCasters[spot] = helper;
@@ -237,7 +290,7 @@ public sealed class DsrP7DragonKingScenario : IScenario
     {
         foreach (var spot in Enum.GetValues<EdgeSpot>())
         {
-            var at = ToWorld(DsrP7DragonKingState.Spot(spot));
+            var at = ToWorld(state.TurnedSpot(spot));
             var action = hit == 0 ? AkhMornFirstAction(spot) : spot == EdgeSpot.Tanks ? ActionId.AkhMornsEdgeTanks : ActionId.AkhMornsEdgeParty;
             if (akhMornCasters.TryGetValue(spot, out var helper)) PlayEffect(helper, action, 1.1f, at: at);
             var hits = party.Find.InsideCircle(at, AkhMornRadius).Where(m => m.IsAlive()).ToList();
@@ -258,13 +311,12 @@ public sealed class DsrP7DragonKingScenario : IScenario
 
     private void CastGigaflares(int cycle)
     {
-        CastSelf(thordan, ActionId.GigaflaresEdge, 7.7f);
+        CastEdge(ActionId.GigaflaresEdge, GigaflaresEdgeCastSeconds);
         for (var blast = 0; blast < 3; blast++)
         {
             var at = ToWorld(state.GigaflareSpot(cycle, blast));
             if (TakeHelper(new Placement(at, 0f)) is not { } helper) continue;
-            // All three cast together; each telegraph waits for the previous blast so the order reads at a glance.
-            var omenDelay = blast == 0 ? 0f : GigaflareHits[cycle][blast - 1] - GigaflareCasts[cycle];
+            var omenDelay = blast * GigaflareOmenStagger;
             helper.NativeCast(GigaflareActions[blast], ActionType.Action, omenDelay, GigaflareCastSeconds[blast], false, targetId: helper.GameObjectId, position: at);
             gigaflareCasters.Add(helper);
         }
@@ -283,9 +335,9 @@ public sealed class DsrP7DragonKingScenario : IScenario
     }
 
     // The top two in enmity take the tank hits; the tanks trade them every pair of Trinities.
-    private void Trinity(bool darkOnMainTank)
+    private void Trinity(PartyRole darkTank)
     {
-        var (darkTank, lightTank) = darkOnMainTank ? (PartyRole.MainTank, PartyRole.OffTank) : (PartyRole.OffTank, PartyRole.MainTank);
+        var lightTank = darkTank == PartyRole.MainTank ? PartyRole.OffTank : PartyRole.MainTank;
         var nearest = party.Find.Closest(ThordanHome);
         foreach (var (target, action) in new[]
                  {
@@ -324,7 +376,7 @@ public sealed class DsrP7DragonKingScenario : IScenario
 
     private void CastMornAfahsEdge()
     {
-        CastSelf(thordan, ActionId.MornAfahsEdge, 9.7f);
+        CastEdge(ActionId.MornAfahsEdge, MornAfahsEdgeCastSeconds);
         foreach (var (spot, action) in new[]
                  {
                      (EdgeSpot.Party, ActionId.MornAfahsEdgePartyFirst),
@@ -332,7 +384,7 @@ public sealed class DsrP7DragonKingScenario : IScenario
                      (EdgeSpot.Tanks, ActionId.MornAfahsEdgeTanksFirst),
                  })
         {
-            var at = ToWorld(DsrP7DragonKingState.Spot(spot));
+            var at = ToWorld(state.TurnedSpot(spot));
             if (TakeHelper(new Placement(at, 0f)) is { } helper)
                 helper.NativeCast(action, ActionType.Action, 0f, 10.4f, false, targetId: helper.GameObjectId, position: at);
         }
@@ -346,6 +398,7 @@ public sealed class DsrP7DragonKingScenario : IScenario
         gigaflareCasters.Clear();
         foreach (var enemy in spawned) enemy.Despawn();
         spawned.Clear();
+        thordan = null;
     }
 
     // A helper spawned in the frame it acts drops the effect or cast, so they wait in a pool.
