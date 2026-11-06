@@ -12,7 +12,9 @@ dotnet $TOOL learn-ready --scenario UwuP2IfritScenario [--strat 0] [--no-run]
 # pin each roll to the value a free run drew and see whether the seed's other rolls move (also part of learn-ready)
 dotnet $TOOL overrides-check --scenario UwuP1GarudaScenario [--strat 0] [--seed 1]
 # the scenario x strat matrix: lesson, draft, steps, registered plan, toolbox block, embedded plan, example seed/example, glossary, mit timeline/plan
-dotnet $TOOL status [--family Uwu]
+dotnet $TOOL status [--family Uwu] [--metrics] [--write-baseline]   # --metrics per family; --write-baseline refreshes the CI list of lessons that may not disappear
+# after a strat edit: follow the moved lines in every embedded lesson (CI's static key check says when); orphans need a human
+dotnet $TOOL rekey-all [--write]
 
 # one command per strat: record -> skeleton -> rule miner -> cue extractor -> draft(glossary) [-> raidplan import -> oracle -> example pinned]
 # writes <out>/<Scenario>.<strat>.{dump.json,lesson.json,context.md}; the plan link and layout come from AnoMech/Learn/Toolbox/plans.json
