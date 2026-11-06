@@ -30,7 +30,8 @@ public sealed class DsrP7DragonKingAi : IScenarioAi<DsrP7DragonKingState>
     public static readonly Vector2 StepBackFromTheRearExaflare = new(0f, 13.5f);
     public static readonly float StepForwardDelay = State.ExaflareDelays[3] + 0.1f;
     private static readonly Vector2 OutOfEveryTower = new(0f, 1f);
-    public static readonly Vector2 TopEnmityTankInFrontOfTheDragonKing = new(0f, -6f);
+    public static readonly Vector2 NorthOfTheDragonKing = new(0f, -6f);
+    public static readonly Vector2 SouthOfTheDragonKing = new(0f, 6f);
     private const float AfterTheCastLocks = 0.2f;
     public const float GigaflareReadTime = 2f * Scenario.GigaflareOmenStagger + 0.5f;
     private const float IceAkhMornRadius = 7.2f;
@@ -49,7 +50,7 @@ public sealed class DsrP7DragonKingAi : IScenarioAi<DsrP7DragonKingState>
         world = worldParam;
         var ai = new AiManager(world);
 
-        ai.Move(Scenario.StartAt + 0.5f, () => AiMove.Create(TopEnmityTankInFront(Cluster(BehindOutsideTheDragonKing, Everyone), ExaflarePair(0))).NaturalOrder(), jitter: 0f);
+        ai.Move(Scenario.StartAt + 0.5f, () => AiMove.Create(TopEnmityTankFacesHimNorth(Cluster(BehindOutsideTheDragonKing, Everyone), ExaflarePair(0))).NaturalOrder(), jitter: 0f);
         for (var cycle = 0; cycle < State.Cycles; cycle++)
         {
             var c = cycle;
@@ -59,52 +60,46 @@ public sealed class DsrP7DragonKingAi : IScenarioAi<DsrP7DragonKingState>
             var firstHit = Scenario.ExaflareFirstHits[c];
 
             var waitAtTheRearLeft = c == 0 ? Scenario.ExaflareCasts[0] + 1.3f : Scenario.TrinityHits[2 * (gigaflarePair - 3) + 1] + AfterTrinity;
-            if (c == 0)
-                ai.Move(waitAtTheRearLeft, () => AiMove.Create(Cluster(ExaflareStart(c), Everyone)).NaturalOrder(), jitter: 0f, sprint: true);
-            else
-            {
-                ai.Move(waitAtTheRearLeft, () => AiMove.Create(TopEnmityTankInFront(Cluster(ExaflareStart(c), Everyone), exaflarePair)).NaturalOrder(), jitter: 0f, sprint: true);
-                ai.Move(Scenario.ExaflareCasts[c] + AfterTheCastLocks, () => AiMove.Create(OnlyTheTopEnmityTank(Cluster(ExaflareStart(c), Everyone), exaflarePair)).NaturalOrder(), jitter: 0f, sprint: true);
-            }
+            if (c > 0)
+                ai.Move(waitAtTheRearLeft, () => AiMove.Create(TopEnmityTankFacesHimNorth(new Vector2?[8], exaflarePair - 1)).NaturalOrder(), jitter: 0f, sprint: true);
+            ai.Move(c == 0 ? waitAtTheRearLeft : Scenario.ExaflareCasts[c] + AfterTheCastLocks, () => AiMove.Create(Cluster(ExaflareStart(c), Everyone)).NaturalOrder(), jitter: 0f, sprint: true);
             ai.Move(firstHit + StepAfterHit, () => AiMove.Create(Cluster(state.TurnedSpot(EdgeSpot.Tanks), Everyone)).NaturalOrder(), jitter: 0f, sprint: true);
             ai.Move(firstHit + State.ExaflareDelays[1] + 0.1f, () => AiMove.Create(Cluster(state.Turned(StepBackFromTheRearExaflare), Everyone)).NaturalOrder(), jitter: 0f, sprint: true);
             ai.Move(firstHit + StepForwardDelay, () => AiMove.Create(TrinitySpots(exaflarePair, 0)).NaturalOrder(), jitter: 0f, sprint: true);
             ai.Move(firstHit + State.ExaflareDelays[^1] + 0.2f, () => AiMove.Create(TrinitySpots(exaflarePair, 1)).NaturalOrder(), jitter: 0f);
 
-            ai.Move(Scenario.TrinityHits[2 * exaflarePair + 1] + AfterTrinity, () => AiMove.Create(TopEnmityTankInFront(AkhMornSpots(c), akhMornPair)).NaturalOrder(), jitter: 0f, sprint: true);
-            ai.Move(Scenario.AkhMornCasts[c] + AfterTheCastLocks, () => AiMove.Create(OnlyTheTopEnmityTank(AkhMornSpots(c), akhMornPair)).NaturalOrder(), jitter: 0f, sprint: true);
+            ai.Move(Scenario.TrinityHits[2 * exaflarePair + 1] + AfterTrinity, () => AiMove.Create(TopEnmityTankFacesHimNorth(new Vector2?[8], exaflarePair)).NaturalOrder(), jitter: 0f, sprint: true);
+            ai.Move(Scenario.AkhMornCasts[c] + AfterTheCastLocks, () => AiMove.Create(AkhMornSpots(c)).NaturalOrder(), jitter: 0f, sprint: true);
             ai.Move(Scenario.AkhMornFirstHits[c] + 0.3f, () => AiMove.Create(SideTowerTankJoinsTheSix(c)).NaturalOrder(), jitter: 0f);
             world.Events.Add(Scenario.AkhMornFirstHits[c] + 0.3f, () => InvulnTheRearTowerTank(c));
             ai.Move(Scenario.AkhMornLastHit(c) + AfterTrinity, () => AiMove.Create(TrinitySpots(akhMornPair, 0)).NaturalOrder(), jitter: 0f);
             ai.Move(Scenario.TrinityHits[2 * akhMornPair] + AfterTrinity, () => AiMove.Create(TrinitySpots(akhMornPair, 1)).NaturalOrder(), jitter: 0f);
 
             if (c >= State.GigaflareCycles) continue;
-            ai.Move(Scenario.TrinityHits[2 * akhMornPair + 1] + AfterTrinity, () => AiMove.Create(TopEnmityTankInFront(new Vector2?[8], gigaflarePair)).NaturalOrder(), jitter: 0f, sprint: true);
+            ai.Move(Scenario.TrinityHits[2 * akhMornPair + 1] + AfterTrinity, () => AiMove.Create(TopEnmityTankFacesHimSouth(new Vector2?[8], akhMornPair)).NaturalOrder(), jitter: 0f, sprint: true);
             ai.Move(Scenario.GigaflareCasts[c] + GigaflareReadTime, () => AiMove.Create(Cluster(OppositeGigaflare(c, 0), Everyone)).NaturalOrder(), jitter: 0f, sprint: true);
             ai.Move(Scenario.GigaflareHits[c][0] + StepAfterHit, () => AiMove.Create(Cluster(OppositeGigaflare(c, 1), Everyone)).NaturalOrder(), jitter: 0f, sprint: true);
             ai.Move(Scenario.GigaflareHits[c][1] + StepAfterHit, () => AiMove.Create(Cluster(OppositeGigaflare(c, 2), Everyone)).NaturalOrder(), jitter: 0f, sprint: true);
             ai.Move(Scenario.GigaflareHits[c][2] + AfterTrinity, () => AiMove.Create(TrinitySpots(gigaflarePair, 0)).NaturalOrder(), jitter: 0f);
             ai.Move(Scenario.TrinityHits[2 * gigaflarePair] + AfterTrinity, () => AiMove.Create(TrinitySpots(gigaflarePair, 1)).NaturalOrder(), jitter: 0f);
         }
-        var mornAfahPair = Scenario.TrinityHits.Length / 2;
-        ai.Move(Scenario.TrinityHits[^1] + AfterTrinity, () => AiMove.Create(TopEnmityTankInFront(new Vector2?[8], mornAfahPair)).NaturalOrder(), jitter: 0f, sprint: true);
+        var lastPair = Scenario.TrinityHits.Length / 2 - 1;
+        ai.Move(Scenario.TrinityHits[^1] + AfterTrinity, () => AiMove.Create(TopEnmityTankFacesHimNorth(new Vector2?[8], lastPair)).NaturalOrder(), jitter: 0f, sprint: true);
         ai.Move(Scenario.MornAfahsEdgeCast + 0.5f, () => AiMove.Create(HealersAndMainTankTakeTheFirstTowers()).NaturalOrder(), jitter: 0f);
     }
 
     private static int ExaflarePair(int cycle) => 3 * cycle;
 
-    private Vector2?[] TopEnmityTankInFront(Vector2?[] spots, int trinityPair)
+    private static Vector2?[] TopEnmityTankFacesHimNorth(Vector2?[] spots, int trinityPair)
     {
-        spots[(int)State.TopEnmityTank(trinityPair)] = state.Turned(TopEnmityTankInFrontOfTheDragonKing);
+        spots[(int)State.TopEnmityTank(trinityPair)] = NorthOfTheDragonKing;
         return spots;
     }
 
-    private static Vector2?[] OnlyTheTopEnmityTank(Vector2?[] spots, int trinityPair)
+    private static Vector2?[] TopEnmityTankFacesHimSouth(Vector2?[] spots, int trinityPair)
     {
-        var tank = (int)State.TopEnmityTank(trinityPair);
-        var only = new Vector2?[8];
-        only[tank] = spots[tank];
-        return only;
+        spots[(int)State.TopEnmityTank(trinityPair)] = SouthOfTheDragonKing;
+        return spots;
     }
 
     private Vector2 ExaflareStart(int cycle)

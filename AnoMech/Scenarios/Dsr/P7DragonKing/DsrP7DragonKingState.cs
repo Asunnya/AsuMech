@@ -62,7 +62,8 @@ public sealed class DsrP7DragonKingState
 
     public static Vector2 Spot(EdgeSpot spot) => Spots[(int)spot];
 
-    // Dark Trinity goes to the top of enmity, so whoever takes it holds the Dragon-king's facing.
+    // Dark Trinity goes to the top of enmity; that tank holds him from the Edge cast before the pair
+    // to the one after it.
     public static PartyRole TopEnmityTank(int trinityPair) => trinityPair % 2 == 0 ? PartyRole.MainTank : PartyRole.OffTank;
 
     // A spot laid out for a north-facing Dragon-king, turned to where he faces.

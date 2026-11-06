@@ -161,11 +161,6 @@ public sealed class DsrP7DragonKingScenario : IScenario
             var darkTank = DsrP7DragonKingState.TopEnmityTank(i / 2);
             world.Events.Add(TrinityHits[i] - TrinitySwingLead, () => PlayEffect(thordan, ActionId.Trinity, 1.1f));
             world.Events.Add(TrinityHits[i], () => Trinity(darkTank));
-            if (i % 2 == 1)
-            {
-                var next = DsrP7DragonKingState.TopEnmityTank(i / 2 + 1);
-                world.Events.Add(TrinityHits[i] + 0.05f, () => SwapEnmity(next));
-            }
         }
 
         world.Events.Add(MornAfahsEdgeCast, CastMornAfahsEdge);
@@ -191,7 +186,6 @@ public sealed class DsrP7DragonKingScenario : IScenario
         if (thordan != null) spawned.Add(thordan);
     }
 
-    // The tanks trade enmity after each pair of Trinities; he turns to the new top.
     private void SwapEnmity(PartyRole tank)
     {
         topEnmity = tank;
@@ -209,13 +203,15 @@ public sealed class DsrP7DragonKingScenario : IScenario
         world.Events.Add(FacingCheckSeconds, FaceTheTopOfEnmity);
     }
 
-    // The Edge's spots are fixed by the way he faces as the cast begins.
-    private void CastEdge(uint actionId, float castSeconds)
+    // The Edge's spots are fixed by the way he faces as the cast begins. The cast locks his facing,
+    // so that is when the tanks trade enmity for the Trinities that follow it.
+    private void CastEdge(uint actionId, float castSeconds, int nextTrinityPair)
     {
         if (thordan == null) return;
         state.Facing = thordan.Rotation;
         facingHeld = true;
         world.Events.Add(castSeconds, () => facingHeld = false);
+        SwapEnmity(DsrP7DragonKingState.TopEnmityTank(nextTrinityPair));
         CastSelf(thordan, actionId, castSeconds);
     }
 
@@ -237,7 +233,7 @@ public sealed class DsrP7DragonKingScenario : IScenario
 
     private void CastExaflares(int cycle)
     {
-        CastEdge(ActionId.ExaflaresEdge, ExaflareCastSeconds);
+        CastEdge(ActionId.ExaflaresEdge, ExaflareCastSeconds, 3 * cycle);
         foreach (var spot in Enum.GetValues<EdgeSpot>())
         {
             var at = ToWorld(state.TurnedSpot(spot));
@@ -262,7 +258,7 @@ public sealed class DsrP7DragonKingScenario : IScenario
 
     private void CastAkhMorn(int cycle)
     {
-        CastEdge(ActionId.AkhMornsEdge, AkhMornCastSeconds);
+        CastEdge(ActionId.AkhMornsEdge, AkhMornCastSeconds, 3 * cycle + 1);
         foreach (var spot in Enum.GetValues<EdgeSpot>())
         {
             var at = ToWorld(state.TurnedSpot(spot));
@@ -311,7 +307,7 @@ public sealed class DsrP7DragonKingScenario : IScenario
 
     private void CastGigaflares(int cycle)
     {
-        CastEdge(ActionId.GigaflaresEdge, GigaflaresEdgeCastSeconds);
+        CastEdge(ActionId.GigaflaresEdge, GigaflaresEdgeCastSeconds, 3 * cycle + 2);
         for (var blast = 0; blast < 3; blast++)
         {
             var at = ToWorld(state.GigaflareSpot(cycle, blast));
@@ -376,7 +372,7 @@ public sealed class DsrP7DragonKingScenario : IScenario
 
     private void CastMornAfahsEdge()
     {
-        CastEdge(ActionId.MornAfahsEdge, MornAfahsEdgeCastSeconds);
+        CastEdge(ActionId.MornAfahsEdge, MornAfahsEdgeCastSeconds, TrinityHits.Length / 2);
         foreach (var (spot, action) in new[]
                  {
                      (EdgeSpot.Party, ActionId.MornAfahsEdgePartyFirst),
