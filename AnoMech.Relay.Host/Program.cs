@@ -208,7 +208,7 @@ internal static class AdminConsole
             return;
         }
         http = new HttpClient(new HttpClientHandler { AllowAutoRedirect = false }) { Timeout = TimeSpan.FromSeconds(60) };
-        http.DefaultRequestHeaders.Add("X-AnoMech-Admin-Token", adminToken);
+        foreach (var name in RelayHeaders.Names(RelayHeaders.AdminToken)) http.DefaultRequestHeaders.Add(name, adminToken);
 
         if (args.Contains("--recordings"))
         {

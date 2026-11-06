@@ -60,8 +60,10 @@ public class RelayClientTests
         var accepted = await AcceptSocket(listener).WaitAsync(TimeSpan.FromSeconds(5));
         using var socket = accepted.Socket;
         listener.Stop();
-        Assert.That(accepted.Headers.GetValueOrDefault("X-AnoMech-Peer-Secret"), Is.EqualTo(secret), "credential header sent");
-        Assert.That(accepted.Headers.GetValueOrDefault("X-AnoMech-Protocol"), Is.EqualTo(RelayWire.Version.ToString()), "protocol header sent");
+        foreach (var name in RelayHeaders.Names(RelayHeaders.PeerSecret))
+            Assert.That(accepted.Headers.GetValueOrDefault(name), Is.EqualTo(secret), $"credential header sent as {name}");
+        foreach (var name in RelayHeaders.Names(RelayHeaders.Protocol))
+            Assert.That(accepted.Headers.GetValueOrDefault(name), Is.EqualTo(RelayWire.Version.ToString()), $"protocol header sent as {name}");
         if (mode == "fragmented")
         {
             // Split, so the client must reassemble it.

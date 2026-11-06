@@ -229,8 +229,8 @@ public class RelayLoopbackTests
     private static async Task<ClientWebSocket> ConnectRaw(string url, string code, string secret)
     {
         var socket = new ClientWebSocket();
-        socket.Options.SetRequestHeader("X-AnoMech-Protocol", RelayWire.Version.ToString());
-        socket.Options.SetRequestHeader("X-AnoMech-Peer-Secret", secret);
+        socket.Options.SetRequestHeader(RelayHeaders.Prefix + RelayHeaders.Protocol, RelayWire.Version.ToString());
+        socket.Options.SetRequestHeader(RelayHeaders.Prefix + RelayHeaders.PeerSecret, secret);
         using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
         await socket.ConnectAsync(new Uri($"{url}/session/{code}"), timeout.Token);
         var frame = await ReadFrame(socket);

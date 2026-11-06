@@ -48,10 +48,11 @@ internal static class RecordingUploader
                 {
                     using var request = new HttpRequestMessage(HttpMethod.Post, uri) { Content = new ByteArrayContent(body) };
                     request.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/gzip");
-                    request.Headers.Add("X-AnoMech-Recording-Name", Path.GetFileName(path));
-                    request.Headers.Add("X-AnoMech-Protocol", RelayWire.Version.ToString());
-                    request.Headers.Add("X-AnoMech-Peer-Secret", peerSecret);
-                    if (!string.IsNullOrEmpty(accessToken)) request.Headers.Add("X-AnoMech-Relay-Token", accessToken);
+                    foreach (var name in RelayHeaders.Names(RelayHeaders.RecordingName)) request.Headers.Add(name, Path.GetFileName(path));
+                    foreach (var name in RelayHeaders.Names(RelayHeaders.Protocol)) request.Headers.Add(name, RelayWire.Version.ToString());
+                    foreach (var name in RelayHeaders.Names(RelayHeaders.PeerSecret)) request.Headers.Add(name, peerSecret);
+                    if (!string.IsNullOrEmpty(accessToken))
+                        foreach (var name in RelayHeaders.Names(RelayHeaders.RelayToken)) request.Headers.Add(name, accessToken);
                     using var response = await Http.SendAsync(request, ct).ConfigureAwait(false);
                     var text = await response.Content.ReadAsStringAsync(ct).ConfigureAwait(false);
                     if (response.IsSuccessStatusCode)

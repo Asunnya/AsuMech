@@ -141,9 +141,9 @@ public class RelayRecordingsTests
 
     private static async Task<(int Status, string Body)> Post(int port, string name, string? secret, byte[] body, string? token = null, string? origin = null)
     {
-        var head = new StringBuilder($"POST /recordings HTTP/1.1\r\nHost: x\r\nContent-Length: {body.Length}\r\nX-AnoMech-Recording-Name: {name}\r\nX-AnoMech-Protocol: {RelayWire.Version}\r\n");
-        if (secret != null) head.Append($"X-AnoMech-Peer-Secret: {secret}\r\n");
-        if (token != null) head.Append($"X-AnoMech-Relay-Token: {token}\r\n");
+        var head = new StringBuilder($"POST /recordings HTTP/1.1\r\nHost: x\r\nContent-Length: {body.Length}\r\n{RelayHeaders.Prefix}{RelayHeaders.RecordingName}: {name}\r\n{RelayHeaders.Prefix}{RelayHeaders.Protocol}: {RelayWire.Version}\r\n");
+        if (secret != null) head.Append($"{RelayHeaders.Prefix}{RelayHeaders.PeerSecret}: {secret}\r\n");
+        if (token != null) head.Append($"{RelayHeaders.Prefix}{RelayHeaders.RelayToken}: {token}\r\n");
         if (origin != null) head.Append($"Origin: {origin}\r\n");
         head.Append("\r\n");
         var (status, bytes) = await Raw(port, Encoding.ASCII.GetBytes(head.ToString()).Concat(body).ToArray());
@@ -157,7 +157,7 @@ public class RelayRecordingsTests
     }
 
     private static Task<(int Status, byte[] Body)> GetBytes(int port, string path, string? adminToken)
-        => Raw(port, Encoding.ASCII.GetBytes($"GET {path} HTTP/1.1\r\nHost: x\r\n{(adminToken != null ? $"X-AnoMech-Admin-Token: {adminToken}\r\n" : "")}\r\n"));
+        => Raw(port, Encoding.ASCII.GetBytes($"GET {path} HTTP/1.1\r\nHost: x\r\n{(adminToken != null ? $"{RelayHeaders.Prefix}{RelayHeaders.AdminToken}: {adminToken}\r\n" : "")}\r\n"));
 
     // Status 0 when the relay reset the connection without a readable response.
     private static async Task<(int Status, byte[] Body)> Raw(int port, byte[] request)

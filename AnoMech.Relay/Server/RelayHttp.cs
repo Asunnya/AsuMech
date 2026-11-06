@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using AnoMech.Network;
 
 namespace AnoMech.Relay;
 
@@ -22,6 +23,8 @@ internal sealed class RelayHttpRequest
     public required byte[] Buffered { get; init; }
 
     public string? Header(string name) => Headers.GetValueOrDefault(name);
+
+    public string? RelayHeader(string field) => Header(RelayHeaders.Prefix + field) ?? Header(RelayHeaders.LegacyPrefix + field);
 
     // Buffered must be empty: a client may not send frames before it has seen the 101, and
     // anything already read here would otherwise be lost to the WebSocket built on the stream.

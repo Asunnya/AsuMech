@@ -1,13 +1,16 @@
 name: Upstream sync
 
-# Opens a PR from anomek/AnoMech master into this fork's master when upstream has new commits.
+# Upstream anomek/AnoMech never merges in raw: tools/asumech_rename.py snapshots its master with
+# the AsuMech rename applied onto the upstream-asu branch, and a PR brings upstream-asu into
+# master. Merge it with a merge commit, never squash or rebase: upstream-asu's history is what
+# keeps the next sync down to upstream's new changes.
 on:
   schedule:
     - cron: '0 12 * * 1'
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pull-requests: write
 
 jobs:
@@ -15,17 +18,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Open upstream PR
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Snapshot upstream onto upstream-asu
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git remote add upstream https://github.com/anomek/AnoMech.git
+        git fetch upstream master
+        git fetch origin upstream-asu:upstream-asu || true
+        python3 tools/asumech_rename.py upstream --from upstream/master --branch upstream-asu --push origin
+
+    - name: Open sync PR
       env:
         GH_TOKEN: ${{ github.token }}
         REPO: ${{ github.repository }}
       run: |
-        ahead=$(gh api "repos/$REPO/compare/master...anomek:AnoMech:master" -q .ahead_by)
-        echo "upstream is $ahead commit(s) ahead"
+        ahead=$(gh api "repos/$REPO/compare/master...upstream-asu" -q .ahead_by)
+        echo "upstream-asu is $ahead commit(s) ahead"
         if [ "$ahead" = "0" ]; then exit 0; fi
-        open=$(gh pr list -R "$REPO" --base master --state open --json headRepositoryOwner,headRefName \
-          -q '[.[] | select(.headRepositoryOwner.login == "anomek" and .headRefName == "master")] | length')
+        open=$(gh pr list -R "$REPO" --base master --head upstream-asu --state open --json number -q length)
         if [ "$open" != "0" ]; then echo "sync PR already open"; exit 0; fi
-        gh pr create -R "$REPO" --base master --head anomek:master \
-          --title "Sync upstream AnoMech" \
-          --body "anomek/AnoMech master is $ahead commit(s) ahead of master. Merge with a merge commit, never squash or rebase."
+        gh pr create -R "$REPO" --base master --head upstream-asu \
+          --title "Sync upstream" \
+          --body "upstream-asu (anomek/AnoMech master, renamed to AsuMech) is $ahead commit(s) ahead of master.
+
+        On conflict keep ours. Take new scenarios; read structural changes and adopt only what fixes a problem we have. Merge with a merge commit, never squash or rebase.
+
+        \`\`\`
+        $(git log -1 --format=%B upstream-asu)
+        \`\`\`"

@@ -10,6 +10,8 @@ namespace AnoMech;
 public class Configuration : IPluginConfiguration
 {
     public int Version { get; set; } = 0;
+    // LegacyConfig.Import: the plugin whose config this one started from, empty for a fresh one.
+    public string ImportedFrom { get; set; } = "";
 
     
     public bool OpenSimMenuOnInn { get; set; } = true;
@@ -120,7 +122,8 @@ public class Configuration : IPluginConfiguration
         // A password saved before it was tied to a relay belongs to the one saved alongside it.
         if (RelayTokenOrigin.Length == 0 && RelayAccessToken.Length != 0) RelayTokenOrigin = OriginOf(RelayServerUrl);
         var origin = OriginOf(url);
-        return origin.Length != 0 && origin == RelayTokenOrigin ? RelayAccessToken : "";
+        if (origin.Length != 0 && origin == RelayTokenOrigin) return RelayAccessToken;
+        return origin.Length != 0 && origin == OriginOf(DefaultRelay.Url) ? DefaultRelay.Token : "";
     }
 
     public static string OriginOf(string url)

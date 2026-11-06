@@ -25,6 +25,14 @@ public class ConfigurationTests
     }
 
     [Test]
+    public void DefaultServerGetsItsBuiltInTokenAndNoOtherDoes()
+    {
+        var config = new Configuration();
+        Assert.That(config.TokenForRelay(DefaultRelay.Url), Is.EqualTo(DefaultRelay.Token));
+        Assert.That(config.TokenForRelay(DefaultRelay.UpstreamUrl), Is.EqualTo(""));
+    }
+
+    [Test]
     public void ActiveServerFollowsTheChoice()
     {
         var config = new Configuration { RelayServerUrl = " relay.example.com " };

@@ -5,9 +5,10 @@
 
 ---
 
-AsuMech is a fork of [AnoMech](https://github.com/anomek/AnoMech) by Anomek. It keeps everything AnoMech has and adds
-Savage raids and other fights that stay in this fork, starting with AAC Heavyweight M1 (Savage). The plugin is still
-opened with `/asumech` (or `/asu`; `/anomech` and `/ano` still work), and only one of the two can be installed at a time.
+AsuMech is a fork of [AnoMech](https://github.com/anomek/AnoMech) by Anomek. It keeps everything AnoMech has and adds <!-- rename:keep -->
+Savage raids and other fights that stay in this fork, starting with AAC Heavyweight M1 (Savage). Open it with
+`/asumech` (or `/asu`; the old `/anomech` and `/ano` still work). Only one of the two plugins can be installed at a <!-- rename:keep -->
+time: uninstall AnoMech first, and its settings are imported the first time AsuMech starts. <!-- rename:keep -->
  
 Simulate FFXIV raid mechanics client-side for solo practice. Go to any Inn, open the plugin with `/anomech` and start practicing!
 
@@ -34,7 +35,7 @@ from the plugin installer:
 https://raw.githubusercontent.com/Asunnya/AsuMech/asunnya-release/pluginmaster.json
 ```
 
-For upstream AnoMech, see: https://github.com/anomek/MyDalamudPlugins
+For upstream AnoMech, see: https://github.com/anomek/MyDalamudPlugins <!-- rename:keep -->
 
 ## Beta: Advanced Simulation Resolution
 

@@ -149,8 +149,9 @@ public class RelayServerTests
     private static async Task<string?> JoinRefusal(string url, string code)
     {
         using var socket = new ClientWebSocket();
-        socket.Options.SetRequestHeader("X-AnoMech-Protocol", RelayWire.Version.ToString());
-        socket.Options.SetRequestHeader("X-AnoMech-Peer-Secret", RelayWire.NewSecret());
+        // Only the legacy names: relays must keep accepting clients of the upstream plugin.
+        socket.Options.SetRequestHeader(RelayHeaders.LegacyPrefix + RelayHeaders.Protocol, RelayWire.Version.ToString());
+        socket.Options.SetRequestHeader(RelayHeaders.LegacyPrefix + RelayHeaders.PeerSecret, RelayWire.NewSecret());
         using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
         await socket.ConnectAsync(new Uri($"{url}/session/{code}"), timeout.Token);
         var result = await socket.ReceiveAsync(new byte[1024], timeout.Token);

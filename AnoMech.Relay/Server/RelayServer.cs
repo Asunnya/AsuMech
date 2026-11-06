@@ -459,7 +459,7 @@ public sealed class RelayServer : IAsyncDisposable
             return;
         }
 
-        if (options.AccessToken != null && !IsValidToken(request.Header("X-AnoMech-Relay-Token"), options.AccessToken))
+        if (options.AccessToken != null && !IsValidToken(request.RelayHeader(RelayHeaders.RelayToken), options.AccessToken))
         {
             CountRejection(ref rejectedBadToken, "bad token", ip, sessionTag);
             RecordFailedAuth(FailedJoinsByIp, JoinLockoutUntilByIp, key, "join");
@@ -467,7 +467,7 @@ public sealed class RelayServer : IAsyncDisposable
             return;
         }
 
-        if (AuthenticatePeer(request.Header("X-AnoMech-Protocol"), request.Header("X-AnoMech-Peer-Secret")) is not { } authenticatedPeerId)
+        if (AuthenticatePeer(request.RelayHeader(RelayHeaders.Protocol), request.RelayHeader(RelayHeaders.PeerSecret)) is not { } authenticatedPeerId)
         {
             // File-only like other per-request refusals: anything can send a bare upgrade request.
             CountRejection(ref rejectedBadProtocol, "missing or wrong protocol version or peer credential; the plugin and relay need to be the same version", ip, sessionTag);
@@ -912,7 +912,7 @@ public sealed class RelayServer : IAsyncDisposable
             await RelayHttp.WriteStatusAsync(stream, 429, token);
             return false;
         }
-        if (!IsValidToken(request.Header("X-AnoMech-Admin-Token"), options.AdminToken))
+        if (!IsValidToken(request.RelayHeader(RelayHeaders.AdminToken), options.AdminToken))
         {
             CountRejection(ref rejectedBadToken, "bad admin token", ip, "admin");
             RecordFailedAuth(FailedAdminByIp, AdminLockoutUntilByIp, key, "admin");
@@ -982,14 +982,14 @@ public sealed class RelayServer : IAsyncDisposable
         }
         if (!string.IsNullOrEmpty(request.Header("Origin"))) { CountRejection(ref rejectedOrigin, "origin header present", ip, "recordings"); await Respond(403); return; }
         if (IsLockedOut(JoinLockoutUntilByIp, key)) { CountRejection(ref rejectedJoinLockout, "auth locked out", ip, "recordings"); await Respond(429); return; }
-        if (options.AccessToken != null && !IsValidToken(request.Header("X-AnoMech-Relay-Token"), options.AccessToken))
+        if (options.AccessToken != null && !IsValidToken(request.RelayHeader(RelayHeaders.RelayToken), options.AccessToken))
         {
             CountRejection(ref rejectedBadToken, "bad token", ip, "recordings");
             RecordFailedAuth(FailedJoinsByIp, JoinLockoutUntilByIp, key, "recordings");
             await Respond(401);
             return;
         }
-        if (AuthenticatePeer(request.Header("X-AnoMech-Protocol"), request.Header("X-AnoMech-Peer-Secret")) is not { } peerId)
+        if (AuthenticatePeer(request.RelayHeader(RelayHeaders.Protocol), request.RelayHeader(RelayHeaders.PeerSecret)) is not { } peerId)
         {
             CountRejection(ref rejectedBadProtocol, "missing or wrong protocol version or peer credential", ip, "recordings");
             await Respond(400);
@@ -1009,10 +1009,10 @@ public sealed class RelayServer : IAsyncDisposable
             await Respond(413);
             return;
         }
-        if (RecordingFileName(request.Header("X-AnoMech-Recording-Name"), peerId) is not { } name)
+        if (RecordingFileName(request.RelayHeader(RelayHeaders.RecordingName), peerId) is not { } name)
         {
             Interlocked.Increment(ref recordingsRejected);
-            log.Warn($"[recordings] upload from {ip} ({peerId}) refused: bad X-AnoMech-Recording-Name");
+            log.Warn($"[recordings] upload from {ip} ({peerId}) refused: bad {RelayHeaders.Prefix}{RelayHeaders.RecordingName}");
             await Respond(400);
             return;
         }

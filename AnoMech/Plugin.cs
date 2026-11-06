@@ -45,7 +45,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
     [PluginService] internal static IGameConfig GameConfig { get; private set; } = null!;
     [PluginService] internal static IGameGui GameGui { get; private set; } = null!;
 
-    private const string CommandName = "/anomech";
+    private const string CommandName = "/anomech"; // rename:keep
     private const string CommandAlias = "/ano";
     private const string AsuMechCommand = "/asumech";
     private const string AsuMechAlias = "/asu";
@@ -63,7 +63,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
     internal RunController Runs { get; private set; } = null!;
     internal ScenarioPicker Picker { get; private set; } = null!;
 
-    private readonly WindowSystem windowSystem = new("AnoMech");
+    private readonly WindowSystem windowSystem = new("AnoMech"); // rename:keep
 
     // Plugin-lifetime singletons, static like the PluginServices above so sim code reaches them
     // without a Plugin reference.
@@ -102,7 +102,9 @@ public sealed class Plugin : IAsyncDalamudPlugin
         DiagnosticLog.Initialize();
         try
         {
-            Config = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+            var imported = LegacyConfig.Import(PluginInterface.ConfigFile, PluginInterface.ConfigDirectory);
+            Config = imported ?? PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+            if (imported != null) Config.Save();
             if (Config.MigrateLayout()) Config.Save();
 
             LogManager = new LogManager();
@@ -190,11 +192,11 @@ public sealed class Plugin : IAsyncDalamudPlugin
 
             CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
             {
-                HelpMessage = "Open AnoMech. Subcommands: config, mp, start, reset, leave, rec, rec stop, rolls"
+                HelpMessage = "Old name of /asumech"
             });
             CommandManager.AddHandler(CommandAlias, new CommandInfo(OnCommand)
             {
-                HelpMessage = "Alias for /anomech"
+                HelpMessage = "Old name of /asu"
             });
             CommandManager.AddHandler(AsuMechCommand, new CommandInfo(OnCommand)
             {

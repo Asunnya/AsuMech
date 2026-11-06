@@ -180,6 +180,11 @@ public sealed class RelayClient(string peerSecret) : IRelayConnection
     // Far above a normal connect, and leaves most of MultiplayerManager's 15 s join deadline.
     internal TimeSpan FallbackAfter { get; init; } = TimeSpan.FromSeconds(5);
 
+    private void SetRelayHeader(string field, string value)
+    {
+        foreach (var name in RelayHeaders.Names(field)) socket.Options.SetRequestHeader(name, value);
+    }
+
     private async Task<string?> ConnectCoreAsync(string relayUrl, string path, string? accessToken)
     {
         var candidates = ResolveCandidateUris(relayUrl, path);
@@ -208,9 +213,9 @@ public sealed class RelayClient(string peerSecret) : IRelayConnection
             }
             // Options only apply before ConnectAsync, so they are set per instance.
             if (!string.IsNullOrEmpty(accessToken))
-                socket.Options.SetRequestHeader("X-AnoMech-Relay-Token", accessToken);
-            socket.Options.SetRequestHeader("X-AnoMech-Peer-Secret", peerSecret);
-            socket.Options.SetRequestHeader("X-AnoMech-Protocol", RelayWire.Version.ToString());
+                SetRelayHeader(RelayHeaders.RelayToken, accessToken);
+            SetRelayHeader(RelayHeaders.PeerSecret, peerSecret);
+            SetRelayHeader(RelayHeaders.Protocol, RelayWire.Version.ToString());
             var uri = candidates[i];
             IsEncrypted = uri.Scheme == "wss";
             var fallbackLeft = i < candidates.Count - 1;
