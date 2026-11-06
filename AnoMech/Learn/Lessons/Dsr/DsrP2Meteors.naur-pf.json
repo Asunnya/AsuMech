@@ -131,5 +131,18 @@
       "skip": false
     }
   ],
+  "toolbox": {
+    "planId": "Src8CpFxCAUUuZEM",
+    "roleMap": {
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "MeleeDpsA": "dps1",
+      "MeleeDpsB": "dps2",
+      "PhysRangedDps": "dps3",
+      "CasterDps": "dps4"
+    },
+    "steps": {},
+    "exampleSeed": 1
+  },
   "draft": true
 }

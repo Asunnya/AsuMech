@@ -62,7 +62,7 @@ public class LearnStatusTests
         Assert.That(rows.Single(r => r.Reads == "plans.json").Status, Is.EqualTo(Readiness.Ok));
         Assert.That(rows.Single(r => r.Reads == "orders for the player's slot").Status, Is.EqualTo(Readiness.Degraded));
         Assert.That(rows.Single(r => r.Reads == "mit timeline + plan").Status, Is.EqualTo(Readiness.Ok));
-        var dsr = Catalog.Scenarios.First(s => s.GetType().Name == "DsrP2MeteorsScenario");
+        var dsr = Catalog.Scenarios.First(s => s.GetType().Name == "UmadP5ForsakenNull");
         var dsrRows = LearnReadiness.Check(dsr);
         TestContext.Out.WriteLine(LearnReadiness.Table(dsr, dsrRows));
         Assert.That(dsrRows.Single(r => r.Reads == "plans.json").Status, Is.EqualTo(Readiness.Missing));
