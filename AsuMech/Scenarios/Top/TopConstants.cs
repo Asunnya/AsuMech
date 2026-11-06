@@ -1,0 +1,397 @@
+using System;
+using System.Collections.Generic;
+using System.Numerics;
+using System.Text.Json.Serialization;
+using AsuMech.Core;
+using AsuMech.Core.EnemyActions;
+using AsuMech.Core.Game;
+using AsuMech.Core.SimObjects;
+using static AsuMech.Scenarios.Top.TopConstants;
+
+namespace AsuMech.Scenarios.Top;
+
+// Travels in TopP5OmegaAiReplayStateMessage, so it stays a plain value: Action is derived, not stored.
+public sealed record OmegaAttack(byte AttributeFlags, uint ActionId)
+{
+    // Every clone spawns in the sword/staff look; legs and shield switch to theirs with a model state.
+    public const byte SpawnAttributeFlags = 0x10;
+    private const byte ReshapedModelState = 0x04;
+
+    public static readonly OmegaAttack Legs   = new(0x31, TopConstants.ActionId.SuperliminalSteel);
+    public static readonly OmegaAttack Staff  = new(0x10, TopConstants.ActionId.OptimizedBlizzardIII);
+    public static readonly OmegaAttack Sword  = new(0x10, TopConstants.ActionId.EfficientBladework);
+    public static readonly OmegaAttack Shield = new(0x31, TopConstants.ActionId.BeyondStrength);
+
+    public void Reshape(SimEnemy? clone)
+    {
+        if (AttributeFlags == SpawnAttributeFlags) return;
+        clone?.SetModeAttributeFlags(AttributeFlags);
+        clone?.SetModelState(ReshapedModelState);
+    }
+
+    [JsonIgnore]
+    public EnemyAction Action => ActionId switch
+    {
+        TopConstants.ActionId.SuperliminalSteel => TopActions.SuperliminalSteel,
+        TopConstants.ActionId.OptimizedBlizzardIII => TopActions.OptimizedBlizzardIII,
+        TopConstants.ActionId.EfficientBladework => TopActions.EfficientBladework,
+        TopConstants.ActionId.BeyondStrength => TopActions.BeyondStrength,
+        _ => throw new InvalidOperationException($"No EnemyAction for omega attack {ActionId}"),
+    };
+}
+
+public sealed record GlitchType(ushort StatusId, Predicate<SimTether> Condition)
+{
+    public static readonly GlitchType Mid = new(TopConstants.StatusId.MidGlitch,
+                                                tether => tether.StretchGt(Geometry.MidGlitchMaxDistance) ||
+                                                          tether.StretchLt(Geometry.MidGlitchMinDistance));
+
+    public static readonly GlitchType Far = new(TopConstants.StatusId.FarGlitch,
+                                                tether => tether.StretchLt(Geometry.FarGlitchMinDistance));
+}
+
+
+// All IDs and tunables for The Omega Protocol (Ultimate), in one flat class.
+// One name per value. Values in decimal.
+public static class TopConstants
+{
+    public const byte Level = 90;
+
+    public static class BNpcBaseId
+    {
+        public const uint OmegaMDynamis = 15720;             // boss-rank Omega-M (4000A63C)
+        public const uint OmegaFDynamis = 15722;             // boss-rank Omega-F
+        public const uint OmegaM_3D69 = 15721;
+        public const uint OmegaM = 15712;         // P2 boss-rank Omega
+        public const uint OmegaF = 15713;         // P2 variant
+        public const uint OmegaMClone = 15714;        // P2 Omega-M
+        public const uint OmegaFClone = 15715;        // P2 Omega-F
+        public const uint BeetleHelper = 15724;       // 0x3D6C — beetle / sigma helper visual
+        public const uint FinalHelper = 14669;        // 0x394D — wave cannon spinner / ultimate visual
+        public const uint RightArmUnit = 15719;       // 0x3D67 — Hyper Pulse caster
+        public const uint LeftArmUnit = 15718;        // 0x3D66
+        public const uint RearPowerUnit = 15723;
+        public const uint OpticalUnit = 15716;        // 0x3D64 — invisible marker for the eye
+        public const uint RocketPunchYellow = 15709;  // 0x3D5D — RocketPunch1 (color 0)
+        public const uint RocketPunchBlue = 15710;    // 0x3D5E — RocketPunch2 (color 1)
+        public const uint AlphaOmega = 15725;         // 0x3D6D — P6 Alpha Omega boss
+    }
+
+    public static class BNpcLayoutId
+    {
+        public const uint OmegaM = 0x91D426;
+        public const uint OmegaF = 0x91D427;
+        public const uint OmegaMClone = 0x91D42A;
+        public const uint OmegaFClone = 0x91D42B;
+        public const uint OpticalUnit = 0x91D42D;
+        public const uint OmegaMDynamis = 0x91E486;
+        public const uint OmegaFDynamis = 0x91E487;
+        public const uint OmegaM_3D69 = 0x91E48A;
+        public const uint BeetleHelper = 0x91E489;
+        public const uint FinalHelper = 0x946F2B;
+        public const uint RightArmUnit = 0x91E422;
+        public const uint LeftArmUnit = 0x91E421;
+        public const uint RearPowerUnit = 0x91E488;
+        public const uint RocketPunchYellow = 0x91D1E8;
+        public const uint RocketPunchBlue = 0x91D1E9;
+        public const uint AlphaOmega = 0x91E4E6;
+    }
+
+    public static class BNpcNameId
+    {
+        public const uint OmegaMDynamis = 12257;
+        public const uint OmegaFDynamis = 12258;
+        public const uint OmegaM = 7633;         // P2 Omega-M
+        public const uint OmegaF = 7634;         // P2 Omega-F
+        public const uint OmegaM_1DD3 = 7635;          // P2 Omega
+        public const uint OmegaBeetle = 7695;
+        public const uint OmegaFinal = 7636;
+        public const uint RightArmUnit = 7638;        // 0x1DD6 — log name for BNpc 0x3D67
+        public const uint LeftArmUnit = 7637;
+        public const uint OpticalUnit = 7640;
+        public const uint RocketPunch = 7696;
+        public const uint RearPowerUnit = 7639;
+        public const uint AlphaOmega = 12256;
+    }
+
+    public static class EObjId
+    {
+        public const uint EventObj1EA1A1 = 2007457;
+        public const uint TowerTimer = 2013244;
+        public const uint TowerSolo = 2013245;
+        public const uint TowerPair = 2013246;
+
+        // EObjSetState p2 for both towers.
+        public const uint TowerStateUnk = 0x800503FE;
+
+        // The duty director's event, which the tower EObjs are bound to.
+        public const uint TowerEventId = 0x800375AC;
+
+        // Sigma's tower spots on the 22.5°-offset ring each have their own layout, clockwise from NNE.
+        public static readonly uint[] TowerRingLayoutIds = [0x945286, 0x945287, 0x945288, 0x945289, 0x94528A, 0x94528B, 0x94528C, 0x94528D];
+    }
+
+    public static class ActionId
+    {
+        // -- Hello World family --
+        public const uint HelloNearWorld = 31625;
+        public const uint HelloNearWorldJump = 31626;
+        public const uint HelloDistantWorld = 33040;
+        public const uint HelloDistantWorldJump = 33041;
+        public const uint HelloWorldFail = 31627;                   // Helper->self, range-100 wipe fired on any Hello World fail
+
+        // -- Sword/shield/leg/staff body forms --
+        public const uint BeyondStrength = 31525;
+        public const uint EfficientBladework = 31526;
+        public const uint BeyondDefense = 31527;
+        public const uint BeyondDefenseAOE = 31528;                 // OmegaMHelper->player, no cast, range 5 circle
+        public const uint PilePitch = 31529;
+        public const uint SuperliminalSteel = 31530;
+        public const uint SuperliminalSteelOmenL = 31531;
+        public const uint SuperliminalSteelOmenR = 31532;
+        public const uint OptimizedBlizzardIII = 31533;
+        public const uint Discharger = 31534;
+        public const uint OptimizedFireIII = 31535;
+
+        // -- Wave Cannon / Oversampled / Diffuse --
+        public const uint WaveCannon = 31603;                  // Sigma canonical wave cannon
+        public const uint WaveCannonAoe = 31604;
+        public const uint WaveCannon_7B80 = 31616;                  // Omega canonical wave cannon
+        public const uint WaveCannonKyrios = 31505;
+        public const uint OversampledWaveCannonAoe = 31597;         // Helper->players, no cast, range 7 circle spread
+        public const uint OversampledWaveCannonLeft = 31639;        // arm unit cone variant — left side
+        public const uint OversampledWaveCannonRight = 31638;       // arm unit cone variant — right side
+        public const uint OmegaDiffuseWaveCannonFront = 31643;          // FinalHelper->self, 8.0s cast, visual (first set of cones, front/back)
+        public const uint OmegaDiffuseWaveCannonSides = 31644;          // FinalHelper->self, 8.0s cast, visual (first set of cones, left/right)
+        public const uint OmegaDiffuseWaveCannonRepeatFront = 31607;    // FinalHelper->self, no cast, visual (second set of cones, front/back)
+        public const uint OmegaDiffuseWaveCannonRepeatSides = 31608;    // FinalHelper->self, no cast, visual (second set of cones, left/right)
+        public const uint OmegaDiffuseWaveCannonAOE = 31609;            // Helper->self, 1.0s cast, range 100 120-degree cone
+
+        // -- Storage Violation --
+        public const uint StorageViolationSolo = 31492;
+        public const uint StorageViolationPair = 31493;
+        // Unfilled-tower raidwide. UNVERIFIED: picked from the Action sheet, never seen cast.
+        public const uint StorageViolationObliteration = 31494;
+
+        // -- Run :() versions --
+        public const uint RunMiDeltaVersion = 31624;
+        public const uint RunMiSigmaVersion = 32788;
+        public const uint RunMiOmegaVersion = 32789;
+
+        // -- Hyper Pulse --
+        public const uint HyperPulseDeltaCharging = 31600;                       // arm unit 2.5s cast, range 100 width 8 rect, baited on closest
+        public const uint HyperPulseDeltaShoot = 31601;                  // arm unit no-cast follow-up
+        public const uint HyperPulseSigma = 31602;
+
+        // -- Rear Lasers --
+        public const uint RearLasersCharging = 31631;
+        public const uint RearLasersShoot = 31632;
+
+        // -- Sniper Cannon --
+        public const uint SniperCannon = 31571;
+        public const uint HighPoweredSniperCannon = 31572;
+
+        // -- Solar Ray --
+        public const uint SolarRay = 33196;
+        public const uint SolarRay_7B01 = 31489;
+        public const uint SolarRay_7B02 = 31490;
+        public const uint SolarRay_7E6A = 32362;
+        public const uint SolarRay_7E6B = 32363;
+        public const uint SolarRay_81AD = 33197;
+
+        // -- Critical bugs --
+        public const uint CriticalOverflowBug = 31575;
+        public const uint CriticalSynchronizationBug = 31574;
+
+        // -- Misc --
+        public const uint BallisticImpact = 31500;
+        public const uint Blaster = 32374;
+        public const uint Blaster_7B0A = 31498;
+        public const uint BlasterEffect = 31641;
+        public const uint BlasterAoe = 32373;
+        public const uint FlameThrower = 32368;
+        public const uint FlameThrower_7B0D = 31501;
+        public const uint SubjectSimulationFDynamis = 32559;
+        public const uint SubjectSimulationF = 31515;
+        public const uint ProgramLoop = 31640;
+        public const uint Teleport7b42 = 31554;                     // Omega-M teleport
+        public const uint Teleport7b43 = 31555;
+        public const uint SuperfluidAnimationM = 31508;
+        public const uint SuperfluidAnimationF = 31509;
+        public const uint SubjectSimulationFWarpDown = 31510;
+        public const uint Unknown7b17 = 31511;
+        public const uint Unknown7b1d = 31517;
+        public const uint SubjectSimulationFWarpUp = 31518;
+        public const uint Unknown7b1f = 31519;
+        public const uint Unknown7b20 = 31520;
+        public const uint Unknown7b85 = 31621;
+        public const uint Unknown7bfe = 31742;
+        public const uint Unknown7bff = 31743;
+        public const uint Unknown7c01 = 31745;
+        public const uint Unknown7c02 = 31746;
+        public const uint Unknown7f30 = 32560;
+
+        // -- Delta-specific --
+        public const uint PeripheralSynthesis = 31628;              // BeetleHelper visual, no cast
+        public const uint DeltaExplosion = 31482;                   // RocketPunch->location, 3s cast
+        public const uint DeltaUnmitigatedExplosion = 31483;        // RocketPunch->location, 3s cast — raidwide wipe when overlap check fails
+        public const uint OpticalLaser = 31521;                     // OpticalUnit line AOE through arena
+        public const uint ArchivePeripheral = 32630;                // FinalHelper->self, no cast — spawns the rotating ring
+        public const uint SwivelCannonR = 31636;                    // BeetleHelper->self, 10s cast, range 60 210° cone
+        public const uint SwivelCannonL = 31637;
+        public const uint HwTetherBreak = 31587;                    // Helper->self, no cast, range 100 circle — raidwide hit on tether break
+        public const uint HwTetherFail = 32505;                     // Helper->self, no cast, range 100 circle — wipe when a tether expires unbroken
+
+        // -- P2 Party Synergy --
+        public const uint Firewall = 31552;
+        public const uint Firewall_7B41 = 31553;
+        public const uint PartySynergyM = 31550;
+        public const uint PartySynergyF = 31551;
+        public const uint Spotlight = 31536;
+        public const uint SubjectSimulationM = 31516;
+        public const uint CondensedWaveCannonKyrios = 31503;
+        public const uint DiffuseWaveCannonKyrios = 31504;
+        public const uint GuidedMissileKyrios = 31502;
+
+        // -- P6 Wave Cannon 2 / Cosmo (Alpha Omega) --
+        public const uint CosmoMemory = 31649;                      // 0x7BA1
+        public const uint CosmoArrow = 31650;                       // 0x7BA2
+        public const uint CosmoArrowOmen = 31651;                   // 0x7BA3
+        public const uint CosmoArrowDamage = 31652;                 // 0x7BA4
+        public const uint CosmoDive = 31654;                        // 0x7BA6
+        public const uint CosmoDive_7BA7 = 31655;                   // 0x7BA7
+        public const uint CosmoDive_7BA8 = 31656;                   // 0x7BA8
+        public const uint WaveCannon_7BA9 = 31657;                  // 0x7BA9 — P6 Alpha Omega wave cannon
+        public const uint WaveCannonWildCharge = 31658;            // 0x7BAA
+        public const uint WaveCannonProtean = 31659;               // 0x7BAB
+        public const uint UnlimitedWaveCannon = 31660;             // 0x7BAC
+        public const uint WaveCannon_7BAD = 31661;                  // 0x7BAD
+        public const uint WaveCannon_7BAE = 31662;                  // 0x7BAE
+        public const uint WaveCannon_7BAF = 31663;                  // 0x7BAF
+        public const uint AlphaOmegaAutoAttack = 31747;            // 0x7C03
+        public const uint Unknown7ddf = 32223;                      // 0x7DDF
+        public const uint Inhale = 32337;                           // 0x7E51
+    }
+
+    public static class StatusId
+    {
+        public const ushort QuickeningDynamis = 3444;               // TOP-wide stack buff
+        public const ushort VulnerabilityUp = 3366;                 // generic damage-taken-up
+        public const ushort MagicVulnerabilityUp = 2941;
+        public const ushort MagicVulnerabilityUpMini = 3516;        // stackable, needs 2 stacks to be lethal
+        public const ushort TwiceComeRuin = 2534;                   // second tick lethal
+        public const ushort TriceComeRuin = 2530;
+        public const ushort HelloNearWorld = 3442;
+        public const ushort HelloDistantWorld = 3443;
+        public const ushort HWPrepLocalTether = 3503;               // 'local code smell'
+        public const ushort HWPrepRemoteTether = 3441;              // 'remote code smell'
+        public const ushort HWLocalTether = 3529;                   // 'local regression'
+        public const ushort HWRemoteTether = 3530;                  // 'remote regression'
+        public const ushort PlayerMonitorRight = 3452;
+        public const ushort PlayerMonitorLeft = 3453;
+        public const ushort Looper = 3456;
+        public const ushort MidGlitch = 3427;
+        public const ushort FarGlitch = 3428;
+        public const ushort OmegaF = 1675;
+        public const ushort OmegaM = 1674;
+        public const ushort OmegaM_D7E = 3454;                      // P2 Omega-M form status
+        public const ushort Superfluid = 1676;
+        public const ushort FirstInLine = 3004;
+        public const ushort SecondInLine = 3005;
+        public const ushort HPPenalty = 3401;
+        public const ushort CodeMi = 3447;                          // 0xD77 — P6 Alpha Omega 'Code M/i' form
+        public const ushort BrilliantDynamis = 3446;
+    }
+
+    public static class TetherId
+    {
+        public const ushort HWPrepLocal = 200;
+        public const ushort HWPrepRemote = 201;
+        public const ushort HWLocal = 224;
+        public const ushort HWRemote = 225;
+        public const ushort AutoTarget = 17;
+        public const ushort Glitch = 222;
+        public const ushort PassableTether = 89;
+    }
+
+    public static class TimelineId
+    {
+        public const ushort RocketPunchSpawn = 1340;
+    }
+
+    public static class LockonId
+    {
+        public const uint RotateCw = 156;                           // vfx/lockon/eff/m0515_turning_right01c.avfx
+        public const uint RotateCcw = 157;                          // vfx/lockon/eff/m0515_turning_left01c.avfx
+        public const uint X_157 = 343;
+        public const uint Stack = 100;
+        public const uint PlaystationX = 419;
+        public const uint PlaystationSq = 418;
+        public const uint PlaystationO = 416;
+        public const uint PlaystationTr = 417;
+        public const uint WaveCannon = 244;
+
+        public static readonly IReadOnlyList<uint> Playstation = [PlaystationX, PlaystationSq, PlaystationO, PlaystationTr];
+    }
+
+    public static class KnockbackId
+    {
+        public const uint Discharger = 72;
+    }
+
+    public static class Geometry
+    {
+        public const float ArenaRadius = 20f;                       // TOP arena ring
+        public const float PunchBackDistance = 2f;
+        public const float HyperPulseStep = MathF.PI / 9f;          // 20° in radians
+        public const float HwTetherBreakDistance = 10f;             // remote (short) breaks above; local (long) breaks below
+        public const float RocketPunchAoeRadius = 3f;
+        public const float BeyondDefenseAoeRadius = 5f;
+        public const float BeyondStrengthSafeRadius = 10f;          // donut inner safe radius (ffxiv_bossmod: range 10-40)
+        public const float OversampledWaveCannonAoeRadius = 7f;
+        public const float PilePitchAoeRadius = 6f;
+        public const float HelloWorldInitialAoeRadius = 8f;
+        public const float HelloWorldJumpAoeRadius = 4f;
+        public const float SwivelCannonRange = 60f;
+        public const float SwivelCannonHalfAngle = MathF.PI * 7f / 12f;
+        public const float HyperPulseHalfWidth = 4f;
+        public const float HyperPulseLength = 100f;
+        // 20, not 21: BossMod's P2PartySynergy DistanceRange is (20, 26) for Mid glitch. The
+        // AI's Mid-glitch stacks sit 90 degrees apart at radius 15 = 21.21y, which is inside the
+        // real window with 1.2y to spare but was only 0.21y above the old 21 -- AiManager's 0.3y
+        // placement jitter then pushed pairs under it at random, the tether's conditional
+        // Vulnerability Up came on, and Spotlight (magic) killed them.
+        public const float MidGlitchMinDistance = 20f;
+        public const float MidGlitchMaxDistance = 26f;
+        public const float FarGlitchMinDistance = 34f;
+        public const float TowerRadius = 3f;
+        
+        public static readonly Placement SuperliminalSteelOmenPlacement =  new(new Vector3(0, 0.000f, 9.9f), MathF.PI);
+        public static readonly Vector3 SuperliminalSteelOmenTargetR = new(21.21f, 0f, 49.50f);        
+        public static readonly Vector3 SuperliminalSteelOmenTargetL = new(-21.21f, 0, 49.50f);
+        public static readonly Placement[] ArmUnitPlacements =
+        [
+            new(new Vector3(-17.3205f, 0f, -10f), MathF.PI / 3f),      // NW
+            new(new Vector3(-17.3205f, 0f,  10f), MathF.PI * 2f / 3f), // SW
+            new(new Vector3(      0f, 0f, -20f), 0f),                  // N
+            new(new Vector3(      0f, 0f,  20f), MathF.PI),            // S
+            new(new Vector3( 17.3205f, 0f, -10f), MathF.PI * 5f / 3f), // NE
+            new(new Vector3( 17.3205f, 0f,  10f), MathF.PI * 4f / 3f), // SE
+        ];
+    }
+
+    public static class BgmId
+    {
+        public const ushort TopP2 = 963;
+        public const ushort TopP5 = 964; 
+        public const ushort TopP6 = 951;
+    }
+
+    public static class Duration
+    {
+        public const float OmegaAttackOmenDelay = 0.5f;
+        public const float HelloWorldDebuff = 44f;
+        public const float MonitorHelperLifetime = 5f;
+        public const float HwTetherBreakStack = 0.96f;              // Trice Come Ruin / Magic Vuln Up applied per HW break hit
+    }
+}

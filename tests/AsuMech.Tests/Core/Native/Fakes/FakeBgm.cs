@@ -1,0 +1,15 @@
+using AsuMech.Core.Native.Interfaces;
+
+namespace AsuMech.Tests;
+
+internal sealed class FakeBgm(SimTimeline timeline) : IBgm
+{
+    public void Play(ushort bgmId, float secondsIn = 0f)
+        => timeline.Add("bgm", id: bgmId.ToString(), name: "BGM", detail: $"seconds_in={SimTimeline.F(secondsIn)}");
+    public void Sync(float secondsIn) { }
+    public void Reset() { }
+    public void Tick(float deltaSeconds) { }
+    public void LogPosition(string label) { }
+
+    public void Dispose() { }
+}

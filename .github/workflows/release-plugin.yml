@@ -1,0 +1,27 @@
+name: Release plugin
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_bump:
+        description: Which version segment to bump
+        type: choice
+        default: patch
+        options:
+          - major
+          - minor
+          - patch
+          - revision
+
+permissions:
+  contents: write          # lets the reusable workflow create the release + push the bump commit
+
+jobs:
+  build:
+    uses: anomek/MyDalamudPlugins/.github/workflows/build-plugin.yml@master
+    with:
+      internal_name: AsuMech
+      solution_name: AsuMech
+      version_bump: ${{ inputs.version_bump }}
+    secrets:
+      PAT: ${{ secrets.PAT }}
