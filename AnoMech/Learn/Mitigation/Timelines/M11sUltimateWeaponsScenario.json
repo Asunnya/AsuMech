@@ -310,20 +310,6 @@
       "occurrence": 1
     },
     {
-      "actionId": 46118,
-      "name": "Charybdis",
-      "start": 103.074,
-      "resolve": 103.074,
-      "occurrence": 1
-    },
-    {
-      "actionId": 46118,
-      "name": "Charybdis",
-      "start": 104.074,
-      "resolve": 104.074,
-      "occurrence": 2
-    },
-    {
       "actionId": 46121,
       "name": "One and Only",
       "start": 106.958,
@@ -356,7 +342,6 @@
     "Sharp Taste",
     "Immortal Reign",
     "Powerful Gust",
-    "Charybdis",
     "One and Only"
   ]
 }

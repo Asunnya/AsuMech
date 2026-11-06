@@ -89,15 +89,16 @@
       "RegenHealer": "healer1",
       "ShieldHealer": "healer2",
       "MeleeDpsB": "dps1",
-      "MeleeDpsA": "dps2",
+      "CasterDps": "dps2",
       "PhysRangedDps": "dps3",
-      "CasterDps": "dps4"
+      "MeleeDpsA": "dps4"
     },
     "steps": {
-      "DsrP4EyesAi@0.3": 0
+      "DsrP4EyesAi@0.3": 0,
+      "DsrP4EyesAi@18": 1
     },
     "exampleSeed": 1,
-    "residual": 2.7
+    "residual": 2.9518976
   },
   "draft": true
 }

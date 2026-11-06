@@ -142,8 +142,8 @@
         "to": 234.73,
         "line": 75
       },
-      "title": "After akh Morn's Edge resolves",
-      "cue": "Akh Morn's Edge resolves",
+      "title": "After akh Morn\u0027s Edge resolves",
+      "cue": "Akh Morn\u0027s Edge resolves",
       "rule": "Go to 10m south of the centre.",
       "roles": {
         "MainTank": {
@@ -222,7 +222,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: GigaflareOrder).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: GigaflareOrder).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -235,7 +235,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: GigaflareOrder).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: GigaflareOrder).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -337,10 +337,11 @@
       "PhysRangedDps": "dps4"
     },
     "steps": {
-      "DsrP7DragonKingAi@47.37-206.16": 0
+      "DsrP7DragonKingAi@59.75-218.56": 0,
+      "DsrP7DragonKingAi@84.21-164.15": 4
     },
     "exampleSeed": 1,
-    "residual": 2.6
+    "residual": 1.0362875
   },
   "draft": true
 }

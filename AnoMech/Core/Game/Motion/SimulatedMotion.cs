@@ -42,8 +42,9 @@ internal sealed class SimulatedMotion : CharacterMotion, INavigated
     // server sends another duration for other pushes.
     private const float NpcKnockbackSeconds = 0.5f;
 
-    public SimulatedMotion(Func<IBattleCharaProxy?> proxy, Coordinates coordinates, ActorControl actorControl, ObstacleField obstacles, float? turnSpeed, bool npc)
+    public SimulatedMotion(Func<IBattleCharaProxy?> proxy, Coordinates coordinates, ActorControl actorControl, ObstacleField obstacles, float? turnSpeed, bool npc, NavPlanner? planner = null)
     {
+        Planner = planner;
         this.proxy = proxy;
         this.coordinates = coordinates;
         this.actorControl = actorControl;
@@ -56,6 +57,7 @@ internal sealed class SimulatedMotion : CharacterMotion, INavigated
     public override Vector3 Position => position;
     public override float Rotation => rotation;
     public ObstacleField Obstacles { get; }
+    public NavPlanner? Planner { get; }
     public float HitboxRadius => proxy()?.HitboxRadius ?? 0f;
     public bool TurnsAlongPath => true;
 

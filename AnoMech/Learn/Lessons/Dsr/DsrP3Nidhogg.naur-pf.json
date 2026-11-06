@@ -28,7 +28,7 @@
       },
       "title": "After dive from Grace cast starts",
       "cue": "Dive from Grace cast starts",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SoulTetherTargets).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SoulTetherTargets).",
       "roles": {
         "OffTank": {
           "rule": "When TowerSoakers includes 4 and EyeTargets leaves out H1, go to 10m south of the centre; when TowerSoakers leaves out 4 and EyeTargets leaves out H1, stand near waymark D, 7m east of the centre; when TowerSoakers leaves out 4 and EyeTargets includes H1, stand near waymark 1, 10m north-west of the centre."
@@ -37,10 +37,10 @@
           "rule": "When TowerSoakers includes 4 and EyeTargets leaves out R1, stand near waymark D, 7m east of the centre; when TowerSoakers leaves out 4 and EyeTargets includes R1, stand near waymark 4, 10m north-east of the centre; when TowerSoakers leaves out 4 and EyeTargets leaves out R1, go to 10m south of the centre."
         },
         "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TowerSoakers)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers)."
         },
         "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TowerSoakers)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers)."
         },
         "CasterDps": {
           "rule": "When EyeTargets leaves out M2, stand near waymark A, 7m west of the centre; when EyeTargets includes M2, stand near waymark 1, 10m north-west of the centre."
@@ -57,13 +57,13 @@
       },
       "title": "After high Jump Target on another player",
       "cue": "High Jump Target on another player",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SoulTetherTargets).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SoulTetherTargets).",
       "roles": {
         "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EyeTargets)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeTargets)."
         },
         "RegenHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TowerSoakers)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers)."
         },
         "ShieldHealer": {
           "rule": "When LashFirst includes true and SoulTetherTargets leaves out R2, stand near waymark 2, 8m north of the centre; when LashFirst includes true and SoulTetherTargets includes R2, stand near waymark B, 7m south of the centre; when LashFirst leaves out true and SoulTetherTargets includes R2, stand near waymark 2, 8m north of the centre."
@@ -72,7 +72,7 @@
           "rule": "When TowerSoakers includes 4 and EyeTargets leaves out M2, stand near waymark D, 7m east of the centre; when TowerSoakers leaves out 4 and EyeTargets leaves out M2, stand near waymark 2, 8m north of the centre; when TowerSoakers leaves out 4 and EyeTargets includes M2, stand near waymark A, 7m west of the centre; when TowerSoakers includes 4 and EyeTargets includes M2, stand near waymark 2, 8m north of the centre."
         },
         "CasterDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TowerSoakers)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers)."
         }
       },
       "tolerance": 2.5,
@@ -86,13 +86,13 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EyeTargets).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeTargets).",
       "roles": {
         "ShieldHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SoulTetherTargets)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SoulTetherTargets)."
         },
         "CasterDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SoulTetherTargets)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SoulTetherTargets)."
         }
       },
       "tolerance": 2.5,
@@ -106,16 +106,16 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EyeTargets).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeTargets).",
       "roles": {
         "ShieldHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SoulTetherTargets)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SoulTetherTargets)."
         },
         "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SoulTetherTargets)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SoulTetherTargets)."
         },
         "CasterDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SoulTetherTargets)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SoulTetherTargets)."
         }
       },
       "tolerance": 2.5,
@@ -129,22 +129,22 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat.",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
       "roles": {
         "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TowerSoakers has 4)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers has 4)."
         },
         "RegenHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EyeTargets)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeTargets)."
         },
         "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SoulTetherTargets has RegenHealer)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SoulTetherTargets has RegenHealer)."
         },
         "ShieldHealer": {
           "rule": "Go to 11m east of the centre."
         },
         "CasterDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LashFirst has true)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LashFirst has true)."
         }
       },
       "tolerance": 2.5,
@@ -202,22 +202,22 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat.",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
       "roles": {
         "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TowerSoakers has 4)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers has 4)."
         },
         "RegenHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EyeTargets)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: EyeTargets)."
         },
         "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SoulTetherTargets has RegenHealer)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SoulTetherTargets has RegenHealer)."
         },
         "ShieldHealer": {
           "rule": "Stand near waymark D, 7m east of the centre."
         },
         "CasterDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LashFirst has true)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LashFirst has true)."
         }
       },
       "tolerance": 2.5,
@@ -253,19 +253,19 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SoulTetherTargets).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SoulTetherTargets).",
       "roles": {
         "OffTank": {
           "rule": "When TowerSoakers leaves out 3 and EyeTargets leaves out H1, go to 4m north of the centre; when TowerSoakers includes 3 and EyeTargets leaves out H1, go to 11m north of the centre; when TowerSoakers includes 3 and EyeTargets includes H1, go to 10m west of the centre."
         },
         "RegenHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TowerSoakers)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers)."
         },
         "MeleeDpsA": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TowerSoakers)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers)."
         },
         "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TowerSoakers)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers)."
         },
         "PhysRangedDps": {
           "rule": "When TowerSoakers leaves out 3, go to 3m north of the centre; when TowerSoakers includes 3, stand near waymark 2, 10m north of the centre."
@@ -282,22 +282,22 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SoulTetherTargets).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SoulTetherTargets).",
       "roles": {
         "OffTank": {
           "rule": "When TowerSoakers leaves out 3 and EyeTargets leaves out H1, go to 11m north of the centre; when TowerSoakers includes 3 and EyeTargets leaves out H1, go to 4m north of the centre; when TowerSoakers includes 3 and EyeTargets includes H1, go to 3m west of the centre."
         },
         "RegenHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TowerSoakers)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers)."
         },
         "MeleeDpsA": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TowerSoakers)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers)."
         },
         "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TowerSoakers)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers)."
         },
         "PhysRangedDps": {
-          "rule": "Depends on LashFirst: [false,true] → near 2 (N 10m); [true,false] → N 3m; [false,false] → N 3m; [true,true] → W 10m."
+          "rule": "Depends on LashFirst: [false,true] \u2192 near 2 (N 10m); [true,false] \u2192 N 3m; [false,false] \u2192 N 3m; [true,true] \u2192 W 10m."
         }
       },
       "tolerance": 2.5,
@@ -323,13 +323,13 @@
           "rule": "If you are in SoulTetherTargets: Go to 11m south of the centre; otherwise: Go to 11m west of the centre."
         },
         "MainTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TowerSoakers has 1)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers has 1)."
         },
         "CasterDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LashFirst)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LashFirst)."
         },
         "RegenHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
         }
       },
       "tolerance": 2.5,
@@ -389,7 +389,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TowerSoakers).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers).",
       "roles": {
         "MainTank": {
           "rule": "When SoulTetherTargets leaves out H1 and EyeTargets leaves out OT, go to 11m south-west of the centre; when SoulTetherTargets includes H1 and EyeTargets leaves out OT, go to 12m north-west of the centre; when SoulTetherTargets leaves out H1 and EyeTargets includes OT, go to 12m north-west of the centre; when SoulTetherTargets includes H1 and EyeTargets includes OT, go to 11m south-west of the centre."
@@ -421,7 +421,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TowerSoakers).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers).",
       "roles": {
         "MainTank": {
           "rule": "When SoulTetherTargets leaves out H1 and EyeTargets leaves out OT, go to the south-west wall; when SoulTetherTargets includes H1 and EyeTargets leaves out OT, go to the north-west wall; when SoulTetherTargets leaves out H1 and EyeTargets includes OT, go to the north-west wall; when SoulTetherTargets includes H1 and EyeTargets includes OT, go to the south-west wall."
@@ -453,10 +453,10 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TowerSoakers).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: TowerSoakers).",
       "roles": {
         "MainTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SoulTetherTargets)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: SoulTetherTargets)."
         },
         "RegenHealer": {
           "rule": "Go to 15m west of the centre."
@@ -486,7 +486,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat.",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
       "roles": {
         "MainTank": {
           "rule": "Stand on waymark 3."
@@ -538,11 +538,10 @@
       "CasterDps": "dps4"
     },
     "steps": {
-      "DsrP3NidhoggAi@0.3": 0,
-      "DsrP3NidhoggAi@74.3": 10
+      "DsrP3NidhoggAi@56.6": 7
     },
     "exampleSeed": 1,
-    "residual": 2.3
+    "residual": 1.4232264
   },
   "draft": true
 }

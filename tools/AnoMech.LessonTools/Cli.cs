@@ -378,18 +378,56 @@ internal static class Cli
         return orphans == 0 ? 0 : 3;
     }
 
+    private static float ArenaYalms(IZone zone) => zone.Arena switch
+    {
+        Core.Game.Geometry.SquareArena square => square.HalfWidth * 2f,
+        Core.Game.Geometry.CircleArena circle => circle.Radius * 2f,
+        _ => 40f,
+    };
+
+    private static WaymarkLayout BestLayout(IRaidplanProvider provider, byte[] raw, string id, IReadOnlyList<WaymarkLayout> layouts)
+    {
+        var fits = new List<(WaymarkLayout Layout, float Residual)>();
+        foreach (var layout in layouts)
+        {
+            try { fits.Add((layout, provider.Convert(raw, id, layout).Report.Residual)); }
+            catch (Exception e) { Console.Error.WriteLine($"layout {layout.Name}: {e.Message}"); }
+        }
+        if (fits.Count == 0) return layouts[0];
+        var best = fits.MinBy(f => f.Residual);
+        Console.WriteLine($"layout: {best.Layout.Name} fits the plan's A-D best ({string.Join(", ", fits.Select(f => $"{f.Layout.Name} {f.Residual:F2} m"))}); pass --layout to override");
+        return best.Layout;
+    }
+
     private static int ToolboxImportCmd(Dictionary<string, string> opts)
     {
         var planArg = Need(opts, "plan");
-        var (id, raw) = FetchPlan(planArg);
-        var provider = ProviderFor(planArg);
+        // Several links separated by ',' become one plan, as `author` merges them.
+        var parts = planArg.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToList();
+        var (id, raw) = FetchPlan(parts[0]);
+        var provider = ProviderFor(parts[0]);
         var zoneName = Need(opts, "zone");
         var zone = ScenarioCatalog.Create().Zones.FirstOrDefault(z => z.GetType().Name == zoneName)
                    ?? throw new ArgumentException($"no zone type named {zoneName}");
+        // Without --layout, the zone's preset the plan's own A-D fit best: a plan drawn on another
+        // tier's marks calibrates to a tiny scale and every object lands on the centre.
         var layout = opts.TryGetValue("layout", out var l) && l.Length > 0
             ? zone.WaymarkPresets.FirstOrDefault(w => w.Name.Equals(l, StringComparison.OrdinalIgnoreCase)) ?? throw new ArgumentException($"no layout {l}")
-            : zone.WaymarkPresets[0];
-        var (plan, report) = provider.Convert(raw, id, layout);
+            : zone.WaymarkPresets.Count == 1 ? zone.WaymarkPresets[0] : BestLayout(provider, raw, id, zone.WaymarkPresets);
+        var (plan, report) = provider.Convert(raw, id, layout, ArenaYalms(zone));
+        if (parts.Count > 1)
+        {
+            var converted = new List<ToolboxPlan> { plan };
+            foreach (var part in parts.Skip(1))
+            {
+                var (partId, partRaw) = FetchPlan(part);
+                var (partPlan, partReport) = ProviderFor(part).Convert(partRaw, partId, layout, ArenaYalms(zone));
+                Console.WriteLine($"part {partId}: {partReport.StepsRecovered} steps, residual {partReport.Residual:F2} m{(partReport.Warnings.Count > 0 ? "; " + string.Join("; ", partReport.Warnings) : "")}");
+                converted.Add(partPlan);
+            }
+            plan = ToolboxPlan.Merge(converted);
+            id = plan.Id;
+        }
         Console.WriteLine($"plan {id} \"{plan.Label}\" by {plan.Author}: {report.StepsRecovered} steps{(report.Truncated ? " (recovered from a truncated file)" : "")}");
         Console.WriteLine($"calibration: {report.Scale:F3} yalm/unit against layout {layout.Name}, residual {report.Residual:F2} m");
         Console.WriteLine($"roles: {string.Join(", ", report.RoleMap.Select(kv => $"{kv.Key}={kv.Value}"))}");
@@ -938,7 +976,7 @@ internal static class Cli
                 try
                 {
                     var (partId, raw) = FetchPlan(part);
-                    var (partPlan, partReport) = ProviderFor(part).Convert(raw, partId, layout);
+                    var (partPlan, partReport) = ProviderFor(part).Convert(raw, partId, layout, zone is null ? null : ArenaYalms(zone));
                     converted.Add(partPlan);
                     report ??= partReport;
                     foreach (var w in partReport.Warnings) log.WriteLine($"plan {partId}: {w}");

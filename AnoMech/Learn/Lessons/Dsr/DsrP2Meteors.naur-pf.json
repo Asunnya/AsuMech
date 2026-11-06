@@ -11,7 +11,7 @@
       },
       "title": "After  resolves",
       "cue": " resolves",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat.",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
       "roles": {
         "RegenHealer": {
           "rule": "Go to 10m west of the centre."
@@ -28,7 +28,7 @@
       },
       "title": "After ice Resistance Down II on you",
       "cue": "Ice Resistance Down II on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat.",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -40,7 +40,7 @@
       },
       "title": "After ice Resistance Down II on you",
       "cue": "Ice Resistance Down II on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat.",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -53,7 +53,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat.",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
       "roles": {
         "MainTank": {
           "rule": "Go to the north wall."
@@ -73,7 +73,7 @@
       },
       "title": "After ice Resistance Down II on you",
       "cue": "Ice Resistance Down II on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat.",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -91,13 +91,13 @@
           "rule": "Go to the south wall."
         },
         "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
         },
         "PhysRangedDps": {
           "rule": "Go to the south wall."
         },
         "ShieldHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
         }
       },
       "tolerance": 2.5,
@@ -141,9 +141,11 @@
       "PhysRangedDps": "dps3",
       "CasterDps": "dps4"
     },
-    "steps": {},
+    "steps": {
+      "DsrP2ThordanAi@120.6": 1
+    },
     "exampleSeed": 1,
-    "residual": 0.0
+    "residual": 2.8677034
   },
   "draft": true
 }

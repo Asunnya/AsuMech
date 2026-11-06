@@ -56,7 +56,7 @@ public sealed class StgyProvider : IRaidplanProvider
         return list;
     }
 
-    public (ToolboxPlan Plan, ImportReport Report) Convert(byte[] raw, string id, WaymarkLayout layout)
+    public (ToolboxPlan Plan, ImportReport Report) Convert(byte[] raw, string id, WaymarkLayout layout, float? arenaYalms = null)
     {
         var codes = Codes(raw);
         if (codes.Count == 0) throw new InvalidOperationException("no [stgy:] code in the input");

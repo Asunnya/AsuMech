@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 using AnoMech.Core.Game.Geometry;
 using AnoMech.Core.SimObjects;
@@ -12,6 +13,9 @@ internal interface INavigated
     float Rotation { get; }
     float HitboxRadius { get; }
     ObstacleField Obstacles { get; }
+
+    // The walker's route planner; null for a walker that only steers (the player, an NPC).
+    NavPlanner? Planner { get; }
 
     // False where the game walks the character itself and faces it the way it goes.
     bool TurnsAlongPath { get; }
@@ -42,6 +46,13 @@ internal sealed class Navigator(INavigated walker)
     private float? finalRotation;
     private int steerSide;
     private bool moveForced;
+
+    // The corners the planner gave for the move in hand, the destination last; replanned on a
+    // cadence so a hazard or obstacle that appeared since is routed around too.
+    private List<Vector2>? waypoints;
+    private float replanIn;
+    private const float ReplanSeconds = 0.5f;
+    private const float WaypointReach = 0.35f;
 
     private SimCharacter? followTarget;
     private bool followForced;
@@ -172,6 +183,8 @@ internal sealed class Navigator(INavigated walker)
         moveForced = forced;
         speed = MathF.Max(0f, sp);
         finalRotation = finalRot;
+        waypoints = null;
+        replanIn = 0f;
     }
 
     // held: an animation lock roots the walker in place for now; the order resumes after.
@@ -198,13 +211,39 @@ internal sealed class Navigator(INavigated walker)
         // obstacle, retarget just outside it so the walker stops at the edge instead of
         // orbiting an unreachable point.
         var dest2 = walker.Obstacles.ClampForSteering(new Vector2(dest.X, dest.Z));
+        var cur2 = new Vector2(cur.X, cur.Z);
 
-        var dx = dest2.X - cur.X;
-        var dz = dest2.Y - cur.Z;
+        // The next corner of the planned route, or the destination itself.
+        if (walker.Planner is { } planner)
+        {
+            replanIn -= deltaSeconds;
+            if (waypoints is null || replanIn <= 0f)
+            {
+                waypoints = planner.Plan(cur2, dest2, speed);
+                replanIn = ReplanSeconds;
+            }
+            while (waypoints is { Count: > 1 } && Vector2.Distance(cur2, waypoints[0]) <= WaypointReach) waypoints.RemoveAt(0);
+        }
+        var corner = waypoints is { Count: > 1 } ? waypoints[0] : (Vector2?)null;
+        var goal = corner ?? dest2;
+
+        var dx = goal.X - cur.X;
+        var dz = goal.Y - cur.Z;
         var distSq = dx * dx + dz * dz;
         var step = speed * deltaSeconds;
 
-        if (distSq <= step * step || step <= 0f)
+        if (corner is { } && distSq <= step * step)
+        {
+            // On the corner this frame: turn toward the next one without stopping.
+            waypoints!.RemoveAt(0);
+            goal = waypoints is { Count: > 1 } ? waypoints[0] : dest2;
+            dx = goal.X - cur.X;
+            dz = goal.Y - cur.Z;
+            distSq = dx * dx + dz * dz;
+            corner = waypoints is { Count: > 1 } ? waypoints[0] : null;
+        }
+
+        if (corner is null && (distSq <= step * step || step <= 0f))
         {
             var rot = finalRotation ?? (distSq > 1e-6f ? MathF.Atan2(dx, dz) : walker.Rotation);
             var arrival = new Vector3(dest2.X, dest.Y, dest2.Y);
@@ -288,6 +327,7 @@ internal sealed class Navigator(INavigated walker)
     {
         destination = null;
         interceptTether = null;
+        waypoints = null;
         walker.Halt();
     }
 

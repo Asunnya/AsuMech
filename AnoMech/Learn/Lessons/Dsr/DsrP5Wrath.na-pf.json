@@ -40,19 +40,19 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LiquidHeaven).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LiquidHeaven).",
       "roles": {
         "MainTank": {
           "rule": "When Tethered includes R1 and Lightning includes M1, go to the south-east wall; when Tethered leaves out R1 and Lightning includes M1, go to the north-west wall; when Tethered leaves out R1 and Lightning leaves out M1, go to the south-east wall."
         },
         "RegenHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Defamation)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Defamation)."
         },
         "MeleeDpsA": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Marked)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Marked)."
         },
         "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Defamation)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Defamation)."
         },
         "PhysRangedDps": {
           "rule": "When DragonBearing is north and Lightning leaves out R2, go to the south-west wall; when DragonBearing is west and Lightning leaves out R2, go to the north wall; when DragonBearing is east and Lightning leaves out R2, go to the south wall; when DragonBearing is east and Lightning includes R2, go to the south-west wall."
@@ -72,13 +72,13 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Divebomb).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Divebomb).",
       "roles": {
         "MainTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LiquidHeaven)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LiquidHeaven)."
         },
         "CasterDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: LiquidHeaven)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: LiquidHeaven)."
         }
       },
       "tolerance": 2.5,
@@ -93,7 +93,7 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat.",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat.",
       "roles": {
         "RegenHealer": {
           "rule": "Go to the south wall."
@@ -132,7 +132,7 @@
           "rule": "Go to the south-west wall."
         },
         "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
         }
       },
       "tolerance": 2.5,
@@ -170,19 +170,19 @@
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: WarriorBearing).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: WarriorBearing).",
       "roles": {
         "RegenHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Defamation)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Defamation)."
         },
         "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: DragonBearing)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: DragonBearing)."
         },
         "CasterDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Marked)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Marked)."
         },
         "MeleeDpsA": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Eruptions)."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: Eruptions)."
         }
       },
       "tolerance": 2.5,
@@ -196,10 +196,10 @@
       },
       "title": "After chain Lightning hits you",
       "cue": "Chain Lightning hits you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: DragonBearing).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: DragonBearing).",
       "roles": {
         "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
         },
         "OffTank": {
           "rule": "with DragonBearing as north: 6m north of the centre."
@@ -211,7 +211,7 @@
           "rule": "Stand on waymark A."
         },
         "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat."
+          "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat."
         },
         "CasterDps": {
           "rule": "Stand on waymark 4."
@@ -238,21 +238,21 @@
     "roleMap": {
       "MainTank": "tank1",
       "OffTank": "tank2",
-      "RegenHealer": "healer1",
-      "ShieldHealer": "healer2",
-      "MeleeDpsB": "dps1",
-      "PhysRangedDps": "dps2",
-      "CasterDps": "dps3",
-      "MeleeDpsA": "dps4"
+      "ShieldHealer": "healer1",
+      "RegenHealer": "healer2",
+      "PhysRangedDps": "dps1",
+      "CasterDps": "dps2",
+      "MeleeDpsA": "dps3",
+      "MeleeDpsB": "dps4"
     },
     "steps": {
-      "DsrP5WrathAi@58.84": 0
+      "DsrP5WrathAi@0.3": 0,
+      "DsrP5WrathAi@29.4": 1,
+      "DsrP5WrathAi@51.36-56": 3,
+      "DsrP5WrathAi@58.84": 9
     },
     "exampleSeed": 1,
-    "example": {
-      "Lightning": "[OffTank,PhysRangedDps]"
-    },
-    "residual": 2.0
+    "residual": 2.0539966
   },
   "draft": true
 }

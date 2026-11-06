@@ -48,7 +48,7 @@ internal static class PartyCreator
 
         Plugin.Log.Info($"PartyCreator: spawned {preset.Name} ({role}, job {preset.ClassJob}) at index {chara.Slot}");
         // Bots steer around the scenario's geometry; bosses walk straight lines.
-        var member = new SimPartyNpc(chara, world.Coordinates, role, preset.ClassJob, preset.Name, world.Obstacles);
+        var member = new SimPartyNpc(chara, world.Coordinates, role, preset.ClassJob, preset.Name, world.Obstacles, world.Planner);
         member.BeginPacketSpawn(entityId, placement);
         return member;
     }

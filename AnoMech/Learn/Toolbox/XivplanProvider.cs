@@ -45,7 +45,7 @@ public sealed class XivplanProvider : IRaidplanProvider
 
     public static bool Looks(string text) => text.Contains("xivplan", StringComparison.OrdinalIgnoreCase) && text.Contains("#/plan/", StringComparison.Ordinal);
 
-    public (ToolboxPlan Plan, ImportReport Report) Convert(byte[] raw, string id, WaymarkLayout layout)
+    public (ToolboxPlan Plan, ImportReport Report) Convert(byte[] raw, string id, WaymarkLayout layout, float? arenaYalms = null)
     {
         var text = Encoding.UTF8.GetString(raw).Trim();
         var json = text.StartsWith('{') ? text : Decode(text);

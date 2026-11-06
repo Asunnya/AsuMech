@@ -32,6 +32,9 @@ public sealed partial class SimWorld : ISimObject, IDisposable
     // (Add/Remove/Clear); bots hold this one instance across runs, cleared on Despawn.
     public ObstacleField Obstacles { get; } = new();
 
+    // Bots' route planner over Obstacles, Hazards and the arena; the player and NPCs only steer.
+    internal Game.Motion.NavPlanner Planner { get; }
+
     // No members outside a zone stay. Ticked before the children, which reference it.
     public SimParty Party { get; } = new();
     public IEnumerable<ISimObject> Children => children;
@@ -71,6 +74,7 @@ public sealed partial class SimWorld : ISimObject, IDisposable
 
     public SimWorld(EventScheduler events)
     {
+        Planner = new Game.Motion.NavPlanner(this);
         Events = events;
         Coordinates = new Coordinates(() => ScenarioOrigin);
     }

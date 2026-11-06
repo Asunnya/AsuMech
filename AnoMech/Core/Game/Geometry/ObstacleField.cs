@@ -50,7 +50,16 @@ public sealed class ObstacleField
 
     public void Remove(IObstacle obstacle) => obstacles.Remove(obstacle);
 
-    public void Clear() => obstacles.Clear();
+    public void Clear()
+    {
+        obstacles.Clear();
+        PlanRoutes = false;
+    }
+
+    // Bots plan a route around the field and the hazards (NavPlanner) instead of only steering
+    // past what is in front of them. Off by default: each scenario turns it on once its strat was
+    // checked with it, since a planned route changes when bots arrive.
+    public bool PlanRoutes { get; set; }
 
     // Projects `p` out onto the boundary of the obstacle it is most deeply inside
     // (or, with `margin` > 0, out to `margin` clear of it even if `p` was already

@@ -83,7 +83,11 @@ public static class ToolboxImport
         return -1;
     }
 
-    public static (ToolboxPlan Plan, ImportReport Report) Convert(byte[] raw, string id, WaymarkLayout layout)
+    // Past this, the plan's A-D are not the layout's marks at all (another tier's, or the author's
+    // own), and the arena object sizes the plan instead.
+    public const float BadFitResidual = 2f;
+
+    public static (ToolboxPlan Plan, ImportReport Report) Convert(byte[] raw, string id, WaymarkLayout layout, float? arenaYalms = null)
     {
         var (doc, truncated) = ParseTolerant(raw);
         var root = doc.RootElement;
@@ -92,8 +96,19 @@ public static class ToolboxImport
         var warnings = new List<string>();
         if (count == 0) throw new InvalidOperationException("no steps");
 
-        var (scale, offset, residual) = Calibrate(steps[0].GetProperty("instance"), layout);
-        if (residual > 0.3f) warnings.Add($"waymark calibration residual {residual:F2} m");
+        var instance = steps[0].GetProperty("instance");
+        var (scale, offset, residual) = Calibrate(instance, layout);
+        if (residual > BadFitResidual && arenaYalms is { } yalms && instance.TryGetProperty("arena", out var arena) && Size(arena).W > 0f)
+        {
+            // The arena object is the floor: its width is the zone's, its centre the origin.
+            var (w, h) = Size(arena);
+            var p = arena.GetProperty("position");
+            scale = yalms / w;
+            offset = -new Vector2(Num(p, "x") + w / 2f, Num(p, "y") + h / 2f) * scale;
+            warnings.Add($"the plan's A-D fit no layout (residual {residual:F2} m): scaled by its arena object, {w:0.#} units for {yalms:0.#} yalms");
+            residual = 0f;
+        }
+        else if (residual > 0.3f) warnings.Add($"waymark calibration residual {residual:F2} m");
         var roleMap = RoleMap(steps[0].GetProperty("instance"), warnings);
 
         var plan = new ToolboxPlan(id, Str(root, "label"), Str(root, "author"), layout.Name, scale,

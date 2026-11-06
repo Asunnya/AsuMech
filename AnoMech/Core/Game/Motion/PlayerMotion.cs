@@ -58,6 +58,7 @@ internal sealed class PlayerMotion : CharacterMotion, INavigated
 
     // Only a bot steers around geometry; a human walks a forced follow (Confusion) straight.
     public ObstacleField Obstacles => DebugBotControl.Enabled ? obstacles : ObstacleField.Empty;
+    public NavPlanner? Planner => null;
     public float HitboxRadius => Proxy.HitboxRadius;
     public bool TurnsAlongPath => false;
 

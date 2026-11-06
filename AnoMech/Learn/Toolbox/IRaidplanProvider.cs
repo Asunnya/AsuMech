@@ -11,7 +11,8 @@ namespace AnoMech.Learn.Toolbox;
 public interface IRaidplanProvider
 {
     RaidplanHost Host { get; }
-    (ToolboxPlan Plan, ImportReport Report) Convert(byte[] raw, string id, WaymarkLayout layout);
+    // arenaYalms: how wide the zone's floor is, for a plan whose waymarks fit no layout.
+    (ToolboxPlan Plan, ImportReport Report) Convert(byte[] raw, string id, WaymarkLayout layout, float? arenaYalms = null);
 }
 
 public static class Raidplans
@@ -28,5 +29,5 @@ public static class Raidplans
 public sealed class ToolboxProvider : IRaidplanProvider
 {
     public RaidplanHost Host => RaidplanHost.Toolbox;
-    public (ToolboxPlan Plan, ImportReport Report) Convert(byte[] raw, string id, WaymarkLayout layout) => ToolboxImport.Convert(raw, id, layout);
+    public (ToolboxPlan Plan, ImportReport Report) Convert(byte[] raw, string id, WaymarkLayout layout, float? arenaYalms = null) => ToolboxImport.Convert(raw, id, layout, arenaYalms);
 }

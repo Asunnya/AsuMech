@@ -43,7 +43,7 @@ public sealed class RaidplanIoProvider : IRaidplanProvider
         ["ff-square"] = "square", ["ff-donut"] = "donut", ["ff-wedge"] = "cone", ["ff-quarter"] = "cone",
     };
 
-    public (ToolboxPlan Plan, ImportReport Report) Convert(byte[] raw, string id, WaymarkLayout layout)
+    public (ToolboxPlan Plan, ImportReport Report) Convert(byte[] raw, string id, WaymarkLayout layout, float? arenaYalms = null)
     {
         using var doc = JsonDocument.Parse(raw);
         var root = doc.RootElement;
@@ -59,17 +59,27 @@ public sealed class RaidplanIoProvider : IRaidplanProvider
             .FirstOrDefault(m => m.Count(x => x.Item1 <= WaymarkSlot.D) >= 2);
         float scale, residual;
         Vector2 offset;
-        if (marks != null) (scale, offset, residual) = ToolboxImport.Calibrate(marks, layout);
+        if (marks != null)
+        {
+            (scale, offset, residual) = ToolboxImport.Calibrate(marks, layout);
+            if (residual > ToolboxImport.BadFitResidual && arenaYalms is { } yalms)
+            {
+                scale = yalms / ImageSpanPx;
+                offset = -new Vector2(600f, 337.5f) * scale;
+                warnings.Add($"the plan's A-D fit no layout (residual {residual:F2} m): the arena image is taken for the zone's {yalms:0.#} yalms across");
+                residual = 0f;
+            }
+            else if (residual > 0.3f) warnings.Add($"waymark calibration residual {residual:F2} m");
+        }
         else
         {
             // No A-D drawn: the arena image is contain-fit to the 1200x675 canvas, so a square floor
-            // spans 675 px; taken for a 40-yalm arena, which the report says is a guess.
-            scale = AssumedArenaYalms / ImageSpanPx;
+            // spans 675 px; taken for the zone's width, or 40 yalms, which the report says is a guess.
+            scale = (arenaYalms ?? AssumedArenaYalms) / ImageSpanPx;
             offset = -new Vector2(600f, 337.5f) * scale;
             residual = 0f;
-            warnings.Add($"no waymarks A-D on any step: the arena image is taken for {AssumedArenaYalms:0} yalms across (unverified)");
+            warnings.Add($"no waymarks A-D on any step: the arena image is taken for {arenaYalms ?? AssumedArenaYalms:0} yalms across (unverified)");
         }
-        if (residual > 0.3f) warnings.Add($"waymark calibration residual {residual:F2} m");
 
         var notes = root.TryGetProperty("step_notes_raw", out var sn) && sn.ValueKind == JsonValueKind.Array ? sn.EnumerateArray().Select(e => e.GetString() ?? "").ToList() : [];
         var header = Str(root, "header_notes_raw");

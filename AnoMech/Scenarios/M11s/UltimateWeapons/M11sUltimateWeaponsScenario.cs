@@ -74,6 +74,9 @@ public sealed class M11sUltimateWeaponsScenario : IScenario
     private readonly SimEnemy?[] lineHelpers = new SimEnemy?[12];
     private readonly SimEnemy?[] gustHelpers = new SimEnemy?[8];
     private readonly SimEnemy?[] maelstroms = new SimEnemy?[4];
+    // Bots route around a risen maelstrom; the keep-out is its damage radius plus a body.
+    private readonly CircleObstacle?[] maelstromObstacles = new CircleObstacle?[4];
+    private const float MaelstromKeepOut = MaelstromRadius + 1f;
     private SimEnemy? tornadoHelper;
     private SimEnemy? raidwideHelper;
     private readonly Dictionary<SimCharacter, float> lastCharybdis = [];
@@ -93,6 +96,7 @@ public sealed class M11sUltimateWeaponsScenario : IScenario
         world.Events.Add(0f, () => world.EnforceArenaBoundary(new SquareArena(Geometry.ArenaHalfWidth), "Walked off the arena"));
         world.Events.Add(0f, () => world.PlaceWaymarks(ToxicWaymarks));
         world.Events.Add(0f, SpawnActors);
+        world.Events.Add(0f, () => world.Obstacles.PlanRoutes = true);
         world.Events.Add(4f, TankTheBoss);
         foreach (var at in AutoAttackAt)
             world.Events.Add(at, AutoAttack);
@@ -241,6 +245,8 @@ public sealed class M11sUltimateWeaponsScenario : IScenario
         maelstrom.SetPosition(new Placement(state.WeaponSpot(index), state.ArrivalBearing(index)));
         maelstrom.SetVisible(true);
         maelstromsUp = true;
+        var spot = state.WeaponSpot(index);
+        maelstromObstacles[index - M11sUltimateWeaponsState.FirstTornadoWeapon] = world.Obstacles.Add(new CircleObstacle(new Vector2(spot.X, spot.Z), MaelstromKeepOut));
     }
 
     private void PowerfulGusts()
@@ -261,5 +267,8 @@ public sealed class M11sUltimateWeaponsScenario : IScenario
     {
         maelstromsUp = false;
         foreach (var maelstrom in maelstroms) maelstrom?.SetVisible(false);
+        foreach (var obstacle in maelstromObstacles)
+            if (obstacle is { }) world.Obstacles.Remove(obstacle);
+        Array.Clear(maelstromObstacles);
     }
 }
