@@ -62,7 +62,7 @@ public class LessonQualityTests
             var literal = time?.ToString("0.##", CultureInfo.InvariantCulture);
             // A call whose time is computed (bait - 3f) cannot be checked for its literal; it still has to be a call.
             var holdsLiteral = time is { } && literal != null && System.Text.RegularExpressions.Regex.IsMatch(text, $@"(?<![\d.]){System.Text.RegularExpressions.Regex.Escape(literal)}(?![\d])");
-            var isCall = System.Text.RegularExpressions.Regex.IsMatch(text, @"\b(Move|Automarker|MoveTo|Loop)\s*\(") || text.Contains("ai.", StringComparison.Ordinal);
+            var isCall = System.Text.RegularExpressions.Regex.IsMatch(text, @"\b(Move|MoveNow|Order|Automarker|MoveTo|Loop)\s*\(") || text.Contains("ai.", StringComparison.Ordinal);
             if (!holdsLiteral && !isCall)
                 stale.Add($"{lesson.Scenario} / {lesson.Strat}: {step.Key.Cls}.cs:{line} no longer holds {literal} ({text.Trim()})");
         }

@@ -84,6 +84,7 @@ public sealed class UmadP5ExaflaresAi : IScenarioAi<UmadP5ExaflaresState>
 
     private UmadP5ExaflaresState state = null!;
     private SimWorld world = null!;
+    private AiManager ai = null!;
     private readonly bool[] relaxMoving = new bool[8];
     private bool spreadPhase;
     private float innerRing = InnerFallback;
@@ -92,6 +93,7 @@ public sealed class UmadP5ExaflaresAi : IScenarioAi<UmadP5ExaflaresState>
     {
         state = stateParam;
         world = worldParam;
+        ai = new AiManager(world);
 
         ScheduleInitialFanOut();
         for (int n = 0; n < 6; n++) ScheduleWaveDodge(n);
@@ -113,7 +115,7 @@ public sealed class UmadP5ExaflaresAi : IScenarioAi<UmadP5ExaflaresState>
         float safeMove = n == 0 ? 2.0f : startT + 1.7f + BloomDelay; // after wave n-2's last snapshot; n==0: big initial run, no prior fire
         float budget = arriveBy - safeMove;
 
-        world.Events.Add(safeMove, () => PlaceWave(n, budget));
+        world.Events.Add(safeMove, () => PlaceWave(n, budget, safeMove));
     }
 
     // Place the group for wave n. The fire runs along one diagonal axis (crit); the other axis (perp)
@@ -122,7 +124,7 @@ public sealed class UmadP5ExaflaresAi : IScenarioAi<UmadP5ExaflaresState>
     // the perp value was already made safe by that wave (which used this axis as its crit). Melee/tank
     // pull crit toward the boss for uptime; a de-clump pass spreads the rest along the lane. Each
     // departure is back-solved so the bot holds position until it must leave to make the snapshot.
-    private void PlaceWave(int n, float budget)
+    private void PlaceWave(int n, float budget, float at)
     {
         bool leftWave = (n % 2) == 0;
         var lanes = UsableBands(n);                                  // safe crit lanes (central + maybe outer)
@@ -149,6 +151,7 @@ public sealed class UmadP5ExaflaresAi : IScenarioAi<UmadP5ExaflaresState>
         foreach (var pk in picks)
         {
             var dest = FromCritPerp(pk.Crit, pk.Perp, leftWave);
+            ai.Order(pk.Bot, dest, at, arrivalTime: at + budget);
             float delay = budget - FlatDist(pk.Bot.Position, dest) / DodgeSpeed; // leave late enough to arrive on time
             if (delay > 0f) world.Events.Add(delay, () => pk.Bot.MoveTo(dest, DodgeSpeed));
             else pk.Bot.MoveTo(dest, DodgeSpeed);                   // farther than the budget allows: best effort
@@ -178,7 +181,7 @@ public sealed class UmadP5ExaflaresAi : IScenarioAi<UmadP5ExaflaresState>
                 float angle = baseAngle + ((float)world.Rng.NextDouble() - 0.5f) * FanAngleJitter;
                 float radius = inner + (float)world.Rng.NextDouble() * (outer - inner);
                 var target = new Vector3(MathF.Sin(angle) * radius, 0f, MathF.Cos(angle) * radius);
-                bot.MoveTo(target, FanSpeed);
+                ai.MoveNow(bot, target, FanSpeed, FanOutAt);
             }
         });
     }

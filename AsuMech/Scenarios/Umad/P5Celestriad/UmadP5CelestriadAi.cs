@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using AsuMech.Core.Game.Ai;
 using AsuMech.Core.Game.Party;
 using AsuMech.Core.SimObjects;
@@ -27,11 +28,12 @@ public sealed class UmadP5CelestriadAi : IScenarioAi<UmadP5CelestriadState>
 
     public void Run(UmadP5CelestriadState state, SimWorld world)
     {
-        world.Events.Add(7.6f, () => PlaceSet(world, state, 0, half: 0f));
-        world.Events.Add(12.18f, () => PlaceSet(world, state, 0, HalfFor(state, 0)));
-        world.Events.Add(15.9f, () => PlaceSet(world, state, 1, half: 0f));
-        world.Events.Add(22.1f, () => PlaceSet(world, state, 2, half: 0f));
-        world.Events.Add(24.34f, () => PlaceSet(world, state, 2, HalfFor(state, 2)));
+        var ai = new AiManager(world);
+        world.Events.Add(7.6f, () => PlaceSet(ai, world, state, 0, half: 0f, at: 7.6f));
+        world.Events.Add(12.18f, () => PlaceSet(ai, world, state, 0, HalfFor(state, 0), at: 12.18f));
+        world.Events.Add(15.9f, () => PlaceSet(ai, world, state, 1, half: 0f, at: 15.9f));
+        world.Events.Add(22.1f, () => PlaceSet(ai, world, state, 2, half: 0f, at: 22.1f));
+        world.Events.Add(24.34f, () => PlaceSet(ai, world, state, 2, HalfFor(state, 2), at: 24.34f));
     }
 
     private static float HalfFor(UmadP5CelestriadState state, int set) =>
@@ -39,7 +41,7 @@ public sealed class UmadP5CelestriadAi : IScenarioAi<UmadP5CelestriadState>
             ? (choice == CatastrophicChoice.Aero ? 1f : -1f)
             : 0f;
 
-    private static void PlaceSet(SimWorld world, UmadP5CelestriadState state, int set, float half)
+    private static void PlaceSet(AiManager ai, SimWorld world, UmadP5CelestriadState state, int set, float half, float at, [CallerLineNumber] int line = 0)
     {
         var party = world.Party;
         var freeRoles = state.PlayerDebuffElement.Where(kv => kv.Value is null).Select(kv => kv.Key).ToArray();
@@ -59,11 +61,11 @@ public sealed class UmadP5CelestriadAi : IScenarioAi<UmadP5CelestriadState>
 
             var towers = group.ToArray();
             for (var i = 0; i < towers.Length; i++)
-                PlaceAtTower(party, towers[i], i == 0 ? debuffedRoles : freeRoles, half);
+                PlaceAtTower(ai, party, towers[i], i == 0 ? debuffedRoles : freeRoles, half, at, line);
         }
     }
 
-    private static void PlaceAtTower(SimParty party, CelestriadTower tower, IReadOnlyList<PartyRole> roles, float half)
+    private static void PlaceAtTower(AiManager ai, SimParty party, CelestriadTower tower, IReadOnlyList<PartyRole> roles, float half, float at, int line)
     {
         var inward = Vector3.Normalize(-tower.Position);
         var lateral = new Vector3(-inward.Z, 0f, inward.X);
@@ -75,7 +77,7 @@ public sealed class UmadP5CelestriadAi : IScenarioAi<UmadP5CelestriadState>
 
             var side = i == 0 ? -1f : 1f;
             var dest = tower.Position + lateral * (side * PairOffset) + inward * (half * HalfOffset);
-            bot.MoveTo(dest, MoveSpeed);
+            ai.MoveNow(bot, dest, MoveSpeed, at, line: line);
         }
     }
 }

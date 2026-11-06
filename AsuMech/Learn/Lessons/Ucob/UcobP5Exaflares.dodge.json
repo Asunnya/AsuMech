@@ -1,0 +1,39 @@
+{
+  "scenario": "UcobP5ExaflaresScenario",
+  "strat": "Dodge",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "UcobP5ExaflaresAi",
+        "from": 5.01,
+        "to": 13.26,
+        "line": 108
+      },
+      "title": "Dodge the exaflares",
+      "cue": "Exaflare cast starts",
+      "rule": "Move into a lane the exaflares don't reach and stay there until the next ones are drawn; the spot is picked again every moment from where you stand.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP5ExaflaresAi",
+        "from": 5.01,
+        "to": 16.26,
+        "line": 117
+      },
+      "title": "Hold",
+      "tolerance": 1.5,
+      "skip": true
+    }
+  ],
+  "toolbox": {
+    "planId": "Y4WRFLhdHSQ7oLN_",
+    "roleMap": {},
+    "steps": {},
+    "exampleSeed": 1,
+    "residual": 0
+  },
+  "draft": true
+}

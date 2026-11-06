@@ -13,6 +13,7 @@ FruP2DiamondDustScenario	NA · Partner Swap
 FruP2LightRampantScenario	NA · Conga
 FruP3ApocalypseScenario	NA priority / static spreads / OT bait
 FruP3UltimateRelativityScenario	NA
+FruP4CrystallizeTimeScenario	NA priority / 7-1 Akh Morn (MT solo)
 FruP4DarklitDragonsongScenario	NA
 FruP4DarklitDragonsongScenario	NA · you take Somber Dance
 FruP5FulgentBladeScenario	Standard
@@ -49,6 +50,7 @@ TopP5SigmaScenario	Standard
 TopP6WaveCannon2Scenario	Standard
 UcobP1TwintaniaScenario	Neurolinks at 1, 2 and 3, ranged baits Liquid Hell
 UcobP2NaelScenario	Stack north of Nael, rotate clockwise, fire in-out-in-in
+UcobP5ExaflaresScenario	Dodge
 UltimateAnnihilationScenario	NAUR
 UltimatePredationScenario	NAUR
 UltimateSuppressionScenario	NAUR
@@ -64,6 +66,8 @@ UmadP3BlackHoleScenario	Black Hole: S>D>A
 UmadP3LimitCutScenario	Standard
 UmadP4KefkaSaysScenario	Kefka Says
 UmadP4KefkaSaysScenario	Kefka Says, gazes: supports N / DPS S
+UmadP5CelestriadScenario	Standard
+UmadP5ExaflaresScenario	Spread
 UmadP5FloodScenario	Rotate
 UwuP1GarudaScenario	Zeal / The Balance
 UwuP2IfritScenario	Zeal / The Balance

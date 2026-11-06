@@ -1,0 +1,138 @@
+{
+  "scenario": "UmadP5CelestriadScenario",
+  "strat": "Standard",
+  "sources": [
+    {
+      "label": "WTFDIG (kefkabin), MIT",
+      "url": "https://github.com/mczub/wtfdig/tree/aa79375/src/routes/ultimates/umad"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "UmadP5CelestriadAi",
+        "time": 7.6,
+        "line": 32
+      },
+      "title": "Celestriad towers",
+      "cue": null,
+      "rule": "Soak your tower for this set: the tower of your element, or with no element the second tower of the doubled element. Stand beside your partner, one on each side of it.",
+      "roles": {
+        "OffTank": {
+          "rule": "Read the strat's PlaceAtTower: the spot follows a rule the rolls alone don't show (closest roll: TowerElementOrder)."
+        },
+        "PhysRangedDps": {
+          "rule": "Read the strat's PlaceAtTower: the spot follows a rule the rolls alone don't show (closest roll: DoubleElement)."
+        },
+        "CasterDps": {
+          "rule": "Read the strat's PlaceAtTower: the spot follows a rule the rolls alone don't show (closest roll: DoubleElement)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP5CelestriadAi",
+        "time": 12.18,
+        "line": 33
+      },
+      "title": "Catastrophic Choice",
+      "cue": "Catastrophic Choice cast starts",
+      "rule": "Catastrophic Choice: stay in your tower and take the safe half. Green (Aero) means step toward the boss, brown (Earth) means step away from it.",
+      "roles": {
+        "OffTank": {
+          "rule": "Read the strat's PlaceAtTower: the spot follows a rule the rolls alone don't show (closest roll: TowerElementOrder)."
+        },
+        "CasterDps": {
+          "rule": "Read the strat's PlaceAtTower: the spot follows a rule the rolls alone don't show (closest roll: DoubleElement)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP5CelestriadAi",
+        "time": 15.9,
+        "line": 34
+      },
+      "title": "Celestriad towers",
+      "cue": null,
+      "rule": "Soak your tower for this set: the tower of your element, or with no element the second tower of the doubled element. Stand beside your partner, one on each side of it.",
+      "roles": {
+        "MainTank": {
+          "rule": "Read the strat's PlaceAtTower: the spot follows a rule the rolls alone don't show (closest roll: DoubleElement)."
+        },
+        "RegenHealer": {
+          "rule": "Read the strat's PlaceAtTower: the spot follows a rule the rolls alone don't show (closest roll: TowerElementOrder)."
+        },
+        "MeleeDpsB": {
+          "rule": "Read the strat's PlaceAtTower: the spot follows a rule the rolls alone don't show (closest roll: DoubleElement)."
+        },
+        "CasterDps": {
+          "rule": "Read the strat's PlaceAtTower: the spot follows a rule the rolls alone don't show (closest roll: DoubleElement)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP5CelestriadAi",
+        "time": 22.1,
+        "line": 35
+      },
+      "title": "Celestriad towers",
+      "cue": null,
+      "rule": "Soak your tower for this set: the tower of your element, or with no element the second tower of the doubled element. Stand beside your partner, one on each side of it.",
+      "roles": {
+        "MainTank": {
+          "rule": "Read the strat's PlaceAtTower: the spot follows a rule the rolls alone don't show (closest roll: TowerElementOrder)."
+        },
+        "OffTank": {
+          "rule": "Read the strat's PlaceAtTower: the spot follows a rule the rolls alone don't show (closest roll: TowerElementOrder)."
+        },
+        "RegenHealer": {
+          "rule": "Read the strat's PlaceAtTower: the spot follows a rule the rolls alone don't show (closest roll: DoubleElement)."
+        },
+        "MeleeDpsA": {
+          "rule": "Read the strat's PlaceAtTower: the spot follows a rule the rolls alone don't show (closest roll: SetActiveTowers has 8])."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP5CelestriadAi",
+        "time": 24.34,
+        "line": 36
+      },
+      "title": "Catastrophic Choice",
+      "cue": "Catastrophic Choice cast starts",
+      "rule": "Catastrophic Choice: stay in your tower and take the safe half. Green (Aero) means step toward the boss, brown (Earth) means step away from it.",
+      "roles": {
+        "MainTank": {
+          "rule": "Read the strat's PlaceAtTower: the spot follows a rule the rolls alone don't show (closest roll: TowerElementOrder)."
+        },
+        "RegenHealer": {
+          "rule": "Read the strat's PlaceAtTower: the spot follows a rule the rolls alone don't show (closest roll: DoubleElement)."
+        },
+        "MeleeDpsA": {
+          "rule": "Read the strat's PlaceAtTower: the spot follows a rule the rolls alone don't show (closest roll: SetActiveTowers has 8])."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "3wODYtApXBtYAdu0",
+    "roleMap": {},
+    "steps": {},
+    "exampleSeed": 1,
+    "residual": 0
+  },
+  "draft": true
+}

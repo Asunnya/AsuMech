@@ -71,6 +71,28 @@ public sealed class AiManager
         }, file, line);
     }
 
+    // For a strat that decides each seat's spot as the fight unfolds instead of through Move's
+    // position functions: records the order and guides the player's seat to it as Move does, without
+    // moving anyone. `at` is the order's time literal when it has one, so the key matches across runs
+    // whatever frame the event lands on; a reaction without one is keyed by the clock.
+    public void Order(SimCharacter member, Vector3 target, float? at = null, float? arrivalTime = null, bool sprint = false,
+        [CallerMemberName] string method = "", [CallerFilePath] string file = "", [CallerLineNumber] int line = 0)
+    {
+        if (member is not ISimPartyMember seat) return;
+        var key = new GuidanceKey(System.IO.Path.GetFileNameWithoutExtension(file), at ?? world.Events.Elapsed, $"{System.IO.Path.GetFileName(file)}:{line}", method);
+        var order = new GuidanceOrder(key, seat.Role, target, world.Events.Elapsed, arrivalTime, sprint);
+        world.RecordOrder(order);
+        if (ReferenceEquals(member, world.Party.Player) && world.Guidance is { } sink) sink.OnMove(order);
+    }
+
+    // Order, then the move; a human's MoveTo stays a no-op, so only bots walk.
+    public void MoveNow(SimCharacter member, Vector3 target, float speed, float? at = null, float? arrivalTime = null,
+        [CallerMemberName] string method = "", [CallerFilePath] string file = "", [CallerLineNumber] int line = 0)
+    {
+        Order(member, target, at, arrivalTime, speed > RunSpeed, method, file, line);
+        member.MoveTo(target, speed);
+    }
+
     // Walk, leaving as late as still arrives in time; sprint now if walking can't make it.
     private static (bool Sprint, float Delay) PlanArrival(float dist, float available)
     {

@@ -32,6 +32,7 @@ public sealed class UcobP5ExaflaresAi : IScenarioAi<UcobP5ExaflaresState>
 
     private UcobP5ExaflaresState state = null!;
     private SimWorld world = null!;
+    private AiManager ai = null!;
     private IReadOnlyList<Vector3> spots = [];
     private readonly Vector3?[] committed = new Vector3?[8];
     private readonly bool[] holding = new bool[8];
@@ -40,6 +41,7 @@ public sealed class UcobP5ExaflaresAi : IScenarioAi<UcobP5ExaflaresState>
     {
         state = stateParam;
         world = worldParam;
+        ai = new AiManager(world);
         spots = BuildLaneSpots();
         Array.Clear(committed);
         Array.Clear(holding);
@@ -96,23 +98,23 @@ public sealed class UcobP5ExaflaresAi : IScenarioAi<UcobP5ExaflaresState>
                 || (holdSafeUntil == bestSafeUntil && SpotCost(from, from, taken) <= bestCost + ImproveMargin);
             if (best is not { } target || holdOutlastsBest)
             {
-                Hold(slot, bot, from, taken);
+                Hold(slot, bot, from, taken, now);
                 continue;
             }
 
             committed[slot] = target;
             holding[slot] = false;
             taken.Add(target);
-            bot.MoveTo(target, DodgeSpeed);
+            ai.MoveNow(bot, target, DodgeSpeed, now);
         }
     }
 
-    private void Hold(int slot, SimCharacter bot, Vector3 at, List<Vector3> taken)
+    private void Hold(int slot, SimCharacter bot, Vector3 at, List<Vector3> taken, float now)
     {
         committed[slot] = null;
         taken.Add(at);
         if (holding[slot]) return;
-        bot.MoveTo(at, DodgeSpeed);
+        ai.MoveNow(bot, at, DodgeSpeed, now);
         holding[slot] = true;
     }
 

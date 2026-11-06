@@ -1,0 +1,365 @@
+{
+  "scenario": "FruP4CrystallizeTimeScenario",
+  "strat": "NA priority / 7-1 Akh Morn (MT solo)",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "FruP4CrystallizeTimeAi",
+        "time": 15.5,
+        "line": 62
+      },
+      "title": "Crystallize Time route",
+      "cue": "Spell-in-Waiting: Return on you",
+      "rule": "Your spot follows your Crystallize Time debuff (and, for the pairs, NA priority west/east) and this run's slow Maelstrom side; follow the marker.",
+      "roles": {
+        "MainTank": {
+          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: SlowNorthwest)."
+        },
+        "ShieldHealer": {
+          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: SlowNorthwest)."
+        },
+        "CasterDps": {
+          "rule": "Depends on SlowNorthwest and Quietus has OffTank: false & no → SE wall; true & yes → SE wall; false & yes → near B (E 13m); true & no → SE wall."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP4CrystallizeTimeAi",
+        "time": 23.3,
+        "line": 63
+      },
+      "title": "Crystallize Time route",
+      "cue": "Maelstrom resolves",
+      "rule": "Go to the south-east wall.",
+      "roles": {
+        "OffTank": {
+          "rule": "When Quietus leaves out MT, go to the south-west wall; when Quietus includes MT, go to the south-east wall."
+        },
+        "RegenHealer": {
+          "rule": "When Quietus leaves out R2, go to the south-west wall; when Quietus includes R2, go to the south-east wall."
+        },
+        "ShieldHealer": {
+          "rule": "Depends on SlowNorthwest and Quietus has MainTank: false & no → SW wall; true & no → SE wall; true & yes → SW wall."
+        },
+        "PhysRangedDps": {
+          "rule": "Depends on SlowNorthwest and East: false & false → SW wall; true & true → SE wall; false & true → SE wall; true & false → SE wall."
+        },
+        "MainTank": {
+          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: SlowNorthwest)."
+        },
+        "MeleeDpsB": {
+          "rule": "When Quietus leaves out R1 and SpiritTakerTarget includes M2, go to the south-east wall; when Quietus leaves out R1 and SpiritTakerTarget leaves out M2, go to the south-west wall; when Quietus includes R1 and SpiritTakerTarget leaves out M2, go to the south-east wall."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP4CrystallizeTimeAi",
+        "time": 26,
+        "line": 65
+      },
+      "title": "Crystallize Time route",
+      "cue": "Dark Blizzard III hits you",
+      "rule": "Go to the east wall.",
+      "roles": {
+        "MeleeDpsA": {
+          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: DragonPuddles)."
+        },
+        "MeleeDpsB": {
+          "rule": "When Quietus leaves out OT, go to the east wall; when Quietus includes OT, go to the west wall."
+        },
+        "RegenHealer": {
+          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: Quietus has PhysRangedDps)."
+        },
+        "OffTank": {
+          "rule": "Go to the west wall."
+        },
+        "ShieldHealer": {
+          "rule": "Go to the west wall."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP4CrystallizeTimeAi",
+        "time": 26.7,
+        "line": 66
+      },
+      "title": "Crystallize Time route",
+      "cue": "Dark Aero III resolves",
+      "rule": "Your spot follows your Crystallize Time debuff (and, for the pairs, NA priority west/east) and this run's slow Maelstrom side; follow the marker.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: SlowNorthwest)."
+        },
+        "ShieldHealer": {
+          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: SlowNorthwest)."
+        },
+        "MeleeDpsA": {
+          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: SlowNorthwest)."
+        },
+        "CasterDps": {
+          "rule": "Depends on SlowNorthwest and Quietus has OffTank: false & no → S wall; true & yes → NW wall; false & yes → NE wall; true & no → NW wall."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP4CrystallizeTimeAi",
+        "time": 28.5,
+        "line": 67
+      },
+      "title": "Crystallize Time route",
+      "cue": "Dark Aero III hits you",
+      "rule": "Your spot follows your Crystallize Time debuff (and, for the pairs, NA priority west/east) and this run's slow Maelstrom side; follow the marker.",
+      "roles": {
+        "PhysRangedDps": {
+          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: SpiritTakerTarget)."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark 3, 12m south-east of the centre."
+        },
+        "OffTank": {
+          "rule": "When Quietus leaves out H1 and Quietus leaves out MT, stand near waymark 4, 12m south-west of the centre; when Quietus includes H1 and Quietus leaves out MT, go to the north-west wall; when Quietus leaves out H1 and Quietus includes MT, stand near waymark 3, 12m south-east of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: SpiritTakerTarget)."
+        },
+        "ShieldHealer": {
+          "rule": "Stand near waymark 4, 12m south-west of the centre."
+        },
+        "RegenHealer": {
+          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: SlowNorthwest)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP4CrystallizeTimeAi",
+        "time": 29.8,
+        "line": 68
+      },
+      "title": "Crystallize Time route",
+      "cue": "Tidal Light cast starts",
+      "rule": "Go to the north wall.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP4CrystallizeTimeAi",
+        "time": 30.566372,
+        "line": 197
+      },
+      "title": "After your debuff resolves",
+      "cue": "Longing of the Lost hits you",
+      "rule": "Go to the south wall.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP4CrystallizeTimeAi",
+        "time": 31.5,
+        "line": 69
+      },
+      "title": "Crystallize Time route",
+      "tolerance": 1.5,
+      "skip": true
+    },
+    {
+      "key": {
+        "cls": "FruP4CrystallizeTimeAi",
+        "time": 33.6,
+        "line": 70
+      },
+      "title": "Crystallize Time route",
+      "cue": "Maelstrom resolves",
+      "rule": "Your spot follows your Crystallize Time debuff (and, for the pairs, NA priority west/east) and this run's slow Maelstrom side; follow the marker.",
+      "roles": {
+        "OffTank": {
+          "rule": "Stand near waymark B, 13m east of the centre."
+        },
+        "RegenHealer": {
+          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show."
+        },
+        "MainTank": {
+          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: Quietus has PhysRangedDps)."
+        },
+        "MeleeDpsB": {
+          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: Quietus has MeleeDpsB)."
+        },
+        "ShieldHealer": {
+          "rule": "Go to 13m west of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: SlowNorthwest)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP4CrystallizeTimeAi",
+        "time": 34.6,
+        "line": 71
+      },
+      "title": "Crystallize Time route",
+      "cue": "Tidal Light resolves",
+      "rule": "Your spot follows your Crystallize Time debuff (and, for the pairs, NA priority west/east) and this run's slow Maelstrom side; follow the marker.",
+      "roles": {
+        "MainTank": {
+          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: Corner)."
+        },
+        "ShieldHealer": {
+          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: SpiritTakerTarget)."
+        },
+        "MeleeDpsA": {
+          "rule": "Depends on Quietus has PhysRangedDps and East: yes & false → at D; no & false → at D; no & true → at B; yes & true → near 3 (SE 13m)."
+        },
+        "PhysRangedDps": {
+          "rule": "Depends on Quietus has MainTank and East: no & false → at D; yes & true → near 3 (SE 13m); no & true → at B; yes & false → near 4 (SW 13m)."
+        },
+        "CasterDps": {
+          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: East)."
+        },
+        "RegenHealer": {
+          "rule": "Depends on Quietus has ShieldHealer and East: yes & false → at D; no & true → near B (E 13m); yes & true → near 3 (SE 13m); no & false → at D."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP4CrystallizeTimeAi",
+        "time": 36.5,
+        "line": 72
+      },
+      "title": "Crystallize Time route",
+      "cue": "Tidal Light resolves",
+      "rule": "Your spot follows your Crystallize Time debuff (and, for the pairs, NA priority west/east) and this run's slow Maelstrom side; follow the marker.",
+      "roles": {
+        "OffTank": {
+          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: Corner)."
+        },
+        "ShieldHealer": {
+          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: Corner)."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP4CrystallizeTimeAi",
+        "from": 37.81626,
+        "to": 39.099575,
+        "line": 206
+      },
+      "title": "After your debuff resolves",
+      "cue": "Tidal Light cast starts",
+      "rule": "Stand near waymark 1, 11m north-west of the centre.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "Stand near waymark 4, 11m south-west of the centre."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP4CrystallizeTimeAi",
+        "time": 38.9,
+        "line": 79
+      },
+      "title": "Crystallize Time route",
+      "cue": "Tidal Light cast starts",
+      "rule": "Your spot follows your Crystallize Time debuff (and, for the pairs, NA priority west/east) and this run's slow Maelstrom side; follow the marker.",
+      "roles": {
+        "OffTank": {
+          "rule": "Depends on Corner: NW → NW 14m; NE → NE 14m; SE → SE 14m; SW → SW 14m."
+        },
+        "RegenHealer": {
+          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: SpiritTakerTarget)."
+        },
+        "ShieldHealer": {
+          "rule": "Depends on Corner: NE → NE 14m; SE → SE 14m; SW → SW 14m; NW → NW 14m."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP4CrystallizeTimeAi",
+        "time": 41.1,
+        "line": 86
+      },
+      "title": "Group up",
+      "cue": "Tidal Light resolves",
+      "rule": "Your spot follows your Crystallize Time debuff (and, for the pairs, NA priority west/east) and this run's slow Maelstrom side; follow the marker.",
+      "roles": {
+        "MainTank": {
+          "rule": "Depends on Corner: NW → near 1 (NW 12m); NE → near 2 (NE 12m); SE → near 3 (SE 12m); SW → near 4 (SW 12m)."
+        },
+        "OffTank": {
+          "rule": "Depends on Corner: NW → near 1 (NW 12m); NE → near 2 (NE 12m); SE → near 3 (SE 12m); SW → near 4 (SW 12m)."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP4CrystallizeTimeAi",
+        "time": 61.7,
+        "line": 88
+      },
+      "title": "Group up",
+      "cue": "Hallowed Wings resolves",
+      "rule": "Stand at the centre.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand on waymark D."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "GIXItxnLI2MJma73",
+    "roleMap": {
+      "CasterDps": "dps4",
+      "RegenHealer": "healer1",
+      "MeleeDpsB": "dps2",
+      "ShieldHealer": "healer2",
+      "MeleeDpsA": "dps1",
+      "PhysRangedDps": "dps3",
+      "MainTank": "tank1",
+      "OffTank": "tank2"
+    },
+    "steps": {
+      "FruP4CrystallizeTimeAi@26": 1,
+      "FruP4CrystallizeTimeAi@37.82-39.1": 15
+    },
+    "exampleSeed": 1,
+    "residual": 2.6134186
+  },
+  "draft": true
+}

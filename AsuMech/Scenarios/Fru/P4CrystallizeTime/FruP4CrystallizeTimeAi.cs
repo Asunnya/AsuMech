@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using AsuMech.Core.Game.Ai;
 using AsuMech.Core.Game.Party;
 using AsuMech.Core.SimObjects;
@@ -34,6 +35,7 @@ public sealed class FruP4CrystallizeTimeAi : IScenarioAi<FruP4CrystallizeTimeSta
 
     private FruP4CrystallizeTimeState state = null!;
     private SimWorld world = null!;
+    private AiManager ai = null!;
     private readonly Dictionary<PartyRole, CrystallizeTimeAssignment> assignments = new();
     private readonly Dictionary<PartyRole, CrystallizeTimeAssignment> puddleTargets = new();
     private readonly Dictionary<PartyRole, Vector3> spreadSpots = new();
@@ -47,6 +49,7 @@ public sealed class FruP4CrystallizeTimeAi : IScenarioAi<FruP4CrystallizeTimeSta
     {
         state = stateParam;
         world = worldParam;
+        ai = new AiManager(world);
         elapsed = 0f;
         puddleTargets.Clear();
         spreadSpots.Clear();
@@ -56,43 +59,43 @@ public sealed class FruP4CrystallizeTimeAi : IScenarioAi<FruP4CrystallizeTimeSta
         moveOrders.Clear();
         AssignSidesByPriority();
 
-        world.Events.Add(15.5f, () => FollowRoute(state.SlowNorthwest ? PRE_HG_1_NW : PRE_HG_1_NE, arriveBy: 22.7f));
-        world.Events.Add(23.3f, () => FollowRoute(state.SlowNorthwest ? POST_HG_1_NW : POST_HG_1_NE, arriveBy: 25.9f));
+        world.Events.Add(15.5f, () => FollowRoute(state.SlowNorthwest ? PRE_HG_1_NW : PRE_HG_1_NE, at: 15.5f, arriveBy: 22.7f));
+        world.Events.Add(23.3f, () => FollowRoute(state.SlowNorthwest ? POST_HG_1_NW : POST_HG_1_NE, at: 23.3f, arriveBy: 25.9f));
         world.Events.Add(25.9f, RememberWhoAeroKnocksBack);
-        world.Events.Add(26f, () => FollowRoute(PUDDLE_DODGE));
-        world.Events.Add(26.7f, () => FollowRoute(state.SlowNorthwest ? POST_KB_NW : POST_KB_NE, arriveBy: 28.2f));
-        world.Events.Add(28.5f, () => FollowRoute(state.SlowNorthwest ? POST_HG_2_NW : POST_HG_2_NE, arriveBy: 28.8f));
-        world.Events.Add(29.8f, () => FollowRoute(state.East ? POST_UD_E : POST_UD_W, arriveBy: 31.5f));
-        world.Events.Add(31.5f, () => FollowRoute(state.East ? POST_EARLY_SOAK_E : POST_EARLY_SOAK_W, arriveBy: 32f));
-        world.Events.Add(33.6f, () => FollowRoute(state.East ? POST_HG_3_E : POST_HG_3_W, arriveBy: 34.1f));
-        world.Events.Add(34.6f, () => FollowRoute(state.East ? POST_EXA_2_E : POST_EXA_2_W, arriveBy: 36.1f));
+        world.Events.Add(26f, () => FollowRoute(PUDDLE_DODGE, at: 26f));
+        world.Events.Add(26.7f, () => FollowRoute(state.SlowNorthwest ? POST_KB_NW : POST_KB_NE, at: 26.7f, arriveBy: 28.2f));
+        world.Events.Add(28.5f, () => FollowRoute(state.SlowNorthwest ? POST_HG_2_NW : POST_HG_2_NE, at: 28.5f, arriveBy: 28.8f));
+        world.Events.Add(29.8f, () => FollowRoute(state.East ? POST_UD_E : POST_UD_W, at: 29.8f, arriveBy: 31.5f));
+        world.Events.Add(31.5f, () => FollowRoute(state.East ? POST_EARLY_SOAK_E : POST_EARLY_SOAK_W, at: 31.5f, arriveBy: 32f));
+        world.Events.Add(33.6f, () => FollowRoute(state.East ? POST_HG_3_E : POST_HG_3_W, at: 33.6f, arriveBy: 34.1f));
+        world.Events.Add(34.6f, () => FollowRoute(state.East ? POST_EXA_2_E : POST_EXA_2_W, at: 34.6f, arriveBy: 36.1f));
         world.Events.Add(36.5f, () => FollowRoute(state.Corner switch
         {
             CrystallizeCorner.NW => POST_EXA_3_NW,
             CrystallizeCorner.NE => POST_EXA_3_NE,
             CrystallizeCorner.SE => POST_EXA_3_SE,
             _ => POST_EXA_3_SW,
-        }, arriveBy: 38.1f));
+        }, at: 36.5f, arriveBy: 38.1f));
         world.Events.Add(38.9f, () => FollowRoute(state.Corner switch
         {
             CrystallizeCorner.NW => POST_EXA_4_NW,
             CrystallizeCorner.NE => POST_EXA_4_NE,
             CrystallizeCorner.SE => POST_EXA_4_SE,
             _ => POST_EXA_4_SW,
-        }, arriveBy: 40.5f));
-        world.Events.Add(StopCleansingAt, () => MoveEveryBot(RewindSpot, arriveBy: 42.5f));
+        }, at: 38.9f, arriveBy: 40.5f));
+        world.Events.Add(41.1f, () => MoveEveryBot(RewindSpot, at: 41.1f, arriveBy: 42.5f));
         world.Events.Add(45.9f, spreadSpots.Clear);
-        world.Events.Add(61.7f, () => MoveEveryBot(AkhMornSpot, arriveBy: 68.9f));
+        world.Events.Add(61.7f, () => MoveEveryBot(AkhMornSpot, at: 61.7f, arriveBy: 68.9f));
     }
 
     public void Tick(FruP4CrystallizeTimeState stateParam, SimWorld worldParam, float delta)
     {
         elapsed += delta;
-        foreach (var bot in Bots())
+        foreach (var member in world.Party.ActiveMembers().Where(m => m.IsAlive()).ToList())
         {
-            var role = ((ISimPartyMember)bot).Role;
-            ReactToClawCaught(bot, role);
-            ReactToFangCleansed(bot, role);
+            var role = ((ISimPartyMember)member).Role;
+            ReactToClawCaught(member, role);
+            ReactToFangCleansed(member, role);
         }
         ChasePuddles();
         if (elapsed is >= 45.9f and < 48.5f) SpreadAwayFromPlayerForSpiritTaker();
@@ -119,13 +122,16 @@ public sealed class FruP4CrystallizeTimeAi : IScenarioAi<FruP4CrystallizeTimeSta
 
     private IEnumerable<SimCharacter> Bots() => world.Party.ActiveMembers().Where(world.Party.IsBotDriven).ToList();
 
-    private void FollowRoute(IReadOnlyDictionary<CrystallizeTimeAssignment, CrystallizeTimeDestination> route, float? arriveBy = null)
+    private void FollowRoute(IReadOnlyDictionary<CrystallizeTimeAssignment, CrystallizeTimeDestination> route, float at, float? arriveBy = null, [CallerLineNumber] int line = 0)
     {
         foreach (var (assignment, destination) in route)
         {
             var role = RoleOf(assignment);
             puddleTargets.Remove(role);
-            if (world.Party.Get(role) is not { } bot || !bot.IsAlive() || !world.Party.IsBotDriven(bot)) continue;
+            if (world.Party.Get(role) is not { } bot || !bot.IsAlive()) continue;
+            var target = destination.Puddle is { } puddleOf && state.DragonPuddles.TryGetValue(RoleOf(puddleOf), out var puddle) ? puddle : destination.Position;
+            ai.Order(bot, target, at, arriveBy, line: line);
+            if (!world.Party.IsBotDriven(bot)) continue;
             if (destination.Puddle is { } source)
             {
                 CancelPendingMove(role);
@@ -139,13 +145,14 @@ public sealed class FruP4CrystallizeTimeAi : IScenarioAi<FruP4CrystallizeTimeSta
         }
     }
 
-    private void MoveEveryBot(Func<PartyRole, Vector3> spot, float arriveBy)
+    private void MoveEveryBot(Func<PartyRole, Vector3> spot, float at, float arriveBy, [CallerLineNumber] int line = 0)
     {
         puddleTargets.Clear();
-        foreach (var bot in Bots())
+        foreach (var member in world.Party.ActiveMembers().Where(m => m.IsAlive()).ToList())
         {
-            var role = ((ISimPartyMember)bot).Role;
-            MoveLeavingAsLateAsPossible(bot, role, spot(role), arriveBy);
+            var role = ((ISimPartyMember)member).Role;
+            ai.Order(member, spot(role), at, arriveBy, line: line);
+            if (world.Party.IsBotDriven(member)) MoveLeavingAsLateAsPossible(member, role, spot(role), arriveBy);
         }
     }
 
@@ -165,10 +172,10 @@ public sealed class FruP4CrystallizeTimeAi : IScenarioAi<FruP4CrystallizeTimeSta
         });
     }
 
-    private void MoveNow(SimCharacter bot, PartyRole role, Vector3 destination)
+    private void MoveNow(SimCharacter member, PartyRole role, Vector3 destination, [CallerLineNumber] int line = 0)
     {
         CancelPendingMove(role);
-        bot.MoveTo(destination, RunSpeed);
+        ai.MoveNow(member, destination, RunSpeed, line: line);
     }
 
     private int CancelPendingMove(PartyRole role) => moveOrders[role] = moveOrders.GetValueOrDefault(role) + 1;
