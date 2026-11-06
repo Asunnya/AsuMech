@@ -42,6 +42,7 @@ internal sealed class DataminingGameData(FakeRsvFunctions rsv) : IGameData
             row.SByte("AttackType"),
             row.Bool("TargetArea"),
             row.Bool("IsPlayerAction"),
+            row.Byte("ClassJobLevel"),
             row.UInt("Recast100ms") / 10f);
     }
 

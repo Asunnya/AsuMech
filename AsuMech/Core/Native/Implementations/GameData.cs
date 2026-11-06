@@ -34,6 +34,7 @@ internal sealed class GameData : IGameData
             (sbyte)row.AttackType.RowId,
             row.TargetArea,
             row.IsPlayerAction,
+            row.ClassJobLevel,
             row.Recast100ms / 10f);
     }
 

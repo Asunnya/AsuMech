@@ -194,6 +194,17 @@ internal sealed class ComboEffect(IActionEffect[] inner) : IActionEffect
     }
 }
 
+// Wrapper: apply the inner effects only once the player's level reaches the action they unlock. A
+// trait's Ready status granted below it would turn a button into an action the player can't use yet.
+internal sealed class UnlocksEffect(uint actionId, IActionEffect[] inner) : IActionEffect
+{
+    public void Apply(ActionContext ctx)
+    {
+        if (ctx.CasterIsPlayer && Plugin.ObjectTable.LocalPlayer?.Level < Natives.Data.Action(actionId)?.ClassJobLevel) return;
+        foreach (var e in inner) e.Apply(ctx);
+    }
+}
+
 // Wrapper: apply the inner effects with `chance` probability (procs, e.g. DNC feathers).
 internal sealed class RandomEffect(float chance, IActionEffect[] inner) : IActionEffect
 {

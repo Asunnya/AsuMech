@@ -40,6 +40,7 @@ public sealed unsafe class UserActions : IUserActions
         new DancerStateHandler(),
         new ViperStateHandler(),
         new NinjaStateHandler(),
+        new BardStateHandler(),
         new ActionEffectHandler(),
         new TimedGaugeHandler(),
         new CastInterruptHandler(),
