@@ -79,6 +79,9 @@ public sealed partial class AsuMainWindow
         ImGui.SameLine();
         if (ImGuiComponents.IconButton("expand", FontAwesomeIcon.Expand)) expandedDuringRun = true;
         if (ImGui.IsItemHovered()) ImGui.SetTooltip("Show the full window");
+        ImGui.SameLine();
+        if (ImGuiComponents.IconButton("strip-minimize", FontAwesomeIcon.WindowMinimize)) minimized = true;
+        if (ImGui.IsItemHovered()) ImGui.SetTooltip("Minimize");
         ImGui.EndGroup();
         stripRightWidth = ImGui.GetItemRectSize().X;
 

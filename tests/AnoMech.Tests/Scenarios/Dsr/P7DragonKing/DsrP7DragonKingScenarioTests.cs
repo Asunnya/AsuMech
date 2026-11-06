@@ -32,6 +32,15 @@ public class DsrP7DragonKingScenarioTests
             .TeleportAt(46.5f, to: new Vector2(-6.93f, -4f))
             .ShouldKill(ActionId.ExaflaresEdgeFirst, MeleeDpsB);
 
+    // The main tank holds enmity for the first Exaflare; from behind him the spots flip to his south.
+    [Test]
+    public void TheTopEnmityTankTurnsTheExaflaresWithTheDragonKing()
+        => Negative<DsrP7DragonKingScenario>(MainTank)
+            .Overrides<DsrP7DragonKingStateOverrides>(Pinned)
+            .TeleportAt(38f, to: new Vector2(0f, 6f))
+            .TeleportAt(46.5f, to: new Vector2(6.93f, 4f))
+            .ShouldKill(ActionId.ExaflaresEdgeFirst, MainTank);
+
     [Test]
     public void StayingNearTheDragonKingForFlamesKills()
         => Negative<DsrP7DragonKingScenario>(CasterDps)

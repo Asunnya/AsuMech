@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using AnoMech.Core.Game.Party;
 
 namespace AnoMech.Scenarios.Dsr.P7DragonKing;
 
@@ -40,6 +41,10 @@ public sealed class DsrP7DragonKingState
     // Per Gigaflare cycle, the spots (by EdgeSpot index, mirrored to r14) in blast order.
     public IReadOnlyList<IReadOnlyList<int>> GigaflareOrder { get; }
 
+    // The Dragon-king's facing as his last Edge cast began; every Edge spot turns with it.
+    public float Facing { get; set; } = NorthFacing;
+    public const float NorthFacing = MathF.PI;
+
     public DsrP7DragonKingState(Rng rng, DsrP7DragonKingStateOverrides? overrides = null)
     {
         overrides ??= new DsrP7DragonKingStateOverrides();
@@ -57,12 +62,26 @@ public sealed class DsrP7DragonKingState
 
     public static Vector2 Spot(EdgeSpot spot) => Spots[(int)spot];
 
-    public Vector2 GigaflareSpot(int cycle, int blast) => -Spot((EdgeSpot)GigaflareOrder[cycle][blast]) * (GigaflareRadius / SpotRadius);
+    // Dark Trinity goes to the top of enmity; that tank holds him from the Edge cast before the pair
+    // to the one after it.
+    public static PartyRole TopEnmityTank(int trinityPair) => trinityPair % 2 == 0 ? PartyRole.MainTank : PartyRole.OffTank;
 
-    public float ExaflareRotation(int cycle, EdgeSpot spot) => HeadingRotation(ExaflareHeadings[cycle][(int)spot]);
+    // A spot laid out for a north-facing Dragon-king, turned to where he faces.
+    public Vector2 Turned(Vector2 northFacing)
+    {
+        var turn = Facing - NorthFacing;
+        var (sin, cos) = MathF.SinCos(turn);
+        return new Vector2(northFacing.X * cos + northFacing.Y * sin, -northFacing.X * sin + northFacing.Y * cos);
+    }
+
+    public Vector2 TurnedSpot(EdgeSpot spot) => Turned(Spot(spot));
+
+    public Vector2 GigaflareSpot(int cycle, int blast) => Turned(-Spot((EdgeSpot)GigaflareOrder[cycle][blast]) * (GigaflareRadius / SpotRadius));
+
+    public float ExaflareRotation(int cycle, EdgeSpot spot) => HeadingRotation(ExaflareHeadings[cycle][(int)spot]) + Facing - NorthFacing;
 
     public IEnumerable<Explosion> ExaflareExplosions(int cycle, EdgeSpot spot)
-        => Explosions(Spot(spot), ExaflareRotation(cycle, spot));
+        => Explosions(TurnedSpot(spot), ExaflareRotation(cycle, spot));
 
     private static float HeadingRotation(int heading) => heading * MathF.PI / 4f;
 
