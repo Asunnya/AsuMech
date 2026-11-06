@@ -57,6 +57,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
     internal static DrillTracker Drill { get; private set; } = null!;
     internal static Learn.MasteryStore Mastery { get; private set; } = null!;
     internal static MultiplayerManager Multiplayer { get; private set; } = null!;
+    internal static PullRecorder Recorder { get; private set; } = null!;
     internal RunController Runs { get; private set; } = null!;
     internal ScenarioPicker Picker { get; private set; } = null!;
 
@@ -75,6 +76,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
     private Window MainUi => Config.UseNewLayout ? AsuMainWindow : MainWindow;
     private FailureBanner? FailureBanner { get; init; }
     private Windows.Learn.GuidanceOverlay GuidanceOverlay { get; init; }
+    private Windows.Learn.HazardOverlay HazardOverlay { get; init; }
     private Windows.Learn.ToolboxViewer ToolboxViewer { get; init; }
     private Windows.Learn.MitOverlay MitOverlay { get; init; }
     private Windows.Learn.MitTraining MitTraining { get; init; }
@@ -135,6 +137,9 @@ public sealed class Plugin : IAsyncDalamudPlugin
             windowSystem.AddWindow(MainWindow.PartyPanel);
             FailureBanner = new FailureBanner();
             windowSystem.AddWindow(FailureBanner);
+            // Before the guidance overlay, so the step's spot draws over the hazards.
+            HazardOverlay = new Windows.Learn.HazardOverlay();
+            windowSystem.AddWindow(HazardOverlay);
             GuidanceOverlay = new Windows.Learn.GuidanceOverlay();
             windowSystem.AddWindow(GuidanceOverlay);
             ToolboxViewer = new Windows.Learn.ToolboxViewer();
@@ -161,7 +166,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
 
             CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
             {
-                HelpMessage = "Open AnoMech. Subcommands: config, mp, start, reset, leave"
+                HelpMessage = "Open AnoMech. Subcommands: config, mp, start, reset, leave, rec, rec stop"
             });
             CommandManager.AddHandler(CommandAlias, new CommandInfo(OnCommand)
             {
@@ -169,7 +174,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
             });
             CommandManager.AddHandler(AsuMechCommand, new CommandInfo(OnCommand)
             {
-                HelpMessage = "Open AsuMech. Subcommands: config, mp, start, reset, leave"
+                HelpMessage = "Open AsuMech. Subcommands: config, mp, start, reset, leave, rec, rec stop"
             });
             CommandManager.AddHandler(AsuMechAlias, new CommandInfo(OnCommand)
             {
@@ -195,6 +200,8 @@ public sealed class Plugin : IAsyncDalamudPlugin
             ModelContainerPointers.Initialize();
             PacketDispatcherPointers.Initialize();
             ResolvedStringPointers.Initialize();
+            // After the pointers: it hooks the handlers they resolve.
+            Recorder = new PullRecorder();
 
             Log.Information($"===A cool log message from {PluginInterface.Manifest.Name}===");
             // The diagnostic log's own header is written before any hook exists, so it alone
@@ -292,6 +299,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
         windowSystem.RemoveAllWindows();
 
         TimelineDebug.Shutdown();
+        Recorder?.Dispose();
         Multiplayer?.Dispose();
         Game?.Dispose();
         Natives.Dispose();
@@ -330,6 +338,8 @@ public sealed class Plugin : IAsyncDalamudPlugin
         Natives.Tick(fw->FrameDeltaTime);
         // Both ticks reach code driven by whatever a relay sent; neither may take the frame
         // pump down.
+        try { Recorder.Tick(); }
+        catch (Exception e) { DiagnosticLog.Warn($"[Plugin] Recorder.Tick threw: {e}"); }
         try { Runs.Tick(); }
         catch (Exception e) { DiagnosticLog.Warn($"[Plugin] Runs.Tick threw: {e}"); }
         try { Game.Tick(fw->FrameDeltaTime); }
@@ -406,6 +416,12 @@ public sealed class Plugin : IAsyncDalamudPlugin
                 break;
             case "leave":
                 Runs.Leave();
+                break;
+            case "rec":
+                Recorder.Arm();
+                break;
+            case "rec stop":
+                Recorder.Disarm();
                 break;
             default:
                 MainUi.Toggle();

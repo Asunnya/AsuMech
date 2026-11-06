@@ -16,6 +16,7 @@ internal sealed class FailureBanner : Window, IDisposable
     private static readonly Vector4 TitleColor = new(1f, 0.35f, 0.3f, 1f);
 
     private readonly IFontHandle titleFont;
+    private string title = "MECHANIC FAILED";
     private string reason = "";
     private DateTime shownAt;
 
@@ -29,18 +30,33 @@ internal sealed class FailureBanner : Window, IDisposable
         DisableWindowSounds = true;
         titleFont = Plugin.PluginInterface.UiBuilder.FontAtlas.NewGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.TrumpGothic68));
         Plugin.Game.MechanicFailed += OnMechanicFailed;
+        Learn.LearnSession.PlayerHit += OnPlayerHit;
     }
 
     public void Dispose()
     {
         Plugin.Game.MechanicFailed -= OnMechanicFailed;
+        Learn.LearnSession.PlayerHit -= OnPlayerHit;
         titleFont.Dispose();
     }
 
     private void OnMechanicFailed(string failure)
     {
         if (Plugin.Config.EnableMechanicResultMarks) return;
-        reason = failure;
+        Show("MECHANIC FAILED", failure);
+    }
+
+    // A failed mechanic's own banner wins over the hit that caused it: a hit never replaces one still showing.
+    private void OnPlayerHit(AnoMech.Learn.LessonHit hit)
+    {
+        if (IsOpen && title == "MECHANIC FAILED" && (DateTime.UtcNow - shownAt).TotalSeconds < HoldSeconds) return;
+        Show(hit.Fatal ? "KILLED" : "HIT", hit.Phrase);
+    }
+
+    private void Show(string what, string why)
+    {
+        title = what;
+        reason = why;
         shownAt = DateTime.UtcNow;
         IsOpen = true;
     }
@@ -60,7 +76,7 @@ internal sealed class FailureBanner : Window, IDisposable
     public override void Draw()
     {
         using (titleFont.Push())
-            CenteredText("MECHANIC FAILED", TitleColor);
+            CenteredText(title, TitleColor);
         CenteredText(reason, new Vector4(1f, 1f, 1f, 1f));
     }
 

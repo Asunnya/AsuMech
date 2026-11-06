@@ -4,6 +4,7 @@ using AnoMech.Learn.Toolbox;
 using AnoMech.Learn.Mitigation;
 using AnoMech.Learn.Sources;
 using AnoMech.Core.Game;
+using AnoMech.Core.Game.Trace;
 using AnoMech.Scenarios;
 using AnoMech.Tests;
 using System.Text.Json;
@@ -42,6 +43,10 @@ namespace AnoMech.LessonTools;
 // links    --file AnoMech/Scenarios/Raidsplan/DSR.txt [--resolve]   every plan link, Strategy Board code, slides deck and sheet in a guide's text, with its heading; --resolve follows tinyurl
 // learn-ready --scenario <TypeName> [--strat N] [--no-run]   what the chain can read from the scenario and how it degrades (runs overrides-check too)
 // status [--family <Family>] [--metrics] [--write-baseline]   scenario × strat × lesson × toolbox × example × mit × draft; --metrics per family; --write-baseline refreshes tests/.../lessons-baseline.txt
+// crosscheck --fight m11s [--source all|bossmod|reborn] [--update] [--out AnoMech/Learn/Sources/modules]   public hint modules (text, no compiler) -> one JSON per fight; --update moves the commit pins to the repos' heads
+// sim-timeline --scenario <TypeName> [--strat N] [--seed 1] --out <file.csv>   the headless run's own SimTimeline CSV, the shape a recording has
+// replay-diff --scenario <TypeName> --replay <file.csv|.csv.gz> [--strat N] [--seed 1] [--pull N] [--t0 s] [--window 3] [--slack 0.25]   headless run vs a recorded pull, cast by cast; exit 1 past the slack
+// mit-timeline --from-replay <file.csv|.csv.gz> --scenario <TypeName> [--pull N] --out Timelines/<TypeName>.json   the recorded pull's casts, on the scenario's clock
 // rekey-all [--write]                                        re-records every embedded lesson's strat (1 seed) and follows moved lines; --write rewrites the lesson files; orphans fail
 internal static class Cli
 {
@@ -76,6 +81,9 @@ internal static class Cli
                 "slides-fetch" => SlidesFetch(opts),
                 "status" => Status(opts),
                 "rekey-all" => RekeyAll(opts),
+                "replay-diff" => ReplayDiffCmd(opts),
+                "sim-timeline" => SimTimelineCmd(opts),
+                "crosscheck" => Crosscheck(opts),
                 _ => Usage(),
             };
         }
@@ -270,6 +278,10 @@ internal static class Cli
         var dump = opts.ContainsKey("no-run") || scenario.AiStrats.Count == 0 ? null : OrderRecorder.Record(name, strat, [1], TextWriter.Null);
         var pins = opts.ContainsKey("no-run") || scenario.SettingsOverrides is null ? null : OverridesCheck.Run(scenario.GetType(), strat);
         var rows = LearnReadiness.Check(scenario, dump, pins);
+        var family = Glossary.FamilyOf(scenario.GetType());
+        var modules = ModuleSource.LoadForFamily(family);
+        var data = dump is null ? null : Core.Native.Interfaces.Natives.Data;
+        rows.AddRange(ModuleCrosscheck.Summarize(family, modules is null ? [] : ModuleCrosscheck.Check(family, modules, data, MitTimelines.Load(name)), modules));
         Console.Write(LearnReadiness.Table(scenario, rows));
         return rows.Any(r => r.Status == Readiness.Missing) ? 1 : 0;
     }
@@ -409,12 +421,131 @@ internal static class Cli
         return 0;
     }
 
+    private static Type ScenarioType(string name)
+        => typeof(Game).Assembly.GetTypes().FirstOrDefault(t => t.Name == name) ?? throw new ArgumentException($"no scenario type named {name}");
+
+    private static List<Dictionary<string, string>> ReplayPull(Dictionary<string, string> opts)
+    {
+        var rows = Recording.Load(Need(opts, "replay"));
+        var pulls = Recording.Pulls(rows);
+        var pull = opts.TryGetValue("pull", out var p) && p.Length > 0 ? int.Parse(p) : 1;
+        if (pull < 1 || pull > pulls.Count) throw new ArgumentException($"--pull {pull}: the recording has {pulls.Count} pull(s)");
+        Console.Error.WriteLine($"recording: territory {Recording.Territory(rows)?.ToString() ?? "?"}, {rows.Count} rows, {pulls.Count} pull(s); using pull {pull} ({pulls[pull - 1].Count} rows)");
+        return pulls[pull - 1];
+    }
+
+    // Each source is one sparse clone under tools/AnoMech.LessonTools/obj/sources/<source>/, kept at
+    // the pinned commit; the fight's folder is all that is checked out.
+    private static int Crosscheck(Dictionary<string, string> opts)
+    {
+        var fight = Need(opts, "fight").ToLowerInvariant();
+        var fightsPath = Path.Combine(RepoRoot(), "AnoMech", "Learn", "Sources", "modules", "fights.json");
+        var table = ModuleFights.Parse(File.ReadAllText(fightsPath));
+        if (!table.Fights.TryGetValue(fight, out var entry)) throw new ArgumentException($"{fight} isn't in {fightsPath}; known: {string.Join(", ", table.Fights.Keys)}");
+        var only = opts.TryGetValue("source", out var so) && so.Length > 0 && so != "all" ? so : null;
+        var update = opts.ContainsKey("update");
+        var module = new ModuleSource { Fight = fight };
+        foreach (var (sourceName, path) in entry.Paths)
+        {
+            if (only != null && sourceName != only) continue;
+            var repo = table.Sources[sourceName];
+            var dir = Path.Combine(RepoRoot(), "tools", "AnoMech.LessonTools", "obj", "sources", sourceName);
+            if (!Directory.Exists(Path.Combine(dir, ".git")))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(dir)!);
+                Git(null, "clone", "-q", "--filter=blob:none", "--no-checkout", repo.Repo, dir);
+            }
+            var commit = path.Commit;
+            if (update)
+            {
+                Git(dir, "fetch", "-q", "origin");
+                commit = Git(dir, "rev-parse", "origin/HEAD").Trim();
+                entry.Paths[sourceName] = path with { Commit = commit };
+            }
+            Git(dir, "sparse-checkout", "set", "--no-cone", $"/{path.Path}/");
+            Git(dir, "checkout", "-q", commit);
+            var folder = Path.Combine(dir, path.Path.Replace('/', Path.DirectorySeparatorChar));
+            var files = Directory.EnumerateFiles(folder, "*.cs", SearchOption.AllDirectories)
+                .Select(f => (Path.GetRelativePath(folder, f).Replace('\\', '/'), File.ReadAllText(f))).ToList();
+            var block = ModuleSource.ParseFolder(sourceName, repo.Repo, path.Path, commit, repo.License, files);
+            module.Sources.Add(block);
+            Console.WriteLine($"{sourceName} @{commit[..8]} {path.Path}: {files.Count} files; enums {string.Join(", ", block.Enums.Select(e => $"{e.Key} {e.Value.Count}"))}; "
+                              + $"{block.Actions.Count(a => a.Shape != null)}/{block.Actions.Count} action facts, {block.Shapes.Count} code shapes, {block.States.Count} states, {block.Unparsed.Count} unparsed");
+            foreach (var u in block.Unparsed.Take(10)) Console.WriteLine($"    unparsed {u}");
+        }
+        var outDir = opts.TryGetValue("out", out var o) && o.Length > 0 ? o : Path.Combine(RepoRoot(), "AnoMech", "Learn", "Sources", "modules");
+        Directory.CreateDirectory(outDir);
+        var outPath = Path.Combine(outDir, $"{fight}.json");
+        File.WriteAllText(outPath, module.ToJson());
+        if (update) File.WriteAllText(fightsPath, table.ToJson());
+        Console.WriteLine($"-> {outPath}{(update ? $" (pins updated in {fightsPath})" : "")}");
+        return 0;
+    }
+
+    private static string Git(string? dir, params string[] args)
+    {
+        var info = new System.Diagnostics.ProcessStartInfo("git") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false };
+        if (dir != null) { info.ArgumentList.Add("-C"); info.ArgumentList.Add(dir); }
+        foreach (var a in args) info.ArgumentList.Add(a);
+        using var process = System.Diagnostics.Process.Start(info)!;
+        var output = process.StandardOutput.ReadToEnd();
+        var error = process.StandardError.ReadToEnd();
+        process.WaitForExit();
+        if (process.ExitCode != 0) throw new InvalidOperationException($"git {string.Join(' ', args)} failed: {error.Trim()}");
+        return output;
+    }
+
+    private static int SimTimelineCmd(Dictionary<string, string> opts)
+    {
+        var type = ScenarioType(Need(opts, "scenario"));
+        var strat = opts.TryGetValue("strat", out var s) && s.Length > 0 ? int.Parse(s) : 0;
+        var seed = opts.TryGetValue("seed", out var sd) && sd.Length > 0 ? int.Parse(sd) : 1;
+        var rows = CastTimelines.SimRows(type, strat, seed, out var failure);
+        if (failure != null) Console.Error.WriteLine($"run: {failure}");
+        var outPath = Need(opts, "out");
+        Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(outPath))!);
+        File.WriteAllText(outPath, SimTimeline.ToCsv(rows));
+        Console.WriteLine($"{rows.Count} rows ({rows.Count(r => r.GetValueOrDefault("kind") == "cast")} casts) -> {outPath}");
+        return 0;
+    }
+
+    private static int ReplayDiffCmd(Dictionary<string, string> opts)
+    {
+        var type = ScenarioType(Need(opts, "scenario"));
+        var strat = opts.TryGetValue("strat", out var s) && s.Length > 0 ? int.Parse(s) : 0;
+        var seed = opts.TryGetValue("seed", out var sd) && sd.Length > 0 ? int.Parse(sd) : 1;
+        var real = ReplayPull(opts);
+        var sim = CastTimelines.SimRows(type, strat, seed, out var failure);
+        if (failure != null) Console.Error.WriteLine($"run: {failure}");
+        float? t0 = opts.TryGetValue("t0", out var t) && t.Length > 0 ? float.Parse(t, System.Globalization.CultureInfo.InvariantCulture) : null;
+        var window = opts.TryGetValue("window", out var w) && w.Length > 0 ? float.Parse(w, System.Globalization.CultureInfo.InvariantCulture) : ReplayDiff.DefaultWindow;
+        var slack = opts.TryGetValue("slack", out var sl) && sl.Length > 0 ? float.Parse(sl, System.Globalization.CultureInfo.InvariantCulture) : ReplayDiff.DefaultSlack;
+        var diff = ReplayDiff.Compare(sim, real, t0, window);
+        Console.Write(diff.Report(slack));
+        return diff.WithinSlack(slack) ? 0 : 1;
+    }
+
     private static int MitTimeline(Dictionary<string, string> opts)
     {
         if (opts.ContainsKey("all")) return MitTimelineAll(opts);
         var scenario = Need(opts, "scenario");
-        var type = typeof(Game).Assembly.GetTypes().FirstOrDefault(t => t.Name == scenario) ?? throw new ArgumentException($"no scenario type named {scenario}");
-        var timeline = CastTimelines.Record(type, 0, 1, out var failure);
+        var type = ScenarioType(scenario);
+        CastTimeline timeline;
+        string? failure;
+        if (opts.TryGetValue("from-replay", out var replay) && replay.Length > 0)
+        {
+            opts["replay"] = replay;
+            var real = ReplayPull(opts);
+            var diff = ReplayDiff.Compare(CastTimelines.SimRows(type, 0, 1, out failure), real);
+            if (diff.AlignedOn is null) throw new ArgumentException("the recorded pull has none of the scenario's casts");
+            // On the scenario's clock, and only the stretch the scenario covers.
+            var shifted = real.Where(r => r.GetValueOrDefault("kind") is "cast" or "ability" && r.GetValueOrDefault("actor", "").StartsWith('4'))
+                .Select(r => new Dictionary<string, string>(r) { ["t"] = SimTimeline.F(SimTimeline.Time(r) - diff.Offset, "F3") })
+                .Where(r => SimTimeline.Time(r) >= -ReplayDiff.DefaultWindow).ToList();
+            timeline = CastTimeline.FromTimelineCsv(scenario, SimTimeline.ToCsv(shifted));
+            Console.Error.WriteLine(diff.Report());
+        }
+        else timeline = CastTimelines.Record(type, 0, 1, out failure);
         if (failure != null) Console.Error.WriteLine($"run: {failure}");
         var outPath = Need(opts, "out");
         Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(outPath))!);
@@ -670,11 +801,22 @@ internal static class Cli
     {
         var dump = OrderDump.Parse(File.ReadAllText(Need(opts, "dump")));
         var window = opts.TryGetValue("window", out var w) && w.Length > 0 ? float.Parse(w, System.Globalization.CultureInfo.InvariantCulture) : CueExtractor.WindowSeconds;
+        var modules = ScenarioCatalog.Create().Scenarios.FirstOrDefault(s => s.GetType().Name == dump.Scenario) is { } sc ? ModuleSource.LoadForFamily(Glossary.FamilyOf(sc.GetType())) : null;
+        var nameless = new SortedDictionary<string, string>(StringComparer.Ordinal);
         foreach (var ((cls, line, role), list) in CueExtractor.Extract(dump, window).OrderBy(kv => kv.Key.Line))
         {
             Console.WriteLine($"{cls} L{line} {role}");
             foreach (var c in list.Take(6))
-                Console.WriteLine($"   {c.Kind} {c.Name}{(c.Target is { } t ? " on " + t : "")} {c.SecondsBefore:0.0}s before{(c.Stable ? "" : $" ({c.Seeds}/{c.OfSeeds})")}");
+            {
+                var named = LessonDraft.NameCue(c, modules);
+                Console.WriteLine($"   {c.Kind} {named}{(c.Target is { } t ? " on " + t : "")} {c.SecondsBefore:0.0}s before{(c.Stable ? "" : $" ({c.Seeds}/{c.OfSeeds})")}");
+                if (c.Kind is "marker" or "tether") nameless[c.Name] = named;
+            }
+        }
+        if (nameless.Count > 0)
+        {
+            Console.WriteLine(modules is null ? "glossary candidates (no public module for this family; run crosscheck):" : "glossary candidates (names from the public modules, wording is yours):");
+            foreach (var (raw, named) in nameless) Console.WriteLine($"   \"{raw}\": \"{(named == raw ? "" : named)}\"");
         }
         return 0;
     }
@@ -743,7 +885,7 @@ internal static class Cli
             : zone.WaymarkPresets.FirstOrDefault(w => w.Name.Equals(layoutName, StringComparison.OrdinalIgnoreCase)) ?? zone.WaymarkPresets.FirstOrDefault();
         var rules = RuleMiner.Mine(dump, layout);
         var cues = CueExtractor.Extract(dump);
-        lesson = LessonDraft.Draft(lesson, dump, rules, cues, Glossary.Load(Glossary.FamilyOf(type)));
+        lesson = LessonDraft.Draft(lesson, dump, rules, cues, Glossary.Load(Glossary.FamilyOf(type)), ModuleSource.LoadForFamily(Glossary.FamilyOf(type)));
 
         ToolboxPlan? plan = null;
         OracleReport? oracle = null;
@@ -821,7 +963,7 @@ internal static class Cli
         var zone = ScenarioCatalog.Create().Scenarios.FirstOrDefault(s => s.GetType() == type)?.Phase.Zone;
         var layout = Layout(opts, zone);
         var glossary = type is null ? Glossary.Empty : Glossary.Load(Glossary.FamilyOf(type));
-        var drafted = LessonDraft.Draft(lesson, dump, RuleMiner.Mine(dump, layout), CueExtractor.Extract(dump), glossary);
+        var drafted = LessonDraft.Draft(lesson, dump, RuleMiner.Mine(dump, layout), CueExtractor.Extract(dump), glossary, ModuleSource.LoadForFamily(Glossary.FamilyOf(type)));
         var outPath = Need(opts, "out");
         File.WriteAllText(outPath, LessonSkeleton.ToJson(drafted));
         Console.WriteLine($"draft    {outPath} ({drafted.Steps.Count(s => s.Skip)} skipped, {drafted.Steps.Count(s => s.Cue != null)} with a cue)");

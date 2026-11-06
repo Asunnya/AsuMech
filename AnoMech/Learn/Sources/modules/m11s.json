@@ -1,0 +1,5802 @@
+{
+  "fight": "m11s",
+  "sources": [
+    {
+      "name": "bossmod",
+      "repo": "https://github.com/awgil/ffxiv_bossmod.git",
+      "path": "BossMod.Modules/Dawntrail/Savage/RM11STheTyrant",
+      "commit": "6e410ef8bb912fc70e3c1f97eedfb77a7dc4dfc0",
+      "license": "BSD-3-Clause",
+      "enums": {
+        "HintSword": [],
+        "HintForegoneFatality": [],
+        "OID": [
+          {
+            "name": "Boss",
+            "value": 19180,
+            "comment": "R5.000, x1"
+          },
+          {
+            "name": "Helper",
+            "value": 9020,
+            "comment": "R0.500, x25-36, Helper type"
+          },
+          {
+            "name": "TheTyrant",
+            "value": 19178,
+            "comment": "R3.000, x3-4"
+          },
+          {
+            "name": "Comet",
+            "value": 19181,
+            "comment": "R2.160, x8"
+          },
+          {
+            "name": "Axe",
+            "value": 19184,
+            "comment": "R1.000, x2"
+          },
+          {
+            "name": "Scythe",
+            "value": 19185,
+            "comment": "R1.000, x2"
+          },
+          {
+            "name": "Sword",
+            "value": 19186,
+            "comment": "R1.000, x2"
+          },
+          {
+            "name": "Maelstrom",
+            "value": 19183,
+            "comment": "R1.000, x0 (spawn during fight)"
+          },
+          {
+            "name": "AtomicImpact",
+            "value": 2015012,
+            "comment": "fire puddle"
+          }
+        ],
+        "AID": [
+          {
+            "name": "AutoAttack",
+            "value": 46085,
+            "comment": "Boss-\u003Eplayer, no cast, single-target"
+          },
+          {
+            "name": "CrownOfArcadia",
+            "value": 46086,
+            "comment": "Boss-\u003Eself, 5.0s cast, range 60 circle"
+          },
+          {
+            "name": "RawSteelTrophyAxe",
+            "value": 46114,
+            "comment": "Boss-\u003Eself, 2.0\u002B4.0s cast, single-target"
+          },
+          {
+            "name": "RawSteelTrophyScythe",
+            "value": 46115,
+            "comment": "Boss-\u003Eself, 2.0\u002B4.0s cast, single-target"
+          },
+          {
+            "name": "RawSteelAxeBoss",
+            "value": 46090,
+            "comment": "Boss-\u003Eself, no cast, single-target"
+          },
+          {
+            "name": "RawSteelAxeBuster",
+            "value": 46091,
+            "comment": "Boss-\u003Eplayers, no cast, range 6 circle, tankbuster"
+          },
+          {
+            "name": "RawSteelAxeImpact",
+            "value": 46092,
+            "comment": "Helper-\u003Eplayers, no cast, range 6 circle, spread"
+          },
+          {
+            "name": "RawSteelScytheBoss1",
+            "value": 46093,
+            "comment": "Boss-\u003Eself, no cast, single-target"
+          },
+          {
+            "name": "RawSteelScytheBoss2",
+            "value": 46094,
+            "comment": "Boss-\u003Eself, no cast, single-target"
+          },
+          {
+            "name": "RawSteelScytheBuster",
+            "value": 46095,
+            "comment": "Helper-\u003Eself, no cast, range 60 90-degree cone, tankbuster"
+          },
+          {
+            "name": "RawSteelScytheHeavyHitter",
+            "value": 46096,
+            "comment": "Helper-\u003Eself, no cast, range 60 45-degree cone, party stack"
+          },
+          {
+            "name": "TrophyWeapons",
+            "value": 46102,
+            "comment": "Boss-\u003Eself, 3.0s cast, single-target"
+          },
+          {
+            "name": "AssaultEvolvedLongCast",
+            "value": 46103,
+            "comment": "Boss-\u003Eself, 6.0s cast, single-target"
+          },
+          {
+            "name": "AssaultEvolvedAxeVisual",
+            "value": 46403,
+            "comment": "Boss-\u003Elocation, no cast, single-target"
+          },
+          {
+            "name": "AssaultEvolvedScytheVisual",
+            "value": 46404,
+            "comment": "Boss-\u003Elocation, no cast, single-target"
+          },
+          {
+            "name": "AssaultEvolvedSwordVisual",
+            "value": 46405,
+            "comment": "Boss-\u003Elocation, no cast, single-target"
+          },
+          {
+            "name": "AssaultEvolvedAxeAOE",
+            "value": 46104,
+            "comment": "Helper-\u003Eself, 2.0s cast, range 8 circle"
+          },
+          {
+            "name": "AssaultEvolvedScytheAOE",
+            "value": 46105,
+            "comment": "Helper-\u003Eself, 2.0s cast, range 5-60 donut"
+          },
+          {
+            "name": "AssaultEvolvedSwordAOE",
+            "value": 46106,
+            "comment": "Helper-\u003Eself, 2.0s cast, range 40 width 10 cross"
+          },
+          {
+            "name": "HeavyWeight",
+            "value": 46107,
+            "comment": "Helper-\u003Eplayers, no cast, range 6 circle, axe"
+          },
+          {
+            "name": "SweepingVictory",
+            "value": 46108,
+            "comment": "Helper-\u003Eself, no cast, range 60 30-degree cone, scythe"
+          },
+          {
+            "name": "SharpTaste",
+            "value": 46109,
+            "comment": "Helper-\u003Eself, no cast, range 60 width 6 rect, sword"
+          },
+          {
+            "name": "VoidStardust",
+            "value": 46098,
+            "comment": "Boss-\u003Eself, 4.0\u002B1.0s cast, single-target"
+          },
+          {
+            "name": "Cometite",
+            "value": 46099,
+            "comment": "Helper-\u003Elocation, 3.0s cast, range 6 circle"
+          },
+          {
+            "name": "CometSpread",
+            "value": 46100,
+            "comment": "Helper-\u003Eplayers, 5.0s cast, range 6 circle"
+          },
+          {
+            "name": "CrushingCometStack",
+            "value": 46101,
+            "comment": "Helper-\u003Eplayers, 5.0s cast, range 6 circle"
+          },
+          {
+            "name": "DanceOfDominationTrophy",
+            "value": 47035,
+            "comment": "Boss-\u003Eself, 2.0\u002B4.0s cast, single-target"
+          },
+          {
+            "name": "DanceOfDominationBoss",
+            "value": 46110,
+            "comment": "Boss-\u003Eself, no cast, single-target"
+          },
+          {
+            "name": "DanceOfDominationFirst",
+            "value": 46111,
+            "comment": "Helper-\u003Eself, 0.5s cast, range 60 circle"
+          },
+          {
+            "name": "DanceOfDominationRepeat",
+            "value": 46113,
+            "comment": "Helper-\u003Eself, no cast, range 60 circle"
+          },
+          {
+            "name": "DanceOfDominationLast",
+            "value": 47082,
+            "comment": "Helper-\u003Eself, no cast, range 60 circle"
+          },
+          {
+            "name": "EyeOfTheHurricane",
+            "value": 46116,
+            "comment": "Helper-\u003Eplayers, 5.0s cast, range 6 circle"
+          },
+          {
+            "name": "HurricaneExplosion",
+            "value": 46112,
+            "comment": "Helper-\u003Eself, 5.0s cast, range 60 width 10 rect"
+          },
+          {
+            "name": "HurricaneExplosionVisual",
+            "value": 47036,
+            "comment": "Helper-\u003Eself, 5.5s cast, range 60 width 10 rect, visual only? doesn\u0027t deal damage"
+          },
+          {
+            "name": "Charybdistopia",
+            "value": 46117,
+            "comment": "Boss-\u003Eself, 5.0s cast, range 60 circle"
+          },
+          {
+            "name": "UltimateTrophyWeapons",
+            "value": 47085,
+            "comment": "Boss-\u003Eself, 3.0s cast, single-target"
+          },
+          {
+            "name": "AssaultApex",
+            "value": 47086,
+            "comment": "Boss-\u003Eself, 5.0s cast, single-target"
+          },
+          {
+            "name": "Charybdis",
+            "value": 46118,
+            "comment": "Helper-\u003Eplayer, no cast, single-target, tornado"
+          },
+          {
+            "name": "PowerfulGust",
+            "value": 46119,
+            "comment": "Helper-\u003Eself, no cast, range 60 90-degree cone"
+          },
+          {
+            "name": "ImmortalReign",
+            "value": 46120,
+            "comment": "Boss-\u003Eself, 3.0\u002B1.0s cast, single-target"
+          },
+          {
+            "name": "OneAndOnlyBoss",
+            "value": 46121,
+            "comment": "Boss-\u003Eself, 6.0\u002B2.0s cast, single-target"
+          },
+          {
+            "name": "OneAndOnlyRaidwide",
+            "value": 46122,
+            "comment": "Helper-\u003Eself, 9.0s cast, range 60 circle"
+          },
+          {
+            "name": "GreatWallOfFireCast",
+            "value": 46123,
+            "comment": "Boss-\u003Eself, 5.0s cast, single-target"
+          },
+          {
+            "name": "GreatWallOfFireRect",
+            "value": 46124,
+            "comment": "Boss-\u003Eself, no cast, range 60 width 6 rect"
+          },
+          {
+            "name": "GreatWallOfFireUnk",
+            "value": 46125,
+            "comment": "Helper-\u003Eself, no cast, single-target"
+          },
+          {
+            "name": "WallExplosion",
+            "value": 46126,
+            "comment": "Helper-\u003Eself, 3.0s cast, range 60 width 6 rect"
+          },
+          {
+            "name": "OrbitalOmenBoss",
+            "value": 46130,
+            "comment": "Boss-\u003Eself, 5.0s cast, single-target"
+          },
+          {
+            "name": "OrbitalOmenRect",
+            "value": 46131,
+            "comment": "Helper-\u003Eself, 6.0s cast, range 60 width 10 rect"
+          },
+          {
+            "name": "FireAndFuryBoss",
+            "value": 46127,
+            "comment": "Boss-\u003Eself, 4.0\u002B1.0s cast, single-target"
+          },
+          {
+            "name": "FireAndFuryFront",
+            "value": 46128,
+            "comment": "Helper-\u003Eself, 5.0s cast, range 60 90-degree cone"
+          },
+          {
+            "name": "FireAndFuryBack",
+            "value": 46129,
+            "comment": "Helper-\u003Eself, 5.0s cast, range 60 90-degree cone"
+          },
+          {
+            "name": "MeteorainBoss",
+            "value": 46132,
+            "comment": "Boss-\u003Eself, 5.0s cast, single-target"
+          },
+          {
+            "name": "FearsomeFireballBoss",
+            "value": 46137,
+            "comment": "Boss-\u003Eself, 5.0s cast, single-target"
+          },
+          {
+            "name": "FearsomeFireballCharge",
+            "value": 46138,
+            "comment": "Boss-\u003Eself, no cast, range 60 width 6 rect"
+          },
+          {
+            "name": "CosmicKiss",
+            "value": 46133,
+            "comment": "Comet-\u003Eself, no cast, range 4 circle"
+          },
+          {
+            "name": "ForegoneFatality",
+            "value": 46134,
+            "comment": "TheTyrant-\u003Eplayer/Comet, no cast, single-target"
+          },
+          {
+            "name": "UnmitigatedExplosionComet",
+            "value": 46135,
+            "comment": "Comet-\u003Eself, no cast, range 60 circle, comet explodes if dropped too close to other comet"
+          },
+          {
+            "name": "ExplosionComet",
+            "value": 46136,
+            "comment": "Comet-\u003Eself, 3.0s cast, range 8 circle, comet explodes when hit"
+          },
+          {
+            "name": "TripleTyrannhilationInstant",
+            "value": 46139,
+            "comment": "Boss-\u003Eself, no cast, single-target"
+          },
+          {
+            "name": "TripleTyrannhilationCast",
+            "value": 46140,
+            "comment": "Boss-\u003Eself, 7.0\u002B1.0s cast, single-target"
+          },
+          {
+            "name": "Shockwave",
+            "value": 46141,
+            "comment": "Helper-\u003Eself, no cast, range 60 circle"
+          },
+          {
+            "name": "CometBreak",
+            "value": 46142,
+            "comment": "Comet-\u003Eself, no cast, single-target"
+          },
+          {
+            "name": "FlatlinerBoss",
+            "value": 46143,
+            "comment": "Boss-\u003Eself, 4.0\u002B2.0s cast, single-target"
+          },
+          {
+            "name": "Flatliner",
+            "value": 47760,
+            "comment": "Helper-\u003Eself, 6.0s cast, range 60 circle"
+          },
+          {
+            "name": "MajesticMeteorBoss",
+            "value": 46144,
+            "comment": "Boss-\u003Eself, 5.0s cast, single-target"
+          },
+          {
+            "name": "ExplosionTower",
+            "value": 46148,
+            "comment": "Helper-\u003Eself, 10.0s cast, range 4 circle"
+          },
+          {
+            "name": "UnmitigatedExplosionTower",
+            "value": 46149,
+            "comment": "Helper-\u003Eself, no cast, range 60 circle"
+          },
+          {
+            "name": "MajesticMeteorAOE",
+            "value": 46145,
+            "comment": "Helper-\u003Elocation, 3.0s cast, range 6 circle"
+          },
+          {
+            "name": "FireBreathBoss",
+            "value": 46150,
+            "comment": "Boss-\u003Eself, 8.0\u002B1.0s cast, single-target"
+          },
+          {
+            "name": "FireBreathRect",
+            "value": 46151,
+            "comment": "Helper-\u003Eself, no cast, range 60 width 6 rect"
+          },
+          {
+            "name": "MajesticMeteowrathRect",
+            "value": 46147,
+            "comment": "Helper-\u003Eself, no cast, range 60 width 10 rect"
+          },
+          {
+            "name": "MajesticMeteorainRect",
+            "value": 46146,
+            "comment": "Helper-\u003Eself, no cast, range 60 width 10 rect"
+          },
+          {
+            "name": "MassiveMeteorBoss",
+            "value": 46152,
+            "comment": "Boss-\u003Eself, 5.0s cast, single-target"
+          },
+          {
+            "name": "MassiveMeteorStack",
+            "value": 46153,
+            "comment": "Helper-\u003Eplayers, no cast, range 6 circle"
+          },
+          {
+            "name": "ArcadionAvalancheBoss1",
+            "value": 46154,
+            "comment": "Boss-\u003Eself, 6.0\u002B9.5s cast, single-target"
+          },
+          {
+            "name": "ArcadionAvalancheBoss2",
+            "value": 46156,
+            "comment": "Boss-\u003Eself, 6.0\u002B9.5s cast, single-target"
+          },
+          {
+            "name": "ArcadionAvalancheBoss3",
+            "value": 46158,
+            "comment": "Boss-\u003Eself, 6.0\u002B9.5s cast, single-target"
+          },
+          {
+            "name": "ArcadionAvalancheBoss4",
+            "value": 46160,
+            "comment": "Boss-\u003Eself, 6.0\u002B9.5s cast, single-target"
+          },
+          {
+            "name": "ArcadionAvalanchePlatform1",
+            "value": 46155,
+            "comment": "Helper-\u003Eself, 15.5s cast, range 40 width 40 rect"
+          },
+          {
+            "name": "ArcadionAvalanchePlatform2",
+            "value": 46157,
+            "comment": "Helper-\u003Eself, 15.5s cast, range 40 width 40 rect"
+          },
+          {
+            "name": "ArcadionAvalanchePlatform3",
+            "value": 46159,
+            "comment": "Helper-\u003Eself, 15.5s cast, range 40 width 40 rect"
+          },
+          {
+            "name": "ArcadionAvalanchePlatform4",
+            "value": 46161,
+            "comment": "Helper-\u003Eself, 15.5s cast, range 40 width 40 rect"
+          },
+          {
+            "name": "EclipticStampede",
+            "value": 46162,
+            "comment": "Boss-\u003Eself, 5.0s cast, single-target"
+          },
+          {
+            "name": "MammothMeteor",
+            "value": 46163,
+            "comment": "Helper-\u003Elocation, 6.0s cast, range 60 circle"
+          },
+          {
+            "name": "AtomicImpact",
+            "value": 46164,
+            "comment": "Helper-\u003Eplayers, no cast, range 5 circle"
+          },
+          {
+            "name": "MajesticMeteorEcliptic",
+            "value": 46165,
+            "comment": "Helper-\u003Elocation, 3.0s cast, range 6 circle"
+          },
+          {
+            "name": "CosmicKissEcliptic",
+            "value": 46166,
+            "comment": "Helper-\u003Elocation, 5.0s cast, range 4 circle"
+          },
+          {
+            "name": "WeightyImpact",
+            "value": 46167,
+            "comment": "Helper-\u003Elocation, 5.0s cast, range 4 circle"
+          },
+          {
+            "name": "UnmitigatedExplosionEcliptic",
+            "value": 46168,
+            "comment": "Helper-\u003Eself, no cast, range 60 circle"
+          },
+          {
+            "name": "MajesticMeteowrathEcliptic",
+            "value": 46169,
+            "comment": "Helper-\u003Eself, no cast, range 60 width 10 rect"
+          },
+          {
+            "name": "TwoWayFireballBoss",
+            "value": 47037,
+            "comment": "Boss-\u003Eself, 6.0\u002B1.0s cast, single-target"
+          },
+          {
+            "name": "TwoWayFireball",
+            "value": 47038,
+            "comment": "Helper-\u003Eself, no cast, range 60 width 6 rect"
+          },
+          {
+            "name": "FourWayFireballBoss",
+            "value": 46170,
+            "comment": "Boss-\u003Eself, 6.0\u002B1.0s cast, single-target"
+          },
+          {
+            "name": "FourWayFireball",
+            "value": 46171,
+            "comment": "Helper-\u003Eself, no cast, range 60 width 6 rect"
+          },
+          {
+            "name": "HeartbreakKickBoss",
+            "value": 46173,
+            "comment": "Boss-\u003Eself, 5.0\u002B1.0s cast, single-target"
+          },
+          {
+            "name": "HeartbreakKickTower",
+            "value": 46174,
+            "comment": "Helper-\u003Eself, no cast, range 4 circle"
+          },
+          {
+            "name": "ToughBreak",
+            "value": 46177,
+            "comment": "Helper-\u003Eself, no cast, range 60 circle, heartbreak kick tower miss"
+          },
+          {
+            "name": "HeartbreakerCast",
+            "value": 46178,
+            "comment": "Boss-\u003Eself, 8.0s cast, single-target"
+          },
+          {
+            "name": "HeartbreakerEnrage",
+            "value": 46179,
+            "comment": "Boss-\u003Eself, no cast, range 60 circle"
+          },
+          {
+            "name": "Jump",
+            "value": 46084,
+            "comment": "Boss-\u003Elocation, no cast, single-target"
+          },
+          {
+            "name": "UnkHK1",
+            "value": 46172,
+            "comment": "Boss-\u003Eself, no cast, single-target"
+          },
+          {
+            "name": "UnkHK2",
+            "value": 46175,
+            "comment": "Boss-\u003Eself, no cast, single-target"
+          },
+          {
+            "name": "Unk1",
+            "value": 46176,
+            "comment": "Boss-\u003Eself, no cast, single-target"
+          }
+        ],
+        "SID": [
+          {
+            "name": "FireResistanceDownII",
+            "value": 2937,
+            "comment": "none-\u003Eplayer, extra=0x0"
+          },
+          {
+            "name": "PhysicalVulnerabilityUp",
+            "value": 2940,
+            "comment": "Boss/Helper/Comet-\u003Eplayer, extra=0x0"
+          },
+          {
+            "name": "MagicVulnerabilityUp",
+            "value": 2941,
+            "comment": "Helper/Boss/TheTyrant-\u003Eplayer/Comet, extra=0x0"
+          },
+          {
+            "name": "Unk1",
+            "value": 3913,
+            "comment": "none-\u003E_Gen_1/_Gen_/Boss/_Gen_2, extra=0x3EB/0x3EC/0x0/0x432"
+          },
+          {
+            "name": "Unk2",
+            "value": 4435,
+            "comment": "none-\u003ETheTyrant/Boss, extra=0xA"
+          }
+        ],
+        "IconID": [
+          {
+            "name": "Stack",
+            "value": 161,
+            "comment": "player-\u003Eself"
+          },
+          {
+            "name": "Spread",
+            "value": 139,
+            "comment": "player-\u003Eself"
+          },
+          {
+            "name": "FireBreath",
+            "value": 244,
+            "comment": "player-\u003Eself"
+          },
+          {
+            "name": "WildCharge",
+            "value": 525,
+            "comment": "Boss-\u003Eplayer"
+          },
+          {
+            "name": "MultiStack",
+            "value": 305,
+            "comment": "player-\u003Eself"
+          },
+          {
+            "name": "AtomicImpactPrey",
+            "value": 30,
+            "comment": "player-\u003Eself"
+          }
+        ],
+        "TetherID": [
+          {
+            "name": "ForegoneFatality",
+            "value": 356,
+            "comment": "TheTyrant-\u003EComet/player"
+          },
+          {
+            "name": "Unstretched",
+            "value": 57,
+            "comment": "TheTyrant-\u003Eplayer"
+          },
+          {
+            "name": "Stretched",
+            "value": 249,
+            "comment": "TheTyrant-\u003Eplayer"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "name": "AutoAttack",
+          "id": 46085,
+          "caster": "Boss",
+          "target": "player",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "CrownOfArcadia",
+          "id": 46086,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          }
+        },
+        {
+          "name": "RawSteelTrophyAxe",
+          "id": 46114,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 2,
+          "castExtraSeconds": 4,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "RawSteelTrophyScythe",
+          "id": 46115,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 2,
+          "castExtraSeconds": 4,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "RawSteelAxeBoss",
+          "id": 46090,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "RawSteelAxeBuster",
+          "id": 46091,
+          "caster": "Boss",
+          "target": "players",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          },
+          "note": "tankbuster"
+        },
+        {
+          "name": "RawSteelAxeImpact",
+          "id": 46092,
+          "caster": "Helper",
+          "target": "players",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          },
+          "note": "spread"
+        },
+        {
+          "name": "RawSteelScytheBoss1",
+          "id": 46093,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "RawSteelScytheBoss2",
+          "id": 46094,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "RawSteelScytheBuster",
+          "id": 46095,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "cone",
+            "range": 60,
+            "angle": 90
+          },
+          "note": "tankbuster"
+        },
+        {
+          "name": "RawSteelScytheHeavyHitter",
+          "id": 46096,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "cone",
+            "range": 60,
+            "angle": 45
+          },
+          "note": "party stack"
+        },
+        {
+          "name": "TrophyWeapons",
+          "id": 46102,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 3,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "AssaultEvolvedLongCast",
+          "id": 46103,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 6,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "AssaultEvolvedAxeVisual",
+          "id": 46403,
+          "caster": "Boss",
+          "target": "location",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "AssaultEvolvedScytheVisual",
+          "id": 46404,
+          "caster": "Boss",
+          "target": "location",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "AssaultEvolvedSwordVisual",
+          "id": 46405,
+          "caster": "Boss",
+          "target": "location",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "AssaultEvolvedAxeAOE",
+          "id": 46104,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 2,
+          "shape": {
+            "kind": "circle",
+            "range": 8
+          }
+        },
+        {
+          "name": "AssaultEvolvedScytheAOE",
+          "id": 46105,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 2,
+          "shape": {
+            "kind": "donut",
+            "range": 60,
+            "inner": 5
+          }
+        },
+        {
+          "name": "AssaultEvolvedSwordAOE",
+          "id": 46106,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 2,
+          "shape": {
+            "kind": "cross",
+            "range": 40,
+            "width": 10
+          }
+        },
+        {
+          "name": "HeavyWeight",
+          "id": 46107,
+          "caster": "Helper",
+          "target": "players",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          },
+          "note": "axe"
+        },
+        {
+          "name": "SweepingVictory",
+          "id": 46108,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "cone",
+            "range": 60,
+            "angle": 30
+          },
+          "note": "scythe"
+        },
+        {
+          "name": "SharpTaste",
+          "id": 46109,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 6
+          },
+          "note": "sword"
+        },
+        {
+          "name": "VoidStardust",
+          "id": 46098,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 4,
+          "castExtraSeconds": 1,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "Cometite",
+          "id": 46099,
+          "caster": "Helper",
+          "target": "location",
+          "castSeconds": 3,
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          }
+        },
+        {
+          "name": "CometSpread",
+          "id": 46100,
+          "caster": "Helper",
+          "target": "players",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          }
+        },
+        {
+          "name": "CrushingCometStack",
+          "id": 46101,
+          "caster": "Helper",
+          "target": "players",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          }
+        },
+        {
+          "name": "DanceOfDominationTrophy",
+          "id": 47035,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 2,
+          "castExtraSeconds": 4,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "DanceOfDominationBoss",
+          "id": 46110,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "DanceOfDominationFirst",
+          "id": 46111,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 0.5,
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          }
+        },
+        {
+          "name": "DanceOfDominationRepeat",
+          "id": 46113,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          }
+        },
+        {
+          "name": "DanceOfDominationLast",
+          "id": 47082,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          }
+        },
+        {
+          "name": "EyeOfTheHurricane",
+          "id": 46116,
+          "caster": "Helper",
+          "target": "players",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          }
+        },
+        {
+          "name": "HurricaneExplosion",
+          "id": 46112,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 10
+          }
+        },
+        {
+          "name": "HurricaneExplosionVisual",
+          "id": 47036,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 5.5,
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 10
+          },
+          "note": "visual only? doesn\u0027t deal damage"
+        },
+        {
+          "name": "Charybdistopia",
+          "id": 46117,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          }
+        },
+        {
+          "name": "UltimateTrophyWeapons",
+          "id": 47085,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 3,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "AssaultApex",
+          "id": 47086,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "Charybdis",
+          "id": 46118,
+          "caster": "Helper",
+          "target": "player",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          },
+          "note": "tornado"
+        },
+        {
+          "name": "PowerfulGust",
+          "id": 46119,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "cone",
+            "range": 60,
+            "angle": 90
+          }
+        },
+        {
+          "name": "ImmortalReign",
+          "id": 46120,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 3,
+          "castExtraSeconds": 1,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "OneAndOnlyBoss",
+          "id": 46121,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 6,
+          "castExtraSeconds": 2,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "OneAndOnlyRaidwide",
+          "id": 46122,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 9,
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          }
+        },
+        {
+          "name": "GreatWallOfFireCast",
+          "id": 46123,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "GreatWallOfFireRect",
+          "id": 46124,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 6
+          }
+        },
+        {
+          "name": "GreatWallOfFireUnk",
+          "id": 46125,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "WallExplosion",
+          "id": 46126,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 3,
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 6
+          }
+        },
+        {
+          "name": "OrbitalOmenBoss",
+          "id": 46130,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "OrbitalOmenRect",
+          "id": 46131,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 6,
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 10
+          }
+        },
+        {
+          "name": "FireAndFuryBoss",
+          "id": 46127,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 4,
+          "castExtraSeconds": 1,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "FireAndFuryFront",
+          "id": 46128,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "cone",
+            "range": 60,
+            "angle": 90
+          }
+        },
+        {
+          "name": "FireAndFuryBack",
+          "id": 46129,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "cone",
+            "range": 60,
+            "angle": 90
+          }
+        },
+        {
+          "name": "MeteorainBoss",
+          "id": 46132,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "FearsomeFireballBoss",
+          "id": 46137,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "FearsomeFireballCharge",
+          "id": 46138,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 6
+          }
+        },
+        {
+          "name": "CosmicKiss",
+          "id": 46133,
+          "caster": "Comet",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 4
+          }
+        },
+        {
+          "name": "ForegoneFatality",
+          "id": 46134,
+          "caster": "TheTyrant",
+          "target": "player/Comet",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "UnmitigatedExplosionComet",
+          "id": 46135,
+          "caster": "Comet",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          },
+          "note": "comet explodes if dropped too close to other comet"
+        },
+        {
+          "name": "ExplosionComet",
+          "id": 46136,
+          "caster": "Comet",
+          "target": "self",
+          "castSeconds": 3,
+          "shape": {
+            "kind": "circle",
+            "range": 8
+          },
+          "note": "comet explodes when hit"
+        },
+        {
+          "name": "TripleTyrannhilationInstant",
+          "id": 46139,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "TripleTyrannhilationCast",
+          "id": 46140,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 7,
+          "castExtraSeconds": 1,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "Shockwave",
+          "id": 46141,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          }
+        },
+        {
+          "name": "CometBreak",
+          "id": 46142,
+          "caster": "Comet",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "FlatlinerBoss",
+          "id": 46143,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 4,
+          "castExtraSeconds": 2,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "Flatliner",
+          "id": 47760,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 6,
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          }
+        },
+        {
+          "name": "MajesticMeteorBoss",
+          "id": 46144,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "ExplosionTower",
+          "id": 46148,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 10,
+          "shape": {
+            "kind": "circle",
+            "range": 4
+          }
+        },
+        {
+          "name": "UnmitigatedExplosionTower",
+          "id": 46149,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          }
+        },
+        {
+          "name": "MajesticMeteorAOE",
+          "id": 46145,
+          "caster": "Helper",
+          "target": "location",
+          "castSeconds": 3,
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          }
+        },
+        {
+          "name": "FireBreathBoss",
+          "id": 46150,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 8,
+          "castExtraSeconds": 1,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "FireBreathRect",
+          "id": 46151,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 6
+          }
+        },
+        {
+          "name": "MajesticMeteowrathRect",
+          "id": 46147,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 10
+          }
+        },
+        {
+          "name": "MajesticMeteorainRect",
+          "id": 46146,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 10
+          }
+        },
+        {
+          "name": "MassiveMeteorBoss",
+          "id": 46152,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "MassiveMeteorStack",
+          "id": 46153,
+          "caster": "Helper",
+          "target": "players",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          }
+        },
+        {
+          "name": "ArcadionAvalancheBoss1",
+          "id": 46154,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 6,
+          "castExtraSeconds": 9.5,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "ArcadionAvalancheBoss2",
+          "id": 46156,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 6,
+          "castExtraSeconds": 9.5,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "ArcadionAvalancheBoss3",
+          "id": 46158,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 6,
+          "castExtraSeconds": 9.5,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "ArcadionAvalancheBoss4",
+          "id": 46160,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 6,
+          "castExtraSeconds": 9.5,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "ArcadionAvalanchePlatform1",
+          "id": 46155,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 15.5,
+          "shape": {
+            "kind": "rect",
+            "range": 40,
+            "width": 40
+          }
+        },
+        {
+          "name": "ArcadionAvalanchePlatform2",
+          "id": 46157,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 15.5,
+          "shape": {
+            "kind": "rect",
+            "range": 40,
+            "width": 40
+          }
+        },
+        {
+          "name": "ArcadionAvalanchePlatform3",
+          "id": 46159,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 15.5,
+          "shape": {
+            "kind": "rect",
+            "range": 40,
+            "width": 40
+          }
+        },
+        {
+          "name": "ArcadionAvalanchePlatform4",
+          "id": 46161,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 15.5,
+          "shape": {
+            "kind": "rect",
+            "range": 40,
+            "width": 40
+          }
+        },
+        {
+          "name": "EclipticStampede",
+          "id": 46162,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "MammothMeteor",
+          "id": 46163,
+          "caster": "Helper",
+          "target": "location",
+          "castSeconds": 6,
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          }
+        },
+        {
+          "name": "AtomicImpact",
+          "id": 46164,
+          "caster": "Helper",
+          "target": "players",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 5
+          }
+        },
+        {
+          "name": "MajesticMeteorEcliptic",
+          "id": 46165,
+          "caster": "Helper",
+          "target": "location",
+          "castSeconds": 3,
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          }
+        },
+        {
+          "name": "CosmicKissEcliptic",
+          "id": 46166,
+          "caster": "Helper",
+          "target": "location",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "circle",
+            "range": 4
+          }
+        },
+        {
+          "name": "WeightyImpact",
+          "id": 46167,
+          "caster": "Helper",
+          "target": "location",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "circle",
+            "range": 4
+          }
+        },
+        {
+          "name": "UnmitigatedExplosionEcliptic",
+          "id": 46168,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          }
+        },
+        {
+          "name": "MajesticMeteowrathEcliptic",
+          "id": 46169,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 10
+          }
+        },
+        {
+          "name": "TwoWayFireballBoss",
+          "id": 47037,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 6,
+          "castExtraSeconds": 1,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "TwoWayFireball",
+          "id": 47038,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 6
+          }
+        },
+        {
+          "name": "FourWayFireballBoss",
+          "id": 46170,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 6,
+          "castExtraSeconds": 1,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "FourWayFireball",
+          "id": 46171,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 6
+          }
+        },
+        {
+          "name": "HeartbreakKickBoss",
+          "id": 46173,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 5,
+          "castExtraSeconds": 1,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "HeartbreakKickTower",
+          "id": 46174,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 4
+          }
+        },
+        {
+          "name": "ToughBreak",
+          "id": 46177,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          },
+          "note": "heartbreak kick tower miss"
+        },
+        {
+          "name": "HeartbreakerCast",
+          "id": 46178,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 8,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "HeartbreakerEnrage",
+          "id": 46179,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          }
+        },
+        {
+          "name": "Jump",
+          "id": 46084,
+          "caster": "Boss",
+          "target": "location",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "UnkHK1",
+          "id": 46172,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "UnkHK2",
+          "id": 46175,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "Unk1",
+          "id": 46176,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          }
+        }
+      ],
+      "shapes": [
+        {
+          "actions": [
+            "WallExplosion"
+          ],
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 6
+          },
+          "file": "Firewall.cs",
+          "line": 67
+        },
+        {
+          "actions": [
+            "ExplosionTower"
+          ],
+          "shape": {
+            "kind": "tower",
+            "range": 4
+          },
+          "file": "Flatliner.cs",
+          "line": 73
+        },
+        {
+          "actions": [
+            "ExplosionTower"
+          ],
+          "shape": {
+            "kind": "circle",
+            "range": 4
+          },
+          "file": "Flatliner.cs",
+          "line": 88
+        },
+        {
+          "actions": [
+            "MajesticMeteorAOE"
+          ],
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          },
+          "file": "Flatliner.cs",
+          "line": 249
+        },
+        {
+          "actions": [
+            "MassiveMeteorStack"
+          ],
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          },
+          "file": "Flatliner.cs",
+          "line": 337
+        },
+        {
+          "actions": [
+            "ArcadionAvalanchePlatform4",
+            "ArcadionAvalanchePlatform2",
+            "ArcadionAvalanchePlatform1",
+            "ArcadionAvalanchePlatform3"
+          ],
+          "shape": {
+            "kind": "rect",
+            "range": 40,
+            "width": 40
+          },
+          "file": "Flatliner.cs",
+          "line": 355
+        },
+        {
+          "actions": [
+            "ArcadionAvalancheBoss1",
+            "ArcadionAvalancheBoss2",
+            "ArcadionAvalancheBoss3",
+            "ArcadionAvalancheBoss4"
+          ],
+          "shape": {
+            "kind": "rect",
+            "range": 40,
+            "width": 40
+          },
+          "file": "Flatliner.cs",
+          "line": 357
+        },
+        {
+          "actions": [
+            "OrbitalOmenRect"
+          ],
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 10
+          },
+          "file": "Meteorain.cs",
+          "line": 3
+        },
+        {
+          "actions": [
+            "FireAndFuryBack",
+            "FireAndFuryFront"
+          ],
+          "shape": {
+            "kind": "cone",
+            "range": 60,
+            "angle": 90
+          },
+          "file": "Meteorain.cs",
+          "line": 5
+        },
+        {
+          "actions": [
+            "ExplosionComet"
+          ],
+          "shape": {
+            "kind": "circle",
+            "range": 8
+          },
+          "file": "Meteorain.cs",
+          "line": 192
+        },
+        {
+          "actions": [
+            "HurricaneExplosion"
+          ],
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 10
+          },
+          "file": "RM11STheTyrant.cs",
+          "line": 20
+        },
+        {
+          "actions": [
+            "EyeOfTheHurricane"
+          ],
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          },
+          "file": "RM11STheTyrant.cs",
+          "line": 21
+        },
+        {
+          "actions": [
+            "MammothMeteor"
+          ],
+          "shape": {
+            "kind": "circle",
+            "range": 20
+          },
+          "file": "Stampede.cs",
+          "line": 4
+        },
+        {
+          "actions": [
+            "MajesticMeteorEcliptic"
+          ],
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          },
+          "file": "Stampede.cs",
+          "line": 29
+        },
+        {
+          "actions": [
+            "TwoWayFireballBoss"
+          ],
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 6
+          },
+          "file": "Stampede.cs",
+          "line": 135
+        },
+        {
+          "actions": [
+            "FourWayFireballBoss"
+          ],
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 6
+          },
+          "file": "Stampede.cs",
+          "line": 138
+        },
+        {
+          "actions": [
+            "Cometite"
+          ],
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          },
+          "file": "TrophyWeapons.cs",
+          "line": 24
+        }
+      ],
+      "states": [
+        {
+          "phase": "SinglePhase",
+          "kind": "Cast",
+          "actions": [
+            "HeartbreakerCast"
+          ],
+          "numbers": [
+            5,
+            8
+          ],
+          "name": "Boss disappears (enrage)",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 22
+        },
+        {
+          "phase": "TrophyWeapons",
+          "kind": "Cast",
+          "actions": [
+            "CrownOfArcadia"
+          ],
+          "numbers": [
+            5
+          ],
+          "name": "Raidwide",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 27
+        },
+        {
+          "phase": "TrophyWeapons",
+          "kind": "Cast",
+          "actions": [
+            "TrophyWeapons"
+          ],
+          "numbers": [
+            10.5,
+            3
+          ],
+          "file": "RM11STheTyrantStates.cs",
+          "line": 33
+        },
+        {
+          "phase": "TrophyWeapons",
+          "kind": "Cast",
+          "actions": [
+            "AssaultEvolvedLongCast"
+          ],
+          "numbers": [
+            3.4,
+            6
+          ],
+          "file": "RM11STheTyrantStates.cs",
+          "line": 38
+        },
+        {
+          "phase": "TrophyWeapons",
+          "kind": "ComponentCondition\u003CTrophyWeaponsAOE\u003E",
+          "actions": [],
+          "numbers": [
+            2.2,
+            0
+          ],
+          "name": "Weapon 1",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 39
+        },
+        {
+          "phase": "TrophyWeapons",
+          "kind": "ComponentCondition\u003CTrophyWeaponsAOE\u003E",
+          "actions": [],
+          "numbers": [
+            5.2,
+            1
+          ],
+          "name": "Weapon 2",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 40
+        },
+        {
+          "phase": "TrophyWeapons",
+          "kind": "ComponentCondition\u003CTrophyWeaponsAOE\u003E",
+          "actions": [],
+          "numbers": [
+            5.2,
+            2
+          ],
+          "name": "Weapon 3",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 41
+        },
+        {
+          "phase": "TrophyWeapons",
+          "kind": "Cast",
+          "actions": [
+            "TrophyWeapons"
+          ],
+          "numbers": [
+            9.2,
+            3
+          ],
+          "file": "RM11STheTyrantStates.cs",
+          "line": 46
+        },
+        {
+          "phase": "TrophyWeapons",
+          "kind": "Cast",
+          "actions": [
+            "VoidStardust"
+          ],
+          "numbers": [
+            3.1,
+            4
+          ],
+          "file": "RM11STheTyrantStates.cs",
+          "line": 53
+        },
+        {
+          "phase": "TrophyWeapons",
+          "kind": "ComponentCondition\u003CCometite\u003E",
+          "actions": [],
+          "numbers": [
+            1.2
+          ],
+          "name": "Puddles start",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 58
+        },
+        {
+          "phase": "TrophyWeapons",
+          "kind": "ComponentCondition\u003CComets\u003E",
+          "actions": [],
+          "numbers": [
+            8.9,
+            0
+          ],
+          "name": "Stack/spread",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 60
+        },
+        {
+          "phase": "TrophyWeapons",
+          "kind": "ComponentCondition\u003CTrophyWeaponsAOE\u003E",
+          "actions": [],
+          "numbers": [
+            5.1,
+            0
+          ],
+          "name": "Weapon 1",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 67
+        },
+        {
+          "phase": "TrophyWeapons",
+          "kind": "ComponentCondition\u003CTrophyWeaponsAOE\u003E",
+          "actions": [],
+          "numbers": [
+            5.2,
+            1
+          ],
+          "name": "Weapon 2",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 68
+        },
+        {
+          "phase": "TrophyWeapons",
+          "kind": "ComponentCondition\u003CTrophyWeaponsAOE\u003E",
+          "actions": [],
+          "numbers": [
+            5.2,
+            2
+          ],
+          "name": "Weapon 3",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 69
+        },
+        {
+          "phase": "TrophyWeapons",
+          "kind": "ComponentCondition\u003CComets\u003E",
+          "actions": [],
+          "numbers": [
+            11.2,
+            0
+          ],
+          "name": "Stack/spread",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 74
+        },
+        {
+          "phase": "TrophyWeapons",
+          "kind": "Cast",
+          "actions": [
+            "CrownOfArcadia"
+          ],
+          "numbers": [
+            1,
+            5
+          ],
+          "name": "Raidwide",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 82
+        },
+        {
+          "phase": "RawSteelTrophy",
+          "kind": "CastMulti",
+          "actions": [
+            "RawSteelTrophyAxe",
+            "RawSteelTrophyScythe"
+          ],
+          "numbers": [
+            2
+          ],
+          "file": "RM11STheTyrantStates.cs",
+          "line": 89
+        },
+        {
+          "phase": "RawSteelTrophy",
+          "kind": "ComponentCondition\u003CRawSteelTrophyCounter\u003E",
+          "actions": [],
+          "numbers": [
+            7.5,
+            0
+          ],
+          "name": "Tankbuster \u002B stack/spread",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 94
+        },
+        {
+          "phase": "DanceOfDomination",
+          "kind": "Cast",
+          "actions": [
+            "DanceOfDominationTrophy"
+          ],
+          "numbers": [
+            2
+          ],
+          "file": "RM11STheTyrantStates.cs",
+          "line": 101
+        },
+        {
+          "phase": "DanceOfDomination",
+          "kind": "ComponentCondition\u003CDanceOfDomination1\u003E",
+          "actions": [],
+          "numbers": [
+            6.6,
+            0
+          ],
+          "name": "Raidwide 1",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 107
+        },
+        {
+          "phase": "DanceOfDomination",
+          "kind": "ComponentCondition\u003CDanceOfDomination2\u003E",
+          "actions": [],
+          "numbers": [
+            4.1,
+            0
+          ],
+          "name": "Raidwide 7",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 109
+        },
+        {
+          "phase": "DanceOfDomination",
+          "kind": "ComponentCondition\u003CEyeOfTheHurricane\u003E",
+          "actions": [],
+          "numbers": [
+            4.9,
+            0
+          ],
+          "name": "Stacks",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 112
+        },
+        {
+          "phase": "UltimateTrophyWeapons",
+          "kind": "Cast",
+          "actions": [
+            "Charybdistopia"
+          ],
+          "numbers": [
+            5
+          ],
+          "name": "1 HP",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 121
+        },
+        {
+          "phase": "UltimateTrophyWeapons",
+          "kind": "Cast",
+          "actions": [
+            "UltimateTrophyWeapons"
+          ],
+          "numbers": [
+            2.6,
+            3
+          ],
+          "file": "RM11STheTyrantStates.cs",
+          "line": 122
+        },
+        {
+          "phase": "UltimateTrophyWeapons",
+          "kind": "ComponentCondition\u003CUltimateTrophyWeaponsAOE\u003E",
+          "actions": [],
+          "numbers": [
+            10,
+            0
+          ],
+          "name": "Weapon 1",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 128
+        },
+        {
+          "phase": "UltimateTrophyWeapons",
+          "kind": "ComponentCondition\u003CUltimateTrophyWeaponsAOE\u003E",
+          "actions": [],
+          "numbers": [
+            5.2,
+            1
+          ],
+          "name": "Weapon 2",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 129
+        },
+        {
+          "phase": "UltimateTrophyWeapons",
+          "kind": "ComponentCondition\u003CUltimateTrophyWeaponsAOE\u003E",
+          "actions": [],
+          "numbers": [
+            5.2,
+            2
+          ],
+          "name": "Weapon 3",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 130
+        },
+        {
+          "phase": "UltimateTrophyWeapons",
+          "kind": "ComponentCondition\u003CUltimateTrophyWeaponsAOE\u003E",
+          "actions": [],
+          "numbers": [
+            5.2,
+            3
+          ],
+          "name": "Weapon 4",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 131
+        },
+        {
+          "phase": "UltimateTrophyWeapons",
+          "kind": "ComponentCondition\u003CUltimateTrophyWeaponsAOE\u003E",
+          "actions": [],
+          "numbers": [
+            5.2,
+            4
+          ],
+          "name": "Weapon 5",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 132
+        },
+        {
+          "phase": "UltimateTrophyWeapons",
+          "kind": "ComponentCondition\u003CUltimateTrophyWeaponsAOE\u003E",
+          "actions": [],
+          "numbers": [
+            5.2,
+            5
+          ],
+          "name": "Weapon 6",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 133
+        },
+        {
+          "phase": "UltimateTrophyWeapons",
+          "kind": "ComponentCondition\u003CPowerfulGust\u003E",
+          "actions": [],
+          "numbers": [
+            6.3,
+            0
+          ],
+          "name": "Tornado baits",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 138
+        },
+        {
+          "phase": "UltimateTrophyWeapons",
+          "kind": "CastEnd",
+          "actions": [],
+          "numbers": [
+            1
+          ],
+          "file": "RM11STheTyrantStates.cs",
+          "line": 142
+        },
+        {
+          "phase": "UltimateTrophyWeapons",
+          "kind": "Cast",
+          "actions": [
+            "OneAndOnlyBoss"
+          ],
+          "numbers": [
+            4.1,
+            6
+          ],
+          "file": "RM11STheTyrantStates.cs",
+          "line": 143
+        },
+        {
+          "phase": "UltimateTrophyWeapons",
+          "kind": "ComponentCondition\u003COneAndOnly\u003E",
+          "actions": [],
+          "numbers": [
+            3,
+            0
+          ],
+          "name": "Raidwide",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 144
+        },
+        {
+          "phase": "Meteorain",
+          "kind": "Cast",
+          "actions": [
+            "GreatWallOfFireCast"
+          ],
+          "numbers": [
+            5
+          ],
+          "file": "RM11STheTyrantStates.cs",
+          "line": 151
+        },
+        {
+          "phase": "Meteorain",
+          "kind": "ComponentCondition\u003CFirewall\u003E",
+          "actions": [],
+          "numbers": [
+            0.3,
+            0
+          ],
+          "name": "Line buster 1",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 155
+        },
+        {
+          "phase": "Meteorain",
+          "kind": "ComponentCondition\u003CFirewall\u003E",
+          "actions": [],
+          "numbers": [
+            3.2,
+            1
+          ],
+          "name": "Line buster 2",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 156
+        },
+        {
+          "phase": "Meteorain",
+          "kind": "Cast",
+          "actions": [
+            "MeteorainBoss"
+          ],
+          "numbers": [
+            7.5,
+            5
+          ],
+          "file": "RM11STheTyrantStates.cs",
+          "line": 161
+        },
+        {
+          "phase": "Meteorain",
+          "kind": "Cast",
+          "actions": [
+            "FearsomeFireballBoss"
+          ],
+          "numbers": [
+            2.7,
+            5
+          ],
+          "file": "RM11STheTyrantStates.cs",
+          "line": 166
+        },
+        {
+          "phase": "Meteorain",
+          "kind": "ComponentCondition\u003CFearsomeFireball1\u003E",
+          "actions": [],
+          "numbers": [
+            0.4,
+            0
+          ],
+          "name": "Wild charge",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 167
+        },
+        {
+          "phase": "Meteorain",
+          "kind": "ComponentCondition\u003CCosmicKiss\u003E",
+          "actions": [],
+          "numbers": [
+            1.2,
+            0
+          ],
+          "name": "Meteors 1",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 169
+        },
+        {
+          "phase": "Meteorain",
+          "kind": "ComponentCondition\u003CForegoneFatality\u003E",
+          "actions": [],
+          "numbers": [
+            7.9,
+            0
+          ],
+          "name": "Tethers",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 173
+        },
+        {
+          "phase": "Meteorain",
+          "kind": "ComponentCondition\u003CFearsomeFireball2\u003E",
+          "actions": [],
+          "numbers": [
+            0.8,
+            0
+          ],
+          "name": "Wild charge",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 174
+        },
+        {
+          "phase": "Meteorain",
+          "kind": "ComponentCondition\u003CCosmicKiss\u003E",
+          "actions": [],
+          "numbers": [
+            1.3,
+            2
+          ],
+          "name": "Meteors 2",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 176
+        },
+        {
+          "phase": "Meteorain",
+          "kind": "ComponentCondition\u003CForegoneFatality\u003E",
+          "actions": [],
+          "numbers": [
+            7.9,
+            2
+          ],
+          "name": "Tethers",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 177
+        },
+        {
+          "phase": "Meteorain",
+          "kind": "ComponentCondition\u003CFearsomeFireball2\u003E",
+          "actions": [],
+          "numbers": [
+            0.8,
+            1
+          ],
+          "name": "Wild charge",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 178
+        },
+        {
+          "phase": "Meteorain",
+          "kind": "ComponentCondition\u003CCosmicKiss\u003E",
+          "actions": [],
+          "numbers": [
+            1.3,
+            4
+          ],
+          "name": "Meteors 3",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 180
+        },
+        {
+          "phase": "Meteorain",
+          "kind": "ComponentCondition\u003CForegoneFatality\u003E",
+          "actions": [],
+          "numbers": [
+            7.9,
+            4
+          ],
+          "name": "Tethers",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 182
+        },
+        {
+          "phase": "Meteorain",
+          "kind": "ComponentCondition\u003CFearsomeFireball2\u003E",
+          "actions": [],
+          "numbers": [
+            0.8,
+            2
+          ],
+          "name": "Wild charge",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 183
+        },
+        {
+          "phase": "Meteorain",
+          "kind": "Cast",
+          "actions": [
+            "TripleTyrannhilationCast"
+          ],
+          "numbers": [
+            5.6,
+            7
+          ],
+          "file": "RM11STheTyrantStates.cs",
+          "line": 188
+        },
+        {
+          "phase": "Meteorain",
+          "kind": "ComponentCondition\u003CShockwaveCounter\u003E",
+          "actions": [],
+          "numbers": [
+            1.1,
+            0
+          ],
+          "name": "LoS 1",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 192
+        },
+        {
+          "phase": "Meteorain",
+          "kind": "ComponentCondition\u003CShockwaveCounter\u003E",
+          "actions": [],
+          "numbers": [
+            3.2,
+            2
+          ],
+          "name": "LoS 3",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 193
+        },
+        {
+          "phase": "Flatliner",
+          "kind": "Cast",
+          "actions": [
+            "FlatlinerBoss"
+          ],
+          "numbers": [
+            4
+          ],
+          "file": "RM11STheTyrantStates.cs",
+          "line": 204
+        },
+        {
+          "phase": "Flatliner",
+          "kind": "ComponentCondition\u003CFlatliner\u003E",
+          "actions": [],
+          "numbers": [
+            2,
+            0
+          ],
+          "name": "Arena split",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 208
+        },
+        {
+          "phase": "Flatliner",
+          "kind": "Cast",
+          "actions": [
+            "MajesticMeteorBoss"
+          ],
+          "numbers": [
+            9.2,
+            5
+          ],
+          "file": "RM11STheTyrantStates.cs",
+          "line": 213
+        },
+        {
+          "phase": "Flatliner",
+          "kind": "ComponentCondition\u003CExplosionTower\u003E",
+          "actions": [],
+          "numbers": [
+            13.1,
+            0
+          ],
+          "name": "Towers 1",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 220
+        },
+        {
+          "phase": "Flatliner",
+          "kind": "ComponentCondition\u003CFireBreathMeteowrath\u003E",
+          "actions": [],
+          "numbers": [
+            6.1
+          ],
+          "name": "Prey assigned",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 224
+        },
+        {
+          "phase": "Flatliner",
+          "kind": "CastStart",
+          "actions": [
+            "FireBreathBoss"
+          ],
+          "numbers": [
+            0.1
+          ],
+          "file": "RM11STheTyrantStates.cs",
+          "line": 225
+        },
+        {
+          "phase": "Flatliner",
+          "kind": "ComponentCondition\u003CMajesticMeteor\u003E",
+          "actions": [],
+          "numbers": [
+            2
+          ],
+          "name": "Puddles 1",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 226
+        },
+        {
+          "phase": "Flatliner",
+          "kind": "ComponentCondition\u003CMajesticMeteor\u003E",
+          "actions": [],
+          "numbers": [
+            4
+          ],
+          "name": "Puddles 3",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 227
+        },
+        {
+          "phase": "Flatliner",
+          "kind": "ComponentCondition\u003CFireBreathMeteowrath\u003E",
+          "actions": [],
+          "numbers": [
+            2.8,
+            0
+          ],
+          "name": "Baits \u002B line meteors",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 231
+        },
+        {
+          "phase": "Flatliner",
+          "kind": "ComponentCondition\u003CMajesticMeteor\u003E",
+          "actions": [],
+          "numbers": [
+            0.2
+          ],
+          "file": "RM11STheTyrantStates.cs",
+          "line": 235
+        },
+        {
+          "phase": "Flatliner",
+          "kind": "ComponentCondition\u003CExplosionTower\u003E",
+          "actions": [],
+          "numbers": [
+            17,
+            0
+          ],
+          "name": "Towers 2",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 238
+        },
+        {
+          "phase": "Flatliner",
+          "kind": "ComponentCondition\u003CFireBreathMeteowrath\u003E",
+          "actions": [],
+          "numbers": [
+            6
+          ],
+          "name": "Prey assigned",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 245
+        },
+        {
+          "phase": "Flatliner",
+          "kind": "CastStart",
+          "actions": [
+            "FireBreathBoss"
+          ],
+          "numbers": [
+            0
+          ],
+          "file": "RM11STheTyrantStates.cs",
+          "line": 246
+        },
+        {
+          "phase": "Flatliner",
+          "kind": "ComponentCondition\u003CMajesticMeteor\u003E",
+          "actions": [],
+          "numbers": [
+            2
+          ],
+          "name": "Puddles 1",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 247
+        },
+        {
+          "phase": "Flatliner",
+          "kind": "ComponentCondition\u003CMajesticMeteor\u003E",
+          "actions": [],
+          "numbers": [
+            4
+          ],
+          "name": "Puddles 3",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 248
+        },
+        {
+          "phase": "Flatliner",
+          "kind": "ComponentCondition\u003CFireBreathMeteowrath\u003E",
+          "actions": [],
+          "numbers": [
+            2.8,
+            0
+          ],
+          "name": "Baits \u002B line meteors",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 252
+        },
+        {
+          "phase": "Flatliner",
+          "kind": "CastStart",
+          "actions": [
+            "MassiveMeteorBoss"
+          ],
+          "numbers": [
+            4.4
+          ],
+          "file": "RM11STheTyrantStates.cs",
+          "line": 257
+        },
+        {
+          "phase": "Flatliner",
+          "kind": "ComponentCondition\u003CMassiveMeteor\u003E",
+          "actions": [],
+          "numbers": [
+            6.1,
+            0
+          ],
+          "name": "Stacks 1",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 261
+        },
+        {
+          "phase": "Flatliner",
+          "kind": "ComponentCondition\u003CMassiveMeteor\u003E",
+          "actions": [],
+          "numbers": [
+            5.9,
+            0
+          ],
+          "name": "Stacks 5",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 262
+        },
+        {
+          "phase": "Flatliner",
+          "kind": "CastMulti",
+          "actions": [
+            "ArcadionAvalancheBoss1",
+            "ArcadionAvalancheBoss2",
+            "ArcadionAvalancheBoss3",
+            "ArcadionAvalancheBoss4"
+          ],
+          "numbers": [
+            1.2,
+            6
+          ],
+          "file": "RM11STheTyrantStates.cs",
+          "line": 266
+        },
+        {
+          "phase": "Flatliner",
+          "kind": "ComponentCondition\u003CArcadionAvalancheRect\u003E",
+          "actions": [],
+          "numbers": [
+            9.5,
+            0
+          ],
+          "name": "Platform AOE",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 275
+        },
+        {
+          "phase": "Flatliner",
+          "kind": "Cast",
+          "actions": [
+            "CrownOfArcadia"
+          ],
+          "numbers": [
+            5.7,
+            5
+          ],
+          "name": "Raidwide \u002B restore arena",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 279
+        },
+        {
+          "phase": "OrbitalOmen",
+          "kind": "Cast",
+          "actions": [
+            "OrbitalOmenBoss"
+          ],
+          "numbers": [
+            5
+          ],
+          "file": "RM11STheTyrantStates.cs",
+          "line": 288
+        },
+        {
+          "phase": "OrbitalOmen",
+          "kind": "ComponentCondition\u003COrbitalOmen\u003E",
+          "actions": [],
+          "numbers": [
+            9.1,
+            2
+          ],
+          "name": "Orbital start",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 293
+        },
+        {
+          "phase": "OrbitalOmen",
+          "kind": "ComponentCondition\u003CFireAndFury\u003E",
+          "actions": [],
+          "numbers": [
+            0.6,
+            0
+          ],
+          "name": "Sides safe",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 294
+        },
+        {
+          "phase": "OrbitalOmen",
+          "kind": "ComponentCondition\u003COrbitalOmen\u003E",
+          "actions": [],
+          "numbers": [
+            4,
+            8
+          ],
+          "name": "Orbital end",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 296
+        },
+        {
+          "phase": "EclipticStampede",
+          "kind": "Cast",
+          "actions": [
+            "GreatWallOfFireCast"
+          ],
+          "numbers": [
+            5
+          ],
+          "file": "RM11STheTyrantStates.cs",
+          "line": 302
+        },
+        {
+          "phase": "EclipticStampede",
+          "kind": "ComponentCondition\u003CFirewall\u003E",
+          "actions": [],
+          "numbers": [
+            0.3,
+            0
+          ],
+          "name": "Line buster 1",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 307
+        },
+        {
+          "phase": "EclipticStampede",
+          "kind": "ComponentCondition\u003CFirewall\u003E",
+          "actions": [],
+          "numbers": [
+            3.2,
+            1
+          ],
+          "name": "Line buster 2",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 308
+        },
+        {
+          "phase": "EclipticStampede",
+          "kind": "Cast",
+          "actions": [
+            "CrownOfArcadia"
+          ],
+          "numbers": [
+            0,
+            4.2
+          ],
+          "name": "Raidwide",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 313
+        },
+        {
+          "phase": "EclipticStampede",
+          "kind": "Cast",
+          "actions": [
+            "EclipticStampede"
+          ],
+          "numbers": [
+            7.4,
+            5
+          ],
+          "file": "RM11STheTyrantStates.cs",
+          "line": 316
+        },
+        {
+          "phase": "EclipticStampede",
+          "kind": "ComponentCondition\u003CMammothMeteor\u003E",
+          "actions": [],
+          "numbers": [
+            7.1,
+            0
+          ],
+          "name": "Proximity \u002B puddles start",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 322
+        },
+        {
+          "phase": "EclipticStampede",
+          "kind": "ComponentCondition\u003CImpactKiss\u003E",
+          "actions": [],
+          "numbers": [
+            16,
+            0
+          ],
+          "name": "Towers",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 326
+        },
+        {
+          "phase": "EclipticStampede",
+          "kind": "CastStartMulti",
+          "actions": [
+            "TwoWayFireballBoss",
+            "FourWayFireballBoss"
+          ],
+          "numbers": [
+            7
+          ],
+          "file": "RM11STheTyrantStates.cs",
+          "line": 332
+        },
+        {
+          "phase": "EclipticStampede",
+          "kind": "ComponentCondition\u003CStampedeMajesticMeteowrath\u003E",
+          "actions": [],
+          "numbers": [
+            2.6,
+            0
+          ],
+          "name": "Tethers",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 336
+        },
+        {
+          "phase": "EclipticStampede",
+          "kind": "ComponentCondition\u003CNWayFireball\u003E",
+          "actions": [],
+          "numbers": [
+            4.3,
+            0
+          ],
+          "name": "2/4 stack",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 340
+        },
+        {
+          "phase": "EclipticStampede",
+          "kind": "Cast",
+          "actions": [
+            "CrownOfArcadia"
+          ],
+          "numbers": [
+            3.3,
+            5
+          ],
+          "name": "Raidwide",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 343
+        },
+        {
+          "phase": "Heartbreaker",
+          "kind": "Cast",
+          "actions": [
+            "HeartbreakKickBoss"
+          ],
+          "numbers": [
+            5
+          ],
+          "file": "RM11STheTyrantStates.cs",
+          "line": 350
+        },
+        {
+          "phase": "Heartbreaker",
+          "kind": "ComponentCondition\u003CHeartbreakKick\u003E",
+          "actions": [],
+          "numbers": [
+            1.2,
+            0
+          ],
+          "name": "Tower 1",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 353
+        },
+        {
+          "phase": "Heartbreaker",
+          "kind": "ComponentCondition\u003CHeartbreakKick\u003E",
+          "actions": [],
+          "numbers": [
+            8,
+            0
+          ],
+          "name": "Tower 5",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 354
+        },
+        {
+          "phase": "Heartbreaker",
+          "kind": "Cast",
+          "actions": [
+            "HeartbreakKickBoss"
+          ],
+          "numbers": [
+            5,
+            5
+          ],
+          "file": "RM11STheTyrantStates.cs",
+          "line": 357
+        },
+        {
+          "phase": "Heartbreaker",
+          "kind": "ComponentCondition\u003CHeartbreakKick\u003E",
+          "actions": [],
+          "numbers": [
+            1.2,
+            0
+          ],
+          "name": "Tower 1",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 360
+        },
+        {
+          "phase": "Heartbreaker",
+          "kind": "ComponentCondition\u003CHeartbreakKick\u003E",
+          "actions": [],
+          "numbers": [
+            10,
+            0
+          ],
+          "name": "Tower 6",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 361
+        },
+        {
+          "phase": "Heartbreaker",
+          "kind": "Cast",
+          "actions": [
+            "HeartbreakKickBoss"
+          ],
+          "numbers": [
+            5,
+            5
+          ],
+          "file": "RM11STheTyrantStates.cs",
+          "line": 364
+        },
+        {
+          "phase": "Heartbreaker",
+          "kind": "ComponentCondition\u003CHeartbreakKick\u003E",
+          "actions": [],
+          "numbers": [
+            1.2,
+            0
+          ],
+          "name": "Tower 1",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 367
+        },
+        {
+          "phase": "Heartbreaker",
+          "kind": "ComponentCondition\u003CHeartbreakKick\u003E",
+          "actions": [],
+          "numbers": [
+            12,
+            0
+          ],
+          "name": "Tower 7",
+          "file": "RM11STheTyrantStates.cs",
+          "line": 368
+        }
+      ],
+      "unparsed": [
+        "Heartbreaker.cs:3: GenericTowers(module, AID.HeartbreakKickTower)",
+        "RM11STheTyrantConfig.cs:16: [PropertyDisplay(\u0022No hint\u0022)]",
+        "RM11STheTyrantConfig.cs:17: None,",
+        "RM11STheTyrantConfig.cs:18: [PropertyDisplay(\u0022LP1 left, LP2 right looking at boss\u0022)]",
+        "RM11STheTyrantConfig.cs:19: Standard,",
+        "RM11STheTyrantConfig.cs:20: [PropertyDisplay(\u0022LP1 right, LP2 left looking at boss\u0022)]",
+        "RM11STheTyrantConfig.cs:21: Flipped",
+        "RM11STheTyrantConfig.cs:29: [PropertyDisplay(\u0022None\u0022)]",
+        "RM11STheTyrantConfig.cs:30: None,",
+        "RM11STheTyrantConfig.cs:31: [PropertyDisplay(\u0022MT north meteor, OT south meteor\u0022)]",
+        "RM11STheTyrantConfig.cs:32: StandardNS"
+      ]
+    },
+    {
+      "name": "reborn",
+      "repo": "https://github.com/FFXIV-CombatReborn/BossModReborn.git",
+      "path": "BossMod/Modules/Dawntrail/Savage/M11STheTyrant",
+      "commit": "27be422560eb801893b093d9157323585eeae0eb",
+      "license": "BSD-3-Clause",
+      "enums": {
+        "OID": [
+          {
+            "name": "Boss",
+            "value": 19180
+          },
+          {
+            "name": "Helper",
+            "value": 9020
+          },
+          {
+            "name": "_Gen_TheTyrant",
+            "value": 19178,
+            "comment": "R3.000-30.000, x?"
+          },
+          {
+            "name": "_Gen_TheTyrant1",
+            "value": 9020,
+            "comment": "R0.500, x?, Helper type"
+          },
+          {
+            "name": "TrophyWeapon_Sword",
+            "value": 19186,
+            "comment": "R1.000, x?"
+          },
+          {
+            "name": "Comet",
+            "value": 19181,
+            "comment": "R2.160, x? ; These are the rocks that spawn from Meteorain"
+          },
+          {
+            "name": "TrophyWeapon_Axe",
+            "value": 19184,
+            "comment": "R1.000, x?"
+          },
+          {
+            "name": "TrophyWeapon_Scythe",
+            "value": 19185,
+            "comment": "R1.000, x?"
+          },
+          {
+            "name": "_Gen_Actor1ea1a1",
+            "value": 2007457,
+            "comment": "R2.000, x?, EventObj type"
+          },
+          {
+            "name": "_Gen_TheTyrant2",
+            "value": 19180,
+            "comment": "R5.000-10.000, x?"
+          },
+          {
+            "name": "_Gen_Exit",
+            "value": 2000139,
+            "comment": "R0.500, x?, EventObj type"
+          },
+          {
+            "name": "Maelstrom",
+            "value": 19183,
+            "comment": "R1.000, x? ; These are the whirlwinds that spawn during ultimate trophy weapons"
+          },
+          {
+            "name": "_Gen_Actor0",
+            "value": 0,
+            "comment": "R340282346638528859811704183484516925440.000--340282346638528859811704183484516925440.000, x?, None type"
+          },
+          {
+            "name": "AtomicImpactVoidZones",
+            "value": 2015012,
+            "comment": "R0.500, x0 (spawn during fight), EventObj type"
+          },
+          {
+            "name": "HeartBreakTowerObj",
+            "value": 2015011,
+            "comment": "R0.500, x0 (spawn during fight), EventObj type"
+          }
+        ],
+        "AID": [
+          {
+            "name": "AutoAttack",
+            "value": 46085,
+            "comment": "4AEC-\u003Eplayer, no cast, single-target"
+          },
+          {
+            "name": "CrownOfArcadia",
+            "value": 46086,
+            "comment": "4AEC-\u003Eself, 5.0s cast, range 60 circle"
+          },
+          {
+            "name": "RawSteelTrophyScythe",
+            "value": 46115,
+            "comment": "4AEC-\u003Eself, 2.0\u002B4.0s cast, single-target ; summons weapon, this was a scythe"
+          },
+          {
+            "name": "RawSteel",
+            "value": 46093,
+            "comment": "4AEC-\u003Eself, no cast, single-target"
+          },
+          {
+            "name": "RawSteel1",
+            "value": 46094,
+            "comment": "4AEC-\u003Eself, no cast, single-target"
+          },
+          {
+            "name": "RawSteel_TankCones",
+            "value": 46095,
+            "comment": "233C-\u003Eself, no cast, range 60 90-degree cone ; Tanks spread"
+          },
+          {
+            "name": "RawSteel_HeavyHitter",
+            "value": 46096,
+            "comment": "233C-\u003Eself, no cast, range 60 ?-degree cone ; Party stack cone for RawSteelTrophy"
+          },
+          {
+            "name": "RawSteelTrophyAxe",
+            "value": 46114,
+            "comment": "4AEC-\u003Eself, 2.0\u002B4.0s cast, single-target ; This is the axe trophy"
+          },
+          {
+            "name": "RawSteel3",
+            "value": 46090,
+            "comment": "4AEC-\u003Eself, no cast, single-target"
+          },
+          {
+            "name": "RawSteel_TankStack",
+            "value": 46091,
+            "comment": "4AEC-\u003Eplayers, no cast, range 6 circle ; Axe tank stack"
+          },
+          {
+            "name": "RawSteel_Impact",
+            "value": 46092,
+            "comment": "233C-\u003Eplayer, no cast, range 6 circle ; Axe party spread"
+          },
+          {
+            "name": "_Ability_",
+            "value": 46084,
+            "comment": "4AEC-\u003Elocation, no cast, single-target"
+          },
+          {
+            "name": "TrophyWeapons",
+            "value": 46102,
+            "comment": "4AEC-\u003Eself, 3.0s cast, single-target ; summons 3 weapons on floor"
+          },
+          {
+            "name": "AssaultEvolved",
+            "value": 46103,
+            "comment": "4AEC-\u003Eself, 6.0s cast, single-target ; Animation showing jump to first weapon"
+          },
+          {
+            "name": "AssaultEvolved_ScytheDash",
+            "value": 46404,
+            "comment": "4AEC-\u003Elocation, no cast, single-target ; Jump to scythe"
+          },
+          {
+            "name": "AssaultEvolved_SweepingVictory",
+            "value": 46108,
+            "comment": "233C-\u003Eself, no cast, range 60 ?-degree cone ; fire 8 spread cones at party"
+          },
+          {
+            "name": "AssaultEvolved_ScytheDonut",
+            "value": 46105,
+            "comment": "233C-\u003Eself, 2.0s cast, range 5-60 donut ; Donut AOE after jumping to scythe"
+          },
+          {
+            "name": "AssaultEvolved_AxeDash",
+            "value": 46403,
+            "comment": "4AEC-\u003Elocation, no cast, single-target ; Jump to axe"
+          },
+          {
+            "name": "AssaultEvolved_HeavyWeight",
+            "value": 46107,
+            "comment": "233C-\u003Eplayers, no cast, range 6 circle ; Axe party stack"
+          },
+          {
+            "name": "AssaultEvolved_AxeAOE",
+            "value": 46104,
+            "comment": "233C-\u003Eself, 2.0s cast, range 8 circle ; Axe out AOE"
+          },
+          {
+            "name": "AssaultEvolved_SwordDash",
+            "value": 46405,
+            "comment": "4AEC-\u003Elocation, no cast, single-target ; Jump to sword"
+          },
+          {
+            "name": "AssaultEvolved_SharpTaste",
+            "value": 46109,
+            "comment": "233C-\u003Eself, no cast, range 60 width 6 rect ; healer cone stacks on sword"
+          },
+          {
+            "name": "AssaultEvolved_SwordCross",
+            "value": 46106,
+            "comment": "233C-\u003Eself, 2.0s cast, range 40 width 10 cross ; sword cross AOE"
+          },
+          {
+            "name": "VoidStardust",
+            "value": 46098,
+            "comment": "4AEC-\u003Eself, 4.0\u002B1.0s cast, single-target"
+          },
+          {
+            "name": "Cometite",
+            "value": 46099,
+            "comment": "233C-\u003Elocation, 3.0s cast, range 6 circle ; these are the multi puddle meteors"
+          },
+          {
+            "name": "CrushingComet",
+            "value": 46101,
+            "comment": "233C-\u003Eplayers, 5.0s cast, range 6 circle ; this is the party stack from icon 161"
+          },
+          {
+            "name": "Comet",
+            "value": 46100,
+            "comment": "233C-\u003Eplayers, 5.0s cast, range 6 circle ; spread AOE variation icon 139"
+          },
+          {
+            "name": "DanceOfDominationTrophy",
+            "value": 47035,
+            "comment": "4AEC-\u003Eself, 2.0\u002B4.0s cast, single-target"
+          },
+          {
+            "name": "DanceOfDomination",
+            "value": 46110,
+            "comment": "4AEC-\u003Eself, no cast, single-target"
+          },
+          {
+            "name": "DanceOfDomination1",
+            "value": 46111,
+            "comment": "233C-\u003Eself, 0.5s cast, range 60 circle"
+          },
+          {
+            "name": "DanceOfDomination2",
+            "value": 46113,
+            "comment": "233C-\u003Eself, no cast, range 60 circle"
+          },
+          {
+            "name": "DanceOfDomination3",
+            "value": 47082,
+            "comment": "233C-\u003Eself, no cast, range 60 circle"
+          },
+          {
+            "name": "EyeOfTheHurricane",
+            "value": 46116,
+            "comment": "233C-\u003Eplayers, 5.0s cast, range 6 circle ; This is the 4 party stacks after dance of dominion"
+          },
+          {
+            "name": "Explosion1",
+            "value": 46112,
+            "comment": "233C-\u003Eself, 5.0s cast, range 60 width 10 rect"
+          },
+          {
+            "name": "Explosion2",
+            "value": 47036,
+            "comment": "233C-\u003Eself, 5.5s cast, range 60 width 10 rect"
+          },
+          {
+            "name": "Charybdistopia",
+            "value": 46117,
+            "comment": "4AEC-\u003Eself, 5.0s cast, range 60 circle ; Drop to 1hp"
+          },
+          {
+            "name": "UltimateTrophyWeapons",
+            "value": 47085,
+            "comment": "4AEC-\u003Eself, 3.0s cast, single-target ; Good place to transition state"
+          },
+          {
+            "name": "AssaultApex",
+            "value": 47086,
+            "comment": "4AEC-\u003Eself, 5.0s cast, single-target ; Starts the UltimateTrophyWeapons sequence"
+          },
+          {
+            "name": "PowerfulGust",
+            "value": 46119,
+            "comment": "233C-\u003Eself, no cast, range 60 ?-degree cone ; Maelstrom baited cones"
+          },
+          {
+            "name": "ImmortalReign",
+            "value": 46120,
+            "comment": "4AEC-\u003Eself, 3.0\u002B1.0s cast, single-target"
+          },
+          {
+            "name": "OneAndOnly",
+            "value": 46121,
+            "comment": "4AEC-\u003Eself, 6.0\u002B2.0s cast, single-target"
+          },
+          {
+            "name": "OneAndOnly1",
+            "value": 46122,
+            "comment": "233C-\u003Eself, 9.0s cast, range 60 circle"
+          },
+          {
+            "name": "GreatWallOfFire",
+            "value": 46123,
+            "comment": "4AEC-\u003Eself, 5.0s cast, single-target"
+          },
+          {
+            "name": "GreatWallOfFire1",
+            "value": 46124,
+            "comment": "4AEC-\u003Eself, no cast, range 60 width 6 rect"
+          },
+          {
+            "name": "GreatWallOfFire2",
+            "value": 46125,
+            "comment": "233C-\u003Eself, no cast, single-target"
+          },
+          {
+            "name": "GreatWallOfFireExplosion",
+            "value": 46126,
+            "comment": "233C-\u003Eself, 3.0s cast, range 60 width 6 rect ; tankbuster aftershock"
+          },
+          {
+            "name": "OrbitalOmen",
+            "value": 46130,
+            "comment": "4AEC-\u003Eself, 5.0s cast, single-target"
+          },
+          {
+            "name": "FireAndFury",
+            "value": 46127,
+            "comment": "4AEC-\u003Eself, 4.0\u002B1.0s cast, single-target"
+          },
+          {
+            "name": "OrbitalOmen_Lines",
+            "value": 46131,
+            "comment": "233C-\u003Eself, 6.0s cast, range 60 width 10 rect"
+          },
+          {
+            "name": "FireAndFuryFront",
+            "value": 46129,
+            "comment": "233C-\u003Eself, 5.0s cast, range 60 90-degree cone"
+          },
+          {
+            "name": "FireAndFuryBack",
+            "value": 46128,
+            "comment": "233C-\u003Eself, 5.0s cast, range 60 90-degree cone"
+          },
+          {
+            "name": "Meteorain",
+            "value": 46132,
+            "comment": "4AEC-\u003Eself, 5.0s cast, single-target"
+          },
+          {
+            "name": "FearsomeFireball",
+            "value": 46137,
+            "comment": "4AEC-\u003Eself, 5.0s cast, single-target ; icon 525 line stack"
+          },
+          {
+            "name": "FearsomeFireball1",
+            "value": 46138,
+            "comment": "4AEC-\u003Eself, no cast, range 60 width 6 rect ; icon 525 line stack"
+          },
+          {
+            "name": "CosmicKiss",
+            "value": 46133,
+            "comment": "4AED-\u003Eself, no cast, range 4 circle ; icon 244 this is the comet impact which leaves a rock"
+          },
+          {
+            "name": "ForegoneFatality",
+            "value": 46134,
+            "comment": "4AEA-\u003Eplayer/4AED, no cast, single-target ; tank tether damage"
+          },
+          {
+            "name": "Comet_Explosion",
+            "value": 46136,
+            "comment": "4AED-\u003Eself, 3.0s cast, range 8 circle ; comets explode when they die"
+          },
+          {
+            "name": "UnmitigatedExplosion",
+            "value": 46135,
+            "comment": "4AED-\u003Eself, no cast, range 60 circle"
+          },
+          {
+            "name": "TripleTyrannhilation1",
+            "value": 46139,
+            "comment": "4AEC-\u003Eself, no cast, single-target"
+          },
+          {
+            "name": "Charybdis",
+            "value": 46118,
+            "comment": "233C-\u003Eplayer, no cast, single-target"
+          },
+          {
+            "name": "TripleTyrannhilation2",
+            "value": 46140,
+            "comment": "4AEC-\u003Eself, 7.0\u002B1.0s cast, single-target"
+          },
+          {
+            "name": "Shockwave",
+            "value": 46141,
+            "comment": "233C-\u003Eself, no cast, range 60 circle ; Three burst attack from Triple Tyrannhilation, LOS with comets"
+          },
+          {
+            "name": "Comet_Destroyed",
+            "value": 46142,
+            "comment": "4AED-\u003Eself, no cast, single-target ; When shockwave destroys a comet"
+          },
+          {
+            "name": "TripleTyrannhilationEnd",
+            "value": 46176,
+            "comment": "4AEC-\u003Eself, no cast, single-target ; Ending the Triple Tryannhilation"
+          },
+          {
+            "name": "Flatliner",
+            "value": 46143,
+            "comment": "4AEC-\u003Eself, 4.0\u002B2.0s cast, single-target"
+          },
+          {
+            "name": "Flatliner1",
+            "value": 47760,
+            "comment": "233C-\u003Eself, 6.0s cast, range 60 circle"
+          },
+          {
+            "name": "MajesticMeteor",
+            "value": 46144,
+            "comment": "4AEC-\u003Eself, 5.0s cast, single-target ; summons towers"
+          },
+          {
+            "name": "ExplosionTower",
+            "value": 46148,
+            "comment": "233C-\u003Eself, 10.0s cast, range 4 circle ; tower knockback explosions"
+          },
+          {
+            "name": "UnmitigatedExplosion_MissedTower",
+            "value": 46149,
+            "comment": "233C-\u003Eself, no cast, range 60 circle"
+          },
+          {
+            "name": "MajesticMeteorBaits",
+            "value": 46145,
+            "comment": "233C-\u003Elocation, 3.0s cast, range 6 circle ; baited puddles"
+          },
+          {
+            "name": "FireBreath",
+            "value": 46150,
+            "comment": "4AEC-\u003Eself, 8.0\u002B1.0s cast, single-target"
+          },
+          {
+            "name": "FireBreath1",
+            "value": 46151,
+            "comment": "233C-\u003Eself, no cast, range 60 width 6 rect ; This might be the line AOEs at icon 244 during arena splits?"
+          },
+          {
+            "name": "MajesticMeteorain",
+            "value": 46146,
+            "comment": "233C-\u003Eself, no cast, range 60 width 10 rect ; This is the north-south line AOE from the portal"
+          },
+          {
+            "name": "MajesticMeteowrathFirst",
+            "value": 46147,
+            "comment": "233C-\u003Eself, no cast, range 60 width 10 rect ; This is the tether cast for tether 57/249"
+          },
+          {
+            "name": "MassiveMeteor",
+            "value": 46152,
+            "comment": "Boss-\u003Eself, 5.0s cast, single-target ; start of 5-hit party share stacks icon 305"
+          },
+          {
+            "name": "MassiveMeteorHit",
+            "value": 46153,
+            "comment": "Helper-\u003Eplayers, no cast, range 6 circle ; damage from dual party stacks, hits 5 times, icon 305"
+          },
+          {
+            "name": "ArcadionAvalanche_Pick1",
+            "value": 46154,
+            "comment": "Boss-\u003Eself, 6.0\u002B9.5s cast, single-target ; NE safe slice, East safe West danger"
+          },
+          {
+            "name": "ArcadionAvalanche_Smash1",
+            "value": 46155,
+            "comment": "Helper-\u003Eself, 15.5s cast, range 40 width 40 rect ; NE safe slice, East safe West danger"
+          },
+          {
+            "name": "ArcadionAvalanche_Pick2",
+            "value": 46156,
+            "comment": "Boss-\u003Eself, 6.0\u002B9.5s cast, single-target ; SE safe slice, East safe West danger"
+          },
+          {
+            "name": "ArcadionAvalanche_Smash2",
+            "value": 46157,
+            "comment": "Helper-\u003Eself, 15.5s cast, range 40 width 40 rect ; SE safe slice, East safe West danger"
+          },
+          {
+            "name": "ArcadionAvalanche_Pick3",
+            "value": 46158,
+            "comment": "Boss-\u003Eself, 6.0\u002B9.5s cast, single-target ; SW safe slice, West safe East danger"
+          },
+          {
+            "name": "ArcadionAvalanche_Smash3",
+            "value": 46159,
+            "comment": "Helper-\u003Eself, 15.5s cast, range 40 width 40 rect ; SW safe slice, West safe East danger"
+          },
+          {
+            "name": "ArcadionAvalanche_Pick4",
+            "value": 46160,
+            "comment": "Boss-\u003Eself, 6.0\u002B9.5s cast, single-target ; NW safe slice, West safe East danger"
+          },
+          {
+            "name": "ArcadionAvalanche_Smash4",
+            "value": 46161,
+            "comment": "Helper-\u003Eself, 15.5s cast, range 40 width 40 rect ; NW safe slice, West safe East danger"
+          },
+          {
+            "name": "EclipticStampede",
+            "value": 46162,
+            "comment": "Boss-\u003Eself, 5.0s cast, single-target ; starts final phase, summons corner meteors, puts 2 icons on farthest players"
+          },
+          {
+            "name": "MammothMeteor",
+            "value": 46163,
+            "comment": "Helper-\u003Elocation, 6.0s cast, range 60 circle ; These are proximity AOE meteors dropped in the corner at the start of Ecliptic Stampede"
+          },
+          {
+            "name": "AtomicImpact",
+            "value": 46164,
+            "comment": "Helper-\u003Eplayer, no cast, range 5 circle ; AOE from icon 30, 6 hits which drop voidzones"
+          },
+          {
+            "name": "MajesticMeteorStorm",
+            "value": 46165,
+            "comment": "Helper-\u003Elocation, 3.0s cast, range 6 circle ; Meteors targeted on party"
+          },
+          {
+            "name": "CosmicKissTower",
+            "value": 46166,
+            "comment": "Helper-\u003Elocation, 5.0s cast, range 4 circle ; tank towers?"
+          },
+          {
+            "name": "WeightyImpactTower",
+            "value": 46167,
+            "comment": "Helper-\u003Elocation, 5.0s cast, range 4 circle ; DPS towers?"
+          },
+          {
+            "name": "UnmitigatedExplosion_MissedTower2",
+            "value": 46168,
+            "comment": "Helper-\u003Eself, no cast, range 60 circle ; miss tower get bleed"
+          },
+          {
+            "name": "MajesticMeteowrathSecond",
+            "value": 46169,
+            "comment": "Helper-\u003Eself, no cast, range 60 width 10 rect ; tether ID 57/249 rectangles during end"
+          },
+          {
+            "name": "FourWayFireballStart",
+            "value": 46170,
+            "comment": "Boss-\u003Eself, 6.0\u002B1.0s cast, single-target"
+          },
+          {
+            "name": "FourWayFireballEnd",
+            "value": 46171,
+            "comment": "Helper-\u003Eself, no cast, range 60 width 6 rect"
+          },
+          {
+            "name": "TwoWayFireballStart",
+            "value": 47037,
+            "comment": "Boss-\u003Eself, 6.0\u002B1.0s cast, single-target"
+          },
+          {
+            "name": "TwoWayFireballEnd",
+            "value": 47038,
+            "comment": "Helper-\u003Eself, no cast, range 60 width 6 rect"
+          },
+          {
+            "name": "_Weaponskill_1",
+            "value": 46172,
+            "comment": "Boss-\u003Eself, no cast, single-target"
+          },
+          {
+            "name": "HeartbreakKickTower",
+            "value": 46173,
+            "comment": "Boss-\u003Eself, 5.0\u002B1.0s cast, single-target"
+          },
+          {
+            "name": "HeartbreakKickDamage",
+            "value": 46174,
+            "comment": "Helper-\u003Eself, no cast, range 4 circle"
+          },
+          {
+            "name": "_Weaponskill_ToughBreak",
+            "value": 46177,
+            "comment": "Helper-\u003Eself, no cast, range 60 circle"
+          },
+          {
+            "name": "HeartBreakKickEnd",
+            "value": 46175,
+            "comment": "Boss-\u003Eself, no cast, single-target"
+          },
+          {
+            "name": "EnrageCast",
+            "value": 46178,
+            "comment": "Boss-\u003Eself, 8.0s cast, single-target"
+          },
+          {
+            "name": "HeartbreakKickEnrage",
+            "value": 46179,
+            "comment": "Boss-\u003Eself, no cast, range 60 circle"
+          }
+        ],
+        "IconID": [
+          {
+            "name": "CrushingCometIcon",
+            "value": 161,
+            "comment": "player-\u003Eself ; This is the icon for Crushing Comet stack spell 46101, also used for Eye of the Hurricane 46116"
+          },
+          {
+            "name": "CometIcon",
+            "value": 139,
+            "comment": "player-\u003Eself ; This is the icon for Comet spell 46100"
+          },
+          {
+            "name": "CosmicKissIcon",
+            "value": 244,
+            "comment": "player-\u003Eself ; This is the icon for Cosmic Kiss spell 46133 which drops comets"
+          },
+          {
+            "name": "FearsomeFireballIcon",
+            "value": 525,
+            "comment": "Boss-\u003Eplayer ; line stack icon for Fearsome Fireball"
+          },
+          {
+            "name": "MassiveMeteorIcon",
+            "value": 305,
+            "comment": "player-\u003Eself ; party stack icons on healers for Massive Meteor 5-hits"
+          },
+          {
+            "name": "AtomicImpactIcon",
+            "value": 30,
+            "comment": "player-\u003Eself ; Atomic Impact, 6 casts at player, leaves void zones"
+          }
+        ],
+        "TetherID": [
+          {
+            "name": "CometTether",
+            "value": 356,
+            "comment": "_Gen_TheTyrant-\u003E_Gen_Comet/player ; This is the tether that tanks take off comets"
+          },
+          {
+            "name": "ShortTether",
+            "value": 57,
+            "comment": "_Gen_TheTyrant-\u003Eplayer ; Tether is too short"
+          },
+          {
+            "name": "LongTether",
+            "value": 249,
+            "comment": "_Gen_TheTyrant-\u003Eplayer ; Tether is stretched enough"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "name": "AutoAttack",
+          "id": 46085,
+          "caster": "4AEC",
+          "target": "player",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "CrownOfArcadia",
+          "id": 46086,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          }
+        },
+        {
+          "name": "RawSteelTrophyScythe",
+          "id": 46115,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 2,
+          "castExtraSeconds": 4,
+          "shape": {
+            "kind": "single-target"
+          },
+          "note": "summons weapon, this was a scythe"
+        },
+        {
+          "name": "RawSteel",
+          "id": 46093,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "RawSteel1",
+          "id": 46094,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "RawSteel_TankCones",
+          "id": 46095,
+          "caster": "233C",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "cone",
+            "range": 60,
+            "angle": 90
+          },
+          "note": "Tanks spread"
+        },
+        {
+          "name": "RawSteel_HeavyHitter",
+          "id": 46096,
+          "caster": "233C",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "cone",
+            "range": 60
+          },
+          "note": "Party stack cone for RawSteelTrophy"
+        },
+        {
+          "name": "RawSteelTrophyAxe",
+          "id": 46114,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 2,
+          "castExtraSeconds": 4,
+          "shape": {
+            "kind": "single-target"
+          },
+          "note": "This is the axe trophy"
+        },
+        {
+          "name": "RawSteel3",
+          "id": 46090,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "RawSteel_TankStack",
+          "id": 46091,
+          "caster": "4AEC",
+          "target": "players",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          },
+          "note": "Axe tank stack"
+        },
+        {
+          "name": "RawSteel_Impact",
+          "id": 46092,
+          "caster": "233C",
+          "target": "player",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          },
+          "note": "Axe party spread"
+        },
+        {
+          "name": "_Ability_",
+          "id": 46084,
+          "caster": "4AEC",
+          "target": "location",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "TrophyWeapons",
+          "id": 46102,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 3,
+          "shape": {
+            "kind": "single-target"
+          },
+          "note": "summons 3 weapons on floor"
+        },
+        {
+          "name": "AssaultEvolved",
+          "id": 46103,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 6,
+          "shape": {
+            "kind": "single-target"
+          },
+          "note": "Animation showing jump to first weapon"
+        },
+        {
+          "name": "AssaultEvolved_ScytheDash",
+          "id": 46404,
+          "caster": "4AEC",
+          "target": "location",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          },
+          "note": "Jump to scythe"
+        },
+        {
+          "name": "AssaultEvolved_SweepingVictory",
+          "id": 46108,
+          "caster": "233C",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "cone",
+            "range": 60
+          },
+          "note": "fire 8 spread cones at party"
+        },
+        {
+          "name": "AssaultEvolved_ScytheDonut",
+          "id": 46105,
+          "caster": "233C",
+          "target": "self",
+          "castSeconds": 2,
+          "shape": {
+            "kind": "donut",
+            "range": 60,
+            "inner": 5
+          },
+          "note": "Donut AOE after jumping to scythe"
+        },
+        {
+          "name": "AssaultEvolved_AxeDash",
+          "id": 46403,
+          "caster": "4AEC",
+          "target": "location",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          },
+          "note": "Jump to axe"
+        },
+        {
+          "name": "AssaultEvolved_HeavyWeight",
+          "id": 46107,
+          "caster": "233C",
+          "target": "players",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          },
+          "note": "Axe party stack"
+        },
+        {
+          "name": "AssaultEvolved_AxeAOE",
+          "id": 46104,
+          "caster": "233C",
+          "target": "self",
+          "castSeconds": 2,
+          "shape": {
+            "kind": "circle",
+            "range": 8
+          },
+          "note": "Axe out AOE"
+        },
+        {
+          "name": "AssaultEvolved_SwordDash",
+          "id": 46405,
+          "caster": "4AEC",
+          "target": "location",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          },
+          "note": "Jump to sword"
+        },
+        {
+          "name": "AssaultEvolved_SharpTaste",
+          "id": 46109,
+          "caster": "233C",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 6
+          },
+          "note": "healer cone stacks on sword"
+        },
+        {
+          "name": "AssaultEvolved_SwordCross",
+          "id": 46106,
+          "caster": "233C",
+          "target": "self",
+          "castSeconds": 2,
+          "shape": {
+            "kind": "cross",
+            "range": 40,
+            "width": 10
+          },
+          "note": "sword cross AOE"
+        },
+        {
+          "name": "VoidStardust",
+          "id": 46098,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 4,
+          "castExtraSeconds": 1,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "Cometite",
+          "id": 46099,
+          "caster": "233C",
+          "target": "location",
+          "castSeconds": 3,
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          },
+          "note": "these are the multi puddle meteors"
+        },
+        {
+          "name": "CrushingComet",
+          "id": 46101,
+          "caster": "233C",
+          "target": "players",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          },
+          "note": "this is the party stack from icon 161"
+        },
+        {
+          "name": "Comet",
+          "id": 46100,
+          "caster": "233C",
+          "target": "players",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          },
+          "note": "spread AOE variation icon 139"
+        },
+        {
+          "name": "DanceOfDominationTrophy",
+          "id": 47035,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 2,
+          "castExtraSeconds": 4,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "DanceOfDomination",
+          "id": 46110,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "DanceOfDomination1",
+          "id": 46111,
+          "caster": "233C",
+          "target": "self",
+          "castSeconds": 0.5,
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          }
+        },
+        {
+          "name": "DanceOfDomination2",
+          "id": 46113,
+          "caster": "233C",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          }
+        },
+        {
+          "name": "DanceOfDomination3",
+          "id": 47082,
+          "caster": "233C",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          }
+        },
+        {
+          "name": "EyeOfTheHurricane",
+          "id": 46116,
+          "caster": "233C",
+          "target": "players",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          },
+          "note": "This is the 4 party stacks after dance of dominion"
+        },
+        {
+          "name": "Explosion1",
+          "id": 46112,
+          "caster": "233C",
+          "target": "self",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 10
+          }
+        },
+        {
+          "name": "Explosion2",
+          "id": 47036,
+          "caster": "233C",
+          "target": "self",
+          "castSeconds": 5.5,
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 10
+          }
+        },
+        {
+          "name": "Charybdistopia",
+          "id": 46117,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          },
+          "note": "Drop to 1hp"
+        },
+        {
+          "name": "UltimateTrophyWeapons",
+          "id": 47085,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 3,
+          "shape": {
+            "kind": "single-target"
+          },
+          "note": "Good place to transition state"
+        },
+        {
+          "name": "AssaultApex",
+          "id": 47086,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "single-target"
+          },
+          "note": "Starts the UltimateTrophyWeapons sequence"
+        },
+        {
+          "name": "PowerfulGust",
+          "id": 46119,
+          "caster": "233C",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "cone",
+            "range": 60
+          },
+          "note": "Maelstrom baited cones"
+        },
+        {
+          "name": "ImmortalReign",
+          "id": 46120,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 3,
+          "castExtraSeconds": 1,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "OneAndOnly",
+          "id": 46121,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 6,
+          "castExtraSeconds": 2,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "OneAndOnly1",
+          "id": 46122,
+          "caster": "233C",
+          "target": "self",
+          "castSeconds": 9,
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          }
+        },
+        {
+          "name": "GreatWallOfFire",
+          "id": 46123,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "GreatWallOfFire1",
+          "id": 46124,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 6
+          }
+        },
+        {
+          "name": "GreatWallOfFire2",
+          "id": 46125,
+          "caster": "233C",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "GreatWallOfFireExplosion",
+          "id": 46126,
+          "caster": "233C",
+          "target": "self",
+          "castSeconds": 3,
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 6
+          },
+          "note": "tankbuster aftershock"
+        },
+        {
+          "name": "OrbitalOmen",
+          "id": 46130,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "FireAndFury",
+          "id": 46127,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 4,
+          "castExtraSeconds": 1,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "OrbitalOmen_Lines",
+          "id": 46131,
+          "caster": "233C",
+          "target": "self",
+          "castSeconds": 6,
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 10
+          }
+        },
+        {
+          "name": "FireAndFuryFront",
+          "id": 46129,
+          "caster": "233C",
+          "target": "self",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "cone",
+            "range": 60,
+            "angle": 90
+          }
+        },
+        {
+          "name": "FireAndFuryBack",
+          "id": 46128,
+          "caster": "233C",
+          "target": "self",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "cone",
+            "range": 60,
+            "angle": 90
+          }
+        },
+        {
+          "name": "Meteorain",
+          "id": 46132,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "FearsomeFireball",
+          "id": 46137,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "single-target"
+          },
+          "note": "icon 525 line stack"
+        },
+        {
+          "name": "FearsomeFireball1",
+          "id": 46138,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 6
+          },
+          "note": "icon 525 line stack"
+        },
+        {
+          "name": "CosmicKiss",
+          "id": 46133,
+          "caster": "4AED",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 4
+          },
+          "note": "icon 244 this is the comet impact which leaves a rock"
+        },
+        {
+          "name": "ForegoneFatality",
+          "id": 46134,
+          "caster": "4AEA",
+          "target": "player/4AED",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          },
+          "note": "tank tether damage"
+        },
+        {
+          "name": "Comet_Explosion",
+          "id": 46136,
+          "caster": "4AED",
+          "target": "self",
+          "castSeconds": 3,
+          "shape": {
+            "kind": "circle",
+            "range": 8
+          },
+          "note": "comets explode when they die"
+        },
+        {
+          "name": "UnmitigatedExplosion",
+          "id": 46135,
+          "caster": "4AED",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          }
+        },
+        {
+          "name": "TripleTyrannhilation1",
+          "id": 46139,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "Charybdis",
+          "id": 46118,
+          "caster": "233C",
+          "target": "player",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "TripleTyrannhilation2",
+          "id": 46140,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 7,
+          "castExtraSeconds": 1,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "Shockwave",
+          "id": 46141,
+          "caster": "233C",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          },
+          "note": "Three burst attack from Triple Tyrannhilation, LOS with comets"
+        },
+        {
+          "name": "Comet_Destroyed",
+          "id": 46142,
+          "caster": "4AED",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          },
+          "note": "When shockwave destroys a comet"
+        },
+        {
+          "name": "TripleTyrannhilationEnd",
+          "id": 46176,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          },
+          "note": "Ending the Triple Tryannhilation"
+        },
+        {
+          "name": "Flatliner",
+          "id": 46143,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 4,
+          "castExtraSeconds": 2,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "Flatliner1",
+          "id": 47760,
+          "caster": "233C",
+          "target": "self",
+          "castSeconds": 6,
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          }
+        },
+        {
+          "name": "MajesticMeteor",
+          "id": 46144,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "single-target"
+          },
+          "note": "summons towers"
+        },
+        {
+          "name": "ExplosionTower",
+          "id": 46148,
+          "caster": "233C",
+          "target": "self",
+          "castSeconds": 10,
+          "shape": {
+            "kind": "circle",
+            "range": 4
+          },
+          "note": "tower knockback explosions"
+        },
+        {
+          "name": "UnmitigatedExplosion_MissedTower",
+          "id": 46149,
+          "caster": "233C",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          }
+        },
+        {
+          "name": "MajesticMeteorBaits",
+          "id": 46145,
+          "caster": "233C",
+          "target": "location",
+          "castSeconds": 3,
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          },
+          "note": "baited puddles"
+        },
+        {
+          "name": "FireBreath",
+          "id": 46150,
+          "caster": "4AEC",
+          "target": "self",
+          "castSeconds": 8,
+          "castExtraSeconds": 1,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "FireBreath1",
+          "id": 46151,
+          "caster": "233C",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 6
+          },
+          "note": "This might be the line AOEs at icon 244 during arena splits?"
+        },
+        {
+          "name": "MajesticMeteorain",
+          "id": 46146,
+          "caster": "233C",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 10
+          },
+          "note": "This is the north-south line AOE from the portal"
+        },
+        {
+          "name": "MajesticMeteowrathFirst",
+          "id": 46147,
+          "caster": "233C",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 10
+          },
+          "note": "This is the tether cast for tether 57/249"
+        },
+        {
+          "name": "MassiveMeteor",
+          "id": 46152,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "single-target"
+          },
+          "note": "start of 5-hit party share stacks icon 305"
+        },
+        {
+          "name": "MassiveMeteorHit",
+          "id": 46153,
+          "caster": "Helper",
+          "target": "players",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          },
+          "note": "damage from dual party stacks, hits 5 times, icon 305"
+        },
+        {
+          "name": "ArcadionAvalanche_Pick1",
+          "id": 46154,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 6,
+          "castExtraSeconds": 9.5,
+          "shape": {
+            "kind": "single-target"
+          },
+          "note": "NE safe slice, East safe West danger"
+        },
+        {
+          "name": "ArcadionAvalanche_Smash1",
+          "id": 46155,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 15.5,
+          "shape": {
+            "kind": "rect",
+            "range": 40,
+            "width": 40
+          },
+          "note": "NE safe slice, East safe West danger"
+        },
+        {
+          "name": "ArcadionAvalanche_Pick2",
+          "id": 46156,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 6,
+          "castExtraSeconds": 9.5,
+          "shape": {
+            "kind": "single-target"
+          },
+          "note": "SE safe slice, East safe West danger"
+        },
+        {
+          "name": "ArcadionAvalanche_Smash2",
+          "id": 46157,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 15.5,
+          "shape": {
+            "kind": "rect",
+            "range": 40,
+            "width": 40
+          },
+          "note": "SE safe slice, East safe West danger"
+        },
+        {
+          "name": "ArcadionAvalanche_Pick3",
+          "id": 46158,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 6,
+          "castExtraSeconds": 9.5,
+          "shape": {
+            "kind": "single-target"
+          },
+          "note": "SW safe slice, West safe East danger"
+        },
+        {
+          "name": "ArcadionAvalanche_Smash3",
+          "id": 46159,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 15.5,
+          "shape": {
+            "kind": "rect",
+            "range": 40,
+            "width": 40
+          },
+          "note": "SW safe slice, West safe East danger"
+        },
+        {
+          "name": "ArcadionAvalanche_Pick4",
+          "id": 46160,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 6,
+          "castExtraSeconds": 9.5,
+          "shape": {
+            "kind": "single-target"
+          },
+          "note": "NW safe slice, West safe East danger"
+        },
+        {
+          "name": "ArcadionAvalanche_Smash4",
+          "id": 46161,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 15.5,
+          "shape": {
+            "kind": "rect",
+            "range": 40,
+            "width": 40
+          },
+          "note": "NW safe slice, West safe East danger"
+        },
+        {
+          "name": "EclipticStampede",
+          "id": 46162,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "single-target"
+          },
+          "note": "starts final phase, summons corner meteors, puts 2 icons on farthest players"
+        },
+        {
+          "name": "MammothMeteor",
+          "id": 46163,
+          "caster": "Helper",
+          "target": "location",
+          "castSeconds": 6,
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          },
+          "note": "These are proximity AOE meteors dropped in the corner at the start of Ecliptic Stampede"
+        },
+        {
+          "name": "AtomicImpact",
+          "id": 46164,
+          "caster": "Helper",
+          "target": "player",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 5
+          },
+          "note": "AOE from icon 30, 6 hits which drop voidzones"
+        },
+        {
+          "name": "MajesticMeteorStorm",
+          "id": 46165,
+          "caster": "Helper",
+          "target": "location",
+          "castSeconds": 3,
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          },
+          "note": "Meteors targeted on party"
+        },
+        {
+          "name": "CosmicKissTower",
+          "id": 46166,
+          "caster": "Helper",
+          "target": "location",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "circle",
+            "range": 4
+          },
+          "note": "tank towers?"
+        },
+        {
+          "name": "WeightyImpactTower",
+          "id": 46167,
+          "caster": "Helper",
+          "target": "location",
+          "castSeconds": 5,
+          "shape": {
+            "kind": "circle",
+            "range": 4
+          },
+          "note": "DPS towers?"
+        },
+        {
+          "name": "UnmitigatedExplosion_MissedTower2",
+          "id": 46168,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          },
+          "note": "miss tower get bleed"
+        },
+        {
+          "name": "MajesticMeteowrathSecond",
+          "id": 46169,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 10
+          },
+          "note": "tether ID 57/249 rectangles during end"
+        },
+        {
+          "name": "FourWayFireballStart",
+          "id": 46170,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 6,
+          "castExtraSeconds": 1,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "FourWayFireballEnd",
+          "id": 46171,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 6
+          }
+        },
+        {
+          "name": "TwoWayFireballStart",
+          "id": 47037,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 6,
+          "castExtraSeconds": 1,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "TwoWayFireballEnd",
+          "id": 47038,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 6
+          }
+        },
+        {
+          "name": "_Weaponskill_1",
+          "id": 46172,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "HeartbreakKickTower",
+          "id": 46173,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 5,
+          "castExtraSeconds": 1,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "HeartbreakKickDamage",
+          "id": 46174,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 4
+          }
+        },
+        {
+          "name": "_Weaponskill_ToughBreak",
+          "id": 46177,
+          "caster": "Helper",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          }
+        },
+        {
+          "name": "HeartBreakKickEnd",
+          "id": 46175,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "EnrageCast",
+          "id": 46178,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 8,
+          "shape": {
+            "kind": "single-target"
+          }
+        },
+        {
+          "name": "HeartbreakKickEnrage",
+          "id": 46179,
+          "caster": "Boss",
+          "target": "self",
+          "castSeconds": 0,
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          }
+        }
+      ],
+      "shapes": [
+        {
+          "actions": [
+            "CosmicKiss"
+          ],
+          "shape": {
+            "kind": "circle",
+            "range": 4
+          },
+          "file": "Meteorain.cs",
+          "line": 5
+        },
+        {
+          "actions": [
+            "FireBreath1"
+          ],
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 6
+          },
+          "file": "Meteorain.cs",
+          "line": 8
+        },
+        {
+          "actions": [
+            "MajesticMeteorBaits"
+          ],
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          },
+          "file": "Meteorain.cs",
+          "line": 11
+        },
+        {
+          "actions": [
+            "CosmicKissTower"
+          ],
+          "shape": {
+            "kind": "tower",
+            "range": 4
+          },
+          "file": "Meteorain.cs",
+          "line": 157
+        },
+        {
+          "actions": [
+            "WeightyImpactTower"
+          ],
+          "shape": {
+            "kind": "tower",
+            "range": 4
+          },
+          "file": "Meteorain.cs",
+          "line": 176
+        },
+        {
+          "actions": [
+            "ExplosionTower"
+          ],
+          "shape": {
+            "kind": "tower",
+            "range": 4
+          },
+          "file": "Meteorain.cs",
+          "line": 219
+        },
+        {
+          "actions": [
+            "Cometite"
+          ],
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          },
+          "file": "SharedAOEs.cs",
+          "line": 6
+        },
+        {
+          "actions": [
+            "MajesticMeteorStorm"
+          ],
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          },
+          "file": "SharedAOEs.cs",
+          "line": 13
+        },
+        {
+          "actions": [
+            "MammothMeteor"
+          ],
+          "shape": {
+            "kind": "circle",
+            "range": 18
+          },
+          "file": "SharedAOEs.cs",
+          "line": 18
+        },
+        {
+          "actions": [
+            "AtomicImpact"
+          ],
+          "shape": {
+            "kind": "circle",
+            "range": 5
+          },
+          "file": "SharedAOEs.cs",
+          "line": 19
+        },
+        {
+          "actions": [
+            "Comet"
+          ],
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          },
+          "file": "SharedAOEs.cs",
+          "line": 20
+        },
+        {
+          "actions": [
+            "CrushingComet"
+          ],
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          },
+          "file": "SharedAOEs.cs",
+          "line": 21
+        },
+        {
+          "actions": [
+            "EyeOfTheHurricane"
+          ],
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          },
+          "file": "SharedAOEs.cs",
+          "line": 22
+        },
+        {
+          "actions": [
+            "Explosion1",
+            "Explosion2"
+          ],
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 10
+          },
+          "file": "SharedAOEs.cs",
+          "line": 23
+        },
+        {
+          "actions": [
+            "FireAndFuryFront",
+            "FireAndFuryBack"
+          ],
+          "shape": {
+            "kind": "cone",
+            "range": 60,
+            "angle": 90
+          },
+          "file": "SharedAOEs.cs",
+          "line": 24
+        },
+        {
+          "actions": [
+            "GreatWallOfFire"
+          ],
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 6
+          },
+          "file": "SharedAOEs.cs",
+          "line": 25
+        },
+        {
+          "actions": [
+            "GreatWallOfFire1",
+            "GreatWallOfFire2",
+            "GreatWallOfFireExplosion"
+          ],
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 6
+          },
+          "file": "SharedAOEs.cs",
+          "line": 26
+        },
+        {
+          "actions": [
+            "FearsomeFireball1"
+          ],
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 8
+          },
+          "file": "SharedAOEs.cs",
+          "line": 27
+        },
+        {
+          "actions": [
+            "Shockwave"
+          ],
+          "shape": {
+            "kind": "circle",
+            "range": 1
+          },
+          "file": "SharedAOEs.cs",
+          "line": 29
+        },
+        {
+          "actions": [
+            "Flatliner"
+          ],
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 10
+          },
+          "file": "SharedAOEs.cs",
+          "line": 30
+        },
+        {
+          "actions": [
+            "Flatliner1"
+          ],
+          "shape": {
+            "kind": "circle",
+            "range": 60
+          },
+          "file": "SharedAOEs.cs",
+          "line": 31
+        },
+        {
+          "actions": [
+            "ArcadionAvalanche_Pick1",
+            "ArcadionAvalanche_Pick2",
+            "ArcadionAvalanche_Pick3",
+            "ArcadionAvalanche_Pick4"
+          ],
+          "shape": {
+            "kind": "rect",
+            "range": 40,
+            "width": 40
+          },
+          "file": "SharedAOEs.cs",
+          "line": 32
+        },
+        {
+          "actions": [
+            "ArcadionAvalanche_Smash1",
+            "ArcadionAvalanche_Smash2",
+            "ArcadionAvalanche_Smash3",
+            "ArcadionAvalanche_Smash4"
+          ],
+          "shape": {
+            "kind": "rect",
+            "range": 40,
+            "width": 40
+          },
+          "file": "SharedAOEs.cs",
+          "line": 35
+        },
+        {
+          "actions": [
+            "OrbitalOmen_Lines"
+          ],
+          "shape": {
+            "kind": "rect",
+            "range": 60,
+            "width": 10
+          },
+          "file": "SharedAOEs.cs",
+          "line": 40
+        },
+        {
+          "actions": [
+            "MassiveMeteorHit"
+          ],
+          "shape": {
+            "kind": "circle",
+            "range": 6
+          },
+          "file": "SharedAOEs.cs",
+          "line": 49
+        }
+      ],
+      "states": [
+        {
+          "phase": "SinglePhase",
+          "kind": "SimpleState",
+          "actions": [],
+          "numbers": [
+            1000
+          ],
+          "name": "Final Phase",
+          "file": "M11STheTyrantStates.cs",
+          "line": 16
+        },
+        {
+          "phase": "CrownOfArcadia",
+          "kind": "Cast",
+          "actions": [
+            "CrownOfArcadia"
+          ],
+          "numbers": [
+            0,
+            5
+          ],
+          "name": "Crown of Arcadia",
+          "hint": "Raidwide",
+          "file": "M11STheTyrantStates.cs",
+          "line": 20
+        },
+        {
+          "phase": "Flatliner",
+          "kind": "Condition",
+          "actions": [
+            "MajesticMeteor"
+          ],
+          "numbers": [
+            362,
+            50,
+            0
+          ],
+          "name": "Majestic Meteor",
+          "file": "M11STheTyrantStates.cs",
+          "line": 53
+        },
+        {
+          "phase": "SplitArena",
+          "kind": "Condition",
+          "actions": [
+            "EclipticStampede"
+          ],
+          "numbers": [
+            0
+          ],
+          "name": "Ecliptic Stampede",
+          "file": "M11STheTyrantStates.cs",
+          "line": 104
+        },
+        {
+          "phase": "SinglePhase",
+          "kind": "SimpleState",
+          "actions": [],
+          "numbers": [
+            10000
+          ],
+          "name": "Report Me",
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 28
+        },
+        {
+          "phase": "CrownOfArcadia",
+          "kind": "Cast",
+          "actions": [
+            "CrownOfArcadia"
+          ],
+          "numbers": [
+            5
+          ],
+          "name": "Crown of Arcadia",
+          "hint": "Raidwide",
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 32
+        },
+        {
+          "phase": "RawSteelTrophy",
+          "kind": "CastMulti",
+          "actions": [
+            "RawSteelTrophyAxe",
+            "RawSteelTrophyScythe"
+          ],
+          "numbers": [
+            2
+          ],
+          "name": "Select Weapon",
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 39
+        },
+        {
+          "phase": "RawSteelTrophy",
+          "kind": "Condition",
+          "actions": [],
+          "numbers": [
+            6.3,
+            0,
+            0,
+            2
+          ],
+          "name": "Raw Steel Trophy resolves",
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 43
+        },
+        {
+          "phase": "TrophyWeapons",
+          "kind": "Cast",
+          "actions": [
+            "TrophyWeapons"
+          ],
+          "numbers": [
+            2
+          ],
+          "name": "Trophy Weapons",
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 58
+        },
+        {
+          "phase": "TrophyWeapons",
+          "kind": "Condition",
+          "actions": [],
+          "numbers": [
+            30,
+            10,
+            10
+          ],
+          "name": "Trophy Weapons Complete",
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 63
+        },
+        {
+          "phase": "VoidStardust",
+          "kind": "Cast",
+          "actions": [
+            "TrophyWeapons"
+          ],
+          "numbers": [
+            2.7
+          ],
+          "name": "Stack/Spread, 3 Weapons, Spread/Stack",
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 70
+        },
+        {
+          "phase": "VoidStardust",
+          "kind": "Cast",
+          "actions": [
+            "VoidStardust"
+          ],
+          "numbers": [
+            4
+          ],
+          "name": "Bait Puddles",
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 75
+        },
+        {
+          "phase": "VoidStardust",
+          "kind": "Condition",
+          "actions": [],
+          "numbers": [
+            30,
+            10,
+            10
+          ],
+          "name": "Trophy Weapons Complete",
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 80
+        },
+        {
+          "phase": "VoidStardust",
+          "kind": "ComponentCondition\u003CComet\u003E",
+          "actions": [],
+          "numbers": [
+            20,
+            0
+          ],
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 85
+        },
+        {
+          "phase": "VoidStardust",
+          "kind": "ComponentCondition\u003CCrushingComet\u003E",
+          "actions": [],
+          "numbers": [
+            20,
+            0
+          ],
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 87
+        },
+        {
+          "phase": "VoidStardust",
+          "kind": "ComponentCondition\u003CCometite\u003E",
+          "actions": [],
+          "numbers": [
+            20,
+            48
+          ],
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 89
+        },
+        {
+          "phase": "DanceOfDomination",
+          "kind": "Cast",
+          "actions": [
+            "DanceOfDominationTrophy"
+          ],
+          "numbers": [
+            2
+          ],
+          "name": "Multi-hit Raidwide",
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 94
+        },
+        {
+          "phase": "DanceOfDomination",
+          "kind": "ComponentCondition\u003CEyeOfTheHurricane\u003E",
+          "actions": [],
+          "numbers": [
+            20,
+            0
+          ],
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 98
+        },
+        {
+          "phase": "Charybdistopia",
+          "kind": "Cast",
+          "actions": [
+            "Charybdistopia"
+          ],
+          "numbers": [
+            2
+          ],
+          "name": "Sets HP to 0",
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 105
+        },
+        {
+          "phase": "UltimateTrophyWeapons",
+          "kind": "Cast",
+          "actions": [
+            "UltimateTrophyWeapons"
+          ],
+          "numbers": [
+            2
+          ],
+          "name": "Ultimate Trophy Weapons",
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 111
+        },
+        {
+          "phase": "UltimateTrophyWeapons",
+          "kind": "ComponentCondition\u003CMaelstromGustCones\u003E",
+          "actions": [],
+          "numbers": [
+            60,
+            10,
+            10
+          ],
+          "name": "Bait Tornadoes",
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 118
+        },
+        {
+          "phase": "UltimateTrophyWeapons",
+          "kind": "Cast",
+          "actions": [
+            "ImmortalReign"
+          ],
+          "numbers": [
+            2
+          ],
+          "name": "Immortal Reign",
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 126
+        },
+        {
+          "phase": "OneAndOnly",
+          "kind": "Cast",
+          "actions": [
+            "OneAndOnly"
+          ],
+          "numbers": [
+            9
+          ],
+          "hint": "Raidwide",
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 130
+        },
+        {
+          "phase": "OneAndOnly",
+          "kind": "ComponentCondition\u003CGreatWallOfFireExplosion\u003E",
+          "actions": [],
+          "numbers": [
+            30,
+            2,
+            10,
+            10
+          ],
+          "name": "Shared Tank Cleaves",
+          "hint": "Tankbuster",
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 146
+        },
+        {
+          "phase": "OneAndOnly",
+          "kind": "ComponentCondition\u003COrbitalOmen\u003E",
+          "actions": [],
+          "numbers": [
+            60,
+            8,
+            10,
+            10
+          ],
+          "name": "Orbital Omen",
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 149
+        },
+        {
+          "phase": "OneAndOnly",
+          "kind": "ComponentCondition\u003CTripleTyrannhilation\u003E",
+          "actions": [],
+          "numbers": [
+            60,
+            100
+          ],
+          "name": "Hide!",
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 154
+        },
+        {
+          "phase": "Flatliner",
+          "kind": "Cast",
+          "actions": [
+            "Flatliner"
+          ],
+          "numbers": [
+            6
+          ],
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 164
+        },
+        {
+          "phase": "Flatliner",
+          "kind": "ComponentCondition\u003CFlatlinerKB\u003E",
+          "actions": [],
+          "numbers": [
+            10,
+            0
+          ],
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 179
+        },
+        {
+          "phase": "Flatliner",
+          "kind": "CastMulti",
+          "actions": [
+            "ArcadionAvalanche_Pick1",
+            "ArcadionAvalanche_Pick2",
+            "ArcadionAvalanche_Pick3",
+            "ArcadionAvalanche_Pick4"
+          ],
+          "numbers": [
+            15
+          ],
+          "name": "Get to safe platform",
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 181
+        },
+        {
+          "phase": "EclipticMeteor",
+          "kind": "Cast",
+          "actions": [
+            "CrownOfArcadia"
+          ],
+          "numbers": [
+            5
+          ],
+          "name": "Crown of Arcadia",
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 193
+        },
+        {
+          "phase": "EclipticMeteor",
+          "kind": "Cast",
+          "actions": [
+            "GreatWallOfFire"
+          ],
+          "numbers": [
+            5
+          ],
+          "name": "Great Wall Of Fire",
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 203
+        },
+        {
+          "phase": "EclipticMeteor",
+          "kind": "Cast",
+          "actions": [
+            "OrbitalOmen"
+          ],
+          "numbers": [
+            5
+          ],
+          "name": "Orbital Omen",
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 204
+        },
+        {
+          "phase": "EclipticMeteor",
+          "kind": "Cast",
+          "actions": [
+            "FireAndFury"
+          ],
+          "numbers": [
+            4
+          ],
+          "name": "Fire and Fury",
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 207
+        },
+        {
+          "phase": "EclipticMeteor",
+          "kind": "Cast",
+          "actions": [
+            "CrownOfArcadia"
+          ],
+          "numbers": [
+            5
+          ],
+          "name": "Crown of Arcadia",
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 209
+        },
+        {
+          "phase": "EclipticMeteor",
+          "kind": "Cast",
+          "actions": [
+            "EclipticStampede"
+          ],
+          "numbers": [
+            5
+          ],
+          "name": "Ecliptic Stampede",
+          "file": "M11STheTyrantStatesWIP.cs",
+          "line": 210
+        }
+      ],
+      "unparsed": []
+    }
+  ]
+}

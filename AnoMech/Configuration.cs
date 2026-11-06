@@ -15,6 +15,22 @@ public class Configuration : IPluginConfiguration
     public bool OpenSimMenuOnInn { get; set; } = true;
     public bool OpenSimMenuOnSupportedInstanceSolo { get; set; } = false;
     public bool EnableEventLogging { get; set; } = false;
+    // PullRecorder: a real savage, ultimate or extreme pull, written as a SimTimeline CSV. Zoning
+    // into one asks in chat unless the territory is in RecordAlwaysTerritories. The folder is the
+    // repo's datalogs/replays when set; empty means the plugin config folder's replays/. A
+    // finished recording is also sent to the active relay's /recordings when UploadRecordings is on.
+    public bool AskToRecordPulls { get; set; } = true;
+    public List<uint> RecordAlwaysTerritories { get; set; } = [];
+    public string PullRecordingsDir { get; set; } = "";
+    public bool UploadRecordings { get; set; } = true;
+    // Override of DefaultRecordingsRelay; both empty means no upload destination.
+    public string RecordingsRelayUrl { get; set; } = "";
+    public string RecordingsRelayToken { get; set; } = "";
+
+    public (string Url, string? Token) RecordingsDestination()
+        => RecordingsRelayUrl.Trim() is { Length: > 0 } url
+            ? (url, RecordingsRelayToken.Trim() is { Length: > 0 } token ? token : null)
+            : (DefaultRecordingsRelay.Url, DefaultRecordingsRelay.Token.Length > 0 ? DefaultRecordingsRelay.Token : null);
     public bool SuppressBgm { get; set; } = true;
     public bool EnableMechanicResultMarks { get; set; } = false;
     public bool AutoCollapseWhileRunning { get; set; } = false;
@@ -44,6 +60,10 @@ public class Configuration : IPluginConfiguration
 
     // Mitigation training: checks the plan's action for your column against what you pressed.
     public bool EnableMitigationTraining { get; set; } = false;
+    // HazardOverlay: the areas about to resolve, drawn on the ground, per lesson level.
+    public bool ShowHazardsAssisted { get; set; } = true;
+    public bool ShowHazardsGuided { get; set; } = false;
+    public bool ShowHazardsObserve { get; set; } = false;
     public bool ToolboxShowWaymarks { get; set; } = true;
     public float ToolboxOpacity { get; set; } = 1f;
     public string SelectedMitPlan { get; set; } = "";

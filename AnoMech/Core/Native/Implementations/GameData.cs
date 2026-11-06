@@ -82,7 +82,7 @@ internal sealed class GameData : IGameData
 
     public ContentFinderConditionRow? ContentFinderCondition(uint contentFinderConditionId)
         => Plugin.DataManager.GetExcelSheet<LuminaContentFinderCondition>().TryGetRow(contentFinderConditionId, out var row)
-            ? new ContentFinderConditionRow(contentFinderConditionId, row.ClassJobLevelSync)
+            ? new ContentFinderConditionRow(contentFinderConditionId, row.ClassJobLevelSync, row.Name.ExtractText(), (byte)row.ContentType.RowId, row.HighEndDuty)
             : null;
 
     public string? BNpcName(uint nameId)

@@ -57,12 +57,22 @@ internal sealed class EnemyActionHandler(SimCharacter caster, SimCast cast, SimW
         var resolveAt = castTime + action.Timing.ResolveSnapshotOffset;
         var releaseAt = action.Cast.CastSecondsOverride is { } bar ? bar + CastSpec.ActionEffectOffset : sheetCastTime;
         if (action.Effects.Count > 0)
+        {
+            HazardArea? hazard = null;
+            if (resolveAt > 0f && !HazardArea.IsSingleTarget(action))
+            {
+                hazard = new HazardArea(action, caster, target, location, world.Events.Elapsed + resolveAt);
+                world.AddHazard(hazard);
+                handle.HazardArea = hazard;
+            }
             Schedule(resolveAt, () =>
             {
+                if (hazard is not null) world.RemoveHazard(hazard);
                 if (handle.IsCancelled) return;
                 if (casting == handle) casting = null;
                 Resolve(action, target, location, delivery, MathF.Max(0f, releaseAt - resolveAt));
             });
+        }
         Schedule(releaseAt, () =>
         {
             if (releasing == handle) releasing = null;
@@ -79,6 +89,7 @@ internal sealed class EnemyActionHandler(SimCharacter caster, SimCast cast, SimW
         casting = null;
         if (releasing == handle) releasing = null;
         handle.Cancelled();
+        if (handle.HazardArea is { } hazard) world.RemoveHazard(hazard);
         cast.Cancel(reason);
         return true;
     }
@@ -147,10 +158,7 @@ internal sealed class EnemyActionHandler(SimCharacter caster, SimCast cast, SimW
     private void Resolve(EnemyAction action, SimCharacter? target, Vector3? location, Delivery delivery, float releaseDelay)
     {
         var party = world.Party;
-        var origin = target is not null && target != caster && IsDirectional(action)
-            ? caster.Placement().Face(target.Position)
-            : target?.Placement()
-              ?? (location is { } at ? new Placement(at, caster.Rotation) : caster.Placement());
+        var origin = HazardArea.OriginOf(action, caster, target, location);
         var ctx = new EnemyActionContext(action, caster, target, origin, party, releaseDelay);
 
         // A party member's own action never hits them.
@@ -172,7 +180,9 @@ internal sealed class EnemyActionHandler(SimCharacter caster, SimCast cast, SimW
 
         foreach (var effect in action.Effects)
             effect.Apply(ctx, hits);
-        world.SimEvents.Raise(new ActionResolved(action, caster, origin, hits, ctx.NpcHits, hits.Where(ctx.IsKilled).ToList(), releaseDelay));
+        var resolved = new ActionResolved(action, caster, origin, hits, ctx.NpcHits, hits.Where(ctx.IsKilled).ToList(), releaseDelay);
+        world.SimEvents.Raise(resolved);
+        world.NotifyResolved(resolved);
 
         delivery.Outcomes = ctx.Outcomes;
         // Ahead of the deaths it shares a time with, so the killing hit lands on a living target.
@@ -232,14 +242,7 @@ internal sealed class EnemyActionHandler(SimCharacter caster, SimCast cast, SimW
     private static float DistanceXZ(Vector3 a, Vector3 b)
         => MathF.Sqrt((a.X - b.X) * (a.X - b.X) + (a.Z - b.Z) * (a.Z - b.Z));
 
-    // No area, only the cast target is hit.
-    private static bool IsSingleTarget(EnemyAction action)
-        => (action.Area.CastTypeOverride ?? Natives.Data.Action(action.ActionId)?.CastType) is CastType.SingleTarget;
-
-    // Cones and lines.
-    private static bool IsDirectional(EnemyAction action)
-        => (action.Area.CastTypeOverride ?? Natives.Data.Action(action.ActionId)?.CastType)
-            is CastType.Cone2 or CastType.Cone or CastType.Rectangle2 or CastType.Rectangle or CastType.Charge;
+    private static bool IsSingleTarget(EnemyAction action) => HazardArea.IsSingleTarget(action);
 
     private static string? Explain(string? action, string? hit)
         => action is null ? hit : hit is null ? action : $"{action}; {hit}";

@@ -61,6 +61,28 @@ internal sealed class LessonReportWindow : Window, IDisposable
             if (step.Step is { Skip: false } lessonStep && ImGui.SmallButton($"Drill##{row}")) StepDrillRunner.Instance?.Start(report, lessonStep);
         }
         ImGui.EndTable();
+        if (report.Hits.Count == 0) return;
+        ImGui.Spacing();
+        using (AsuTheme.PushTextColor(AsuTheme.Bad))
+            ImGui.TextUnformatted($"{report.Hits.Count} hit{(report.Hits.Count == 1 ? "" : "s")} taken");
+        if (!ImGui.BeginTable("lesson-hits", 4, ImGuiTableFlags.RowBg | ImGuiTableFlags.SizingStretchProp)) return;
+        ImGui.TableSetupColumn("When");
+        ImGui.TableSetupColumn("Step");
+        ImGui.TableSetupColumn("Why");
+        ImGui.TableSetupColumn("From the spot");
+        ImGui.TableHeadersRow();
+        foreach (var hit in report.Hits)
+        {
+            ImGui.TableNextRow();
+            ImGui.TableNextColumn(); ImGui.TextUnformatted($"{hit.Time:0.#}s");
+            ImGui.TableNextColumn(); ImGui.TextUnformatted(hit.StepTitle ?? "—");
+            ImGui.TableNextColumn();
+            using (AsuTheme.PushTextColor(hit.Fatal ? AsuTheme.Bad : AsuTheme.Text))
+                ImGui.TextUnformatted(hit.Phrase);
+            ImGui.TableNextColumn();
+            ImGui.TextUnformatted(hit.StepTarget is { } target ? $"{System.Numerics.Vector3.Distance(target, hit.Position):0.0} yalms" : "—");
+        }
+        ImGui.EndTable();
     }
 
     private static string Label(StepResult result) => result switch

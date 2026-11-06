@@ -22,4 +22,14 @@ public class RelayOptionsTests
         Assert.That(new RelayOptions { Group = group }.Validate(), Is.Not.Null, "a list without a number");
         Assert.That(new RelayOptions { GroupNumber = 0, Group = [new(0, "wss://us.example.com", "")] }.Validate(), Is.Not.Null, "an unusable list");
     }
+
+    [Test]
+    public void RecordingsNeedSomeoneToAnswerFor()
+    {
+        var peer = Guid.NewGuid();
+        Assert.That(new RelayOptions { RecordingsDir = "r" }.Validate(), Is.Not.Null, "open to anyone");
+        Assert.That(new RelayOptions { RecordingsDir = "r", RecordingsFrom = [peer] }.Validate(), Is.Null);
+        Assert.That(new RelayOptions { RecordingsDir = "r", AccessToken = "join-token-0123456789abcdef", TrustedProxies = [IPNetwork.Parse("127.0.0.1/32")] }.Validate(), Is.Null);
+        Assert.That(new RelayOptions { RecordingsFrom = [peer] }.Validate(), Is.Null, "a list without a dir is just unused");
+    }
 }

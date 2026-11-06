@@ -94,7 +94,7 @@ internal sealed class DataminingGameData(FakeRsvFunctions rsv) : IGameData
 
     public ContentFinderConditionRow? ContentFinderCondition(uint contentFinderConditionId)
         => ContentFinderConditions.Value.Row(contentFinderConditionId) is { } row
-            ? new ContentFinderConditionRow(contentFinderConditionId, row.Byte("ClassJobLevelSync"))
+            ? new ContentFinderConditionRow(contentFinderConditionId, row.Byte("ClassJobLevelSync"), row.Text("Name"), row.Byte("ContentType"), row.Bool("HighEndDuty"))
             : null;
 
     public string? BNpcName(uint nameId) => NonEmpty(Resolve(BNpcNames.Value.Row(nameId)?.Text("Singular")));

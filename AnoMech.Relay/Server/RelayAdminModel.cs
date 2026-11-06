@@ -42,7 +42,8 @@ public sealed record AdminStats(
     long TotalConnectionsAccepted, long TotalMessagesBroadcast, long TotalBytesBroadcast,
     RejectionCounts Rejections, long RecentRejections,
     long PeakMessagesPerSecond, long PeakBytesPerSecond, long NearLimitWarnings, LimitSettings Limits,
-    long MemoryBytes, int Gen0Collections, int Gen1Collections, int Gen2Collections);
+    long MemoryBytes, int Gen0Collections, int Gen1Collections, int Gen2Collections,
+    long RecordingsStored = 0, long RecordingsRejected = 0);
 
 public sealed record PeerInfo(uint Id, string Ip, bool IsHost, double AgeSeconds, long MessagesIn, long BytesIn,
     int PeakMessagesPerSecond, long PeakBytesPerSecond);
@@ -52,3 +53,5 @@ public sealed record SessionInfo(string Code, double AgeSeconds, double IdleSeco
 public sealed record AdminActionRequest(string Action, string? SessionCode, uint? ConnectionId, string? Ip, string? Name, double? Value);
 
 public sealed record AdminActionResult(bool Ok, string Message);
+
+public sealed record RecordingInfo(string Name, long Bytes, DateTime ModifiedUtc);

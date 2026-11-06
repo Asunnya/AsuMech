@@ -132,7 +132,9 @@ public sealed class RelayClient(string peerSecret) : IRelayConnection
 
     // Same host/port resolution mapped to https/http; /info lives on the same host:port as the
     // WS endpoint.
-    private static IReadOnlyList<Uri> ResolveInfoCandidateUris(string relayUrl)
+    private static IReadOnlyList<Uri> ResolveInfoCandidateUris(string relayUrl) => ResolveHttpCandidateUris(relayUrl, "info");
+
+    internal static IReadOnlyList<Uri> ResolveHttpCandidateUris(string relayUrl, string path)
     {
         var trimmed = relayUrl.Trim();
         var explicitScheme = trimmed.IndexOf("://", StringComparison.Ordinal) is var idx && idx > 0
@@ -141,13 +143,13 @@ public sealed class RelayClient(string peerSecret) : IRelayConnection
         if (explicitScheme is not null)
         {
             var mapped = explicitScheme switch { "wss" => "https", "ws" => "http", _ => explicitScheme };
-            return [BuildUri($"{mapped}://{trimmed[(idx + 3)..]}", "info")];
+            return [BuildUri($"{mapped}://{trimmed[(idx + 3)..]}", path)];
         }
         var (host, explicitPort) = SplitHostPort(trimmed);
         return
         [
-            BuildUri($"https://{host}:{explicitPort ?? 443}", "info"),
-            BuildUri($"http://{host}:{explicitPort ?? 7890}", "info"),
+            BuildUri($"https://{host}:{explicitPort ?? 443}", path),
+            BuildUri($"http://{host}:{explicitPort ?? 7890}", path),
         ];
     }
 

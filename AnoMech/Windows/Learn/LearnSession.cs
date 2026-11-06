@@ -1,3 +1,4 @@
+using System.Linq;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -49,7 +50,25 @@ internal sealed class LearnSession : IDisposable
         Director = new LessonDirector(lesson ?? new Lesson(scenario.GetType().Name, strat.Name, [], []), role, level, SetSpeed, Plugin.Mastery);
         game.World.Guidance = Director;
         game.MechanicFailed += OnMechanicFailed;
+        game.World.ActionResolved += OnActionResolved;
         Current = this;
+    }
+
+    // The hits the player took this run, with the step they fell in and why they landed.
+    public IReadOnlyList<LessonHit> Hits => hits;
+    private readonly List<LessonHit> hits = [];
+
+    // A phrase for the banner, every time the player is caught.
+    public static event Action<LessonHit>? PlayerHit;
+
+    private void OnActionResolved(ActionResolved resolved)
+    {
+        if (game.World.Party.Player is not { } player || !resolved.Hits.Contains(player)) return;
+        var step = Director.Current;
+        var hit = new LessonHit(game.World.Events.Elapsed, step?.Title, step?.Evaluation.Target, Core.Native.Interfaces.GameDataExtensions.ActionName(Core.Native.Interfaces.Natives.Data, resolved.Action.ActionId),
+            player.Position, HitExplanation.Phrase(resolved, player), resolved.Killed.Contains(player));
+        hits.Add(hit);
+        if (Level != LearnLevel.Observe) PlayerHit?.Invoke(hit);
     }
 
     public IScenario Scenario { get; }
@@ -120,10 +139,11 @@ internal sealed class LearnSession : IDisposable
         Director.End();
         if (Director.Judging && Director.Results.Count > 0 && Lesson is { } judged)
         {
-            LastReport = new LessonReport(Scenario, Strat, judged, Level, Role, Director.Results);
+            LastReport = new LessonReport(Scenario, Strat, judged, Level, Role, Director.Results, hits.ToList());
             ReportReady?.Invoke(LastReport);
         }
         game.MechanicFailed -= OnMechanicFailed;
+        game.World.ActionResolved -= OnActionResolved;
         if (Drill != null) game.RunStarted -= OnRunStarted;
         if (pinned != null) ExampleOverrides.Lift(pinned, pinnedKeys);
         if (ReferenceEquals(game.World.Guidance, Director)) game.World.Guidance = null;

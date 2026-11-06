@@ -52,6 +52,17 @@ dotnet $TOOL slides-fetch --deck <google id|url|file.pptx> --out work/deck [--zo
 # mitigation: cast timeline per scenario (embedded under Learn/Mitigation/Timelines), then a plan from a sheet, a CSV or WTFDIG
 dotnet $TOOL mit-timeline --all [--check]        # every scenario; CI (MitTimelinesTests) fails when a run drifts from its embedded timeline
 dotnet $TOOL mit-timeline --scenario UwuP1GarudaScenario --out AnoMech/Learn/Mitigation/Timelines/UwuP1GarudaScenario.json
+
+# a real pull (PullRecorder CSV, plain or the relay's .csv.gz) against the scenario, cast by cast: drift, origin, facing, casts only one side has,
+# EObjs and MapEffects the sim never sends; exit 1 past --slack. --pull picks one of a lockout's pulls, --t0 forces the alignment time
+dotnet $TOOL replay-diff --scenario M4sScenario --replay AnoMech.Relay.Host/recordings/1232_20261105_213000_ab12cd34.csv.gz [--pull 2] [--strat 0] [--seed 1] [--t0 480] [--window 3] [--slack 0.25]
+# the recorded pull's casts as a mit timeline, on the scenario's clock (aligned the same way)
+dotnet $TOOL mit-timeline --from-replay <recording> --scenario M4sScenario [--pull 2] --out AnoMech/Learn/Mitigation/Timelines/M4sScenario.json
+# the public hint modules of one fight (Learn/Sources/modules/fights.json names repo, folder and commit per source) read as text into
+# AnoMech/Learn/Sources/modules/<fight>.json; learn-ready then shows a "module <source>" row per source and cues/draft name markers and tethers
+dotnet $TOOL crosscheck --fight m11s [--source bossmod|reborn] [--update]   # --update moves the pins to the repos' heads and rewrites fights.json
+# the headless run's own timeline CSV, the shape a recording has (diff a seed against another, feed the viewer)
+dotnet $TOOL sim-timeline --scenario UwuP1GarudaScenario [--strat 0] [--seed 7] --out work/garuda.csv
 dotnet $TOOL mit-import --plan uwu-ethel-master --sheet-id <google sheet id> --tabs "Garuda=UwuP1GarudaScenario,Ifrit=UwuP2IfritScenario" --credits "A;B" --out AnoMech/Learn/Mitigation/Plans/uwu-ethel-master.json
 dotnet $TOOL mit-import --plan <name> --csv exported.csv --scenario UwuP1GarudaScenario --out Plans/<name>.json
 dotnet $TOOL mit-import --plan umad-ikuya --wtfdig umad --mit-plan ikuya --tabs "p1=UmadP1TeleTrouncingScenario,p3=UmadP3LimitCutScenario|UmadP3BlackHoleScenario" --accept-unresolved --out Plans/umad-ikuya.json

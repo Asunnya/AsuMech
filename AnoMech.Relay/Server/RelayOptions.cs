@@ -99,6 +99,13 @@ public sealed record RelayOptions
     public int? GroupNumber { get; set; }
     public List<RelayGroupMember> Group { get; set; } = new();
 
+    // Recordings (PullRecorder CSVs) uploaded to POST /recordings land here; null keeps the
+    // endpoint off (404, like admin without its token). RecordingsFrom lists the peer ids allowed
+    // to upload; empty means anyone the access token lets in.
+    public string? RecordingsDir { get; set; }
+    public List<Guid> RecordingsFrom { get; set; } = new();
+    public long MaxRecordingBytes { get; set; } = 50L * 1024 * 1024;
+
     public const int MinTokenLength = 16;
 
     // Null when the options are usable. The relay refuses to start rather than just warn:
@@ -120,6 +127,10 @@ public sealed record RelayOptions
                    "<cidr> naming the reverse proxy that terminates it (e.g. --trusted-proxy 127.0.0.1/32 " +
                    "for a local Caddy/nginx). Without it, X-Forwarded-Proto could be spoofed by anyone " +
                    "who can reach this port directly. See AnoMech.Relay.Host/README.md.";
+
+        // An upload endpoint open to anyone on the internet is a free disk filler.
+        if (RecordingsDir != null && AccessToken == null && RecordingsFrom.Count == 0)
+            return "--recordings-dir needs --token or at least one --recordings-from <peer id>, or anyone could fill the disk.";
 
         if (Group.Count > 0 && RelayGroup.Validate(Group) is { } invalidGroup)
             return $"--relays: {invalidGroup}";

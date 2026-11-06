@@ -19,9 +19,10 @@ public static class LessonDraft
 
     private static readonly string[] Roles = ["MainTank", "OffTank", "RegenHealer", "ShieldHealer", "MeleeDpsA", "MeleeDpsB", "PhysRangedDps", "CasterDps"];
 
-    public static Lesson Draft(Lesson skeleton, OrderDump dump, List<MinedRule> rules, Dictionary<(string Cls, int Line, string Role), List<CueCandidate>> cues, Glossary? glossary = null)
+    public static Lesson Draft(Lesson skeleton, OrderDump dump, List<MinedRule> rules, Dictionary<(string Cls, int Line, string Role), List<CueCandidate>> cues, Glossary? glossary = null, Sources.ModuleSource? modules = null)
     {
         glossary ??= Glossary.Empty;
+        modulesInUse = modules;
         var steps = new List<LessonStep>();
         LessonStep? previous = null;
         foreach (var step in skeleton.Steps)
@@ -226,11 +227,30 @@ public static class LessonDraft
         "cast" => $"{c.Name} cast starts",
         "ability" => own ? $"{c.Name} hits you" : $"{c.Name} resolves",
         "status" => own ? $"{c.Name} on you" : $"{c.Name} on {c.Target ?? "someone"}",
-        "tether" => own ? "A tether lands on you" : $"A tether lands on {c.Target ?? "someone"}",
-        "marker" => own ? "A marker lands on you" : $"A marker lands on {c.Target ?? "someone"}",
+        "tether" => own ? $"A tether{Named(c)} lands on you" : $"A tether{Named(c)} lands on {c.Target ?? "someone"}",
+        "marker" => own ? $"A marker{Named(c)} lands on you" : $"A marker{Named(c)} lands on {c.Target ?? "someone"}",
         "spawn" => $"{c.Name} appears",
         _ => c.Name,
     };
+
+    // The game gives head markers and tethers no name; a public module's enum member is the next
+    // best thing, spaced out ("CometIcon" -> "Comet Icon"), until the glossary words it.
+    [ThreadStatic] private static Sources.ModuleSource? modulesInUse;
+
+    private static string Named(CueCandidate c)
+    {
+        var named = NameCue(c, modulesInUse);
+        return named == c.Name ? "" : $" ({named})";
+    }
+
+    public static string NameCue(CueCandidate c, Sources.ModuleSource? modules)
+    {
+        if (modules is null || c.Kind is not ("marker" or "tether")) return c.Name;
+        var space = c.Name.LastIndexOf(' ');
+        if (space < 0 || !long.TryParse(c.Name[(space + 1)..], out var value)) return c.Name;
+        var name = c.Kind == "marker" ? modules.IconName(value) : modules.TetherName(value);
+        return name is null ? c.Name : System.Text.RegularExpressions.Regex.Replace(name, "(?<=[a-z0-9])(?=[A-Z])|_", " ").Trim();
+    }
 
     private static string Title(LessonStep step, DraftCue? cue)
     {

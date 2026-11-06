@@ -1,0 +1,15 @@
+{
+  "sources": {
+    "bossmod": { "repo": "https://github.com/awgil/ffxiv_bossmod.git", "license": "BSD-3-Clause" },
+    "reborn": { "repo": "https://github.com/FFXIV-CombatReborn/BossModReborn.git", "license": "BSD-3-Clause" }
+  },
+  "fights": {
+    "m11s": {
+      "family": "M11s",
+      "paths": {
+        "bossmod": { "path": "BossMod.Modules/Dawntrail/Savage/RM11STheTyrant", "commit": "6e410ef8bb912fc70e3c1f97eedfb77a7dc4dfc0" },
+        "reborn": { "path": "BossMod/Modules/Dawntrail/Savage/M11STheTyrant", "commit": "27be422560eb801893b093d9157323585eeae0eb" }
+      }
+    }
+  }
+}

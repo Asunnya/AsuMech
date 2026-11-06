@@ -98,12 +98,16 @@ internal static class RelayHttp
     }
 
     public static async Task<string> ReadBodyAsync(Stream stream, RelayHttpRequest request, int maxBytes, CancellationToken token)
+        => Encoding.UTF8.GetString(await ReadBodyBytesAsync(stream, request, maxBytes, token));
+
+    // Null Content-Length, chunked, or a length past maxBytes all throw before a byte of body is read.
+    public static async Task<byte[]> ReadBodyBytesAsync(Stream stream, RelayHttpRequest request, long maxBytes, CancellationToken token)
     {
         if (request.Header("Transfer-Encoding") != null) throw new InvalidDataException("chunked bodies aren't supported");
-        if (!int.TryParse(request.Header("Content-Length"), out var length) || length < 0 || length > maxBytes)
+        if (!long.TryParse(request.Header("Content-Length"), out var length) || length < 0 || length > maxBytes)
             throw new InvalidDataException("missing or oversized Content-Length");
         var body = new byte[length];
-        var have = Math.Min(request.Buffered.Length, length);
+        var have = (int)Math.Min(request.Buffered.Length, length);
         request.Buffered.AsSpan(0, have).CopyTo(body);
         while (have < length)
         {
@@ -111,17 +115,20 @@ internal static class RelayHttp
             if (read == 0) throw new EndOfStreamException("body ended early");
             have += read;
         }
-        return Encoding.UTF8.GetString(body);
+        return body;
     }
+
+    public static long? ContentLength(RelayHttpRequest request)
+        => long.TryParse(request.Header("Content-Length"), out var length) && length >= 0 ? length : null;
 
     public static Task WriteStatusAsync(Stream stream, int status, CancellationToken token)
         => WriteAsync(stream, $"HTTP/1.1 {status} {Reason(status)}\r\nContent-Length: 0\r\nConnection: close\r\n\r\n", [], token);
 
-    public static Task WriteJsonAsync(Stream stream, string json, CancellationToken token)
-    {
-        var body = Encoding.UTF8.GetBytes(json);
-        return WriteAsync(stream, $"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {body.Length}\r\nConnection: close\r\n\r\n", body, token);
-    }
+    public static Task WriteJsonAsync(Stream stream, string json, CancellationToken token, int status = 200)
+        => WriteBytesAsync(stream, "application/json", Encoding.UTF8.GetBytes(json), token, status);
+
+    public static Task WriteBytesAsync(Stream stream, string contentType, byte[] body, CancellationToken token, int status = 200)
+        => WriteAsync(stream, $"HTTP/1.1 {status} {Reason(status)}\r\nContent-Type: {contentType}\r\nContent-Length: {body.Length}\r\nConnection: close\r\n\r\n", body, token);
 
     public static async Task<WebSocket> AcceptWebSocketAsync(Stream stream, RelayHttpRequest request, CancellationToken token)
     {
@@ -142,10 +149,12 @@ internal static class RelayHttp
     private static string Reason(int status) => status switch
     {
         200 => "OK",
+        201 => "Created",
         400 => "Bad Request",
         401 => "Unauthorized",
         403 => "Forbidden",
         404 => "Not Found",
+        413 => "Content Too Large",
         426 => "Upgrade Required",
         429 => "Too Many Requests",
         503 => "Service Unavailable",

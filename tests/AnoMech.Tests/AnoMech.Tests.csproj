@@ -9,11 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Learn/Sources/Fixtures/module-*/*.cs" />
     <ProjectReference Include="../../AnoMech/AnoMech.csproj" />
     <InternalsVisibleTo Include="AnoMech.LessonTools" />
     <None Include="Learn/Toolbox/Fixtures/*.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="Core/Game/Trace/Fixtures/*.csv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="Learn/Mitigation/Fixtures/*.csv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="Learn/Sources/Fixtures/*.ts" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="Learn/Sources/Fixtures/module-*/*.cs" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <!-- The plugin references these with Private=false because Dalamud supplies them in game; the

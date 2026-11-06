@@ -12,3 +12,5 @@ __pycache__
 /tools/.venv/
 logdalamud
 TestResults/
+/AnoMech.Relay.Host/recordings.env
+/AnoMech.Relay.Host/recordings/

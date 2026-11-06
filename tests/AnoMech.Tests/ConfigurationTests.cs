@@ -49,4 +49,15 @@ public class ConfigurationTests
         Assert.That(RelayWire.IsValidSecret(config.EnsurePeerSecret()));
         Assert.That(config.PeerSecret, Is.Not.EqualTo("tampered"));
     }
+
+    [Test]
+    public void RecordingsGoToTheBuiltInServerUnlessOverridden()
+    {
+        var config = new Configuration();
+        Assert.That(config.RecordingsDestination(), Is.EqualTo((DefaultRecordingsRelay.Url, DefaultRecordingsRelay.Token.Length > 0 ? DefaultRecordingsRelay.Token : null)));
+        config.RecordingsRelayUrl = " wss://mine.example ";
+        Assert.That(config.RecordingsDestination(), Is.EqualTo(("wss://mine.example", (string?)null)), "an own server without a password");
+        config.RecordingsRelayToken = "pw";
+        Assert.That(config.RecordingsDestination(), Is.EqualTo(("wss://mine.example", (string?)"pw")));
+    }
 }

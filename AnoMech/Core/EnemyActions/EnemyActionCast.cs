@@ -5,6 +5,7 @@ namespace AnoMech.Core.EnemyActions;
 internal sealed class EnemyActionCast
 {
     public bool IsCancelled { get; private set; }
+    public Game.HazardArea? HazardArea { get; set; }
 
     internal void Cancelled() => IsCancelled = true;
 }

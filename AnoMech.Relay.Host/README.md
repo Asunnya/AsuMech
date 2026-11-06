@@ -25,6 +25,7 @@ service](#running-it-as-a-public-service) and [Security notes](#security-notes).
 - [Logging](#logging)
 - [Admin dashboard](#admin-dashboard)
 - [Admin actions](#admin-actions)
+- [Pull recordings](#pull-recordings)
 - [Security notes](#security-notes)
 - [Troubleshooting](#troubleshooting)
 - [Configuring the plugin](#configuring-the-plugin)
@@ -390,6 +391,70 @@ The same actions are available as `POST /admin/action` with a JSON body
 `GET /admin/sessions`. All three need the `X-AnoMech-Admin-Token` header.
 
 Bans and limit changes live in memory only — they reset when the relay restarts.
+
+---
+
+## Pull recordings
+
+The plugin's pull recorder (Settings → "Record real pulls") can upload each finished recording to
+the relay the player has configured, so whoever studies the fight gets every static member's
+pulls without asking for files. Off unless the relay opts in:
+
+```
+anomech-relay --token <join-token> --admin-token <admin-token> --recordings-dir /srv/anomech/recordings
+```
+
+- `--recordings-dir <path>`: where uploads land, one `.csv.gz` per recording, named after the
+  uploader's file plus the first 8 characters of their peer id. Enabling it needs `--token` or at
+  least one `--recordings-from`, so nobody anonymous can fill the disk.
+- `--recordings-from <peer id>` (repeatable): only these peers may upload. The peer id is the
+  identity the relay derives from the plugin's credential, shown in the plugin's Multiplayer
+  screen. Without it, anyone holding the join token may upload.
+- `--max-recording-bytes <n>`: per-upload cap, default 50 MB (a long ultimate night compresses
+  to a few MB).
+
+Uploads go through the same front door as a join: paused, banned, TLS, Origin, lockout, the
+join token and the peer credential are all checked before a byte of body is read; the body has
+to be gzip. Fetching them needs the admin token:
+
+```
+anomech-relay --admin --host https://relay.yourdomain.com --admin-token <admin-token> --recordings --out datalogs/replays
+```
+
+That lists `GET /recordings`, downloads every file not already in `--out` and expands it back to
+the `.csv` the plugin wrote; run it again after each raid night. `GET /recordings/<name>` serves
+one file. Both need the `X-AnoMech-Admin-Token` header, like the other admin endpoints.
+
+### The built-in study server
+
+Players never type an address: the plugin ships with the recordings server's URL and password in
+`AnoMech/Multiplayer/DefaultRecordingsRelay.cs`, and sends there whenever "Send finished
+recordings to the study server" is on (the default). That server is just this relay, run by
+whoever studies the fights, on a PC at home is fine. The password in `DefaultRecordingsRelay.Token`
+goes in `--token`, so a password set, the relay insists on TLS; the easiest way to get a public
+https address for a home PC without a domain or port forwarding is Tailscale Funnel:
+
+```
+cd AnoMech.Relay.Host
+cp recordings.env.example recordings.env      # fill in the two tokens
+docker compose -f docker-compose.recordings.yml up -d --build
+tailscale funnel --bg 7890
+```
+
+`docker-compose.recordings.yml` runs this relay as you, publishes 7890 on loopback only, keeps
+the uploads in `AnoMech.Relay.Host/recordings/` on the host and logs to `docker logs
+asumech-relay`. Funnel answers on `https://<machine>.<tailnet>.ts.net` and forwards to the
+container with `X-Forwarded-Proto: https`; from inside the container that request comes from
+Docker's bridge gateway, so the compose file trusts `172.16.0.0/12` as well as `127.0.0.1/32`.
+Funnel has to be enabled once in the Tailscale admin console; people uploading don't need
+Tailscale, they're plain HTTPS visitors and don't count toward your tailnet's user limit. Put
+`wss://<machine>.<tailnet>.ts.net` in `DefaultRecordingsRelay.Url` and rebuild the plugin; a
+player on that build uploads to it with no setup. Cloudflare Tunnel does the same with your own
+domain. The token is in the source, so treat it as a filter against scanners, not as a secret:
+cap the disk with `--max-recording-bytes`, and list the people you expect with
+`--recordings-from` (each sees their id under Settings, "Copy my id") once the group is known.
+The uploads are already files on your disk; `--admin --recordings --out datalogs/replays` is only
+the step that expands them to `.csv` where `replay-diff` reads.
 
 ---
 

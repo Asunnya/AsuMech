@@ -119,7 +119,8 @@ public sealed class RelayServer : IAsyncDisposable
     private long rejectedOrigin, rejectedIpCap, rejectedJoinLockout, rejectedRelayFull,
         rejectedSessionFull, rejectedSessionNotFound, rejectedBadToken, rejectedHandshakeTimeout,
         rejectedMessageTooLarge, rejectedMessageTimeout, rejectedMessageRate, rejectedByteRate,
-        rejectedUnencrypted, rejectedTooManyFragments, rejectedBanned, rejectedPaused, rejectedBadProtocol;
+        rejectedUnencrypted, rejectedTooManyFragments, rejectedBanned, rejectedPaused, rejectedBadProtocol,
+        recordingsStored, recordingsRejected;
 
     public RelayServer(RelayOptions options, IRelayLog log)
     {
@@ -149,6 +150,9 @@ public sealed class RelayServer : IAsyncDisposable
             : $"[AnoMech.Relay] Trusting {options.ClientIpHeader} / X-Forwarded-Proto from: {string.Join(", ", options.TrustedProxies)}.");
         if (options.GroupNumber is { } number)
             log.Info($"[AnoMech.Relay] Relay {number} of a group of {options.Group.Count}: a join for another member's code is sent there.");
+        if (options.RecordingsDir is { } recordingsDir)
+            log.Info($"[AnoMech.Relay] Accepting pull recordings into {Path.GetFullPath(recordingsDir)} from " +
+                     $"{(options.RecordingsFrom.Count == 0 ? "anyone with the access token" : $"{options.RecordingsFrom.Count} listed peer(s)")}, up to {options.MaxRecordingBytes / (1024 * 1024)} MB each.");
         log.Info($"[AnoMech.Relay] Per-connection caps: {options.MaxMessagesPerSecond} msg/s, " +
                  $"{options.MaxBytesPerSecond / (1024.0 * 1024):F1} MB/s, {options.MaxMessageBytes / 1024} KB/message. " +
                  $"Logging a [NEAR-LIMIT] line past {options.UsageWarnFraction:P0} of either rate.");
@@ -382,6 +386,17 @@ public sealed class RelayServer : IAsyncDisposable
                     await ServeAdminAsync(stream, request, handshake.Token, async () =>
                         ApplyAdminActionBody(await RelayHttp.ReadBodyAsync(stream, request, MaxAdminBodyBytes, handshake.Token), ResolveClientIp(request)));
                     return;
+                case "recordings" when request.Method == "POST":
+                    await ServeRecordingUploadAsync(stream, request, handshake.Token);
+                    return;
+                case "recordings":
+                    await ServeAdminAsync(stream, request, handshake.Token, () => Task.FromResult(JsonSerializer.Serialize(ListRecordings(), RelayAdmin.Json)));
+                    return;
+            }
+            if (path.StartsWith("recordings/", StringComparison.Ordinal))
+            {
+                await ServeRecordingDownloadAsync(stream, request, path["recordings/".Length..], handshake.Token);
+                return;
             }
         }
 
@@ -858,33 +873,8 @@ public sealed class RelayServer : IAsyncDisposable
     // from anyone without the admin token.
     private async Task ServeAdminAsync(Stream stream, RelayHttpRequest request, CancellationToken token, Func<Task<string>> handler)
     {
-        // 404, not 401 -- a relay with no --admin-token set shouldn't even reveal these exist.
-        if (options.AdminToken is null)
-        {
-            await RelayHttp.WriteStatusAsync(stream, 404, token);
-            return;
-        }
+        if (!await AuthorizeAdminAsync(stream, request, token)) return;
         var ip = ResolveClientIp(request);
-        var key = AbuseKey(ip);
-        if (!IsRequestEncrypted(request))
-        {
-            CountRejection(ref rejectedUnencrypted, "unencrypted", ip, "admin");
-            await RelayHttp.WriteStatusAsync(stream, 426, token);
-            return;
-        }
-        if (IsLockedOut(AdminLockoutUntilByIp, key))
-        {
-            CountRejection(ref rejectedJoinLockout, "admin locked out", ip, "admin");
-            await RelayHttp.WriteStatusAsync(stream, 429, token);
-            return;
-        }
-        if (!IsValidToken(request.Header("X-AnoMech-Admin-Token"), options.AdminToken))
-        {
-            CountRejection(ref rejectedBadToken, "bad admin token", ip, "admin");
-            RecordFailedAuth(FailedAdminByIp, AdminLockoutUntilByIp, key, "admin");
-            await RelayHttp.WriteStatusAsync(stream, 401, token);
-            return;
-        }
         string json;
         try
         {
@@ -897,6 +887,39 @@ public sealed class RelayServer : IAsyncDisposable
             return;
         }
         await RelayHttp.WriteJsonAsync(stream, json, token);
+    }
+
+    // False after writing the refusal. 404, not 401, with no --admin-token set: a relay nobody
+    // enabled admin on shouldn't even reveal these exist.
+    private async Task<bool> AuthorizeAdminAsync(Stream stream, RelayHttpRequest request, CancellationToken token)
+    {
+        if (options.AdminToken is null)
+        {
+            await RelayHttp.WriteStatusAsync(stream, 404, token);
+            return false;
+        }
+        var ip = ResolveClientIp(request);
+        var key = AbuseKey(ip);
+        if (!IsRequestEncrypted(request))
+        {
+            CountRejection(ref rejectedUnencrypted, "unencrypted", ip, "admin");
+            await RelayHttp.WriteStatusAsync(stream, 426, token);
+            return false;
+        }
+        if (IsLockedOut(AdminLockoutUntilByIp, key))
+        {
+            CountRejection(ref rejectedJoinLockout, "admin locked out", ip, "admin");
+            await RelayHttp.WriteStatusAsync(stream, 429, token);
+            return false;
+        }
+        if (!IsValidToken(request.Header("X-AnoMech-Admin-Token"), options.AdminToken))
+        {
+            CountRejection(ref rejectedBadToken, "bad admin token", ip, "admin");
+            RecordFailedAuth(FailedAdminByIp, AdminLockoutUntilByIp, key, "admin");
+            await RelayHttp.WriteStatusAsync(stream, 401, token);
+            return false;
+        }
+        return true;
     }
 
     // ---- Admin model ------------------------------------------------------------------------
@@ -931,10 +954,146 @@ public sealed class RelayServer : IAsyncDisposable
             Interlocked.Read(ref recentRejections),
             Interlocked.Read(ref peakMessagesPerSecond), Interlocked.Read(ref peakBytesPerSecond),
             Interlocked.Read(ref nearLimitWarnings), BuildLimits(),
-            GC.GetTotalMemory(false), GC.CollectionCount(0), GC.CollectionCount(1), GC.CollectionCount(2));
+            GC.GetTotalMemory(false), GC.CollectionCount(0), GC.CollectionCount(1), GC.CollectionCount(2),
+            Interlocked.Read(ref recordingsStored), Interlocked.Read(ref recordingsRejected));
     }
 
     public List<SessionInfo> GetSessions() => rooms.Snapshot();
+
+    // ---- Recordings ------------------------------------------------------------------------
+
+    // The same front door as a join (paused, banned, TLS, Origin, lockout, token, peer
+    // credential), then the upload's own checks: sender on the list, size, gzip, a name that is
+    // safe on disk. The file is written whole under a temporary name and renamed into place, so a
+    // half-received upload never shows up in a listing.
+    private async Task ServeRecordingUploadAsync(Stream stream, RelayHttpRequest request, CancellationToken token)
+    {
+        Task Respond(int status) => RelayHttp.WriteStatusAsync(stream, status, token);
+        if (options.RecordingsDir is null) { await Respond(404); return; }
+        var ip = ResolveClientIp(request);
+        var key = AbuseKey(ip);
+        if (!acceptingConnections) { CountRejection(ref rejectedPaused, "relay paused by admin", ip, "recordings"); await Respond(503); return; }
+        if (IsBanned(key)) { CountRejection(ref rejectedBanned, "banned", ip, "recordings"); await Respond(403); return; }
+        if ((options.RequireTls || options.AccessToken != null) && !IsRequestEncrypted(request))
+        {
+            CountRejection(ref rejectedUnencrypted, "unencrypted", ip, "recordings");
+            await Respond(426);
+            return;
+        }
+        if (!string.IsNullOrEmpty(request.Header("Origin"))) { CountRejection(ref rejectedOrigin, "origin header present", ip, "recordings"); await Respond(403); return; }
+        if (IsLockedOut(JoinLockoutUntilByIp, key)) { CountRejection(ref rejectedJoinLockout, "auth locked out", ip, "recordings"); await Respond(429); return; }
+        if (options.AccessToken != null && !IsValidToken(request.Header("X-AnoMech-Relay-Token"), options.AccessToken))
+        {
+            CountRejection(ref rejectedBadToken, "bad token", ip, "recordings");
+            RecordFailedAuth(FailedJoinsByIp, JoinLockoutUntilByIp, key, "recordings");
+            await Respond(401);
+            return;
+        }
+        if (AuthenticatePeer(request.Header("X-AnoMech-Protocol"), request.Header("X-AnoMech-Peer-Secret")) is not { } peerId)
+        {
+            CountRejection(ref rejectedBadProtocol, "missing or wrong protocol version or peer credential", ip, "recordings");
+            await Respond(400);
+            return;
+        }
+        if (options.RecordingsFrom.Count > 0 && !options.RecordingsFrom.Contains(peerId))
+        {
+            Interlocked.Increment(ref recordingsRejected);
+            log.Warn($"[recordings] upload from {ip} refused: peer {peerId} isn't in --recordings-from");
+            await Respond(403);
+            return;
+        }
+        if (RelayHttp.ContentLength(request) is not { } length || length == 0 || length > options.MaxRecordingBytes)
+        {
+            Interlocked.Increment(ref recordingsRejected);
+            log.Warn($"[recordings] upload from {ip} ({peerId}) refused: Content-Length {RelayHttp.ContentLength(request)?.ToString() ?? "missing"} (max {options.MaxRecordingBytes})");
+            await Respond(413);
+            return;
+        }
+        if (RecordingFileName(request.Header("X-AnoMech-Recording-Name"), peerId) is not { } name)
+        {
+            Interlocked.Increment(ref recordingsRejected);
+            log.Warn($"[recordings] upload from {ip} ({peerId}) refused: bad X-AnoMech-Recording-Name");
+            await Respond(400);
+            return;
+        }
+        byte[] body;
+        try
+        {
+            body = await RelayHttp.ReadBodyBytesAsync(stream, request, options.MaxRecordingBytes, token);
+        }
+        catch (Exception e)
+        {
+            Interlocked.Increment(ref recordingsRejected);
+            log.Warn($"[recordings] upload from {ip} ({peerId}) failed mid-body: {e.Message}");
+            return;
+        }
+        if (body.Length < 2 || body[0] != 0x1F || body[1] != 0x8B)
+        {
+            Interlocked.Increment(ref recordingsRejected);
+            log.Warn($"[recordings] upload from {ip} ({peerId}) refused: not gzip");
+            await Respond(400);
+            return;
+        }
+        try
+        {
+            Directory.CreateDirectory(options.RecordingsDir);
+            var final = Path.Combine(options.RecordingsDir, name);
+            var partial = final + ".part";
+            await File.WriteAllBytesAsync(partial, body, token);
+            File.Move(partial, final, overwrite: true);
+        }
+        catch (Exception e)
+        {
+            log.Warn($"[recordings] storing {name} from {ip} ({peerId}) failed: {e.Message}");
+            await Respond(503);
+            return;
+        }
+        Interlocked.Increment(ref recordingsStored);
+        log.Info($"[recordings] stored {name} ({body.Length:N0} bytes) from {ip} ({peerId})");
+        await RelayHttp.WriteJsonAsync(stream, JsonSerializer.Serialize(new { name, bytes = body.Length }, RelayAdmin.Json), token, 201);
+    }
+
+    private static readonly System.Text.RegularExpressions.Regex RecordingNamePattern = new("^[A-Za-z0-9][A-Za-z0-9_.-]{0,79}$");
+
+    // The client's own file name (its stem) plus who sent it, so two senders' pulls of the same
+    // duty at the same second don't collide; anything outside a safe character set is refused.
+    internal static string? RecordingFileName(string? requested, Guid peerId)
+    {
+        if (requested is null) return null;
+        var stem = requested.EndsWith(".csv", StringComparison.OrdinalIgnoreCase) ? requested[..^4] : requested;
+        if (!RecordingNamePattern.IsMatch(stem) || stem.Contains("..")) return null;
+        return $"{stem}_{peerId.ToString("N")[..8]}.csv.gz";
+    }
+
+    internal static bool IsStoredRecordingName(string name)
+        => name.EndsWith(".csv.gz", StringComparison.Ordinal) && RecordingNamePattern.IsMatch(name[..^".csv.gz".Length]) && !name.Contains("..");
+
+    public List<RecordingInfo> ListRecordings()
+    {
+        if (options.RecordingsDir is null || !Directory.Exists(options.RecordingsDir)) return [];
+        return new DirectoryInfo(options.RecordingsDir).EnumerateFiles("*.csv.gz")
+            .Where(f => IsStoredRecordingName(f.Name))
+            .OrderBy(f => f.LastWriteTimeUtc)
+            .Select(f => new RecordingInfo(f.Name, f.Length, f.LastWriteTimeUtc))
+            .ToList();
+    }
+
+    private async Task ServeRecordingDownloadAsync(Stream stream, RelayHttpRequest request, string name, CancellationToken token)
+    {
+        if (options.RecordingsDir is null || request.Method != "GET" || !IsStoredRecordingName(name))
+        {
+            await RelayHttp.WriteStatusAsync(stream, 404, token);
+            return;
+        }
+        if (!await AuthorizeAdminAsync(stream, request, token)) return;
+        var path = Path.Combine(options.RecordingsDir, name);
+        if (!File.Exists(path))
+        {
+            await RelayHttp.WriteStatusAsync(stream, 404, token);
+            return;
+        }
+        await RelayHttp.WriteBytesAsync(stream, "application/gzip", await File.ReadAllBytesAsync(path, token), token);
+    }
 
     private string ApplyAdminActionBody(string body, IPAddress from)
     {

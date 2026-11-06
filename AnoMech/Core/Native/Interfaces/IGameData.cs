@@ -1,3 +1,5 @@
+using System;
+
 namespace AnoMech.Core.Native.Interfaces;
 
 // Excel sheets and game files. Rows are our own records, not Lumina's: tests have no game files.
@@ -37,4 +39,14 @@ public static class GameDataExtensions
            && data.ContentFinderCondition(territory.ContentFinderCondition) is { ClassJobLevelSync: not 0 } duty
             ? duty.ClassJobLevelSync
             : null;
+
+    // Savage, ultimate and extreme: the duties worth recording a real pull of. Savage has no
+    // content type of its own, so it goes by the English client's name; HighEndDuty is no help,
+    // it marks the current tier only.
+    public static bool IsRecordableDuty(this IGameData data, uint territoryId)
+        => data.TerritoryType(territoryId) is { ContentFinderCondition: not 0 } territory
+           && data.ContentFinderCondition(territory.ContentFinderCondition) is { } duty
+           && (duty.ContentType == ContentFinderConditionRow.UltimateContentType
+               || duty.Name.EndsWith("(Savage)", StringComparison.Ordinal)
+               || duty.ContentType == ContentFinderConditionRow.TrialContentType && duty.Name.EndsWith("(Extreme)", StringComparison.Ordinal));
 }

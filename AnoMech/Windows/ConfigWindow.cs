@@ -153,6 +153,19 @@ public class ConfigWindow : Window, IDisposable
 
         ImGui.Separator();
 
+        ImGui.TextUnformatted("Show the areas about to hit, during a lesson:");
+        var hazardsAssisted = configuration.ShowHazardsAssisted;
+        if (Pills.Checkbox("Assisted##hazards-assisted", ref hazardsAssisted)) { configuration.ShowHazardsAssisted = hazardsAssisted; configuration.Save(); }
+        ImGui.SameLine();
+        var hazardsGuided = configuration.ShowHazardsGuided;
+        if (Pills.Checkbox("Guided##hazards-guided", ref hazardsGuided)) { configuration.ShowHazardsGuided = hazardsGuided; configuration.Save(); }
+        ImGui.SameLine();
+        var hazardsObserve = configuration.ShowHazardsObserve;
+        if (Pills.Checkbox("Observe##hazards-observe", ref hazardsObserve)) { configuration.ShowHazardsObserve = hazardsObserve; configuration.Save(); }
+        if (ImGui.IsItemHovered()) ImGui.SetTooltip("The outline is the one the sim checks you against: red when you're inside it. Never in Exam.");
+
+        ImGui.Separator();
+
         var logging = configuration.EnableEventLogging;
         if (Pills.Checkbox("Enable event logging", ref logging))
         {
@@ -164,6 +177,8 @@ public class ConfigWindow : Window, IDisposable
         ImGui.SameLine();
         if (ImGui.Button("Open logs folder"))
             Plugin.LogManager.OpenLogsFolder();
+
+        DrawPullRecorder();
 
         ImGui.Separator();
         DrawMultiplayerServer();
@@ -250,6 +265,86 @@ public class ConfigWindow : Window, IDisposable
         if (!accentUnsaved) return;
         configuration.Save();
         accentUnsaved = false;
+    }
+
+    // Zoning into a savage, ultimate or extreme asks in chat; the recorder itself never starts
+    // while a scenario is loaded.
+    private void DrawPullRecorder()
+    {
+        var ask = configuration.AskToRecordPulls;
+        if (Pills.Checkbox("Ask to record real pulls (savage, ultimate, extreme)", ref ask))
+        {
+            configuration.AskToRecordPulls = ask;
+            configuration.Save();
+        }
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("On zoning in, a chat line offers Yes / No / Always here. Every cast, ability, status, spawn and position goes to a CSV in the SimTimeline format, for replay-diff against the scenario. /asu rec starts one anywhere.");
+        var recorder = Plugin.Recorder;
+        var dir = configuration.PullRecordingsDir;
+        ImGui.SetNextItemWidth(260f * ImGuiHelpers.GlobalScale);
+        if (ImGui.InputTextWithHint("Folder##pull-recordings-dir", "plugin config folder/replays", ref dir, 260))
+        {
+            configuration.PullRecordingsDir = dir;
+            configuration.Save();
+        }
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Point this at the repo's datalogs/replays so the recordings sit next to the ACT logs.");
+        if (configuration.RecordAlwaysTerritories.Count > 0)
+        {
+            ImGui.TextUnformatted($"Always recording in {configuration.RecordAlwaysTerritories.Count} dut{(configuration.RecordAlwaysTerritories.Count == 1 ? "y" : "ies")}");
+            ImGui.SameLine();
+            if (ImGui.SmallButton("Forget##record-always"))
+            {
+                configuration.RecordAlwaysTerritories.Clear();
+                configuration.Save();
+            }
+        }
+        var upload = configuration.UploadRecordings;
+        if (Pills.Checkbox("Send finished recordings to the study server", ref upload))
+        {
+            configuration.UploadRecordings = upload;
+            configuration.Save();
+        }
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Gzipped and sent to the recordings server built into this build, so whoever studies the fight gets your pulls without any setup. The file stays on your disk either way.");
+        if (upload)
+        {
+            var (relay, _) = configuration.RecordingsDestination();
+            var peerId = relay.Length > 0 ? AnoMech.Network.RelayWire.PeerId(AnoMech.Network.RelayWire.RelayCredential(configuration.EnsurePeerSecret(), relay)).ToString() : "";
+            ImGui.TextUnformatted(relay.Length > 0 ? $"Server: {relay}" : "No recordings server in this build.");
+            if (peerId.Length > 0)
+            {
+                ImGui.SameLine();
+                if (ImGui.SmallButton("Copy my id##peer-id")) ImGui.SetClipboardText(peerId);
+                if (ImGui.IsItemHovered()) ImGui.SetTooltip($"Your id on that server, {peerId}: what its operator puts in --recordings-from to allow you.");
+            }
+            if (ImGui.TreeNodeEx("Another server##recordings-override", ImGuiTreeNodeFlags.None))
+            {
+                var url = configuration.RecordingsRelayUrl;
+                ImGui.SetNextItemWidth(260f * ImGuiHelpers.GlobalScale);
+                if (ImGui.InputTextWithHint("Address##recordings-relay-url", "wss://host (empty = built-in)", ref url, 200))
+                {
+                    configuration.RecordingsRelayUrl = url;
+                    configuration.Save();
+                }
+                var token = configuration.RecordingsRelayToken;
+                ImGui.SetNextItemWidth(260f * ImGuiHelpers.GlobalScale);
+                if (ImGui.InputText("Password##recordings-relay-token", ref token, 200, ImGuiInputTextFlags.Password))
+                {
+                    configuration.RecordingsRelayToken = token;
+                    configuration.Save();
+                }
+                ImGui.TreePop();
+            }
+        }
+        if (recorder.Recording)
+            ImGui.TextUnformatted($"Recording: {recorder.Rows} rows, {recorder.Elapsed:mm\\:ss} -- {recorder.Path}");
+        else if (recorder.Armed)
+            ImGui.TextUnformatted("Armed: starts as soon as you're in the duty.");
+        else
+            ImGui.TextUnformatted(recorder.Path is { } last ? $"Idle. Last recording: {last}" : "Idle.");
+        if (recorder.MissingHooks.Count > 0)
+            ImGui.TextColored(new Vector4(1f, 0.6f, 0.3f, 1f), $"Not recorded this build: {string.Join(", ", recorder.MissingHooks)}");
     }
 
     private void DrawMultiplayerServer()

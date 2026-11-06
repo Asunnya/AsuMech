@@ -33,4 +33,14 @@ internal static class MathUtil
     {
         return (ushort)((value + 1000) * 100 * 0.32767f);
     }
+
+    public static float DequantizeRotation(ushort value)
+    {
+        return value / (float)ushort.MaxValue * (2 * MathF.PI) - MathF.PI;
+    }
+
+    public static float DequantizePosition(ushort value)
+    {
+        return value / 32.767f - 1000f;
+    }
 }

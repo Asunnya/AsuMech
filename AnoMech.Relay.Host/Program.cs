@@ -65,6 +65,13 @@ internal static class Program
             if (RelayOptions.TryParseNetwork(cidr, out var network)) options.TrustedProxies.Add(network);
             else { Console.Error.WriteLine($"--trusted-proxy: '{cidr}' isn't a valid CIDR (e.g. 127.0.0.1/32 or ::1/128)."); return; }
         }
+        options.RecordingsDir = NullIfEmpty(GetArg(args, "--recordings-dir"));
+        if (long.TryParse(GetArg(args, "--max-recording-bytes"), out var mrb)) options.MaxRecordingBytes = mrb;
+        foreach (var peer in GetArgs(args, "--recordings-from"))
+        {
+            if (Guid.TryParse(peer, out var peerId)) options.RecordingsFrom.Add(peerId);
+            else { Console.Error.WriteLine($"--recordings-from: '{peer}' isn't a peer id (the GUID the plugin shows under Multiplayer)."); return; }
+        }
         if (GetArg(args, "--relay-number") is { } relayNumber)
         {
             if (!int.TryParse(relayNumber, out var number))
@@ -200,8 +207,14 @@ internal static class AdminConsole
             Console.Error.WriteLine("Admin connections require HTTPS, except HTTP on loopback.");
             return;
         }
-        http = new HttpClient(new HttpClientHandler { AllowAutoRedirect = false }) { Timeout = TimeSpan.FromSeconds(5) };
+        http = new HttpClient(new HttpClientHandler { AllowAutoRedirect = false }) { Timeout = TimeSpan.FromSeconds(60) };
         http.DefaultRequestHeaders.Add("X-AnoMech-Admin-Token", adminToken);
+
+        if (args.Contains("--recordings"))
+        {
+            await PullRecordingsAsync(ValueOf(args, "--out") ?? "recordings");
+            return;
+        }
 
         var showSessions = false;
         while (true)
@@ -234,6 +247,45 @@ internal static class AdminConsole
                 break;
             }
         }
+    }
+
+    // Every recording the relay holds that isn't in the folder yet, expanded back to the CSV the
+    // plugin wrote (the .gz stays on the relay). Idempotent: run it after each raid night.
+    private static async Task PullRecordingsAsync(string outDir)
+    {
+        List<RecordingInfo> list;
+        try
+        {
+            list = JsonSerializer.Deserialize<List<RecordingInfo>>(await http.GetStringAsync($"{host}/recordings"), Json) ?? [];
+        }
+        catch (Exception e)
+        {
+            Console.Error.WriteLine($"Listing {host}/recordings failed: {e.Message} (does the relay run with --recordings-dir?)");
+            return;
+        }
+        Directory.CreateDirectory(outDir);
+        var pulled = 0;
+        foreach (var recording in list)
+        {
+            var csv = Path.Combine(outDir, recording.Name[..^".gz".Length]);
+            if (File.Exists(csv)) continue;
+            try
+            {
+                await using var download = await http.GetStreamAsync($"{host}/recordings/{recording.Name}");
+                await using var gzip = new GZipStream(download, CompressionMode.Decompress);
+                await using var file = File.Create(csv + ".part");
+                await gzip.CopyToAsync(file);
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine($"{recording.Name}: {e.Message}");
+                continue;
+            }
+            File.Move(csv + ".part", csv, overwrite: true);
+            pulled++;
+            Console.WriteLine($"{recording.Name} -> {csv} ({recording.Bytes:N0} bytes compressed, {recording.ModifiedUtc:u})");
+        }
+        Console.WriteLine($"{list.Count} on the relay, {pulled} new, in {Path.GetFullPath(outDir)}");
     }
 
     private static string? ValueOf(string[] args, string name)

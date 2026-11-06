@@ -208,6 +208,18 @@ public sealed partial class SimWorld : ISimObject, IDisposable
 
     internal SimEvents SimEvents { get; } = new();
 
+    // Every enemy action whose area is still to be checked, oldest first. Read-only: the handler
+    // that resolves them keeps it.
+    public IReadOnlyList<Game.HazardArea> Hazards => hazards;
+    private readonly List<Game.HazardArea> hazards = [];
+    internal void AddHazard(Game.HazardArea hazard) => hazards.Add(hazard);
+    internal void RemoveHazard(Game.HazardArea hazard) => hazards.Remove(hazard);
+
+    // Every resolve, as it happens, for whoever watches the run from outside the scenario (the
+    // lesson's hit report); the scenario itself listens through SimEvents.
+    public event Action<Game.ActionResolved>? ActionResolved;
+    internal void NotifyResolved(Game.ActionResolved resolved) => ActionResolved?.Invoke(resolved);
+
     // A one-shot VFX sheet row at a scenario-local point, e.g. FRU's Return marker (1013) under each
     // player. Shown on this client only.
     public void PlaceGroundVfx(uint vfxId, Vector3 position)
@@ -237,6 +249,7 @@ public sealed partial class SimWorld : ISimObject, IDisposable
     public void Despawn()
     {
         SimEvents.Clear();
+        hazards.Clear();
         children.Despawn();
         enemyList.Clear();
         Obstacles.Clear();
