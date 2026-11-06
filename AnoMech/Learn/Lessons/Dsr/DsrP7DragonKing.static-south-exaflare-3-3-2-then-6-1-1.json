@@ -145,7 +145,7 @@
         "cls": "DsrP7DragonKingAi",
         "from": 73.79,
         "to": 234.73,
-        "line": 75
+        "line": 74
       },
       "title": "After akh Morn\u0027s Edge resolves",
       "cue": "Akh Morn\u0027s Edge resolves",
@@ -169,7 +169,7 @@
         "cls": "DsrP7DragonKingAi",
         "from": 80.15,
         "to": 241.2,
-        "line": 76
+        "line": 75
       },
       "title": "After trinity hits you",
       "cue": "Trinity hits you",
@@ -193,7 +193,7 @@
         "cls": "DsrP7DragonKingAi",
         "from": 84.21001,
         "to": 164.15001,
-        "line": 79
+        "line": 78
       },
       "title": "After trinity hits you",
       "cue": "Trinity hits you",
@@ -223,7 +223,7 @@
         "cls": "DsrP7DragonKingAi",
         "from": 95.07,
         "to": 175.06,
-        "line": 81
+        "line": 80
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
@@ -236,7 +236,7 @@
         "cls": "DsrP7DragonKingAi",
         "from": 99.08,
         "to": 179.02,
-        "line": 82
+        "line": 81
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
@@ -249,7 +249,7 @@
         "cls": "DsrP7DragonKingAi",
         "from": 103.14,
         "to": 183.08,
-        "line": 83
+        "line": 82
       },
       "title": "After sprint on you",
       "cue": "Sprint on you",
@@ -273,7 +273,7 @@
         "cls": "DsrP7DragonKingAi",
         "from": 113.39,
         "to": 193.33,
-        "line": 84
+        "line": 83
       },
       "title": "After trinity hits you",
       "cue": "Trinity hits you",
@@ -295,21 +295,8 @@
     {
       "key": {
         "cls": "DsrP7DragonKingAi",
-        "from": 147.28,
-        "to": 227.2,
-        "line": 73
-      },
-      "title": "After holmgang on another player",
-      "cue": "Holmgang on another player",
-      "rule": "Stand on waymark 1.",
-      "tolerance": 2,
-      "skip": false
-    },
-    {
-      "key": {
-        "cls": "DsrP7DragonKingAi",
         "time": 247.41,
-        "line": 88
+        "line": 87
       },
       "title": "After trinity hits you",
       "cue": "Trinity hits you",
