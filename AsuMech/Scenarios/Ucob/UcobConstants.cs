@@ -109,6 +109,8 @@ public class UcobConstants
         public const ushort LandWaker = 863;
         public const ushort DarkForce = 864;
         public const ushort GunmetalSoul = 1931;
+        public const ushort PiercingResistanceDownII = 0x59B;
+        public const ushort DamageUp = 0x122;
     }
 
     public const uint HeavensfallKnockback = 115;
@@ -142,6 +144,7 @@ public class UcobConstants
     {
         public const ushort Fireball = 5;
         public const ushort TempestWing = 4;
+        public const ushort BahamutsFavor = 0x43;
     }
 
     // Lohs Daih is a Transfiguration status: its param is the Transformation row the boss
@@ -167,6 +170,9 @@ public class UcobConstants
         public const ushort TrioLand = 0x1E43;
         public const ushort TwintaniaTrioLand = 0x1E44;
         public const ushort NaelOrBahamutArrives = 0x1E43;
+        // UNVERIFIED what they show: the adds' P4 entrance.
+        public const ushort NaelReturns = 0x1E43;
+        public const ushort TwintaniaReturns = 0x1E44;
     }
 
     public const uint MusicDirector = 0x80000004;
@@ -243,5 +249,8 @@ public class UcobConstants
         public const uint HeavensfallTrio = 0x26E5;
         public const uint TenstrikeTrio = 0x26E6;
         public const uint GrandOctet = 0x26E7;
+        public const uint Megaflare = 0x26BA;
+        public const uint WhiteFury = 0x26C4;
+        public const uint PrimeBahamutsFavor = 0x26E8;
     }
 }
