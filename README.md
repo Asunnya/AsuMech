@@ -152,7 +152,16 @@ All using default NA pf strats unless noted otherwise:
     - Primal Roulette _by [Asunnya](https://github.com/Asunnya)_
 - The Unending Coil of Bahamut (Ultimate) _by [RoarkGit](https://github.com/RoarkGit)_
     - P1 Twintania (Plummet, Twister, Fireball stacks, Death Sentence tank swaps, Liquid Hell baits, Neurolinks and Hatches) _by [Asunnya](https://github.com/Asunnya)_
-    - P2 Nael deus Darnus (Heavensfall, Thermionic Burst slices, Meteor Streams, Dalamud Dive, Nael's quotes, fire/ice, Thunderstruck, Doom and Wings of Salvation, up to the Ravensbeak before divebombs) _by [Asunnya](https://github.com/Asunnya)_
+    - P2 Nael deus Darnus (Heavensfall, Thermionic Burst slices, Meteor Streams, Dalamud Dive, Nael's quotes, fire/ice, Thunderstruck, Doom and Wings of Salvation, Ravensbeak, then the push or, optionally, the divebombs) _by [Asunnya](https://github.com/Asunnya)_
+    - P3 Bahamut Prime _by [Asunnya](https://github.com/Asunnya)_
+      - Quickmarch Trio (dives, Twisters, Megaflare spreads and stack, Earth Shakers, Tempest Wing, Flare Breath)
+      - Blackfire Trio (Liquid Hell, Thermionic Beam, Megaflare towers and stack, Hypernovas, Gigaflare)
+      - Fellruin Trio (Nael's quote, Tempest Wing, Aetheric Profusion in the Neurolinks, Meteor Streams)
+      - Heavensfall Trio (towers, Heavensfall knockback, Thermionic Burst slices, Hypernovas, Fireball)
+      - Tenstrike Trio (Hatches in the Neurolinks, Meteor Streams, two sets of Earth Shakers)
+      - Grand Octet (eight dives in turn, Megaflare towers and stacks, with or without tank LB3)
+    - P4 Adds (Twintania and Nael together: Plummet, Liquid Hell, Hatches, Twisters, Nael's triple quotes, Megaflare, tank swap) _by [Asunnya](https://github.com/Asunnya)_
+    - P5 Golden Bahamut (Morn Afah stacks, Akh Morn with tank invulns, Exaflares) _by [Asunnya](https://github.com/Asunnya)_
     - Exaflares
 - Dragonsong's Reprise (Ultimate) _by [Asunnya](https://github.com/Asunnya)_
     - P1 Knights (pull to Thordan: Hyperdimensional Slash, Shining Blade, Playstation, Holiest Hallowing interrupts, Pure of Heart)

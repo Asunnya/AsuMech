@@ -58,7 +58,15 @@ using AsuMech.Scenarios.Top.P6AlphaOmega;
 using AsuMech.Scenarios.Top.P6WaveCannon2;
 using AsuMech.Scenarios.Ucob.P1Twintania;
 using AsuMech.Scenarios.Ucob.P2Nael;
+using AsuMech.Scenarios.Ucob.P3Blackfire;
+using AsuMech.Scenarios.Ucob.P3Quickmarch;
+using AsuMech.Scenarios.Ucob.P3Fellruin;
+using AsuMech.Scenarios.Ucob.P3Heavensfall;
+using AsuMech.Scenarios.Ucob.P3GrandOctet;
+using AsuMech.Scenarios.Ucob.P3Tenstrike;
+using AsuMech.Scenarios.Ucob.P4Adds;
 using AsuMech.Scenarios.Ucob.P5Exaflares;
+using AsuMech.Scenarios.Ucob.P5GoldenBahamut;
 using AsuMech.Scenarios.Umad;
 using AsuMech.Scenarios.Umad.P1TeleTrouncing;
 using AsuMech.Scenarios.Umad.P2Forsaken;
@@ -164,7 +172,15 @@ public sealed class ScenarioCatalog
         new TeaP4PerfectAlexanderScenario(),
         new UcobP1TwintaniaScenario(),
         new UcobP2NaelScenario(),
+        new UcobP3QuickmarchScenario(),
+        new UcobP3BlackfireScenario(),
+        new UcobP3FellruinScenario(),
+        new UcobP3HeavensfallScenario(),
+        new UcobP3TenstrikeScenario(),
+        new UcobP3GrandOctetScenario(),
+        new UcobP4AddsScenario(),
         new UcobP5ExaflaresScenario(),
+        new UcobP5GoldenBahamutScenario(),
         new DsrP1KnightsScenario(),
         new DsrP2ThordanScenario(),
         new DsrP2MeteorsScenario(),

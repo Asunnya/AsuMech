@@ -29,14 +29,15 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
     private const float FarEarRadius = 11f;
     private static readonly float[] FarEarDegrees = [-35f, 35f];
     private const float FireOutRadius = 11f;
-    private const float ChariotRadius = 9.5f;
+    private const float ChariotRadius = 11f;
     private const float ClockRadius = 5f;
     private const float RavenDynamoDistance = 2f;
-    private const float RavenChariotDistance = 9f;
+    private const float RavenChariotDistance = 11.5f;
     private const float PuddleClearance = 6f;
     private const float DodgeTrigger = 5.2f;
     private const float EarClearance = 6.5f;
     private const float DoomWalk = 4f;
+    private const float CleanseSearchRadius = 3f;
     private const float WalkRecheck = 0.4f;
     private const float StackLead = 2.6f;
     private const float After = 0.05f;
@@ -117,7 +118,197 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
 
         foreach (var at in times)
             ai.Move(at, () => AiMove.Create(Spots(world.Events.Elapsed)).NaturalOrder(), jitter: 0f, sprint: true);
+
+        if (state.Push == NaelPush.NoPush) BaitTheDivebombs(ai);
     }
+
+    private const float BaitRadius = 21f;
+    private const float StagingRadius = 14f;
+    private const float StepOffThePuddle = 7f;
+    private const float LongestDashToTheBaitSpot = 10f;
+    private const float FirstStagingSwing = 25f;
+    private const float CentreClusterRadius = 1.5f;
+    private const float RegroupBeforeTheQuote = 1.5f;
+    private const float WaitingShare = 0.6f;
+    private const float SpreadOutRadius = 7f;
+    private const float TankDiveRadius = 12f;
+    private const float PathClearance = 1.5f;
+    private const float HalfSlot = 22.5f;
+    private const float MeetTheLastBaitRadius = 6f;
+    private static readonly float[] SingleDragonOffsets = [35f, -35f, 25f, -25f, 50f, -50f, 15f, -15f, 60f, -60f, 70f, -70f, 80f, -80f];
+    private static readonly float[] StagingSwings = [30f, -30f, 40f, -40f, 20f, -20f, 50f, -50f, 60f, -60f];
+
+    private readonly Vector2[] baitSpots = new Vector2[State.Divebombs];
+    private readonly Vector2[] stagingSpots = new Vector2[State.Divebombs];
+    private readonly Vector2[] sideSteps = new Vector2[State.Divebombs];
+
+    private void BaitTheDivebombs(AiManager ai)
+    {
+        PlanTheBaitRoutes();
+        var everyone = Enum.GetValues<PartyRole>();
+        ai.Move(Scenario.DivebombQuoteAt, () => AiMove.Create(Cluster(Vector2.Zero, everyone)).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(Scenario.DivebombMarkers[0] + After, () => Send(Bait(0), stagingSpots[0]), jitter: 0f, sprint: true);
+        ai.Move(Scenario.Hypernovas[0] + After, () => Send(Bait(0), baitSpots[0]), jitter: 0f, sprint: true);
+        ai.Move(Scenario.DivebombMarkers[1] + After, () => Send(Bait(1), stagingSpots[1] * WaitingShare), jitter: 0f, sprint: true);
+        ai.Move(Scenario.DivebombLocks[0] + After, () => Send(Bait(0), Vector2.Zero), jitter: 0f, sprint: true);
+        ai.Move(Scenario.Hypernovas[1] + After, () => Send(Bait(1), stagingSpots[1]), jitter: 0f, sprint: true);
+        ai.Move(Scenario.Hypernovas[2] + After, () => Send(Bait(1), sideSteps[1]), jitter: 0f, sprint: true);
+        ai.Move(Scenario.Hypernovas[3] + After, () => Send(Bait(1), baitSpots[1]), jitter: 0f, sprint: true);
+        ai.Move(Scenario.Hypernovas[3] + After, () => Send(Bait(2), baitSpots[2]), jitter: 0f, sprint: true);
+        ai.Move(Scenario.DivebombLocks[1] + After, () => Send(Bait(1), Vector2.Zero), jitter: 0f, sprint: true);
+        ai.Move(Scenario.DivebombLocks[1] + RegroupBeforeTheQuote, OutForTheFirstQuoteMove, jitter: 0f, sprint: true);
+        ai.Move(Scenario.DivebombLocks[1] + Scenario.CauterizeCastSeconds + After, InForTheSecondQuoteMove, jitter: 0f, sprint: true);
+        ai.Move(Scenario.DivebombQuoteMoves[1] + After, () => AiMove.Create(Cluster(Vector2.Zero, everyone)).NaturalOrder(), jitter: 0f, sprint: true);
+    }
+
+    private PartyRole Bait(int dive) => state.DivebombTargets[dive];
+
+    private static ISwapStep Send(PartyRole role, Vector2 spot)
+    {
+        var spots = new Vector2?[8];
+        spots[(int)role] = spot;
+        return AiMove.Create(spots).NaturalOrder();
+    }
+
+    private void PlanTheBaitRoutes()
+    {
+        var dives = state.DiveDragons;
+        baitSpots[0] = Compass(MidwayClockwise(dives[0][0], dives[0][1])) * BaitRadius;
+        stagingSpots[0] = Compass(CompassDegrees(baitSpots[0]) + FirstStagingSwing) * StagingRadius;
+        sideSteps[0] = baitSpots[0];
+        var betweenTheLastDragons = Compass(MidwayClockwise(dives[2][0], dives[2][1])) * BaitRadius;
+        var pastTheLastDragon = Compass(dives[2][1] * 45f + HalfSlot) * BaitRadius;
+        var best = SecondBaitRoute(betweenTheLastDragons);
+        if (best.Score < PathClearance && SecondBaitRoute(pastTheLastDragon) is var past && past.Score > best.Score) best = past;
+        (baitSpots[1], stagingSpots[1], sideSteps[1], baitSpots[2]) = (best.Second.Bait, best.Second.Staging, best.Second.SideStep, best.ThirdBait);
+    }
+
+    private (float Score, BaitRoute Second, Vector2 ThirdBait) SecondBaitRoute(Vector2 thirdBait)
+    {
+        var dives = state.DiveDragons;
+        var firstLines = LinesOf(dives[0], baitSpots[0]);
+        var best = (Score: float.MinValue, Second: default(BaitRoute), ThirdBait: thirdBait);
+        foreach (var offset in SingleDragonOffsets)
+        {
+            var secondBait = Compass(dives[1][0] * 45f + offset) * BaitRadius;
+            var second = BestRoute(secondBait, firstLines, [stagingSpots[0], baitSpots[0]]);
+            var secondLines = LinesOf(dives[1], secondBait);
+            var hard = MathF.Min(OutsideLines(firstLines, secondBait, secondBait), OutsideLines(secondLines, Vector2.Zero, Vector2.Zero) - CentreClusterRadius);
+            var score = hard < PathClearance ? hard - 100f : MathF.Min(second.Clearance, MathF.Min(
+                OutsideLines(secondLines, Vector2.Zero, thirdBait),
+                AwayFromPuddles([stagingSpots[0], baitSpots[0], second.Staging, second.SideStep], Vector2.Zero, thirdBait)));
+            if (score > best.Score) best = (score, second, thirdBait);
+            if (score >= PathClearance) break;
+        }
+        return best;
+    }
+
+    private readonly record struct BaitRoute(Vector2 Bait, Vector2 Staging, Vector2 SideStep, float Clearance);
+
+    private static BaitRoute BestRoute(Vector2 bait, IReadOnlyList<(Vector2 From, Vector2 Aim)> earlierLines, IReadOnlyList<Vector2> earlierPuddles)
+    {
+        var best = new BaitRoute(bait, bait, bait, float.MinValue);
+        foreach (var swing in StagingSwings)
+        {
+            var staging = Compass(CompassDegrees(bait) + swing) * StagingRadius;
+            for (var degrees = 0f; degrees < 360f; degrees += 30f)
+            {
+                var sideStep = staging + Compass(degrees) * StepOffThePuddle;
+                var withStaging = earlierPuddles.Append(staging).ToList();
+                var clearance = new[]
+                {
+                    OutsideLines(earlierLines, sideStep, bait),
+                    LongestDashToTheBaitSpot - Vector2.Distance(sideStep, bait),
+                    BaitRadius + 0.5f - sideStep.Length(),
+                    sideStep.Length() - (SpreadOutRadius + State.HypernovaPuddleRadius + 1f),
+                    AwayFromPuddles(earlierPuddles, Vector2.Zero, staging),
+                    AwayFromPuddles(earlierPuddles, staging, sideStep),
+                    AwayFromPuddles(withStaging, sideStep, bait),
+                    AwayFromPuddles(withStaging.Append(sideStep).ToList(), bait, Vector2.Zero),
+                }.Min();
+                if (clearance > best.Clearance) best = new BaitRoute(bait, staging, sideStep, clearance);
+            }
+        }
+        return best;
+    }
+
+    private static List<(Vector2 From, Vector2 Aim)> LinesOf(IEnumerable<int> slots, Vector2 aim)
+        => slots.Select(slot => (State.DragonPosition(slot), aim)).ToList();
+
+    private static float OutsideLines(IEnumerable<(Vector2 From, Vector2 Aim)> lines, Vector2 start, Vector2 end)
+        => !lines.Any() ? float.MaxValue : lines.Min(line => Walk(start, end).Min(at => OutsideLine(line.From, line.Aim, at)));
+
+    private static float OutsideLine(Vector2 from, Vector2 aim, Vector2 at)
+    {
+        var along = Vector2.Normalize(aim - from);
+        var offset = at - from;
+        var ahead = Vector2.Dot(offset, along);
+        var aside = MathF.Abs(along.X * offset.Y - along.Y * offset.X);
+        return MathF.Max(aside - State.CauterizeHalfWidth, MathF.Max(-ahead, ahead - State.CauterizeLength));
+    }
+
+    private static float AwayFromPuddles(IReadOnlyList<Vector2> puddles, Vector2 start, Vector2 end)
+        => puddles.Count == 0 ? float.MaxValue : puddles.Min(p => Walk(start, end).Min(at => Vector2.Distance(at, p))) - State.HypernovaPuddleRadius;
+
+    private static IEnumerable<Vector2> Walk(Vector2 start, Vector2 end)
+    {
+        var steps = Math.Max(1, (int)(Vector2.Distance(start, end) / 0.5f));
+        for (var i = 0; i <= steps; i++) yield return Vector2.Lerp(start, end, i / (float)steps);
+    }
+
+    private ISwapStep OutForTheFirstQuoteMove()
+    {
+        var (spread, tank) = SpreadAndTankDiveBearings();
+        var spots = Cluster(Vector2.Zero, Enum.GetValues<PartyRole>().Where(r => r != MainTank));
+        spots[(int)MainTank] = Compass(tank) * TankDiveRadius;
+        if (state.DivebombQuote.First == NaelMove.MeteorStream)
+            for (var i = 0; i < state.DivebombSpreads.Count; i++)
+                spots[(int)state.DivebombSpreads[i]] = Compass(spread + 90f * i) * SpreadOutRadius;
+        spots[(int)Bait(2)] = null;
+        return AiMove.Create(spots).NaturalOrder();
+    }
+
+    private ISwapStep InForTheSecondQuoteMove()
+    {
+        var stackOnTheLastBait = state.DivebombQuote.Second == NaelMove.ThermionicBeam && state.DivebombStackTarget == Bait(2);
+        var meet = stackOnTheLastBait ? Vector2.Normalize(baitSpots[2]) * MeetTheLastBaitRadius : Vector2.Zero;
+        var spots = Cluster(meet, Enum.GetValues<PartyRole>());
+        if (state.DivebombQuote.Second == NaelMove.DalamudDive) spots[(int)MainTank] = null;
+        return AiMove.Create(spots).NaturalOrder();
+    }
+
+    private (float Spread, float Tank) SpreadAndTankDiveBearings()
+    {
+        var puddles = new[] { stagingSpots[0], baitSpots[0], stagingSpots[1], sideSteps[1] };
+        var secondLines = LinesOf(state.DiveDragons[1], baitSpots[1]);
+        var best = (Score: float.MinValue, Spread: 0f, Tank: 0f);
+        foreach (var spread in new[] { 0f, 45f, 22.5f, 67.5f })
+            for (var k = 0; k < 4; k++)
+            {
+                var tank = spread + 45f + 90f * k;
+                var tankSpot = Compass(tank) * TankDiveRadius;
+                var spreads = Enumerable.Range(0, 4).Select(i => Compass(spread + 90f * i) * SpreadOutRadius).ToList();
+                var score = new[]
+                {
+                    AwayFromPuddles(puddles, Vector2.Zero, tankSpot),
+                    OutsideLines(secondLines, tankSpot, tankSpot),
+                    Walk(baitSpots[2], Vector2.Zero).Min(at => Vector2.Distance(at, tankSpot)) - State.DalamudDiveRadius,
+                    spreads.Min(at => MathF.Min(AwayFromPuddles(puddles, Vector2.Zero, at), OutsideLines(secondLines, at, at))),
+                }.Min();
+                if (score > best.Score) best = (score, spread, tank);
+            }
+        return (best.Spread, best.Tank);
+    }
+
+    private static float MidwayClockwise(int firstSlot, int secondSlot) => (firstSlot + secondSlot) * 45f / 2f;
+
+    private static Vector2 Compass(float degrees)
+    {
+        var r = degrees * MathF.PI / 180f;
+        return new Vector2(MathF.Sin(r), -MathF.Cos(r));
+    }
+
+    private static float CompassDegrees(Vector2 at) => MathF.Atan2(at.X, -at.Y) * 180f / MathF.PI;
 
     private static readonly float[] DanceStarts = [Scenario.QuoteMoves[0][1] + After, Scenario.QuoteMoves[1][1] + After, Fireball(3) + After];
     private const float FireballAloneAgainFrom = 89.0f;
@@ -192,6 +383,15 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
         (danceStep, danceRadius) = (best.Step, best.Radius);
     }
 
+    private Vector2 CleanseLaidAt(Vector2 expected)
+        => world.Children.OfType<SimEventObject>()
+            .Where(e => e.IsActive && e.SpawnConfig.EObjId == UcobConstants.EObjId.WingsOfSalvationCleanse)
+            .Select(e => new Vector2(e.Position.X, e.Position.Z))
+            .Where(at => Vector2.Distance(at, expected) <= CleanseSearchRadius)
+            .OrderBy(at => Vector2.Distance(at, expected))
+            .Cast<Vector2?>()
+            .FirstOrDefault() ?? expected;
+
     private bool StillDoomed(PartyRole role, float at)
         => at > world.Events.Elapsed + 0.05f || world.Party.Get(role) is not { } member || member.HasStatus(UcobConstants.StatusId.Doom);
 
@@ -233,7 +433,7 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
     private Vector2 Spot(PartyRole role, float now, bool afterWalk = false)
     {
         foreach (var walk in doomWalks)
-            if (!afterWalk && walk.Role == role && now >= walk.From && now < walk.Until && StillDoomed(role, now)) return walk.Circle;
+            if (!afterWalk && walk.Role == role && now >= walk.From && now < walk.Until && StillDoomed(role, now)) return CleanseLaidAt(walk.Circle);
         if (dodges.TryGetValue(role, out var dodge) && now >= dodge.From && now < dodge.Until) return dodge.Spot;
         var alone = state.FireTargets[State.FireTakenAlone];
         if (role == alone && ((now >= Scenario.FireTethers[State.FireTakenAlone] && now < Fireball(State.FireTakenAlone) + After)
@@ -280,12 +480,23 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
     private Vector2 OffOthersCircles(PartyRole role, Vector2 spot, float now)
     {
         if (now > world.Events.Elapsed + 0.05f || world.Party.Get(role) is not { } member || !member.HasStatus(UcobConstants.StatusId.Doom)) return spot;
+        var from = Flat(member.Position) ?? spot;
         foreach (var walk in doomWalks)
         {
-            if (walk.Role == role || now < walk.From - 0.7f || now > walk.Until || Vector2.Distance(spot, walk.Circle) > State.CleanseRadius + 1f) continue;
-            return walk.Circle + Vector2.Normalize(spot - walk.Circle + new Vector2(0.001f, 0f)) * (State.CleanseRadius + 1.5f);
+            if (walk.Role == role || now < walk.From - 0.7f || now > walk.Until) continue;
+            if (Vector2.Distance(spot, walk.Circle) <= State.CleanseRadius + 1f)
+                return walk.Circle + Vector2.Normalize(spot - walk.Circle + new Vector2(0.001f, 0f)) * (State.CleanseRadius + 1.5f);
+            if (DistanceToSegment(walk.Circle, from, spot) <= State.CleanseRadius + 1f)
+                return walk.Circle + Vector2.Normalize(from - walk.Circle + new Vector2(0.001f, 0f)) * (State.CleanseRadius + 1.5f);
         }
         return spot;
+    }
+
+    private static float DistanceToSegment(Vector2 point, Vector2 a, Vector2 b)
+    {
+        var ab = b - a;
+        var t = ab.LengthSquared() < 1e-6f ? 0f : Math.Clamp(Vector2.Dot(point - a, ab) / ab.LengthSquared(), 0f, 1f);
+        return Vector2.Distance(point, a + ab * t);
     }
 
     private Vector2 Ear(int set, int holder, float now)

@@ -1,0 +1,330 @@
+{
+  "scenario": "UcobP4AddsScenario",
+  "casts": [
+    {
+      "actionId": 9960,
+      "name": "Bahamut\u0027s Favor",
+      "start": 9.483,
+      "resolve": 9.483,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9896,
+      "name": "Plummet",
+      "start": 19.067,
+      "resolve": 19.067,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9909,
+      "name": "Bahamut\u0027s Claw",
+      "start": 19.067,
+      "resolve": 19.067,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9909,
+      "name": "Bahamut\u0027s Claw",
+      "start": 19.867,
+      "resolve": 19.867,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9909,
+      "name": "Bahamut\u0027s Claw",
+      "start": 20.683,
+      "resolve": 20.683,
+      "occurrence": 3
+    },
+    {
+      "actionId": 9909,
+      "name": "Bahamut\u0027s Claw",
+      "start": 21.483,
+      "resolve": 21.483,
+      "occurrence": 4
+    },
+    {
+      "actionId": 9909,
+      "name": "Bahamut\u0027s Claw",
+      "start": 22.283,
+      "resolve": 22.283,
+      "occurrence": 5
+    },
+    {
+      "actionId": 9901,
+      "name": "Liquid Hell",
+      "start": 22.366,
+      "resolve": 22.366,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9901,
+      "name": "Liquid Hell",
+      "start": 23.533,
+      "resolve": 23.533,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9901,
+      "name": "Liquid Hell",
+      "start": 24.683,
+      "resolve": 24.683,
+      "occurrence": 3
+    },
+    {
+      "actionId": 9901,
+      "name": "Liquid Hell",
+      "start": 25.85,
+      "resolve": 25.85,
+      "occurrence": 4
+    },
+    {
+      "actionId": 9901,
+      "name": "Liquid Hell",
+      "start": 27.016,
+      "resolve": 27.016,
+      "occurrence": 5
+    },
+    {
+      "actionId": 9902,
+      "name": "Generate",
+      "start": 28.116,
+      "resolve": 30.816,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9898,
+      "name": "Twister",
+      "start": 33.383,
+      "resolve": 35.083,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9903,
+      "name": "Hatch",
+      "start": 33.933,
+      "resolve": 33.933,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9903,
+      "name": "Hatch",
+      "start": 34.616,
+      "resolve": 34.616,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9903,
+      "name": "Hatch",
+      "start": 36.466,
+      "resolve": 36.466,
+      "occurrence": 3
+    },
+    {
+      "actionId": 9916,
+      "name": "Lunar Dynamo",
+      "start": 43.183,
+      "resolve": 43.183,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9915,
+      "name": "Iron Chariot",
+      "start": 46.266,
+      "resolve": 46.266,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9918,
+      "name": "Raven Dive",
+      "start": 49.433,
+      "resolve": 49.433,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9898,
+      "name": "Twister",
+      "start": 50.499,
+      "resolve": 52.199,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9914,
+      "name": "Megaflare",
+      "start": 58.566,
+      "resolve": 63.266003,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9897,
+      "name": "Death Sentence",
+      "start": 67.667,
+      "resolve": 71.367,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9910,
+      "name": "Ravensbeak",
+      "start": 67.717,
+      "resolve": 71.417,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9896,
+      "name": "Plummet",
+      "start": 75.785,
+      "resolve": 75.785,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9909,
+      "name": "Bahamut\u0027s Claw",
+      "start": 75.818,
+      "resolve": 75.818,
+      "occurrence": 6
+    },
+    {
+      "actionId": 9909,
+      "name": "Bahamut\u0027s Claw",
+      "start": 76.619,
+      "resolve": 76.619,
+      "occurrence": 7
+    },
+    {
+      "actionId": 9909,
+      "name": "Bahamut\u0027s Claw",
+      "start": 77.435,
+      "resolve": 77.435,
+      "occurrence": 8
+    },
+    {
+      "actionId": 9909,
+      "name": "Bahamut\u0027s Claw",
+      "start": 78.236,
+      "resolve": 78.236,
+      "occurrence": 9
+    },
+    {
+      "actionId": 9909,
+      "name": "Bahamut\u0027s Claw",
+      "start": 79.036,
+      "resolve": 79.036,
+      "occurrence": 10
+    },
+    {
+      "actionId": 9901,
+      "name": "Liquid Hell",
+      "start": 84.92,
+      "resolve": 84.92,
+      "occurrence": 6
+    },
+    {
+      "actionId": 9901,
+      "name": "Liquid Hell",
+      "start": 86.121,
+      "resolve": 86.121,
+      "occurrence": 7
+    },
+    {
+      "actionId": 9901,
+      "name": "Liquid Hell",
+      "start": 87.271,
+      "resolve": 87.271,
+      "occurrence": 8
+    },
+    {
+      "actionId": 9901,
+      "name": "Liquid Hell",
+      "start": 88.471,
+      "resolve": 88.471,
+      "occurrence": 9
+    },
+    {
+      "actionId": 9901,
+      "name": "Liquid Hell",
+      "start": 89.638,
+      "resolve": 89.638,
+      "occurrence": 10
+    },
+    {
+      "actionId": 9902,
+      "name": "Generate",
+      "start": 90.755,
+      "resolve": 93.454994,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9898,
+      "name": "Twister",
+      "start": 96.023,
+      "resolve": 97.723,
+      "occurrence": 3
+    },
+    {
+      "actionId": 9903,
+      "name": "Hatch",
+      "start": 96.756,
+      "resolve": 96.756,
+      "occurrence": 4
+    },
+    {
+      "actionId": 9903,
+      "name": "Hatch",
+      "start": 98.973,
+      "resolve": 98.973,
+      "occurrence": 5
+    },
+    {
+      "actionId": 9915,
+      "name": "Iron Chariot",
+      "start": 105.925,
+      "resolve": 105.925,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9917,
+      "name": "Thermionic Beam",
+      "start": 109.042,
+      "resolve": 109.042,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9918,
+      "name": "Raven Dive",
+      "start": 112.293,
+      "resolve": 112.293,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9898,
+      "name": "Twister",
+      "start": 113.143,
+      "resolve": 114.842995,
+      "occurrence": 4
+    },
+    {
+      "actionId": 9924,
+      "name": "White Fury",
+      "start": 120.395,
+      "resolve": 123.09499,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Bahamut\u0027s Favor",
+    "Plummet",
+    "Bahamut\u0027s Claw",
+    "Liquid Hell",
+    "Generate",
+    "Twister",
+    "Hatch",
+    "Lunar Dynamo",
+    "Iron Chariot",
+    "Raven Dive",
+    "Megaflare",
+    "Death Sentence",
+    "Ravensbeak",
+    "Thermionic Beam",
+    "White Fury"
+  ]
+}

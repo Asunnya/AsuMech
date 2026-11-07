@@ -6,9 +6,8 @@ using AsuMech.Core.Game.Party;
 
 namespace AsuMech.Scenarios.Ucob.P2Nael;
 
-public enum NaelMove { LunarDynamo, IronChariot, ThermionicBeam, RavenDive }
-
-public sealed record NaelQuote(string Text, NaelMove First, NaelMove Second);
+// Push: the party kills her phase off after Ravensbeak and she leaves. NoPush: the divebombs follow.
+public enum NaelPush { Push, NoPush }
 
 public sealed class UcobP2NaelState
 {
@@ -29,21 +28,31 @@ public sealed class UcobP2NaelState
         ],
     ];
 
+    public static readonly NaelQuote[] DivebombQuoteChoices =
+    [
+        new("Fleeting light! 'Amid a rain of stars, exalt you the red moon!'", NaelMove.MeteorStream, NaelMove.DalamudDive),
+        new("Fleeting light! 'Neath the red moon, scorch you the earth!'", NaelMove.DalamudDive, NaelMove.ThermionicBeam),
+    ];
+
     public const float ThermionicBurstRange = 24f;
-    public const float ThermionicBurstHalfAngle = MathF.PI / 16f; // UNVERIFIED
+    public const float ThermionicBurstHalfAngle = UcobConstants.Geometry.ThermionicBurstHalfAngle;
     public const float MeteorStreamRadius = 4f;
     public const float DalamudDiveRadius = 5f;
-    public const float LunarDynamoInner = 6f; // UNVERIFIED
-    // UNVERIFIED: someone 6.6y from her was still hit.
-    public const float IronChariotRadius = 7f;
+    public const float LunarDynamoInner = UcobConstants.Geometry.LunarDynamoInner;
+    public const float IronChariotRadius = UcobConstants.Geometry.IronChariotRadius;
     public const float ThermionicBeamRadius = 4f;
-    public const int ThermionicBeamMinimumStack = 4; // UNVERIFIED
+    public const int ThermionicBeamMinimumStack = 4;
     public const float RavenDiveRadius = 3f;
     public const float ThunderstruckRadius = 5f;
     public const float DragonFireballRadius = 4f;
     public const float WingsRadius = 4f;
     public const float CleanseRadius = 1.5f; // UNVERIFIED
     public const float DragonDistance = 24f;
+    public const float CauterizeLength = 48f;
+    public const float CauterizeHalfWidth = 10f;
+    public const float HypernovaRadius = 5f;
+    // UNVERIFIED: the puddle burns as wide as the hit that drops it.
+    public const float HypernovaPuddleRadius = 5f;
 
     public static readonly int[] ThunderCounts = [2, 2, 2, 2];
     public static readonly int[] DoomCounts = [2, 3, 3];
@@ -52,6 +61,8 @@ public sealed class UcobP2NaelState
     public const int FireTethers = 4;
     // The second fire is taken alone; the rest are shared by the whole party.
     public const int FireTakenAlone = 1;
+    public const int Divebombs = 3;
+    public const int DivebombSpreadCount = 4;
 
     public IReadOnlyList<NaelQuote> Quotes { get; }
     public IReadOnlyList<PartyRole> MeteorOrder { get; }
@@ -65,6 +76,16 @@ public sealed class UcobP2NaelState
     public PartyRole RavenDiveTarget { get; }
     // Bearings, in 45° steps clockwise from north, of the five dragons.
     public IReadOnlyList<int> DragonSlots { get; }
+
+    public NaelPush Push { get; }
+    public NaelQuote DivebombQuote { get; }
+    // Never the main tank, who holds Nael for her dive.
+    public IReadOnlyList<PartyRole> DivebombTargets { get; }
+    // Slots each divebomb sends, from north clockwise: the first two, the third, the last two.
+    public IReadOnlyList<IReadOnlyList<int>> DiveDragons { get; }
+    // UNVERIFIED: the spread and the stack spare the main tank, who takes the dive.
+    public IReadOnlyList<PartyRole> DivebombSpreads { get; }
+    public PartyRole DivebombStackTarget { get; }
 
     public UcobP2NaelState(Rng rng, UcobP2NaelStateOverrides? overrides = null)
     {
@@ -87,7 +108,30 @@ public sealed class UcobP2NaelState
             }).ToList();
         BeamTargets = overrides.BeamTargets ?? Enumerable.Range(0, 3).Select(_ => rng.NextObj(roles)).ToList();
         RavenDiveTarget = overrides.RavenDiveTarget ?? rng.NextObj(roles);
-        DragonSlots = overrides.DragonSlots ?? rng.Shuffle(Enumerable.Range(0, 8)).Take(5).ToList();
+        var rolledSlots = rng.Shuffle(Enumerable.Range(0, 8)).Take(5).ToList();
+        DragonSlots = overrides.DragonSlots ?? rolledSlots;
+
+        Push = overrides.Push;
+        var rolledQuote = rng.NextObj(DivebombQuoteChoices);
+        DivebombQuote = overrides.DivebombQuote is { } quote ? DivebombQuoteChoices[quote] : rolledQuote;
+        DivebombTargets = RollDivebombs(rng, overrides.DivebombPicks);
+        var clockwise = DragonSlots.Order().ToList();
+        DiveDragons = [clockwise.Take(2).ToList(), clockwise.Skip(2).Take(1).ToList(), clockwise.Skip(3).ToList()];
+        var notMainTank = roles.Where(r => r != PartyRole.MainTank).ToArray();
+        var rolledSpreads = rng.Shuffle(notMainTank).Take(DivebombSpreadCount).ToList();
+        DivebombSpreads = overrides.DivebombSpreads ?? rolledSpreads;
+        var rolledStack = rng.NextObj(notMainTank);
+        DivebombStackTarget = overrides.DivebombStackTarget ?? rolledStack;
+    }
+
+    private static IReadOnlyList<PartyRole> RollDivebombs(Rng rng, PartyRole?[] picks)
+    {
+        var kept = picks.Select(p => p is { } role && role != PartyRole.MainTank ? p : null).ToArray();
+        for (var i = 0; i < kept.Length; i++)
+            if (kept[i] is { } role && Array.IndexOf(kept, role) < i) kept[i] = null;
+        var pool = rng.Shuffle(Enum.GetValues<PartyRole>().Where(r => r != PartyRole.MainTank)).Where(r => !kept.Contains(r)).ToList();
+        var next = 0;
+        return kept.Select(p => p ?? pool[next++]).ToList();
     }
 
     // UNVERIFIED: the third fire never tethers the one still Firescorched from the second.

@@ -1,0 +1,139 @@
+{
+  "scenario": "UcobP3TenstrikeScenario",
+  "casts": [
+    {
+      "actionId": 9958,
+      "name": "Tenstrike Trio",
+      "start": 5,
+      "resolve": 8.7,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9902,
+      "name": "Generate",
+      "start": 13.35,
+      "resolve": 16.050001,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9920,
+      "name": "Meteor Stream",
+      "start": 17.267,
+      "resolve": 17.267,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9902,
+      "name": "Generate",
+      "start": 17.483,
+      "resolve": 20.183,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9920,
+      "name": "Meteor Stream",
+      "start": 18.283,
+      "resolve": 18.283,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9903,
+      "name": "Hatch",
+      "start": 18.633,
+      "resolve": 18.633,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9920,
+      "name": "Meteor Stream",
+      "start": 19.267,
+      "resolve": 19.267,
+      "occurrence": 3
+    },
+    {
+      "actionId": 9920,
+      "name": "Meteor Stream",
+      "start": 20.283,
+      "resolve": 20.283,
+      "occurrence": 4
+    },
+    {
+      "actionId": 9920,
+      "name": "Meteor Stream",
+      "start": 21.267,
+      "resolve": 21.267,
+      "occurrence": 5
+    },
+    {
+      "actionId": 9920,
+      "name": "Meteor Stream",
+      "start": 22.3,
+      "resolve": 22.3,
+      "occurrence": 6
+    },
+    {
+      "actionId": 9903,
+      "name": "Hatch",
+      "start": 22.766,
+      "resolve": 22.766,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9920,
+      "name": "Meteor Stream",
+      "start": 23.266,
+      "resolve": 23.266,
+      "occurrence": 7
+    },
+    {
+      "actionId": 9920,
+      "name": "Meteor Stream",
+      "start": 24.3,
+      "resolve": 24.3,
+      "occurrence": 8
+    },
+    {
+      "actionId": 9945,
+      "name": "Earth Shaker",
+      "start": 30.433,
+      "resolve": 30.433,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9946,
+      "name": "Earth Shaker",
+      "start": 30.433,
+      "resolve": 30.433,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9945,
+      "name": "Earth Shaker",
+      "start": 35.483,
+      "resolve": 35.483,
+      "occurrence": 3
+    },
+    {
+      "actionId": 9946,
+      "name": "Earth Shaker",
+      "start": 35.483,
+      "resolve": 35.483,
+      "occurrence": 4
+    },
+    {
+      "actionId": 9942,
+      "name": "Gigaflare",
+      "start": 37.566,
+      "resolve": 43.266003,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Tenstrike Trio",
+    "Generate",
+    "Meteor Stream",
+    "Hatch",
+    "Earth Shaker",
+    "Gigaflare"
+  ]
+}

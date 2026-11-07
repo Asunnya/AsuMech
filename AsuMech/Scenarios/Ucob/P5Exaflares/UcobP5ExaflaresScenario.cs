@@ -11,14 +11,9 @@ using Actions = AsuMech.Scenarios.Ucob.UcobActions;
 
 namespace AsuMech.Scenarios.Ucob.P5Exaflares;
 
-// UCOB P5 "Exaflares": Bahamut Prime lays six parallel lanes across the arena, fired as three
-// pairs 3s apart, each lane erupting six times in 8y steps. Runs solo or with bots
-// (UcobP5ExaflaresAi).
-//
-// Each lane's first eruption is the release of its own arrow-omen cast (ExaflareFirst), so the
-// telegraph and hit 1 cannot drift apart; the five follow-ups are instant ExaflareRest casts at each
-// step. The flame is the actions' AnimationEnd gimmick timeline, played by the action effect on the
-// helper. Lingering flame is decorative: only the snapshot kills.
+// UCOB P5 "Exaflares": one set of Bahamut Prime's Exaflares (UcobExaflarePattern). The flame is
+// the actions' AnimationEnd gimmick timeline, played by the action effect on the helper.
+// Lingering flame is decorative: only the snapshot kills.
 public sealed class UcobP5ExaflaresScenario : IMultiplayerReplayable
 {
     public string Name => "Exaflares";
@@ -54,9 +49,7 @@ public sealed class UcobP5ExaflaresScenario : IMultiplayerReplayable
 
         world.Events.Add(0f, SpawnBahamut);
         world.Events.Add(0.5f, () => bahamut?.AddStatusParam(StatusId.LohsDaih, LohsDaihTransformation));
-        world.Events.Add(UcobP5ExaflaresState.BossCastAt,
-            () => bahamut?.Cast(Actions.Exaflare));
-        foreach (var line in state.Lines) LaunchLine(line);
+        state.Pattern.Schedule(world, () => bahamut);
         world.Events.Add(state.LastHitAt + DespawnAfterLastHit, () => bahamut?.Despawn());
         
         if (!solo)
@@ -84,15 +77,6 @@ public sealed class UcobP5ExaflaresScenario : IMultiplayerReplayable
 
     private void AutoAttackMainTank(byte variation)
         => bahamut?.Cast(Actions.AutoAttack, world.Party.Get(PartyRole.MainTank), variation);
-
-    // One lane. The arrow omen rides ExaflareFirst's own cast at the lane's first step and its
-    // release is that step's eruption; every later step is an instant cast.
-    private void LaunchLine(ExaflareLine line)
-    {
-        world.Events.Add(line.TelegraphAt, () => bahamut?.CastFromHelper(Actions.ExaflareFirst, at: new Placement(line.Start, line.Rotation)));
-        foreach (var hit in line.Hits.Skip(1))
-            world.Events.Add(hit.Time, () => bahamut?.CastFromHelper(Actions.ExaflareRest, at: new Placement(hit.Position, line.Rotation)));
-    }
 
     public MpMessage? BuildReplayStateMessage()
         => LastState is { } s

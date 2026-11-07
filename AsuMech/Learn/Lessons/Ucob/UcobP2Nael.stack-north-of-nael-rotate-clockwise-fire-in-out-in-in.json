@@ -17,7 +17,7 @@
         "cls": "UcobP2NaelAi",
         "from": 0.3,
         "to": 128.31001,
-        "line": 119
+        "line": 120
       },
       "title": "After Nael deus Darnus appears",
       "cue": "Nael deus Darnus appears",
@@ -29,7 +29,7 @@
       "key": {
         "cls": "UcobP2NaelAi",
         "time": 20,
-        "line": 67
+        "line": 68
       },
       "title": "After Dalamud Dive hits you",
       "tolerance": 1.5,
@@ -40,7 +40,7 @@
         "cls": "UcobP2NaelAi",
         "from": 48.27,
         "to": 121.32,
-        "line": 111
+        "line": 112
       },
       "title": "After Deathstorm hits you",
       "cue": "Deathstorm hits you",
@@ -52,7 +52,7 @@
       "key": {
         "cls": "UcobP2NaelAi",
         "time": 57.8,
-        "line": 103
+        "line": 104
       },
       "title": "After Iceball resolves",
       "cue": "Iceball resolves",
@@ -64,7 +64,7 @@
       "key": {
         "cls": "UcobP2NaelAi",
         "time": 75.91,
-        "line": 102
+        "line": 103
       },
       "title": "After Lunar Dynamo resolves",
       "tolerance": 1.5,
@@ -74,7 +74,7 @@
       "key": {
         "cls": "UcobP2NaelAi",
         "time": 106.22,
-        "line": 94
+        "line": 95
       },
       "title": "After Iceball hits you",
       "cue": "Iceball hits you",
@@ -103,7 +103,7 @@
       "key": {
         "cls": "UcobP2NaelAi",
         "time": 112.67,
-        "line": 101
+        "line": 102
       },
       "title": "After Firescorched on you",
       "cue": "Firescorched on you",

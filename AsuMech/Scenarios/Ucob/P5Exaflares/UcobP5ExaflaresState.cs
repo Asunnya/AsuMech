@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -6,106 +5,37 @@ using AsuMech.Core.Game;
 
 namespace AsuMech.Scenarios.Ucob.P5Exaflares;
 
-// One rolling eruption: where it lands, when it lands, and when its lane arrow went up
-// (KnownAt): bots may only dodge what has already been telegraphed.
-public sealed record ExaflareHit(Vector3 Position, float Time, float KnownAt);
-
-// One lane of fire: six eruptions marching Advance yalms along Rotation, starting at Start.
-public sealed record ExaflareLine(Vector3 Start, float Rotation, float TelegraphAt, IReadOnlyList<ExaflareHit> Hits);
-
-// Per-run randomization plus the pattern it resolves to.
-//
-// Six parallel lanes cross the arena, all travelling the same way, spaced 8y apart at
-// perpendicular offsets -20/-12/-4/+4/+12/+20. Each lane erupts six times, 8y apart, from 20y
-// behind the arena to 20y past it. They fire as three pairs 3s apart, and which two lanes make
-// up a pair is randomized per set — so the dodge is "stand on a lane that has already burned,
-// or on one that is not in this pair", never "find the gap" (adjacent lanes are 8y apart and
-// each blast is 6y, so the lanes overlap).
-//
-// The second eruption trails the first by ~1.6s, longer than the 1.476s between later steps.
+// Per-run randomization: one Exaflare set (UcobExaflarePattern) cast 3s in.
 public sealed class UcobP5ExaflaresState
 {
-    public const float HitRadius = 6f;              // ExaflareFirst/Rest EffectRange
-    public const float Advance = 8f;
-    public const float RollInterval = 1.476f;
-    public const int HitsPerLine = 6;
-    public const float StartDistance = 20f;
-    public const float TelegraphSeconds = 3.97f;    // arrow omen up to its own release (the first eruption)
-    public const float SecondHitSeconds = 5.58f;    // arrow omen up to the second eruption, the first ExaflareRest
-
-    public const int PairCount = 3;
-    public const float PairInterval = 3f;
+    public const float HitRadius = UcobExaflarePattern.HitRadius;
     public const float BossCastAt = 3f;
-    public const float FirstTelegraphAt = BossCastAt + 2.01f;
+    public const float FirstTelegraphAt = BossCastAt + UcobExaflarePattern.TelegraphAfterCast;
+    public static IReadOnlyList<float> LaneOffsets => UcobExaflarePattern.LaneOffsets;
 
-    // Perpendicular offsets of the six lanes, in firing-agnostic order.
-    public static readonly IReadOnlyList<float> LaneOffsets = [-20f, -12f, -4f, 4f, 12f, 20f];
-
-    public Direction Direction { get; }
-
-    // The lanes in firing order, two per pair.
-    public IReadOnlyList<float> LaneOrder { get; }
-
-    // Set axes: Travel is where the lanes roll, Lateral the axis the lane offsets sit on.
-    public Vector3 Travel { get; }
-    public Vector3 Lateral { get; }
-    public IReadOnlyList<ExaflareLine> Lines { get; }
-    public IReadOnlyList<ExaflareHit> Hits { get; }
-    public float LastHitAt { get; }
-
-    private readonly Rng rng;
+    public UcobExaflarePattern Pattern { get; }
+    public Direction Direction => Pattern.Direction;
+    public IReadOnlyList<float> LaneOrder => Pattern.LaneOrder;
+    public Vector3 Travel => Pattern.Travel;
+    public Vector3 Lateral => Pattern.Lateral;
+    public IReadOnlyList<ExaflareLine> Lines => Pattern.Lines;
+    public IReadOnlyList<ExaflareHit> Hits => Pattern.Hits;
+    public float LastHitAt => Pattern.LastHitAt;
 
     public UcobP5ExaflaresState(Rng rng, UcobP5ExaflaresStateOverrides overrides)
-        : this(rng, null, null, overrides) { }
+    {
+        Pattern = UcobExaflarePattern.Roll(rng, BossCastAt, overrides.Direction, overrides.LaneOrder);
+    }
+
+    private UcobP5ExaflaresState(UcobExaflarePattern pattern)
+    {
+        Pattern = pattern;
+    }
 
     public static UcobP5ExaflaresState? FromNetworkReplay(float directionRadians, IReadOnlyList<float> laneOrder)
     {
         if (laneOrder.Count != LaneOffsets.Count) return null;
         if (!float.IsFinite(directionRadians) || laneOrder.Any(o => !LaneOffsets.Contains(o))) return null;
-        return new UcobP5ExaflaresState(Rng.Detached, new Direction(directionRadians), laneOrder, null);
-    }
-
-    private UcobP5ExaflaresState(Rng rng, Direction? direction, IReadOnlyList<float>? laneOrder, UcobP5ExaflaresStateOverrides? overrides)
-    {
-        this.rng = rng;
-        Direction = direction ?? overrides!.Direction ?? rng.NextDirection();
-
-        var theta = Direction.RadiansFromNorth;
-        var travel = new Vector3(MathF.Sin(theta), 0f, -MathF.Cos(theta));
-        var lateral = new Vector3(MathF.Cos(theta), 0f, MathF.Sin(theta));
-        Travel = travel;
-        Lateral = lateral;
-        // Placement rotation faces +Z at 0, so a compass bearing is its mirror.
-        var rotation = MathF.PI - theta;
-
-        var order = laneOrder ?? overrides?.LaneOrder ?? rng.Shuffle(LaneOffsets.ToArray()).ToList();
-        LaneOrder = order;
-        var lines = new List<ExaflareLine>(LaneOffsets.Count);
-        var hits = new List<ExaflareHit>(LaneOffsets.Count * HitsPerLine);
-        for (var i = 0; i < order.Count; i++)
-        {
-            var telegraphAt = FirstTelegraphAt + i / 2 * PairInterval;
-            var line = BuildLine(travel, lateral, rotation, order[i], telegraphAt);
-            lines.Add(line);
-            hits.AddRange(line.Hits);
-        }
-
-        Lines = lines;
-        Hits = hits;
-        LastHitAt = FirstTelegraphAt + (PairCount - 1) * PairInterval
-                    + SecondHitSeconds + (HitsPerLine - 2) * RollInterval;
-    }
-
-    private static ExaflareLine BuildLine(Vector3 travel, Vector3 lateral, float rotation, float offset, float telegraphAt)
-    {
-        var start = travel * -StartDistance + lateral * offset;
-        var hits = new List<ExaflareHit>(HitsPerLine);
-        for (var i = 0; i < HitsPerLine; i++)
-            hits.Add(new ExaflareHit(
-                start + travel * (Advance * i),
-                telegraphAt + (i == 0 ? TelegraphSeconds : SecondHitSeconds + (i - 1) * RollInterval),
-                telegraphAt));
-
-        return new ExaflareLine(start, rotation, telegraphAt, hits);
+        return new UcobP5ExaflaresState(new UcobExaflarePattern(BossCastAt, new Direction(directionRadians), laneOrder));
     }
 }
