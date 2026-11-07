@@ -83,13 +83,30 @@ All using default NA pf strats unless noted otherwise:
     - P5 Fulgent Blade
     - P5 Paradise Regained 
 - The Omega Protocol (Ultimate)
+    - P1 Program Loop _by [Evernow](https://github.com/Evernow)_
     - P2 Party Synergy
       - NA pf
       - LPDU _by [Quantumlyy](https://github.com/Quantumlyy)_
+    - P3 Intermission _by [Evernow](https://github.com/Evernow)_
+    - P3 Hello World _by [Evernow](https://github.com/Evernow)_
+    - P3 Monitors _by [Evernow](https://github.com/Evernow)_
+    - P4 Blue Screen _by [Evernow](https://github.com/Evernow)_
     - P5 Delta
+      - Standard
+      - Tuufless (Elemental) _by [AppleCronch](https://github.com/AppleCronch)_
     - P5 Sigma
+      - Standard
+      - Tuufless (Elemental) _by [AppleCronch](https://github.com/AppleCronch)_
     - P5 Omega
     - P6 Exasquares / Wave Cannon 2
+    - P6 Alpha Omega (whole phase, NAUR) _by [Evernow](https://github.com/Evernow)_
+- The Epic of Alexander (Ultimate) _by [Evernow](https://github.com/Evernow)_
+    - P1 Living Liquid
+    - Limit Cut
+    - P2 Brute Justice and Cruise Chaser
+    - Temporal Stasis
+    - P3 Alexander Prime
+    - P4 Perfect Alexander
 - The Weapon's Refrain (Ultimate)
     - P1 Garuda _by [Asunnya](https://github.com/Asunnya)_
     - P2 Ifrit _by [Asunnya](https://github.com/Asunnya)_
@@ -152,10 +169,16 @@ All using default NA pf strats unless noted otherwise:
 
 #  Acknowledgments
 
+Thanks to [Anomek](https://github.com/anomek) for [AnoMech](https://github.com/anomek/AnoMech), the plugin AsuMech is built on. <!-- rename:keep -->
+The engine, the zone and the sim core, and most of the scenarios, all started there.
+
 Thanks for contributors:
 * [WorstAquaPlayer](https://github.com/WorstAquaPlayer) - rewriting core & fixing crashes, extra scenarios
 * [Wydox](https://github.com/Wydox) - core improvements, extra scenarios and strategies
-* [Evernow](https://github.com/Evernow) - multiplayer (WIP), core improvements, extra scenarions and strategies
+* [Evernow](https://github.com/Evernow) - multiplayer (WIP), core improvements, extra scenarios and strategies, TEA, TOP P1 / P3 / P4 / P6
+* [AlexisLynd](https://github.com/AlexisLynd) - files that make TEA look like the real fight
+* [Ziggycuff](https://github.com/Ziggycuff) - job actions (MNK, VPR, BRD, RDM, NIN and more)
+* [AppleCronch](https://github.com/AppleCronch) - Tuufless strategies for TOP P5 Delta and Sigma
 * [RoarkGit](https://github.com/RoarkGit) - win streaks, extra scenarios
 * [grayparser](https://github.com/grayparser) - core improvements, extra scenarios
 * [altair9x](https://github.com/altair9x) - extra strategies
