@@ -1,0 +1,90 @@
+{
+  "scenario": "UcobP3GrandOctetScenario",
+  "casts": [
+    {
+      "actionId": 9959,
+      "name": "Grand Octet",
+      "start": 5,
+      "resolve": 8.7,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9923,
+      "name": "Lunar Dive",
+      "start": 17.383,
+      "resolve": 21.083,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9932,
+      "name": "Cauterize",
+      "start": 24.466,
+      "resolve": 28.166,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9933,
+      "name": "Cauterize",
+      "start": 26.516,
+      "resolve": 30.216002,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9935,
+      "name": "Cauterize",
+      "start": 28.566,
+      "resolve": 32.266,
+      "occurrence": 3
+    },
+    {
+      "actionId": 9934,
+      "name": "Cauterize",
+      "start": 30.616,
+      "resolve": 34.315998,
+      "occurrence": 4
+    },
+    {
+      "actionId": 9931,
+      "name": "Cauterize",
+      "start": 32.633,
+      "resolve": 36.333,
+      "occurrence": 5
+    },
+    {
+      "actionId": 9953,
+      "name": "Megaflare Dive",
+      "start": 34.633,
+      "resolve": 38.333,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9951,
+      "name": "Megaflare",
+      "start": 40.383,
+      "resolve": 48.083,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9906,
+      "name": "Twisting Dive",
+      "start": 43.633,
+      "resolve": 47.333,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9950,
+      "name": "Megaflare",
+      "start": 46.399,
+      "resolve": 46.399,
+      "occurrence": 2
+    }
+  ],
+  "names": [
+    "Grand Octet",
+    "Lunar Dive",
+    "Cauterize",
+    "Megaflare Dive",
+    "Megaflare",
+    "Twisting Dive"
+  ]
+}

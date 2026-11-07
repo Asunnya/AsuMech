@@ -14,6 +14,9 @@ public class UcobConstants
         public const float P5ArenaRadius = 21.8f;
         // UNVERIFIED: Twintania's death wall; nobody in the logs stood past 20.
         public const float P1ArenaRadius = 24.5f;
+        // P1's Neurolinks, still up in P3.
+        public static readonly Vector2[] Neurolinks = [new(0.1f, -8.5f), new(-7.7f, 5.9f), new(9.3f, 5.5f)];
+        public const float NeurolinkRadius = 2f; // UNVERIFIED
     }
 
     // "Aether Markers": A/B/C on the rim, D and 1-4 inside. Scenario-local == world here,
@@ -83,6 +86,11 @@ public class UcobConstants
         public const ushort Firescorched = 0x1D0;
         public const ushort Icebitten = 0x1D1;
         public const ushort Thunderstruck = 0x1D2;
+        public const ushort EarthResistanceDownII = 0x41D;
+        public const ushort LastBastion = 196;
+        public const ushort LandWaker = 863;
+        public const ushort DarkForce = 864;
+        public const ushort GunmetalSoul = 1931;
     }
 
     public const uint HeavensfallKnockback = 115;
@@ -91,6 +99,12 @@ public class UcobConstants
     {
         public const uint Fireball = 0x75;
         public const uint Hatch = 0x76;
+        public const uint DragonDive = 0x14;
+        public const uint MegaflareStack = 0x27;
+        public const uint EarthShaker = 0x28;
+        public const uint MegaflareDive = 0x29;
+        public const uint TwistingDive = 0x2A;
+        public const uint LunarDive = 0x77;
     }
 
     public class EObjId
@@ -99,6 +113,7 @@ public class UcobConstants
         public const uint Neurolink = 2001151;
         public const uint Twister = 2001168;
         public const uint WingsOfSalvationCleanse = 2003412;
+        public const uint EarthShakerPuddle = 2004579;
     }
 
     public class TetherId
@@ -114,6 +129,10 @@ public class UcobConstants
     {
         public const ushort NaelLeaves = 0x1E39;
         public const ushort DragonLeaves = 0x008F;
+        public const ushort BahamutLeaves = 0x1E39;
+        public const ushort TwintaniaLeaves = 0x1E3A;
+        public const ushort NaelOrBahamutArrives = 0x1E43;
+        public const ushort TwintaniaArrives = 0x1E44;
     }
 
     public class ActionId
@@ -148,5 +167,21 @@ public class UcobConstants
         public const uint Exaflare = 9967;       // 0x26EF, boss-body cast, no AOE of its own
         public const uint ExaflareFirst = 9968;  // 0x26F0, helper, 4.0s cast, arrow omen, 6y circle
         public const uint ExaflareRest = 9969;   // 0x26F1, helper, instant, 6y circle
+        public const uint TwistingDive = 0x26B2;
+        public const uint LunarDive = 0x26C3;
+        public const uint CauterizeFirehorn = 0x26CB;
+        public const uint CauterizeIceclaw = 0x26CC;
+        public const uint CauterizeThunderwing = 0x26CD;
+        public const uint CauterizeTail = 0x26CE;
+        public const uint CauterizeFang = 0x26CF;
+        public const uint Gigaflare = 0x26D6;
+        public const uint EarthShaker = 0x26D9;
+        public const uint EarthShakerCone = 0x26DA;
+        public const uint MegaflareStack = 0x26DE;
+        public const uint MegaflareTower = 0x26DF;
+        public const uint MegaflareStrike = 0x26E0;
+        public const uint MegaflareDive = 0x26E1;
+        public const uint TenstrikeTrio = 0x26E6;
+        public const uint GrandOctet = 0x26E7;
     }
 }
