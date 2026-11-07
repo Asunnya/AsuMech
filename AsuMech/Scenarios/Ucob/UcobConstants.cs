@@ -95,6 +95,7 @@ public class UcobConstants
     {
         public const uint Fireball = 0x75;
         public const uint Hatch = 0x76;
+        public const uint Divebomb = 0x14;
     }
 
     public class EObjId
@@ -103,6 +104,7 @@ public class UcobConstants
         public const uint Neurolink = 2001151;
         public const uint Twister = 2001168;
         public const uint WingsOfSalvationCleanse = 2003412;
+        public const uint HypernovaPuddle = 2003393;
     }
 
     public class TetherId
@@ -154,6 +156,12 @@ public class UcobConstants
         public const uint ChainLightningSplash = 0x26C8;
         public const uint Deathstorm = 0x26C9;
         public const uint WingsOfSalvation = 0x26CA;
+        public const uint Hypernova = 0x26BF;
+        public const uint CauterizeFirehorn = 0x26CB;
+        public const uint CauterizeIceclaw = 0x26CC;
+        public const uint CauterizeThunderwing = 0x26CD;
+        public const uint CauterizeTailOfDarkness = 0x26CE;
+        public const uint CauterizeFangOfLight = 0x26CF;
         public const uint Exaflare = 9967;       // 0x26EF, boss-body cast, no AOE of its own
         public const uint ExaflareFirst = 9968;  // 0x26F0, helper, 4.0s cast, arrow omen, 6y circle
         public const uint ExaflareRest = 9969;   // 0x26F1, helper, instant, 6y circle
