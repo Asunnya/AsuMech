@@ -81,7 +81,7 @@ public sealed class UcobP3FellruinScenario : IScenario
         world.Events.Add(TrioLeave, PlayTrioLeave);
         world.Events.Add(TrioMove, MoveTrioToTheirSpots);
         world.Events.Add(TrioLand, PlayTrioLand);
-        world.Events.Add(Quote, () => world.Announce($"Nael deus Darnus: {state.Quote.Text}"));
+        world.Events.Add(Quote, () => UcobNaelQuotes.Say(world, nael, state.Quote.Text));
         world.Events.Add(TempestWingTethers, TetherTempestWing);
         world.Events.Add(QuoteMoves[0], () => ResolveNaelMove(state.Quote.First));
         world.Events.Add(AethericProfusion, () => twintania?.Cast(Actions.AethericProfusion));

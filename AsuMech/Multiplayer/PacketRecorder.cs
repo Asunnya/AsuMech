@@ -406,6 +406,12 @@ internal sealed class PacketRecorder
             inner.NpcKnockback(position, rotation, durationSeconds);
         }
 
+        public void Yell(string text, float seconds)
+        {
+            recorder.Record(this, Delivery.Everyone, (actor, _) => new YellPacket(actor, text, seconds));
+            inner.Yell(text, seconds);
+        }
+
         public void ReceiveActorCast(ActorCastData cast)
         {
             recorder.RecordCast(this, cast);

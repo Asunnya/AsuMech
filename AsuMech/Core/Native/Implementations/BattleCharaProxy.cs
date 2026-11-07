@@ -142,6 +142,18 @@ internal sealed unsafe class BattleCharaProxy : IBattleCharaProxy
         PacketDispatcherPointers.HandleNpcKnockbackPacket(obj->EntityId, &packet);
     }
 
+    // Balloon bone the NpcYell sheet uses.
+    private const byte YellBalloonBone = 25;
+
+    public void Yell(string text, float seconds)
+    {
+        var obj = Ptr;
+        if (obj == null) return;
+        var bytes = System.Text.Encoding.UTF8.GetBytes(text + "\0");
+        fixed (byte* str = bytes)
+            obj->YellBalloon.OpenBalloon(str, seconds, false, 0f, false, false, true, YellBalloonBone);
+    }
+
     public float HitboxRadius
     {
         get
