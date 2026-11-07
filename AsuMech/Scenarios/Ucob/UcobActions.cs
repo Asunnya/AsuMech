@@ -173,7 +173,6 @@ public static class UcobActions
         DeathExplanation = "the marked players stack together",
     };
 
-    // UNVERIFIED: the half-angle; it lies between 27° and 88°.
     public const float EarthShakerHalfAngle = MathF.PI / 4f;
 
     public static readonly EnemyAction EarthShakerCone = new(ActionId.EarthShakerCone)
@@ -201,10 +200,10 @@ public static class UcobActions
         DeathExplanation = "stood next to a Tempest Wing tether holder",
     };
 
-    // UNVERIFIED: the half-angle, and that anyone but the target dies in it.
+    // UNVERIFIED: the half-angle within a degree, and that anyone but the target dies in it.
     public static readonly EnemyAction FlareBreath = new(ActionId.FlareBreath)
     {
-        Area = new() { Size = MathF.PI / 4f },
+        Area = new() { Size = 46f * MathF.PI / 180f },
         Effects = [OnTarget(Damage(TankBuster)), OnOthers(Damage(Lethal))],
         Timing = new() { DamageDelay = 0.5f },
         DeathExplanation = "stay out from in front of Bahamut (Flare Breath)",

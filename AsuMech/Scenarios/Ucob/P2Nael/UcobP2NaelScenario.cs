@@ -65,18 +65,24 @@ public sealed class UcobP2NaelScenario : IScenario
 
     public const float CauterizeCastSeconds = 4f;
     public const float HypernovaPuddleAppears = 1.08f;
+    // It burns from 2s after the drop, a while after it shows.
+    public const float HypernovaPuddleHurts = 2f;
     public const float HypernovaPuddleLasts = 11.7f;
 
-    // No log reaches the divebombs: every time below is UNVERIFIED.
-    public const float DivebombQuoteAt = 136f;
-    public static readonly float[] DivebombMarkers = [137f, 143f, 149f];
-    public static readonly float[] DivebombLocks = [143f, 149f, 155f];
-    public static readonly float[] Hypernovas = [143f, 146f, 149f, 152f];
-    public const float NaelLeavesForTheDive = 153.5f;
-    private const float NaelGone = 155.5f;
-    public static readonly float[] DivebombQuoteMoves = [161f, 165f];
-    public const float FinalRavensbeakCast = 167f;
-    public const float DivebombsEnd = 172f;
+    // The fourth quote and the first marker come 5.2s after Ravensbeak lands; a dragon locks its line as
+    // it starts its cast.
+    public const float DivebombQuoteAt = 139.26f;
+    public static readonly float[] DivebombMarkers = [139.26f, 143.26f, 147.26f];
+    public static readonly float[] DivebombLocks = [146.66f, 150.66f, 154.66f];
+    public static readonly float[] Hypernovas = [144.46f, 146.06f, 147.66f, 149.26f];
+    // UNVERIFIED: when she leaves for the dive.
+    public const float NaelLeavesForTheDive = 151f;
+    private const float NaelGone = 153f;
+    public static readonly float[] DivebombQuoteMoves = [153.96f, 156.26f];
+    public const float DivebombClaw = 161.46f;
+    // The fifth and sixth quotes that come before it are left out.
+    public const float FinalRavensbeakCast = 165.5f;
+    public const float DivebombsEnd = 171f;
 
     // Checked just before the status itself runs out and is gone.
     private const float DoomCheckLead = 0.05f;
@@ -95,7 +101,7 @@ public sealed class UcobP2NaelScenario : IScenario
     private readonly Queue<SimEnemy> helperPool = [];
     private readonly List<SimEventObject> eobjs = [];
     private readonly List<(Vector2 At, SimEventObject? EObj, float Until)> cleanses = [];
-    private readonly List<(Vector2 At, float Until)> hypernovaPuddles = [];
+    private readonly List<(Vector2 At, float HurtsAt, float Until)> hypernovaPuddles = [];
     private readonly List<SimEnemy?> dragons = [];
 
     public void Run(SimWorld worldParam, int? selectedAi)
@@ -225,6 +231,8 @@ public sealed class UcobP2NaelScenario : IScenario
         var quote = state.DivebombQuote;
         world.Events.Add(DivebombQuoteMoves[0], () => DivebombQuoteMove(quote.First));
         world.Events.Add(DivebombQuoteMoves[1], () => DivebombQuoteMove(quote.Second));
+        for (var hit = 0; hit < 5; hit++)
+            world.Events.Add(DivebombClaw + hit * ClawInterval, BahamutsClaw);
         world.Events.Add(FinalRavensbeakCast, CastRavensbeak);
         world.Events.Add(FinalRavensbeakCast + RavensbeakCastSeconds, Ravensbeak);
         world.Events.Add(DivebombsEnd, DespawnAll);
@@ -601,7 +609,7 @@ public sealed class UcobP2NaelScenario : IScenario
         {
             var eobj = SpawnEObj(EObjId.HypernovaPuddle, at);
             var now = world.Events.Elapsed;
-            hypernovaPuddles.Add((at, now + HypernovaPuddleLasts));
+            hypernovaPuddles.Add((at, now + HypernovaPuddleHurts - HypernovaPuddleAppears, now + HypernovaPuddleLasts));
             world.Events.Add(HypernovaPuddleLasts, () => eobj?.Despawn());
         });
     }
@@ -611,7 +619,7 @@ public sealed class UcobP2NaelScenario : IScenario
     {
         hypernovaPuddles.RemoveAll(p => now >= p.Until);
         foreach (var member in AliveMembers().ToList())
-            if (hypernovaPuddles.Any(p => Vector2.Distance(Flat(member.Position), p.At) <= State.HypernovaPuddleRadius))
+            if (hypernovaPuddles.Any(p => now >= p.HurtsAt && Vector2.Distance(Flat(member.Position), p.At) <= State.HypernovaPuddleRadius))
                 member.Die(ActionId.Hypernova, "stood in a Hypernova puddle (keep moving once one lands on you)");
     }
 

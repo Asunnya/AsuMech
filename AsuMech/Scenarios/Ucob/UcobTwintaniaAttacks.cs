@@ -9,8 +9,8 @@ namespace AsuMech.Scenarios.Ucob;
 
 public static class UcobTwintaniaAttacks
 {
-    public const float PlummetRange = 8f;
-    public const float PlummetHalfAngle = MathF.PI / 4f; // UNVERIFIED
+    public const float PlummetRange = 12f;
+    public const float PlummetHalfAngle = MathF.PI / 3f;
     public const float DeathSentenceCastSeconds = 3.7f;
     private const float SlashingResistanceDownSeconds = 34f;
 

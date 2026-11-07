@@ -24,11 +24,12 @@ public sealed class UcobP1TwintaniaAi : IScenarioAi<UcobP1TwintaniaState>
     private static readonly Camp FirstWest = new(Scenario.FirstWestCamp, new(-11.2f, -3.5f), new(-7.5f, 1f), new(-4f, 1.5f), new(-11.2f, -6.5f), new(-7.5f, 4f));
     private static readonly Camp SecondWest = new(Scenario.SecondWestCamp, new(-12.2f, 5.9f), new(-8.5f, 10.4f), new(-3.5f, 7.5f), new(-12.2f, 2.9f), new(-5.5f, 10.4f));
     private static readonly Camp East = new(Scenario.EastCamp, new(13.3f, 5.7f), new(12.5f, 10.5f), new(5.3f, 5.7f), new(13.3f, 2.7f), new(14.3f, 12.9f));
+    private static readonly Camp EastClearOfTheLoop = East with { Side = new(11.2f, 9.2f) };
 
     private static readonly Vector2[][] BaitPaths =
     [
         [new(16.5f, -9.5f), new(18.7f, -3.3f), new(18.7f, 3.3f), new(16.5f, 9.5f), new(12.2f, 14.6f), new(6.5f, 17.9f)],
-        [new(1.7f, 19.9f), new(-5.2f, 19.3f), new(-11.5f, 16.4f), new(-16.4f, 11.5f), new(-19.3f, 5.2f), new(-19.8f, -1f)],
+        [new(1.7f, 19.9f), new(-5.2f, 19.3f), new(-11.5f, 16.4f), new(-16.4f, 11.5f), new(-19.3f, 5.2f), new(-13f, -3f)],
         [new(-16.5f, -9.5f), new(-18.7f, -3.3f), new(-18.7f, 3.3f), new(-16.5f, 9.5f), new(-12.2f, 14.6f), new(-6.5f, 17.9f)],
         [],
         [new(-18.6f, -4.9f), new(-19.5f, 1.5f), new(-18.2f, 7.8f), new(-15f, 13.5f), new(-10f, 17.5f), new(-4f, 19.3f)],
@@ -36,7 +37,7 @@ public sealed class UcobP1TwintaniaAi : IScenarioAi<UcobP1TwintaniaState>
     private static readonly float[] BaitStarts = [Scenario.ToFirstWestCamp, 44f, Scenario.ToEastCamp + 0.1f, 0f, 118.5f];
     private static readonly Vector2 FifthBaitTwisterSpot = new(-18f, -8f);
     private static readonly Vector2 EastStackOffTheOviformPaths = new(5.3f, 9.5f);
-    private static readonly Vector2[] TargetedLiquidHellLoop = [new(11f, 17f), new(16f, 13f), new(19f, 7f), new(17f, 1f), new(13f, -3f)];
+    private static readonly Vector2[] TargetedLiquidHellLoop = [new(11.7f, 18.1f), new(16.7f, 13.6f), new(20.2f, 7.4f), new(21.5f, 1.3f), new(19.6f, -5.6f)];
     private const float RingRadius = 6.5f;
     private const float StepOff = 0.08f;
     private const float AfterDrop = 0.02f;
@@ -75,7 +76,7 @@ public sealed class UcobP1TwintaniaAi : IScenarioAi<UcobP1TwintaniaState>
         ai.Move(Scenario.GenerateCasts[2], () => AiMove.Create(StackAwayFromTheTargetedLiquidHell()).NaturalOrder(), jitter: 0f, sprint: true);
         RunTheTargetedLiquidHellLoop(ai);
         ai.Move(HatchResolvesBy(2) + LeaveNeurolinkAfterHatch, () => AiMove.Create(Cluster(East.Stack, NonTanks.Where(r => r != state.LiquidHellTarget))).NaturalOrder(), jitter: 0f);
-        ai.Move(TankSpotsFreeOfPuddles, () => AiMove.Create(CampSpots(East, TankSpotsFreeOfPuddles)).NaturalOrder(), jitter: 0f);
+        ai.Move(TankSpotsFreeOfPuddles, () => AiMove.Create(CampSpots(EastClearOfTheLoop, TankSpotsFreeOfPuddles)).NaturalOrder(), jitter: 0f);
         ai.Move(Scenario.AggroSwaps[2] - 1.4f, () => AiMove.Create(Tanking(East, Scenario.AggroSwaps[2])).NaturalOrder(), jitter: 0f);
 
         ai.Move(Scenario.GenerateCasts[3], () => AiMove.Create(HatchTargetsWaitBesideTheirNeurolinks(3)).NaturalOrder(), jitter: 0f, sprint: true);
@@ -204,6 +205,7 @@ public sealed class UcobP1TwintaniaAi : IScenarioAi<UcobP1TwintaniaState>
     {
         var spots = Cluster(EastStackOffTheOviformPaths, NonTanks.Except(state.HatchTargets[2]).Where(r => r != state.LiquidHellTarget));
         Place(spots, Neurolinks(2));
+        Place(spots, Tanking(EastClearOfTheLoop, Scenario.GenerateCasts[2]));
         spots[(int)state.LiquidHellTarget] = TargetedLiquidHellLoop[0];
         return spots;
     }

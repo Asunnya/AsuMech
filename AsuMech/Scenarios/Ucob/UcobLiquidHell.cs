@@ -11,14 +11,16 @@ namespace AsuMech.Scenarios.Ucob;
 public sealed class UcobLiquidHell(SimWorld world, DamageSolver damage)
 {
     public const float Interval = 1.16f;
-    public const float PuddleRadius = 4f; // UNVERIFIED
+    public const float PuddleRadius = 6f;
     public const float PuddleAppears = 0.9f;
+    // It burns from 1.8s after the drop, a while after it shows.
+    public const float PuddleHurts = 1.8f;
     private const float PuddleFades = 11.7f;
     private const float PuddleGone = 12.7f;
     private const float BurnsSeconds = 15f;
     private const float BurnsKill = 3f; // UNVERIFIED
 
-    private sealed record Puddle(Vector2 At, float FadesAt);
+    private sealed record Puddle(Vector2 At, float HurtsAt, float FadesAt);
 
     private readonly List<Puddle> puddles = [];
     private readonly List<SimEventObject> eobjs = [];
@@ -36,7 +38,7 @@ public sealed class UcobLiquidHell(SimWorld world, DamageSolver damage)
         damage.ApplyDamage(target, 0.05f, ActionId.LiquidHell, "Liquid Hell", lethal: false);
         world.Events.Add(PuddleAppears, () =>
         {
-            var puddle = new Puddle(at, world.Events.Elapsed + PuddleFades);
+            var puddle = new Puddle(at, world.Events.Elapsed + PuddleHurts - PuddleAppears, world.Events.Elapsed + PuddleFades);
             puddles.Add(puddle);
             var eobj = UcobSim.SpawnEObj(world, EObjId.LiquidHell, at);
             if (eobj != null) eobjs.Add(eobj);
@@ -53,7 +55,7 @@ public sealed class UcobLiquidHell(SimWorld world, DamageSolver damage)
     {
         foreach (var member in UcobSim.AliveMembers(world.Party).Where(m => !m.HasStatus(StatusId.Burns)).ToList())
         {
-            if (!puddles.Any(p => now < p.FadesAt && Vector2.Distance(UcobSim.Flat(member.Position), p.At) <= PuddleRadius)) continue;
+            if (!puddles.Any(p => now >= p.HurtsAt && now < p.FadesAt && Vector2.Distance(UcobSim.Flat(member.Position), p.At) <= PuddleRadius)) continue;
             member.AddStatus(StatusId.Burns, BurnsSeconds);
             world.Events.Add(BurnsKill, () =>
             {

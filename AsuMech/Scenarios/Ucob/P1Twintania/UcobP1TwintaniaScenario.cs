@@ -59,6 +59,8 @@ public sealed class UcobP1TwintaniaScenario : IScenario
     // The fourth set chases one rolled player; the others take whoever is furthest from her.
     public const int TargetedLiquidHellSet = 3;
     public const float PuddleAppears = 0.9f;
+    // It burns from 1.8s after the drop, a while after it shows.
+    public const float PuddleHurts = 1.8f;
     private const float PuddleFades = 11.7f;
     private const float PuddleGone = 12.7f;
     private const float BurnsSeconds = 15f;
@@ -87,7 +89,7 @@ public sealed class UcobP1TwintaniaScenario : IScenario
     private UcobHatches hatches = null!;
     private UcobTwisters twisters = null!;
 
-    private sealed record Puddle(Vector2 At, float FadesAt);
+    private sealed record Puddle(Vector2 At, float HurtsAt, float FadesAt);
 
     public void Run(SimWorld worldParam, int? selectedAi)
     {
@@ -262,7 +264,7 @@ public sealed class UcobP1TwintaniaScenario : IScenario
         damage.ApplyDamage(target, 0.05f, ActionId.LiquidHell, "Liquid Hell", lethal: false);
         world.Events.Add(PuddleAppears, () =>
         {
-            var puddle = new Puddle(at, world.Events.Elapsed + PuddleFades);
+            var puddle = new Puddle(at, world.Events.Elapsed + PuddleHurts - PuddleAppears, world.Events.Elapsed + PuddleFades);
             puddles.Add(puddle);
             var eobj = SpawnEObj(EObjId.LiquidHell, at);
             world.Events.Add(PuddleFades, () =>
@@ -278,7 +280,7 @@ public sealed class UcobP1TwintaniaScenario : IScenario
     {
         foreach (var member in AliveMembers().Where(m => !m.HasStatus(StatusId.Burns)).ToList())
         {
-            if (!puddles.Any(p => now < p.FadesAt && Vector2.Distance(Flat(member.Position), p.At) <= State.LiquidHellPuddleRadius)) continue;
+            if (!puddles.Any(p => now >= p.HurtsAt && now < p.FadesAt && Vector2.Distance(Flat(member.Position), p.At) <= State.LiquidHellPuddleRadius)) continue;
             member.AddStatus(StatusId.Burns, BurnsSeconds);
             world.Events.Add(BurnsKill, () =>
             {

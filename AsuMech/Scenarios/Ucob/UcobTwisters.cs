@@ -12,7 +12,7 @@ namespace AsuMech.Scenarios.Ucob;
 // a touch casts Twister's blast from Twintania; without, the caller resolves it.
 public sealed class UcobTwisters
 {
-    public const float TriggerRadius = 2f; // UNVERIFIED
+    public const float TriggerRadius = 1.25f;
     public const float Arms = 0.9f;
     public const float Fades = 5.56f;
     private const float Gone = 6.62f;

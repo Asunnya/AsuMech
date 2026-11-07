@@ -17,11 +17,10 @@ public class UcobConstants
         public const float P1ArenaRadius = 24.5f;
 
         public const float NeurolinkRadius = 2f; // UNVERIFIED
-        public const float TwisterTriggerRadius = 2f; // UNVERIFIED
+        public const float TwisterTriggerRadius = 1.25f;
         public const float TwisterBlastRadius = 8f;
         public const float LunarDynamoInner = 6f; // UNVERIFIED
-        // UNVERIFIED: someone 6.6y from her was still hit.
-        public const float IronChariotRadius = 7f;
+        public const float IronChariotRadius = 8.55f;
         public const float ThermionicBurstHalfAngle = MathF.PI / 16f;
 
         // Twintania's P1 neurolinks stay down for the rest of the fight, wherever she dropped them.

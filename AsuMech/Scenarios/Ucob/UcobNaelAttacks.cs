@@ -13,8 +13,7 @@ public sealed record NaelTripleQuote(string Text, params NaelMove[] Moves);
 public static class UcobNaelAttacks
 {
     public const float LunarDynamoInner = 6f; // UNVERIFIED
-    // UNVERIFIED: someone 6.6y from her was still hit.
-    public const float IronChariotRadius = 7f;
+    public const float IronChariotRadius = 8.55f;
     public const float ThermionicBeamRadius = 4f;
     public const int ThermionicBeamMinimumStack = 4; // UNVERIFIED
     public const float RavenDiveRadius = 3f;

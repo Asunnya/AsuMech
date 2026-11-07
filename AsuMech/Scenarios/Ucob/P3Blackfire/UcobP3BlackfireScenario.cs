@@ -58,10 +58,10 @@ public sealed class UcobP3BlackfireScenario : IScenario
     public static readonly float[] TowerBearings = [45f, 135f, -135f, -45f];
 
     public const float PuddleAppears = 0.9f;
-    public const float PuddleArms = 2.5f; // UNVERIFIED
+    public const float PuddleArms = 1.8f;
     public const float PuddleFades = 12.6f;
     private const float PuddleGone = 13.6f;
-    public const float PuddleRadius = 4f; // UNVERIFIED
+    public const float PuddleRadius = 6f;
     private const float BurnToDeath = 1f; // UNVERIFIED
 
     private static readonly Vector3 NaelBesideBahamut = new(-4.13f, 0f, 4.67f);

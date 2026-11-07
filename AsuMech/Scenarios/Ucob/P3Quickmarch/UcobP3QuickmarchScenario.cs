@@ -55,7 +55,7 @@ public sealed class UcobP3QuickmarchScenario : IScenario
     public const float TwisterArms = 0.9f;
     public const float TwisterFades = 5.56f;
     private const float TwisterGone = 6.62f;
-    public const float TwisterTriggerRadius = 2f; // UNVERIFIED
+    public const float TwisterTriggerRadius = 1.25f;
 
     private static readonly Vector3 NaelBesideBahamut = new(-4.72f, 0f, 4.82f);
     private static readonly Vector3 TwintaniaBesideBahamut = new(5.83f, 0f, 5.71f);

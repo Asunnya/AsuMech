@@ -44,7 +44,7 @@ public sealed class UcobP3TenstrikeScenario : IScenario
     public const float PuddleAppears = 1.09f;
     public const float PuddleFades = 8.68f;
     private const float PuddleGone = 9.0f;
-    public const float PuddleRadius = 3f; // UNVERIFIED
+    public const float PuddleRadius = 4f;
     public const float GigaflareCast = 37.56f;
     public const float End = 46f;
 

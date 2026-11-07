@@ -15,7 +15,7 @@ public sealed class AddsTwisters(SimWorld world, UcobHelperPool helpers)
 {
     public const int Count = 4;
     public const float CastSeconds = 1.7f;
-    public const float TriggerRadius = 2f; // UNVERIFIED
+    public const float TriggerRadius = 1.25f;
     public const float BlastRadius = 8f;
     public const float Arms = 0.9f;
     public const float Fades = 5.56f;

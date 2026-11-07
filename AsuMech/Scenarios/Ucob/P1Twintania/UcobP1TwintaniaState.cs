@@ -14,9 +14,9 @@ public sealed class UcobP1TwintaniaState
     public const float FireballRadius = 4f;
     // UNVERIFIED: one or two took lethal hits, five or more lived.
     public const int FireballMinimumStack = 4;
-    public const float LiquidHellPuddleRadius = 4f; // UNVERIFIED
-    public const float PlummetRange = 8f;
-    public const float PlummetHalfAngle = MathF.PI / 4f; // UNVERIFIED
+    public const float LiquidHellPuddleRadius = 6f;
+    public const float PlummetRange = 12f;
+    public const float PlummetHalfAngle = MathF.PI / 3f;
 
     public static readonly int[] HatchCounts = [1, 1, 2, 2, 2];
     // The Generate whose markers are up while the targeted Liquid Hell starts.
