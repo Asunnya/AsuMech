@@ -88,6 +88,21 @@ public class UcobP3FellruinScenarioTests
         });
     }
 
+    [Test]
+    public void EachMeteorStreamIsANaelGeminusStrikingItsTarget()
+    {
+        PartyRole[] targets = [CasterDps, PhysRangedDps, MainTank, OffTank];
+        var rows = Run(o => o.MeteorTargets = targets);
+        var gemini = SpawnedIds(rows, BNpcBaseId.NaelGeminus);
+        var strikes = rows.Where(r => r["kind"] == "ability" && r["id"] == ActionId.MeteorStream.ToString()).ToList();
+        Assert.Multiple(() =>
+        {
+            Assert.That(gemini, Has.Count.EqualTo(UcobP3FellruinState.MeteorStreams));
+            Assert.That(strikes.Select(r => r["actor"]), Is.EquivalentTo(gemini));
+            Assert.That(strikes.Select(r => r["detail"]), Has.All.Contains("hits=1"));
+        });
+    }
+
     private static IReadOnlyList<Dictionary<string, string>> Run(System.Action<UcobP3FellruinStateOverrides> set)
     {
         var run = ScenarioRun.Execute(typeof(UcobP3FellruinScenario), 0, 1, new ScenarioRunOptions
