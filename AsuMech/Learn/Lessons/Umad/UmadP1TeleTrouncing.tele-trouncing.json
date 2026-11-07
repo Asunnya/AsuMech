@@ -16,7 +16,7 @@
       "key": {
         "cls": "UmadP1TeleTrouncingAi",
         "time": 7.5,
-        "line": 34
+        "line": 33
       },
       "title": "After Tele-portent on you",
       "cue": "Tele-portent on you",
@@ -48,7 +48,7 @@
       "key": {
         "cls": "UmadP1TeleTrouncingAi",
         "time": 14.4,
-        "line": 35
+        "line": 34
       },
       "title": "After Tele-trouncing hits you",
       "cue": "Tele-trouncing hits you",
@@ -71,7 +71,7 @@
       "key": {
         "cls": "UmadP1TeleTrouncingAi",
         "time": 17.5,
-        "line": 38
+        "line": 37
       },
       "title": "After Tele-trouncing hits you",
       "cue": "Tele-trouncing hits you",
@@ -97,17 +97,17 @@
       "key": {
         "cls": "UmadP1TeleTrouncingAi",
         "time": 23.6,
-        "line": 40
+        "line": 39
       },
       "title": "After a tether lands on you",
       "cue": "A tether lands on you",
       "rule": "Each role has its own spot.",
       "roles": {
         "MainTank": {
-          "rule": "Stand near waymark A, 9m north of the centre."
+          "rule": "Stand near waymark A, 7.5m north of the centre."
         },
         "OffTank": {
-          "rule": "Stand near waymark D, 9m west of the centre."
+          "rule": "Stand near waymark D, 7.5m west of the centre."
         },
         "RegenHealer": {
           "rule": "Stand near waymark C, the south wall."
@@ -116,10 +116,10 @@
           "rule": "Stand near waymark B, the east wall."
         },
         "MeleeDpsA": {
-          "rule": "Stand near waymark C, 9m south of the centre."
+          "rule": "Stand near waymark C, 7.5m south of the centre."
         },
         "MeleeDpsB": {
-          "rule": "Stand near waymark B, 9m east of the centre."
+          "rule": "Stand near waymark B, 7.5m east of the centre."
         },
         "PhysRangedDps": {
           "rule": "Stand near waymark A, the north wall."
@@ -135,7 +135,7 @@
       "key": {
         "cls": "UmadP1TeleTrouncingAi",
         "time": 34.6,
-        "line": 44
+        "line": 43
       },
       "title": "After Bind on you",
       "cue": "Bind on you",
@@ -170,12 +170,102 @@
       "skip": false
     }
   ],
-  "toolbox": {
-    "planId": "stgy-981c446f",
-    "roleMap": {},
-    "steps": {},
-    "exampleSeed": 1,
-    "residual": 0
-  },
-  "draft": true
+  "draft": true,
+  "pictures": {
+    "credit": "Pictures: WTFDIG (kefkabin, Merry-Go-Round), MIT",
+    "pages": [
+      {
+        "title": "Arrows: placement",
+        "image": "Umad/arrows-placement.png",
+        "text": "Everyone gets 2 Arrow debuffs: one role gets 2 the same, the other 2 different. Place the arrows rotating clockwise using the markers."
+      },
+      {
+        "title": "Arrows: solve",
+        "image": "Umad/arrows-arrow-solve.png",
+        "text": "Same arrows: on the letter and one spot counterclockwise of it. Different arrows: the leftmost debuff picks the side. Place by debuff timers."
+      },
+      {
+        "title": "Arrows: knockback",
+        "image": "Umad/arrows-knockback.png",
+        "text": "Supports NW, DPS SE for the Confetti knockback. Confetti debuffs on the 1/3 markers.",
+        "roles": {
+          "MainTank": "North-west, with the supports",
+          "OffTank": "North-west, with the supports",
+          "RegenHealer": "North-west, with the supports",
+          "ShieldHealer": "North-west, with the supports",
+          "MeleeDpsA": "South-east, with the DPS",
+          "MeleeDpsB": "South-east, with the DPS",
+          "PhysRangedDps": "South-east, with the DPS",
+          "CasterDps": "South-east, with the DPS"
+        }
+      },
+      {
+        "title": "Sleep/Confuse: fixed spots",
+        "image": "Umad/arrows-sleep-confuse.png",
+        "text": "Ignore the debuffs, use fixed tether spots. Tanks and melee inside, healers and ranged outside.",
+        "roles": {
+          "MainTank": "North, inside",
+          "OffTank": "West, inside",
+          "RegenHealer": "South, outside",
+          "ShieldHealer": "East, outside",
+          "MeleeDpsA": "South, inside",
+          "MeleeDpsB": "East, inside",
+          "PhysRangedDps": "North, outside",
+          "CasterDps": "West, outside"
+        }
+      },
+      {
+        "title": "Gaze \u002B Fire \u002B Lightning: static spots",
+        "image": "Umad/gaze-static-spots.png",
+        "text": "After the teleports, preposition in the shown spots.",
+        "roles": {
+          "MainTank": "Northeast, 2 marker",
+          "OffTank": "Southeast, 3 marker",
+          "RegenHealer": "South, far",
+          "ShieldHealer": "East, far",
+          "MeleeDpsA": "Northwest, 1 marker",
+          "MeleeDpsB": "Southwest, 4 marker",
+          "PhysRangedDps": "North, far",
+          "CasterDps": "West, far"
+        }
+      },
+      {
+        "title": "Gaze \u002B Fire \u002B Lightning: spread",
+        "image": "Umad/gaze-spread.png",
+        "text": "Solve the gaze (on the statue) and the lightning lines. Melee on the unsafe half move under the boss.",
+        "roles": {
+          "MainTank": "Northeast, 2 marker",
+          "OffTank": "Southeast, 3 marker",
+          "RegenHealer": "South, far",
+          "ShieldHealer": "East, far",
+          "MeleeDpsA": "Northwest, 1 marker",
+          "MeleeDpsB": "Southwest, 4 marker",
+          "PhysRangedDps": "North, far",
+          "CasterDps": "West, far"
+        }
+      },
+      {
+        "title": "Gaze \u002B Fire \u002B Lightning: stack",
+        "image": "Umad/gaze-stack.png",
+        "text": "Supports on 3, DPS on 1.",
+        "roles": {
+          "MainTank": "Southeast, 3 marker",
+          "OffTank": "Southeast, 3 marker",
+          "RegenHealer": "Southeast, 3 marker",
+          "ShieldHealer": "Southeast, 3 marker",
+          "MeleeDpsA": "Northwest, 1 marker",
+          "MeleeDpsB": "Northwest, 1 marker",
+          "PhysRangedDps": "Northwest, 1 marker",
+          "CasterDps": "Northwest, 1 marker"
+        }
+      }
+    ],
+    "steps": {
+      "UmadP1TeleTrouncingAi@7.5": 0,
+      "UmadP1TeleTrouncingAi@14.4": 1,
+      "UmadP1TeleTrouncingAi@17.5": 2,
+      "UmadP1TeleTrouncingAi@23.6": 3,
+      "UmadP1TeleTrouncingAi@34.6": 4
+    }
+  }
 }

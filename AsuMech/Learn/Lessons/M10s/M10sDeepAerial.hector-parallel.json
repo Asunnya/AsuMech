@@ -1,7 +1,20 @@
 {
   "scenario": "M10sDeepAerialScenario",
   "strat": "Hector (Parallel)",
-  "sources": [],
+  "sources": [
+    {
+      "label": "Toxic Friends - whole fight",
+      "url": "https://raidplan.io/plan/syjvfhacdxz7awet"
+    },
+    {
+      "label": "Parallel - Orb add phase",
+      "url": "https://raidplan.io/plan/qWue79_md0YHCrnW"
+    },
+    {
+      "label": "WTFDIG - Hector",
+      "url": "https://wtfdig.info/74/m10s#hector"
+    }
+  ],
   "steps": [
     {
       "key": {

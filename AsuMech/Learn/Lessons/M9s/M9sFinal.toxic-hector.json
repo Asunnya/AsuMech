@@ -1,7 +1,16 @@
 {
   "scenario": "M9sFinalScenario",
   "strat": "Toxic / Hector",
-  "sources": [],
+  "sources": [
+    {
+      "label": "Toxic Friends - whole fight",
+      "url": "https://raidplan.io/plan/c2L5iJfuYIWXk1v7"
+    },
+    {
+      "label": "WTFDIG - Toxic",
+      "url": "https://wtfdig.info/74/m9s#toxic"
+    }
+  ],
   "steps": [
     {
       "key": {

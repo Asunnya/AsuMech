@@ -55,14 +55,18 @@
           "url": "https://ff14.toolboxgaming.space/?id=832999250798471&preview=1",
           "kind": "toolbox",
           "section": "Resources by phase (toolbox + slides)",
-          "scenarios": []
+          "scenarios": [
+            "TopP1ProgramLoopScenario"
+          ]
         },
         {
           "label": "P1: Omega (Beetle) (Slides)",
           "url": "https://docs.google.com/presentation/d/1eOViXZYLosAFmuOWAQwAK6KwnfoC3iTQUeM6nQyKL48/edit?usp=sharing",
           "kind": "slides",
           "section": "Resources by phase (toolbox + slides)",
-          "scenarios": []
+          "scenarios": [
+            "TopP1ProgramLoopScenario"
+          ]
         },
         {
           "label": "P2: Omega-M and Omega-F (Toolbox)",
@@ -87,28 +91,40 @@
           "url": "https://ff14.toolboxgaming.space/?id=243183080764761&preview=1",
           "kind": "toolbox",
           "section": "Resources by phase (toolbox + slides)",
-          "scenarios": []
+          "scenarios": [
+            "TopP3IntermissionScenario",
+            "TopP3HelloWorldScenario",
+            "TopP3MonitorsScenario"
+          ]
         },
         {
           "label": "P3: Omega Reconfigured (Final Omega) (Slides)",
           "url": "https://docs.google.com/presentation/d/1ncZ3riDOf056wxkCAFto3aX-4TWOMVO4gFfrQkQNMdY/edit?usp=sharing",
           "kind": "slides",
           "section": "Resources by phase (toolbox + slides)",
-          "scenarios": []
+          "scenarios": [
+            "TopP3IntermissionScenario",
+            "TopP3HelloWorldScenario",
+            "TopP3MonitorsScenario"
+          ]
         },
         {
           "label": "P4: Blue Screen (Toolbox)",
           "url": "https://ff14.toolboxgaming.space/?id=142998596798471&preview=1",
           "kind": "toolbox",
           "section": "Resources by phase (toolbox + slides)",
-          "scenarios": []
+          "scenarios": [
+            "TopP4BlueScreenScenario"
+          ]
         },
         {
           "label": "P4: Blue Screen (Slides)",
           "url": "https://docs.google.com/presentation/d/1wsYwsYXF9zIj2hXFJ3aTz_WLvIbaieKAApS6ExRdOsk/edit?usp=sharing",
           "kind": "slides",
           "section": "Resources by phase (toolbox + slides)",
-          "scenarios": []
+          "scenarios": [
+            "TopP4BlueScreenScenario"
+          ]
         },
         {
           "label": "P5: Run: Dynamis - Delta (Toolbox)",
@@ -170,7 +186,8 @@
           "kind": "toolbox",
           "section": "Resources by phase (toolbox + slides)",
           "scenarios": [
-            "TopP6WaveCannon2Scenario"
+            "TopP6WaveCannon2Scenario",
+            "TopP6AlphaOmegaScenario"
           ]
         },
         {
@@ -179,7 +196,8 @@
           "kind": "slides",
           "section": "Resources by phase (toolbox + slides)",
           "scenarios": [
-            "TopP6WaveCannon2Scenario"
+            "TopP6WaveCannon2Scenario",
+            "TopP6AlphaOmegaScenario"
           ]
         }
       ],
@@ -214,14 +232,18 @@
           "url": "[stgy:aOK1X5gi086wNTdhs50fkbQSKUZDO3ef6YlgJg0IrA0ipDwc7KZQ94U4TEU4Mfs5aUpGCjccRgA56YLzEnFMq8qYetA4wbqpRaupzir36UKlhNQz3wgnZvaS8N4Nm6rDxl8tR2oUikP+o-IUoxHyGIDGQCMlU8Fwp3GvfPg7CywbUROblKYnusG736Jiy70rR49cKNb-c9A5aYx8SBODWE1veBIXyBTSOWO49Da3BVg+Ahvmy7XbQ7dEzrN8+hWx9tVDkoMZMWqCLWlNwU6h6Bg3ODgYF3v1ReAbGaXi]",
           "kind": "stgy",
           "section": "Strategy board cheat sheets (paste into the in-game Strategy Board)",
-          "scenarios": []
+          "scenarios": [
+            "TopP3IntermissionScenario"
+          ]
         },
         {
           "label": "Monitors (P3)",
           "url": "[stgy:aWYVmREYBkoTECOsYxwInhynMvdZ31IPHphrDNhCva-Y0E5pnccin-DTHA9PcV04DuMUkGBIoOXoJJCLZYjTDGyLHYj1EjVrPsR8ca0pmyAa7K0IBFQEXFASo1zbYG4lM6Qgzofspgf6nc3itfvcjNYKp4d6L9R8nq4KcT4P1vCFkaLTVEjkAmD+gR0Jz0BJHF4mPb3h7Ho3yep9x6PUplm6w4DpJI+s1L5yncsyeNJT-NTw4duXtScujbIOWCQ7smUYe8Z3m6wR6GC5hMLq+jw2wTZIBLF1rrwU6PJoBWC9-gJCAE7220BXfs7qq9-acArmoGK8LkZUth349XYyrhy0MuZ7Cj0iPLrpENJu27AFJeyze+cxbnWE+71GeISeRfUgRVNFwuG0NB18]",
           "kind": "stgy",
           "section": "Strategy board cheat sheets (paste into the in-game Strategy Board)",
-          "scenarios": []
+          "scenarios": [
+            "TopP3MonitorsScenario"
+          ]
         },
         {
           "label": "P5 Sigma - far glitch",
@@ -285,6 +307,25 @@
   ],
   "waymarks": [],
   "scenarios": {
+    "TopP1ProgramLoopScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=832999250798471&preview=1",
+          "credits": "NAUR (P1: Omega (Beetle) (Toolbox))"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - P1: Omega (Beetle) (Toolbox)",
+          "url": "https://ff14.toolboxgaming.space/?id=832999250798471&preview=1"
+        },
+        {
+          "label": "NAUR - P1: Omega (Beetle) (Slides)",
+          "url": "https://docs.google.com/presentation/d/1eOViXZYLosAFmuOWAQwAK6KwnfoC3iTQUeM6nQyKL48/edit?usp=sharing"
+        }
+      ],
+      "rules": []
+    },
     "TopP2PartySynergyScenario": {
       "plans": [
         {
@@ -300,6 +341,90 @@
         {
           "label": "NAUR - P2: Omega-M and Omega-F (Slides)",
           "url": "https://docs.google.com/presentation/d/1j-z91BI9i2LDOtp-qQzucqittpsvkecvmG3bXPV_9xs/edit?usp=sharing"
+        }
+      ],
+      "rules": []
+    },
+    "TopP3IntermissionScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=243183080764761&preview=1",
+          "credits": "NAUR (P3: Omega Reconfigured (Final Omega) (Toolbox))"
+        },
+        {
+          "url": "[stgy:aOK1X5gi086wNTdhs50fkbQSKUZDO3ef6YlgJg0IrA0ipDwc7KZQ94U4TEU4Mfs5aUpGCjccRgA56YLzEnFMq8qYetA4wbqpRaupzir36UKlhNQz3wgnZvaS8N4Nm6rDxl8tR2oUikP+o-IUoxHyGIDGQCMlU8Fwp3GvfPg7CywbUROblKYnusG736Jiy70rR49cKNb-c9A5aYx8SBODWE1veBIXyBTSOWO49Da3BVg+Ahvmy7XbQ7dEzrN8+hWx9tVDkoMZMWqCLWlNwU6h6Bg3ODgYF3v1ReAbGaXi]",
+          "credits": "NAUR (Intermission)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - P3: Omega Reconfigured (Final Omega) (Toolbox)",
+          "url": "https://ff14.toolboxgaming.space/?id=243183080764761&preview=1"
+        },
+        {
+          "label": "NAUR - P3: Omega Reconfigured (Final Omega) (Slides)",
+          "url": "https://docs.google.com/presentation/d/1ncZ3riDOf056wxkCAFto3aX-4TWOMVO4gFfrQkQNMdY/edit?usp=sharing"
+        }
+      ],
+      "rules": []
+    },
+    "TopP3HelloWorldScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=243183080764761&preview=1",
+          "credits": "NAUR (P3: Omega Reconfigured (Final Omega) (Toolbox))"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - P3: Omega Reconfigured (Final Omega) (Toolbox)",
+          "url": "https://ff14.toolboxgaming.space/?id=243183080764761&preview=1"
+        },
+        {
+          "label": "NAUR - P3: Omega Reconfigured (Final Omega) (Slides)",
+          "url": "https://docs.google.com/presentation/d/1ncZ3riDOf056wxkCAFto3aX-4TWOMVO4gFfrQkQNMdY/edit?usp=sharing"
+        }
+      ],
+      "rules": []
+    },
+    "TopP3MonitorsScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=243183080764761&preview=1",
+          "credits": "NAUR (P3: Omega Reconfigured (Final Omega) (Toolbox))"
+        },
+        {
+          "url": "[stgy:aWYVmREYBkoTECOsYxwInhynMvdZ31IPHphrDNhCva-Y0E5pnccin-DTHA9PcV04DuMUkGBIoOXoJJCLZYjTDGyLHYj1EjVrPsR8ca0pmyAa7K0IBFQEXFASo1zbYG4lM6Qgzofspgf6nc3itfvcjNYKp4d6L9R8nq4KcT4P1vCFkaLTVEjkAmD+gR0Jz0BJHF4mPb3h7Ho3yep9x6PUplm6w4DpJI+s1L5yncsyeNJT-NTw4duXtScujbIOWCQ7smUYe8Z3m6wR6GC5hMLq+jw2wTZIBLF1rrwU6PJoBWC9-gJCAE7220BXfs7qq9-acArmoGK8LkZUth349XYyrhy0MuZ7Cj0iPLrpENJu27AFJeyze+cxbnWE+71GeISeRfUgRVNFwuG0NB18]",
+          "credits": "NAUR (Monitors (P3))"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - P3: Omega Reconfigured (Final Omega) (Toolbox)",
+          "url": "https://ff14.toolboxgaming.space/?id=243183080764761&preview=1"
+        },
+        {
+          "label": "NAUR - P3: Omega Reconfigured (Final Omega) (Slides)",
+          "url": "https://docs.google.com/presentation/d/1ncZ3riDOf056wxkCAFto3aX-4TWOMVO4gFfrQkQNMdY/edit?usp=sharing"
+        }
+      ],
+      "rules": []
+    },
+    "TopP4BlueScreenScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=142998596798471&preview=1",
+          "credits": "NAUR (P4: Blue Screen (Toolbox))"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - P4: Blue Screen (Toolbox)",
+          "url": "https://ff14.toolboxgaming.space/?id=142998596798471&preview=1"
+        },
+        {
+          "label": "NAUR - P4: Blue Screen (Slides)",
+          "url": "https://docs.google.com/presentation/d/1wsYwsYXF9zIj2hXFJ3aTz_WLvIbaieKAApS6ExRdOsk/edit?usp=sharing"
         }
       ],
       "rules": []
@@ -382,6 +507,25 @@
       "rules": []
     },
     "TopP6WaveCannon2Scenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=829484027197761&preview=1",
+          "credits": "NAUR (P6: Alpha Omega (Toolbox))"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - P6: Alpha Omega (Toolbox)",
+          "url": "https://ff14.toolboxgaming.space/?id=829484027197761&preview=1"
+        },
+        {
+          "label": "NAUR - P6: Alpha Omega (Slides)",
+          "url": "https://docs.google.com/presentation/d/1NjFeRT-6ORKjR8ZZzDdktTOnJwuLNGyuUif1aNvKwU8/edit?usp=sharing"
+        }
+      ],
+      "rules": []
+    },
+    "TopP6AlphaOmegaScenario": {
       "plans": [
         {
           "url": "https://ff14.toolboxgaming.space/?id=829484027197761&preview=1",

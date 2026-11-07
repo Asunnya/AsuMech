@@ -480,5 +480,139 @@
       "url": "https://raidplan.io/plan/Src8CpFxCAUUuZEM",
       "credits": "NAUR (Sanctity pt. 2, meteors)"
     }
+  ],
+  "TeaP1LivingLiquidScenario": [
+    {
+      "url": "https://ff14.toolboxgaming.space/?id=725383877116761&preview=1",
+      "layout": "PF Trines",
+      "credits": "NAUR (Toolbox: Living Liquid)"
+    }
+  ],
+  "TeaI1LimitCutScenario": [
+    {
+      "url": "https://ff14.toolboxgaming.space/?id=803293127441961&preview=1",
+      "layout": "PF Trines",
+      "credits": "NAUR (Toolbox: Limit Cut)"
+    }
+  ],
+  "TeaP2BjCcScenario": [
+    {
+      "url": "https://ff14.toolboxgaming.space/?id=492297437831961&preview=1",
+      "layout": "PF Trines",
+      "credits": "NAUR (Toolbox: BJCC)"
+    }
+  ],
+  "TeaI2TemporalStasisScenario": [
+    {
+      "url": "https://ff14.toolboxgaming.space/?id=860745463802461&preview=1",
+      "layout": "PF Trines",
+      "credits": "NAUR (Toolbox: Alexander Prime - Timestop / Inception)"
+    }
+  ],
+  "TeaP3AlexanderPrimeScenario": [
+    {
+      "url": "https://ff14.toolboxgaming.space/?id=537197026169861&preview=1",
+      "layout": "PF Trines",
+      "credits": "NAUR (Toolbox: Wormhole)"
+    }
+  ],
+  "TeaP4PerfectAlexanderScenario": [
+    {
+      "url": "https://ff14.toolboxgaming.space/?id=170875560147661&preview=1",
+      "layout": "PF Trines",
+      "credits": "NAUR (Toolbox: Perfect Alexander)"
+    }
+  ],
+  "TopP1ProgramLoopScenario": [
+    {
+      "url": "https://ff14.toolboxgaming.space/?id=832999250798471&preview=1",
+      "credits": "NAUR (P1: Omega (Beetle) (Toolbox))"
+    }
+  ],
+  "TopP3IntermissionScenario": [
+    {
+      "url": "https://ff14.toolboxgaming.space/?id=243183080764761&preview=1",
+      "credits": "NAUR (P3: Omega Reconfigured (Final Omega) (Toolbox))"
+    },
+    {
+      "url": "[stgy:aOK1X5gi086wNTdhs50fkbQSKUZDO3ef6YlgJg0IrA0ipDwc7KZQ94U4TEU4Mfs5aUpGCjccRgA56YLzEnFMq8qYetA4wbqpRaupzir36UKlhNQz3wgnZvaS8N4Nm6rDxl8tR2oUikP+o-IUoxHyGIDGQCMlU8Fwp3GvfPg7CywbUROblKYnusG736Jiy70rR49cKNb-c9A5aYx8SBODWE1veBIXyBTSOWO49Da3BVg+Ahvmy7XbQ7dEzrN8+hWx9tVDkoMZMWqCLWlNwU6h6Bg3ODgYF3v1ReAbGaXi]",
+      "credits": "NAUR (Intermission)"
+    }
+  ],
+  "TopP3HelloWorldScenario": [
+    {
+      "url": "https://ff14.toolboxgaming.space/?id=243183080764761&preview=1",
+      "credits": "NAUR (P3: Omega Reconfigured (Final Omega) (Toolbox))"
+    }
+  ],
+  "TopP3MonitorsScenario": [
+    {
+      "url": "https://ff14.toolboxgaming.space/?id=243183080764761&preview=1",
+      "credits": "NAUR (P3: Omega Reconfigured (Final Omega) (Toolbox))"
+    },
+    {
+      "url": "[stgy:aWYVmREYBkoTECOsYxwInhynMvdZ31IPHphrDNhCva-Y0E5pnccin-DTHA9PcV04DuMUkGBIoOXoJJCLZYjTDGyLHYj1EjVrPsR8ca0pmyAa7K0IBFQEXFASo1zbYG4lM6Qgzofspgf6nc3itfvcjNYKp4d6L9R8nq4KcT4P1vCFkaLTVEjkAmD+gR0Jz0BJHF4mPb3h7Ho3yep9x6PUplm6w4DpJI+s1L5yncsyeNJT-NTw4duXtScujbIOWCQ7smUYe8Z3m6wR6GC5hMLq+jw2wTZIBLF1rrwU6PJoBWC9-gJCAE7220BXfs7qq9-acArmoGK8LkZUth349XYyrhy0MuZ7Cj0iPLrpENJu27AFJeyze+cxbnWE+71GeISeRfUgRVNFwuG0NB18]",
+      "credits": "NAUR (Monitors (P3))"
+    }
+  ],
+  "TopP4BlueScreenScenario": [
+    {
+      "url": "https://ff14.toolboxgaming.space/?id=142998596798471&preview=1",
+      "credits": "NAUR (P4: Blue Screen (Toolbox))"
+    }
+  ],
+  "TopP6AlphaOmegaScenario": [
+    {
+      "url": "https://ff14.toolboxgaming.space/?id=829484027197761&preview=1",
+      "credits": "NAUR (P6: Alpha Omega (Toolbox))"
+    }
+  ],
+  "UcobP3QuickmarchScenario": [
+    {
+      "url": "https://raidplan.io/plan/3zSKK0DXeJgCLadx",
+      "credits": "NAUR (Quickmarch - uptime)"
+    }
+  ],
+  "UcobP3BlackfireScenario": [
+    {
+      "url": "https://raidplan.io/plan/BJPnHRQMEsmOyapB",
+      "credits": "NAUR (Blackfire - DPS CCW, supports CW)"
+    }
+  ],
+  "UcobP3FellruinScenario": [
+    {
+      "url": "https://raidplan.io/plan/-83d6AilbZGqba3j",
+      "credits": "NAUR (Fellruin - party neuro opposite Bahamut)"
+    }
+  ],
+  "UcobP3HeavensfallScenario": [
+    {
+      "url": "https://raidplan.io/plan/NGpZ9S-3kiLsDzAY",
+      "credits": "NAUR (Heavensfall - R1 tower under Nael)"
+    }
+  ],
+  "UcobP3TenstrikeScenario": [
+    {
+      "url": "https://raidplan.io/plan/2wu2LOy8wKhG29Tr",
+      "credits": "NAUR (Tenstrike - jump to show you're covering the hatch; 1 is always safe for Earthshakers)"
+    }
+  ],
+  "UcobP3GrandOctetScenario": [
+    {
+      "url": "https://raidplan.io/plan/iunTUxGNwjAGF_7K",
+      "credits": "NAUR (Grand Octet - tank LB3; without tank LB3, bait Twin CCW (left) and stack CW of Twin (right))"
+    }
+  ],
+  "UcobP4AddsScenario": [
+    {
+      "url": "https://raidplan.io/plan/AMEhnLbUmlTb7ij3",
+      "credits": "NAUR (Raidplan: Adds)"
+    }
+  ],
+  "UcobP5GoldenBahamutScenario": [
+    {
+      "url": "https://raidplan.io/plan/Y4WRFLhdHSQ7oLN_",
+      "credits": "NAUR (Raidplan: Golden Bahamut)"
+    }
   ]
 }

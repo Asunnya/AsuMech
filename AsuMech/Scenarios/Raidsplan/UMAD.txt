@@ -84,6 +84,7 @@ Videos:
   Stray Apocalypse (P5 exaflares) dodge mini guide
     https://www.youtube.com/watch?v=WFGmri3-5VA
 
+@scenarios: -
 Simulations: Waju Sims
   https://github.com/WCGH/Waju-Sims/releases
 

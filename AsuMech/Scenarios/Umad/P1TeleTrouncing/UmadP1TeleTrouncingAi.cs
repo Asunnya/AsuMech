@@ -22,9 +22,8 @@ public sealed class UmadP1TeleTrouncingAi : IScenarioAi<UmadP1TeleTrouncingState
     private static readonly Vector2 ConfettiStackDpsSpot = new(6f, 6f);
     private static readonly Vector2 ConfettiSpreadDpsSpot = new(4f, 4f);
 
-    // Approximations: the guide says "on the boss ring" and "just outside the teleporter" with
-    // no distances; the teleporter square's radius is 12.
-    private const float RingRadius = 9f;
+    // Read off the WTFDIG fixed-tether picture: inside sits just past the boss ring.
+    private const float RingRadius = 7.5f;
     private const float OutsideRadius = 15f;
 
     public void Run(UmadP1TeleTrouncingState state, SimWorld world)

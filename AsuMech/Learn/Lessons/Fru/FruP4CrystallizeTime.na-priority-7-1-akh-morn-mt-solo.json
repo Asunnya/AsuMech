@@ -1,7 +1,12 @@
 {
   "scenario": "FruP4CrystallizeTimeScenario",
   "strat": "NA priority / 7-1 Akh Morn (MT solo)",
-  "sources": [],
+  "sources": [
+    {
+      "label": "NAUR LesBin - Crystallize Time - Early Pop",
+      "url": "https://docs.google.com/presentation/d/1dz7IPrYxMPT1Qc81aLi-s8pVQQ3AzD_P6nheLcdhH0o/edit?usp=sharing"
+    }
+  ],
   "steps": [
     {
       "key": {

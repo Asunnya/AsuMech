@@ -1,7 +1,16 @@
 {
   "scenario": "UcobP5ExaflaresScenario",
   "strat": "Dodge",
-  "sources": [],
+  "sources": [
+    {
+      "label": "NAUR - Raidplan: Golden Bahamut",
+      "url": "https://raidplan.io/plan/Y4WRFLhdHSQ7oLN_"
+    },
+    {
+      "label": "NAUR - Video: how to mid-dodge / uptime-dodge exaflares",
+      "url": "https://www.youtube.com/watch?v=ZbrTfoIxRdE"
+    }
+  ],
   "steps": [
     {
       "key": {

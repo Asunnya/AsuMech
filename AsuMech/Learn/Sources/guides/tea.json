@@ -1,0 +1,363 @@
+{
+  "fight": "TEA",
+  "family": "Tea",
+  "title": "The Epic of Alexander (Ultimate) - TEA",
+  "source": null,
+  "guide": null,
+  "captured": null,
+  "credits": "NAUR",
+  "sections": [
+    {
+      "title": "P1: Living Liquid",
+      "links": [
+        {
+          "label": "Toolbox: Living Liquid",
+          "url": "https://ff14.toolboxgaming.space/?id=725383877116761&preview=1",
+          "kind": "toolbox",
+          "section": "P1: Living Liquid",
+          "scenarios": [
+            "TeaP1LivingLiquidScenario"
+          ],
+          "layout": "PF Trines"
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "Intermission: Limit Cut",
+      "links": [
+        {
+          "label": "Toolbox: Limit Cut",
+          "url": "https://ff14.toolboxgaming.space/?id=803293127441961&preview=1",
+          "kind": "toolbox",
+          "section": "Intermission: Limit Cut",
+          "scenarios": [
+            "TeaI1LimitCutScenario"
+          ],
+          "layout": "PF Trines"
+        },
+        {
+          "label": "Video: Limit Cut guide",
+          "url": "https://www.youtube.com/watch?v=r3PODekimO0",
+          "kind": "video",
+          "section": "Intermission: Limit Cut",
+          "scenarios": [
+            "TeaI1LimitCutScenario"
+          ],
+          "layout": "PF Trines"
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "P2: Brute Justice and Cruise Chaser (BJ/CC)",
+      "links": [
+        {
+          "label": "Toolbox: BJCC",
+          "url": "https://ff14.toolboxgaming.space/?id=492297437831961&preview=1",
+          "kind": "toolbox",
+          "section": "P2: Brute Justice and Cruise Chaser (BJ/CC)",
+          "scenarios": [
+            "TeaP2BjCcScenario"
+          ],
+          "layout": "PF Trines"
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "Intermission: Temporal Stasis",
+      "links": [
+        {
+          "label": "Toolbox: Alexander Prime - Timestop / Inception",
+          "url": "https://ff14.toolboxgaming.space/?id=860745463802461&preview=1",
+          "kind": "toolbox",
+          "section": "Intermission: Temporal Stasis",
+          "scenarios": [
+            "TeaI2TemporalStasisScenario"
+          ],
+          "layout": "PF Trines"
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "P3: Alexander Prime",
+      "links": [
+        {
+          "label": "Toolbox: Wormhole",
+          "url": "https://ff14.toolboxgaming.space/?id=537197026169861&preview=1",
+          "kind": "toolbox",
+          "section": "P3: Alexander Prime",
+          "scenarios": [
+            "TeaP3AlexanderPrimeScenario"
+          ],
+          "layout": "PF Trines"
+        },
+        {
+          "label": "Video: Wormhole guide",
+          "url": "https://www.youtube.com/watch?v=yAstTj6LMdA",
+          "kind": "video",
+          "section": "P3: Alexander Prime",
+          "scenarios": [
+            "TeaP3AlexanderPrimeScenario"
+          ],
+          "layout": "PF Trines"
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "P4: Perfect Alexander",
+      "links": [
+        {
+          "label": "Toolbox: Perfect Alexander",
+          "url": "https://ff14.toolboxgaming.space/?id=170875560147661&preview=1",
+          "kind": "toolbox",
+          "section": "P4: Perfect Alexander",
+          "scenarios": [
+            "TeaP4PerfectAlexanderScenario"
+          ],
+          "layout": "PF Trines"
+        },
+        {
+          "label": "Video: Perfect Alexander guide",
+          "url": "https://www.youtube.com/watch?v=fiXZRgAOCHw",
+          "kind": "video",
+          "section": "P4: Perfect Alexander",
+          "scenarios": [
+            "TeaP4PerfectAlexanderScenario"
+          ],
+          "layout": "PF Trines"
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "General resources",
+      "links": [
+        {
+          "label": "Mitigation: General TEA Mitigation",
+          "url": "https://docs.google.com/spreadsheets/d/1A58RflNeNq9mesuvSEcQzIvQ3MwOGyvPRi5khNACrc8/edit#gid=1511755464",
+          "kind": "sheet",
+          "section": "General resources",
+          "scenarios": [],
+          "layout": "PF Trines",
+          "sheetId": "1A58RflNeNq9mesuvSEcQzIvQ3MwOGyvPRi5khNACrc8"
+        },
+        {
+          "label": "KR/EN Wormhole & Limit Cut Unity sim",
+          "url": "https://github.com/naurffxiv/assets/tree/main/Simulators",
+          "kind": "other",
+          "section": "General resources",
+          "scenarios": [
+            "TeaI1LimitCutScenario",
+            "TeaP3AlexanderPrimeScenario"
+          ],
+          "layout": "PF Trines"
+        },
+        {
+          "label": "Browser sim: Limit Cut / Temporal Stasis / Inception / Wormhole",
+          "url": "https://dangermomentum.itch.io/1256-sim",
+          "kind": "other",
+          "section": "General resources",
+          "scenarios": [
+            "TeaI1LimitCutScenario",
+            "TeaI2TemporalStasisScenario",
+            "TeaP3AlexanderPrimeScenario"
+          ],
+          "layout": "PF Trines"
+        }
+      ],
+      "rules": []
+    }
+  ],
+  "mitigation": [
+    {
+      "label": "Mitigation: General TEA Mitigation",
+      "url": "https://docs.google.com/spreadsheets/d/1A58RflNeNq9mesuvSEcQzIvQ3MwOGyvPRi5khNACrc8/edit#gid=1511755464",
+      "sheetId": "1A58RflNeNq9mesuvSEcQzIvQ3MwOGyvPRi5khNACrc8"
+    }
+  ],
+  "waymarks": [
+    {
+      "name": "PF Trines",
+      "mapId": 694,
+      "local": {
+        "A": [
+          0.0,
+          0.0,
+          -13.75
+        ],
+        "B": [
+          13.75,
+          0.0,
+          -8.25
+        ],
+        "C": [
+          0.0,
+          0.0,
+          13.75
+        ],
+        "D": [
+          -13.75,
+          0.0,
+          0.0
+        ],
+        "One": [
+          8.0,
+          0.0,
+          0.0
+        ],
+        "Two": [
+          13.75,
+          0.0,
+          0.0
+        ],
+        "Three": [
+          0.0,
+          0.0,
+          8.0
+        ],
+        "Four": [
+          8.0,
+          0.0,
+          8.0
+        ]
+      },
+      "closestPreset": "PF Trines",
+      "maxDeviation": 0.0
+    }
+  ],
+  "scenarios": {
+    "TeaP1LivingLiquidScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=725383877116761&preview=1",
+          "layout": "PF Trines",
+          "credits": "NAUR (Toolbox: Living Liquid)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Toolbox: Living Liquid",
+          "url": "https://ff14.toolboxgaming.space/?id=725383877116761&preview=1"
+        }
+      ],
+      "rules": []
+    },
+    "TeaI1LimitCutScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=803293127441961&preview=1",
+          "layout": "PF Trines",
+          "credits": "NAUR (Toolbox: Limit Cut)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Toolbox: Limit Cut",
+          "url": "https://ff14.toolboxgaming.space/?id=803293127441961&preview=1"
+        },
+        {
+          "label": "NAUR - Video: Limit Cut guide",
+          "url": "https://www.youtube.com/watch?v=r3PODekimO0"
+        },
+        {
+          "label": "NAUR - KR/EN Wormhole & Limit Cut Unity sim",
+          "url": "https://github.com/naurffxiv/assets/tree/main/Simulators"
+        },
+        {
+          "label": "NAUR - Browser sim: Limit Cut / Temporal Stasis / Inception / Wormhole",
+          "url": "https://dangermomentum.itch.io/1256-sim"
+        }
+      ],
+      "rules": []
+    },
+    "TeaP2BjCcScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=492297437831961&preview=1",
+          "layout": "PF Trines",
+          "credits": "NAUR (Toolbox: BJCC)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Toolbox: BJCC",
+          "url": "https://ff14.toolboxgaming.space/?id=492297437831961&preview=1"
+        }
+      ],
+      "rules": []
+    },
+    "TeaI2TemporalStasisScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=860745463802461&preview=1",
+          "layout": "PF Trines",
+          "credits": "NAUR (Toolbox: Alexander Prime - Timestop / Inception)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Toolbox: Alexander Prime - Timestop / Inception",
+          "url": "https://ff14.toolboxgaming.space/?id=860745463802461&preview=1"
+        },
+        {
+          "label": "NAUR - Browser sim: Limit Cut / Temporal Stasis / Inception / Wormhole",
+          "url": "https://dangermomentum.itch.io/1256-sim"
+        }
+      ],
+      "rules": []
+    },
+    "TeaP3AlexanderPrimeScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=537197026169861&preview=1",
+          "layout": "PF Trines",
+          "credits": "NAUR (Toolbox: Wormhole)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Toolbox: Wormhole",
+          "url": "https://ff14.toolboxgaming.space/?id=537197026169861&preview=1"
+        },
+        {
+          "label": "NAUR - Video: Wormhole guide",
+          "url": "https://www.youtube.com/watch?v=yAstTj6LMdA"
+        },
+        {
+          "label": "NAUR - KR/EN Wormhole & Limit Cut Unity sim",
+          "url": "https://github.com/naurffxiv/assets/tree/main/Simulators"
+        },
+        {
+          "label": "NAUR - Browser sim: Limit Cut / Temporal Stasis / Inception / Wormhole",
+          "url": "https://dangermomentum.itch.io/1256-sim"
+        }
+      ],
+      "rules": []
+    },
+    "TeaP4PerfectAlexanderScenario": {
+      "plans": [
+        {
+          "url": "https://ff14.toolboxgaming.space/?id=170875560147661&preview=1",
+          "layout": "PF Trines",
+          "credits": "NAUR (Toolbox: Perfect Alexander)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Toolbox: Perfect Alexander",
+          "url": "https://ff14.toolboxgaming.space/?id=170875560147661&preview=1"
+        },
+        {
+          "label": "NAUR - Video: Perfect Alexander guide",
+          "url": "https://www.youtube.com/watch?v=fiXZRgAOCHw"
+        }
+      ],
+      "rules": []
+    }
+  },
+  "guideText": []
+}

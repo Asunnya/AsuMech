@@ -24,6 +24,7 @@ Resources by phase (toolbox + slides)
 ------------------------------------------------------------------------
 Tip: view the slides in Slideshow mode to hide the easter eggs.
 
+@scenarios: TopP1ProgramLoopScenario
 P1: Omega (Beetle)
   Toolbox: https://ff14.toolboxgaming.space/?id=832999250798471&preview=1
   Slides:  https://docs.google.com/presentation/d/1eOViXZYLosAFmuOWAQwAK6KwnfoC3iTQUeM6nQyKL48/edit?usp=sharing
@@ -33,11 +34,12 @@ P2: Omega-M and Omega-F
   Toolbox: https://ff14.toolboxgaming.space/?id=324285310725761&preview=1
   Slides:  https://docs.google.com/presentation/d/1j-z91BI9i2LDOtp-qQzucqittpsvkecvmG3bXPV_9xs/edit?usp=sharing
 
-@scenarios: -
+@scenarios: TopP3IntermissionScenario, TopP3HelloWorldScenario, TopP3MonitorsScenario
 P3: Omega Reconfigured (Final Omega)
   Toolbox: https://ff14.toolboxgaming.space/?id=243183080764761&preview=1
   Slides:  https://docs.google.com/presentation/d/1ncZ3riDOf056wxkCAFto3aX-4TWOMVO4gFfrQkQNMdY/edit?usp=sharing
 
+@scenarios: TopP4BlueScreenScenario
 P4: Blue Screen
   Toolbox: https://ff14.toolboxgaming.space/?id=142998596798471&preview=1
   Slides:  https://docs.google.com/presentation/d/1wsYwsYXF9zIj2hXFJ3aTz_WLvIbaieKAApS6ExRdOsk/edit?usp=sharing
@@ -57,7 +59,7 @@ P5: Run: Dynamis - Omega
   Toolbox: https://ff14.toolboxgaming.space/?id=078384491946761&preview=1
   Slides:  https://docs.google.com/presentation/d/1oxxFMaGJEEgQyEgj6ENC0Y23O5Mi10Ap72h2ctPu68A/edit?usp=sharing
 
-@scenarios: TopP6WaveCannon2Scenario
+@scenarios: TopP6WaveCannon2Scenario, TopP6AlphaOmegaScenario
 P6: Alpha Omega
   Toolbox: https://ff14.toolboxgaming.space/?id=829484027197761&preview=1
   Slides:  https://docs.google.com/presentation/d/1NjFeRT-6ORKjR8ZZzDdktTOnJwuLNGyuUif1aNvKwU8/edit?usp=sharing
@@ -73,9 +75,11 @@ Mitigation sheet (short link)
 ------------------------------------------------------------------------
 Strategy board cheat sheets (paste into the in-game Strategy Board)
 ------------------------------------------------------------------------
+@scenarios: TopP3IntermissionScenario
 Intermission
 [stgy:aOK1X5gi086wNTdhs50fkbQSKUZDO3ef6YlgJg0IrA0ipDwc7KZQ94U4TEU4Mfs5aUpGCjccRgA56YLzEnFMq8qYetA4wbqpRaupzir36UKlhNQz3wgnZvaS8N4Nm6rDxl8tR2oUikP+o-IUoxHyGIDGQCMlU8Fwp3GvfPg7CywbUROblKYnusG736Jiy70rR49cKNb-c9A5aYx8SBODWE1veBIXyBTSOWO49Da3BVg+Ahvmy7XbQ7dEzrN8+hWx9tVDkoMZMWqCLWlNwU6h6Bg3ODgYF3v1ReAbGaXi]
 
+@scenarios: TopP3MonitorsScenario
 Monitors (P3)
 [stgy:aWYVmREYBkoTECOsYxwInhynMvdZ31IPHphrDNhCva-Y0E5pnccin-DTHA9PcV04DuMUkGBIoOXoJJCLZYjTDGyLHYj1EjVrPsR8ca0pmyAa7K0IBFQEXFASo1zbYG4lM6Qgzofspgf6nc3itfvcjNYKp4d6L9R8nq4KcT4P1vCFkaLTVEjkAmD+gR0Jz0BJHF4mPb3h7Ho3yep9x6PUplm6w4DpJI+s1L5yncsyeNJT-NTw4duXtScujbIOWCQ7smUYe8Z3m6wR6GC5hMLq+jw2wTZIBLF1rrwU6PJoBWC9-gJCAE7220BXfs7qq9-acArmoGK8LkZUth349XYyrhy0MuZ7Cj0iPLrpENJu27AFJeyze+cxbnWE+71GeISeRfUgRVNFwuG0NB18]
 

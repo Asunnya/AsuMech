@@ -1,0 +1,339 @@
+{
+  "fight": "M10S",
+  "family": "M10s",
+  "title": "AAC Heavyweight M2 (Savage) - M10S - The Xtremes (Red Hot & Deep Blue)",
+  "source": null,
+  "guide": null,
+  "captured": null,
+  "credits": "",
+  "sections": [
+    {
+      "title": "PF vocabulary",
+      "links": [],
+      "rules": [
+        {
+          "text": "Hector: the video guide made by Hector.",
+          "scenarios": []
+        },
+        {
+          "text": "TF: the Toxic Friends raidplan, the one PF usually means.",
+          "scenarios": []
+        },
+        {
+          "text": "Nomnom: a better Firesnaking / Watersnaking raidplan.",
+          "scenarios": []
+        },
+        {
+          "text": "Parallel: an Orb add phase strat that keeps both boss tethers parallel the whole time.",
+          "scenarios": []
+        }
+      ]
+    },
+    {
+      "title": "Raidplans",
+      "links": [
+        {
+          "label": "Toxic Friends - whole fight",
+          "url": "https://raidplan.io/plan/syjvfhacdxz7awet",
+          "kind": "raidplan.io",
+          "section": "Raidplans",
+          "scenarios": [
+            "M10sOpenerScenario",
+            "M10sSickestTakeoffScenario",
+            "M10sInsaneAirScenario",
+            "M10sSnakingScenario",
+            "M10sDeepVarialScenario",
+            "M10sDeepAerialScenario",
+            "M10sArenaSplitScenario",
+            "M10sXtremeSnakingScenario",
+            "M10sAlleyOopTwoScenario"
+          ]
+        },
+        {
+          "label": "NomNom - Fire/Watersnaking",
+          "url": "https://raidplan.io/plan/Cmo_RpCDbsUSMV5c",
+          "kind": "raidplan.io",
+          "section": "Raidplans",
+          "scenarios": [
+            "M10sSnakingScenario",
+            "M10sXtremeSnakingScenario"
+          ],
+          "sourceOnly": true
+        },
+        {
+          "label": "Parallel - Orb add phase",
+          "url": "https://raidplan.io/plan/qWue79_md0YHCrnW",
+          "kind": "raidplan.io",
+          "section": "Raidplans",
+          "scenarios": [
+            "M10sDeepAerialScenario"
+          ],
+          "strat": "Hector (Parallel)",
+          "sourceOnly": true
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "Videos and cheat sheets",
+      "links": [
+        {
+          "label": "WTFDIG - Hector",
+          "url": "https://wtfdig.info/74/m10s#hector",
+          "kind": "other",
+          "section": "Videos and cheat sheets",
+          "scenarios": [
+            "M10sOpenerScenario",
+            "M10sSickestTakeoffScenario",
+            "M10sInsaneAirScenario",
+            "M10sSnakingScenario",
+            "M10sDeepVarialScenario",
+            "M10sDeepAerialScenario",
+            "M10sArenaSplitScenario",
+            "M10sXtremeSnakingScenario",
+            "M10sAlleyOopTwoScenario"
+          ]
+        }
+      ],
+      "rules": []
+    }
+  ],
+  "mitigation": [],
+  "waymarks": [
+    {
+      "name": "Toxic Friends",
+      "mapId": 1071,
+      "local": {
+        "A": [
+          0.021,
+          0.0,
+          -14.197
+        ],
+        "B": [
+          14.839,
+          0.0,
+          -0.078
+        ],
+        "C": [
+          -0.004,
+          0.0,
+          14.401
+        ],
+        "D": [
+          -14.986,
+          0.0,
+          -0.1
+        ],
+        "One": [
+          -11.832,
+          0.0,
+          -11.735
+        ],
+        "Two": [
+          11.858,
+          0.0,
+          -11.911
+        ],
+        "Three": [
+          11.945,
+          0.0,
+          12.022
+        ],
+        "Four": [
+          -11.758,
+          0.0,
+          11.614
+        ]
+      },
+      "closestPreset": "Toxic Friends",
+      "maxDeviation": 0.005
+    }
+  ],
+  "scenarios": {
+    "M10sOpenerScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/syjvfhacdxz7awet",
+          "credits": "Toxic Friends - whole fight"
+        }
+      ],
+      "sources": [
+        {
+          "label": "Toxic Friends - whole fight",
+          "url": "https://raidplan.io/plan/syjvfhacdxz7awet"
+        },
+        {
+          "label": "WTFDIG - Hector",
+          "url": "https://wtfdig.info/74/m10s#hector"
+        }
+      ],
+      "rules": []
+    },
+    "M10sSickestTakeoffScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/syjvfhacdxz7awet",
+          "credits": "Toxic Friends - whole fight"
+        }
+      ],
+      "sources": [
+        {
+          "label": "Toxic Friends - whole fight",
+          "url": "https://raidplan.io/plan/syjvfhacdxz7awet"
+        },
+        {
+          "label": "WTFDIG - Hector",
+          "url": "https://wtfdig.info/74/m10s#hector"
+        }
+      ],
+      "rules": []
+    },
+    "M10sInsaneAirScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/syjvfhacdxz7awet",
+          "credits": "Toxic Friends - whole fight"
+        }
+      ],
+      "sources": [
+        {
+          "label": "Toxic Friends - whole fight",
+          "url": "https://raidplan.io/plan/syjvfhacdxz7awet"
+        },
+        {
+          "label": "WTFDIG - Hector",
+          "url": "https://wtfdig.info/74/m10s#hector"
+        }
+      ],
+      "rules": []
+    },
+    "M10sSnakingScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/syjvfhacdxz7awet",
+          "credits": "Toxic Friends - whole fight"
+        }
+      ],
+      "sources": [
+        {
+          "label": "Toxic Friends - whole fight",
+          "url": "https://raidplan.io/plan/syjvfhacdxz7awet"
+        },
+        {
+          "label": "NomNom - Fire/Watersnaking",
+          "url": "https://raidplan.io/plan/Cmo_RpCDbsUSMV5c"
+        },
+        {
+          "label": "WTFDIG - Hector",
+          "url": "https://wtfdig.info/74/m10s#hector"
+        }
+      ],
+      "rules": []
+    },
+    "M10sDeepVarialScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/syjvfhacdxz7awet",
+          "credits": "Toxic Friends - whole fight"
+        }
+      ],
+      "sources": [
+        {
+          "label": "Toxic Friends - whole fight",
+          "url": "https://raidplan.io/plan/syjvfhacdxz7awet"
+        },
+        {
+          "label": "WTFDIG - Hector",
+          "url": "https://wtfdig.info/74/m10s#hector"
+        }
+      ],
+      "rules": []
+    },
+    "M10sDeepAerialScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/syjvfhacdxz7awet",
+          "credits": "Toxic Friends - whole fight"
+        }
+      ],
+      "sources": [
+        {
+          "label": "Toxic Friends - whole fight",
+          "url": "https://raidplan.io/plan/syjvfhacdxz7awet"
+        },
+        {
+          "label": "Parallel - Orb add phase",
+          "url": "https://raidplan.io/plan/qWue79_md0YHCrnW",
+          "strat": "Hector (Parallel)"
+        },
+        {
+          "label": "WTFDIG - Hector",
+          "url": "https://wtfdig.info/74/m10s#hector"
+        }
+      ],
+      "rules": []
+    },
+    "M10sArenaSplitScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/syjvfhacdxz7awet",
+          "credits": "Toxic Friends - whole fight"
+        }
+      ],
+      "sources": [
+        {
+          "label": "Toxic Friends - whole fight",
+          "url": "https://raidplan.io/plan/syjvfhacdxz7awet"
+        },
+        {
+          "label": "WTFDIG - Hector",
+          "url": "https://wtfdig.info/74/m10s#hector"
+        }
+      ],
+      "rules": []
+    },
+    "M10sXtremeSnakingScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/syjvfhacdxz7awet",
+          "credits": "Toxic Friends - whole fight"
+        }
+      ],
+      "sources": [
+        {
+          "label": "Toxic Friends - whole fight",
+          "url": "https://raidplan.io/plan/syjvfhacdxz7awet"
+        },
+        {
+          "label": "NomNom - Fire/Watersnaking",
+          "url": "https://raidplan.io/plan/Cmo_RpCDbsUSMV5c"
+        },
+        {
+          "label": "WTFDIG - Hector",
+          "url": "https://wtfdig.info/74/m10s#hector"
+        }
+      ],
+      "rules": []
+    },
+    "M10sAlleyOopTwoScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/syjvfhacdxz7awet",
+          "credits": "Toxic Friends - whole fight"
+        }
+      ],
+      "sources": [
+        {
+          "label": "Toxic Friends - whole fight",
+          "url": "https://raidplan.io/plan/syjvfhacdxz7awet"
+        },
+        {
+          "label": "WTFDIG - Hector",
+          "url": "https://wtfdig.info/74/m10s#hector"
+        }
+      ],
+      "rules": []
+    }
+  },
+  "guideText": []
+}

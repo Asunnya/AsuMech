@@ -95,42 +95,54 @@
           "url": "https://raidplan.io/plan/3zSKK0DXeJgCLadx",
           "kind": "raidplan.io",
           "section": "P3: Bahamut Prime",
-          "scenarios": []
+          "scenarios": [
+            "UcobP3QuickmarchScenario"
+          ]
         },
         {
           "label": "Blackfire - DPS CCW, supports CW",
           "url": "https://raidplan.io/plan/BJPnHRQMEsmOyapB",
           "kind": "raidplan.io",
           "section": "P3: Bahamut Prime",
-          "scenarios": []
+          "scenarios": [
+            "UcobP3BlackfireScenario"
+          ]
         },
         {
           "label": "Fellruin - party neuro opposite Bahamut",
           "url": "https://raidplan.io/plan/-83d6AilbZGqba3j",
           "kind": "raidplan.io",
           "section": "P3: Bahamut Prime",
-          "scenarios": []
+          "scenarios": [
+            "UcobP3FellruinScenario"
+          ]
         },
         {
           "label": "Heavensfall - R1 tower under Nael",
           "url": "https://raidplan.io/plan/NGpZ9S-3kiLsDzAY",
           "kind": "raidplan.io",
           "section": "P3: Bahamut Prime",
-          "scenarios": []
+          "scenarios": [
+            "UcobP3HeavensfallScenario"
+          ]
         },
         {
           "label": "Tenstrike - jump to show you're covering the hatch; 1 is always safe for Earthshakers",
           "url": "https://raidplan.io/plan/2wu2LOy8wKhG29Tr",
           "kind": "raidplan.io",
           "section": "P3: Bahamut Prime",
-          "scenarios": []
+          "scenarios": [
+            "UcobP3TenstrikeScenario"
+          ]
         },
         {
           "label": "Grand Octet - tank LB3; without tank LB3, bait Twin CCW (left) and stack CW of Twin (right)",
           "url": "https://raidplan.io/plan/iunTUxGNwjAGF_7K",
           "kind": "raidplan.io",
           "section": "P3: Bahamut Prime",
-          "scenarios": []
+          "scenarios": [
+            "UcobP3GrandOctetScenario"
+          ]
         }
       ],
       "rules": []
@@ -143,21 +155,29 @@
           "url": "https://raidplan.io/plan/AMEhnLbUmlTb7ij3",
           "kind": "raidplan.io",
           "section": "P4: Adds",
-          "scenarios": []
+          "scenarios": [
+            "UcobP4AddsScenario"
+          ]
         }
       ],
       "rules": [
         {
           "text": "Discuss which boss you take (default: MT Twin, OT Nael).",
-          "scenarios": []
+          "scenarios": [
+            "UcobP4AddsScenario"
+          ]
         },
         {
           "text": "Bosses between the 1 and 3 markers, somewhat NE.",
-          "scenarios": []
+          "scenarios": [
+            "UcobP4AddsScenario"
+          ]
         },
         {
           "text": "All stacks in the center of the arena.",
-          "scenarios": []
+          "scenarios": [
+            "UcobP4AddsScenario"
+          ]
         }
       ]
     },
@@ -170,7 +190,8 @@
           "kind": "raidplan.io",
           "section": "P5: Golden Bahamut",
           "scenarios": [
-            "UcobP5ExaflaresScenario"
+            "UcobP5ExaflaresScenario",
+            "UcobP5GoldenBahamutScenario"
           ]
         },
         {
@@ -179,7 +200,8 @@
           "kind": "video",
           "section": "P5: Golden Bahamut",
           "scenarios": [
-            "UcobP5ExaflaresScenario"
+            "UcobP5ExaflaresScenario",
+            "UcobP5GoldenBahamutScenario"
           ]
         }
       ],
@@ -187,25 +209,29 @@
         {
           "text": "Akh Morn order: share > MT invuln > OT invuln > share.",
           "scenarios": [
-            "UcobP5ExaflaresScenario"
+            "UcobP5ExaflaresScenario",
+            "UcobP5GoldenBahamutScenario"
           ]
         },
         {
           "text": "Shared busters: kitchen-sinked with every available mitigation.",
           "scenarios": [
-            "UcobP5ExaflaresScenario"
+            "UcobP5ExaflaresScenario",
+            "UcobP5GoldenBahamutScenario"
           ]
         },
         {
           "text": "Mitigation plan: 60s/90s CDs: Morn Afah 1/3/5 or 2/4 2m CDs:      Morn Afah 1/4 or 2/5 Discuss with co-tank / melee / caster which Morn Afahs you cover.",
           "scenarios": [
-            "UcobP5ExaflaresScenario"
+            "UcobP5ExaflaresScenario",
+            "UcobP5GoldenBahamutScenario"
           ]
         },
         {
           "text": "Tank LBs: none in the default plan unless it's an emergency (e.g. < 8-person stack, or invuln not up).",
           "scenarios": [
-            "UcobP5ExaflaresScenario"
+            "UcobP5ExaflaresScenario",
+            "UcobP5GoldenBahamutScenario"
           ]
         }
       ]
@@ -348,7 +374,140 @@
         "Fire order: In > Out > In (2nd fire-tether person goes out) > In."
       ]
     },
+    "UcobP3QuickmarchScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/3zSKK0DXeJgCLadx",
+          "credits": "NAUR (Quickmarch - uptime)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Quickmarch - uptime",
+          "url": "https://raidplan.io/plan/3zSKK0DXeJgCLadx"
+        }
+      ],
+      "rules": []
+    },
+    "UcobP3BlackfireScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/BJPnHRQMEsmOyapB",
+          "credits": "NAUR (Blackfire - DPS CCW, supports CW)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Blackfire - DPS CCW, supports CW",
+          "url": "https://raidplan.io/plan/BJPnHRQMEsmOyapB"
+        }
+      ],
+      "rules": []
+    },
+    "UcobP3FellruinScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/-83d6AilbZGqba3j",
+          "credits": "NAUR (Fellruin - party neuro opposite Bahamut)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Fellruin - party neuro opposite Bahamut",
+          "url": "https://raidplan.io/plan/-83d6AilbZGqba3j"
+        }
+      ],
+      "rules": []
+    },
+    "UcobP3HeavensfallScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/NGpZ9S-3kiLsDzAY",
+          "credits": "NAUR (Heavensfall - R1 tower under Nael)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Heavensfall - R1 tower under Nael",
+          "url": "https://raidplan.io/plan/NGpZ9S-3kiLsDzAY"
+        }
+      ],
+      "rules": []
+    },
+    "UcobP3TenstrikeScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/2wu2LOy8wKhG29Tr",
+          "credits": "NAUR (Tenstrike - jump to show you're covering the hatch; 1 is always safe for Earthshakers)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Tenstrike - jump to show you're covering the hatch; 1 is always safe for Earthshakers",
+          "url": "https://raidplan.io/plan/2wu2LOy8wKhG29Tr"
+        }
+      ],
+      "rules": []
+    },
+    "UcobP3GrandOctetScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/iunTUxGNwjAGF_7K",
+          "credits": "NAUR (Grand Octet - tank LB3; without tank LB3, bait Twin CCW (left) and stack CW of Twin (right))"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Grand Octet - tank LB3; without tank LB3, bait Twin CCW (left) and stack CW of Twin (right)",
+          "url": "https://raidplan.io/plan/iunTUxGNwjAGF_7K"
+        }
+      ],
+      "rules": []
+    },
+    "UcobP4AddsScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/AMEhnLbUmlTb7ij3",
+          "credits": "NAUR (Raidplan: Adds)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Raidplan: Adds",
+          "url": "https://raidplan.io/plan/AMEhnLbUmlTb7ij3"
+        }
+      ],
+      "rules": [
+        "Discuss which boss you take (default: MT Twin, OT Nael).",
+        "Bosses between the 1 and 3 markers, somewhat NE.",
+        "All stacks in the center of the arena."
+      ]
+    },
     "UcobP5ExaflaresScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/Y4WRFLhdHSQ7oLN_",
+          "credits": "NAUR (Raidplan: Golden Bahamut)"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR - Raidplan: Golden Bahamut",
+          "url": "https://raidplan.io/plan/Y4WRFLhdHSQ7oLN_"
+        },
+        {
+          "label": "NAUR - Video: how to mid-dodge / uptime-dodge exaflares",
+          "url": "https://www.youtube.com/watch?v=ZbrTfoIxRdE"
+        }
+      ],
+      "rules": [
+        "Akh Morn order: share > MT invuln > OT invuln > share.",
+        "Shared busters: kitchen-sinked with every available mitigation.",
+        "Mitigation plan: 60s/90s CDs: Morn Afah 1/3/5 or 2/4 2m CDs:      Morn Afah 1/4 or 2/5 Discuss with co-tank / melee / caster which Morn Afahs you cover.",
+        "Tank LBs: none in the default plan unless it's an emergency (e.g. < 8-person stack, or invuln not up)."
+      ]
+    },
+    "UcobP5GoldenBahamutScenario": {
       "plans": [
         {
           "url": "https://raidplan.io/plan/Y4WRFLhdHSQ7oLN_",
