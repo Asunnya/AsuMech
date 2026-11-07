@@ -6,7 +6,7 @@
         "Description": "Asunnya's fork of AnoMech: spawns fake party members and bosses client-side so you can practice raid mechanics without a full party. Everything from AnoMech, plus Savage (M9S to M11S), DSR, UCOB and UWU, and a Learn mode that guides you through each strat. Questions, strats and bug reports: https://discord.gg/y6kTkdaXjz",
         "Changelog": "0.6.0.4: UCOB fixes from playtesting: each phase has its own arena, Nael says her quotes over her head, the Geminus dragons and the P2 dragons hit their targets, puddles and twisters go away, the Heavensfall trio shows and bots dodge where the dives really land, Tenstrike bots stay out of your Earth Shaker, the P2 stack rotates a quarter turn per puddle, and the Phoenix transition is its own scenario; guides for M9S, M10S, M12S and TEA; the UMAD P1 lesson shows the WTFDIG pictures. 0.6.0.3: the whole of UCOB after Twintania: Nael's ending as a clear plays it, with the divebombs as an option, every Bahamut Prime trio (Quickmarch, Blackfire, Fellruin, Heavensfall, Tenstrike, Grand Octet), the adds and Golden Bahamut; The Epic of Alexander (P1 to P4); TOP P1 Program Loop, P3 Intermission, Hello World and Monitors, P4 Blue Screen and the whole of P6; Tuufless for TOP Delta and Sigma; better Monk, Viper and Bard actions. 0.6.0.2: Guided and Assisted for UMAD P5 Celestriad and Exaflares, FRU Crystallize Time and UCOB P5 Exaflares; a Discord link in the window and the feedback popup. 0.6.0.1: a recording you sent is removed from your disk (Settings can keep a copy), and Settings can delete every saved recording. 0.6: AnoMech is now AsuMech. Uninstall AnoMech: AsuMech imports its settings (relay, streaks, recent fights) the first time it starts. New: a Learn mode that guides you through each strat step by step, with the strat's toolbox picture and a thumbs up/down on every step; Report a problem from inside a run (a solo run pauses while you write, and the run's details are sent with it); scenario and strat requests no longer need a GitHub account; your best streak shows beside your streak. Multiplayer now uses the AsuMech server by default.",
         "InternalName": "AsuMech",
-        "AssemblyVersion": "0.6.0.3",
+        "AssemblyVersion": "0.6.0.4",
         "RepoUrl": "https://github.com/Asunnya/AsuMech",
         "ApplicableVersion": "any",
         "Tags": [
@@ -18,11 +18,11 @@
         ],
         "DalamudApiLevel": 15,
         "IconUrl": "https://raw.githubusercontent.com/Asunnya/AsuMech/asunnya-release/images/icon6464.png",
-        "DownloadLinkInstall": "https://github.com/Asunnya/AsuMech/releases/download/v0.6.0.3/latest.zip",
-        "DownloadLinkTesting": "https://github.com/Asunnya/AsuMech/releases/download/v0.6.0.3/latest.zip",
-        "DownloadLinkUpdate": "https://github.com/Asunnya/AsuMech/releases/download/v0.6.0.3/latest.zip",
+        "DownloadLinkInstall": "https://github.com/Asunnya/AsuMech/releases/download/v0.6.0.4/latest.zip",
+        "DownloadLinkTesting": "https://github.com/Asunnya/AsuMech/releases/download/v0.6.0.4/latest.zip",
+        "DownloadLinkUpdate": "https://github.com/Asunnya/AsuMech/releases/download/v0.6.0.4/latest.zip",
         "IsHide": false,
         "IsTestingExclusive": false,
-        "LastUpdate": "1794070292"
+        "LastUpdate": "1794080762"
     }
 ]
