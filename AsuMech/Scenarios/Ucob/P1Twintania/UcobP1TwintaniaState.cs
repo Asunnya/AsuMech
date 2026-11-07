@@ -10,13 +10,12 @@ namespace AsuMech.Scenarios.Ucob.P1Twintania;
 public sealed class UcobP1TwintaniaState
 {
     public const int TwisterCount = 4;
-    public const float TwisterTriggerRadius = 2f; // UNVERIFIED
-    public const float TwisterBlastRadius = 8f;
-    public const float NeurolinkRadius = 2f; // UNVERIFIED
+    public const float TwisterTriggerRadius = UcobConstants.Geometry.TwisterTriggerRadius;
+    public const float TwisterBlastRadius = UcobConstants.Geometry.TwisterBlastRadius;
+    public const float NeurolinkRadius = UcobConstants.Geometry.NeurolinkRadius;
     public const float HatchRadius = 8f;
     public const float FireballRadius = 4f;
-    // UNVERIFIED: one or two took lethal hits, five or more lived.
-    public const int FireballMinimumStack = 4;
+    public const int FireballMinimumStack = UcobConstants.FireballMinimumStack;
     public const float LiquidHellPuddleRadius = 4f; // UNVERIFIED
     public const float PlummetRange = 8f;
     public const float PlummetHalfAngle = MathF.PI / 4f; // UNVERIFIED

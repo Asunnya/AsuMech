@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 using AsuMech.Core.Game;
@@ -14,7 +15,21 @@ public class UcobConstants
         public const float P5ArenaRadius = 21.8f;
         // UNVERIFIED: Twintania's death wall; nobody in the logs stood past 20.
         public const float P1ArenaRadius = 24.5f;
+
+        public const float NeurolinkRadius = 2f; // UNVERIFIED
+        public const float TwisterTriggerRadius = 2f; // UNVERIFIED
+        public const float TwisterBlastRadius = 8f;
+        public const float LunarDynamoInner = 6f; // UNVERIFIED
+        // UNVERIFIED: someone 6.6y from her was still hit.
+        public const float IronChariotRadius = 7f;
+        public const float ThermionicBurstHalfAngle = MathF.PI / 16f;
+
+        // Twintania's P1 neurolinks stay down for the rest of the fight, wherever she dropped them.
+        public static readonly Vector2[] P3Neurolinks = [new(-0.16f, -8.40f), new(-8.51f, 5.74f), new(8.53f, 5.61f)];
     }
+
+    // UNVERIFIED: one or two took lethal hits, five or more lived.
+    public const int FireballMinimumStack = 4;
 
     // "Aether Markers": A/B/C on the rim, D and 1-4 inside. Scenario-local == world here,
     // since the arena centre is the zone origin.
@@ -100,6 +115,9 @@ public class UcobConstants
         public const uint MegaflareStack = 0x27;
         public const uint EarthShaker = 0x28;
         public const uint LiquidHell = 0x29;
+        // UNVERIFIED which dive each one marks.
+        public const uint MegaflareDive = 0x29;
+        public const uint TwistingDive = 0x2A;
     }
 
     public class EObjId
@@ -134,7 +152,15 @@ public class UcobConstants
         public const ushort TwintaniaLeaves = 0x1E3A;
         public const ushort DragonArrives = 0x1E43;
         public const ushort TwintaniaArrives = 0x1E44;
+        // UNVERIFIED in the sim: Bahamut Prime, Nael and Twintania leave and land between trios.
+        public const ushort TrioLeave = 0x1E39;
+        public const ushort TwintaniaTrioLeave = 0x1E3A;
+        public const ushort TrioLand = 0x1E43;
+        public const ushort TwintaniaTrioLand = 0x1E44;
     }
+
+    public const uint MusicDirector = 0x80000004;
+    public const uint HeavensfallTrioMusic = 0x176F;
 
     public class ActionId
     {
@@ -197,5 +223,11 @@ public class UcobConstants
         public const uint MegaflareDive = 0x26E1;
         public const uint QuickmarchTrio = 0x26E2;
         public const uint BlackfireTrio = 0x26E3;
+        public const uint AethericProfusion = 0x26B1;
+        public const uint HeavensfallCast = 0x26B7;
+        public const uint Flatten = 0x26D5;
+        public const uint TempestWingSplash = 0x26D8;
+        public const uint FellruinTrio = 0x26E4;
+        public const uint HeavensfallTrio = 0x26E5;
     }
 }

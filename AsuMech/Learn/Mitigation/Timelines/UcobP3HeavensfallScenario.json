@@ -1,0 +1,156 @@
+{
+  "scenario": "UcobP3HeavensfallScenario",
+  "casts": [
+    {
+      "actionId": 9957,
+      "name": "Heavensfall Trio",
+      "start": 4.017,
+      "resolve": 7.717,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9953,
+      "name": "Megaflare Dive",
+      "start": 12.383,
+      "resolve": 16.083,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9906,
+      "name": "Twisting Dive",
+      "start": 12.383,
+      "resolve": 16.083,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9951,
+      "name": "Megaflare",
+      "start": 18.367,
+      "resolve": 26.067001,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9911,
+      "name": "Heavensfall",
+      "start": 18.85,
+      "resolve": 21.550001,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9949,
+      "name": "Megaflare",
+      "start": 19.333,
+      "resolve": 22.033,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9912,
+      "name": "Heavensfall",
+      "start": 23.933,
+      "resolve": 23.933,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9913,
+      "name": "Thermionic Burst",
+      "start": 27.95,
+      "resolve": 30.650002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9919,
+      "name": "Hypernova",
+      "start": 29.516,
+      "resolve": 29.516,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9913,
+      "name": "Thermionic Burst",
+      "start": 29.966,
+      "resolve": 32.666,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9913,
+      "name": "Thermionic Burst",
+      "start": 30.483,
+      "resolve": 33.183,
+      "occurrence": 3
+    },
+    {
+      "actionId": 9913,
+      "name": "Thermionic Burst",
+      "start": 31.016,
+      "resolve": 33.716,
+      "occurrence": 4
+    },
+    {
+      "actionId": 9919,
+      "name": "Hypernova",
+      "start": 31.066,
+      "resolve": 31.066,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9913,
+      "name": "Thermionic Burst",
+      "start": 31.566,
+      "resolve": 34.266,
+      "occurrence": 5
+    },
+    {
+      "actionId": 9913,
+      "name": "Thermionic Burst",
+      "start": 32.1,
+      "resolve": 34.8,
+      "occurrence": 6
+    },
+    {
+      "actionId": 9913,
+      "name": "Thermionic Burst",
+      "start": 32.633,
+      "resolve": 35.333,
+      "occurrence": 7
+    },
+    {
+      "actionId": 9919,
+      "name": "Hypernova",
+      "start": 32.633,
+      "resolve": 32.633,
+      "occurrence": 3
+    },
+    {
+      "actionId": 9913,
+      "name": "Thermionic Burst",
+      "start": 33.166,
+      "resolve": 35.866,
+      "occurrence": 8
+    },
+    {
+      "actionId": 9942,
+      "name": "Gigaflare",
+      "start": 37.716,
+      "resolve": 43.416,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9900,
+      "name": "Fireball",
+      "start": 38.783,
+      "resolve": 38.783,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Heavensfall Trio",
+    "Megaflare Dive",
+    "Twisting Dive",
+    "Megaflare",
+    "Heavensfall",
+    "Thermionic Burst",
+    "Hypernova",
+    "Gigaflare",
+    "Fireball"
+  ]
+}

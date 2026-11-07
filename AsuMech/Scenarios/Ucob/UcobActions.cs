@@ -95,6 +95,47 @@ public static class UcobActions
     };
 
     // UNVERIFIED: the blast's damage; the arena edge is close, so it is played as lethal.
+    // -- P3 Bahamut Prime's trios --
+
+    public static readonly EnemyAction LunarDynamo = new(ActionId.LunarDynamo)
+    {
+        Area = new() { Size = Geometry.LunarDynamoInner },
+        Effects = [Damage(Lethal)],
+        DeathExplanation = "outside Nael's melee range for Lunar Dynamo (\"hallowed moon\": get in)",
+    };
+
+    // UNVERIFIED: whoever else it lands on is knocked back like Heavensfall.
+    public static readonly EnemyAction RavenDive = new(ActionId.RavenDive)
+    {
+        Effects = [OnTarget(Damage()), OnOthers(Knockback(HeavensfallKnockback))],
+    };
+
+    // UNVERIFIED: a second player under one kills both.
+    public static readonly EnemyAction MeteorStream = new(ActionId.MeteorStream)
+    {
+        Effects = [Damage(split: Distribution.Exactly(1))],
+        DeathExplanation = "shared a Meteor Stream (spread for them)",
+    };
+
+    // UNVERIFIED: a non-tank holding it dies.
+    public static readonly EnemyAction TempestWingSplash = new(ActionId.TempestWingSplash)
+    {
+        Area = new() { CastTypeOverride = CastType.Circle },
+        Effects = [OnTarget(Damage(TankBuster)), OnOthers(Damage(Lethal))],
+        DeathExplanation = "stood near a Tempest Wing tether as it went off (tanks take them away from the party)",
+    };
+
+    public static readonly EnemyAction AethericProfusion = new(ActionId.AethericProfusion)
+    {
+        Effects = [Damage(ProtectedBy(StatusId.Neurolink), Lethal)],
+        DeathExplanation = "outside a Neurolink for Aetheric Profusion",
+    };
+
+    public static readonly EnemyAction Flatten = new(ActionId.Flatten)
+    {
+        Effects = [Damage(TankBuster)],
+    };
+
     public static readonly EnemyAction TwisterBlast = new(ActionId.TwisterBlast)
     {
         Area = new() { CastTypeOverride = CastType.Circle },
@@ -183,6 +224,18 @@ public static class UcobActions
         DeathExplanation = "stack with the party for Thermionic Beam",
     };
 
+    public static readonly EnemyAction Heavensfall = new(ActionId.Heavensfall)
+    {
+        Effects = [Damage(), Knockback(HeavensfallKnockback)],
+    };
+
+    public static readonly EnemyAction ThermionicBurst = new(ActionId.ThermionicBurst)
+    {
+        Area = new() { Size = Geometry.ThermionicBurstHalfAngle },
+        Effects = [Damage(Lethal)],
+        DeathExplanation = "stood in a Thermionic Burst slice (follow behind the sweep)",
+    };
+
     public static readonly EnemyAction Hypernova = new(ActionId.Hypernova)
     {
         Effects = [Damage()],
@@ -210,5 +263,11 @@ public static class UcobActions
         Cast = new() { AnimationLock = 2.1f },
         Effects = [Damage()],
         Timing = new() { DamageDelay = 0.6f },
+    };
+
+    public static readonly EnemyAction Fireball = new(ActionId.Fireball)
+    {
+        Effects = [Damage(split: Distribution.Stack(FireballMinimumStack))],
+        DeathExplanation = "Fireball wasn't shared (stack on the marker)",
     };
 }

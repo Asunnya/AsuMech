@@ -6,12 +6,8 @@ using AsuMech.Core.Game.Party;
 
 namespace AsuMech.Scenarios.Ucob.P2Nael;
 
-public enum NaelMove { LunarDynamo, IronChariot, ThermionicBeam, RavenDive, MeteorStream, DalamudDive }
-
 // Push: the party kills her phase off after Ravensbeak and she leaves. NoPush: the divebombs follow.
 public enum NaelPush { Push, NoPush }
-
-public sealed record NaelQuote(string Text, NaelMove First, NaelMove Second);
 
 public sealed class UcobP2NaelState
 {
@@ -39,12 +35,11 @@ public sealed class UcobP2NaelState
     ];
 
     public const float ThermionicBurstRange = 24f;
-    public const float ThermionicBurstHalfAngle = MathF.PI / 16f; // UNVERIFIED
+    public const float ThermionicBurstHalfAngle = UcobConstants.Geometry.ThermionicBurstHalfAngle;
     public const float MeteorStreamRadius = 4f;
     public const float DalamudDiveRadius = 5f;
-    public const float LunarDynamoInner = 6f; // UNVERIFIED
-    // UNVERIFIED: someone 6.6y from her was still hit.
-    public const float IronChariotRadius = 7f;
+    public const float LunarDynamoInner = UcobConstants.Geometry.LunarDynamoInner;
+    public const float IronChariotRadius = UcobConstants.Geometry.IronChariotRadius;
     public const float ThermionicBeamRadius = 4f;
     public const int ThermionicBeamMinimumStack = 4; // UNVERIFIED
     public const float RavenDiveRadius = 3f;

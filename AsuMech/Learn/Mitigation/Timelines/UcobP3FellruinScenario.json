@@ -1,0 +1,78 @@
+{
+  "scenario": "UcobP3FellruinScenario",
+  "casts": [
+    {
+      "actionId": 9956,
+      "name": "Fellruin Trio",
+      "start": 4.017,
+      "resolve": 7.717,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9916,
+      "name": "Lunar Dynamo",
+      "start": 17.433,
+      "resolve": 17.433,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9905,
+      "name": "Aetheric Profusion",
+      "start": 19.383,
+      "resolve": 24.083,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9918,
+      "name": "Raven Dive",
+      "start": 20.583,
+      "resolve": 20.583,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9943,
+      "name": "Tempest Wing",
+      "start": 23.433,
+      "resolve": 23.433,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9944,
+      "name": "Tempest Wing",
+      "start": 23.433,
+      "resolve": 23.433,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9942,
+      "name": "Gigaflare",
+      "start": 26.566,
+      "resolve": 32.266,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9920,
+      "name": "Meteor Stream",
+      "start": 27.766,
+      "resolve": 27.766,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9941,
+      "name": "Flatten",
+      "start": 43.033,
+      "resolve": 46.733,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Fellruin Trio",
+    "Lunar Dynamo",
+    "Aetheric Profusion",
+    "Raven Dive",
+    "Tempest Wing",
+    "Gigaflare",
+    "Meteor Stream",
+    "Flatten"
+  ]
+}
