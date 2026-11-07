@@ -16,6 +16,7 @@ public sealed class BurningGround(ushort burnStatus, float burnToDeath, string d
     private abstract record Patch(uint ActionId, float ArmedAt)
     {
         public abstract bool Contains(Vector2 p);
+        public virtual bool ActiveAt(float elapsed) => elapsed >= ArmedAt;
     }
 
     private sealed record Strip(uint ActionId, float ArmedAt, Vector2 Start, Vector2 Direction, float Length, float HalfWidth) : Patch(ActionId, ArmedAt)
@@ -29,9 +30,10 @@ public sealed class BurningGround(ushort burnStatus, float burnToDeath, string d
         }
     }
 
-    private sealed record Circle(uint ActionId, float ArmedAt, Vector2 Centre, float Radius) : Patch(ActionId, ArmedAt)
+    private sealed record Circle(uint ActionId, float ArmedAt, Vector2 Centre, float Radius, float GoneAt) : Patch(ActionId, ArmedAt)
     {
         public override bool Contains(Vector2 p) => Vector2.Distance(p, Centre) <= Radius;
+        public override bool ActiveAt(float elapsed) => elapsed >= ArmedAt && elapsed < GoneAt;
     }
 
     private sealed record Slice(uint ActionId, float ArmedAt, Vector2 Origin, Vector2 Direction, float HalfAngle) : Patch(ActionId, ArmedAt)
@@ -47,8 +49,9 @@ public sealed class BurningGround(ushort burnStatus, float burnToDeath, string d
     public void AddStrip(uint actionId, float armedAt, Vector3 start, Vector2 direction, float length, float halfWidth)
         => patches.Add(new Strip(actionId, armedAt, Flat(start), direction, length, halfWidth));
 
-    public void AddCircle(uint actionId, float armedAt, Vector3 centre, float radius)
-        => patches.Add(new Circle(actionId, armedAt, Flat(centre), radius));
+    // `goneAt` puts the patch out on its own, for fire that fades while others still burn.
+    public void AddCircle(uint actionId, float armedAt, Vector3 centre, float radius, float goneAt = float.PositiveInfinity)
+        => patches.Add(new Circle(actionId, armedAt, Flat(centre), radius, goneAt));
 
     public void AddSlice(uint actionId, float armedAt, Vector3 origin, Vector2 direction, float halfAngle)
         => patches.Add(new Slice(actionId, armedAt, Flat(origin), direction, halfAngle));
@@ -59,7 +62,7 @@ public sealed class BurningGround(ushort burnStatus, float burnToDeath, string d
         foreach (var member in party.ActiveMembers().Where(m => m.IsAlive()).ToList())
         {
             var at = Flat(member.Position);
-            var patch = patches.FirstOrDefault(p => elapsed >= p.ArmedAt && p.Contains(at));
+            var patch = patches.FirstOrDefault(p => p.ActiveAt(elapsed) && p.Contains(at));
             if (patch == null)
             {
                 exposure.Remove(member);

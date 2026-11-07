@@ -1,0 +1,99 @@
+{
+  "scenario": "UcobP3QuickmarchScenario",
+  "casts": [
+    {
+      "actionId": 9954,
+      "name": "Quickmarch Trio",
+      "start": 3.417,
+      "resolve": 7.117,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9953,
+      "name": "Megaflare Dive",
+      "start": 11.75,
+      "resolve": 15.45,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9923,
+      "name": "Lunar Dive",
+      "start": 11.75,
+      "resolve": 15.45,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9906,
+      "name": "Twisting Dive",
+      "start": 11.75,
+      "resolve": 15.45,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9949,
+      "name": "Megaflare",
+      "start": 18.783,
+      "resolve": 21.483002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9948,
+      "name": "Megaflare",
+      "start": 19.767,
+      "resolve": 19.767,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9950,
+      "name": "Megaflare",
+      "start": 23.816,
+      "resolve": 23.816,
+      "occurrence": 3
+    },
+    {
+      "actionId": 9945,
+      "name": "Earth Shaker",
+      "start": 26.133,
+      "resolve": 26.133,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9946,
+      "name": "Earth Shaker",
+      "start": 26.133,
+      "resolve": 26.133,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9943,
+      "name": "Tempest Wing",
+      "start": 28.133,
+      "resolve": 28.133,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9944,
+      "name": "Tempest Wing",
+      "start": 29.3,
+      "resolve": 29.3,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9940,
+      "name": "Flare Breath",
+      "start": 32.233,
+      "resolve": 32.233,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Quickmarch Trio",
+    "Megaflare Dive",
+    "Lunar Dive",
+    "Twisting Dive",
+    "Megaflare",
+    "Earth Shaker",
+    "Tempest Wing",
+    "Flare Breath"
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "scenario": "UcobP3BlackfireScenario",
+  "casts": [
+    {
+      "actionId": 9955,
+      "name": "Blackfire Trio",
+      "start": 3.483,
+      "resolve": 7.183,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9901,
+      "name": "Liquid Hell",
+      "start": 11.817,
+      "resolve": 11.817,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9953,
+      "name": "Megaflare Dive",
+      "start": 11.867,
+      "resolve": 15.566999,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9901,
+      "name": "Liquid Hell",
+      "start": 12.983,
+      "resolve": 12.983,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9901,
+      "name": "Liquid Hell",
+      "start": 14.133,
+      "resolve": 14.133,
+      "occurrence": 3
+    },
+    {
+      "actionId": 9917,
+      "name": "Thermionic Beam",
+      "start": 14.85,
+      "resolve": 14.85,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9901,
+      "name": "Liquid Hell",
+      "start": 15.283,
+      "resolve": 15.283,
+      "occurrence": 4
+    },
+    {
+      "actionId": 9901,
+      "name": "Liquid Hell",
+      "start": 16.467,
+      "resolve": 16.467,
+      "occurrence": 5
+    },
+    {
+      "actionId": 9951,
+      "name": "Megaflare",
+      "start": 17.833,
+      "resolve": 25.533,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9919,
+      "name": "Hypernova",
+      "start": 21.983,
+      "resolve": 21.983,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9919,
+      "name": "Hypernova",
+      "start": 23.533,
+      "resolve": 23.533,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9950,
+      "name": "Megaflare",
+      "start": 23.883,
+      "resolve": 23.883,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9919,
+      "name": "Hypernova",
+      "start": 25.1,
+      "resolve": 25.1,
+      "occurrence": 3
+    },
+    {
+      "actionId": 9942,
+      "name": "Gigaflare",
+      "start": 26.166,
+      "resolve": 31.866001,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9919,
+      "name": "Hypernova",
+      "start": 26.7,
+      "resolve": 26.7,
+      "occurrence": 4
+    }
+  ],
+  "names": [
+    "Blackfire Trio",
+    "Liquid Hell",
+    "Megaflare Dive",
+    "Thermionic Beam",
+    "Megaflare",
+    "Hypernova",
+    "Gigaflare"
+  ]
+}
