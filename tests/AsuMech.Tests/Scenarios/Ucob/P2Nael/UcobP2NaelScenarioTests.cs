@@ -67,6 +67,30 @@ public class UcobP2NaelScenarioTests
         });
     }
 
+    // Fang of Light casts each puddle itself; a cleanse circle stays up a while even once it is taken.
+    [Test]
+    public void FangOfLightCastsThePuddlesAndTheCleansesStayVisible([Values(1, 2, 3)] int seed)
+    {
+        var run = ScenarioRun.Execute(typeof(UcobP2NaelScenario), 0, seed, new ScenarioRunOptions { StopAt = UcobP2NaelScenario.RavensbeakCast });
+        Assert.That(run.Passed, run.ToString);
+        var rows = ((FakeBattleCharas)Natives.BattleCharas).Timeline.Rows;
+        var casts = rows.Where(r => r["kind"] == "cast" && r["id"] == ActionId.WingsOfSalvation.ToString()).ToList();
+        var circles = rows.Where(r => r["kind"] == "eobj_spawn" && r["id"] == EObjId.WingsOfSalvationCleanse.ToString()).ToList();
+        Assert.Multiple(() =>
+        {
+            Assert.That(casts, Has.Count.EqualTo(UcobP2NaelScenario.WingsCasts.Sum(set => set.Length)));
+            Assert.That(casts.Select(r => r["actor_name"]), Is.All.EqualTo("fang of light"));
+            Assert.That(circles, Has.Count.EqualTo(casts.Count));
+            foreach (var circle in circles)
+            {
+                var gone = rows.FirstOrDefault(r => r["kind"] == "despawn" && r["actor"] == circle["actor"] && Number(r["t"]) >= Number(circle["t"]));
+                if (gone != null) Assert.That(Number(gone["t"]) - Number(circle["t"]), Is.GreaterThan(1.5f));
+            }
+        });
+    }
+
+    private static float Number(string s) => float.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
+
     [Test]
     public void StandingInAThermionicBurstSliceKills()
         => Negative<UcobP2NaelScenario>(CasterDps)

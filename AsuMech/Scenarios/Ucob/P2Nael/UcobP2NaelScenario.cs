@@ -54,6 +54,9 @@ public sealed class UcobP2NaelScenario : IScenario
     public const float WingsCastSeconds = 2.99f;
     public const float CleanseAppears = 0.5f;
     private const float CleanseLasts = 11.3f;
+    // A taken circle stays up a moment, so it's seen before it goes.
+    private const float CleanseFadesAfterTaken = 1.6f;
+    private const float CleanseGoneAfterTaken = 3.1f;
     public static readonly float[] Deathstorms = [48.19f, 77.34f, 113.47f];
     public const float DoomAfterDeathstorm = 1.03f;
     public const float RavensbeakCast = 130.36f;
@@ -471,11 +474,7 @@ public sealed class UcobP2NaelScenario : IScenario
         var target = party.Get(role) is { } chosen && chosen.IsAlive() ? chosen : AliveMembers().FirstOrDefault();
         if (target == null) return null;
         var at = Flat(target.Position);
-        if (TakeHelper(new Placement(ToWorld(at), 0f)) is { } helper)
-        {
-            helper.NativeCast(ActionId.WingsOfSalvation, ActionType.Action, 0f, 2.7f, false, position: ToWorld(at));
-            world.Events.Add(WingsCastSeconds + EffectCarrierLinger, () => helperPool.Enqueue(helper));
-        }
+        fang?.NativeCast(ActionId.WingsOfSalvation, ActionType.Action, 0f, 2.7f, false, position: ToWorld(at));
         return at;
     }
 
@@ -522,7 +521,11 @@ public sealed class UcobP2NaelScenario : IScenario
             var index = cleanses.FindIndex(c => Vector2.Distance(Flat(member.Position), c.At) <= State.CleanseRadius);
             if (index < 0) continue;
             member.RemoveStatus(StatusId.Doom);
-            cleanses[index].EObj?.Despawn();
+            if (cleanses[index].EObj is { } taken)
+            {
+                world.Events.Add(CleanseFadesAfterTaken, taken.FadeOut);
+                world.Events.Add(CleanseGoneAfterTaken, taken.Despawn);
+            }
             cleanses.RemoveAt(index);
         }
     }
