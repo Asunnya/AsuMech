@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 using AsuMech.Core.Game;
@@ -14,7 +15,21 @@ public class UcobConstants
         public const float P5ArenaRadius = 21.8f;
         // UNVERIFIED: Twintania's death wall; nobody in the logs stood past 20.
         public const float P1ArenaRadius = 24.5f;
+
+        public const float NeurolinkRadius = 2f; // UNVERIFIED
+        public const float TwisterTriggerRadius = 2f; // UNVERIFIED
+        public const float TwisterBlastRadius = 8f;
+        public const float LunarDynamoInner = 6f; // UNVERIFIED
+        // UNVERIFIED: someone 6.6y from her was still hit.
+        public const float IronChariotRadius = 7f;
+        public const float ThermionicBurstHalfAngle = MathF.PI / 16f;
+
+        // Twintania's P1 neurolinks stay down for the rest of the fight, wherever she dropped them.
+        public static readonly Vector2[] P3Neurolinks = [new(-0.16f, -8.40f), new(-8.51f, 5.74f), new(8.53f, 5.61f)];
     }
+
+    // UNVERIFIED: one or two took lethal hits, five or more lived.
+    public const int FireballMinimumStack = 4;
 
     // "Aether Markers": A/B/C on the rim, D and 1-4 inside. Scenario-local == world here,
     // since the arena centre is the zone origin.
@@ -91,6 +106,9 @@ public class UcobConstants
     {
         public const uint Fireball = 0x75;
         public const uint Hatch = 0x76;
+        // UNVERIFIED which dive each one marks.
+        public const uint MegaflareDive = 0x29;
+        public const uint TwistingDive = 0x2A;
     }
 
     public class EObjId
@@ -99,11 +117,13 @@ public class UcobConstants
         public const uint Neurolink = 2001151;
         public const uint Twister = 2001168;
         public const uint WingsOfSalvationCleanse = 2003412;
+        public const uint Hypernova = 2003393;
     }
 
     public class TetherId
     {
         public const ushort Fireball = 5;
+        public const ushort TempestWing = 4;
     }
 
     // Lohs Daih is a Transfiguration status: its param is the Transformation row the boss
@@ -114,7 +134,15 @@ public class UcobConstants
     {
         public const ushort NaelLeaves = 0x1E39;
         public const ushort DragonLeaves = 0x008F;
+        // UNVERIFIED in the sim: Bahamut Prime, Nael and Twintania leave and land between trios.
+        public const ushort TrioLeave = 0x1E39;
+        public const ushort TwintaniaTrioLeave = 0x1E3A;
+        public const ushort TrioLand = 0x1E43;
+        public const ushort TwintaniaTrioLand = 0x1E44;
     }
+
+    public const uint MusicDirector = 0x80000004;
+    public const uint HeavensfallTrioMusic = 0x176F;
 
     public class ActionId
     {
@@ -148,5 +176,19 @@ public class UcobConstants
         public const uint Exaflare = 9967;       // 0x26EF, boss-body cast, no AOE of its own
         public const uint ExaflareFirst = 9968;  // 0x26F0, helper, 4.0s cast, arrow omen, 6y circle
         public const uint ExaflareRest = 9969;   // 0x26F1, helper, instant, 6y circle
+        public const uint AethericProfusion = 0x26B1;
+        public const uint TwistingDive = 0x26B2;
+        public const uint HeavensfallCast = 0x26B7;
+        public const uint Hypernova = 0x26BF;
+        public const uint Flatten = 0x26D5;
+        public const uint Gigaflare = 0x26D6;
+        public const uint TempestWing = 0x26D7;
+        public const uint TempestWingSplash = 0x26D8;
+        public const uint MegaflarePuddle = 0x26DD;
+        public const uint MegaflareTower = 0x26DF;
+        public const uint MegaflareStrike = 0x26E0;
+        public const uint MegaflareDive = 0x26E1;
+        public const uint FellruinTrio = 0x26E4;
+        public const uint HeavensfallTrio = 0x26E5;
     }
 }

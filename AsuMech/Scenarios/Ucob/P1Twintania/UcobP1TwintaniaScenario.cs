@@ -39,9 +39,8 @@ public sealed class UcobP1TwintaniaScenario : IScenario
     public static readonly float[] PlummetHits = [6.47f, 112.05f, 127.46f];
     public static readonly float[] TwisterCasts = [10.63f, 68.02f, 120.31f];
     public static readonly float[] TwisterSnapshots = [12.64f, 69.98f, 122.27f];
-    public const float TwisterArms = 0.9f;
-    public const float TwisterFades = 5.56f;
-    private const float TwisterGone = 6.62f;
+    public const float TwisterArms = UcobTwisters.Arms;
+    public const float TwisterFades = UcobTwisters.Fades;
     public static readonly float[] FireballMarkers = [10.55f, 92.54f];
     public static readonly float[] FireballHits = [15.85f, 99.77f];
     public static readonly float[] DeathSentenceCasts = [19.96f, 55.72f, 104.90f];
@@ -92,19 +91,10 @@ public sealed class UcobP1TwintaniaScenario : IScenario
     private readonly List<SimEnemy> spawned = [];
     private readonly Queue<SimEnemy> helperPool = [];
     private readonly List<SimEventObject> eobjs = [];
-    private readonly List<Vector2> neurolinks = [];
-    private readonly List<Twister> twisters = [];
+    private readonly UcobNeurolinks neurolinks = new();
+    private readonly UcobTwisters twisters = new();
     private readonly List<Puddle> puddles = [];
     private readonly List<Oviform> oviforms = [];
-
-    private sealed class Twister(Vector2 at, SimEventObject? eobj, float armsAt, float fadesAt)
-    {
-        public Vector2 At { get; } = at;
-        public SimEventObject? EObj { get; } = eobj;
-        public float ArmsAt { get; } = armsAt;
-        public float FadesAt { get; } = fadesAt;
-        public bool Spent { get; set; }
-    }
 
     private sealed record Puddle(Vector2 At, float FadesAt);
 
@@ -192,8 +182,8 @@ public sealed class UcobP1TwintaniaScenario : IScenario
             if (!boss.IsCasting && !boss.IsMoving && party.Get(AggroTank(now)) is { } tank && tank.IsAlive()) boss.Face(tank);
             boss.SetHealth(0, HealthAt(now));
         }
-        UpdateNeurolinkStatus();
-        TriggerTwisters(now);
+        neurolinks.Tick(party);
+        twisters.Tick(world, BlastTwister);
         BurnInPuddles(now);
         MoveOviforms();
     }
@@ -240,37 +230,18 @@ public sealed class UcobP1TwintaniaScenario : IScenario
 
     private void DropTwisters(int set)
     {
-        var now = world.Events.Elapsed;
         foreach (var role in state.TwisterTargets[set])
-        {
-            if (party.Get(role) is not { } member || !member.IsAlive()) continue;
-            var at = Flat(member.Position);
-            var eobj = SpawnEObj(EObjId.Twister, at);
-            var twister = new Twister(at, eobj, now + TwisterArms, now + TwisterFades);
-            twisters.Add(twister);
-            world.Events.Add(TwisterFades, () => eobj?.FadeOut());
-            world.Events.Add(TwisterGone, () =>
-            {
-                eobj?.SetState(0);
-                twisters.Remove(twister);
-            });
-        }
+            if (party.Get(role) is { } member && member.IsAlive())
+                twisters.Drop(world, Flat(member.Position));
     }
 
-    private void TriggerTwisters(float now)
+    private void BlastTwister(Vector2 at, SimCharacter toucher)
     {
-        foreach (var twister in twisters.Where(t => !t.Spent && now >= t.ArmsAt && now < t.FadesAt).ToList())
-        {
-            var toucher = AliveMembers().FirstOrDefault(m => Vector2.Distance(Flat(m.Position), twister.At) <= State.TwisterTriggerRadius);
-            if (toucher == null) continue;
-            twister.Spent = true;
-            twister.EObj?.SetState(0);
-            PlayFromHelper(ActionId.TwisterBlast, ToWorld(twister.At));
-            foreach (var hit in AliveMembers().Where(m => Vector2.Distance(Flat(m.Position), twister.At) <= State.TwisterBlastRadius).ToList())
-                hit.Die(ActionId.TwisterBlast, ReferenceEquals(hit, toucher)
-                    ? "touched a Twister (move off your spot as the cast ends)"
-                    : "launched into the death wall by a Twister someone touched");
-        }
+        PlayFromHelper(ActionId.TwisterBlast, ToWorld(at));
+        foreach (var hit in AliveMembers().Where(m => Vector2.Distance(Flat(m.Position), at) <= State.TwisterBlastRadius).ToList())
+            hit.Die(ActionId.TwisterBlast, ReferenceEquals(hit, toucher)
+                ? "touched a Twister (move off your spot as the cast ends)"
+                : "launched into the death wall by a Twister someone touched");
     }
 
     private void Fireball(PartyRole role)
@@ -307,23 +278,10 @@ public sealed class UcobP1TwintaniaScenario : IScenario
     private void DropNeurolink()
     {
         if (twintania is not { } boss) return;
-        var at = Flat(boss.Position);
-        neurolinks.Add(at);
-        SpawnEObj(EObjId.Neurolink, at);
+        neurolinks.Drop(world, Flat(boss.Position));
     }
 
-    private void UpdateNeurolinkStatus()
-    {
-        foreach (var member in AliveMembers().ToList())
-        {
-            var inside = InNeurolink(member);
-            if (inside && !member.HasStatus(StatusId.Neurolink)) member.AddStatus(StatusId.Neurolink);
-            else if (!inside && member.HasStatus(StatusId.Neurolink)) member.RemoveStatus(StatusId.Neurolink);
-        }
-    }
-
-    private bool InNeurolink(SimCharacter member)
-        => neurolinks.Any(n => Vector2.Distance(Flat(member.Position), n) <= State.NeurolinkRadius);
+    private bool InNeurolink(SimCharacter member) => neurolinks.Contains(member);
 
     private void LiquidHell(bool targeted)
     {
