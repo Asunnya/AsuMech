@@ -16,7 +16,7 @@
       "key": {
         "cls": "UmadP1TeleTrouncingAi",
         "time": 7.5,
-        "line": 34
+        "line": 33
       },
       "title": "After Tele-portent on you",
       "cue": "Tele-portent on you",
@@ -48,7 +48,7 @@
       "key": {
         "cls": "UmadP1TeleTrouncingAi",
         "time": 14.4,
-        "line": 35
+        "line": 34
       },
       "title": "After Tele-trouncing hits you",
       "cue": "Tele-trouncing hits you",
@@ -71,7 +71,7 @@
       "key": {
         "cls": "UmadP1TeleTrouncingAi",
         "time": 17.5,
-        "line": 38
+        "line": 37
       },
       "title": "After Tele-trouncing hits you",
       "cue": "Tele-trouncing hits you",
@@ -97,17 +97,17 @@
       "key": {
         "cls": "UmadP1TeleTrouncingAi",
         "time": 23.6,
-        "line": 40
+        "line": 39
       },
       "title": "After a tether lands on you",
       "cue": "A tether lands on you",
       "rule": "Each role has its own spot.",
       "roles": {
         "MainTank": {
-          "rule": "Stand near waymark A, 9m north of the centre."
+          "rule": "Stand near waymark A, 7.5m north of the centre."
         },
         "OffTank": {
-          "rule": "Stand near waymark D, 9m west of the centre."
+          "rule": "Stand near waymark D, 7.5m west of the centre."
         },
         "RegenHealer": {
           "rule": "Stand near waymark C, the south wall."
@@ -116,10 +116,10 @@
           "rule": "Stand near waymark B, the east wall."
         },
         "MeleeDpsA": {
-          "rule": "Stand near waymark C, 9m south of the centre."
+          "rule": "Stand near waymark C, 7.5m south of the centre."
         },
         "MeleeDpsB": {
-          "rule": "Stand near waymark B, 9m east of the centre."
+          "rule": "Stand near waymark B, 7.5m east of the centre."
         },
         "PhysRangedDps": {
           "rule": "Stand near waymark A, the north wall."
@@ -135,7 +135,7 @@
       "key": {
         "cls": "UmadP1TeleTrouncingAi",
         "time": 34.6,
-        "line": 44
+        "line": 43
       },
       "title": "After Bind on you",
       "cue": "Bind on you",
