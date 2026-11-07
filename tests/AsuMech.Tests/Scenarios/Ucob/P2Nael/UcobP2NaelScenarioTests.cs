@@ -144,11 +144,9 @@ public class UcobP2NaelScenarioTests
             {
                 SimEnemy? Nael() => p.World.Children.OfType<SimEnemy>().FirstOrDefault(e => e.IsActive && e.BNpcBaseId == BNpcBaseId.NaelDeusDarnus);
                 if (p.Crossed(UcobP2NaelScenario.NaelLeavesForTheDive + 1f)) naelTargetableAfterLeaving = Nael()?.Targetable;
-                if (p.Crossed(UcobP2NaelScenario.DivebombQuoteMoves[1] + 0.5f))
-                {
-                    naelTargetableAfterDive = Nael()?.Targetable;
+                if (p.Crossed(UcobP2NaelScenario.DivebombQuoteMoves[1] + 0.5f)) naelTargetableAfterDive = Nael()?.Targetable;
+                if (p.Crossed(UcobP2NaelScenario.DivebombLocks[^1] + UcobP2NaelScenario.CauterizeCastSeconds + 3.5f))
                     dragonsAfter = p.World.Children.OfType<SimEnemy>().Count(e => e.IsActive && dragonIds.Contains(e.BNpcBaseId));
-                }
             },
         });
         Assert.That(run.Passed, run.ToString);
@@ -174,13 +172,17 @@ public class UcobP2NaelScenarioTests
     public void StandingInADragonsPathKills()
         => Negative<UcobP2NaelScenario>(CasterDps)
             .Overrides<UcobP2NaelStateOverrides>(NorthLayout)
-            .TeleportAt(146.5f, to: new Vector2(2.6f, -22.5f))
+            .TeleportAt(149.5f, to: new Vector2(2.6f, -22.5f))
             .ShouldKill(ActionId.CauterizeFirehorn, CasterDps);
 
     [Test]
     public void TheLastBaitStayingInTheDragonsPathDies()
         => Negative<UcobP2NaelScenario>(RegenHealer)
-            .Overrides<UcobP2NaelStateOverrides>(NorthLayout)
+            .Overrides<UcobP2NaelStateOverrides>(o =>
+            {
+                NorthLayout(o);
+                o.DivebombStackTarget = MeleeDpsA;
+            })
             .FreezeAt(154.9f)
             .ShouldKill(ActionId.CauterizeTailOfDarkness, RegenHealer);
 
@@ -199,6 +201,6 @@ public class UcobP2NaelScenarioTests
                 NorthLayout(o);
                 o.DivebombQuote = 1;
             })
-            .TeleportAt(160.5f, to: Vector2.Zero)
-            .ShouldKill(ActionId.DalamudDive, AllBut(MainTank, OffTank));
+            .TeleportAt(153.7f, to: Vector2.Zero)
+            .ShouldKill(ActionId.DalamudDive, AllBut(MainTank, OffTank, RegenHealer));
 }
