@@ -29,6 +29,12 @@ public sealed class UcobP2NaelScenario : IScenario
     public object SettingsOverrides => settingsWindow.Overrides;
 
     public const float Heavensfall = 8.41f;
+    // The centre sword's steps down through the opener, each an (old, new) timeline pair.
+    public static readonly (float At, uint From, uint To)[] SwordSinks =
+    [
+        (8.32f, 0x4, 0x8), (8.81f, 0x10, 0x20), (12.34f, 0x40, 0x80), (14.13f, 0x100, 0x200),
+        (15.93f, 0x400, 0x800), (17.72f, 0x1000, 0x2000), (19.51f, 0x4000, 0x8000),
+    ];
     public static readonly float[] ThermionicBurstCasts = [12.39f, 16.55f];
     public const float ThermionicBurstCastSeconds = 3f;
     public static readonly float[] MeteorStreams = [13.95f, 17.18f];
@@ -129,6 +135,8 @@ public sealed class UcobP2NaelScenario : IScenario
         world.Events.Add(0f, SpawnNael);
         world.Events.Add(0f, FillHelperPool);
 
+        foreach (var (at, from, to) in SwordSinks)
+            world.Events.Add(at, () => UcobZone.DalamudSword?.PlayBeat(from, to));
         world.Events.Add(Heavensfall, HeavensfallHit);
         for (var i = 0; i < ThermionicBurstCasts.Length; i++)
         {

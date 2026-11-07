@@ -89,6 +89,21 @@ public class UcobP2NaelScenarioTests
         });
     }
 
+    // The sword of Dalamud in the centre steps down through the opener, all on one arena EObj.
+    [Test]
+    public void TheCentreSwordSinksThroughTheOpener()
+    {
+        var run = ScenarioRun.Execute(typeof(UcobP2NaelScenario), 0, 1, new ScenarioRunOptions { StopAt = UcobP2NaelScenario.DalamudDive + 1f });
+        Assert.That(run.Passed, run.ToString);
+        var beats = ((FakeBattleCharas)Natives.BattleCharas).Timeline.Rows
+            .Where(r => r["kind"] == "ac" && r["id"] == "0x19D" && Number(r["t"]) > 5f).ToList();
+        Assert.Multiple(() =>
+        {
+            Assert.That(beats, Has.Count.EqualTo(UcobP2NaelScenario.SwordSinks.Length));
+            Assert.That(beats.Select(r => r["actor"]).Distinct().Count(), Is.EqualTo(1));
+        });
+    }
+
     private static float Number(string s) => float.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
 
     [Test]
