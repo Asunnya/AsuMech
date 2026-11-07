@@ -17,6 +17,7 @@ public sealed class UcobP5GoldenBahamutState
     // Morn Afah marks a non-tank (UNVERIFIED that a tank is never marked).
     public IReadOnlyList<PartyRole> MornAfahTargets { get; }
     public PartyRole FirstInvulnTank { get; }
+    public float StartsAt { get; }
 
     // Akh Morn goes to whoever holds him: shared, one tank's invuln, the other's, shared again. The
     // tank who invulns the third keeps him to the end.
@@ -33,6 +34,7 @@ public sealed class UcobP5GoldenBahamutState
         var targets = Enumerable.Range(0, MornAfahs).Select(_ => NonTanks[rng.Next(NonTanks.Length)]).ToList();
         MornAfahTargets = overrides.MornAfahTargets ?? targets;
         FirstInvulnTank = overrides.FirstInvulnTank.IsTank() ? overrides.FirstInvulnTank : PartyRole.MainTank;
+        StartsAt = Scenario.StartsAt;
     }
 
     // Rolled whether pinned or not, so a pin leaves every later roll of the seed where it was.

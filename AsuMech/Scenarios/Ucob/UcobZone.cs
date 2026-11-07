@@ -9,12 +9,12 @@ namespace AsuMech.Scenarios.Ucob;
 public sealed class UcobZone : IZone
 {
     public static readonly UcobZone Instance = new();
-    // UNVERIFIED: P1 and P2's weather and track are borrowed from P5.
-    public static readonly Phase P1 = new(Instance, "P1", 32, 499);
-    public static readonly Phase P2 = new(Instance, "P2", 32, 499);
-    // UNVERIFIED: P3 and P4's weather and track are borrowed from P5 as well.
-    public static readonly Phase P3 = new(Instance, "P3", 32, 499);
-    public static readonly Phase P4 = new(Instance, "P4", 32, 499);
+    // Weather 2 is Twintania's arena, 21 Nael's. UNVERIFIED: both tracks are borrowed from P5.
+    public static readonly Phase P1 = new(Instance, "P1", 2, 499);
+    public static readonly Phase P2 = new(Instance, "P2", 21, 499);
+    // Weather 30 is Bahamut Prime's arena, 31 the adds'; P5's 32 is the Golden Bahamut floor. Track UNVERIFIED.
+    public static readonly Phase P3 = new(Instance, "P3", 30, 499);
+    public static readonly Phase P4 = new(Instance, "P4", 31, 499);
     public static readonly Phase P5 = new(Instance, "P5", 32, 499,
         init: world =>
         {
@@ -28,6 +28,10 @@ public sealed class UcobZone : IZone
     private const uint ArenaEObjId = 2007457;
     private const float ArenaBeatAt = 1f;
     private SimEventObject? p5Arena;
+    private SimEventObject? dalamudSword;
+
+    // The sword of Dalamud standing in the arena centre, which sinks over each Heavensfall.
+    public static SimEventObject? DalamudSword => Instance.dalamudSword;
 
     public string Name => "The Unending Coil of Bahamut";
 
@@ -54,7 +58,7 @@ public sealed class UcobZone : IZone
         SpawnArenaEObj(world, UcobConstants.ArenaLayoutId.Piece1, 0x6D0616, 1);
         SpawnArenaEObj(world, UcobConstants.ArenaLayoutId.Piece2, 0x6B6DD9, 4);
         SpawnArenaEObj(world, UcobConstants.ArenaLayoutId.Piece3, 0x6B6DBB, 1);
-        SpawnArenaEObj(world, UcobConstants.ArenaLayoutId.Piece4, 0x6B6CB2, 1);
+        dalamudSword = SpawnArenaEObj(world, UcobConstants.ArenaLayoutId.Piece4, 0x6B6CB2, 1);
         world.Events.Add(ArenaBeatAt, () => deathWall?.PlayBeat(4, 0x8));
     }
 

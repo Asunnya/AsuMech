@@ -63,6 +63,7 @@ public class UcobConstants
         public const uint Twintania = 8159;
         public const uint Oviform = 8160;
         public const uint NaelDeusDarnus = 8161;
+        public const uint NaelGeminus = 8162;
         public const uint Firehorn = 8163;
         public const uint Iceclaw = 8164;
         public const uint Thunderwing = 8165;
@@ -79,6 +80,7 @@ public class UcobConstants
         public const uint Twintania = 1482;
         public const uint Oviform = 2210;
         public const uint NaelDeusDarnus = 2612;
+        public const uint NaelGeminus = 2628;
         public const uint Firehorn = 2630;
         public const uint Iceclaw = 2631;
         public const uint Thunderwing = 2632;
@@ -157,6 +159,8 @@ public class UcobConstants
         public const ushort PhoenixRises = 0x1E43;
         public const ushort PhoenixLeaves = 0x1E39;
         public const ushort BahamutInnerRage = 0x11D2;
+        // UNVERIFIED that it keeps Prime dark: the log plays it as he lands for P3.
+        public const ushort BahamutPrimeLands = 0x11D1;
         public const ushort BahamutLeaves = 0x1E39;
         public const ushort TwintaniaLeaves = 0x1E3A;
         public const ushort DragonArrives = 0x1E43;

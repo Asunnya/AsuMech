@@ -300,6 +300,8 @@ internal sealed class PeerProxy(IBattleCharaProxy inner, PeerSeat seat) : IBattl
 
     public void NpcKnockback(Vector3 position, float rotation, float durationSeconds) { }
 
+    public void Yell(string text, float seconds) { }
+
     // Our player's own presses reach the client without coming through here.
     public void ReceiveActorCast(ActorCastData cast) { }
 

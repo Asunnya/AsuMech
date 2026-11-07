@@ -36,6 +36,8 @@ public sealed class UcobP3TenstrikeScenario : IScenario
     private const float GenerateCastSeconds = 2.7f;
     public const float OviformChaseAfterCast = 1.25f;
     public static readonly float[] MeteorStreams = [17.26f, 18.28f, 19.26f, 20.28f, 21.26f, 22.29f, 23.26f, 24.29f];
+    public const float GeminusArrives = 0.44f;
+    private const float GeminusHides = 1.3f;
     public const float TwintaniaLeaves = 24.64f;
     public static readonly float[] EarthShakerMarkers = [25.18f, 30.34f];
     public const float BahamutReturns = 29.10f;
@@ -103,7 +105,10 @@ public sealed class UcobP3TenstrikeScenario : IScenario
         for (var i = 0; i < MeteorStreams.Length; i++)
         {
             var target = state.MeteorOrder[i];
-            world.Events.Add(MeteorStreams[i], () => MeteorStream(target));
+            SimEnemy? geminus = null;
+            world.Events.Add(MeteorStreams[i] - GeminusArrives, () => geminus = GeminusOnto(target));
+            world.Events.Add(MeteorStreams[i], () => MeteorStream(geminus, target));
+            world.Events.Add(MeteorStreams[i] + GeminusHides, () => geminus?.FadeOut());
         }
         world.Events.Add(TwintaniaLeaves, () => twintania?.PlayActionTimeline(TimelineId.TwintaniaLeaves));
         world.Events.Add(TwintaniaLeaves + FadesAfterLeaving, () => twintania?.FadeOut());
@@ -115,7 +120,11 @@ public sealed class UcobP3TenstrikeScenario : IScenario
             world.Events.Add(EarthShakerMarkers[set], () => Mark(targets, LockonId.EarthShaker));
             world.Events.Add(EarthShakers[set], () => EarthShaker(targets));
         }
-        world.Events.Add(BahamutReturns, () => bahamut = Spawn(BNpcBaseId.BahamutPrime, BNpcNameId.BahamutPrime, Vector2.Zero, MathF.PI, targetable: false));
+        world.Events.Add(BahamutReturns, () =>
+        {
+            bahamut = Spawn(BNpcBaseId.BahamutPrime, BNpcNameId.BahamutPrime, Vector2.Zero, MathF.PI, targetable: false);
+            bahamut?.PlayActionTimeline(TimelineId.BahamutPrimeLands);
+        });
         world.Events.Add(BahamutReturns + ArrivalAfterSpawn, () => bahamut?.PlayActionTimeline(TimelineId.NaelOrBahamutArrives));
         world.Events.Add(EarthShakerMarkers[1], () => bahamut?.SetTargetable(true));
 
@@ -132,6 +141,7 @@ public sealed class UcobP3TenstrikeScenario : IScenario
     private void SpawnTrio()
     {
         bahamut = Spawn(BNpcBaseId.BahamutPrime, BNpcNameId.BahamutPrime, Vector2.Zero, MathF.PI, targetable: true);
+        bahamut?.PlayActionTimeline(TimelineId.BahamutPrimeLands);
         nael = Spawn(BNpcBaseId.NaelDeusDarnus, BNpcNameId.NaelDeusDarnus, NaelSpot, MathF.PI, targetable: false);
         twintania = Spawn(BNpcBaseId.Twintania, BNpcNameId.Twintania, TwintaniaSpot, MathF.PI, targetable: false);
     }
@@ -154,10 +164,17 @@ public sealed class UcobP3TenstrikeScenario : IScenario
         if (twintania is { } boss) hatches.Generate(boss, Members(state.HatchTargets));
     }
 
-    private void MeteorStream(PartyRole role)
+    // One of Nael's clones drops onto the target's spot just before its Meteor Stream.
+    private SimEnemy? GeminusOnto(PartyRole role)
+        => party.Get(role) is { } target && target.IsAlive()
+            ? Spawn(BNpcBaseId.NaelGeminus, BNpcNameId.NaelGeminus, Flat(target.Position), target.Rotation, targetable: false)
+            : null;
+
+    private void MeteorStream(SimEnemy? geminus, PartyRole role)
     {
-        if (party.Get(role) is { } target && target.IsAlive())
-            nael?.CastFromHelper(UcobActions.MeteorStreamSpread, target, at: target.Placement());
+        if (party.Get(role) is not { } target || !target.IsAlive()) return;
+        if (geminus is not null) geminus.Cast(UcobActions.MeteorStreamSpread, target);
+        else nael?.CastFromHelper(UcobActions.MeteorStreamSpread, target, at: target.Placement());
     }
 
     private void Mark(IEnumerable<PartyRole> roles, uint lockonId)
@@ -172,7 +189,8 @@ public sealed class UcobP3TenstrikeScenario : IScenario
         foreach (var member in Members(roles))
         {
             spots.Add(Flat(member.Position));
-            bahamut?.CastFromHelper(UcobActions.EarthShakerCone, member, at: new Placement(Vector3.Zero, 0f));
+            // The helper turns to its target, so each cone is drawn where it hits.
+            bahamut?.CastFromHelper(UcobActions.EarthShakerCone, member, at: new Placement(Vector3.Zero, 0f).Face(member.Position));
         }
         world.Events.Add(PuddleAppears, () => DropPuddles(spots));
     }
@@ -195,7 +213,7 @@ public sealed class UcobP3TenstrikeScenario : IScenario
                 puddles.Remove(puddle);
                 eobj?.FadeOut();
             });
-            world.Events.Add(PuddleGone, () => eobj?.SetState(0));
+            world.Events.Add(PuddleGone, () => eobj?.Despawn());
         }
     }
 

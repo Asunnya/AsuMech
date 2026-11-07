@@ -32,7 +32,7 @@ public sealed class UcobP5GoldenBahamutAi : IScenarioAi<State>
         world = worldParam;
         ai = new AiManager(world);
 
-        ai.Move(1f, () => AiMove.All(CenterOfTheBoss));
+        ai.Move(state.StartsAt + 1f, () => AiMove.All(CenterOfTheBoss));
         for (var k = 0; k < Scenario.AkhMornCasts.Length; k++)
         {
             var akhMorn = k;

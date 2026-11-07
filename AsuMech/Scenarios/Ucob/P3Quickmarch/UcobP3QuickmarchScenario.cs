@@ -166,6 +166,7 @@ public sealed class UcobP3QuickmarchScenario : IScenario
             Targetable: true,
             EnemyList: EnemyListMode.Always,
             Placement: new Placement(Vector3.Zero, MathF.PI)));
+        bahamut?.PlayActionTimeline(TimelineId.BahamutPrimeLands);
         nael = SpawnAdd(BNpcBaseId.NaelDeusDarnus, BNpcNameId.NaelDeusDarnus, NaelBesideBahamut);
         twintania = SpawnAdd(BNpcBaseId.Twintania, BNpcNameId.Twintania, TwintaniaBesideBahamut);
     }
@@ -254,7 +255,7 @@ public sealed class UcobP3QuickmarchScenario : IScenario
         {
             if (!world.Party.ActiveMembers().Any(m => m.IsAlive() && Vector2.Distance(Flat(m.Position), twister.At) <= TwisterTriggerRadius)) continue;
             twister.Spent = true;
-            twister.EObj?.SetState(0);
+            twister.EObj?.Despawn();
             var at = new Vector3(twister.At.X, 0f, twister.At.Y);
             twintania?.CastFromHelper(Actions.TwisterBlast, at, at: new Placement(at, 0f));
         }
@@ -300,7 +301,7 @@ public sealed class UcobP3QuickmarchScenario : IScenario
         if (bahamut is not { } boss) return;
         boss.Cast(ActionId.EarthShaker, animationLock: 1.1f);
         foreach (var member in Alive(state.EarthShakerTargets))
-            boss.CastFromHelper(Actions.EarthShakerCone, member, at: boss.Placement());
+            boss.CastFromHelper(Actions.EarthShakerCone, member, at: boss.Placement().Face(member.Position));
     }
 
     private void DespawnAll()

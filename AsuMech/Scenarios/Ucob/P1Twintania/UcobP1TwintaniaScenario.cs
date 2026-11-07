@@ -272,7 +272,7 @@ public sealed class UcobP1TwintaniaScenario : IScenario
                 puddles.Remove(puddle);
                 eobj?.FadeOut();
             });
-            world.Events.Add(PuddleGone, () => eobj?.SetState(0));
+            world.Events.Add(PuddleGone, () => eobj?.Despawn());
         });
     }
 

@@ -24,6 +24,14 @@ public sealed class UcobP3TenstrikeAi : IScenarioAi<UcobP3TenstrikeState>
     private const float GoToSpots = 0.5f;
     private const float AfterFirstHatches = 19.8f;
     private const float StepOffTheShaker = 0.07f;
+    private const float FirstAdaptAfterMarker = 0.5f;
+    private const float AdaptEvery = 0.4f;
+    private const float LastAdaptBeforeCone = 0.9f;
+    private const float ShakerArcStart = 60f;
+    private const float ShakerArcEnd = 300f;
+    private static readonly float[] ConeClearances = [55f, 50f, 46f];
+    private const float PeopleCountFrom = 5f;
+    private const float PuddleClearance = Scenario.PuddleRadius + 0.4f;
 
     private static readonly Dictionary<PartyRole, float> HomeBearings = new()
     {
@@ -36,12 +44,16 @@ public sealed class UcobP3TenstrikeAi : IScenarioAi<UcobP3TenstrikeState>
     private static readonly Vector2 One = new(0f, -8f);
 
     private State state = null!;
+    private SimWorld world = null!;
+    private readonly List<Vector2> firstPuddles = [];
     private IReadOnlyList<PartyRole> hatchByNeurolink = [];
     private IReadOnlyList<PartyRole> waitingAtEdge = [];
 
-    public void Run(UcobP3TenstrikeState stateParam, SimWorld world)
+    public void Run(UcobP3TenstrikeState stateParam, SimWorld worldParam)
     {
         state = stateParam;
+        world = worldParam;
+        firstPuddles.Clear();
         var ai = new AiManager(world);
         hatchByNeurolink = ClosestAssignment(state.HatchTargets, Geometry.Neurolinks.Select(BearingOf).ToArray());
         waitingAtEdge = ClosestAssignment(Enum.GetValues<PartyRole>().Except(state.HatchTargets).ToList(), EdgeBearings);
@@ -50,7 +62,10 @@ public sealed class UcobP3TenstrikeAi : IScenarioAi<UcobP3TenstrikeState>
         ai.Move(Scenario.GenerateCasts[0], () => AiMove.Create(HatchesIntoNeurolinksOthersToTheEdge()).NaturalOrder(), jitter: 0f);
         ai.Move(AfterFirstHatches, () => AiMove.Create(HatchesWalkBackAndCuttersStepIn()).NaturalOrder(), jitter: 0f, sprint: true);
         ai.Move(Scenario.EarthShakerMarkers[0] + 0.1f, () => AiMove.Create(FirstShakersOutOthersOnOne()).NaturalOrder(), jitter: 0f);
+        AdaptBotShakers(ai, Scenario.EarthShakerMarkers[0], Scenario.EarthShakers[0], state.FirstEarthShakers, FirstShakerRadius);
+        world.Events.Add(Scenario.EarthShakers[0], RecordFirstPuddles);
         ai.Move(Scenario.EarthShakers[0] + StepOffTheShaker, () => AiMove.Create(SecondShakersOutFirstBackToOne()).NaturalOrder(), jitter: 0f, sprint: true);
+        AdaptBotShakers(ai, Scenario.EarthShakers[0], Scenario.EarthShakers[1], state.SecondEarthShakers, SecondShakerRadius);
         ai.Move(Scenario.EarthShakers[1] + StepOffTheShaker, () => AiMove.Create(EveryoneOnOne()).NaturalOrder(), jitter: 0f, sprint: true);
     }
 
@@ -93,6 +108,104 @@ public sealed class UcobP3TenstrikeAi : IScenarioAi<UcobP3TenstrikeState>
         Place(spots, ShakerSpots(state.SecondEarthShakers, SecondShakerRadius));
         return spots;
     }
+
+    private void AdaptBotShakers(AiManager ai, float from, float cone, IReadOnlyList<PartyRole> shakers, float radius)
+    {
+        for (var at = from + FirstAdaptAfterMarker; at <= cone - LastAdaptBeforeCone; at += AdaptEvery)
+            ai.Move(at, () => AiMove.Create(BotShakersClearOfPeople(shakers, radius)).NaturalOrder(), jitter: 0f);
+    }
+
+    private void RecordFirstPuddles()
+    {
+        firstPuddles.Clear();
+        foreach (var role in state.FirstEarthShakers)
+            if (world.Party.Get(role) is { } member && member.IsAlive())
+                firstPuddles.Add(Flat(member.Position));
+    }
+
+    private Vector2?[] BotShakersClearOfPeople(IReadOnlyList<PartyRole> shakers, float radius)
+    {
+        var defaults = DefaultShakerBearings(shakers);
+        var bots = shakers.Where(IsBot).OrderBy(r => defaults[r]).ToList();
+        var people = PeopleBearings();
+        var wanted = bots.Select(r => defaults[r]).ToArray();
+        var bearings = ShakerBearingsClearOf(people, wanted, radius) ?? wanted;
+        var spots = new Vector2?[8];
+        for (var i = 0; i < bots.Count; i++) spots[(int)bots[i]] = AtBearing(bearings[i], radius);
+        return spots;
+    }
+
+    private float[]? ShakerBearingsClearOf(IReadOnlyList<float> people, float[] wanted, float radius)
+    {
+        if (wanted.All(b => Fits(b, people, radius, ConeClearances[0]))) return wanted;
+        foreach (var clearance in ConeClearances)
+            if (ClosestSpreadBearings(people, wanted, radius, clearance) is { } found)
+                return found;
+        return null;
+    }
+
+    private float[]? ClosestSpreadBearings(IReadOnlyList<float> people, float[] wanted, float radius, float clearance)
+    {
+        var candidates = Enumerable.Range((int)ShakerArcStart, (int)(ShakerArcEnd - ShakerArcStart) + 1)
+            .Select(b => (float)b)
+            .Where(b => Fits(b, people, radius, clearance))
+            .ToArray();
+        var n = wanted.Length;
+        if (n == 0) return [];
+        var cost = new float[n, candidates.Length];
+        var from = new int[n, candidates.Length];
+        for (var i = 0; i < n; i++)
+            for (var c = 0; c < candidates.Length; c++)
+            {
+                cost[i, c] = float.PositiveInfinity;
+                var own = MathF.Abs(candidates[c] - wanted[i]);
+                if (i == 0)
+                {
+                    cost[i, c] = own;
+                    continue;
+                }
+                for (var p = 0; p < c; p++)
+                    if (candidates[c] - candidates[p] >= clearance && cost[i - 1, p] + own < cost[i, c])
+                    {
+                        cost[i, c] = cost[i - 1, p] + own;
+                        from[i, c] = p;
+                    }
+            }
+        var best = -1;
+        for (var c = 0; c < candidates.Length; c++)
+            if (float.IsFinite(cost[n - 1, c]) && (best < 0 || cost[n - 1, c] < cost[n - 1, best]))
+                best = c;
+        if (best < 0) return null;
+        var chosen = new float[n];
+        for (var i = n - 1; i >= 0; i--)
+        {
+            chosen[i] = candidates[best];
+            best = from[i, best];
+        }
+        return chosen;
+    }
+
+    private bool Fits(float bearing, IReadOnlyList<float> people, float radius, float clearance)
+        => people.All(p => AngleBetween(p, bearing) >= clearance)
+           && firstPuddles.All(p => Vector2.Distance(p, AtBearing(bearing, radius)) >= PuddleClearance);
+
+    private static Dictionary<PartyRole, float> DefaultShakerBearings(IReadOnlyList<PartyRole> shakers)
+    {
+        var assigned = ClosestAssignment(shakers, ShakerBearings);
+        return assigned.Select((role, i) => (role, i)).ToDictionary(x => x.role, x => ShakerBearings[x.i]);
+    }
+
+    private bool IsBot(PartyRole role) => world.Party.Get(role) is { } member && world.Party.IsBotDriven(member);
+
+    private List<float> PeopleBearings()
+        => Enum.GetValues<PartyRole>()
+            .Select(r => world.Party.Get(r))
+            .OfType<SimCharacter>()
+            .Where(m => m.IsAlive() && !world.Party.IsBotDriven(m) && Flat(m.Position).Length() >= PeopleCountFrom)
+            .Select(m => BearingOf(Flat(m.Position)))
+            .ToList();
+
+    private static Vector2 Flat(Vector3 at) => new(at.X, at.Z);
 
     private static Vector2?[] EveryoneOnOne() => Cluster(One, Enum.GetValues<PartyRole>());
 

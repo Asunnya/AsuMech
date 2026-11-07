@@ -1,5 +1,6 @@
 using System.Numerics;
 using AsuMech.Core.Game.Party;
+using AsuMech.Core.Native.Interfaces;
 using AsuMech.Scenarios;
 using AsuMech.Scenarios.Ucob.P3Blackfire;
 using static AsuMech.Core.Game.Party.PartyRole;
@@ -56,6 +57,23 @@ public class UcobP3BlackfireScenarioTests
         => Negative<UcobP3BlackfireScenario>(PhysRangedDps)
             .Overrides<UcobP3BlackfireStateOverrides>(o => o.LiquidHellTarget = target)
             .ShouldKillNoOneElse();
+
+    [Test]
+    public void NaelThrowsEachHypernovaAndLeavesAPuddleWhereItLands()
+    {
+        var run = ScenarioRun.Execute(typeof(UcobP3BlackfireScenario), 0, 1, new ScenarioRunOptions { PlayerRole = OffTank });
+        Assert.That(run.Passed, run.ToString);
+        var rows = ((FakeBattleCharas)Natives.BattleCharas).Timeline.Rows;
+        var nael = rows.First(r => r["kind"] == "spawn" && r["id"] == BNpcBaseId.NaelDeusDarnus.ToString())["actor"];
+        var throws = rows.Where(r => r["kind"] == "ability" && r["id"] == ActionId.Hypernova.ToString()).ToList();
+        var puddles = rows.Where(r => r["kind"] == "eobj_spawn" && r["id"] == EObjId.HypernovaPuddle.ToString()).ToList();
+        Assert.Multiple(() =>
+        {
+            Assert.That(throws, Has.Count.EqualTo(UcobP3BlackfireState.HypernovaCount));
+            Assert.That(throws.Select(r => r["actor"]), Is.All.EqualTo(nael), "a Hypernova came from someone other than Nael");
+            Assert.That(puddles, Has.Count.EqualTo(UcobP3BlackfireState.HypernovaCount));
+        });
+    }
 
     private static readonly PartyRole[] Everyone = System.Enum.GetValues<PartyRole>();
 }

@@ -47,7 +47,7 @@ public sealed class UcobLiquidHell(SimWorld world, DamageSolver damage)
                 puddles.Remove(puddle);
                 eobj?.FadeOut();
             });
-            world.Events.Add(PuddleGone, () => eobj?.SetState(0));
+            world.Events.Add(PuddleGone, () => eobj?.Despawn());
         });
     }
 

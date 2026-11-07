@@ -63,6 +63,7 @@ public sealed class UcobP3BlackfireScenario : IScenario
     private const float PuddleGone = 13.6f;
     public const float PuddleRadius = 6f;
     private const float BurnToDeath = 1f; // UNVERIFIED
+    public const float HypernovaPuddleAppears = 1.08f;
 
     private static readonly Vector3 NaelBesideBahamut = new(-4.13f, 0f, 4.67f);
     private static readonly Vector3 TwintaniaBesideBahamut = new(6.44f, 0f, 4.07f);
@@ -161,6 +162,7 @@ public sealed class UcobP3BlackfireScenario : IScenario
             Targetable: true,
             EnemyList: EnemyListMode.Always,
             Placement: new Placement(Vector3.Zero, MathF.PI)));
+        bahamut?.PlayActionTimeline(TimelineId.BahamutPrimeLands);
         nael = SpawnAdd(BNpcBaseId.NaelDeusDarnus, BNpcNameId.NaelDeusDarnus, NaelBesideBahamut);
         twintania = SpawnAdd(BNpcBaseId.Twintania, BNpcNameId.Twintania, TwintaniaBesideBahamut);
     }
@@ -243,10 +245,16 @@ public sealed class UcobP3BlackfireScenario : IScenario
         }
     }
 
+    // Thrown by Nael herself; UNVERIFIED: the puddle does no damage.
     private void Hypernova(PartyRole role)
     {
         if (world.Party.Get(role) is not { } target || !target.IsAlive() || nael is not { } boss) return;
-        boss.CastFromHelper(Actions.Hypernova, target.Position, at: boss.Placement());
+        var at = target.Position;
+        boss.Cast(Actions.Hypernova, at);
+        world.Events.Add(HypernovaPuddleAppears, () =>
+        {
+            if (UcobSim.SpawnEObj(world, EObjId.HypernovaPuddle, UcobSim.Flat(at)) is { } puddle) puddles.Add(puddle);
+        });
     }
 
     // On whichever marked player has the most of the others with them.

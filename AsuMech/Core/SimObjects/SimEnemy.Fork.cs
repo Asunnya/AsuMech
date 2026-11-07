@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using AsuMech.Core.EnemyActions;
 using AsuMech.Core.Native.Interfaces;
@@ -17,6 +19,11 @@ public sealed partial class SimEnemy
     public void NativeActionEffect(uint actionId, float animationLock, ushort spellId, byte animationVariaton, ActionType actionType, byte flags, float? rotation = null, Vector3? position = null, GameObjectId? animationTargetId = null, GameObjectId? actionTargetId = null, GameObjectId? ballistaId = null)
         => Casting.NativeActionEffect(actionId, animationLock, spellId, animationVariaton, actionType, flags, rotation, position, animationTargetId,
             actionTargetId is { } target ? [new ActionEffectTarget(target)] : null, ballistaId);
+
+    // One effect whose hit plays on every listed target.
+    public void NativeActionEffect(uint actionId, float animationLock, ActionType actionType, IEnumerable<GameObjectId> actionTargetIds, float? rotation = null, Vector3? position = null, GameObjectId? animationTargetId = null)
+        => Casting.NativeActionEffect(actionId, animationLock, (ushort)actionId, 0, actionType, 0, rotation, position, animationTargetId,
+            actionTargetIds.Select(id => new ActionEffectTarget(id)).ToList());
 
     // A bar of `castSeconds` (the sheet's when null) whose effect lands as it ends, with no mechanics.
     public void LegacyCast(uint actionId, Vector3? targetLocation = null, float? castSeconds = null, SimCharacter? target = null,

@@ -412,6 +412,9 @@ public abstract partial class SimCharacter : ISimObject, IPositioned
 
     public void VoiceLine(uint voiceLineId) => ActorControl.PlayVoiceLine(voiceLineId);
 
+    // Dropped while the actor is still spawning.
+    public void Yell(string text, float seconds) => Proxy?.Yell(text, seconds);
+
     public virtual void SetTargetable(bool targetable) => ActorControl.SetTargetable(targetable);
 
     public bool Dead { get; private set; }

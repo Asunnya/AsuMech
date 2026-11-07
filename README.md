@@ -161,6 +161,7 @@ All using default NA pf strats unless noted otherwise:
       - Tenstrike Trio (Hatches in the Neurolinks, Meteor Streams, two sets of Earth Shakers)
       - Grand Octet (eight dives in turn, Megaflare towers and stacks, with or without tank LB3)
     - P4 Adds (Twintania and Nael together: Plummet, Liquid Hell, Hatches, Twisters, Nael's triple quotes, Megaflare, tank swap) _by [Asunnya](https://github.com/Asunnya)_
+    - P5 Phoenix Transition (the revive and Bahamut turning golden) _by [Asunnya](https://github.com/Asunnya)_
     - P5 Golden Bahamut (Morn Afah stacks, Akh Morn with tank invulns, Exaflares) _by [Asunnya](https://github.com/Asunnya)_
     - Exaflares
 - Dragonsong's Reprise (Ultimate) _by [Asunnya](https://github.com/Asunnya)_

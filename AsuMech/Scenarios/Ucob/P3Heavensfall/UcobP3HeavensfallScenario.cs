@@ -14,7 +14,7 @@ using State = AsuMech.Scenarios.Ucob.P3Heavensfall.UcobP3HeavensfallState;
 namespace AsuMech.Scenarios.Ucob.P3Heavensfall;
 
 // Bahamut Prime's Heavensfall Trio, through the Gigaflare that ends it. The bosses' HP is not
-// simulated; Bahamut Prime and Twintania stay where they dove from.
+// simulated.
 public sealed class UcobP3HeavensfallScenario : IScenario
 {
     public string Name => "Heavensfall Trio";
@@ -27,15 +27,19 @@ public sealed class UcobP3HeavensfallScenario : IScenario
     public object SettingsOverrides => settingsWindow.Overrides;
 
     public const float HeavensfallTrio = 4.00f;
+    public const float NaelAndTwintaniaShow = 4.05f;
     private const float BahamutUntargetable = 10.01f;
     private const float TrioLeave = 10.06f;
-    private const float TrioMove = 11.10f;
-    private const float TrioLand = 11.17f;
+    private const float TrioGone = 10.56f;
+    private const float TrioMove = 10.87f;
+    public const float TrioLand = 11.17f;
     public const float DiveMarkers = 12.24f;
     public const float Dives = 12.38f;
     public const float DivesResolve = 16.08f;
     public const float Twisters = 17.37f;
     public const float TowersCast = 18.35f;
+    public const float BahamutDivesOff = 18.39f;
+    public const float TwintaniaDivesOff = 18.48f;
     private const float NaelHeavensfall = 18.84f;
     public const float MegaflarePuddles = 19.33f;
     public const float MegaflarePuddlesResolve = 22.33f;
@@ -46,14 +50,21 @@ public sealed class UcobP3HeavensfallScenario : IScenario
     public static readonly float[] Hypernovas = [29.50f, 31.06f, 32.62f];
     private const float HypernovaPuddleAppears = 0.9f;
     private const float HypernovaPuddleLasts = 15.2f;
-    private const float TwintaniaLands = 32.53f;
+    public const float TwintaniaLands = 32.53f;
     public const float FireballMarker = 33.65f;
     private const float NaelLeaves = 34.23f;
-    private const float BahamutReturns = 36.54f;
+    public const float NaelGone = 34.81f;
+    private const float BahamutReturns = 36.22f;
+    public const float BahamutLands = 36.54f;
     public const float Fireball = 38.77f;
     public const float Gigaflare = 37.70f;
     private const float TwintaniaLeaves = 40.87f;
+    private const float TwintaniaGone = 41.40f;
     public const float End = 45f;
+
+    // Beside Bahamut Prime at the centre, facing north.
+    public static readonly Vector2 NaelShowsAt = new(-4.75f, 4.82f);
+    public static readonly Vector2 TwintaniaShowsAt = new(5.79f, 5.77f);
 
     private SimWorld world = null!;
     private SimParty party = null!;
@@ -61,7 +72,7 @@ public sealed class UcobP3HeavensfallScenario : IScenario
     private SimEnemy? bahamut;
     private SimEnemy? nael;
     private SimEnemy? twintania;
-    private readonly UcobTwisters twisters = new();
+    private readonly UcobTwisters twisters = new() { BotsAvoidRadius = UcobTwisters.TriggerRadius + 0.6f };
     private readonly List<SimEventObject> puddles = [];
 
     public void Run(SimWorld worldParam, int? selectedAi)
@@ -80,12 +91,14 @@ public sealed class UcobP3HeavensfallScenario : IScenario
         world.Events.Add(0f, SpawnBosses);
 
         world.Events.Add(HeavensfallTrio, () => bahamut?.Cast(ActionId.HeavensfallTrio));
+        world.Events.Add(NaelAndTwintaniaShow, ShowNaelAndTwintania);
         world.Events.Add(BahamutUntargetable, () =>
         {
             bahamut?.SetTargetable(false);
             world.Map.DirectorUpdate(MusicDirector, HeavensfallTrioMusic);
         });
-        world.Events.Add(TrioLeave, () => bahamut?.PlayActionTimeline(TimelineId.TrioLeave));
+        world.Events.Add(TrioLeave, PlayTrioLeave);
+        world.Events.Add(TrioGone, () => SetVisible(false, bahamut, nael, twintania));
         world.Events.Add(TrioMove, MoveTrioToTheEdge);
         world.Events.Add(TrioLand, PlayTrioLand);
         world.Events.Add(DiveMarkers, MarkDiveTargets);
@@ -96,6 +109,8 @@ public sealed class UcobP3HeavensfallScenario : IScenario
         });
         world.Events.Add(Twisters, DropTwisters);
         world.Events.Add(TowersCast, CastTowers);
+        world.Events.Add(BahamutDivesOff, () => bahamut?.SetVisible(false));
+        world.Events.Add(TwintaniaDivesOff, () => twintania?.SetVisible(false));
         world.Events.Add(NaelHeavensfall, () => nael?.Cast(ActionId.HeavensfallCast));
         world.Events.Add(MegaflarePuddles, CastMegaflarePuddles);
         world.Events.Add(Heavensfall, () => nael?.CastFromHelper(Actions.Heavensfall, at: new Placement(Vector3.Zero, 0f)));
@@ -106,10 +121,12 @@ public sealed class UcobP3HeavensfallScenario : IScenario
             world.Events.Add(BurstCasts[k], () => CastBursts(step));
         }
         foreach (var at in Hypernovas) world.Events.Add(at, DropHypernova);
-        world.Events.Add(TwintaniaLands, () => twintania?.PlayActionTimeline(TimelineId.TwintaniaTrioLand));
+        world.Events.Add(TwintaniaLands, () => Land(twintania, TimelineId.TwintaniaTrioLand));
         world.Events.Add(FireballMarker, () => party.Get(state.FireballTarget)?.AttachLockonVfx(LockonId.Fireball));
         world.Events.Add(NaelLeaves, () => nael?.PlayActionTimeline(TimelineId.TrioLeave));
-        world.Events.Add(BahamutReturns, ReturnBahamutToTheCentre);
+        world.Events.Add(NaelGone, () => nael?.SetVisible(false));
+        world.Events.Add(BahamutReturns, () => bahamut?.SetPosition(new Placement(Vector3.Zero, MathF.PI)));
+        world.Events.Add(BahamutLands, () => Land(bahamut, TimelineId.TrioLand));
         world.Events.Add(Gigaflare, () =>
         {
             bahamut?.SetTargetable(true);
@@ -120,6 +137,7 @@ public sealed class UcobP3HeavensfallScenario : IScenario
             if (party.Get(state.FireballTarget) is { } target && target.IsAlive()) twintania?.Cast(Actions.Fireball, target);
         });
         world.Events.Add(TwintaniaLeaves, () => twintania?.PlayActionTimeline(TimelineId.TwintaniaTrioLeave));
+        world.Events.Add(TwintaniaGone, () => twintania?.SetVisible(false));
         world.Events.Add(End, DespawnAll);
     }
 
@@ -132,8 +150,9 @@ public sealed class UcobP3HeavensfallScenario : IScenario
     private void SpawnBosses()
     {
         bahamut = Spawn(BNpcBaseId.BahamutPrime, BNpcNameId.BahamutPrime, Vector2.Zero, MathF.PI, true, EnemyListMode.Always, SpawnVisibility.Visible);
-        nael = Spawn(BNpcBaseId.NaelDeusDarnus, BNpcNameId.NaelDeusDarnus, Vector2.Zero, 0f, false, EnemyListMode.Never, SpawnVisibility.HiddenUntilShown);
-        twintania = Spawn(BNpcBaseId.Twintania, BNpcNameId.Twintania, Vector2.Zero, 0f, false, EnemyListMode.Never, SpawnVisibility.HiddenUntilShown);
+        bahamut?.PlayActionTimeline(TimelineId.BahamutPrimeLands);
+        nael = Spawn(BNpcBaseId.NaelDeusDarnus, BNpcNameId.NaelDeusDarnus, NaelShowsAt, MathF.PI, false, EnemyListMode.Never, SpawnVisibility.HiddenUntilShown);
+        twintania = Spawn(BNpcBaseId.Twintania, BNpcNameId.Twintania, TwintaniaShowsAt, MathF.PI, false, EnemyListMode.Never, SpawnVisibility.HiddenUntilShown);
     }
 
     private SimEnemy? Spawn(uint baseId, uint nameId, Vector2 at, float rotation, bool targetable, EnemyListMode list, SpawnVisibility visibility)
@@ -146,13 +165,24 @@ public sealed class UcobP3HeavensfallScenario : IScenario
             Visibility: visibility,
             Placement: new Placement(ToWorld(at), rotation)));
 
+    private void ShowNaelAndTwintania()
+    {
+        Land(nael, TimelineId.TrioLand);
+        Land(twintania, TimelineId.TwintaniaTrioLand);
+    }
+
+    private void PlayTrioLeave()
+    {
+        bahamut?.PlayActionTimeline(TimelineId.TrioLeave);
+        nael?.PlayActionTimeline(TimelineId.TrioLeave);
+        twintania?.PlayActionTimeline(TimelineId.TwintaniaTrioLeave);
+    }
+
     private void MoveTrioToTheEdge()
     {
         PlaceFacingTheCentre(bahamut, State.OnBearing(state.BahamutBearing, State.DiverDistance));
         PlaceFacingTheCentre(nael, State.OnBearing(state.NaelBearing, State.NaelDistance));
         PlaceFacingTheCentre(twintania, State.OnBearing(state.TwintaniaBearing, State.DiverDistance));
-        nael?.SetVisible(true);
-        twintania?.SetVisible(true);
     }
 
     private static void PlaceFacingTheCentre(SimEnemy? boss, Vector2 at)
@@ -160,9 +190,20 @@ public sealed class UcobP3HeavensfallScenario : IScenario
 
     private void PlayTrioLand()
     {
-        bahamut?.PlayActionTimeline(TimelineId.TrioLand);
-        nael?.PlayActionTimeline(TimelineId.TrioLand);
-        twintania?.PlayActionTimeline(TimelineId.TwintaniaTrioLand);
+        Land(bahamut, TimelineId.TrioLand);
+        Land(nael, TimelineId.TrioLand);
+        Land(twintania, TimelineId.TwintaniaTrioLand);
+    }
+
+    private static void Land(SimEnemy? boss, ushort timeline)
+    {
+        boss?.SetVisible(true);
+        boss?.PlayActionTimeline(timeline);
+    }
+
+    private static void SetVisible(bool visible, params SimEnemy?[] bosses)
+    {
+        foreach (var boss in bosses) boss?.SetVisible(visible);
     }
 
     private void MarkDiveTargets()
@@ -232,12 +273,6 @@ public sealed class UcobP3HeavensfallScenario : IScenario
                 puddles.Remove(eobj);
             });
         });
-    }
-
-    private void ReturnBahamutToTheCentre()
-    {
-        bahamut?.SetPosition(new Placement(Vector3.Zero, MathF.PI));
-        bahamut?.PlayActionTimeline(TimelineId.TrioLand);
     }
 
     private void DespawnAll()

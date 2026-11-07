@@ -38,6 +38,7 @@ internal sealed class PacketReplay(PeerNatives natives, SimWorld world, PartyRol
     private const int MaxWaitFrames = 300;
     private const int RememberedEffects = 4096;
     private const uint MaxBattleTalkMilliseconds = 30_000;
+    private const float MaxYellSeconds = 30f;
 
     private sealed class Spawned
     {
@@ -184,6 +185,7 @@ internal sealed class PacketReplay(PeerNatives natives, SimWorld world, PartyRol
         SetPosPacket p => p.Actor,
         MovePacket p => p.Actor,
         NpcKnockbackPacket p => p.Actor,
+        YellPacket p => p.Actor,
         CastPacket p => p.Actor,
         EffectPacket p => p.Actor,
         EffectResultPacket p => p.Actor,
@@ -361,6 +363,9 @@ internal sealed class PacketReplay(PeerNatives natives, SimWorld world, PartyRol
             case NpcKnockbackPacket p when NetGuard.TryPosition(p.X, p.Y, p.Z, out var position):
                 Character(p.Actor)?.NpcKnockback(position, NetGuard.Rotation(p.Rotation), NetGuard.Clamp(p.DurationSeconds, 0f, 10f));
                 Follow(p.Actor, position, NetGuard.Rotation(p.Rotation));
+                break;
+            case YellPacket p:
+                Character(p.Actor)?.Yell(NetGuard.Clean(p.Text), NetGuard.Clamp(p.Seconds, 0f, MaxYellSeconds));
                 break;
             case CastPacket p: Cast(p); break;
             case EffectPacket p: Effect(p); break;
