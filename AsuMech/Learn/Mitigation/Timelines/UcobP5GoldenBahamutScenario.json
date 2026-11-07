@@ -1,0 +1,558 @@
+{
+  "scenario": "UcobP5GoldenBahamutScenario",
+  "casts": [
+    {
+      "actionId": 9970,
+      "name": "Flames of Rebirth",
+      "start": 15.1,
+      "resolve": 15.1,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9991,
+      "name": "",
+      "start": 20.867,
+      "resolve": 20.867,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9964,
+      "name": "Morn Afah",
+      "start": 35.15,
+      "resolve": 40.850002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9962,
+      "name": "Akh Morn",
+      "start": 43.433,
+      "resolve": 47.133,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9963,
+      "name": "Akh Morn",
+      "start": 49.499,
+      "resolve": 49.499,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9963,
+      "name": "Akh Morn",
+      "start": 50.566,
+      "resolve": 50.566,
+      "occurrence": 3
+    },
+    {
+      "actionId": 9967,
+      "name": "Exaflare",
+      "start": 55.916,
+      "resolve": 59.616,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9968,
+      "name": "Exaflare",
+      "start": 57.933,
+      "resolve": 61.633,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9968,
+      "name": "Exaflare",
+      "start": 60.933,
+      "resolve": 64.632996,
+      "occurrence": 3
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 63.516,
+      "resolve": 63.516,
+      "occurrence": 4
+    },
+    {
+      "actionId": 9968,
+      "name": "Exaflare",
+      "start": 63.933,
+      "resolve": 67.632996,
+      "occurrence": 5
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 64.983,
+      "resolve": 64.983,
+      "occurrence": 6
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 66.466,
+      "resolve": 66.466,
+      "occurrence": 7
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 67.933,
+      "resolve": 67.933,
+      "occurrence": 8
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 69.417,
+      "resolve": 69.417,
+      "occurrence": 9
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 70.934,
+      "resolve": 70.934,
+      "occurrence": 10
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 72.418,
+      "resolve": 72.418,
+      "occurrence": 11
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 73.935,
+      "resolve": 73.935,
+      "occurrence": 12
+    },
+    {
+      "actionId": 9962,
+      "name": "Akh Morn",
+      "start": 75.035,
+      "resolve": 78.735,
+      "occurrence": 4
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 75.418,
+      "resolve": 75.418,
+      "occurrence": 13
+    },
+    {
+      "actionId": 9963,
+      "name": "Akh Morn",
+      "start": 81.103,
+      "resolve": 81.103,
+      "occurrence": 5
+    },
+    {
+      "actionId": 9963,
+      "name": "Akh Morn",
+      "start": 82.17,
+      "resolve": 82.17,
+      "occurrence": 6
+    },
+    {
+      "actionId": 9963,
+      "name": "Akh Morn",
+      "start": 83.237,
+      "resolve": 83.237,
+      "occurrence": 7
+    },
+    {
+      "actionId": 9964,
+      "name": "Morn Afah",
+      "start": 90.472,
+      "resolve": 96.172,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9967,
+      "name": "Exaflare",
+      "start": 104.591,
+      "resolve": 108.291,
+      "occurrence": 14
+    },
+    {
+      "actionId": 9968,
+      "name": "Exaflare",
+      "start": 106.592,
+      "resolve": 110.292,
+      "occurrence": 15
+    },
+    {
+      "actionId": 9968,
+      "name": "Exaflare",
+      "start": 109.592,
+      "resolve": 113.292,
+      "occurrence": 16
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 112.176,
+      "resolve": 112.176,
+      "occurrence": 17
+    },
+    {
+      "actionId": 9968,
+      "name": "Exaflare",
+      "start": 112.593,
+      "resolve": 116.293,
+      "occurrence": 18
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 113.66,
+      "resolve": 113.66,
+      "occurrence": 19
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 115.127,
+      "resolve": 115.127,
+      "occurrence": 20
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 116.61,
+      "resolve": 116.61,
+      "occurrence": 21
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 118.077,
+      "resolve": 118.077,
+      "occurrence": 22
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 119.611,
+      "resolve": 119.611,
+      "occurrence": 23
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 121.078,
+      "resolve": 121.078,
+      "occurrence": 24
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 122.612,
+      "resolve": 122.612,
+      "occurrence": 25
+    },
+    {
+      "actionId": 9964,
+      "name": "Morn Afah",
+      "start": 123.912,
+      "resolve": 129.612,
+      "occurrence": 3
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 124.079,
+      "resolve": 124.079,
+      "occurrence": 26
+    },
+    {
+      "actionId": 9962,
+      "name": "Akh Morn",
+      "start": 138.044,
+      "resolve": 141.744,
+      "occurrence": 8
+    },
+    {
+      "actionId": 9963,
+      "name": "Akh Morn",
+      "start": 144.109,
+      "resolve": 144.109,
+      "occurrence": 9
+    },
+    {
+      "actionId": 9963,
+      "name": "Akh Morn",
+      "start": 145.175,
+      "resolve": 145.175,
+      "occurrence": 10
+    },
+    {
+      "actionId": 9963,
+      "name": "Akh Morn",
+      "start": 146.242,
+      "resolve": 146.242,
+      "occurrence": 11
+    },
+    {
+      "actionId": 9963,
+      "name": "Akh Morn",
+      "start": 147.325,
+      "resolve": 147.325,
+      "occurrence": 12
+    },
+    {
+      "actionId": 9967,
+      "name": "Exaflare",
+      "start": 154.456,
+      "resolve": 158.15599,
+      "occurrence": 27
+    },
+    {
+      "actionId": 9968,
+      "name": "Exaflare",
+      "start": 156.473,
+      "resolve": 160.173,
+      "occurrence": 28
+    },
+    {
+      "actionId": 9968,
+      "name": "Exaflare",
+      "start": 159.472,
+      "resolve": 163.172,
+      "occurrence": 29
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 162.055,
+      "resolve": 162.055,
+      "occurrence": 30
+    },
+    {
+      "actionId": 9968,
+      "name": "Exaflare",
+      "start": 162.471,
+      "resolve": 166.17099,
+      "occurrence": 31
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 163.521,
+      "resolve": 163.521,
+      "occurrence": 32
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 165.004,
+      "resolve": 165.004,
+      "occurrence": 33
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 166.47,
+      "resolve": 166.47,
+      "occurrence": 34
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 167.953,
+      "resolve": 167.953,
+      "occurrence": 35
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 169.469,
+      "resolve": 169.469,
+      "occurrence": 36
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 170.952,
+      "resolve": 170.952,
+      "occurrence": 37
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 172.469,
+      "resolve": 172.469,
+      "occurrence": 38
+    },
+    {
+      "actionId": 9964,
+      "name": "Morn Afah",
+      "start": 173.768,
+      "resolve": 179.468,
+      "occurrence": 4
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 173.952,
+      "resolve": 173.952,
+      "occurrence": 39
+    },
+    {
+      "actionId": 9962,
+      "name": "Akh Morn",
+      "start": 187.898,
+      "resolve": 191.59799,
+      "occurrence": 13
+    },
+    {
+      "actionId": 9963,
+      "name": "Akh Morn",
+      "start": 193.963,
+      "resolve": 193.963,
+      "occurrence": 14
+    },
+    {
+      "actionId": 9963,
+      "name": "Akh Morn",
+      "start": 195.03,
+      "resolve": 195.03,
+      "occurrence": 15
+    },
+    {
+      "actionId": 9963,
+      "name": "Akh Morn",
+      "start": 196.096,
+      "resolve": 196.096,
+      "occurrence": 16
+    },
+    {
+      "actionId": 9963,
+      "name": "Akh Morn",
+      "start": 197.163,
+      "resolve": 197.163,
+      "occurrence": 17
+    },
+    {
+      "actionId": 9963,
+      "name": "Akh Morn",
+      "start": 198.246,
+      "resolve": 198.246,
+      "occurrence": 18
+    },
+    {
+      "actionId": 9967,
+      "name": "Exaflare",
+      "start": 205.361,
+      "resolve": 209.06099,
+      "occurrence": 40
+    },
+    {
+      "actionId": 9968,
+      "name": "Exaflare",
+      "start": 207.36,
+      "resolve": 211.06,
+      "occurrence": 41
+    },
+    {
+      "actionId": 9968,
+      "name": "Exaflare",
+      "start": 210.376,
+      "resolve": 214.076,
+      "occurrence": 42
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 212.942,
+      "resolve": 212.942,
+      "occurrence": 43
+    },
+    {
+      "actionId": 9968,
+      "name": "Exaflare",
+      "start": 213.375,
+      "resolve": 217.075,
+      "occurrence": 44
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 214.425,
+      "resolve": 214.425,
+      "occurrence": 45
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 215.908,
+      "resolve": 215.908,
+      "occurrence": 46
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 217.374,
+      "resolve": 217.374,
+      "occurrence": 47
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 218.857,
+      "resolve": 218.857,
+      "occurrence": 48
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 220.374,
+      "resolve": 220.374,
+      "occurrence": 49
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 221.857,
+      "resolve": 221.857,
+      "occurrence": 50
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 223.373,
+      "resolve": 223.373,
+      "occurrence": 51
+    },
+    {
+      "actionId": 9964,
+      "name": "Morn Afah",
+      "start": 224.656,
+      "resolve": 230.356,
+      "occurrence": 5
+    },
+    {
+      "actionId": 9969,
+      "name": "Exaflare",
+      "start": 224.856,
+      "resolve": 224.856,
+      "occurrence": 52
+    },
+    {
+      "actionId": 9965,
+      "name": "Morn Afah",
+      "start": 232.771,
+      "resolve": 242.471,
+      "occurrence": 6
+    }
+  ],
+  "names": [
+    "Flames of Rebirth",
+    "",
+    "Morn Afah",
+    "Akh Morn",
+    "Exaflare"
+  ]
+}
