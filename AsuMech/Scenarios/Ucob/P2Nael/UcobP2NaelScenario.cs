@@ -167,7 +167,7 @@ public sealed class UcobP2NaelScenario : IScenario
         for (var i = 0; i < Quotes.Length; i++)
         {
             var quote = state.Quotes[i];
-            world.Events.Add(Quotes[i], () => world.Announce($"Nael deus Darnus: {quote.Text}"));
+            world.Events.Add(Quotes[i], () => UcobNaelQuotes.Say(world, nael, quote.Text));
             foreach (var (move, at) in new[] { quote.First, quote.Second }.Zip(QuoteMoves[i]))
             {
                 var beam = move == NaelMove.ThermionicBeam ? beams++ : -1;
@@ -221,7 +221,7 @@ public sealed class UcobP2NaelScenario : IScenario
 
     private void ScheduleDivebombs()
     {
-        world.Events.Add(DivebombQuoteAt, () => world.Announce($"Nael deus Darnus: {state.DivebombQuote.Text}"));
+        world.Events.Add(DivebombQuoteAt, () => UcobNaelQuotes.Say(world, nael, state.DivebombQuote.Text));
         for (var i = 0; i < State.Divebombs; i++)
         {
             var target = state.DivebombTargets[i];
