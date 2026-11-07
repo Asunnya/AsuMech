@@ -9,8 +9,8 @@ namespace AsuMech.Scenarios.Ucob;
 public sealed class UcobZone : IZone
 {
     public static readonly UcobZone Instance = new();
-    // UNVERIFIED: P1 and P2's weather and track are borrowed from P5.
-    public static readonly Phase P1 = new(Instance, "P1", 32, 499);
+    // Weather 2 is Twintania's arena. UNVERIFIED: P2's weather and both tracks are borrowed from P5.
+    public static readonly Phase P1 = new(Instance, "P1", 2, 499);
     public static readonly Phase P2 = new(Instance, "P2", 32, 499);
     // Weather 30 is the Bahamut Prime arena; P5's 32 dresses it as the Golden Bahamut floor. Track UNVERIFIED.
     public static readonly Phase P3 = new(Instance, "P3", 30, 499);

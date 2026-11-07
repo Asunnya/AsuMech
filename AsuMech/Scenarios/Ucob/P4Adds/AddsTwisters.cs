@@ -57,7 +57,7 @@ public sealed class AddsTwisters(SimWorld world, UcobHelperPool helpers)
             });
             world.Events.Add(Gone, () =>
             {
-                eobj?.SetState(0);
+                eobj?.Despawn();
                 twisters.Remove(twister);
             });
         }
@@ -71,7 +71,7 @@ public sealed class AddsTwisters(SimWorld world, UcobHelperPool helpers)
             var toucher = alive.FirstOrDefault(m => Vector2.Distance(UcobSim.Flat(m.Position), twister.At) <= TriggerRadius);
             if (toucher == null) continue;
             twister.Spent = true;
-            twister.EObj?.SetState(0);
+            twister.EObj?.Despawn();
             world.Obstacles.Remove(twister.Obstacle);
             helpers.Play(ActionId.TwisterBlast, UcobSim.ToWorld(twister.At));
             foreach (var hit in alive.Where(m => Vector2.Distance(UcobSim.Flat(m.Position), twister.At) <= BlastRadius))

@@ -255,7 +255,7 @@ public sealed class UcobP3QuickmarchScenario : IScenario
         {
             if (!world.Party.ActiveMembers().Any(m => m.IsAlive() && Vector2.Distance(Flat(m.Position), twister.At) <= TwisterTriggerRadius)) continue;
             twister.Spent = true;
-            twister.EObj?.SetState(0);
+            twister.EObj?.Despawn();
             var at = new Vector3(twister.At.X, 0f, twister.At.Y);
             twintania?.CastFromHelper(Actions.TwisterBlast, at, at: new Placement(at, 0f));
         }

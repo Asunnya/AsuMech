@@ -56,7 +56,7 @@ public sealed class UcobTwisters
         on.Events.Add(Fades, () => eobj?.FadeOut());
         on.Events.Add(Gone, () =>
         {
-            eobj?.SetState(0);
+            eobj?.Despawn();
             twisters.Remove(twister);
         });
     }
@@ -76,7 +76,7 @@ public sealed class UcobTwisters
                     toucher = member;
             if (toucher == null) continue;
             twister.Spent = true;
-            twister.EObj?.SetState(0);
+            twister.EObj?.Despawn();
             blast(twister.At, toucher);
         }
     }
