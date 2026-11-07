@@ -53,6 +53,12 @@ namespace AsuMech.Multiplayer;
 [JsonDerivedType(typeof(TopP6WaveCannon2AiReplayStateMessage), "topP6Wc2AiReplayState")]
 [JsonDerivedType(typeof(TopP2PartySynergyAiReplayStateMessage), "topP2PsAiReplayState")]
 [JsonDerivedType(typeof(TopP5SigmaAiReplayStateMessage), "topP5SigmaAiReplayState")]
+[JsonDerivedType(typeof(TopP1ProgramLoopAiReplayStateMessage), "topP1ProgramLoopAiReplayState")]
+[JsonDerivedType(typeof(TopP3MonitorsAiReplayStateMessage), "topP3MonitorsAiReplayState")]
+[JsonDerivedType(typeof(TopP3IntermissionAiReplayStateMessage), "topP3IntermissionAiReplayState")]
+[JsonDerivedType(typeof(TopP3HelloWorldAiReplayStateMessage), "topP3HelloWorldAiReplayState")]
+[JsonDerivedType(typeof(TopP4BlueScreenAiReplayStateMessage), "topP4BlueScreenAiReplayState")]
+[JsonDerivedType(typeof(TopP6AlphaOmegaAiReplayStateMessage), "topP6AlphaOmegaAiReplayState")]
 [JsonDerivedType(typeof(TopP5OmegaAiReplayStateMessage), "topP5OmegaAiReplayState")]
 [JsonDerivedType(typeof(UltimatePredationAiReplayStateMessage), "ultimatePredationAiReplayState")]
 [JsonDerivedType(typeof(TopP5DeltaAiReplayStateMessage), "topP5DeltaAiReplayState")]
@@ -410,3 +416,30 @@ public sealed record PeerAttackedEnemyMessage(Guid PeerId, uint Enemy) : MpMessa
 // Peer -> host: a step of this player's own action (IUserActions.Acted), which the host shows on
 // the peer's seat for the rest of the party. Target names an actor as a GamePacket does.
 public sealed record ActedMessage(Guid PeerId, PlayerActionStep Step, ActionType ActionType, uint ActionId, uint Target, float CastSeconds) : MpMessage, IPeerMessage;
+
+
+// The whole state surface; tower sets travel flattened, two cardinals per set.
+public sealed record TopP1ProgramLoopAiReplayStateMessage(
+    PartyRole[] InLine, int[] TowerCardinals, int[] TowerShifts, PartyRole[] FirstTetherHolders) : MpMessage, IScenarioReplayStateMessage;
+
+// The whole state surface; each CleaveSide travels as a bool naming the static instance.
+public sealed record TopP3MonitorsAiReplayStateMessage(bool BossIsLeft, PartyRole[] Monitors, bool[] MonitorsAreLeft) : MpMessage, IScenarioReplayStateMessage;
+
+// The subset TopP3IntermissionAi reads: the debuff order (four spreads, two stacks, two without)
+// and where the first arm units appear.
+public sealed record TopP3IntermissionAiReplayStateMessage(PartyRole[] Debuffs, bool FirstHandsNorth) : MpMessage, IScenarioReplayStateMessage;
+
+// The whole state surface; tower layouts travel as parallel arrays, one entry per patch.
+public sealed record TopP3HelloWorldAiReplayStateMessage(
+    PartyRole[] Pairs, bool DefamationIsRed, bool[] Intercardinal, int[] RedStart) : MpMessage, IScenarioReplayStateMessage;
+
+// The whole state surface; the three Wave Cannons' stack targets travel flattened, two per set.
+public sealed record TopP4BlueScreenAiReplayStateMessage(PartyRole[] StackTargets) : MpMessage, IScenarioReplayStateMessage;
+
+// The subset TopP6AlphaOmegaAi reads; each exaflare sweep travels as its start octant and turn.
+public sealed record TopP6AlphaOmegaAiReplayStateMessage(
+    bool[] ArrowsInFirst, int[] ExaflareStarts, int[] ExaflareTurns, PartyRole[] WildChargeTargets,
+    PartyRole[] FlareTargets, PartyRole StackTarget, PartyRole LeftDiveTank, PartyRole MeteorMiddleHealer,
+    PartyRole FirstWaveCannonInvuln, AsuMech.Scenarios.Top.P6AlphaOmega.P6Practice Practice = AsuMech.Scenarios.Top.P6AlphaOmega.P6Practice.WholePhase)
+    : MpMessage, IScenarioReplayStateMessage;
+

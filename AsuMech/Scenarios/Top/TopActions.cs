@@ -16,9 +16,10 @@ public static class TopActions
         .VulnerableTo(StatusId.MagicVulnerabilityUpMini, minStacks: 2);
 
 
-    private static readonly RuinSpec ComeRuin = new((2, StatusId.TwiceComeRuin), (3, StatusId.TriceComeRuin));
+    internal static readonly RuinSpec ComeRuin = new((2, StatusId.TwiceComeRuin), (3, StatusId.TriceComeRuin));
 
     // -- Sword/shield/leg/staff body forms --
+
     public static readonly EnemyAction EfficientBladework = new(ActionId.EfficientBladework)
     {
         Cast = new() { OmenDelay = Duration.OmegaAttackOmenDelay, AnimationLock = 3.1f },
@@ -268,6 +269,20 @@ public static class TopActions
             ApplyStatus(StatusId.QuickeningDynamis, 0f),
             ApplyStatus(StatusId.MagicVulnerabilityUp, 4.96f),
         ],
+    };
+
+    // -- Solar Ray, Omega-F's tank buster after Omega --
+    public static readonly EnemyAction SolarRay = new(ActionId.SolarRay_81AD)
+    {
+        Cast = new() { CastSecondsOverride = 4.7f, AnimationLock = 3.1f },
+        Timing = new() { DamageDelay = 0.30f },
+        Effects = [Damage(MagicVulns, TankBuster), ApplyStatus(StatusId.MagicVulnerabilityUp, 4f)],
+    };
+
+    public static readonly EnemyAction SolarRayFollowUp = new(ActionId.SolarRay_7B02)
+    {
+        Cast = new() { AnimationLock = 3.1f },
+        Effects = [Damage(MagicVulns, TankBuster)],
     };
 
     // -- Optical Unit --

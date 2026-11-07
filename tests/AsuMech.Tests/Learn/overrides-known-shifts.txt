@@ -93,3 +93,5 @@ TeaP4PerfectAlexanderScenario	AlphaSafeClone
 TeaP4PerfectAlexanderScenario	BetaOpticalStack
 TeaP4PerfectAlexanderScenario	BetaOpticalClone
 TeaP4PerfectAlexanderScenario	BetaDonutClone
+TopP3HelloWorldScenario	DefamationColor
+TopP3MonitorsScenario	BossSide

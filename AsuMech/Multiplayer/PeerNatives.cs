@@ -277,6 +277,7 @@ internal sealed class PeerProxy(IBattleCharaProxy inner, PeerSeat seat) : IBattl
     public float TotalCastTime => inner.TotalCastTime;
     public uint Health => inner.Health;
     public uint MaxHealth => inner.MaxHealth;
+    public void SetMaxHealth(uint maxHealth) => inner.SetMaxHealth(maxHealth);
     public uint Mana => inner.Mana;
     public uint MaxMana => inner.MaxMana;
     public byte TargetableStatus => inner.TargetableStatus;

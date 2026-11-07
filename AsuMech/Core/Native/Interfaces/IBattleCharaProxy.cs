@@ -89,6 +89,10 @@ public interface IBattleCharaProxy
 
     uint Health { get; }
     uint MaxHealth { get; }
+
+    // No packet carries max HP after the spawn, so a mechanic that caps it (TOP's HP Penalty)
+    // writes it on the character; the next status list shows HP against it.
+    void SetMaxHealth(uint maxHealth);
     uint Mana { get; }
     uint MaxMana { get; }
 

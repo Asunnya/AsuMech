@@ -253,6 +253,11 @@ internal sealed class FakeBattleChara(FakeBattleCharas owner, int slot) : IBattl
 
     public uint MaxHealth => Actor?.MaxHealth ?? 0;
 
+    public void SetMaxHealth(uint maxHealth)
+    {
+        if (Actor is { } a) a.MaxHealth = maxHealth;
+    }
+
     public uint Mana => Actor?.Mana ?? 0;
     public uint MaxMana => Actor?.MaxMana ?? 0;
 

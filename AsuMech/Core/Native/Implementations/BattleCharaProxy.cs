@@ -410,6 +410,12 @@ internal sealed unsafe class BattleCharaProxy : IBattleCharaProxy
         }
     }
 
+    public void SetMaxHealth(uint maxHealth)
+    {
+        var obj = Ptr;
+        if (obj != null) obj->MaxHealth = maxHealth;
+    }
+
     public uint MaxMana
     {
         get

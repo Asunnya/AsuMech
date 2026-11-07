@@ -39,7 +39,12 @@ using AsuMech.Scenarios.Fru.P4CrystallizeTime;
 using AsuMech.Scenarios.Fru.P4DarklitDragonsong;
 using AsuMech.Scenarios.Fru.P5FulgentBlade;
 using AsuMech.Scenarios.Fru.P5ParadiseRegained;
+using AsuMech.Scenarios.Top.P1ProgramLoop;
 using AsuMech.Scenarios.Top.P2PartySynergy;
+using AsuMech.Scenarios.Top.P3HelloWorld;
+using AsuMech.Scenarios.Top.P3Intermission;
+using AsuMech.Scenarios.Top.P3Monitors;
+using AsuMech.Scenarios.Top.P4BlueScreen;
 using AsuMech.Scenarios.Top.P5Delta;
 using AsuMech.Scenarios.Top.P5Omega;
 using AsuMech.Scenarios.Top.P5Sigma;
@@ -49,6 +54,7 @@ using AsuMech.Scenarios.Tea.I2TemporalStasis;
 using AsuMech.Scenarios.Tea.P2BjCc;
 using AsuMech.Scenarios.Tea.P3AlexanderPrime;
 using AsuMech.Scenarios.Tea.P4PerfectAlexander;
+using AsuMech.Scenarios.Top.P6AlphaOmega;
 using AsuMech.Scenarios.Top.P6WaveCannon2;
 using AsuMech.Scenarios.Ucob.P1Twintania;
 using AsuMech.Scenarios.Ucob.P2Nael;
@@ -132,11 +138,17 @@ public sealed class ScenarioCatalog
         new FruP4CrystallizeTimeScenario(),
         new FruP5FulgentBladeScenario(),
         new FruP5ParadiseRegainedScenario(),
+        new TopP1ProgramLoopScenario(),
         new TopP2PartySynergyScenario(),
+        new TopP3IntermissionScenario(),
+        new TopP3HelloWorldScenario(),
+        new TopP3MonitorsScenario(),
+        new TopP4BlueScreenScenario(),
         new TopP5DeltaScenario(),
         new TopP5SigmaScenario(),
         new TopP5OmegaScenario(),
         new TopP6WaveCannon2Scenario(),
+        new TopP6AlphaOmegaScenario(),
         new UwuP1GarudaScenario(),
         new UwuP2IfritScenario(),
         new UwuP3TitanScenario(),

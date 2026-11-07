@@ -1,0 +1,153 @@
+{
+  "scenario": "TopP3IntermissionScenario",
+  "casts": [
+    {
+      "actionId": 31557,
+      "name": "Laser Shower",
+      "start": 0.017,
+      "resolve": 4.8770003,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31507,
+      "name": "",
+      "start": 1.1,
+      "resolve": 1.1,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31509,
+      "name": "",
+      "start": 2.25,
+      "resolve": 2.25,
+      "occurrence": 2
+    },
+    {
+      "actionId": 31511,
+      "name": "",
+      "start": 3.15,
+      "resolve": 3.15,
+      "occurrence": 3
+    },
+    {
+      "actionId": 31567,
+      "name": "Wave Repeater",
+      "start": 10.1,
+      "resolve": 14.8,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31561,
+      "name": "",
+      "start": 10.1,
+      "resolve": 10.1,
+      "occurrence": 4
+    },
+    {
+      "actionId": 31562,
+      "name": "",
+      "start": 10.417,
+      "resolve": 10.417,
+      "occurrence": 5
+    },
+    {
+      "actionId": 31563,
+      "name": "",
+      "start": 13.45,
+      "resolve": 13.45,
+      "occurrence": 6
+    },
+    {
+      "actionId": 31564,
+      "name": "",
+      "start": 16.483,
+      "resolve": 16.483,
+      "occurrence": 7
+    },
+    {
+      "actionId": 31568,
+      "name": "Wave Repeater",
+      "start": 17.167,
+      "resolve": 17.167,
+      "occurrence": 2
+    },
+    {
+      "actionId": 31567,
+      "name": "Wave Repeater",
+      "start": 18.233,
+      "resolve": 22.932999,
+      "occurrence": 3
+    },
+    {
+      "actionId": 31569,
+      "name": "Wave Repeater",
+      "start": 19.217,
+      "resolve": 19.217,
+      "occurrence": 4
+    },
+    {
+      "actionId": 31570,
+      "name": "Wave Repeater",
+      "start": 21.283,
+      "resolve": 21.283,
+      "occurrence": 5
+    },
+    {
+      "actionId": 31566,
+      "name": "Colossal Blow",
+      "start": 25.166,
+      "resolve": 26.866001,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31568,
+      "name": "Wave Repeater",
+      "start": 25.316,
+      "resolve": 25.316,
+      "occurrence": 6
+    },
+    {
+      "actionId": 31569,
+      "name": "Wave Repeater",
+      "start": 27.366,
+      "resolve": 27.366,
+      "occurrence": 7
+    },
+    {
+      "actionId": 31566,
+      "name": "Colossal Blow",
+      "start": 27.683,
+      "resolve": 29.383001,
+      "occurrence": 2
+    },
+    {
+      "actionId": 31571,
+      "name": "Sniper Cannon",
+      "start": 29.116,
+      "resolve": 29.116,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31572,
+      "name": "High-powered Sniper Cannon",
+      "start": 29.116,
+      "resolve": 29.116,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31570,
+      "name": "Wave Repeater",
+      "start": 29.433,
+      "resolve": 29.433,
+      "occurrence": 8
+    }
+  ],
+  "names": [
+    "Laser Shower",
+    "",
+    "Wave Repeater",
+    "Colossal Blow",
+    "Sniper Cannon",
+    "High-powered Sniper Cannon"
+  ]
+}

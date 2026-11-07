@@ -20,6 +20,10 @@ public interface ILocalPlayerInput : IDisposable
     // True once per cast-cancel request (cancel keybind) since the last poll.
     bool PollCancelCast();
 
+    // The target and, for an area-targeted one, the ground point (world space) of the local
+    // player's last limit break the client sent.
+    (ulong TargetId, System.Numerics.Vector3? Location) LastLimitBreakAim { get; }
+
     // Actions the player pressed, oldest first; a bounded debug history.
     IReadOnlyCollection<(uint ActionId, ActionType Type)> RecentActions { get; }
 

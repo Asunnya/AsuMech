@@ -29,6 +29,9 @@ public sealed unsafe class LocalPlayerInputHooks : ILocalPlayerInput
     // position delta.
     public bool MovementInputActive { get; private set; }
 
+    private const uint LimitBreakCategory = 9;
+    public (ulong TargetId, Vector3? Location) LastLimitBreakAim { get; private set; }
+
     public bool IsAutoAttacking => UIState.Instance()->WeaponState.AutoAttackState.IsAutoAttacking;
 
     // State poll: a jump is always self-initiated.
@@ -279,6 +282,8 @@ public sealed unsafe class LocalPlayerInputHooks : ILocalPlayerInput
         if (result)
         {
             actionUsedSincePoll = true;
+            if (actionType == ActionType.Action && Natives.Data.Action(ran) is { ActionCategory: LimitBreakCategory } row)
+                LastLimitBreakAim = (targetId, row.TargetArea && location != null ? *location : null);
             ActionExecuted?.Invoke(actionType, ran, targetId);
         }
         return result;

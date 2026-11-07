@@ -8,6 +8,8 @@ namespace AsuMech.Tests;
 // Nobody at the keyboard, unless a test holds a movement key.
 internal sealed class FakeLocalPlayerInput : ILocalPlayerInput
 {
+    public (ulong TargetId, System.Numerics.Vector3? Location) LastLimitBreakAim { get; set; }
+
     public event Action<ActionType, uint, ulong>? ActionExecuted { add { } remove { } }
 
     public bool MovementInputActive { get; set; }

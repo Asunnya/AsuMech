@@ -314,6 +314,24 @@ public abstract partial class SimCharacter : ISimObject, IPositioned
     // HP no action dealt goes out on the status list, as the server's does.
     internal void SendHealth(uint health) => SendStatusList(health, Proxy?.Mana ?? 0);
 
+    public uint Health => Proxy?.Health ?? 0u;
+    public uint MaxHealth => Proxy?.MaxHealth ?? 0u;
+
+    // HP no action dealt (a heal to full, an add's bar set at spawn), capped at max HP.
+    public void SetHealth(uint health)
+    {
+        if (Proxy is not { Exists: true } chara) return;
+        SendHealth(Math.Min(health, chara.MaxHealth));
+    }
+
+    // A mechanic capping max HP (TOP's HP Penalty); HP above the new cap is lost.
+    public void SetMaxHealth(uint maxHealth)
+    {
+        if (Proxy is not { Exists: true } chara) return;
+        chara.SetMaxHealth(maxHealth);
+        SendHealth(Math.Min(chara.Health, maxHealth));
+    }
+
     private void SendStatusList(uint health, uint mana)
     {
         statusListChanged = false;
@@ -417,7 +435,7 @@ public abstract partial class SimCharacter : ISimObject, IPositioned
         return true;
     }
 
-    protected void PlayDeath()
+    public void PlayDeath()
     {
         ActorControl.PlayDeathAnimation();
         ActorControl.SetMode(CharacterModes.Dead);
