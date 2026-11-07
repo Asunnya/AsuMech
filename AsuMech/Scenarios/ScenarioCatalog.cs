@@ -46,6 +46,8 @@ using AsuMech.Scenarios.Top.P5Sigma;
 using AsuMech.Scenarios.Top.P6WaveCannon2;
 using AsuMech.Scenarios.Ucob.P1Twintania;
 using AsuMech.Scenarios.Ucob.P2Nael;
+using AsuMech.Scenarios.Ucob.P3Blackfire;
+using AsuMech.Scenarios.Ucob.P3Quickmarch;
 using AsuMech.Scenarios.Ucob.P5Exaflares;
 using AsuMech.Scenarios.Ucob.P5GoldenBahamut;
 using AsuMech.Scenarios.Umad;
@@ -141,6 +143,8 @@ public sealed class ScenarioCatalog
         new PrimalRouletteScenario(),
         new UcobP1TwintaniaScenario(),
         new UcobP2NaelScenario(),
+        new UcobP3QuickmarchScenario(),
+        new UcobP3BlackfireScenario(),
         new UcobP5ExaflaresScenario(),
         new UcobP5GoldenBahamutScenario(),
         new DsrP1KnightsScenario(),

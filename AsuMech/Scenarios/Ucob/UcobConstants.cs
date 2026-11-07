@@ -87,6 +87,7 @@ public class UcobConstants
         public const ushort Thunderstruck = 0x1D2;
         public const ushort Transcendent = 0x1A2;
         public const ushort PhoenixsBlessing = 0x59C;
+        public const ushort EarthResistanceDownII = 0x41D;
     }
 
     public const uint HeavensfallKnockback = 115;
@@ -96,6 +97,9 @@ public class UcobConstants
         public const uint Fireball = 0x75;
         public const uint Hatch = 0x76;
         public const uint Divebomb = 0x14;
+        public const uint MegaflareStack = 0x27;
+        public const uint EarthShaker = 0x28;
+        public const uint LiquidHell = 0x29;
     }
 
     public class EObjId
@@ -110,6 +114,7 @@ public class UcobConstants
     public class TetherId
     {
         public const ushort Fireball = 5;
+        public const ushort TempestWing = 4;
     }
 
     // Lohs Daih is a Transfiguration status: its param is the Transformation row the boss
@@ -125,6 +130,10 @@ public class UcobConstants
         public const ushort PhoenixRises = 0x1E43;
         public const ushort PhoenixLeaves = 0x1E39;
         public const ushort BahamutInnerRage = 0x11D2;
+        public const ushort BahamutLeaves = 0x1E39;
+        public const ushort TwintaniaLeaves = 0x1E3A;
+        public const ushort DragonArrives = 0x1E43;
+        public const ushort TwintaniaArrives = 0x1E44;
     }
 
     public class ActionId
@@ -172,5 +181,21 @@ public class UcobConstants
         public const uint FlamesOfRebirth = 0x26F2;
         // Unnamed in the sheet: Bahamut Prime's flight from the edge to the centre before Lohs Daih.
         public const uint GoldenDescent = 0x2707;
+        public const uint TwistingDive = 0x26B2;
+        public const uint LunarDive = 0x26C3;
+        public const uint FlareBreath = 0x26D4;
+        public const uint Gigaflare = 0x26D6;
+        public const uint TempestWing = 0x26D7;
+        public const uint TempestWingBlast = 0x26D8;
+        public const uint EarthShaker = 0x26D9;
+        public const uint EarthShakerCone = 0x26DA;
+        public const uint MegaflareSpread = 0x26DC;
+        public const uint MegaflarePuddle = 0x26DD;
+        public const uint MegaflareStack = 0x26DE;
+        public const uint MegaflareTower = 0x26DF;
+        public const uint MegaflareStrike = 0x26E0;
+        public const uint MegaflareDive = 0x26E1;
+        public const uint QuickmarchTrio = 0x26E2;
+        public const uint BlackfireTrio = 0x26E3;
     }
 }
