@@ -132,6 +132,8 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
     private const float SpreadOutRadius = 7f;
     private const float TankDiveRadius = 12f;
     private const float PathClearance = 1.5f;
+    private const float HalfSlot = 22.5f;
+    private const float MeetTheLastBaitRadius = 6f;
     private static readonly float[] SingleDragonOffsets = [35f, -35f, 25f, -25f, 50f, -50f, 15f, -15f, 60f, -60f, 70f, -70f, 80f, -80f];
     private static readonly float[] StagingSwings = [30f, -30f, 40f, -40f, 20f, -20f, 50f, -50f, 60f, -60f];
 
@@ -153,8 +155,9 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
         ai.Move(Scenario.Hypernovas[3] + After, () => Send(Bait(1), baitSpots[1]), jitter: 0f, sprint: true);
         ai.Move(Scenario.Hypernovas[3] + After, () => Send(Bait(2), baitSpots[2]), jitter: 0f, sprint: true);
         ai.Move(Scenario.DivebombLocks[1] + After, () => Send(Bait(1), Vector2.Zero), jitter: 0f, sprint: true);
-        ai.Move(Scenario.DivebombLocks[1] + RegroupBeforeTheQuote, () => SpreadAndTankDiveSpots(except: Bait(2)), jitter: 0f, sprint: true);
-        ai.Move(Scenario.DivebombLocks[2] + After, () => SpreadAndTankDiveSpots(except: null), jitter: 0f, sprint: true);
+        ai.Move(Scenario.DivebombLocks[1] + RegroupBeforeTheQuote, OutForTheFirstQuoteMove, jitter: 0f, sprint: true);
+        ai.Move(Scenario.DivebombLocks[1] + Scenario.CauterizeCastSeconds + After, InForTheSecondQuoteMove, jitter: 0f, sprint: true);
+        ai.Move(Scenario.DivebombQuoteMoves[1] + After, () => AiMove.Create(Cluster(Vector2.Zero, everyone)).NaturalOrder(), jitter: 0f, sprint: true);
     }
 
     private PartyRole Bait(int dive) => state.DivebombTargets[dive];
@@ -170,11 +173,20 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
     {
         var dives = state.DiveDragons;
         baitSpots[0] = Compass(MidwayClockwise(dives[0][0], dives[0][1])) * BaitRadius;
-        baitSpots[2] = Compass(MidwayClockwise(dives[2][0], dives[2][1])) * BaitRadius;
         stagingSpots[0] = Compass(CompassDegrees(baitSpots[0]) + FirstStagingSwing) * StagingRadius;
         sideSteps[0] = baitSpots[0];
+        var betweenTheLastDragons = Compass(MidwayClockwise(dives[2][0], dives[2][1])) * BaitRadius;
+        var pastTheLastDragon = Compass(dives[2][1] * 45f + HalfSlot) * BaitRadius;
+        var best = SecondBaitRoute(betweenTheLastDragons);
+        if (best.Score < PathClearance && SecondBaitRoute(pastTheLastDragon) is var past && past.Score > best.Score) best = past;
+        (baitSpots[1], stagingSpots[1], sideSteps[1], baitSpots[2]) = (best.Second.Bait, best.Second.Staging, best.Second.SideStep, best.ThirdBait);
+    }
+
+    private (float Score, BaitRoute Second, Vector2 ThirdBait) SecondBaitRoute(Vector2 thirdBait)
+    {
+        var dives = state.DiveDragons;
         var firstLines = LinesOf(dives[0], baitSpots[0]);
-        var best = (Score: float.MinValue, Second: default(BaitRoute));
+        var best = (Score: float.MinValue, Second: default(BaitRoute), ThirdBait: thirdBait);
         foreach (var offset in SingleDragonOffsets)
         {
             var secondBait = Compass(dives[1][0] * 45f + offset) * BaitRadius;
@@ -182,12 +194,12 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
             var secondLines = LinesOf(dives[1], secondBait);
             var hard = MathF.Min(OutsideLines(firstLines, secondBait, secondBait), OutsideLines(secondLines, Vector2.Zero, Vector2.Zero) - CentreClusterRadius);
             var score = hard < PathClearance ? hard - 100f : MathF.Min(second.Clearance, MathF.Min(
-                OutsideLines(LinesOf(dives[1], secondBait), Vector2.Zero, baitSpots[2]),
-                AwayFromPuddles([stagingSpots[0], baitSpots[0], second.Staging, second.SideStep], Vector2.Zero, baitSpots[2])));
-            if (score > best.Score) best = (score, second);
+                OutsideLines(secondLines, Vector2.Zero, thirdBait),
+                AwayFromPuddles([stagingSpots[0], baitSpots[0], second.Staging, second.SideStep], Vector2.Zero, thirdBait)));
+            if (score > best.Score) best = (score, second, thirdBait);
             if (score >= PathClearance) break;
         }
-        (baitSpots[1], stagingSpots[1], sideSteps[1]) = (best.Second.Bait, best.Second.Staging, best.Second.SideStep);
+        return best;
     }
 
     private readonly record struct BaitRoute(Vector2 Bait, Vector2 Staging, Vector2 SideStep, float Clearance);
@@ -243,31 +255,48 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
         for (var i = 0; i <= steps; i++) yield return Vector2.Lerp(start, end, i / (float)steps);
     }
 
-    private ISwapStep SpreadAndTankDiveSpots(PartyRole? except)
+    private ISwapStep OutForTheFirstQuoteMove()
+    {
+        var (spread, tank) = SpreadAndTankDiveBearings();
+        var spots = Cluster(Vector2.Zero, Enum.GetValues<PartyRole>().Where(r => r != MainTank));
+        spots[(int)MainTank] = Compass(tank) * TankDiveRadius;
+        if (state.DivebombQuote.First == NaelMove.MeteorStream)
+            for (var i = 0; i < state.DivebombSpreads.Count; i++)
+                spots[(int)state.DivebombSpreads[i]] = Compass(spread + 90f * i) * SpreadOutRadius;
+        spots[(int)Bait(2)] = null;
+        return AiMove.Create(spots).NaturalOrder();
+    }
+
+    private ISwapStep InForTheSecondQuoteMove()
+    {
+        var stackOnTheLastBait = state.DivebombQuote.Second == NaelMove.ThermionicBeam && state.DivebombStackTarget == Bait(2);
+        var meet = stackOnTheLastBait ? Vector2.Normalize(baitSpots[2]) * MeetTheLastBaitRadius : Vector2.Zero;
+        var spots = Cluster(meet, Enum.GetValues<PartyRole>());
+        if (state.DivebombQuote.Second == NaelMove.DalamudDive) spots[(int)MainTank] = null;
+        return AiMove.Create(spots).NaturalOrder();
+    }
+
+    private (float Spread, float Tank) SpreadAndTankDiveBearings()
     {
         var puddles = new[] { stagingSpots[0], baitSpots[0], stagingSpots[1], sideSteps[1] };
-        var lastLines = LinesOf(state.DiveDragons[1], baitSpots[1]).Concat(LinesOf(state.DiveDragons[2], baitSpots[2])).ToList();
+        var secondLines = LinesOf(state.DiveDragons[1], baitSpots[1]);
         var best = (Score: float.MinValue, Spread: 0f, Tank: 0f);
         foreach (var spread in new[] { 0f, 45f, 22.5f, 67.5f })
             for (var k = 0; k < 4; k++)
             {
                 var tank = spread + 45f + 90f * k;
+                var tankSpot = Compass(tank) * TankDiveRadius;
                 var spreads = Enumerable.Range(0, 4).Select(i => Compass(spread + 90f * i) * SpreadOutRadius).ToList();
                 var score = new[]
                 {
-                    AwayFromPuddles(puddles, Vector2.Zero, Compass(tank) * TankDiveRadius),
-                    OutsideLines(lastLines, Compass(tank) * TankDiveRadius, Compass(tank) * TankDiveRadius),
-                    spreads.Min(at => MathF.Min(AwayFromPuddles(puddles, Vector2.Zero, at), OutsideLines(lastLines, at, at))),
+                    AwayFromPuddles(puddles, Vector2.Zero, tankSpot),
+                    OutsideLines(secondLines, tankSpot, tankSpot),
+                    Walk(baitSpots[2], Vector2.Zero).Min(at => Vector2.Distance(at, tankSpot)) - State.DalamudDiveRadius,
+                    spreads.Min(at => MathF.Min(AwayFromPuddles(puddles, Vector2.Zero, at), OutsideLines(secondLines, at, at))),
                 }.Min();
                 if (score > best.Score) best = (score, spread, tank);
             }
-        var spots = Cluster(Vector2.Zero, Enum.GetValues<PartyRole>().Where(r => r != MainTank));
-        spots[(int)MainTank] = Compass(best.Tank) * TankDiveRadius;
-        if (state.DivebombQuote.First == NaelMove.MeteorStream)
-            for (var i = 0; i < state.DivebombSpreads.Count; i++)
-                spots[(int)state.DivebombSpreads[i]] = Compass(best.Spread + 90f * i) * SpreadOutRadius;
-        if (except is { } busy) spots[(int)busy] = null;
-        return AiMove.Create(spots).NaturalOrder();
+        return (best.Spread, best.Tank);
     }
 
     private static float MidwayClockwise(int firstSlot, int secondSlot) => (firstSlot + secondSlot) * 45f / 2f;
