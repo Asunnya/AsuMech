@@ -104,6 +104,38 @@ public class UcobP2NaelScenarioTests
         });
     }
 
+    // The stack turns a quarter clockwise round Nael for each puddle, so each lands a quarter on from the last.
+    [Test]
+    public void TheStackTurnsAQuarterClockwisePerPuddle([Range(0, 9)] int seed)
+    {
+        var casts = UcobP2NaelScenario.WingsCasts.SelectMany((set, s) => set.Select(at => (Set: s, At: at))).ToList();
+        var naels = new List<Vector3>();
+        var run = ScenarioRun.Execute(typeof(UcobP2NaelScenario), 0, seed, new ScenarioRunOptions
+        {
+            StopAt = UcobP2NaelScenario.RavensbeakCast,
+            Probe = p =>
+            {
+                if (casts.Any(c => p.Crossed(c.At)))
+                    naels.Add(p.World.Children.OfType<SimEnemy>().First(e => e.IsActive && e.BNpcBaseId == BNpcBaseId.NaelDeusDarnus).Position);
+            },
+        });
+        Assert.That(run.Passed, run.ToString);
+        var puddles = ((FakeBattleCharas)Natives.BattleCharas).Timeline.Rows
+            .Where(r => r["kind"] == "cast" && r["id"] == ActionId.WingsOfSalvation.ToString())
+            .Select(r => new Vector2(Number(r["x"]), Number(r["z"]))).ToList();
+        Assert.That(puddles, Has.Count.EqualTo(casts.Count));
+        var bearings = puddles.Select((at, i) => MathF.Atan2(at.X - naels[i].X, -(at.Y - naels[i].Z)) * 180f / MathF.PI).ToList();
+        Assert.Multiple(() =>
+        {
+            for (var k = 1; k < casts.Count; k++)
+            {
+                if (casts[k].Set != casts[k - 1].Set) continue;
+                var turn = float.Ieee754Remainder(bearings[k] - bearings[k - 1], 360f);
+                Assert.That(turn, Is.EqualTo(90f).Within(25f), $"puddle {k}");
+            }
+        });
+    }
+
     private static float Number(string s) => float.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
 
     [Test]

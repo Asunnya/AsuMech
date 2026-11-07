@@ -24,7 +24,7 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
     private const float SpreadRadius = 12f;
     private const float DiveRadius = 9f;
     private const float StackRadius = 4.8f;
-    private static readonly float[] DanceDegrees = [0f, 90f, -75f, 45f, -40f, 135f, -120f];
+    private static readonly float[] DanceDegrees = [0f, 90f, 180f, 270f];
     private const float CloseEarRadius = 5.2f;
     private const float FarEarRadius = 11f;
     private static readonly float[] FarEarDegrees = [-35f, 35f];
@@ -99,7 +99,7 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
             ravenSpot = nael + Vector2.Normalize(home - nael + new Vector2(0.001f, 0f)) * (state.Quotes[2].Second == NaelMove.LunarDynamo ? RavenDynamoDistance : RavenChariotDistance);
             return Formation();
         }, jitter: 0f, sprint: true);
-        ai.Move(DanceStarts[2], () => { ravenSpot = null; ResetDance(); return Formation(); }, jitter: 0f, sprint: true);
+        ai.Move(DanceStarts[2], StartTheLastDanceWhereTheStackStands, jitter: 0f, sprint: true);
         ai.Move(DanceStarts[1], () => { ResetDance(); return Formation(); }, jitter: 0f, sprint: true);
         ai.Move(StackRegroupsAfterFirstDance, () => { ResetDance(); return Formation(); }, jitter: 0f, sprint: true);
 
@@ -326,6 +326,15 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
         return go;
     }
 
+    private ISwapStep StartTheLastDanceWhereTheStackStands()
+    {
+        var here = ravenSpot ?? Cluster();
+        ravenSpot = null;
+        ResetDance();
+        danceStep = Enumerable.Range(0, DanceDegrees.Length).MinBy(step => Vector2.Distance(DanceSpot(step), here));
+        return Formation();
+    }
+
     private void ResetDance()
     {
         danceStep = 0;
@@ -343,7 +352,7 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
             var puddle = Flat(target.Position)!.Value;
             var until = cast + Scenario.WingsCastSeconds + After;
             livePuddles.Add((puddle, until));
-            if (Vector2.Distance(puddle, Cluster()) <= PuddleClearance) StepTheStackAwayFrom(puddle, now);
+            TurnTheStackAQuarterClockwise();
             var later = Spots(until - 0.3f);
             foreach (var role in Enum.GetValues<PartyRole>())
             {
@@ -367,20 +376,10 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
         return AiMove.Create(Spots(now)).NaturalOrder();
     }
 
-    private void StepTheStackAwayFrom(Vector2 puddle, float now)
+    private void TurnTheStackAQuarterClockwise()
     {
-        var ears = fixedEars.Where(e => e.Value.Until > now).Select(e => e.Value.Spot).ToList();
-        var best = (Score: float.MinValue, Step: 0, Radius: StackRadius);
-        foreach (var radius in new[] { StackRadius, StackRadius + 2.5f })
-            for (var step = 0; step < DanceDegrees.Length; step++)
-            {
-                var spot = nael + Rotate(Inward, DanceDegrees[step]) * radius;
-                var score = MathF.Min(Vector2.Distance(spot, puddle) - (PuddleClearance + 0.7f),
-                    ears.Select(e => Vector2.Distance(spot, e) - EarClearance).DefaultIfEmpty(10f).Min());
-                if (radius > StackRadius) score -= 0.5f;
-                if (score > best.Score) best = (score, step, radius);
-            }
-        (danceStep, danceRadius) = (best.Step, best.Radius);
+        danceStep = (danceStep + 1) % DanceDegrees.Length;
+        danceRadius = StackRadius;
     }
 
     private Vector2 CleanseLaidAt(Vector2 expected)
