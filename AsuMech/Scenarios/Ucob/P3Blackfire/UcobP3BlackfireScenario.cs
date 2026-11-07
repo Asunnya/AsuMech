@@ -15,7 +15,7 @@ namespace AsuMech.Scenarios.Ucob.P3Blackfire;
 // Bahamut Prime's Blackfire Trio, from the trio cast to Gigaflare. The main tank holds Bahamut.
 public sealed class UcobP3BlackfireScenario : IScenario
 {
-    public string Name => "Bahamut Prime: Blackfire Trio";
+    public string Name => "Blackfire Trio";
     public IPhase Phase => UcobZone.P3;
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new UcobP3BlackfireAi()];

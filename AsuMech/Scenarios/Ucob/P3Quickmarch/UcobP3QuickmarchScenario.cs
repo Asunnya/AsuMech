@@ -15,7 +15,7 @@ namespace AsuMech.Scenarios.Ucob.P3Quickmarch;
 // Bahamut Prime's Quickmarch Trio, from the trio cast to Flare Breath. The main tank holds Bahamut.
 public sealed class UcobP3QuickmarchScenario : IScenario
 {
-    public string Name => "Bahamut Prime: Quickmarch Trio";
+    public string Name => "Quickmarch Trio";
     public IPhase Phase => UcobZone.P3;
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new UcobP3QuickmarchAi()];
