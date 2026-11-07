@@ -37,6 +37,7 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
     private const float DodgeTrigger = 5.2f;
     private const float EarClearance = 6.5f;
     private const float DoomWalk = 4f;
+    private const float CleanseSearchRadius = 3f;
     private const float WalkRecheck = 0.4f;
     private const float StackLead = 2.6f;
     private const float After = 0.05f;
@@ -382,6 +383,15 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
         (danceStep, danceRadius) = (best.Step, best.Radius);
     }
 
+    private Vector2 CleanseLaidAt(Vector2 expected)
+        => world.Children.OfType<SimEventObject>()
+            .Where(e => e.IsActive && e.SpawnConfig.EObjId == UcobConstants.EObjId.WingsOfSalvationCleanse)
+            .Select(e => new Vector2(e.Position.X, e.Position.Z))
+            .Where(at => Vector2.Distance(at, expected) <= CleanseSearchRadius)
+            .OrderBy(at => Vector2.Distance(at, expected))
+            .Cast<Vector2?>()
+            .FirstOrDefault() ?? expected;
+
     private bool StillDoomed(PartyRole role, float at)
         => at > world.Events.Elapsed + 0.05f || world.Party.Get(role) is not { } member || member.HasStatus(UcobConstants.StatusId.Doom);
 
@@ -423,7 +433,7 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
     private Vector2 Spot(PartyRole role, float now, bool afterWalk = false)
     {
         foreach (var walk in doomWalks)
-            if (!afterWalk && walk.Role == role && now >= walk.From && now < walk.Until && StillDoomed(role, now)) return walk.Circle;
+            if (!afterWalk && walk.Role == role && now >= walk.From && now < walk.Until && StillDoomed(role, now)) return CleanseLaidAt(walk.Circle);
         if (dodges.TryGetValue(role, out var dodge) && now >= dodge.From && now < dodge.Until) return dodge.Spot;
         var alone = state.FireTargets[State.FireTakenAlone];
         if (role == alone && ((now >= Scenario.FireTethers[State.FireTakenAlone] && now < Fireball(State.FireTakenAlone) + After)
