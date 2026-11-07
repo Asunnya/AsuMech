@@ -1,7 +1,20 @@
 {
   "scenario": "M10sSnakingScenario",
   "strat": "Hector (Toxic)",
-  "sources": [],
+  "sources": [
+    {
+      "label": "Toxic Friends - whole fight",
+      "url": "https://raidplan.io/plan/syjvfhacdxz7awet"
+    },
+    {
+      "label": "NomNom - Fire/Watersnaking",
+      "url": "https://raidplan.io/plan/Cmo_RpCDbsUSMV5c"
+    },
+    {
+      "label": "WTFDIG - Hector",
+      "url": "https://wtfdig.info/74/m10s#hector"
+    }
+  ],
   "steps": [
     {
       "key": {

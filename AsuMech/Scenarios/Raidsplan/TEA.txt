@@ -1,0 +1,88 @@
+========================================================================
+The Epic of Alexander (Ultimate) - TEA
+NAUR (NA Party Finder) strats and resources
+========================================================================
+@fight: TEA
+@family: Tea
+@credits: NAUR
+@layout: PF Trines
+
+------------------------------------------------------------------------
+P1: Living Liquid
+------------------------------------------------------------------------
+@scenarios: TeaP1LivingLiquidScenario
+Toolbox: Living Liquid
+  https://ff14.toolboxgaming.space/?id=725383877116761&preview=1
+
+------------------------------------------------------------------------
+Intermission: Limit Cut
+------------------------------------------------------------------------
+@scenarios: TeaI1LimitCutScenario
+Toolbox: Limit Cut
+  https://ff14.toolboxgaming.space/?id=803293127441961&preview=1
+Video: Limit Cut guide
+  https://www.youtube.com/watch?v=r3PODekimO0
+
+------------------------------------------------------------------------
+P2: Brute Justice and Cruise Chaser (BJ/CC)
+------------------------------------------------------------------------
+@scenarios: TeaP2BjCcScenario
+Toolbox: BJCC
+  https://ff14.toolboxgaming.space/?id=492297437831961&preview=1
+
+------------------------------------------------------------------------
+Intermission: Temporal Stasis
+------------------------------------------------------------------------
+@scenarios: TeaI2TemporalStasisScenario
+Toolbox: Alexander Prime - Timestop / Inception
+  https://ff14.toolboxgaming.space/?id=860745463802461&preview=1
+
+------------------------------------------------------------------------
+P3: Alexander Prime
+------------------------------------------------------------------------
+@scenarios: TeaP3AlexanderPrimeScenario
+Toolbox: Wormhole
+  https://ff14.toolboxgaming.space/?id=537197026169861&preview=1
+Video: Wormhole guide
+  https://www.youtube.com/watch?v=yAstTj6LMdA
+
+------------------------------------------------------------------------
+P4: Perfect Alexander
+------------------------------------------------------------------------
+@scenarios: TeaP4PerfectAlexanderScenario
+Toolbox: Perfect Alexander
+  https://ff14.toolboxgaming.space/?id=170875560147661&preview=1
+Video: Perfect Alexander guide
+  https://www.youtube.com/watch?v=fiXZRgAOCHw
+
+------------------------------------------------------------------------
+General resources
+------------------------------------------------------------------------
+Mitigation: General TEA Mitigation
+  https://docs.google.com/spreadsheets/d/1A58RflNeNq9mesuvSEcQzIvQ3MwOGyvPRi5khNACrc8/edit#gid=1511755464
+
+Simulations:
+@scenarios: TeaI1LimitCutScenario, TeaP3AlexanderPrimeScenario
+  KR/EN Wormhole & Limit Cut Unity sim
+    https://github.com/naurffxiv/assets/tree/main/Simulators
+@scenarios: TeaI1LimitCutScenario, TeaI2TemporalStasisScenario, TeaP3AlexanderPrimeScenario
+  Browser sim: Limit Cut / Temporal Stasis / Inception / Wormhole
+    https://dangermomentum.itch.io/1256-sim
+
+(The source's "Documents & Cheat Sheets" section was empty.)
+
+------------------------------------------------------------------------
+Waymarks (WaymarkPresetPlugin JSON)
+------------------------------------------------------------------------
+{
+  "Name": "PF Trines",
+  "MapID": 694,
+  "A": { "X": 100.0, "Y": 0.0, "Z": 86.25, "ID": 0, "Active": true },
+  "B": { "X": 113.75, "Y": 0.0, "Z": 91.75, "ID": 1, "Active": true },
+  "C": { "X": 100.0, "Y": 0.0, "Z": 113.75, "ID": 2, "Active": true },
+  "D": { "X": 86.25, "Y": 0.0, "Z": 100.0, "ID": 3, "Active": true },
+  "One": { "X": 108.0, "Y": 0.0, "Z": 100.0, "ID": 4, "Active": true },
+  "Two": { "X": 113.75, "Y": 0.0, "Z": 100.0, "ID": 5, "Active": true },
+  "Three": { "X": 100.0, "Y": 0.0, "Z": 108.0, "ID": 6, "Active": true },
+  "Four": { "X": 108.0, "Y": 0.0, "Z": 108.0, "ID": 7, "Active": true }
+}

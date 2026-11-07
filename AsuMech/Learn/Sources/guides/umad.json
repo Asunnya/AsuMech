@@ -163,9 +163,7 @@
           "url": "https://github.com/WCGH/Waju-Sims/releases",
           "kind": "other",
           "section": "General resources",
-          "scenarios": [
-            "UmadP5ExaflaresScenario"
-          ]
+          "scenarios": []
         }
       ],
       "rules": []
@@ -396,10 +394,6 @@
         {
           "label": "NAUR Kefkabin - Stray Apocalypse (P5 exaflares) dodge mini guide",
           "url": "https://www.youtube.com/watch?v=WFGmri3-5VA"
-        },
-        {
-          "label": "NAUR Kefkabin - Simulations: Waju Sims",
-          "url": "https://github.com/WCGH/Waju-Sims/releases"
         }
       ],
       "rules": []

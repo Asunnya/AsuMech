@@ -43,17 +43,23 @@ Raidplan: Divebombs
 ------------------------------------------------------------------------
 P3: Bahamut Prime
 ------------------------------------------------------------------------
+@scenarios: UcobP3QuickmarchScenario
 Quickmarch - uptime
   https://raidplan.io/plan/3zSKK0DXeJgCLadx
+@scenarios: UcobP3BlackfireScenario
 Blackfire - DPS CCW, supports CW
   https://raidplan.io/plan/BJPnHRQMEsmOyapB
+@scenarios: UcobP3FellruinScenario
 Fellruin - party neuro opposite Bahamut
   https://raidplan.io/plan/-83d6AilbZGqba3j
+@scenarios: UcobP3HeavensfallScenario
 Heavensfall - R1 tower under Nael
   https://raidplan.io/plan/NGpZ9S-3kiLsDzAY
+@scenarios: UcobP3TenstrikeScenario
 Tenstrike - jump to show you're covering the hatch; 1 is always safe
 for Earthshakers
   https://raidplan.io/plan/2wu2LOy8wKhG29Tr
+@scenarios: UcobP3GrandOctetScenario
 Grand Octet - tank LB3; without tank LB3, bait Twin CCW (left) and
 stack CW of Twin (right)
   https://raidplan.io/plan/iunTUxGNwjAGF_7K
@@ -61,6 +67,7 @@ stack CW of Twin (right)
 ------------------------------------------------------------------------
 P4: Adds
 ------------------------------------------------------------------------
+@scenarios: UcobP4AddsScenario
 Raidplan: Adds
   https://raidplan.io/plan/AMEhnLbUmlTb7ij3
 
@@ -71,7 +78,7 @@ Raidplan: Adds
 ------------------------------------------------------------------------
 P5: Golden Bahamut
 ------------------------------------------------------------------------
-@scenarios: UcobP5ExaflaresScenario
+@scenarios: UcobP5ExaflaresScenario, UcobP5GoldenBahamutScenario
 Raidplan: Golden Bahamut
   https://raidplan.io/plan/Y4WRFLhdHSQ7oLN_
 Video: how to mid-dodge / uptime-dodge exaflares

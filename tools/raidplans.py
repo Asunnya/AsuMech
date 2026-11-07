@@ -248,7 +248,8 @@ def zone_presets(family):
             d = re.search(rf"\b{ref}\s*(=>|=)", every)
             presets[name] = markers(block(every, d.end())) if d else {}
     origin = re.search(r"Origin\s*=>\s*new\(([^)]*)\)", zone)  # Vector3 literal
-    o = [float(v.strip().rstrip("f")) for v in origin.group(1).split(",")] if origin else [0, 0, 0]
+    # no zone yet (fight not built): most arenas are centred on (100, 0, 100)
+    o = [float(v.strip().rstrip("f")) for v in origin.group(1).split(",")] if origin else [100.0, 0.0, 100.0]
     return presets, o
 
 
@@ -273,7 +274,8 @@ def dump(obj):
 def catalog(path):
     head, sections, waymarks, guide = parse(path)
     family = head.get("family")
-    presets, origin = zone_presets(family) if family else ({}, [0, 0, 0])
+    presets, origin = zone_presets(family) if family else ({}, [100.0, 0.0, 100.0])
+    zone_known = bool(family) and bool(glob.glob(os.path.join(SCENARIOS, family, "*Zone.cs")))
     credits = head.get("credits", "")
 
     marks = []
@@ -286,6 +288,7 @@ def catalog(path):
             dev = max(((local[s][0] - p[s][0]) ** 2 + (local[s][2] - p[s][2]) ** 2) ** 0.5 for s in local)
             if worst is None or dev < worst: best, worst = name, dev
         marks.append({"name": w.get("Name"), "mapId": w.get("MapID"), "local": local,
+                      **({} if zone_known else {"originAssumed": origin}),
                       "closestPreset": best, "maxDeviation": None if worst is None else round(worst, 3)})
 
     per = {}
@@ -345,9 +348,11 @@ def cmd_build(args):
 def diff(catalogs):
     plans = json.load(open(PLANS, encoding="utf-8"))
     lessons = lesson_files()
+    types = scenario_types()
     add_plans, add_sources = [], []
     for c in catalogs:
         for sc, e in c["scenarios"].items():
+            if sc not in types: continue  # fight not on this branch: plans.json must only name catalog scenarios
             have = {norm(p["url"]) for p in plans.get(sc, [])}
             for p in e["plans"]:
                 if norm(p["url"]) not in have:

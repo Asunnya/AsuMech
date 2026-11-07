@@ -1,0 +1,284 @@
+{
+  "fight": "M12S",
+  "family": "M12s",
+  "title": "AAC Heavyweight M4 (Savage) - M12S - The Lindwurm",
+  "source": null,
+  "guide": null,
+  "captured": null,
+  "credits": "",
+  "sections": [
+    {
+      "title": "(header)",
+      "links": [
+        {
+          "label": "WTFDIG",
+          "url": "https://wtfdig.info/74/m12s",
+          "kind": "other",
+          "section": "(header)",
+          "scenarios": []
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "PF descriptions",
+      "links": [
+        {
+          "label": "Phase 1:  Toxic Friends | Roles Mortal Slayer",
+          "url": "https://www.youtube.com/watch?v=VTzndDkiXEk",
+          "kind": "video",
+          "section": "PF descriptions",
+          "scenarios": []
+        },
+        {
+          "label": "Phase 2:  Modified Bin (3VJ0) | DN Replication | DN Idyllic | 3-1 Orb Soaks",
+          "url": "https://www.youtube.com/watch?v=Ey--4oQS6KI",
+          "kind": "video",
+          "section": "PF descriptions",
+          "scenarios": []
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "PF vocabulary",
+      "links": [],
+      "rules": [
+        {
+          "text": "Toxic Friends: the phase 1 raidplan.",
+          "scenarios": []
+        },
+        {
+          "text": "Roles Mortal Slayer: a Mortal Slayer strat with its own raidplan, separate from Toxic Friends.",
+          "scenarios": []
+        },
+        {
+          "text": "Modified Bin (3VJ0): a slightly modified bin for the M12S strats; usually means the whole pastebin. 3VJ0 = the end of its URL.",
+          "scenarios": []
+        },
+        {
+          "text": "Uptime: Uptime Idyllic.",
+          "scenarios": []
+        },
+        {
+          "text": "Banana Codex: a Replication 2 strat not in the main pastebins, \"relative D north\".",
+          "scenarios": []
+        },
+        {
+          "text": "DN Replication / DN Idyllic: the DN versions of those strats; DN Replication 1 uses the phase 2 markers below.",
+          "scenarios": []
+        },
+        {
+          "text": "3-1 Orb Soaks: (not explained in the source).",
+          "scenarios": []
+        }
+      ]
+    },
+    {
+      "title": "Phase 1 raidplans",
+      "links": [
+        {
+          "label": "Toxic Friends (without Mortal Slayer)",
+          "url": "https://raidplan.io/plan/m1AMDbG_jxkgkPRc",
+          "kind": "raidplan.io",
+          "section": "Phase 1 raidplans",
+          "scenarios": []
+        },
+        {
+          "label": "Roles Mortal Slayer",
+          "url": "https://raidplan.io/plan/KbxeCHoPkzWbt_HB",
+          "kind": "raidplan.io",
+          "section": "Phase 1 raidplans",
+          "scenarios": []
+        },
+        {
+          "label": "Toxic Friends (with Mortal Slayer - NOT Roles Mortal Slayer)",
+          "url": "https://raidplan.io/plan/44JJjqZ6Mcgaxnnn",
+          "kind": "raidplan.io",
+          "section": "Phase 1 raidplans",
+          "scenarios": []
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "Phase 2 raidplans",
+      "links": [
+        {
+          "label": "Modified Bin (3VJ0) - contains the raidplans below",
+          "url": "https://pastebin.com/qXLm3VJ0",
+          "kind": "other",
+          "section": "Phase 2 raidplans",
+          "scenarios": []
+        },
+        {
+          "label": "Replication 1",
+          "url": "https://raidplan.io/plan/9ncP6UIDURcWuRuO",
+          "kind": "raidplan.io",
+          "section": "Phase 2 raidplans",
+          "scenarios": []
+        },
+        {
+          "label": "Replication 2",
+          "url": "https://raidplan.io/plan/SFa6J6wDrU9PlCJ4",
+          "kind": "raidplan.io",
+          "section": "Phase 2 raidplans",
+          "scenarios": []
+        },
+        {
+          "label": "Superchain Theory",
+          "url": "https://raidplan.io/plan/OnhUS061LkI3xlmg",
+          "kind": "raidplan.io",
+          "section": "Phase 2 raidplans",
+          "scenarios": []
+        },
+        {
+          "label": "Idyllic Dream",
+          "url": "https://raidplan.io/plan/zoeminUT6l2gaOWp",
+          "kind": "raidplan.io",
+          "section": "Phase 2 raidplans",
+          "scenarios": []
+        },
+        {
+          "label": "Cheat sheets for P2",
+          "url": "https://imgur.com/a/aFuveHk",
+          "kind": "other",
+          "section": "Phase 2 raidplans",
+          "scenarios": []
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "General resources",
+      "links": [
+        {
+          "label": "DT Timelines spreadsheet",
+          "url": "https://docs.google.com/spreadsheets/d/1oG1SwNQ_Ncz2-1pOZrE9Y_A-2yECKD2ULNGpwvKtKho/edit?gid=1833407011#gid=1833407011",
+          "kind": "sheet",
+          "section": "General resources",
+          "scenarios": [],
+          "sheetId": "1oG1SwNQ_Ncz2-1pOZrE9Y_A-2yECKD2ULNGpwvKtKho"
+        }
+      ],
+      "rules": []
+    }
+  ],
+  "mitigation": [
+    {
+      "label": "DT Timelines spreadsheet",
+      "url": "https://docs.google.com/spreadsheets/d/1oG1SwNQ_Ncz2-1pOZrE9Y_A-2yECKD2ULNGpwvKtKho/edit?gid=1833407011#gid=1833407011",
+      "sheetId": "1oG1SwNQ_Ncz2-1pOZrE9Y_A-2yECKD2ULNGpwvKtKho"
+    }
+  ],
+  "waymarks": [
+    {
+      "name": "Toxic Friends",
+      "mapId": 1075,
+      "local": {
+        "A": [
+          -0.016,
+          0.0,
+          -12.409
+        ],
+        "B": [
+          12.405,
+          0.0,
+          -0.086
+        ],
+        "C": [
+          0.012,
+          0.0,
+          12.338
+        ],
+        "D": [
+          -12.251,
+          0.0,
+          0.017
+        ],
+        "One": [
+          -15.901,
+          0.0,
+          -12.411
+        ],
+        "Two": [
+          15.843,
+          0.0,
+          -12.456
+        ],
+        "Three": [
+          15.92,
+          0.0,
+          12.349
+        ],
+        "Four": [
+          -15.921,
+          0.0,
+          12.366
+        ]
+      },
+      "originAssumed": [
+        100.0,
+        0.0,
+        100.0
+      ],
+      "closestPreset": null,
+      "maxDeviation": null
+    },
+    {
+      "name": "M12 P2",
+      "mapId": 1075,
+      "local": {
+        "A": [
+          -0.138,
+          0.0,
+          -13.591
+        ],
+        "B": [
+          13.711,
+          0.0,
+          -0.015
+        ],
+        "C": [
+          0.044,
+          0.0,
+          13.551
+        ],
+        "D": [
+          -13.629,
+          0.0,
+          0.034
+        ],
+        "One": [
+          0.096,
+          0.0,
+          -8.627
+        ],
+        "Two": [
+          8.282,
+          0.0,
+          0.024
+        ],
+        "Three": [
+          0.003,
+          0.0,
+          8.251
+        ],
+        "Four": [
+          -8.221,
+          0.0,
+          0.053
+        ]
+      },
+      "originAssumed": [
+        100.0,
+        0.0,
+        100.0
+      ],
+      "closestPreset": null,
+      "maxDeviation": null
+    }
+  ],
+  "scenarios": {},
+  "guideText": []
+}

@@ -1,0 +1,49 @@
+========================================================================
+AAC Heavyweight M1 (Savage) - M9S - Vamp Fatale
+NA Party Finder strats and resources
+PF summary: Hector | TF | Static Aetherletting
+========================================================================
+@fight: M9S
+@family: M9s
+
+------------------------------------------------------------------------
+PF vocabulary
+------------------------------------------------------------------------
+  - Hector: the video guide made by Hector.
+  - TF: the Toxic Friends raidplan, the one PF usually means.
+  - Static Aetherletting: fixed star-puddle spots for Aetherletting.
+
+------------------------------------------------------------------------
+Raidplans
+------------------------------------------------------------------------
+@scenarios: M9sVampStompScenario, M9sCoffinmakerScenario, M9sAetherlettingScenario, M9sVampStomp2Scenario, M9sFlailsScenario, M9sHellInACellScenario, M9sDeathmatchScenario, M9sFinalScenario
+Toxic Friends - whole fight
+  https://raidplan.io/plan/c2L5iJfuYIWXk1v7
+
+------------------------------------------------------------------------
+Videos and cheat sheets
+------------------------------------------------------------------------
+@scenarios: M9sVampStompScenario, M9sCoffinmakerScenario, M9sAetherlettingScenario, M9sVampStomp2Scenario, M9sFlailsScenario, M9sHellInACellScenario, M9sDeathmatchScenario, M9sFinalScenario
+WTFDIG - Toxic
+  https://wtfdig.info/74/m9s#toxic
+
+Hector Hectorson - M9S guide (Vamp Fatale)   (URL not captured)
+DT Timelines spreadsheet   (URL not captured; M12S.txt has one under
+the same name, probably the same sheet)
+
+------------------------------------------------------------------------
+Waymarks (WaymarkPresetPlugin JSON)
+------------------------------------------------------------------------
+Arena markers (A-D on the cardinals 10y out, 1-4 on the intercardinals)
+{
+  "Name": "Imported",
+  "MapID": 1069,
+  "A": { "X": 100.0, "Y": 0.0, "Z": 90.0, "ID": 0, "Active": true },
+  "B": { "X": 110.0, "Y": 0.0, "Z": 100.0, "ID": 1, "Active": true },
+  "C": { "X": 100.0, "Y": 0.0, "Z": 110.0, "ID": 2, "Active": true },
+  "D": { "X": 90.0, "Y": 0.0, "Z": 100.0, "ID": 3, "Active": true },
+  "One": { "X": 90.0, "Y": 0.0, "Z": 90.0, "ID": 4, "Active": true },
+  "Two": { "X": 110.0, "Y": 0.0, "Z": 90.0, "ID": 5, "Active": true },
+  "Three": { "X": 110.0, "Y": 0.0, "Z": 110.0, "ID": 6, "Active": true },
+  "Four": { "X": 90.0, "Y": 0.0, "Z": 110.0, "ID": 7, "Active": true }
+}

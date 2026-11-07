@@ -1,0 +1,279 @@
+{
+  "fight": "M9S",
+  "family": "M9s",
+  "title": "AAC Heavyweight M1 (Savage) - M9S - Vamp Fatale",
+  "source": null,
+  "guide": null,
+  "captured": null,
+  "credits": "",
+  "sections": [
+    {
+      "title": "PF vocabulary",
+      "links": [],
+      "rules": [
+        {
+          "text": "Hector: the video guide made by Hector.",
+          "scenarios": []
+        },
+        {
+          "text": "TF: the Toxic Friends raidplan, the one PF usually means.",
+          "scenarios": []
+        },
+        {
+          "text": "Static Aetherletting: fixed star-puddle spots for Aetherletting.",
+          "scenarios": []
+        }
+      ]
+    },
+    {
+      "title": "Raidplans",
+      "links": [
+        {
+          "label": "Toxic Friends - whole fight",
+          "url": "https://raidplan.io/plan/c2L5iJfuYIWXk1v7",
+          "kind": "raidplan.io",
+          "section": "Raidplans",
+          "scenarios": [
+            "M9sVampStompScenario",
+            "M9sCoffinmakerScenario",
+            "M9sAetherlettingScenario",
+            "M9sVampStomp2Scenario",
+            "M9sFlailsScenario",
+            "M9sHellInACellScenario",
+            "M9sDeathmatchScenario",
+            "M9sFinalScenario"
+          ]
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "Videos and cheat sheets",
+      "links": [
+        {
+          "label": "WTFDIG - Toxic",
+          "url": "https://wtfdig.info/74/m9s#toxic",
+          "kind": "other",
+          "section": "Videos and cheat sheets",
+          "scenarios": [
+            "M9sVampStompScenario",
+            "M9sCoffinmakerScenario",
+            "M9sAetherlettingScenario",
+            "M9sVampStomp2Scenario",
+            "M9sFlailsScenario",
+            "M9sHellInACellScenario",
+            "M9sDeathmatchScenario",
+            "M9sFinalScenario"
+          ]
+        }
+      ],
+      "rules": []
+    }
+  ],
+  "mitigation": [],
+  "waymarks": [
+    {
+      "name": "Imported",
+      "mapId": 1069,
+      "local": {
+        "A": [
+          0.0,
+          0.0,
+          -10.0
+        ],
+        "B": [
+          10.0,
+          0.0,
+          0.0
+        ],
+        "C": [
+          0.0,
+          0.0,
+          10.0
+        ],
+        "D": [
+          -10.0,
+          0.0,
+          0.0
+        ],
+        "One": [
+          -10.0,
+          0.0,
+          -10.0
+        ],
+        "Two": [
+          10.0,
+          0.0,
+          -10.0
+        ],
+        "Three": [
+          10.0,
+          0.0,
+          10.0
+        ],
+        "Four": [
+          -10.0,
+          0.0,
+          10.0
+        ]
+      },
+      "closestPreset": "NAUR",
+      "maxDeviation": 0.0
+    }
+  ],
+  "scenarios": {
+    "M9sVampStompScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/c2L5iJfuYIWXk1v7",
+          "credits": "Toxic Friends - whole fight"
+        }
+      ],
+      "sources": [
+        {
+          "label": "Toxic Friends - whole fight",
+          "url": "https://raidplan.io/plan/c2L5iJfuYIWXk1v7"
+        },
+        {
+          "label": "WTFDIG - Toxic",
+          "url": "https://wtfdig.info/74/m9s#toxic"
+        }
+      ],
+      "rules": []
+    },
+    "M9sCoffinmakerScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/c2L5iJfuYIWXk1v7",
+          "credits": "Toxic Friends - whole fight"
+        }
+      ],
+      "sources": [
+        {
+          "label": "Toxic Friends - whole fight",
+          "url": "https://raidplan.io/plan/c2L5iJfuYIWXk1v7"
+        },
+        {
+          "label": "WTFDIG - Toxic",
+          "url": "https://wtfdig.info/74/m9s#toxic"
+        }
+      ],
+      "rules": []
+    },
+    "M9sAetherlettingScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/c2L5iJfuYIWXk1v7",
+          "credits": "Toxic Friends - whole fight"
+        }
+      ],
+      "sources": [
+        {
+          "label": "Toxic Friends - whole fight",
+          "url": "https://raidplan.io/plan/c2L5iJfuYIWXk1v7"
+        },
+        {
+          "label": "WTFDIG - Toxic",
+          "url": "https://wtfdig.info/74/m9s#toxic"
+        }
+      ],
+      "rules": []
+    },
+    "M9sVampStomp2Scenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/c2L5iJfuYIWXk1v7",
+          "credits": "Toxic Friends - whole fight"
+        }
+      ],
+      "sources": [
+        {
+          "label": "Toxic Friends - whole fight",
+          "url": "https://raidplan.io/plan/c2L5iJfuYIWXk1v7"
+        },
+        {
+          "label": "WTFDIG - Toxic",
+          "url": "https://wtfdig.info/74/m9s#toxic"
+        }
+      ],
+      "rules": []
+    },
+    "M9sFlailsScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/c2L5iJfuYIWXk1v7",
+          "credits": "Toxic Friends - whole fight"
+        }
+      ],
+      "sources": [
+        {
+          "label": "Toxic Friends - whole fight",
+          "url": "https://raidplan.io/plan/c2L5iJfuYIWXk1v7"
+        },
+        {
+          "label": "WTFDIG - Toxic",
+          "url": "https://wtfdig.info/74/m9s#toxic"
+        }
+      ],
+      "rules": []
+    },
+    "M9sHellInACellScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/c2L5iJfuYIWXk1v7",
+          "credits": "Toxic Friends - whole fight"
+        }
+      ],
+      "sources": [
+        {
+          "label": "Toxic Friends - whole fight",
+          "url": "https://raidplan.io/plan/c2L5iJfuYIWXk1v7"
+        },
+        {
+          "label": "WTFDIG - Toxic",
+          "url": "https://wtfdig.info/74/m9s#toxic"
+        }
+      ],
+      "rules": []
+    },
+    "M9sDeathmatchScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/c2L5iJfuYIWXk1v7",
+          "credits": "Toxic Friends - whole fight"
+        }
+      ],
+      "sources": [
+        {
+          "label": "Toxic Friends - whole fight",
+          "url": "https://raidplan.io/plan/c2L5iJfuYIWXk1v7"
+        },
+        {
+          "label": "WTFDIG - Toxic",
+          "url": "https://wtfdig.info/74/m9s#toxic"
+        }
+      ],
+      "rules": []
+    },
+    "M9sFinalScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/c2L5iJfuYIWXk1v7",
+          "credits": "Toxic Friends - whole fight"
+        }
+      ],
+      "sources": [
+        {
+          "label": "Toxic Friends - whole fight",
+          "url": "https://raidplan.io/plan/c2L5iJfuYIWXk1v7"
+        },
+        {
+          "label": "WTFDIG - Toxic",
+          "url": "https://wtfdig.info/74/m9s#toxic"
+        }
+      ],
+      "rules": []
+    }
+  },
+  "guideText": []
+}
