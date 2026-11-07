@@ -95,7 +95,7 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
         {
             var home = nael;
             nael = Flat(world.Party.Get(state.RavenDiveTarget)?.Position) ?? nael;
-            ravenSpot = nael + Vector2.Normalize(home - nael + new Vector2(0.001f, 0f)) * (state.Quotes[2].Second == NaelMove.LunarDynamo ? RavenDynamoDistance : RavenChariotDistance);
+            ravenSpot = nael + Vector2.Normalize(home - nael + new Vector2(0.001f, 0f)) * (state.Quotes[2].Moves[1] == NaelMove.LunarDynamo ? RavenDynamoDistance : RavenChariotDistance);
             return Formation();
         }, jitter: 0f, sprint: true);
         ai.Move(DanceStarts[2], () => { ravenSpot = null; ResetDance(); return Formation(); }, jitter: 0f, sprint: true);
@@ -264,7 +264,7 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
         {
             var moves = Scenario.QuoteMoves[q];
             var next = now < moves[0] + After ? 0 : 1;
-            var move = next == 0 ? state.Quotes[q].First : state.Quotes[q].Second;
+            var move = state.Quotes[q].Moves[next];
             var at = moves[next];
             if (now >= at - StackLead)
             {

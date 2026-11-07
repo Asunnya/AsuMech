@@ -1,6 +1,7 @@
 using System.Linq;
 using AsuMech.Core.Game.Party;
 using AsuMech.Scenarios;
+using AsuMech.Scenarios.Ucob;
 using AsuMech.Scenarios.Ucob.P1Twintania;
 using static AsuMech.Core.Game.Party.PartyRole;
 
@@ -61,7 +62,7 @@ public class UcobP1TwintaniaStateTests
         Assert.That(state.TwisterTargets, Has.Count.EqualTo(3));
         foreach (var targets in state.TwisterTargets)
         {
-            Assert.That(targets, Has.Count.EqualTo(UcobP1TwintaniaState.TwisterCount));
+            Assert.That(targets, Has.Count.EqualTo(UcobTwisters.Count));
             Assert.That(targets, Is.Unique);
         }
     }

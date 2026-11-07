@@ -10,6 +10,7 @@ using AsuMech.Scenarios.Legacy;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using static AsuMech.Scenarios.Ucob.UcobConstants;
+using static AsuMech.Scenarios.Ucob.UcobSim;
 using State = AsuMech.Scenarios.Ucob.P2Nael.UcobP2NaelState;
 
 namespace AsuMech.Scenarios.Ucob.P2Nael;
@@ -34,7 +35,6 @@ public sealed class UcobP2NaelScenario : IScenario
     public static readonly float[] MeteorStreams = [13.95f, 17.18f];
     public const float DalamudDive = 19.95f;
     public static readonly float[] ClawStarts = [22.10f, 58.68f, 94.96f];
-    private const float ClawInterval = 0.805f;
     public const float DragonsArrive = 28.04f;
     private const float BahamutsFavor = 28.18f;
     public static readonly float[] ThunderMarks = [38.18f, 63.33f, 82.48f, 109.62f];
@@ -57,7 +57,6 @@ public sealed class UcobP2NaelScenario : IScenario
     public static readonly float[] Deathstorms = [48.19f, 77.34f, 113.47f];
     public const float DoomAfterDeathstorm = 1.03f;
     public const float RavensbeakCast = 130.36f;
-    private const float RavensbeakCastSeconds = 3.7f;
     public const float NaelUntargetable = 136.41f;
     public const float LeaveAnimations = 136.50f;
     public const float DragonsLeave = 138.59f;
@@ -65,7 +64,6 @@ public sealed class UcobP2NaelScenario : IScenario
 
     // Checked just before the status itself runs out and is gone.
     private const float DoomCheckLead = 0.05f;
-    private const float EffectCarrierLinger = 3f;
     private const int HelperPoolSize = 24;
 
     private SimWorld world = null!;
@@ -77,7 +75,7 @@ public sealed class UcobP2NaelScenario : IScenario
     private SimEnemy? thunderwing;
     private SimEnemy? tail;
     private readonly List<SimEnemy> spawned = [];
-    private readonly Queue<SimEnemy> helperPool = [];
+    private UcobHelperPool helpers = null!;
     private readonly List<SimEventObject> eobjs = [];
     private readonly List<(Vector2 At, SimEventObject? EObj, float Until)> cleanses = [];
 
@@ -88,7 +86,7 @@ public sealed class UcobP2NaelScenario : IScenario
         damage = new DamageSolver(party);
         state = new State(world.Rng, settingsWindow.Overrides);
         spawned.Clear();
-        helperPool.Clear();
+        helpers = new UcobHelperPool(world, BNpcNameId.NaelDeusDarnus, spawned);
         eobjs.Clear();
         cleanses.Clear();
         nael = null;
@@ -99,7 +97,7 @@ public sealed class UcobP2NaelScenario : IScenario
         world.Events.Add(0f, () => world.EnforceArenaBoundary(Geometry.P1ArenaRadius, "Fell into the death wall"));
         world.Events.Add(0f, () => world.PlaceWaymarks(AetherWaymarks));
         world.Events.Add(0f, SpawnNael);
-        world.Events.Add(0f, FillHelperPool);
+        world.Events.Add(0f, () => helpers.Fill(HelperPoolSize));
 
         world.Events.Add(Heavensfall, HeavensfallHit);
         for (var i = 0; i < ThermionicBurstCasts.Length; i++)
@@ -115,8 +113,8 @@ public sealed class UcobP2NaelScenario : IScenario
         }
         world.Events.Add(DalamudDive, DalamudDiveHit);
         foreach (var start in ClawStarts)
-            for (var hit = 0; hit < 5; hit++)
-                world.Events.Add(start + hit * ClawInterval, BahamutsClaw);
+            for (var hit = 0; hit < UcobNaelAttacks.ClawHits; hit++)
+                world.Events.Add(start + hit * UcobNaelAttacks.ClawInterval, BahamutsClaw);
         world.Events.Add(DragonsArrive, SpawnDragons);
         world.Events.Add(BahamutsFavor, () => CastSelf(nael, ActionId.BahamutsFavor, 2.7f));
 
@@ -132,7 +130,7 @@ public sealed class UcobP2NaelScenario : IScenario
         {
             var quote = state.Quotes[i];
             world.Events.Add(Quotes[i], () => world.Announce($"Nael deus Darnus: {quote.Text}"));
-            foreach (var (move, at) in new[] { quote.First, quote.Second }.Zip(QuoteMoves[i]))
+            foreach (var (move, at) in quote.Moves.Zip(QuoteMoves[i]))
             {
                 var beam = move == NaelMove.ThermionicBeam ? beams++ : -1;
                 world.Events.Add(at, () => NaelMoveHit(move, beam));
@@ -170,8 +168,8 @@ public sealed class UcobP2NaelScenario : IScenario
             world.Events.Add(Deathstorms[set] + DoomAfterDeathstorm, () => Doom(dooms, seconds));
         }
 
-        world.Events.Add(RavensbeakCast, CastRavensbeak);
-        world.Events.Add(RavensbeakCast + RavensbeakCastSeconds, Ravensbeak);
+        world.Events.Add(RavensbeakCast, () => UcobNaelAttacks.CastRavensbeak(nael, party.Get(PartyRole.MainTank)));
+        world.Events.Add(RavensbeakCast + UcobNaelAttacks.RavensbeakCastSeconds, () => UcobNaelAttacks.Ravensbeak(damage, nael, party.Get(PartyRole.MainTank)));
         world.Events.Add(NaelUntargetable, () => nael?.SetTargetable(false));
         world.Events.Add(LeaveAnimations, PlayLeaveAnimations);
         world.Events.Add(DragonsLeave, DespawnDragons);
@@ -200,7 +198,7 @@ public sealed class UcobP2NaelScenario : IScenario
 
     private void HeavensfallHit()
     {
-        PlayFromHelper(ActionId.Heavensfall, Vector3.Zero);
+        helpers.Play(ActionId.Heavensfall, Vector3.Zero);
         foreach (var member in AliveMembers().ToList())
         {
             damage.ApplyDamage(member, 0.3f, ActionId.Heavensfall, "Heavensfall", lethal: false);
@@ -216,7 +214,7 @@ public sealed class UcobP2NaelScenario : IScenario
         for (var k = 0; k < 8; k++)
         {
             var rotation = offset + k * MathF.PI / 4f;
-            if (TakeHelper(new Placement(Vector3.Zero, rotation)) is not { } helper) continue;
+            if (helpers.Take(new Placement(Vector3.Zero, rotation)) is not { } helper) continue;
             helper.NativeCast(ActionId.ThermionicBurst, ActionType.Action, 0f, 2.7f, false, rotation: rotation, position: Vector3.Zero);
             burstCasters.Add(helper);
         }
@@ -227,8 +225,7 @@ public sealed class UcobP2NaelScenario : IScenario
         foreach (var helper in burstCasters)
         {
             PlayEffect(helper, ActionId.ThermionicBurst, 1.1f, helper.Rotation, at: Vector3.Zero);
-            var used = helper;
-            world.Events.Add(EffectCarrierLinger, () => helperPool.Enqueue(used));
+            helpers.Release(helper);
         }
         burstCasters.Clear();
         foreach (var member in AliveMembers().ToList())
@@ -247,7 +244,7 @@ public sealed class UcobP2NaelScenario : IScenario
     {
         var landed = targets.Select(r => party.Get(r)).Where(m => m != null && m.IsAlive()).Select(m => Flat(m!.Position)).ToList();
         foreach (var (role, at) in targets.Zip(landed))
-            PlayFromHelper(ActionId.MeteorStream, ToWorld(at), party.Get(role)?.GameObjectId);
+            helpers.Play(ActionId.MeteorStream, ToWorld(at), party.Get(role)?.GameObjectId);
         foreach (var member in AliveMembers().ToList())
         {
             var hits = landed.Count(at => Vector2.Distance(Flat(member.Position), at) <= State.MeteorStreamRadius);
@@ -270,12 +267,7 @@ public sealed class UcobP2NaelScenario : IScenario
         }
     }
 
-    private void BahamutsClaw()
-    {
-        if (party.Get(PartyRole.MainTank) is not { } tank || !tank.IsAlive()) return;
-        PlayEffect(nael, ActionId.BahamutsClaw, 0.6f, target: tank.GameObjectId);
-        damage.ApplyDamage(tank, 0.08f, ActionId.BahamutsClaw, "Bahamut's Claw", lethal: false);
-    }
+    private void BahamutsClaw() => UcobNaelAttacks.BahamutsClaw(damage, nael, party.Get(PartyRole.MainTank));
 
     private void SpawnDragons()
     {
@@ -326,7 +318,7 @@ public sealed class UcobP2NaelScenario : IScenario
         foreach (var holder in holders)
         {
             holder.RemoveStatus(StatusId.Thunderstruck);
-            PlayFromHelper(ActionId.ChainLightningSplash, holder.Position, holder.GameObjectId);
+            helpers.Play(ActionId.ChainLightningSplash, holder.Position, holder.GameObjectId);
             damage.ApplyDamage(holder, 0.3f, ActionId.ChainLightningSplash, "Thunderstruck", lethal: false);
             foreach (var hit in AliveMembers().Where(m => !holders.Contains(m) && Vector2.Distance(Flat(m.Position), Flat(holder.Position)) <= State.ThunderstruckRadius).ToList())
                 hit.Die(ActionId.ChainLightningSplash, "caught in a Thunderstruck splash (Thunderstruck players move away from everyone)");
@@ -335,50 +327,13 @@ public sealed class UcobP2NaelScenario : IScenario
 
     private void NaelMoveHit(NaelMove move, int beam)
     {
-        if (nael is not { } boss) return;
-        switch (move)
+        var target = move switch
         {
-            case NaelMove.LunarDynamo:
-                PlayEffect(boss, ActionId.LunarDynamo, 1.1f);
-                foreach (var hit in AliveMembers().Where(m => Vector2.Distance(Flat(m.Position), Flat(boss.Position)) > State.LunarDynamoInner).ToList())
-                    hit.Die(ActionId.LunarDynamo, "outside Nael's melee range for Lunar Dynamo (\"hallowed moon\": get in)");
-                break;
-            case NaelMove.IronChariot:
-                PlayEffect(boss, ActionId.IronChariot, 1.1f);
-                foreach (var hit in AliveMembers().Where(m => Vector2.Distance(Flat(m.Position), Flat(boss.Position)) <= State.IronChariotRadius).ToList())
-                    hit.Die(ActionId.IronChariot, "inside Iron Chariot (\"iron path\": get out)");
-                break;
-            case NaelMove.ThermionicBeam:
-                ThermionicBeam(beam);
-                break;
-            case NaelMove.RavenDive:
-                RavenDive();
-                break;
-        }
-    }
-
-    private void ThermionicBeam(int beam)
-    {
-        var target = party.Get(state.BeamTargets[beam]) is { } chosen && chosen.IsAlive() ? chosen : AliveMembers().FirstOrDefault();
-        if (target == null) return;
-        PlayEffect(nael, ActionId.ThermionicBeam, 1.1f, target: target.GameObjectId, at: target.Position);
-        var hits = AliveMembers().Where(m => Vector2.Distance(Flat(m.Position), Flat(target.Position)) <= State.ThermionicBeamRadius).ToList();
-        foreach (var hit in hits)
-        {
-            if (hits.Count < State.ThermionicBeamMinimumStack) hit.Die(ActionId.ThermionicBeam, "Thermionic Beam wasn't shared (\"take fire\" / \"blazing path\": stack)");
-            else damage.ApplyDamage(hit, 0.5f, ActionId.ThermionicBeam, "Thermionic Beam", lethal: false);
-        }
-    }
-
-    // UNVERIFIED: whoever else it lands on is knocked back like Heavensfall.
-    private void RavenDive()
-    {
-        if (nael is not { } boss || party.Get(state.RavenDiveTarget) is not { } target || !target.IsAlive()) return;
-        boss.SetPosition(new Placement(target.Position, boss.Rotation));
-        PlayEffect(boss, ActionId.RavenDive, 1.1f, target: target.GameObjectId, at: target.Position);
-        damage.ApplyDamage(target, 0.2f, ActionId.RavenDive, "Raven Dive", lethal: false);
-        foreach (var hit in AliveMembers().Where(m => !ReferenceEquals(m, target) && Vector2.Distance(Flat(m.Position), Flat(target.Position)) <= State.RavenDiveRadius).ToList())
-            hit.Knockback(target.Position, HeavensfallKnockback);
+            NaelMove.ThermionicBeam => party.Get(state.BeamTargets[beam]) is { } chosen && chosen.IsAlive() ? chosen : AliveMembers().FirstOrDefault(),
+            NaelMove.RavenDive => party.Get(state.RavenDiveTarget),
+            _ => null,
+        };
+        UcobNaelAttacks.Move(party, damage, nael, move, target);
     }
 
     private void Iceball(PartyRole role)
@@ -410,10 +365,10 @@ public sealed class UcobP2NaelScenario : IScenario
         var target = party.Get(role) is { } chosen && chosen.IsAlive() ? chosen : AliveMembers().FirstOrDefault();
         if (target == null) return null;
         var at = Flat(target.Position);
-        if (TakeHelper(new Placement(ToWorld(at), 0f)) is { } helper)
+        if (helpers.Take(new Placement(ToWorld(at), 0f)) is { } helper)
         {
             helper.NativeCast(ActionId.WingsOfSalvation, ActionType.Action, 0f, 2.7f, false, position: ToWorld(at));
-            world.Events.Add(WingsCastSeconds + EffectCarrierLinger, () => helperPool.Enqueue(helper));
+            helpers.Release(helper, WingsCastSeconds);
         }
         return at;
     }
@@ -466,19 +421,6 @@ public sealed class UcobP2NaelScenario : IScenario
         }
     }
 
-    private void CastRavensbeak()
-    {
-        if (party.Get(PartyRole.MainTank) is not { } tank) return;
-        nael?.NativeCast(ActionId.Ravensbeak, ActionType.Action, 0f, RavensbeakCastSeconds, false, targetId: tank.GameObjectId);
-    }
-
-    private void Ravensbeak()
-    {
-        if (party.Get(PartyRole.MainTank) is not { } tank || !tank.IsAlive()) return;
-        PlayEffect(nael, ActionId.Ravensbeak, 1.1f, target: tank.GameObjectId);
-        damage.ApplyDamage(tank, 0.5f, ActionId.Ravensbeak, "Ravensbeak", lethal: false);
-    }
-
     private IEnumerable<SimEnemy> Dragons() => new[] { firehorn, iceclaw, thunderwing, tail, fang }.OfType<SimEnemy>();
 
     private void PlayLeaveAnimations()
@@ -503,74 +445,15 @@ public sealed class UcobP2NaelScenario : IScenario
         cleanses.Clear();
         foreach (var enemy in spawned) enemy.Despawn();
         spawned.Clear();
-        helperPool.Clear();
+        helpers.Clear();
     }
 
     private SimEventObject? SpawnEObj(uint eobjId, Vector2 at)
     {
-        var eobj = world.SpawnEventObject(new EventObjectSpawnConfig
-        {
-            EObjId = eobjId,
-            Placement = new Placement(ToWorld(at), 0f),
-            TimelineState = 1,
-        });
+        var eobj = UcobSim.SpawnEObj(world, eobjId, at);
         if (eobj != null) eobjs.Add(eobj);
         return eobj;
     }
 
-    // A helper spawned in the frame it acts drops the effect or cast, so they wait in a pool.
-    private void FillHelperPool()
-    {
-        for (var i = 0; i < HelperPoolSize; i++)
-            if (SpawnHelper(new Placement(Vector3.Zero, 0f)) is { } helper) helperPool.Enqueue(helper);
-    }
-
-    private SimEnemy? TakeHelper(Placement placement)
-    {
-        var helper = helperPool.TryDequeue(out var pooled) ? pooled : SpawnHelper(placement);
-        helper?.SetPosition(placement);
-        return helper;
-    }
-
-    private SimEnemy? SpawnHelper(Placement placement)
-    {
-        var helper = world.SpawnEnemy(new EnemySpawnConfig(
-            BNpcBaseId: BNpcBaseId.Dummy,
-            NameId: BNpcNameId.NaelDeusDarnus,
-            Level: Level,
-            Targetable: false,
-            EnemyList: EnemyListMode.Never,
-            Visibility: SimEnemy.LegacyVisibility(true, true),
-            Placement: placement));
-        if (helper != null) spawned.Add(helper);
-        return helper;
-    }
-
-    private void PlayFromHelper(uint actionId, Vector3 at, GameObjectId? target = null)
-    {
-        if (TakeHelper(new Placement(at, 0f)) is not { } helper) return;
-        PlayEffect(helper, actionId, 1.1f, target: target, at: at);
-        world.Events.Add(EffectCarrierLinger, () => helperPool.Enqueue(helper));
-    }
-
-    private IEnumerable<SimCharacter> AliveMembers()
-    {
-        for (var slot = 0; slot < 8; slot++)
-            if (party.Get(slot) is { } member && member.IsAlive())
-                yield return member;
-    }
-
-    private static bool IsTank(SimCharacter member) => member is ISimPartyMember { Role: PartyRole.MainTank or PartyRole.OffTank };
-
-    private static Vector3 ToWorld(Vector2 at) => new(at.X, 0f, at.Y);
-
-    private static Vector2 Flat(Vector3 at) => new(at.X, at.Z);
-
-    private static void CastSelf(SimEnemy? caster, uint actionId, float castSeconds) =>
-        caster?.NativeCast(actionId, ActionType.Action, 0f, castSeconds, false, targetId: caster.GameObjectId);
-
-    // An effect without a position plays at the arena centre, so default it to the caster.
-    private static void PlayEffect(SimEnemy? caster, uint actionId, float animationLock, float? rotation = null, GameObjectId? target = null, Vector3? at = null) =>
-        caster?.NativeActionEffect(actionId, animationLock, (ushort)actionId, 0, ActionType.Action, 0,
-            rotation: rotation, position: at ?? caster.Position, animationTargetId: target ?? caster.GameObjectId);
+    private IEnumerable<SimCharacter> AliveMembers() => UcobSim.AliveMembers(party);
 }

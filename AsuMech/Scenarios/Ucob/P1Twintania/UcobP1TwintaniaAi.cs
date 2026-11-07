@@ -63,7 +63,7 @@ public sealed class UcobP1TwintaniaAi : IScenarioAi<UcobP1TwintaniaState>
 
         ai.Move(Scenario.ToSecondWestCamp, () => AiMove.Create(CampSpots(SecondWest, Scenario.ToSecondWestCamp)).NaturalOrder(), jitter: 0f, sprint: true);
         ai.Move(Scenario.AggroSwaps[1] - 1f, () => AiMove.Create(Tanking(SecondWest, Scenario.AggroSwaps[1])).NaturalOrder(), jitter: 0f);
-        ai.Move(Scenario.GenerateCasts[1], () => AiMove.Create(Only(state.HatchTargets[1], [FarSideOfNeurolink(State.NorthNeurolink, SecondWest.Boss)])).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(Scenario.GenerateCasts[1], () => AiMove.Create(Only(state.HatchTargets[1], [FarSideOfNeurolink(UcobNeurolinks.North, SecondWest.Boss)])).NaturalOrder(), jitter: 0f, sprint: true);
         ai.Move(66f, () => AiMove.Create(Ring(SecondWest.Stack, RingRadius, -90f, 90f, NonTanks.Except(state.HatchTargets[1]))).NaturalOrder(), jitter: 0f);
         ai.Move(Scenario.TwisterSnapshots[1] + StepOff, () => AiMove.Create(DodgeIntoNeurolinks(SecondWest, Scenario.TwisterSnapshots[1] + StepOff, 1)).NaturalOrder(), jitter: 0f, sprint: true);
         ai.Move(TwistersGone(1), () => AiMove.Create(Cluster(SecondWest.Stack, state.HatchTargets[1])).NaturalOrder(), jitter: 0f);
@@ -97,7 +97,7 @@ public sealed class UcobP1TwintaniaAi : IScenarioAi<UcobP1TwintaniaState>
         return BaitOrder.First(r => !busy.Contains(r));
     }
 
-    private static float TwistersGone(int set) => Scenario.TwisterSnapshots[set] + Scenario.TwisterFades + 0.1f;
+    private static float TwistersGone(int set) => Scenario.TwisterSnapshots[set] + UcobTwisters.Fades + 0.1f;
 
     private static float HatchResolvesBy(int set) => set switch
     {
@@ -125,8 +125,8 @@ public sealed class UcobP1TwintaniaAi : IScenarioAi<UcobP1TwintaniaState>
     {
         var spots = new Vector2?[8];
         var targets = state.HatchTargets[set];
-        spots[(int)targets[0]] = State.NorthNeurolink;
-        if (targets.Count > 1) spots[(int)targets[1]] = State.WestNeurolink;
+        spots[(int)targets[0]] = UcobNeurolinks.North;
+        if (targets.Count > 1) spots[(int)targets[1]] = UcobNeurolinks.West;
         return spots;
     }
 
@@ -134,13 +134,13 @@ public sealed class UcobP1TwintaniaAi : IScenarioAi<UcobP1TwintaniaState>
     {
         var spots = new Vector2?[8];
         var targets = state.HatchTargets[set];
-        spots[(int)targets[0]] = FarSideOfNeurolink(State.NorthNeurolink, East.Boss);
-        if (targets.Count > 1) spots[(int)targets[1]] = FarSideOfNeurolink(State.WestNeurolink, East.Boss);
+        spots[(int)targets[0]] = FarSideOfNeurolink(UcobNeurolinks.North, East.Boss);
+        if (targets.Count > 1) spots[(int)targets[1]] = FarSideOfNeurolink(UcobNeurolinks.West, East.Boss);
         return spots;
     }
 
     private static Vector2 FarSideOfNeurolink(Vector2 neurolink, Vector2 boss)
-        => neurolink + Vector2.Normalize(neurolink - boss) * (State.TwisterTriggerRadius + 0.7f);
+        => neurolink + Vector2.Normalize(neurolink - boss) * (UcobTwisters.TriggerRadius + 0.7f);
 
     private Vector2?[] CampSpots(Camp camp, float at)
     {

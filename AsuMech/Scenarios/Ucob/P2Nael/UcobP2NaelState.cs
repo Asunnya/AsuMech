@@ -6,10 +6,6 @@ using AsuMech.Core.Game.Party;
 
 namespace AsuMech.Scenarios.Ucob.P2Nael;
 
-public enum NaelMove { LunarDynamo, IronChariot, ThermionicBeam, RavenDive }
-
-public sealed record NaelQuote(string Text, NaelMove First, NaelMove Second);
-
 public sealed class UcobP2NaelState
 {
     // The first three quotes each pick from their own pair.
@@ -33,12 +29,6 @@ public sealed class UcobP2NaelState
     public const float ThermionicBurstHalfAngle = MathF.PI / 16f; // UNVERIFIED
     public const float MeteorStreamRadius = 4f;
     public const float DalamudDiveRadius = 5f;
-    public const float LunarDynamoInner = 6f; // UNVERIFIED
-    // UNVERIFIED: someone 6.6y from her was still hit.
-    public const float IronChariotRadius = 7f;
-    public const float ThermionicBeamRadius = 4f;
-    public const int ThermionicBeamMinimumStack = 4; // UNVERIFIED
-    public const float RavenDiveRadius = 3f;
     public const float ThunderstruckRadius = 5f;
     public const float DragonFireballRadius = 4f;
     public const float WingsRadius = 4f;

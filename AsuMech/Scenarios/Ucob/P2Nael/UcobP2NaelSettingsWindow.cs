@@ -25,7 +25,7 @@ public sealed class UcobP2NaelSettingsWindow
         for (var i = 0; i < Overrides.Quotes.Length; i++)
         {
             SettingsGrid.Row($"Quote {i + 1}:");
-            var labels = new[] { "Random" }.Concat(UcobP2NaelState.QuoteChoices[i].Select(q => $"{q.First} > {q.Second}")).ToArray();
+            var labels = new[] { "Random" }.Concat(UcobP2NaelState.QuoteChoices[i].Select(q => string.Join(" > ", q.Moves))).ToArray();
             var selected = Overrides.Quotes[i] is { } pick ? pick + 1 : 0;
             SettingsGrid.ItemWidth(220);
             ImGui.Combo($"##ucobp2quote{i}", ref selected, labels, labels.Length);

@@ -83,6 +83,8 @@ public class UcobConstants
         public const ushort Firescorched = 0x1D0;
         public const ushort Icebitten = 0x1D1;
         public const ushort Thunderstruck = 0x1D2;
+        public const ushort PiercingResistanceDownII = 0x59B;
+        public const ushort DamageUp = 0x122;
     }
 
     public const uint HeavensfallKnockback = 115;
@@ -104,6 +106,7 @@ public class UcobConstants
     public class TetherId
     {
         public const ushort Fireball = 5;
+        public const ushort BahamutsFavor = 0x43;
     }
 
     // Lohs Daih is a Transfiguration status: its param is the Transformation row the boss
@@ -114,6 +117,9 @@ public class UcobConstants
     {
         public const ushort NaelLeaves = 0x1E39;
         public const ushort DragonLeaves = 0x008F;
+        // UNVERIFIED what they show: the adds' P4 entrance.
+        public const ushort NaelReturns = 0x1E43;
+        public const ushort TwintaniaReturns = 0x1E44;
     }
 
     public class ActionId
@@ -148,5 +154,8 @@ public class UcobConstants
         public const uint Exaflare = 9967;       // 0x26EF, boss-body cast, no AOE of its own
         public const uint ExaflareFirst = 9968;  // 0x26F0, helper, 4.0s cast, arrow omen, 6y circle
         public const uint ExaflareRest = 9969;   // 0x26F1, helper, instant, 6y circle
+        public const uint Megaflare = 0x26BA;
+        public const uint WhiteFury = 0x26C4;
+        public const uint PrimeBahamutsFavor = 0x26E8;
     }
 }
