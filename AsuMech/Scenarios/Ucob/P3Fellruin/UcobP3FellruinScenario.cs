@@ -39,9 +39,10 @@ public sealed class UcobP3FellruinScenario : IScenario
     public const float TempestWing = 23.43f;
     private const float NaelLeaves = 23.65f;
     public const float Gigaflare = 26.55f;
-    public const float MeteorMarks = 26.77f;
+    private const float GeminiAppear = 27.68f;
     public const float MeteorStreams = 27.75f;
     private const float TwintaniaLeaves = 28.51f;
+    private const float GeminiVanish = 29.14f;
     public const float Flatten = 43.03f;
     public const float End = 48f;
 
@@ -54,6 +55,7 @@ public sealed class UcobP3FellruinScenario : IScenario
     private SimEnemy? bahamut;
     private SimEnemy? nael;
     private SimEnemy? twintania;
+    private readonly List<SimEnemy> gemini = [];
     private readonly UcobNeurolinks neurolinks = new();
     private readonly List<SimTether> tempestTethers = [];
     private bool tethersFollow;
@@ -81,7 +83,7 @@ public sealed class UcobP3FellruinScenario : IScenario
         world.Events.Add(TrioLeave, PlayTrioLeave);
         world.Events.Add(TrioMove, MoveTrioToTheirSpots);
         world.Events.Add(TrioLand, PlayTrioLand);
-        world.Events.Add(Quote, () => world.Announce($"Nael deus Darnus: {state.Quote.Text}"));
+        world.Events.Add(Quote, () => UcobNaelQuotes.Say(world, nael, state.Quote.Text));
         world.Events.Add(TempestWingTethers, TetherTempestWing);
         world.Events.Add(QuoteMoves[0], () => ResolveNaelMove(state.Quote.First));
         world.Events.Add(AethericProfusion, () => twintania?.Cast(Actions.AethericProfusion));
@@ -93,10 +95,10 @@ public sealed class UcobP3FellruinScenario : IScenario
             bahamut?.SetTargetable(true);
             bahamut?.Cast(Actions.Gigaflare);
         });
-        List<Vector3> meteors = [];
-        world.Events.Add(MeteorMarks, () => meteors = MarkMeteorStreams());
-        world.Events.Add(MeteorStreams, () => DropMeteorStreams(meteors));
+        world.Events.Add(GeminiAppear, GeminiLandOnTheirTargets);
+        world.Events.Add(MeteorStreams, GeminiStrike);
         world.Events.Add(TwintaniaLeaves, () => twintania?.PlayActionTimeline(TimelineId.TwintaniaTrioLeave));
+        world.Events.Add(GeminiVanish, () => { foreach (var geminus in gemini) geminus.SetVisible(false); });
         world.Events.Add(Flatten, () => bahamut?.Cast(Actions.Flatten, party.Get(PartyRole.OffTank)));
         world.Events.Add(End, DespawnAll);
     }
@@ -114,6 +116,10 @@ public sealed class UcobP3FellruinScenario : IScenario
         nael = Spawn(BNpcBaseId.NaelDeusDarnus, BNpcNameId.NaelDeusDarnus, NaelShowsAt, 0f, false, EnemyListMode.Never, SpawnVisibility.HiddenUntilShown);
         twintania = Spawn(BNpcBaseId.Twintania, BNpcNameId.Twintania, TwintaniaShowsAt, 0f, false, EnemyListMode.Never, SpawnVisibility.HiddenUntilShown);
         bahamut?.KeepFacing(party.Get(PartyRole.MainTank));
+        gemini.Clear();
+        for (var i = 0; i < State.MeteorStreams; i++)
+            if (Spawn(BNpcBaseId.NaelGeminus, BNpcNameId.NaelGeminus, Vector2.Zero, 0f, false, EnemyListMode.Never, SpawnVisibility.HiddenUntilShown) is { } geminus)
+                gemini.Add(geminus);
     }
 
     private SimEnemy? Spawn(uint baseId, uint nameId, Vector2 at, float rotation, bool targetable, EnemyListMode list, SpawnVisibility visibility)
@@ -197,13 +203,26 @@ public sealed class UcobP3FellruinScenario : IScenario
         tempestTethers.Clear();
     }
 
-    private List<Vector3> MarkMeteorStreams()
-        => state.MeteorTargets.Select(r => party.Get(r)).Where(m => m != null && m.IsAlive()).Select(m => m!.Position).ToList();
-
-    private void DropMeteorStreams(IReadOnlyList<Vector3> spots)
+    private void GeminiLandOnTheirTargets()
     {
-        foreach (var at in spots)
-            nael?.CastFromHelper(Actions.MeteorStream, at, new Placement(at, 0f));
+        foreach (var (geminus, target) in GeminiAndTargets())
+        {
+            geminus.SetPosition(new Placement(target.Position, State.FacingOf(Flat(target.Position), Vector2.Zero)));
+            geminus.SetVisible(true);
+        }
+    }
+
+    private void GeminiStrike()
+    {
+        foreach (var (geminus, target) in GeminiAndTargets())
+            geminus.Cast(Actions.MeteorStream, target);
+    }
+
+    private IEnumerable<(SimEnemy Geminus, SimCharacter Target)> GeminiAndTargets()
+    {
+        for (var i = 0; i < gemini.Count && i < state.MeteorTargets.Count; i++)
+            if (party.Get(state.MeteorTargets[i]) is { } target && target.IsAlive())
+                yield return (gemini[i], target);
     }
 
     private void DespawnAll()
@@ -214,6 +233,8 @@ public sealed class UcobP3FellruinScenario : IScenario
         bahamut?.Despawn();
         nael?.Despawn();
         twintania?.Despawn();
+        foreach (var geminus in gemini) geminus.Despawn();
+        gemini.Clear();
     }
 
     private IEnumerable<SimCharacter> AliveMembers()
@@ -224,4 +245,6 @@ public sealed class UcobP3FellruinScenario : IScenario
     }
 
     private static Vector3 ToWorld(Vector2 at) => new(at.X, 0f, at.Y);
+
+    private static Vector2 Flat(Vector3 at) => new(at.X, at.Z);
 }

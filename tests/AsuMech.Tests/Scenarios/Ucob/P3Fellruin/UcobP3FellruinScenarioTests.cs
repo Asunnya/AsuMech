@@ -1,5 +1,6 @@
 using System.Numerics;
 using AsuMech.Core.Game.Party;
+using AsuMech.Core.Native.Interfaces;
 using AsuMech.Scenarios.Ucob.P3Fellruin;
 using static AsuMech.Core.Game.Party.PartyRole;
 using static AsuMech.Scenarios.Ucob.UcobConstants;
@@ -73,4 +74,46 @@ public class UcobP3FellruinScenarioTests
                 o.RavenDiveTarget = diver;
             })
             .ShouldKillNoOneElse();
+
+    [Test]
+    public void NaelSaysTheQuoteOverHerHead([Values(0, 1)] int quote)
+    {
+        var rows = Run(o => o.Quote = quote);
+        var nael = SpawnedIds(rows, BNpcBaseId.NaelDeusDarnus).Single();
+        var yell = rows.Single(r => r["kind"] == "yell");
+        Assert.Multiple(() =>
+        {
+            Assert.That(yell["actor"], Is.EqualTo(nael));
+            Assert.That(yell["detail"], Does.Contain(UcobP3FellruinState.QuoteChoices[quote].Text));
+        });
+    }
+
+    [Test]
+    public void EachMeteorStreamIsANaelGeminusStrikingItsTarget()
+    {
+        PartyRole[] targets = [CasterDps, PhysRangedDps, MainTank, OffTank];
+        var rows = Run(o => o.MeteorTargets = targets);
+        var gemini = SpawnedIds(rows, BNpcBaseId.NaelGeminus);
+        var strikes = rows.Where(r => r["kind"] == "ability" && r["id"] == ActionId.MeteorStream.ToString()).ToList();
+        Assert.Multiple(() =>
+        {
+            Assert.That(gemini, Has.Count.EqualTo(UcobP3FellruinState.MeteorStreams));
+            Assert.That(strikes.Select(r => r["actor"]), Is.EquivalentTo(gemini));
+            Assert.That(strikes.Select(r => r["detail"]), Has.All.Contains("hits=1"));
+        });
+    }
+
+    private static IReadOnlyList<Dictionary<string, string>> Run(System.Action<UcobP3FellruinStateOverrides> set)
+    {
+        var run = ScenarioRun.Execute(typeof(UcobP3FellruinScenario), 0, 1, new ScenarioRunOptions
+        {
+            PlayerRole = PhysRangedDps,
+            Overrides = o => set((UcobP3FellruinStateOverrides)o),
+        });
+        Assert.That(run.Passed, run.ToString);
+        return ((FakeBattleCharas)Natives.BattleCharas).Timeline.Rows;
+    }
+
+    private static List<string> SpawnedIds(IReadOnlyList<Dictionary<string, string>> rows, uint baseId)
+        => rows.Where(r => r["kind"] == "spawn" && r["id"] == baseId.ToString()).Select(r => r["actor"]).ToList();
 }

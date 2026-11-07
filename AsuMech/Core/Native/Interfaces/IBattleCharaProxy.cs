@@ -85,6 +85,9 @@ public interface IBattleCharaProxy
     // Ends the forced move and halts the player where they stand. Self-only.
     void StopForcedMove();
 
+    // An NpcYell's speech balloon over its head, for `seconds`; nothing goes to chat.
+    void Yell(string text, float seconds);
+
     // ── Combat state ─────────────────────────────────────────────────────────
 
     uint Health { get; }

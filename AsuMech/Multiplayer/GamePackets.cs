@@ -38,6 +38,7 @@ internal static class PacketActor
 [JsonDerivedType(typeof(SetPosPacket), "setPos")]
 [JsonDerivedType(typeof(MovePacket), "move")]
 [JsonDerivedType(typeof(NpcKnockbackPacket), "npcKnockback")]
+[JsonDerivedType(typeof(YellPacket), "yell")]
 [JsonDerivedType(typeof(CastPacket), "cast")]
 [JsonDerivedType(typeof(EffectPacket), "effect")]
 [JsonDerivedType(typeof(EffectResultPacket), "effectResult")]
@@ -79,6 +80,8 @@ public sealed record SetPosPacket(uint Actor, float X, float Y, float Z, float R
 public sealed record MovePacket(uint Actor, float X, float Y, float Z, float Rotation, ActorMoveFlags Flags, float Speed) : GamePacket;
 
 public sealed record NpcKnockbackPacket(uint Actor, float X, float Y, float Z, float Rotation, float DurationSeconds) : GamePacket;
+
+public sealed record YellPacket(uint Actor, string Text, float Seconds) : GamePacket;
 
 public sealed record CastPacket(
     uint Actor, uint ActionId, ActionType ActionType, float CastTime, float OmenDelay, bool Interruptible, float Rotation,

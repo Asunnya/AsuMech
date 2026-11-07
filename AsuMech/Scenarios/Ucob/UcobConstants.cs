@@ -63,6 +63,7 @@ public class UcobConstants
         public const uint Twintania = 8159;
         public const uint Oviform = 8160;
         public const uint NaelDeusDarnus = 8161;
+        public const uint NaelGeminus = 8162;
         public const uint Firehorn = 8163;
         public const uint Iceclaw = 8164;
         public const uint Thunderwing = 8165;
@@ -79,6 +80,7 @@ public class UcobConstants
         public const uint Twintania = 1482;
         public const uint Oviform = 2210;
         public const uint NaelDeusDarnus = 2612;
+        public const uint NaelGeminus = 2628;
         public const uint Firehorn = 2630;
         public const uint Iceclaw = 2631;
         public const uint Thunderwing = 2632;

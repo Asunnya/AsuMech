@@ -41,6 +41,8 @@ internal sealed class FakeBattleChara(FakeBattleCharas owner, int slot) : IBattl
         if (slot >= 0) Actor?.StartGlide(position, rotation);
     }
 
+    public void Yell(string text, float seconds) => Record("yell", detail: $"{text} ({SimTimeline.F(seconds)}s)");
+
     public void NpcKnockback(Vector3 position, float rotation, float durationSeconds)
     {
         Record("npc_knockback", position: position, rotation: rotation, detail: $"dur={SimTimeline.F(durationSeconds)}");
