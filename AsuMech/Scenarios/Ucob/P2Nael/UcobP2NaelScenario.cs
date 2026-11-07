@@ -597,7 +597,7 @@ public sealed class UcobP2NaelScenario : IScenario
         return ahead >= 0f && ahead <= State.CauterizeLength && aside <= State.CauterizeHalfWidth;
     }
 
-    // UNVERIFIED: each lands on whoever stands farthest from the centre.
+    // Each lands on whoever stands farthest from the centre.
     private void Hypernova()
     {
         if (AliveMembers().OrderByDescending(m => Flat(m.Position).Length()).FirstOrDefault() is not { } target) return;

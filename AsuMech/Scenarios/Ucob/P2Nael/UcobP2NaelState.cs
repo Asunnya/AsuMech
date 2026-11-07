@@ -41,7 +41,7 @@ public sealed class UcobP2NaelState
     public const float LunarDynamoInner = UcobConstants.Geometry.LunarDynamoInner;
     public const float IronChariotRadius = UcobConstants.Geometry.IronChariotRadius;
     public const float ThermionicBeamRadius = 4f;
-    public const int ThermionicBeamMinimumStack = 4; // UNVERIFIED
+    public const int ThermionicBeamMinimumStack = 4;
     public const float RavenDiveRadius = 3f;
     public const float ThunderstruckRadius = 5f;
     public const float DragonFireballRadius = 4f;

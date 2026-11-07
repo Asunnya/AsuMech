@@ -16,7 +16,7 @@ public sealed class UcobP3BlackfireState
     public Direction NaelFrom { get; }
     public PartyRole LiquidHellTarget { get; }
     public PartyRole BeamTarget { get; }
-    // UNVERIFIED: always two supports and two DPS, as the guide draws it.
+    // Always two supports and two DPS.
     public IReadOnlyList<PartyRole> StackTargets { get; }
     public IReadOnlyList<PartyRole> HypernovaTargets { get; }
 

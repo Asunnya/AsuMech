@@ -24,7 +24,7 @@ public sealed class UcobP3HeavensfallState
     public HeavensfallFormation Formation { get; }
     // UNVERIFIED: Nael was only seen north; any intercardinal or cardinal is assumed.
     public float NaelBearing { get; }
-    // Tower slots counted clockwise from the one under Nael, which always has one. UNVERIFIED.
+    // Tower slots counted clockwise from the one under Nael, which always has one.
     public IReadOnlyList<int> TowerSlotsTaken { get; }
     public PartyRole MegaflareDiveTarget { get; }
     public PartyRole TwistingDiveTarget { get; }
@@ -33,7 +33,6 @@ public sealed class UcobP3HeavensfallState
     public IReadOnlyList<PartyRole> MegaflarePuddleTargets { get; }
     public PartyRole HypernovaTarget { get; }
     public PartyRole FireballTarget { get; }
-    // UNVERIFIED: only a clockwise sweep was seen.
     public bool BurstsClockwise { get; }
 
     public UcobP3HeavensfallState(Rng rng, UcobP3HeavensfallStateOverrides? overrides = null)

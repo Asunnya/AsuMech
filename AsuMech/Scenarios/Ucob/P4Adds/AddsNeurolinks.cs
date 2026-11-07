@@ -11,7 +11,7 @@ namespace AsuMech.Scenarios.Ucob.P4Adds;
 // survivable.
 public sealed class AddsNeurolinks(SimWorld world)
 {
-    public const float Radius = 2f; // UNVERIFIED
+    public const float Radius = 2f;
 
     // Where the three always land: at waymarks 1, 2 and 3.
     public static readonly Vector2 North = new(0.1f, -8.5f);

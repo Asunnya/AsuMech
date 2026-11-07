@@ -29,13 +29,14 @@ public sealed class UcobP3BlackfireAi : IScenarioAi<UcobP3BlackfireState>
     private const float TowerDistance = 14f;
     private const float StackDetourDistance = 9f;
     private const float StackBearing = 180f;
-    private const float StackDistance = 7f;
+    private const float StackDistance = 9f;
     private const float GigaflareStackDistance = 3f;
     private const float MainTankGigaflareDistance = 2.5f;
 
     private const float StackUnderBahamut = 0.3f;
     private const float LeadTheLiquidHellsTowardNael = 13.02f;
-    private const float SplitAlongTheRim = 17.9f;
+    private const float SplitAlongTheRim = 15.35f;
+    private const float LeaveTheLastLiquidHell = 0.05f;
     private const float TakeTowersOrDetourToTheStack = 19.15f;
     private const float StackOppositeNael = 22f;
     private const float RegroupForGigaflare = 25.9f;
@@ -51,11 +52,14 @@ public sealed class UcobP3BlackfireAi : IScenarioAi<UcobP3BlackfireState>
 
         ai.Move(StackUnderBahamut, () => Spots(r => r == MainTank ? MainTankOnBahamut : PartyUnderBahamut), jitter: 0f);
         ai.Move(LeadTheLiquidHellsTowardNael, () => Spots(r => AroundNael(0f, r == state.LiquidHellTarget ? LiquidHellLeadTowardNael : PackTowardNael)), jitter: 0f);
-        ai.Move(SplitAlongTheRim, () => Spots(r => AroundNael(Side(r) * RimTurnBearing, RimTurnDistance)), jitter: 0f, sprint: true);
+        ai.Move(SplitAlongTheRim, () => Spots(r => r == state.LiquidHellTarget ? AroundNael(0f, LiquidHellLeadTowardNael) : RimTurn(r)), jitter: 0f, sprint: true);
+        ai.Move(Scenario.LiquidHells[^1] + LeaveTheLastLiquidHell, () => Spots(RimTurn), jitter: 0f, sprint: true);
         ai.Move(TakeTowersOrDetourToTheStack, () => Spots(TowerOrStackDetour), jitter: 0f, sprint: true);
         ai.Move(StackOppositeNael, () => Spots(r => StackTargeted(r) ? AroundNael(StackBearing, StackDistance) : TowerOrStackDetour(r)), jitter: 0f, sprint: true);
         ai.Move(RegroupForGigaflare, () => Spots(r => r == MainTank ? AroundNael(0f, MainTankGigaflareDistance) : AroundNael(StackBearing, GigaflareStackDistance)), jitter: 0f, sprint: true);
     }
+
+    private Vector2 RimTurn(PartyRole role) => AroundNael(Side(role) * RimTurnBearing, RimTurnDistance);
 
     private static float Side(PartyRole role) => State.Supports.Contains(role) ? 1f : -1f;
 

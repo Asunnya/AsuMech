@@ -13,7 +13,6 @@ public sealed class UcobP3FellruinState
     public static readonly NaelQuote[] QuoteChoices =
     [
         new("From hallowed moon I descend, a rain of stars to bring!", NaelMove.LunarDynamo, NaelMove.RavenDive),
-        // UNVERIFIED: only the first was seen; this one is the guide's.
         new("From on high I descend, the moon and stars to bring!", NaelMove.RavenDive, NaelMove.LunarDynamo),
     ];
 

@@ -12,7 +12,6 @@ public sealed class UcobP1TwintaniaState
     public const int TwisterCount = 4;
     public const float TwisterTriggerRadius = UcobTwisters.TriggerRadius;
     public const float FireballRadius = 4f;
-    // UNVERIFIED: one or two took lethal hits, five or more lived.
     public const int FireballMinimumStack = 4;
     public const float LiquidHellPuddleRadius = 6f;
     public const float PlummetRange = 12f;

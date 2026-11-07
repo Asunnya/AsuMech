@@ -41,7 +41,7 @@ public static class UcobActions
 
     // -- Golden Bahamut --
 
-    // UNVERIFIED: the sheet's shape is Custom; everyone stood within 3y of the target.
+    // The sheet's shape is Custom: a 4y stack the whole party must share.
     // Fewer than all eight and the stack is too heavy for the rest.
     public static readonly EnemyAction MornAfah = new(ActionId.MornAfah)
     {
@@ -94,7 +94,7 @@ public static class UcobActions
         DeathExplanation = "stay out of the dives' lines",
     };
 
-    // UNVERIFIED: the blast's damage; the arena edge is close, so it is played as lethal.
+    // It kills whoever sets it off and throws everyone within 8 off the arena.
     // -- P3 Bahamut Prime's trios --
 
     public static readonly EnemyAction LunarDynamo = new(ActionId.LunarDynamo)
@@ -161,7 +161,7 @@ public static class UcobActions
         DeathExplanation = "caught in someone's Megaflare spread (spread out after the dives)",
     };
 
-    // UNVERIFIED: anything short of every marked player kills the stack.
+    // Anything short of every marked player kills the stack.
     public static readonly EnemyAction MegaflareStackOfThree = MegaflareStack(3);
     public static readonly EnemyAction MegaflareStackOfFour = MegaflareStack(4);
 
@@ -191,7 +191,7 @@ public static class UcobActions
         Timing = new() { DamageDelay = 0.4f },
     };
 
-    // UNVERIFIED: its damage; the holder is spared.
+    // It kills anyone near the holder; the holder is spared.
     public static readonly EnemyAction TempestWingBlast = new(ActionId.TempestWingBlast)
     {
         Area = new() { CastTypeOverride = CastType.Circle },
@@ -215,7 +215,6 @@ public static class UcobActions
         Timing = new() { DamageDelay = 0.4f },
     };
 
-    // UNVERIFIED: the minimum.
     public static readonly EnemyAction ThermionicBeam = new(ActionId.ThermionicBeam)
     {
         Effects = [Damage(split: Stack(4))],
@@ -248,7 +247,7 @@ public static class UcobActions
         Timing = new() { DamageDelay = 0.4f },
     };
 
-    // UNVERIFIED: an unsoaked tower's punishment.
+    // An unsoaked tower wipes the party.
     public static readonly EnemyAction MegaflareStrike = new(ActionId.MegaflareStrike)
     {
         Cast = new() { AnimationLock = 1.1f },

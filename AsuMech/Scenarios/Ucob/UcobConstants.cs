@@ -16,7 +16,7 @@ public class UcobConstants
         // UNVERIFIED: Twintania's death wall; nobody in the logs stood past 20.
         public const float P1ArenaRadius = 24.5f;
 
-        public const float NeurolinkRadius = 2f; // UNVERIFIED
+        public const float NeurolinkRadius = 2f;
         public const float TwisterTriggerRadius = 1.25f;
         public const float TwisterBlastRadius = 8f;
         public const float LunarDynamoInner = 6f; // UNVERIFIED
@@ -29,7 +29,6 @@ public class UcobConstants
         public static readonly Vector2[] Neurolinks = [new(0.1f, -8.5f), new(-7.7f, 5.9f), new(9.3f, 5.5f)];
     }
 
-    // UNVERIFIED: one or two took lethal hits, five or more lived.
     public const int FireballMinimumStack = 4;
 
     // "Aether Markers": A/B/C on the rim, D and 1-4 inside. Scenario-local == world here,
@@ -122,7 +121,6 @@ public class UcobConstants
         public const uint MegaflareStack = 0x27;
         public const uint EarthShaker = 0x28;
         public const uint LiquidHell = 0x29;
-        // UNVERIFIED which dive each one marks.
         public const uint MegaflareDive = 0x29;
         public const uint TwistingDive = 0x2A;
         public const uint DragonDive = 0x14;

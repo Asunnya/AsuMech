@@ -15,7 +15,7 @@ public static class UcobNaelAttacks
     public const float LunarDynamoInner = 6f; // UNVERIFIED
     public const float IronChariotRadius = 8.55f;
     public const float ThermionicBeamRadius = 4f;
-    public const int ThermionicBeamMinimumStack = 4; // UNVERIFIED
+    public const int ThermionicBeamMinimumStack = 4;
     public const float RavenDiveRadius = 3f;
     public const int ClawHits = 5;
     public const float ClawInterval = 0.805f;

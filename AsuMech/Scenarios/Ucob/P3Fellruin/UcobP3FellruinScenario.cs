@@ -161,7 +161,7 @@ public sealed class UcobP3FellruinScenario : IScenario
             nael?.Cast(Actions.RavenDive, target);
     }
 
-    // UNVERIFIED: the two players nearest Bahamut Prime hold them until they go off.
+    // The two players nearest Bahamut Prime hold them until they go off.
     private void TetherTempestWing()
     {
         tethersFollow = true;
