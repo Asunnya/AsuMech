@@ -426,12 +426,23 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
     private Vector2 OffOthersCircles(PartyRole role, Vector2 spot, float now)
     {
         if (now > world.Events.Elapsed + 0.05f || world.Party.Get(role) is not { } member || !member.HasStatus(UcobConstants.StatusId.Doom)) return spot;
+        var from = Flat(member.Position) ?? spot;
         foreach (var walk in doomWalks)
         {
-            if (walk.Role == role || now < walk.From - 0.7f || now > walk.Until || Vector2.Distance(spot, walk.Circle) > State.CleanseRadius + 1f) continue;
-            return walk.Circle + Vector2.Normalize(spot - walk.Circle + new Vector2(0.001f, 0f)) * (State.CleanseRadius + 1.5f);
+            if (walk.Role == role || now < walk.From - 0.7f || now > walk.Until) continue;
+            if (Vector2.Distance(spot, walk.Circle) <= State.CleanseRadius + 1f)
+                return walk.Circle + Vector2.Normalize(spot - walk.Circle + new Vector2(0.001f, 0f)) * (State.CleanseRadius + 1.5f);
+            if (DistanceToSegment(walk.Circle, from, spot) <= State.CleanseRadius + 1f)
+                return walk.Circle + Vector2.Normalize(from - walk.Circle + new Vector2(0.001f, 0f)) * (State.CleanseRadius + 1.5f);
         }
         return spot;
+    }
+
+    private static float DistanceToSegment(Vector2 point, Vector2 a, Vector2 b)
+    {
+        var ab = b - a;
+        var t = ab.LengthSquared() < 1e-6f ? 0f : Math.Clamp(Vector2.Dot(point - a, ab) / ab.LengthSquared(), 0f, 1f);
+        return Vector2.Distance(point, a + ab * t);
     }
 
     private Vector2 Ear(int set, int holder, float now)
