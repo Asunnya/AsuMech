@@ -67,6 +67,7 @@ using AsuMech.Scenarios.Ucob.P3Tenstrike;
 using AsuMech.Scenarios.Ucob.P4Adds;
 using AsuMech.Scenarios.Ucob.P5Exaflares;
 using AsuMech.Scenarios.Ucob.P5GoldenBahamut;
+using AsuMech.Scenarios.Ucob.P5PhoenixTransition;
 using AsuMech.Scenarios.Umad;
 using AsuMech.Scenarios.Umad.P1TeleTrouncing;
 using AsuMech.Scenarios.Umad.P2Forsaken;
@@ -180,6 +181,7 @@ public sealed class ScenarioCatalog
         new UcobP3GrandOctetScenario(),
         new UcobP4AddsScenario(),
         new UcobP5ExaflaresScenario(),
+        new UcobP5PhoenixTransitionScenario(),
         new UcobP5GoldenBahamutScenario(),
         new DsrP1KnightsScenario(),
         new DsrP2ThordanScenario(),
