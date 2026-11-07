@@ -133,7 +133,7 @@ public sealed class UcobP4AddsScenario : IScenario
         world.Events.Add(AddsAppear, SpawnAdds);
         world.Events.Add(ReturnAnimations, PlayReturnAnimations);
         world.Events.Add(FavorTethers, TetherAddsToBahamut);
-        world.Events.Add(OpeningQuote, () => world.Announce("Nael deus Darnus: O Bahamut! We shall stand guard as you make ready your divine judgment!"));
+        world.Events.Add(OpeningQuote, () => UcobNaelQuotes.Say(world, nael, "O Bahamut! We shall stand guard as you make ready your divine judgment!"));
         world.Events.Add(BahamutsFavor, GrantBahamutsFavor);
         world.Events.Add(Targetable, EngageAdds);
 
@@ -178,7 +178,7 @@ public sealed class UcobP4AddsScenario : IScenario
         world.Events.Add(WhiteFuryCast, () => nael?.Cast(ActionId.WhiteFury));
         world.Events.Add(TwintaniaDies, () => Kill(twintania, TwintaniaCorpseFades));
         world.Events.Add(WhiteFuryInterrupted, () => nael?.CancelCast(CastCancelReason.Interrupted));
-        world.Events.Add(ClosingQuote, () => world.Announce("Nael deus Darnus: Ugh... None shall defy Lord Bahamut's will! On your knees, vermin!"));
+        world.Events.Add(ClosingQuote, () => UcobNaelQuotes.Say(world, nael, "Ugh... None shall defy Lord Bahamut's will! On your knees, vermin!"));
         world.Events.Add(NaelDies, () => Kill(nael, NaelCorpseFades));
         world.Events.Add(End, DespawnAll);
     }
@@ -261,7 +261,7 @@ public sealed class UcobP4AddsScenario : IScenario
 
     private void HoldNael(NaelTripleQuote quote)
     {
-        world.Announce($"Nael deus Darnus: {quote.Text}");
+        UcobNaelQuotes.Say(world, nael, quote.Text);
         naelHolding = true;
         nael?.Follow(null);
         nael?.StopMoving();

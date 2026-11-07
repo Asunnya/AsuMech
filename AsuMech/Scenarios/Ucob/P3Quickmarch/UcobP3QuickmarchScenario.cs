@@ -301,7 +301,7 @@ public sealed class UcobP3QuickmarchScenario : IScenario
         if (bahamut is not { } boss) return;
         boss.Cast(ActionId.EarthShaker, animationLock: 1.1f);
         foreach (var member in Alive(state.EarthShakerTargets))
-            boss.CastFromHelper(Actions.EarthShakerCone, member, at: boss.Placement());
+            boss.CastFromHelper(Actions.EarthShakerCone, member, at: boss.Placement().Face(member.Position));
     }
 
     private void DespawnAll()
