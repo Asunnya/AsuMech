@@ -14,8 +14,9 @@ using State = AsuMech.Scenarios.Ucob.P2Nael.UcobP2NaelState;
 
 namespace AsuMech.Scenarios.Ucob.P2Nael;
 
-// Nael deus Darnus from Heavensfall to the Ravensbeak that ends the dragons' elements, before the
-// divebombs. Her HP is not simulated. The main tank holds her throughout.
+// Nael deus Darnus from Heavensfall to the Ravensbeak that ends the dragons' elements, then the
+// party pushes her and she leaves with her dragons, as a clear does. Her HP is not simulated. The
+// main tank holds her throughout.
 public sealed class UcobP2NaelScenario : IScenario
 {
     public string Name => "Nael deus Darnus";
@@ -57,7 +58,10 @@ public sealed class UcobP2NaelScenario : IScenario
     public const float DoomAfterDeathstorm = 1.03f;
     public const float RavensbeakCast = 130.36f;
     private const float RavensbeakCastSeconds = 3.7f;
-    public const float End = 135.5f;
+    public const float NaelUntargetable = 136.41f;
+    public const float LeaveAnimations = 136.50f;
+    public const float DragonsLeave = 138.59f;
+    public const float End = 139f;
 
     // Checked just before the status itself runs out and is gone.
     private const float DoomCheckLead = 0.05f;
@@ -168,6 +172,9 @@ public sealed class UcobP2NaelScenario : IScenario
 
         world.Events.Add(RavensbeakCast, CastRavensbeak);
         world.Events.Add(RavensbeakCast + RavensbeakCastSeconds, Ravensbeak);
+        world.Events.Add(NaelUntargetable, () => nael?.SetTargetable(false));
+        world.Events.Add(LeaveAnimations, PlayLeaveAnimations);
+        world.Events.Add(DragonsLeave, DespawnDragons);
         world.Events.Add(End, DespawnAll);
     }
 
@@ -470,6 +477,23 @@ public sealed class UcobP2NaelScenario : IScenario
         if (party.Get(PartyRole.MainTank) is not { } tank || !tank.IsAlive()) return;
         PlayEffect(nael, ActionId.Ravensbeak, 1.1f, target: tank.GameObjectId);
         damage.ApplyDamage(tank, 0.5f, ActionId.Ravensbeak, "Ravensbeak", lethal: false);
+    }
+
+    private IEnumerable<SimEnemy> Dragons() => new[] { firehorn, iceclaw, thunderwing, tail, fang }.OfType<SimEnemy>();
+
+    private void PlayLeaveAnimations()
+    {
+        nael?.PlayActionTimeline(TimelineId.NaelLeaves);
+        foreach (var dragon in Dragons()) dragon.PlayActionTimeline(TimelineId.DragonLeaves);
+    }
+
+    private void DespawnDragons()
+    {
+        foreach (var dragon in Dragons().ToList())
+        {
+            dragon.Despawn();
+            spawned.Remove(dragon);
+        }
     }
 
     private void DespawnAll()

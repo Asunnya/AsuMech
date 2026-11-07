@@ -1,5 +1,6 @@
 using System.Numerics;
 using AsuMech.Core.Game.Party;
+using AsuMech.Core.SimObjects;
 using AsuMech.Scenarios.Ucob.P2Nael;
 using static AsuMech.Core.Game.Party.PartyRole;
 using static AsuMech.Scenarios.Ucob.UcobConstants;
@@ -11,6 +12,34 @@ namespace AsuMech.Tests;
 // Nael lands on the main tank at (0, 9).
 public class UcobP2NaelScenarioTests
 {
+    // The clear's push: after Ravensbeak, Nael stops being a target and the dragons leave.
+    [Test]
+    public void NaelIsPushedAndTheDragonsLeaveAfterRavensbeak()
+    {
+        bool? targetableBefore = null, targetableAfter = null;
+        int? dragonsBefore = null, dragonsAfter = null;
+        var dragonIds = new[] { BNpcBaseId.Firehorn, BNpcBaseId.Iceclaw, BNpcBaseId.Thunderwing, BNpcBaseId.TailOfDarkness, BNpcBaseId.FangOfLight };
+        var run = ScenarioRun.Execute(typeof(UcobP2NaelScenario), 0, 1, new ScenarioRunOptions
+        {
+            StopAt = UcobP2NaelScenario.End - 0.1f,
+            Probe = p =>
+            {
+                SimEnemy? Nael() => p.World.Children.OfType<SimEnemy>().FirstOrDefault(e => e.IsActive && e.BNpcBaseId == BNpcBaseId.NaelDeusDarnus);
+                int Dragons() => p.World.Children.OfType<SimEnemy>().Count(e => e.IsActive && dragonIds.Contains(e.BNpcBaseId));
+                if (p.Crossed(UcobP2NaelScenario.NaelUntargetable - 0.5f)) { targetableBefore = Nael()?.Targetable; dragonsBefore = Dragons(); }
+                if (p.Crossed(UcobP2NaelScenario.DragonsLeave + 0.1f)) { targetableAfter = Nael()?.Targetable; dragonsAfter = Dragons(); }
+            },
+        });
+        Assert.That(run.Passed, run.ToString);
+        Assert.Multiple(() =>
+        {
+            Assert.That(targetableBefore, Is.True);
+            Assert.That(dragonsBefore, Is.EqualTo(5));
+            Assert.That(targetableAfter, Is.False);
+            Assert.That(dragonsAfter, Is.EqualTo(0));
+        });
+    }
+
     [Test]
     public void StandingInAThermionicBurstSliceKills()
         => Negative<UcobP2NaelScenario>(CasterDps)

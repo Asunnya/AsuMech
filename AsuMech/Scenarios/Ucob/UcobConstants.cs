@@ -110,6 +110,12 @@ public class UcobConstants
     // takes on, not a stack count (param 1 turns him into a toad).
     public const int LohsDaihTransformation = 73;
 
+    public class TimelineId
+    {
+        public const ushort NaelLeaves = 0x1E39;
+        public const ushort DragonLeaves = 0x008F;
+    }
+
     public class ActionId
     {
         public const uint AutoAttack = 9936;
