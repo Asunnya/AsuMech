@@ -123,7 +123,11 @@ public sealed class UcobP4AddsScenario : IScenario
 
         world.Events.Add(0f, () => world.EnforceArenaBoundary(Geometry.P1ArenaRadius, "Fell into the death wall"));
         world.Events.Add(0f, () => world.PlaceWaymarks(AetherWaymarks));
-        world.Events.Add(0f, () => bahamut = Spawn(BNpcBaseId.BahamutPrime, BNpcNameId.BahamutPrime, BahamutSpot, EnemyListMode.Never));
+        world.Events.Add(0f, () =>
+        {
+            bahamut = Spawn(BNpcBaseId.BahamutPrime, BNpcNameId.BahamutPrime, BahamutSpot, EnemyListMode.Never);
+            bahamut?.PlayActionTimeline(TimelineId.BahamutPrimeLands);
+        });
         world.Events.Add(0f, () => helpers.Fill(HelperPoolSize));
         world.Events.Add(0f, DropNeurolinks);
         world.Events.Add(AddsAppear, SpawnAdds);

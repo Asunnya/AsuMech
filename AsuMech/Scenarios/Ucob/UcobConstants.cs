@@ -157,6 +157,8 @@ public class UcobConstants
         public const ushort PhoenixRises = 0x1E43;
         public const ushort PhoenixLeaves = 0x1E39;
         public const ushort BahamutInnerRage = 0x11D2;
+        // UNVERIFIED that it keeps Prime dark: the log plays it as he lands for P3.
+        public const ushort BahamutPrimeLands = 0x11D1;
         public const ushort BahamutLeaves = 0x1E39;
         public const ushort TwintaniaLeaves = 0x1E3A;
         public const ushort DragonArrives = 0x1E43;

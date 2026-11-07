@@ -12,9 +12,9 @@ public sealed class UcobZone : IZone
     // UNVERIFIED: P1 and P2's weather and track are borrowed from P5.
     public static readonly Phase P1 = new(Instance, "P1", 32, 499);
     public static readonly Phase P2 = new(Instance, "P2", 32, 499);
-    // UNVERIFIED: P3 and P4's weather and track are borrowed from P5 as well.
-    public static readonly Phase P3 = new(Instance, "P3", 32, 499);
-    public static readonly Phase P4 = new(Instance, "P4", 32, 499);
+    // Weather 30 is the Bahamut Prime arena; P5's 32 dresses it as the Golden Bahamut floor. Track UNVERIFIED.
+    public static readonly Phase P3 = new(Instance, "P3", 30, 499);
+    public static readonly Phase P4 = new(Instance, "P4", 30, 499);
     public static readonly Phase P5 = new(Instance, "P5", 32, 499,
         init: world =>
         {

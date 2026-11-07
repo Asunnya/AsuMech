@@ -81,7 +81,11 @@ public sealed class UcobP3GrandOctetScenario : IScenario
         world.Events.Add(0f, () => world.EnforceArenaBoundary(Geometry.P1ArenaRadius, "Fell into the death wall"));
         world.Events.Add(0f, () => world.PlaceWaymarks(AetherWaymarks));
         world.Events.Add(0f, () => party.LimitBreak.Set(LimitBreakBars));
-        world.Events.Add(0f, () => bahamut = Spawn(BNpcBaseId.BahamutPrime, BNpcNameId.BahamutPrime, Vector2.Zero, MathF.PI, targetable: true));
+        world.Events.Add(0f, () =>
+        {
+            bahamut = Spawn(BNpcBaseId.BahamutPrime, BNpcNameId.BahamutPrime, Vector2.Zero, MathF.PI, targetable: true);
+            bahamut?.PlayActionTimeline(TimelineId.BahamutPrimeLands);
+        });
 
         world.Events.Add(GrandOctetCast, () => bahamut?.Cast(ActionId.GrandOctet, animationLock: 3.1f));
         world.Events.Add(NaelAndTwintaniaAppear, () =>
@@ -172,6 +176,7 @@ public sealed class UcobP3GrandOctetScenario : IScenario
     private void SpawnTrioOnTheRim()
     {
         bahamut = SpawnOnTheRim(BNpcBaseId.BahamutPrime, BNpcNameId.BahamutPrime, state.BahamutSlot);
+        bahamut?.PlayActionTimeline(TimelineId.BahamutPrimeLands);
         nael = SpawnOnTheRim(BNpcBaseId.NaelDeusDarnus, BNpcNameId.NaelDeusDarnus, state.NaelSlot);
         twintania = SpawnOnTheRim(BNpcBaseId.Twintania, BNpcNameId.Twintania, state.TwintaniaSlot);
     }

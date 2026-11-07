@@ -132,6 +132,7 @@ public sealed class UcobP3HeavensfallScenario : IScenario
     private void SpawnBosses()
     {
         bahamut = Spawn(BNpcBaseId.BahamutPrime, BNpcNameId.BahamutPrime, Vector2.Zero, MathF.PI, true, EnemyListMode.Always, SpawnVisibility.Visible);
+        bahamut?.PlayActionTimeline(TimelineId.BahamutPrimeLands);
         nael = Spawn(BNpcBaseId.NaelDeusDarnus, BNpcNameId.NaelDeusDarnus, Vector2.Zero, 0f, false, EnemyListMode.Never, SpawnVisibility.HiddenUntilShown);
         twintania = Spawn(BNpcBaseId.Twintania, BNpcNameId.Twintania, Vector2.Zero, 0f, false, EnemyListMode.Never, SpawnVisibility.HiddenUntilShown);
     }

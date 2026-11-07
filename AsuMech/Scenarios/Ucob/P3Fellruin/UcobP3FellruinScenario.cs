@@ -110,6 +110,7 @@ public sealed class UcobP3FellruinScenario : IScenario
     private void SpawnBosses()
     {
         bahamut = Spawn(BNpcBaseId.BahamutPrime, BNpcNameId.BahamutPrime, Vector2.Zero, MathF.PI, true, EnemyListMode.Always, SpawnVisibility.Visible);
+        bahamut?.PlayActionTimeline(TimelineId.BahamutPrimeLands);
         nael = Spawn(BNpcBaseId.NaelDeusDarnus, BNpcNameId.NaelDeusDarnus, NaelShowsAt, 0f, false, EnemyListMode.Never, SpawnVisibility.HiddenUntilShown);
         twintania = Spawn(BNpcBaseId.Twintania, BNpcNameId.Twintania, TwintaniaShowsAt, 0f, false, EnemyListMode.Never, SpawnVisibility.HiddenUntilShown);
         bahamut?.KeepFacing(party.Get(PartyRole.MainTank));

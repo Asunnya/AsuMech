@@ -161,6 +161,7 @@ public sealed class UcobP3BlackfireScenario : IScenario
             Targetable: true,
             EnemyList: EnemyListMode.Always,
             Placement: new Placement(Vector3.Zero, MathF.PI)));
+        bahamut?.PlayActionTimeline(TimelineId.BahamutPrimeLands);
         nael = SpawnAdd(BNpcBaseId.NaelDeusDarnus, BNpcNameId.NaelDeusDarnus, NaelBesideBahamut);
         twintania = SpawnAdd(BNpcBaseId.Twintania, BNpcNameId.Twintania, TwintaniaBesideBahamut);
     }

@@ -115,7 +115,11 @@ public sealed class UcobP3TenstrikeScenario : IScenario
             world.Events.Add(EarthShakerMarkers[set], () => Mark(targets, LockonId.EarthShaker));
             world.Events.Add(EarthShakers[set], () => EarthShaker(targets));
         }
-        world.Events.Add(BahamutReturns, () => bahamut = Spawn(BNpcBaseId.BahamutPrime, BNpcNameId.BahamutPrime, Vector2.Zero, MathF.PI, targetable: false));
+        world.Events.Add(BahamutReturns, () =>
+        {
+            bahamut = Spawn(BNpcBaseId.BahamutPrime, BNpcNameId.BahamutPrime, Vector2.Zero, MathF.PI, targetable: false);
+            bahamut?.PlayActionTimeline(TimelineId.BahamutPrimeLands);
+        });
         world.Events.Add(BahamutReturns + ArrivalAfterSpawn, () => bahamut?.PlayActionTimeline(TimelineId.NaelOrBahamutArrives));
         world.Events.Add(EarthShakerMarkers[1], () => bahamut?.SetTargetable(true));
 
@@ -132,6 +136,7 @@ public sealed class UcobP3TenstrikeScenario : IScenario
     private void SpawnTrio()
     {
         bahamut = Spawn(BNpcBaseId.BahamutPrime, BNpcNameId.BahamutPrime, Vector2.Zero, MathF.PI, targetable: true);
+        bahamut?.PlayActionTimeline(TimelineId.BahamutPrimeLands);
         nael = Spawn(BNpcBaseId.NaelDeusDarnus, BNpcNameId.NaelDeusDarnus, NaelSpot, MathF.PI, targetable: false);
         twintania = Spawn(BNpcBaseId.Twintania, BNpcNameId.Twintania, TwintaniaSpot, MathF.PI, targetable: false);
     }
