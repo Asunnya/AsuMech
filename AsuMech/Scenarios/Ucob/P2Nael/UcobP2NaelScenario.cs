@@ -14,9 +14,9 @@ using State = AsuMech.Scenarios.Ucob.P2Nael.UcobP2NaelState;
 
 namespace AsuMech.Scenarios.Ucob.P2Nael;
 
-// Nael deus Darnus from Heavensfall to the Ravensbeak that ends the dragons' elements, then the
-// party pushes her and she leaves with her dragons, as a clear does. Her HP is not simulated. The
-// main tank holds her throughout.
+// Nael deus Darnus from Heavensfall to the Ravensbeak that ends the dragons' elements. Pushed, she
+// leaves with her dragons, as a clear does; not pushed, the divebombs follow. Her HP is not
+// simulated. The main tank holds her throughout.
 public sealed class UcobP2NaelScenario : IScenario
 {
     public string Name => "Nael deus Darnus";
@@ -63,6 +63,21 @@ public sealed class UcobP2NaelScenario : IScenario
     public const float DragonsLeave = 138.59f;
     public const float End = 139f;
 
+    public const float CauterizeCastSeconds = 4f;
+    public const float HypernovaPuddleAppears = 1.08f;
+    public const float HypernovaPuddleLasts = 11.7f;
+
+    // No log reaches the divebombs: every time below is UNVERIFIED.
+    public const float DivebombQuoteAt = 136f;
+    public static readonly float[] DivebombMarkers = [137f, 143f, 149f];
+    public static readonly float[] DivebombLocks = [143f, 149f, 155f];
+    public static readonly float[] Hypernovas = [143f, 146f, 149f, 152f];
+    public const float NaelLeavesForTheDive = 153.5f;
+    private const float NaelGone = 155.5f;
+    public static readonly float[] DivebombQuoteMoves = [161f, 165f];
+    public const float FinalRavensbeakCast = 167f;
+    public const float DivebombsEnd = 172f;
+
     // Checked just before the status itself runs out and is gone.
     private const float DoomCheckLead = 0.05f;
     private const float EffectCarrierLinger = 3f;
@@ -80,6 +95,8 @@ public sealed class UcobP2NaelScenario : IScenario
     private readonly Queue<SimEnemy> helperPool = [];
     private readonly List<SimEventObject> eobjs = [];
     private readonly List<(Vector2 At, SimEventObject? EObj, float Until)> cleanses = [];
+    private readonly List<(Vector2 At, float Until)> hypernovaPuddles = [];
+    private readonly List<SimEnemy?> dragons = [];
 
     public void Run(SimWorld worldParam, int? selectedAi)
     {
@@ -91,6 +108,8 @@ public sealed class UcobP2NaelScenario : IScenario
         helperPool.Clear();
         eobjs.Clear();
         cleanses.Clear();
+        hypernovaPuddles.Clear();
+        dragons.Clear();
         nael = null;
 
         if (selectedAi is { } idx && idx < AiStrats.Count)
@@ -172,10 +191,43 @@ public sealed class UcobP2NaelScenario : IScenario
 
         world.Events.Add(RavensbeakCast, CastRavensbeak);
         world.Events.Add(RavensbeakCast + RavensbeakCastSeconds, Ravensbeak);
+        if (state.Push == NaelPush.NoPush)
+        {
+            ScheduleDivebombs();
+            return;
+        }
         world.Events.Add(NaelUntargetable, () => nael?.SetTargetable(false));
         world.Events.Add(LeaveAnimations, PlayLeaveAnimations);
         world.Events.Add(DragonsLeave, DespawnDragons);
         world.Events.Add(End, DespawnAll);
+    }
+
+    private void ScheduleDivebombs()
+    {
+        world.Events.Add(DivebombQuoteAt, () => world.Announce($"Nael deus Darnus: {state.DivebombQuote.Text}"));
+        for (var i = 0; i < State.Divebombs; i++)
+        {
+            var target = state.DivebombTargets[i];
+            var slots = state.DiveDragons[i];
+            List<(int Slot, Vector2 From, Vector2 Along)> aims = [];
+            world.Events.Add(DivebombMarkers[i], () => { if (party.Get(target) is { } member && member.IsAlive()) member.AttachLockonVfx(LockonId.Divebomb); });
+            world.Events.Add(DivebombLocks[i], () => aims = LockCauterize(slots, target));
+            world.Events.Add(DivebombLocks[i] + CauterizeCastSeconds, () => Cauterize(aims));
+        }
+        foreach (var at in Hypernovas)
+            world.Events.Add(at, Hypernova);
+        world.Events.Add(NaelLeavesForTheDive, () =>
+        {
+            nael?.SetTargetable(false);
+            nael?.PlayActionTimeline(TimelineId.NaelLeaves);
+        });
+        world.Events.Add(NaelGone, () => nael?.SetVisible(false));
+        var quote = state.DivebombQuote;
+        world.Events.Add(DivebombQuoteMoves[0], () => DivebombQuoteMove(quote.First));
+        world.Events.Add(DivebombQuoteMoves[1], () => DivebombQuoteMove(quote.Second));
+        world.Events.Add(FinalRavensbeakCast, CastRavensbeak);
+        world.Events.Add(FinalRavensbeakCast + RavensbeakCastSeconds, Ravensbeak);
+        world.Events.Add(DivebombsEnd, DespawnAll);
     }
 
     public void Tick(float delta, float elapsed)
@@ -183,6 +235,7 @@ public sealed class UcobP2NaelScenario : IScenario
         if (nael is { IsCasting: false, IsMoving: false } boss && party.Get(PartyRole.MainTank) is { } tank && tank.IsAlive())
             boss.Face(tank);
         CleanseDooms(world.Events.Elapsed);
+        BurnInHypernovaPuddles(world.Events.Elapsed);
     }
 
     private void SpawnNael()
@@ -285,7 +338,7 @@ public sealed class UcobP2NaelScenario : IScenario
             (BNpcBaseId.Thunderwing, BNpcNameId.Thunderwing), (BNpcBaseId.TailOfDarkness, BNpcNameId.TailOfDarkness),
             (BNpcBaseId.FangOfLight, BNpcNameId.FangOfLight),
         };
-        var dragons = new List<SimEnemy?>();
+        dragons.Clear();
         for (var i = 0; i < kinds.Length; i++)
         {
             var at = State.DragonPosition(state.DragonSlots[i]);
@@ -349,7 +402,7 @@ public sealed class UcobP2NaelScenario : IScenario
                     hit.Die(ActionId.IronChariot, "inside Iron Chariot (\"iron path\": get out)");
                 break;
             case NaelMove.ThermionicBeam:
-                ThermionicBeam(beam);
+                ThermionicBeam(state.BeamTargets[beam]);
                 break;
             case NaelMove.RavenDive:
                 RavenDive();
@@ -357,9 +410,9 @@ public sealed class UcobP2NaelScenario : IScenario
         }
     }
 
-    private void ThermionicBeam(int beam)
+    private void ThermionicBeam(PartyRole role)
     {
-        var target = party.Get(state.BeamTargets[beam]) is { } chosen && chosen.IsAlive() ? chosen : AliveMembers().FirstOrDefault();
+        var target = party.Get(role) is { } chosen && chosen.IsAlive() ? chosen : AliveMembers().FirstOrDefault();
         if (target == null) return;
         PlayEffect(nael, ActionId.ThermionicBeam, 1.1f, target: target.GameObjectId, at: target.Position);
         var hits = AliveMembers().Where(m => Vector2.Distance(Flat(m.Position), Flat(target.Position)) <= State.ThermionicBeamRadius).ToList();
@@ -479,6 +532,105 @@ public sealed class UcobP2NaelScenario : IScenario
         damage.ApplyDamage(tank, 0.5f, ActionId.Ravensbeak, "Ravensbeak", lethal: false);
     }
 
+    private static readonly uint[] CauterizeIds =
+    [
+        ActionId.CauterizeFirehorn, ActionId.CauterizeIceclaw, ActionId.CauterizeThunderwing,
+        ActionId.CauterizeTailOfDarkness, ActionId.CauterizeFangOfLight,
+    ];
+
+    // UNVERIFIED: each dragon locks its line on the marked player as the marker goes, then dives
+    // along it and is gone.
+    private List<(int Slot, Vector2 From, Vector2 Along)> LockCauterize(IReadOnlyList<int> slots, PartyRole role)
+    {
+        var target = party.Get(role) is { } chosen && chosen.IsAlive() ? chosen : AliveMembers().FirstOrDefault();
+        var aims = new List<(int Slot, Vector2 From, Vector2 Along)>();
+        if (target == null) return aims;
+        foreach (var slot in slots)
+        {
+            var index = state.DragonSlots.ToList().IndexOf(slot);
+            var from = State.DragonPosition(slot);
+            var toward = Flat(target.Position) - from;
+            var along = toward.LengthSquared() < 0.01f ? Vector2.Normalize(-from) : Vector2.Normalize(toward);
+            var rotation = MathF.Atan2(along.X, along.Y);
+            if (dragons[index] is { } dragon)
+            {
+                dragon.SetPosition(new Placement(ToWorld(from), rotation));
+                dragon.NativeCast(CauterizeIds[index], ActionType.Action, 0f, CauterizeCastSeconds, false, rotation: rotation, position: ToWorld(from));
+            }
+            aims.Add((slot, from, along));
+        }
+        return aims;
+    }
+
+    private void Cauterize(IReadOnlyList<(int Slot, Vector2 From, Vector2 Along)> aims)
+    {
+        foreach (var (slot, from, along) in aims)
+        {
+            var index = state.DragonSlots.ToList().IndexOf(slot);
+            var dragon = dragons[index];
+            PlayEffect(dragon, CauterizeIds[index], 1.1f, rotation: MathF.Atan2(along.X, along.Y), at: ToWorld(from));
+            foreach (var hit in AliveMembers().Where(m => InCauterize(from, along, Flat(m.Position))).ToList())
+                hit.Die(CauterizeIds[index], "stood in a dragon's divebomb path (step out of its line once it locks on)");
+            if (dragon == null) continue;
+            world.Events.Add(EffectCarrierLinger, () =>
+            {
+                dragon.Despawn();
+                spawned.Remove(dragon);
+            });
+            dragons[index] = null;
+        }
+    }
+
+    public static bool InCauterize(Vector2 from, Vector2 along, Vector2 at)
+    {
+        var offset = at - from;
+        var ahead = Vector2.Dot(offset, along);
+        var aside = MathF.Abs(along.X * offset.Y - along.Y * offset.X);
+        return ahead >= 0f && ahead <= State.CauterizeLength && aside <= State.CauterizeHalfWidth;
+    }
+
+    // UNVERIFIED: each lands on whoever stands farthest from the centre.
+    private void Hypernova()
+    {
+        if (AliveMembers().OrderByDescending(m => Flat(m.Position).Length()).FirstOrDefault() is not { } target) return;
+        var at = Flat(target.Position);
+        PlayEffect(nael, ActionId.Hypernova, 1.1f, at: ToWorld(at));
+        foreach (var hit in AliveMembers().Where(m => Vector2.Distance(Flat(m.Position), at) <= State.HypernovaRadius).ToList())
+            damage.ApplyDamage(hit, 0.3f, ActionId.Hypernova, "Hypernova", lethal: false);
+        world.Events.Add(HypernovaPuddleAppears, () =>
+        {
+            var eobj = SpawnEObj(EObjId.HypernovaPuddle, at);
+            var now = world.Events.Elapsed;
+            hypernovaPuddles.Add((at, now + HypernovaPuddleLasts));
+            world.Events.Add(HypernovaPuddleLasts, () => eobj?.Despawn());
+        });
+    }
+
+    // UNVERIFIED: standing in a puddle once it has formed is lethal.
+    private void BurnInHypernovaPuddles(float now)
+    {
+        hypernovaPuddles.RemoveAll(p => now >= p.Until);
+        foreach (var member in AliveMembers().ToList())
+            if (hypernovaPuddles.Any(p => Vector2.Distance(Flat(member.Position), p.At) <= State.HypernovaPuddleRadius))
+                member.Die(ActionId.Hypernova, "stood in a Hypernova puddle (keep moving once one lands on you)");
+    }
+
+    private void DivebombQuoteMove(NaelMove move)
+    {
+        switch (move)
+        {
+            case NaelMove.MeteorStream:
+                MeteorStream(state.DivebombSpreads);
+                break;
+            case NaelMove.DalamudDive:
+                DalamudDiveHit();
+                break;
+            case NaelMove.ThermionicBeam:
+                ThermionicBeam(state.DivebombStackTarget);
+                break;
+        }
+    }
+
     private IEnumerable<SimEnemy> Dragons() => new[] { firehorn, iceclaw, thunderwing, tail, fang }.OfType<SimEnemy>();
 
     private void PlayLeaveAnimations()
@@ -501,6 +653,7 @@ public sealed class UcobP2NaelScenario : IScenario
         foreach (var eobj in eobjs) eobj.Despawn();
         eobjs.Clear();
         cleanses.Clear();
+        hypernovaPuddles.Clear();
         foreach (var enemy in spawned) enemy.Despawn();
         spawned.Clear();
         helperPool.Clear();

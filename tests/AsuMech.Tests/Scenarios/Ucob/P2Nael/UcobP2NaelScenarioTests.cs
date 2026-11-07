@@ -103,4 +103,102 @@ public class UcobP2NaelScenarioTests
                 o.Quotes[2] = third;
             })
             .ShouldKillNoOneElse();
+
+    private static readonly int[][] EveryDragonLayout = Combinations(Enumerable.Range(0, 8).ToArray(), 5).ToArray();
+
+    private static IEnumerable<int[]> Combinations(int[] from, int count)
+        => count == 0 ? [[]] : from.SelectMany((first, i) => Combinations(from[(i + 1)..], count - 1).Select(rest => rest.Prepend(first).ToArray()));
+
+    [Test]
+    public void WithoutThePushTheBotsClearTheDivebombs([Range(0, 19)] int seed)
+    {
+        var run = ScenarioRun.Execute(typeof(UcobP2NaelScenario), 0, seed, new ScenarioRunOptions
+        {
+            Overrides = o => ((UcobP2NaelStateOverrides)o).Push = NaelPush.NoPush,
+        });
+        Assert.That(run.Passed, run.ToString);
+    }
+
+    [Test]
+    public void WithoutThePushTheBotsClearEveryDragonLayout([Range(0, 55)] int layout)
+        => Negative<UcobP2NaelScenario>(PhysRangedDps)
+            .Overrides<UcobP2NaelStateOverrides>(o =>
+            {
+                o.Push = NaelPush.NoPush;
+                o.DragonSlots = EveryDragonLayout[layout];
+                o.DivebombQuote = layout % 2;
+            })
+            .Seed(layout)
+            .ShouldKillNoOneElse();
+
+    [Test]
+    public void WithoutThePushTheDragonsDiveAndNaelComesBackForTheTank()
+    {
+        int? dragonsAfter = null;
+        bool? naelTargetableAfterLeaving = null, naelTargetableAfterDive = null;
+        var dragonIds = new[] { BNpcBaseId.Firehorn, BNpcBaseId.Iceclaw, BNpcBaseId.Thunderwing, BNpcBaseId.TailOfDarkness, BNpcBaseId.FangOfLight };
+        var run = ScenarioRun.Execute(typeof(UcobP2NaelScenario), 0, 3, new ScenarioRunOptions
+        {
+            Overrides = o => ((UcobP2NaelStateOverrides)o).Push = NaelPush.NoPush,
+            Probe = p =>
+            {
+                SimEnemy? Nael() => p.World.Children.OfType<SimEnemy>().FirstOrDefault(e => e.IsActive && e.BNpcBaseId == BNpcBaseId.NaelDeusDarnus);
+                if (p.Crossed(UcobP2NaelScenario.NaelLeavesForTheDive + 1f)) naelTargetableAfterLeaving = Nael()?.Targetable;
+                if (p.Crossed(UcobP2NaelScenario.DivebombQuoteMoves[1] + 0.5f))
+                {
+                    naelTargetableAfterDive = Nael()?.Targetable;
+                    dragonsAfter = p.World.Children.OfType<SimEnemy>().Count(e => e.IsActive && dragonIds.Contains(e.BNpcBaseId));
+                }
+            },
+        });
+        Assert.That(run.Passed, run.ToString);
+        Assert.Multiple(() =>
+        {
+            Assert.That(naelTargetableAfterLeaving, Is.False);
+            Assert.That(naelTargetableAfterDive, Is.True);
+            Assert.That(dragonsAfter, Is.EqualTo(0));
+        });
+    }
+
+    // Dragons north, north-east, south, west and north-west: the first bait stands north-north-east.
+    private static void NorthLayout(UcobP2NaelStateOverrides o)
+    {
+        o.Push = NaelPush.NoPush;
+        o.DragonSlots = [0, 1, 4, 6, 7];
+        o.DivebombPicks[0] = MeleeDpsA;
+        o.DivebombPicks[1] = MeleeDpsB;
+        o.DivebombPicks[2] = RegenHealer;
+    }
+
+    [Test]
+    public void StandingInADragonsPathKills()
+        => Negative<UcobP2NaelScenario>(CasterDps)
+            .Overrides<UcobP2NaelStateOverrides>(NorthLayout)
+            .TeleportAt(146.5f, to: new Vector2(2.6f, -22.5f))
+            .ShouldKill(ActionId.CauterizeFirehorn, CasterDps);
+
+    [Test]
+    public void TheLastBaitStayingInTheDragonsPathDies()
+        => Negative<UcobP2NaelScenario>(RegenHealer)
+            .Overrides<UcobP2NaelStateOverrides>(NorthLayout)
+            .FreezeAt(154.9f)
+            .ShouldKill(ActionId.CauterizeTailOfDarkness, RegenHealer);
+
+    [Test]
+    public void StandingStillWhereAHypernovaLandsKills()
+        => Negative<UcobP2NaelScenario>(MeleeDpsA)
+            .Overrides<UcobP2NaelStateOverrides>(NorthLayout)
+            .FreezeAt(142.5f)
+            .ShouldKill(ActionId.Hypernova, MeleeDpsA);
+
+    [Test]
+    public void StandingNearTheTankForNaelsDiveKills()
+        => Negative<UcobP2NaelScenario>(MainTank)
+            .Overrides<UcobP2NaelStateOverrides>(o =>
+            {
+                NorthLayout(o);
+                o.DivebombQuote = 1;
+            })
+            .TeleportAt(160.5f, to: Vector2.Zero)
+            .ShouldKill(ActionId.DalamudDive, AllBut(MainTank, OffTank));
 }
