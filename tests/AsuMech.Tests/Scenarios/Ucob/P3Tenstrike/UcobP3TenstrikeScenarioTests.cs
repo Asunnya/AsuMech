@@ -1,5 +1,6 @@
 using System.Numerics;
 using AsuMech.Core.Game.Party;
+using AsuMech.Core.SimObjects;
 using AsuMech.Scenarios.Ucob.P3Tenstrike;
 using static AsuMech.Core.Game.Party.PartyRole;
 using static AsuMech.Scenarios.Ucob.UcobConstants;
@@ -53,6 +54,79 @@ public class UcobP3TenstrikeScenarioTests
             .TeleportAt(32f, to: new Vector2(0f, 4f))
             .ShouldKill(ActionId.EarthShakerCone, RegenHealer)
             .ShouldKillNoOneElse();
+
+    // The bots read where a shaker stands and fan out around them, so any spread spot works.
+    [Test]
+    public void AFirstShakerAnywhereOnTheRimTakesOnlyTheirOwnCone([Values(90f, 120f, 150f, 180f, 210f, 240f, 270f)] float bearing)
+    {
+        var hits = CountConeHits(out var probe);
+        Negative<UcobP3TenstrikeScenario>(RegenHealer)
+            .Overrides<UcobP3TenstrikeStateOverrides>(TanksAndHealersShakeFirst)
+            .At(0.1f, probe)
+            .TeleportAt(26.5f, to: AtBearing(bearing, 13f))
+            .TeleportAt(31f, to: new Vector2(0f, -8f))
+            .ShouldKillNoOneElse();
+        AssertOneConeEach(hits);
+    }
+
+    [Test]
+    public void ASecondShakerAnywhereOnTheRimTakesOnlyTheirOwnCone([Values(80f, 120f, 180f, 240f, 280f)] float bearing)
+    {
+        var hits = CountConeHits(out var probe);
+        Negative<UcobP3TenstrikeScenario>(MeleeDpsA)
+            .Overrides<UcobP3TenstrikeStateOverrides>(TanksAndHealersShakeFirst)
+            .At(0.1f, probe)
+            .TeleportAt(31.5f, to: AtBearing(bearing, 8.5f))
+            .TeleportAt(36f, to: new Vector2(0f, -8f))
+            .ShouldKillNoOneElse();
+        AssertOneConeEach(hits);
+    }
+
+    [Test]
+    public void AShakerWhoStaysOutForTheSecondSetIsLeftClear()
+        => Negative<UcobP3TenstrikeScenario>(RegenHealer)
+            .Overrides<UcobP3TenstrikeStateOverrides>(TanksAndHealersShakeFirst)
+            .TeleportAt(26.5f, to: AtBearing(180f, 13f))
+            .TeleportAt(31f, to: AtBearing(180f, 19f))
+            .ShouldKillNoOneElse();
+
+    // Too late for the bots to make room: south sits 40 degrees from the shakers at 140 and 220.
+    [Test]
+    public void SteppingBetweenTwoShakersAtTheLastMomentKillsAllThree()
+        => Negative<UcobP3TenstrikeScenario>(RegenHealer)
+            .Overrides<UcobP3TenstrikeStateOverrides>(TanksAndHealersShakeFirst)
+            .TeleportAt(30.2f, to: AtBearing(180f, 13f))
+            .ShouldKill(ActionId.EarthShakerCone, RegenHealer, OffTank, ShieldHealer);
+
+    private static Dictionary<(PartyRole, int), int> CountConeHits(out Action<ScenarioProbe> probe)
+    {
+        var hits = new Dictionary<(PartyRole, int), int>();
+        probe = p => p.World.ActionResolved += r =>
+        {
+            if (r.Action.ActionId != ActionId.EarthShakerCone) return;
+            var set = p.Time < UcobP3TenstrikeScenario.EarthShakers[1] - 1f ? 0 : 1;
+            foreach (var hit in r.Hits.OfType<ISimPartyMember>())
+                hits[(hit.Role, set)] = hits.GetValueOrDefault((hit.Role, set)) + 1;
+        };
+        return hits;
+    }
+
+    private static void AssertOneConeEach(Dictionary<(PartyRole, int), int> hits)
+    {
+        PartyRole[] first = [MainTank, OffTank, RegenHealer, ShieldHealer];
+        foreach (var role in Enum.GetValues<PartyRole>())
+        {
+            var set = first.Contains(role) ? 0 : 1;
+            Assert.That(hits.GetValueOrDefault((role, set)), Is.EqualTo(1), $"{role} cones in its own set");
+            Assert.That(hits.GetValueOrDefault((role, 1 - set)), Is.EqualTo(0), $"{role} cones in the other set");
+        }
+    }
+
+    private static Vector2 AtBearing(float degrees, float radius)
+    {
+        var radians = degrees * MathF.PI / 180f;
+        return new Vector2(MathF.Sin(radians), -MathF.Cos(radians)) * radius;
+    }
 
     [Test]
     public void StayingOnTheEarthShakerSpotKills()

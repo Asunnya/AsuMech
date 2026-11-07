@@ -177,7 +177,8 @@ public sealed class UcobP3TenstrikeScenario : IScenario
         foreach (var member in Members(roles))
         {
             spots.Add(Flat(member.Position));
-            bahamut?.CastFromHelper(UcobActions.EarthShakerCone, member, at: new Placement(Vector3.Zero, 0f));
+            // The helper turns to its target, so each cone is drawn where it hits.
+            bahamut?.CastFromHelper(UcobActions.EarthShakerCone, member, at: new Placement(Vector3.Zero, 0f).Face(member.Position));
         }
         world.Events.Add(PuddleAppears, () => DropPuddles(spots));
     }
