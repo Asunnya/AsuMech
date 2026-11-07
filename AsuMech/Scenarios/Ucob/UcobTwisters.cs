@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using AsuMech.Core.Game;
+using AsuMech.Core.Game.Geometry;
 using AsuMech.Core.SimObjects;
 using static AsuMech.Scenarios.Ucob.UcobConstants;
 
@@ -24,11 +25,16 @@ public sealed class UcobTwisters
         public float ArmsAt { get; } = armsAt;
         public float FadesAt { get; } = fadesAt;
         public bool Spent { get; set; }
+        public CircleObstacle? Obstacle { get; set; }
     }
+
+    // Bots steer this far around a twister; null leaves them walking straight.
+    public float? BotsAvoidRadius { get; init; }
 
     private readonly SimWorld? world;
     private readonly List<Twister> twisters = [];
     private readonly List<SimEventObject> eobjs = [];
+    private readonly List<(SimWorld World, CircleObstacle Obstacle)> obstacles = [];
     private SimEnemy? owner;
 
     public UcobTwisters() { }
@@ -53,7 +59,16 @@ public sealed class UcobTwisters
         if (eobj != null) eobjs.Add(eobj);
         var twister = new Twister(at, eobj, now + Arms, now + Fades);
         twisters.Add(twister);
-        on.Events.Add(Fades, () => eobj?.FadeOut());
+        if (BotsAvoidRadius is { } radius)
+        {
+            twister.Obstacle = on.Obstacles.Add(new CircleObstacle(at, radius));
+            obstacles.Add((on, twister.Obstacle));
+        }
+        on.Events.Add(Fades, () =>
+        {
+            eobj?.FadeOut();
+            RemoveObstacle(on, twister);
+        });
         on.Events.Add(Gone, () =>
         {
             eobj?.SetState(0);
@@ -77,14 +92,25 @@ public sealed class UcobTwisters
             if (toucher == null) continue;
             twister.Spent = true;
             twister.EObj?.SetState(0);
+            RemoveObstacle(on, twister);
             blast(twister.At, toucher);
         }
+    }
+
+    private void RemoveObstacle(SimWorld on, Twister twister)
+    {
+        if (twister.Obstacle is not { } obstacle) return;
+        on.Obstacles.Remove(obstacle);
+        obstacles.Remove((on, obstacle));
+        twister.Obstacle = null;
     }
 
     public void Clear()
     {
         foreach (var eobj in eobjs) eobj.Despawn();
         eobjs.Clear();
+        foreach (var (world, obstacle) in obstacles) world.Obstacles.Remove(obstacle);
+        obstacles.Clear();
         twisters.Clear();
     }
 }
