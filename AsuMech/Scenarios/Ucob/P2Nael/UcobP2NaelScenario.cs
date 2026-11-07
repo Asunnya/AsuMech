@@ -306,9 +306,10 @@ public sealed class UcobP2NaelScenario : IScenario
     // Anyone two Meteor Streams land on dies; one is survivable.
     private void MeteorStream(IReadOnlyList<PartyRole> targets)
     {
-        var landed = targets.Select(r => party.Get(r)).Where(m => m != null && m.IsAlive()).Select(m => Flat(m!.Position)).ToList();
-        foreach (var (role, at) in targets.Zip(landed))
-            PlayFromHelper(ActionId.MeteorStream, ToWorld(at), party.Get(role)?.GameObjectId);
+        var struck = targets.Select(r => party.Get(r)).Where(m => m != null && m.IsAlive()).Select(m => m!).ToList();
+        var landed = struck.Select(m => Flat(m.Position)).ToList();
+        foreach (var member in struck)
+            PlayFromHelper(ActionId.MeteorStream, member.Position, member);
         foreach (var member in AliveMembers().ToList())
         {
             var hits = landed.Count(at => Vector2.Distance(Flat(member.Position), at) <= State.MeteorStreamRadius);
@@ -323,7 +324,7 @@ public sealed class UcobP2NaelScenario : IScenario
         boss.SetPosition(new Placement(tank.Position, boss.Rotation));
         boss.SetVisible(true);
         boss.SetTargetable(true);
-        PlayEffect(boss, ActionId.DalamudDive, 1.1f, target: tank.GameObjectId, at: tank.Position);
+        PlayEffect(boss, ActionId.DalamudDive, 1.1f, target: tank.GameObjectId, at: tank.Position, hits: [tank]);
         foreach (var hit in AliveMembers().Where(m => Vector2.Distance(Flat(m.Position), Flat(tank.Position)) <= State.DalamudDiveRadius).ToList())
         {
             if (IsTank(hit)) damage.ApplyDamage(hit, 0.4f, ActionId.DalamudDive, "Dalamud Dive", lethal: false);
@@ -334,7 +335,7 @@ public sealed class UcobP2NaelScenario : IScenario
     private void BahamutsClaw()
     {
         if (party.Get(PartyRole.MainTank) is not { } tank || !tank.IsAlive()) return;
-        PlayEffect(nael, ActionId.BahamutsClaw, 0.6f, target: tank.GameObjectId);
+        PlayEffect(nael, ActionId.BahamutsClaw, 0.6f, target: tank.GameObjectId, hits: [tank]);
         damage.ApplyDamage(tank, 0.08f, ActionId.BahamutsClaw, "Bahamut's Claw", lethal: false);
     }
 
@@ -372,12 +373,10 @@ public sealed class UcobP2NaelScenario : IScenario
 
     private void MarkThunderstruck(IReadOnlyList<PartyRole> targets)
     {
-        foreach (var role in targets)
-        {
-            if (party.Get(role) is not { } member || !member.IsAlive()) continue;
-            PlayEffect(thunderwing, ActionId.ChainLightning, 1.1f, target: member.GameObjectId, at: member.Position);
+        var marked = targets.Select(r => party.Get(r)).Where(m => m != null && m.IsAlive()).Select(m => m!).ToList();
+        if (marked.Count > 0) PlayEffect(thunderwing, ActionId.ChainLightning, 1.1f, target: marked[0].GameObjectId, hits: marked);
+        foreach (var member in marked)
             world.Events.Add(ThunderstruckAfterMark, () => { if (member.IsAlive()) member.AddStatus(StatusId.Thunderstruck, ThunderstruckSeconds); });
-        }
     }
 
     // UNVERIFIED: the holders' splashes spare each other; everyone else in one dies.
@@ -387,7 +386,7 @@ public sealed class UcobP2NaelScenario : IScenario
         foreach (var holder in holders)
         {
             holder.RemoveStatus(StatusId.Thunderstruck);
-            PlayFromHelper(ActionId.ChainLightningSplash, holder.Position, holder.GameObjectId);
+            PlayFromHelper(ActionId.ChainLightningSplash, holder.Position, holder);
             damage.ApplyDamage(holder, 0.3f, ActionId.ChainLightningSplash, "Thunderstruck", lethal: false);
             foreach (var hit in AliveMembers().Where(m => !holders.Contains(m) && Vector2.Distance(Flat(m.Position), Flat(holder.Position)) <= State.ThunderstruckRadius).ToList())
                 hit.Die(ActionId.ChainLightningSplash, "caught in a Thunderstruck splash (Thunderstruck players move away from everyone)");
@@ -422,8 +421,8 @@ public sealed class UcobP2NaelScenario : IScenario
     {
         var target = party.Get(role) is { } chosen && chosen.IsAlive() ? chosen : AliveMembers().FirstOrDefault();
         if (target == null) return;
-        PlayEffect(nael, ActionId.ThermionicBeam, 1.1f, target: target.GameObjectId, at: target.Position);
         var hits = AliveMembers().Where(m => Vector2.Distance(Flat(m.Position), Flat(target.Position)) <= State.ThermionicBeamRadius).ToList();
+        PlayEffect(nael, ActionId.ThermionicBeam, 1.1f, target: target.GameObjectId, at: target.Position, hits: hits);
         foreach (var hit in hits)
         {
             if (hits.Count < State.ThermionicBeamMinimumStack) hit.Die(ActionId.ThermionicBeam, "Thermionic Beam wasn't shared (\"take fire\" / \"blazing path\": stack)");
@@ -436,7 +435,7 @@ public sealed class UcobP2NaelScenario : IScenario
     {
         if (nael is not { } boss || party.Get(state.RavenDiveTarget) is not { } target || !target.IsAlive()) return;
         boss.SetPosition(new Placement(target.Position, boss.Rotation));
-        PlayEffect(boss, ActionId.RavenDive, 1.1f, target: target.GameObjectId, at: target.Position);
+        PlayEffect(boss, ActionId.RavenDive, 1.1f, target: target.GameObjectId, at: target.Position, hits: [target]);
         damage.ApplyDamage(target, 0.2f, ActionId.RavenDive, "Raven Dive", lethal: false);
         foreach (var hit in AliveMembers().Where(m => !ReferenceEquals(m, target) && Vector2.Distance(Flat(m.Position), Flat(target.Position)) <= State.RavenDiveRadius).ToList())
             hit.Knockback(target.Position, HeavensfallKnockback);
@@ -445,7 +444,7 @@ public sealed class UcobP2NaelScenario : IScenario
     private void Iceball(PartyRole role)
     {
         if (party.Get(role) is not { } target || !target.IsAlive()) return;
-        PlayEffect(iceclaw, ActionId.Iceball, 1.1f, target: target.GameObjectId, at: target.Position);
+        PlayEffect(iceclaw, ActionId.Iceball, 1.1f, target: target.GameObjectId, at: target.Position, hits: [target]);
         if (target.HasStatus(StatusId.Firescorched)) target.RemoveStatus(StatusId.Firescorched);
         else if (target.HasStatus(StatusId.Icebitten)) target.Die(ActionId.Iceball, "took an Iceball while Icebitten (a shared Fireball thaws it)");
         else target.AddStatus(StatusId.Icebitten, 60f);
@@ -457,8 +456,9 @@ public sealed class UcobP2NaelScenario : IScenario
     private void DragonFireball(PartyRole role)
     {
         if (party.Get(role) is not { } target || !target.IsAlive()) return;
-        PlayEffect(firehorn, ActionId.DragonFireball, 1.1f, target: target.GameObjectId, at: target.Position);
-        foreach (var hit in AliveMembers().Where(m => Vector2.Distance(Flat(m.Position), Flat(target.Position)) <= State.DragonFireballRadius).ToList())
+        var hits = AliveMembers().Where(m => Vector2.Distance(Flat(m.Position), Flat(target.Position)) <= State.DragonFireballRadius).ToList();
+        PlayEffect(firehorn, ActionId.DragonFireball, 1.1f, target: target.GameObjectId, at: target.Position, hits: hits);
+        foreach (var hit in hits)
         {
             if (hit.HasStatus(StatusId.Firescorched)) hit.Die(ActionId.DragonFireball, "took a Fireball while Firescorched (an Iceball cools it first)");
             else if (hit.HasStatus(StatusId.Icebitten)) hit.RemoveStatus(StatusId.Icebitten);
@@ -481,8 +481,9 @@ public sealed class UcobP2NaelScenario : IScenario
 
     private void Wings(Vector2 at)
     {
-        PlayEffect(fang, ActionId.WingsOfSalvation, 1.1f, at: ToWorld(at));
-        foreach (var hit in AliveMembers().Where(m => Vector2.Distance(Flat(m.Position), at) <= State.WingsRadius).ToList())
+        var hits = AliveMembers().Where(m => Vector2.Distance(Flat(m.Position), at) <= State.WingsRadius).ToList();
+        PlayEffect(fang, ActionId.WingsOfSalvation, 1.1f, at: ToWorld(at), hits: hits);
+        foreach (var hit in hits)
             hit.Die(ActionId.WingsOfSalvation, "stood in a Wings of Salvation puddle as it landed");
         world.Events.Add(CleanseAppears, () =>
         {
@@ -494,9 +495,8 @@ public sealed class UcobP2NaelScenario : IScenario
 
     private void Deathstorm(IReadOnlyList<PartyRole> targets)
     {
-        foreach (var role in targets)
-            if (party.Get(role) is { } member && member.IsAlive())
-                PlayEffect(tail, ActionId.Deathstorm, 1.1f, target: member.GameObjectId, at: member.Position);
+        var doomed = targets.Select(r => party.Get(r)).Where(m => m != null && m.IsAlive()).Select(m => m!).ToList();
+        if (doomed.Count > 0) PlayEffect(tail, ActionId.Deathstorm, 1.1f, target: doomed[0].GameObjectId, hits: doomed);
     }
 
     private void Doom(IReadOnlyList<PartyRole> targets, float[] seconds)
@@ -536,7 +536,7 @@ public sealed class UcobP2NaelScenario : IScenario
     private void Ravensbeak()
     {
         if (party.Get(PartyRole.MainTank) is not { } tank || !tank.IsAlive()) return;
-        PlayEffect(nael, ActionId.Ravensbeak, 1.1f, target: tank.GameObjectId);
+        PlayEffect(nael, ActionId.Ravensbeak, 1.1f, target: tank.GameObjectId, hits: [tank]);
         damage.ApplyDamage(tank, 0.5f, ActionId.Ravensbeak, "Ravensbeak", lethal: false);
     }
 
@@ -707,10 +707,10 @@ public sealed class UcobP2NaelScenario : IScenario
         return helper;
     }
 
-    private void PlayFromHelper(uint actionId, Vector3 at, GameObjectId? target = null)
+    private void PlayFromHelper(uint actionId, Vector3 at, SimCharacter? target = null)
     {
         if (TakeHelper(new Placement(at, 0f)) is not { } helper) return;
-        PlayEffect(helper, actionId, 1.1f, target: target, at: at);
+        PlayEffect(helper, actionId, 1.1f, target: target?.GameObjectId, at: at, hits: target != null ? [target] : null);
         world.Events.Add(EffectCarrierLinger, () => helperPool.Enqueue(helper));
     }
 
@@ -731,7 +731,16 @@ public sealed class UcobP2NaelScenario : IScenario
         caster?.NativeCast(actionId, ActionType.Action, 0f, castSeconds, false, targetId: caster.GameObjectId);
 
     // An effect without a position plays at the arena centre, so default it to the caster.
-    private static void PlayEffect(SimEnemy? caster, uint actionId, float animationLock, float? rotation = null, GameObjectId? target = null, Vector3? at = null) =>
-        caster?.NativeActionEffect(actionId, animationLock, (ushort)actionId, 0, ActionType.Action, 0,
+    private static void PlayEffect(SimEnemy? caster, uint actionId, float animationLock, float? rotation = null, GameObjectId? target = null, Vector3? at = null, IEnumerable<SimCharacter>? hits = null)
+    {
+        if (caster == null) return;
+        if (hits == null)
+        {
+            caster.NativeActionEffect(actionId, animationLock, (ushort)actionId, 0, ActionType.Action, 0,
+                rotation: rotation, position: at ?? caster.Position, animationTargetId: target ?? caster.GameObjectId);
+            return;
+        }
+        caster.NativeActionEffect(actionId, animationLock, ActionType.Action, hits.Select(h => h.GameObjectId).ToList(),
             rotation: rotation, position: at ?? caster.Position, animationTargetId: target ?? caster.GameObjectId);
+    }
 }

@@ -1,5 +1,6 @@
 using System.Numerics;
 using AsuMech.Core.Game.Party;
+using AsuMech.Core.Native.Interfaces;
 using AsuMech.Core.SimObjects;
 using AsuMech.Scenarios.Ucob.P2Nael;
 using static AsuMech.Core.Game.Party.PartyRole;
@@ -37,6 +38,32 @@ public class UcobP2NaelScenarioTests
             Assert.That(dragonsBefore, Is.EqualTo(5));
             Assert.That(targetableAfter, Is.False);
             Assert.That(dragonsAfter, Is.EqualTo(0));
+        });
+    }
+
+    // Each dragon's attack lands on the players it targets, so the client plays their hits.
+    [Test]
+    public void TheDragonsAttacksHitTheirTargets()
+    {
+        var run = ScenarioRun.Execute(typeof(UcobP2NaelScenario), 0, 2, new ScenarioRunOptions { StopAt = UcobP2NaelScenario.RavensbeakCast });
+        Assert.That(run.Passed, run.ToString);
+        var rows = ((FakeBattleCharas)Natives.BattleCharas).Timeline.Rows.Where(r => r["kind"] == "ability").ToList();
+        var attacks = new (uint Action, string Dragon, int Count)[]
+        {
+            (ActionId.Iceball, "Iceclaw", UcobP2NaelScenario.IceHits.Count(t => t < UcobP2NaelScenario.RavensbeakCast)),
+            (ActionId.ChainLightning, "Thunderwing", UcobP2NaelScenario.ThunderMarks.Length),
+            (ActionId.Deathstorm, "tail of darkness", UcobP2NaelScenario.Deathstorms.Length),
+            (ActionId.DragonFireball, "Firehorn", UcobP2NaelScenario.FireTethers.Length),
+        };
+        Assert.Multiple(() =>
+        {
+            foreach (var (action, dragon, count) in attacks)
+            {
+                var hits = rows.Where(r => r["id"] == action.ToString()).ToList();
+                Assert.That(hits, Has.Count.EqualTo(count), dragon);
+                Assert.That(hits.Select(r => r["actor_name"]), Is.All.EqualTo(dragon), dragon);
+                Assert.That(hits.Select(r => r["targets"]), Is.All.Not.Empty, dragon);
+            }
         });
     }
 
