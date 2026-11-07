@@ -136,6 +136,33 @@ public class UcobP2NaelScenarioTests
         });
     }
 
+    // Each cleanse goes to whoever's Doom is closest to running out.
+    [Test]
+    public void TheLowestDoomTakesEachCleanse([Range(0, 9)] int seed)
+    {
+        var wrong = new List<string>();
+        var remaining = new Dictionary<PartyRole, float>();
+        var run = ScenarioRun.Execute(typeof(UcobP2NaelScenario), 0, seed, new ScenarioRunOptions
+        {
+            StopAt = UcobP2NaelScenario.RavensbeakCast,
+            Overrides = seed % 2 == 0 ? null : o => ((UcobP2NaelStateOverrides)o).DoomTargets =
+                [[MeleeDpsB, CasterDps], [ShieldHealer, PhysRangedDps, MeleeDpsA], [RegenHealer, OffTank, CasterDps]],
+            Probe = p =>
+            {
+                var now = new Dictionary<PartyRole, float>();
+                foreach (var role in Enum.GetValues<PartyRole>())
+                    if (p.Member(role) is { } m && m.IsAlive() && m.FindStatus(StatusId.Doom) is { } doom) now[role] = doom.Remaining;
+                foreach (var (role, left) in remaining)
+                    if (!now.ContainsKey(role) && left > 0.2f && remaining.Values.Min() < left - 0.01f)
+                        wrong.Add($"{role} took a cleanse at {p.Time:F2} with {left:F2}s left while another had {remaining.Values.Min():F2}s");
+                remaining.Clear();
+                foreach (var (role, left) in now) remaining[role] = left;
+            },
+        });
+        Assert.That(run.Passed, run.ToString);
+        Assert.That(wrong, Is.Empty);
+    }
+
     private static float Number(string s) => float.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
 
     [Test]

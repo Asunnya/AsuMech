@@ -49,7 +49,7 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
     private float danceRadius = StackRadius;
     private Vector2? ravenSpot;
     private readonly Dictionary<PartyRole, (Vector2 Spot, float From, float Until)> dodges = [];
-    private readonly List<(PartyRole Role, Vector2 Circle, float From, float Until)> doomWalks = [];
+    private readonly List<CleanseWalk> doomWalks = [];
 
     public void Run(UcobP2NaelState stateParam, SimWorld worldParam)
     {
@@ -370,7 +370,7 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
             if (circle < state.DoomTargets[set].Count)
             {
                 var go = CleanseWalkFrom(cast);
-                doomWalks.Add((state.DoomTargets[set][circle], puddle, go, go + DoomWalk));
+                doomWalks.Add(new CleanseWalk(state.DoomTargets[set][circle], puddle, go, go + DoomWalk));
             }
         }
         return AiMove.Create(Spots(now)).NaturalOrder();
@@ -380,6 +380,22 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
     {
         danceStep = (danceStep + 1) % DanceDegrees.Length;
         danceRadius = StackRadius;
+    }
+
+    private PartyRole Walker(CleanseWalk walk, float now)
+    {
+        if (walk.Settled || now < walk.From || now > world.Events.Elapsed + 0.05f) return walk.Role;
+        var walking = doomWalks.Where(w => w != walk && w.Settled && w.Until > now).Select(w => w.Role).ToHashSet();
+        var closestToZero = Enum.GetValues<PartyRole>()
+            .Where(r => !walking.Contains(r))
+            .Select(r => (Role: r, Doom: world.Party.Get(r) is { } member && member.IsAlive() ? member.FindStatus(UcobConstants.StatusId.Doom) : null))
+            .Where(d => d.Doom != null)
+            .OrderBy(d => d.Doom!.Remaining)
+            .Select(d => (PartyRole?)d.Role)
+            .FirstOrDefault();
+        if (closestToZero is { } role) walk.Role = role;
+        walk.Settled = true;
+        return walk.Role;
     }
 
     private Vector2 CleanseLaidAt(Vector2 expected)
@@ -432,14 +448,14 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
     private Vector2 Spot(PartyRole role, float now, bool afterWalk = false)
     {
         foreach (var walk in doomWalks)
-            if (!afterWalk && walk.Role == role && now >= walk.From && now < walk.Until && StillDoomed(role, now)) return CleanseLaidAt(walk.Circle);
+            if (!afterWalk && Walker(walk, now) == role && now >= walk.From && now < walk.Until && StillDoomed(role, now)) return CleanseLaidAt(walk.Circle);
         if (dodges.TryGetValue(role, out var dodge) && now >= dodge.From && now < dodge.Until) return dodge.Spot;
         var alone = state.FireTargets[State.FireTakenAlone];
         if (role == alone && ((now >= Scenario.FireTethers[State.FireTakenAlone] && now < Fireball(State.FireTakenAlone) + After)
                               || (now >= FireballAloneAgainFrom && now < Fireball(2) + After)))
         {
             foreach (var walk in doomWalks)
-                if (walk.Role == role && walk.From >= FireballAloneAgainFrom - 3f && walk.From <= Fireball(2))
+                if (Walker(walk, now) == role && walk.From >= FireballAloneAgainFrom - 3f && walk.From <= Fireball(2))
                     return nael + Vector2.Normalize(walk.Circle - nael + new Vector2(0.001f, 0f)) * FireOutRadius;
             return nael + Vector2.Normalize(nael - Cluster() + new Vector2(0.001f, 0f)) * FireOutRadius;
         }
@@ -482,7 +498,7 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
         var from = Flat(member.Position) ?? spot;
         foreach (var walk in doomWalks)
         {
-            if (walk.Role == role || now < walk.From - 0.7f || now > walk.Until) continue;
+            if (Walker(walk, now) == role || now < walk.From - 0.7f || now > walk.Until) continue;
             if (Vector2.Distance(spot, walk.Circle) <= State.CleanseRadius + 1f)
                 return walk.Circle + Vector2.Normalize(spot - walk.Circle + new Vector2(0.001f, 0f)) * (State.CleanseRadius + 1.5f);
             if (DistanceToSegment(walk.Circle, from, spot) <= State.CleanseRadius + 1f)
@@ -566,5 +582,14 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
             i++;
         }
         return spots;
+    }
+
+    private sealed class CleanseWalk(PartyRole planned, Vector2 circle, float from, float until)
+    {
+        public PartyRole Role { get; set; } = planned;
+        public bool Settled { get; set; }
+        public Vector2 Circle => circle;
+        public float From => from;
+        public float Until => until;
     }
 }
