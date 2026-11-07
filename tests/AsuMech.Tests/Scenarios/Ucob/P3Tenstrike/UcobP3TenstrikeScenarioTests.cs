@@ -48,6 +48,31 @@ public class UcobP3TenstrikeScenarioTests
             .ShouldKill(ActionId.MeteorStream, MeleeDpsA);
 
     [Test]
+    public void EachMeteorStreamComesFromANaelGeminusOnItsTarget()
+    {
+        var streams = new List<(PartyRole Target, uint Caster, float Distance)>();
+        PartyRole[] order = [MeleeDpsA, MeleeDpsB, PhysRangedDps, CasterDps, RegenHealer, ShieldHealer, OffTank, MainTank];
+        Negative<UcobP3TenstrikeScenario>(CasterDps)
+            .Overrides<UcobP3TenstrikeStateOverrides>(o =>
+            {
+                HealersAndCasterHatch(o);
+                o.MeteorOrder = order;
+            })
+            .At(0.1f, p => p.World.ActionResolved += r =>
+            {
+                if (r.Action.ActionId != ActionId.MeteorStream) return;
+                foreach (var hit in r.Hits.OfType<ISimPartyMember>())
+                    streams.Add((hit.Role, (r.Caster as SimEnemy)?.SpawnConfig.BNpcBaseId ?? 0,
+                        Vector2.Distance(new(r.Caster.Position.X, r.Caster.Position.Z), new(((SimCharacter)hit).Position.X, ((SimCharacter)hit).Position.Z))));
+            })
+            .ShouldKillNoOneElse();
+        Assert.That(streams.Select(s => s.Target), Is.EqualTo(order));
+        Assert.That(streams.Select(s => s.Caster), Is.All.EqualTo(BNpcBaseId.NaelGeminus));
+        // A sprinting target gets this far from where the clone landed.
+        Assert.That(streams.Select(s => s.Distance), Is.All.LessThanOrEqualTo(AsuMech.Core.Game.Ai.AiManager.SprintSpeed * UcobP3TenstrikeScenario.GeminusArrives + 0.1f));
+    }
+
+    [Test]
     public void ASecondEarthShakerKills()
         => Negative<UcobP3TenstrikeScenario>(RegenHealer)
             .Overrides<UcobP3TenstrikeStateOverrides>(TanksAndHealersShakeFirst)
