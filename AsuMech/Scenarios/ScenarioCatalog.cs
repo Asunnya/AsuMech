@@ -47,6 +47,7 @@ using AsuMech.Scenarios.Top.P6WaveCannon2;
 using AsuMech.Scenarios.Ucob.P1Twintania;
 using AsuMech.Scenarios.Ucob.P2Nael;
 using AsuMech.Scenarios.Ucob.P5Exaflares;
+using AsuMech.Scenarios.Ucob.P5GoldenBahamut;
 using AsuMech.Scenarios.Umad;
 using AsuMech.Scenarios.Umad.P1TeleTrouncing;
 using AsuMech.Scenarios.Umad.P2Forsaken;
@@ -141,6 +142,7 @@ public sealed class ScenarioCatalog
         new UcobP1TwintaniaScenario(),
         new UcobP2NaelScenario(),
         new UcobP5ExaflaresScenario(),
+        new UcobP5GoldenBahamutScenario(),
         new DsrP1KnightsScenario(),
         new DsrP2ThordanScenario(),
         new DsrP2MeteorsScenario(),

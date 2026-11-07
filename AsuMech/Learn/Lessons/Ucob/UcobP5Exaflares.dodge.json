@@ -8,7 +8,7 @@
         "cls": "UcobP5ExaflaresAi",
         "from": 5.01,
         "to": 13.26,
-        "line": 108
+        "line": 19
       },
       "title": "Dodge the exaflares",
       "cue": "Exaflare cast starts",
@@ -21,7 +21,7 @@
         "cls": "UcobP5ExaflaresAi",
         "from": 5.01,
         "to": 16.26,
-        "line": 117
+        "line": 21
       },
       "title": "Hold",
       "tolerance": 1.5,

@@ -54,6 +54,7 @@ public class UcobConstants
         public const uint TailOfDarkness = 8166;
         public const uint FangOfLight = 8167;
         public const uint BahamutPrime = 0x1FE8;
+        public const uint Phoenix = 8169;
         // The fight's generic invisible caster (x42 in the instance): AOE source for
         // everything the boss doesn't cast from its own body.
     }
@@ -69,6 +70,7 @@ public class UcobConstants
         public const uint FangOfLight = 6957;
         public const uint TailOfDarkness = 6958;
         public const uint BahamutPrime = 3210;
+        public const uint Phoenix = 3204;
     }
 
     public class StatusId
@@ -83,6 +85,8 @@ public class UcobConstants
         public const ushort Firescorched = 0x1D0;
         public const ushort Icebitten = 0x1D1;
         public const ushort Thunderstruck = 0x1D2;
+        public const ushort Transcendent = 0x1A2;
+        public const ushort PhoenixsBlessing = 0x59C;
     }
 
     public const uint HeavensfallKnockback = 115;
@@ -114,6 +118,11 @@ public class UcobConstants
     {
         public const ushort NaelLeaves = 0x1E39;
         public const ushort DragonLeaves = 0x008F;
+        public const ushort PhoenixAppears = 0x11DE;
+        public const ushort BahamutWatchesPhoenix = 0x0C91;
+        public const ushort PhoenixRises = 0x1E43;
+        public const ushort PhoenixLeaves = 0x1E39;
+        public const ushort BahamutInnerRage = 0x11D2;
     }
 
     public class ActionId
@@ -148,5 +157,12 @@ public class UcobConstants
         public const uint Exaflare = 9967;       // 0x26EF, boss-body cast, no AOE of its own
         public const uint ExaflareFirst = 9968;  // 0x26F0, helper, 4.0s cast, arrow omen, 6y circle
         public const uint ExaflareRest = 9969;   // 0x26F1, helper, instant, 6y circle
+        public const uint AkhMorn = 0x26EA;
+        public const uint AkhMornFollowUp = 0x26EB;
+        public const uint MornAfah = 0x26EC;
+        public const uint MornAfahEnrage = 0x26ED;
+        public const uint FlamesOfRebirth = 0x26F2;
+        // Unnamed in the sheet: Bahamut Prime's flight from the edge to the centre before Lohs Daih.
+        public const uint GoldenDescent = 0x2707;
     }
 }
