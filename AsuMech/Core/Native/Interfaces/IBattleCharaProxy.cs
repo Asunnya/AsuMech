@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Numerics;
+using AsuMech.Core.SimObjects;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 
@@ -49,6 +50,9 @@ public interface IBattleCharaProxy
 
     // GameObject.Scale, mirrored onto the DrawObject so the model resizes.
     float ModelScale { get; set; }
+    // The look a spawn packet would carry to copy this character: customize, gear and weapons as
+    // drawn now. Null while there is no character.
+    NpcAppearance? Appearance { get; }
 
     // ── Casting ──────────────────────────────────────────────────────────────
 
@@ -85,6 +89,10 @@ public interface IBattleCharaProxy
 
     uint Health { get; }
     uint MaxHealth { get; }
+
+    // No packet carries max HP after the spawn, so a mechanic that caps it (TOP's HP Penalty)
+    // writes it on the character; the next status list shows HP against it.
+    void SetMaxHealth(uint maxHealth);
     uint Mana { get; }
     uint MaxMana { get; }
 
@@ -98,6 +106,9 @@ public interface IBattleCharaProxy
     // level and maxima go out as the character has them. shield (0-100, % of max HP) is the gold
     // overlay on the HP bar, target bar and nameplate.
     void ReceiveStatusList(IReadOnlyList<StatusSlot> statuses, uint health, uint mana, byte shield);
+
+    // Whether the client's StatusManager holds it: what the party list and nameplate show.
+    bool ShowsStatus(ushort statusId);
 
     // ── Effects ──────────────────────────────────────────────────────────────
 

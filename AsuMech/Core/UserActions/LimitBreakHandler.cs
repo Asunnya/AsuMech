@@ -1,3 +1,5 @@
+using AsuMech.Core.Game;
+using System.Linq;
 using AsuMech.Core.Game.Party;
 using AsuMech.Core.Native.Interfaces;
 using AsuMech.Core.SimObjects;
@@ -50,6 +52,16 @@ internal sealed class LimitBreakHandler : IUserActionHandler
         _ => 36u,
     };
 
+    // Toward the enemy it was used on, else the way the player faced; scenario-local.
+    private static LimitBreakAim AimOf(SimWorld world, SimCharacter player)
+    {
+        var (targetId, location) = Natives.PlayerInput.LastLimitBreakAim;
+        var aim = new Placement(player.Position, player.Rotation);
+        if (world.Children.OfType<SimEnemy>().FirstOrDefault(e => e.IsActive && (ulong)e.GameObjectId == targetId) is { } target)
+            aim = aim.Face(target.Position);
+        return new LimitBreakAim(aim.Position, aim.Rotation, location is { } at ? world.Coordinates.ToLocal(at) : null);
+    }
+
     public void OnCastStart(ActionType actionType, uint actionId)
     {
         if (actionType != ActionType.Action || !IsLimitBreak(actionId)) return;
@@ -62,6 +74,7 @@ internal sealed class LimitBreakHandler : IUserActionHandler
         if (actionType != ActionType.Action || !IsLimitBreak(actionId)) return;
         if (Plugin.Game?.World.Party is not { Player: { } player } party) return;
         Resolve(party, player, actionId);
+        party.LimitBreak.Land(actionId, AimOf(Plugin.Game.World, player));
         DiagnosticLog.Info($"[LimitBreak] {Natives.Data.ActionName(actionId)} ({actionId}) resolved -- the gauge is spent.");
     }
 }

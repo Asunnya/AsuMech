@@ -8,12 +8,23 @@ namespace AsuMech.Tests;
 // Nobody at the keyboard, unless a test holds a movement key.
 internal sealed class FakeLocalPlayerInput : ILocalPlayerInput
 {
+    public (ulong TargetId, System.Numerics.Vector3? Location) LastLimitBreakAim { get; set; }
+
     public event Action<ActionType, uint, ulong>? ActionExecuted { add { } remove { } }
 
     public bool MovementInputActive { get; set; }
     public bool IsJumping => false;
     public bool IsAutoAttacking => false;
-    public bool PollActionUsed() => false;
+    // A test's press: the player's next frame sees it once.
+    private bool pressed;
+    public void PressAction() => pressed = true;
+
+    public bool PollActionUsed()
+    {
+        var used = pressed;
+        pressed = false;
+        return used;
+    }
     public bool PollCancelCast() => false;
     public IReadOnlyCollection<(uint ActionId, ActionType Type)> RecentActions => [];
 

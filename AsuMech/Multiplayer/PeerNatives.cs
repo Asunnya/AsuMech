@@ -189,6 +189,9 @@ internal sealed class PeerNatives
         {
             if (!natives.HostOwnsArena) natives.RealDirector.Commence();
         }
+
+        public bool BattleTalk(uint speakerNameId, uint textId, uint durationMs)
+            => natives.HostOwnsArena || natives.RealDirector.BattleTalk(speakerNameId, textId, durationMs);
     }
 
     private sealed class PeerHaterList(PeerNatives natives) : IHaterList
@@ -267,16 +270,19 @@ internal sealed class PeerProxy(IBattleCharaProxy inner, PeerSeat seat) : IBattl
     public bool IsDrawObjectVisible { get => inner.IsDrawObjectVisible; set => inner.IsDrawObjectVisible = value; }
     public byte ModelState => inner.ModelState;
     public float ModelScale { get => inner.ModelScale; set => inner.ModelScale = value; }
+    public NpcAppearance? Appearance => inner.Appearance;
     public bool IsCasting => inner.IsCasting;
     public uint CastActionId => inner.CastActionId;
     public float CurrentCastTime => inner.CurrentCastTime;
     public float TotalCastTime => inner.TotalCastTime;
     public uint Health => inner.Health;
     public uint MaxHealth => inner.MaxHealth;
+    public void SetMaxHealth(uint maxHealth) => inner.SetMaxHealth(maxHealth);
     public uint Mana => inner.Mana;
     public uint MaxMana => inner.MaxMana;
     public byte TargetableStatus => inner.TargetableStatus;
     public ushort GetTetherId(byte slot) => inner.GetTetherId(slot);
+    public bool ShowsStatus(ushort statusId) => inner.ShowsStatus(statusId);
     public string DescribeDrawState() => inner.DescribeDrawState();
     public string DescribeActionTimeline() => inner.DescribeActionTimeline();
     public string DescribeTimelineSlotIds() => inner.DescribeTimelineSlotIds();

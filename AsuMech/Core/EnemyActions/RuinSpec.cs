@@ -27,6 +27,15 @@ public sealed class RuinSpec
             ? statusId
             : throw new ArgumentException($"No ruin status is lethal on hit {times}.", nameof(times));
 
+    // One more stack of the `times` status from a hit a scenario resolves itself. False when it
+    // completes a death, which the caller deals.
+    public bool Land(SimCharacter target, int times, float duration)
+    {
+        if (Overloads(target, times)) return false;
+        target.AddStatus(StatusId(times), duration);
+        return true;
+    }
+
     internal bool Overloads(SimCharacter target, int times)
     {
         var carried = statuses.Sum(s => death / s.Key * (target.FindStatus(s.Value)?.Stacks ?? 0));

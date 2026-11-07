@@ -49,4 +49,28 @@ public sealed class HelloWorld(SimParty party, PartyRole holder, bool near)
         lastAction = action;
         hits++;
     }
+
+    // Hello World leaves everyone an Underflow and a Performance Debugger, and four of them a
+    // Synchronization Debugger (its second and last stack holders), until Blue Screen.
+    public static void ApplyDebuggers(SimParty party, Rng rng)
+    {
+        var synchronization = rng.Shuffle(PerRole.All.ToArray()).Take(4).ToHashSet();
+        foreach (var role in PerRole.All)
+        {
+            if (party.Get(role) is not { } member) continue;
+            member.AddStatus(StatusId.HWImmuneRedRot);
+            member.AddStatus(StatusId.HWImmuneBlueRot);
+            if (synchronization.Contains(role)) member.AddStatus(StatusId.HWImmuneStack);
+        }
+    }
+
+    public static void RemoveDebuggers(SimParty party)
+    {
+        foreach (var member in party.AllMembers())
+        {
+            member.RemoveStatus(StatusId.HWImmuneRedRot);
+            member.RemoveStatus(StatusId.HWImmuneBlueRot);
+            member.RemoveStatus(StatusId.HWImmuneStack);
+        }
+    }
 }

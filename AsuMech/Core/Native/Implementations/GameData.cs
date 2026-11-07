@@ -34,6 +34,7 @@ internal sealed class GameData : IGameData
             (sbyte)row.AttackType.RowId,
             row.TargetArea,
             row.IsPlayerAction,
+            row.ClassJobLevel,
             row.Recast100ms / 10f);
     }
 
@@ -72,7 +73,7 @@ internal sealed class GameData : IGameData
 
     public StatusRow? Status(ushort statusId)
         => Plugin.DataManager.GetExcelSheet<LuminaStatus>().TryGetRow(statusId, out var row)
-            ? new StatusRow(statusId, row.Name.ExtractText(), row.LockMovement, row.LockActions, row.LockControl, row.MaxStacks)
+            ? new StatusRow(statusId, row.Name.ExtractText(), row.LockMovement, row.LockActions, row.LockControl, row.MaxStacks, row.ParamEffect)
             : null;
 
     public TerritoryTypeRow? TerritoryType(uint territoryId)
@@ -89,6 +90,9 @@ internal sealed class GameData : IGameData
         => Plugin.DataManager.GetExcelSheet<LuminaBNpcName>().TryGetRow(nameId, out var row) ? NonEmpty(row.Singular.ExtractText()) : null;
 
     public bool WeatherExists(byte weatherId) => Plugin.DataManager.GetExcelSheet<LuminaWeather>().HasRow(weatherId);
+
+    public bool CanDispel(ushort statusId)
+        => Plugin.DataManager.GetExcelSheet<LuminaStatus>().TryGetRow(statusId, out var row) && row.CanDispel;
 
     public bool FileExists(string path) => Plugin.DataManager.FileExists(path);
 

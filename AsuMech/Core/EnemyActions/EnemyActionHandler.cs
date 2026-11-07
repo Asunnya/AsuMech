@@ -71,7 +71,7 @@ internal sealed class EnemyActionHandler(SimCharacter caster, SimCast cast, SimW
                 if (handle.IsCancelled) return;
                 if (casting == handle) casting = null;
                 Resolve(action, target, location, delivery, MathF.Max(0f, releaseAt - resolveAt));
-            });
+            }, handle);
         }
         Schedule(releaseAt, () =>
         {
@@ -79,7 +79,7 @@ internal sealed class EnemyActionHandler(SimCharacter caster, SimCast cast, SimW
             if (handle.IsCancelled) return;
             if (casting == handle) casting = null;
             Release(action, target, location, castTarget, animationVariation, delivery);
-        });
+        }, handle);
     }
 
     // False when nothing was on its bar.
@@ -91,6 +91,8 @@ internal sealed class EnemyActionHandler(SimCharacter caster, SimCast cast, SimW
         handle.Cancelled();
         if (handle.HazardArea is { } hazard) world.RemoveHazard(hazard);
         cast.Cancel(reason);
+        foreach (var step in handle.PendingSteps) world.Events.Remove(step);
+        handle.PendingSteps.Clear();
         return true;
     }
 
@@ -159,7 +161,7 @@ internal sealed class EnemyActionHandler(SimCharacter caster, SimCast cast, SimW
     {
         var party = world.Party;
         var origin = HazardArea.OriginOf(action, caster, target, location);
-        var ctx = new EnemyActionContext(action, caster, target, origin, party, releaseDelay);
+        var ctx = new EnemyActionContext(action, caster, target, origin, party, releaseDelay, world.Events);
 
         // A party member's own action never hits them.
         IReadOnlyList<SimCharacter> hits = IsSingleTarget(action)
@@ -268,10 +270,15 @@ internal sealed class EnemyActionHandler(SimCharacter caster, SimCast cast, SimW
     }
 
     // Anything due now runs inline: an instant action resolves inside the Cast() call, so casts
-    // issued in one timeline event see each other's statuses in call order.
-    private void Schedule(float delay, Action run)
+    // issued in one timeline event see each other's statuses in call order. `owner`: the cast whose
+    // cancel takes the step off the queue.
+    private void Schedule(float delay, Action run, EnemyActionCast? owner = null)
     {
         if (delay <= 0f) run();
-        else world.Events.Add(delay, run);
+        else
+        {
+            world.Events.Add(delay, run);
+            owner?.PendingSteps.Add(run);
+        }
     }
 }

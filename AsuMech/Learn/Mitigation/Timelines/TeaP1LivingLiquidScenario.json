@@ -1,0 +1,934 @@
+{
+  "scenario": "TeaP1LivingLiquidScenario",
+  "casts": [
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 3.083,
+      "resolve": 3.083,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 6.083,
+      "resolve": 6.083,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 9.15,
+      "resolve": 9.15,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18864,
+      "name": "Fluid Swing",
+      "start": 10.15,
+      "resolve": 10.15,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 12.183,
+      "resolve": 12.183,
+      "occurrence": 4
+    },
+    {
+      "actionId": 18470,
+      "name": "Cascade",
+      "start": 14.283,
+      "resolve": 17.983,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 19.217,
+      "resolve": 19.217,
+      "occurrence": 5
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 22.233,
+      "resolve": 22.233,
+      "occurrence": 6
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 24.3,
+      "resolve": 24.3,
+      "occurrence": 7
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 25.216,
+      "resolve": 25.216,
+      "occurrence": 8
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 27.383,
+      "resolve": 27.383,
+      "occurrence": 9
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 28.233,
+      "resolve": 28.233,
+      "occurrence": 10
+    },
+    {
+      "actionId": 7533,
+      "name": "Provoke",
+      "start": 29.866,
+      "resolve": 29.866,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 30.416,
+      "resolve": 30.416,
+      "occurrence": 11
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 31.316,
+      "resolve": 31.316,
+      "occurrence": 12
+    },
+    {
+      "actionId": 18869,
+      "name": "Protean Wave",
+      "start": 32.45,
+      "resolve": 35.15,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 33.416,
+      "resolve": 33.416,
+      "occurrence": 13
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 34.35,
+      "resolve": 34.35,
+      "occurrence": 14
+    },
+    {
+      "actionId": 18476,
+      "name": "Hand of Parting",
+      "start": 34.466,
+      "resolve": 34.466,
+      "occurrence": 1
+    },
+    {
+      "actionId": 7,
+      "name": "attack",
+      "start": 35.716,
+      "resolve": 35.716,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 36.383,
+      "resolve": 36.383,
+      "occurrence": 15
+    },
+    {
+      "actionId": 18864,
+      "name": "Fluid Swing",
+      "start": 36.483,
+      "resolve": 36.483,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18871,
+      "name": "Fluid Strike",
+      "start": 36.616,
+      "resolve": 36.616,
+      "occurrence": 1
+    },
+    {
+      "actionId": 7,
+      "name": "attack",
+      "start": 36.75,
+      "resolve": 36.75,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 37.366,
+      "resolve": 37.366,
+      "occurrence": 16
+    },
+    {
+      "actionId": 18870,
+      "name": "Protean Wave",
+      "start": 37.533,
+      "resolve": 37.533,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18462,
+      "name": "Exhaust",
+      "start": 38.566,
+      "resolve": 38.566,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18477,
+      "name": "Hand of Pain",
+      "start": 38.733,
+      "resolve": 41.433002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 19278,
+      "name": "",
+      "start": 39.583,
+      "resolve": 39.583,
+      "occurrence": 17
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 40.366,
+      "resolve": 40.366,
+      "occurrence": 18
+    },
+    {
+      "actionId": 18473,
+      "name": "Pressurize",
+      "start": 40.466,
+      "resolve": 40.466,
+      "occurrence": 1
+    },
+    {
+      "actionId": 7533,
+      "name": "Provoke",
+      "start": 40.516,
+      "resolve": 40.516,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 42.516,
+      "resolve": 42.516,
+      "occurrence": 19
+    },
+    {
+      "actionId": 19278,
+      "name": "",
+      "start": 42.583,
+      "resolve": 42.583,
+      "occurrence": 20
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 43.333,
+      "resolve": 43.333,
+      "occurrence": 21
+    },
+    {
+      "actionId": 18464,
+      "name": "Reducible Complexity",
+      "start": 44.983,
+      "resolve": 44.983,
+      "occurrence": 1
+    },
+    {
+      "actionId": 19278,
+      "name": "",
+      "start": 45.583,
+      "resolve": 45.583,
+      "occurrence": 22
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 45.583,
+      "resolve": 45.583,
+      "occurrence": 23
+    },
+    {
+      "actionId": 18464,
+      "name": "Reducible Complexity",
+      "start": 46.233,
+      "resolve": 46.233,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 46.399,
+      "resolve": 46.399,
+      "occurrence": 24
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 48.583,
+      "resolve": 48.583,
+      "occurrence": 25
+    },
+    {
+      "actionId": 19278,
+      "name": "",
+      "start": 48.583,
+      "resolve": 48.583,
+      "occurrence": 26
+    },
+    {
+      "actionId": 18462,
+      "name": "Exhaust",
+      "start": 49.199,
+      "resolve": 49.199,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 49.433,
+      "resolve": 49.433,
+      "occurrence": 27
+    },
+    {
+      "actionId": 19278,
+      "name": "",
+      "start": 51.583,
+      "resolve": 51.583,
+      "occurrence": 28
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 51.599,
+      "resolve": 51.599,
+      "occurrence": 29
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 52.499,
+      "resolve": 52.499,
+      "occurrence": 30
+    },
+    {
+      "actionId": 18464,
+      "name": "Reducible Complexity",
+      "start": 52.833,
+      "resolve": 52.833,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 54.649,
+      "resolve": 54.649,
+      "occurrence": 31
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 55.566,
+      "resolve": 55.566,
+      "occurrence": 32
+    },
+    {
+      "actionId": 18864,
+      "name": "Fluid Swing",
+      "start": 55.616,
+      "resolve": 55.616,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18871,
+      "name": "Fluid Strike",
+      "start": 55.866,
+      "resolve": 55.866,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 57.733,
+      "resolve": 57.733,
+      "occurrence": 33
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 58.533,
+      "resolve": 58.533,
+      "occurrence": 34
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 60.766,
+      "resolve": 60.766,
+      "occurrence": 35
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 61.566,
+      "resolve": 61.566,
+      "occurrence": 36
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 63.733,
+      "resolve": 63.733,
+      "occurrence": 37
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 64.616,
+      "resolve": 64.616,
+      "occurrence": 38
+    },
+    {
+      "actionId": 18466,
+      "name": "Protean Wave",
+      "start": 65.8,
+      "resolve": 68.5,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18468,
+      "name": "Protean Wave",
+      "start": 65.8,
+      "resolve": 68.5,
+      "occurrence": 4
+    },
+    {
+      "actionId": 18477,
+      "name": "Hand of Pain",
+      "start": 66.016,
+      "resolve": 68.715996,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 69.834,
+      "resolve": 69.834,
+      "occurrence": 39
+    },
+    {
+      "actionId": 18467,
+      "name": "Protean Wave",
+      "start": 70.834,
+      "resolve": 70.834,
+      "occurrence": 5
+    },
+    {
+      "actionId": 18469,
+      "name": "Protean Wave",
+      "start": 70.834,
+      "resolve": 70.834,
+      "occurrence": 6
+    },
+    {
+      "actionId": 18865,
+      "name": "Sluice",
+      "start": 70.834,
+      "resolve": 73.534,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 72.818,
+      "resolve": 72.818,
+      "occurrence": 40
+    },
+    {
+      "actionId": 18467,
+      "name": "Protean Wave",
+      "start": 73.901,
+      "resolve": 73.901,
+      "occurrence": 7
+    },
+    {
+      "actionId": 18469,
+      "name": "Protean Wave",
+      "start": 73.901,
+      "resolve": 73.901,
+      "occurrence": 8
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 75.885,
+      "resolve": 75.885,
+      "occurrence": 41
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 76.952,
+      "resolve": 76.952,
+      "occurrence": 42
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 78.902,
+      "resolve": 78.902,
+      "occurrence": 43
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 79.969,
+      "resolve": 79.969,
+      "occurrence": 44
+    },
+    {
+      "actionId": 18866,
+      "name": "Splash",
+      "start": 80.119,
+      "resolve": 80.119,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18866,
+      "name": "Splash",
+      "start": 81.203,
+      "resolve": 81.203,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 81.97,
+      "resolve": 81.97,
+      "occurrence": 45
+    },
+    {
+      "actionId": 18866,
+      "name": "Splash",
+      "start": 82.286,
+      "resolve": 82.286,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 83.003,
+      "resolve": 83.003,
+      "occurrence": 46
+    },
+    {
+      "actionId": 18866,
+      "name": "Splash",
+      "start": 83.403,
+      "resolve": 83.403,
+      "occurrence": 4
+    },
+    {
+      "actionId": 18866,
+      "name": "Splash",
+      "start": 84.52,
+      "resolve": 84.52,
+      "occurrence": 5
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 84.954,
+      "resolve": 84.954,
+      "occurrence": 47
+    },
+    {
+      "actionId": 18477,
+      "name": "Hand of Pain",
+      "start": 85.17,
+      "resolve": 87.869995,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18866,
+      "name": "Splash",
+      "start": 85.654,
+      "resolve": 85.654,
+      "occurrence": 6
+    },
+    {
+      "actionId": 18471,
+      "name": "Drainage",
+      "start": 85.654,
+      "resolve": 85.654,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 86.071,
+      "resolve": 86.071,
+      "occurrence": 48
+    },
+    {
+      "actionId": 18470,
+      "name": "Cascade",
+      "start": 86.804,
+      "resolve": 90.504,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 90.988,
+      "resolve": 90.988,
+      "occurrence": 49
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 93.072,
+      "resolve": 93.072,
+      "occurrence": 50
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 94.072,
+      "resolve": 94.072,
+      "occurrence": 51
+    },
+    {
+      "actionId": 18472,
+      "name": "Liquid Gaol",
+      "start": 94.939,
+      "resolve": 94.939,
+      "occurrence": 1
+    },
+    {
+      "actionId": 7568,
+      "name": "Esuna",
+      "start": 95.989,
+      "resolve": 95.989,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 96.106,
+      "resolve": 96.106,
+      "occurrence": 52
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 97.073,
+      "resolve": 97.073,
+      "occurrence": 53
+    },
+    {
+      "actionId": 7568,
+      "name": "Esuna",
+      "start": 98.49,
+      "resolve": 98.49,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 99.19,
+      "resolve": 99.19,
+      "occurrence": 54
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 100.19,
+      "resolve": 100.19,
+      "occurrence": 55
+    },
+    {
+      "actionId": 7568,
+      "name": "Esuna",
+      "start": 100.99,
+      "resolve": 100.99,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 102.191,
+      "resolve": 102.191,
+      "occurrence": 56
+    },
+    {
+      "actionId": 18466,
+      "name": "Protean Wave",
+      "start": 102.991,
+      "resolve": 105.690994,
+      "occurrence": 9
+    },
+    {
+      "actionId": 18468,
+      "name": "Protean Wave",
+      "start": 102.991,
+      "resolve": 105.690994,
+      "occurrence": 10
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 103.158,
+      "resolve": 103.158,
+      "occurrence": 57
+    },
+    {
+      "actionId": 18477,
+      "name": "Hand of Pain",
+      "start": 104.925,
+      "resolve": 107.625,
+      "occurrence": 4
+    },
+    {
+      "actionId": 18467,
+      "name": "Protean Wave",
+      "start": 108.042,
+      "resolve": 108.042,
+      "occurrence": 11
+    },
+    {
+      "actionId": 18469,
+      "name": "Protean Wave",
+      "start": 108.042,
+      "resolve": 108.042,
+      "occurrence": 12
+    },
+    {
+      "actionId": 18865,
+      "name": "Sluice",
+      "start": 108.042,
+      "resolve": 110.742,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18869,
+      "name": "Protean Wave",
+      "start": 108.992,
+      "resolve": 111.69199,
+      "occurrence": 13
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 109.259,
+      "resolve": 109.259,
+      "occurrence": 58
+    },
+    {
+      "actionId": 18467,
+      "name": "Protean Wave",
+      "start": 111.176,
+      "resolve": 111.176,
+      "occurrence": 14
+    },
+    {
+      "actionId": 18469,
+      "name": "Protean Wave",
+      "start": 111.176,
+      "resolve": 111.176,
+      "occurrence": 15
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 112.259,
+      "resolve": 112.259,
+      "occurrence": 59
+    },
+    {
+      "actionId": 18870,
+      "name": "Protean Wave",
+      "start": 114.143,
+      "resolve": 114.143,
+      "occurrence": 16
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 115.243,
+      "resolve": 115.243,
+      "occurrence": 60
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 115.293,
+      "resolve": 115.293,
+      "occurrence": 61
+    },
+    {
+      "actionId": 18473,
+      "name": "Pressurize",
+      "start": 118.111,
+      "resolve": 118.111,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 118.261,
+      "resolve": 118.261,
+      "occurrence": 62
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 118.327,
+      "resolve": 118.327,
+      "occurrence": 63
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 121.295,
+      "resolve": 121.295,
+      "occurrence": 64
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 121.361,
+      "resolve": 121.361,
+      "occurrence": 65
+    },
+    {
+      "actionId": 18476,
+      "name": "Hand of Parting",
+      "start": 123.128,
+      "resolve": 123.128,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 124.329,
+      "resolve": 124.329,
+      "occurrence": 66
+    },
+    {
+      "actionId": 18477,
+      "name": "Hand of Pain",
+      "start": 125.196,
+      "resolve": 127.895996,
+      "occurrence": 5
+    },
+    {
+      "actionId": 18866,
+      "name": "Splash",
+      "start": 126.262,
+      "resolve": 126.262,
+      "occurrence": 7
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 127.363,
+      "resolve": 127.363,
+      "occurrence": 67
+    },
+    {
+      "actionId": 18866,
+      "name": "Splash",
+      "start": 127.396,
+      "resolve": 127.396,
+      "occurrence": 8
+    },
+    {
+      "actionId": 18866,
+      "name": "Splash",
+      "start": 128.496,
+      "resolve": 128.496,
+      "occurrence": 9
+    },
+    {
+      "actionId": 18866,
+      "name": "Splash",
+      "start": 129.612,
+      "resolve": 129.612,
+      "occurrence": 10
+    },
+    {
+      "actionId": 18866,
+      "name": "Splash",
+      "start": 130.729,
+      "resolve": 130.729,
+      "occurrence": 11
+    },
+    {
+      "actionId": 18866,
+      "name": "Splash",
+      "start": 131.862,
+      "resolve": 131.862,
+      "occurrence": 12
+    },
+    {
+      "actionId": 18864,
+      "name": "Fluid Swing",
+      "start": 132.962,
+      "resolve": 132.962,
+      "occurrence": 4
+    },
+    {
+      "actionId": 18808,
+      "name": "",
+      "start": 133.412,
+      "resolve": 133.412,
+      "occurrence": 68
+    },
+    {
+      "actionId": 18809,
+      "name": "",
+      "start": 133.478,
+      "resolve": 133.478,
+      "occurrence": 69
+    }
+  ],
+  "names": [
+    "",
+    "Fluid Swing",
+    "Cascade",
+    "Provoke",
+    "Protean Wave",
+    "Hand of Parting",
+    "attack",
+    "Fluid Strike",
+    "Exhaust",
+    "Hand of Pain",
+    "Pressurize",
+    "Reducible Complexity",
+    "Sluice",
+    "Splash",
+    "Drainage",
+    "Liquid Gaol",
+    "Esuna"
+  ]
+}

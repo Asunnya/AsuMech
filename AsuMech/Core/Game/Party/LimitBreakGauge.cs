@@ -20,6 +20,12 @@ public sealed class LimitBreakGauge
 
     public int FilledBars => units / UnitsPerBar;
 
+    // The local player's own limit break as it resolves, and where it was aimed: a scenario reacts
+    // to what it did (where a caster LB3 came down, which add a melee LB3 hit).
+    public event Action<uint, LimitBreakAim>? Landed;
+
+    internal void Land(uint actionId, LimitBreakAim aim) => Landed?.Invoke(actionId, aim);
+
     public void Set(float bars)
     {
         units = (ushort)(Math.Clamp(bars, 0f, Bars) * UnitsPerBar);

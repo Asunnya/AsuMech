@@ -1,19 +1,14 @@
 
 # ![AsuMech](images/icon6464.png) AsuMech
 
-*Another FFXIV mechanics simulator, now with Savage*
+*FFXIV raid mechanics simulator, from Savage to Ultimate, with a Learn mode*
 
 ---
 
-AsuMech is a fork of [AnoMech](https://github.com/anomek/AnoMech) by Anomek. It keeps everything AnoMech has and adds <!-- rename:keep -->
-Savage raids and other fights that stay in this fork, starting with AAC Heavyweight M1 (Savage). Open it with
-`/asumech` (or `/asu`; the old `/anomech` and `/ano` still work). Only one of the two plugins can be installed at a <!-- rename:keep -->
-time: uninstall AnoMech first, and its settings are imported the first time AsuMech starts. <!-- rename:keep -->
- 
-Simulate FFXIV raid mechanics client-side for solo practice. Go to any Inn, open the plugin with `/asumech` and start practicing!
+AsuMech simulates FFXIV raid mechanics client-side, so you can practice them solo or with friends. Go to any Inn, open
+the plugin with `/asumech` (or `/asu`) and start practicing!
 
-Thanks to improvemnts by [WorstAquaPlayer](https://github.com/WorstAquaPlayer) plugin is quite stable now! No more 
-crashes after training session.
+Questions, strats and bug reports: join the [AsuMech Discord](https://discord.gg/y6kTkdaXjz).
 
 **WARNING!!!**
 
@@ -23,10 +18,43 @@ While simulating:
   * Players joining or leaving your party will not appear in the party list
   until you leave the sim zone.
   * Ready checks will not pop.
- 
 
+## Features
 
-Questions, strats and bug reports: join the [AsuMech Discord](https://discord.gg/y6kTkdaXjz).
+**Fights**
+- Ultimates: Dancing Mad, Futures Rewritten, The Omega Protocol, The Epic of Alexander, Dragonsong's Reprise,
+  The Weapon's Refrain and The Unending Coil of Bahamut.
+- Savage: AAC Heavyweight M1–M3 (M9S, M10S, M11S).
+- See [Currently implemented](#currently-implemented) for every phase and strat.
+
+**Practice**
+- A full fake party: bots play the strat you pick, or practice solo where a scenario offers it.
+- Streak and best streak, speed control, and Watch mode, where the strat's AI plays your seat slowed down, outside the
+  streak.
+- Multiplayer through the AsuMech relay.
+
+**Learn mode** (still being built; the lessons are drafts)
+- Strats as lessons (not yet for TEA or the new TOP phases), step by step, at four levels: **Observe** (watch the strat
+  play out), **Guided** (the sim slows down and shows your spot and the rule for your seat), **Assisted** (the hints fade
+  as you get each step right) and **Exam** (no help; counts toward your streak).
+- The strat's own picture (toolbox, raidplan.io, Strategy Board or XIVPlan) beside each step, with a 👍/👎 on every
+  step so bad text or pictures get fixed.
+- Step drills that repeat just the part you keep failing, a report after each run, and a roll selector that pins the
+  variation you fail most.
+- Overlays: the areas about to resolve drawn on the ground, the next casts with a timer, and a bot inspector that
+  says which strat call sent a bot where.
+- Mitigation training against a mit plan (sheets and WTFDIG), with bots that use the planned mits.
+
+**Interface**
+- One window: search and browse fights by expansion and category, with your recent fights at hand.
+
+**Feedback from inside the game**
+- Report a problem during a run (a solo run pauses while you write); the run's details go with it.
+- Scenario and strat requests without a GitHub account, and a link to the Discord.
+- Optional recording of your real Savage/Ultimate pulls, used to check the sims against the real fight.
+
+**Bots**
+- They plan routes around hazards and arena walls instead of walking straight lines.
 
 ## Installation
 
@@ -37,7 +65,14 @@ from the plugin installer:
 https://raw.githubusercontent.com/Asunnya/AsuMech/asunnya-release/pluginmaster.json
 ```
 
-For upstream AnoMech, see: https://github.com/anomek/MyDalamudPlugins <!-- rename:keep -->
+## Coming from AnoMech <!-- rename:keep -->
+
+AsuMech started as a fork of [AnoMech](https://github.com/anomek/AnoMech) by Anomek and keeps taking in its new <!-- rename:keep -->
+scenarios.
+- Only one of the two plugins can be installed at a time: uninstall AnoMech first. Its settings (relay, streaks, <!-- rename:keep -->
+  recent fights) are imported the first time AsuMech starts.
+- The old `/anomech` and `/ano` commands still open AsuMech. <!-- rename:keep -->
+- AnoMech's own plugin repository: https://github.com/anomek/MyDalamudPlugins <!-- rename:keep -->
 
 ## Beta: Advanced Simulation Resolution
 
@@ -83,13 +118,30 @@ All using default NA pf strats unless noted otherwise:
     - P5 Fulgent Blade
     - P5 Paradise Regained 
 - The Omega Protocol (Ultimate)
+    - P1 Program Loop _by [Evernow](https://github.com/Evernow)_
     - P2 Party Synergy
       - NA pf
       - LPDU _by [Quantumlyy](https://github.com/Quantumlyy)_
+    - P3 Intermission _by [Evernow](https://github.com/Evernow)_
+    - P3 Hello World _by [Evernow](https://github.com/Evernow)_
+    - P3 Monitors _by [Evernow](https://github.com/Evernow)_
+    - P4 Blue Screen _by [Evernow](https://github.com/Evernow)_
     - P5 Delta
+      - Standard
+      - Tuufless (Elemental) _by [AppleCronch](https://github.com/AppleCronch)_
     - P5 Sigma
+      - Standard
+      - Tuufless (Elemental) _by [AppleCronch](https://github.com/AppleCronch)_
     - P5 Omega
     - P6 Exasquares / Wave Cannon 2
+    - P6 Alpha Omega (whole phase, NAUR) _by [Evernow](https://github.com/Evernow)_
+- The Epic of Alexander (Ultimate) _by [Evernow](https://github.com/Evernow)_
+    - P1 Living Liquid
+    - Limit Cut
+    - P2 Brute Justice and Cruise Chaser
+    - Temporal Stasis
+    - P3 Alexander Prime
+    - P4 Perfect Alexander
 - The Weapon's Refrain (Ultimate)
     - P1 Garuda _by [Asunnya](https://github.com/Asunnya)_
     - P2 Ifrit _by [Asunnya](https://github.com/Asunnya)_
@@ -152,10 +204,16 @@ All using default NA pf strats unless noted otherwise:
 
 #  Acknowledgments
 
+Thanks to [Anomek](https://github.com/anomek) for [AnoMech](https://github.com/anomek/AnoMech), the plugin AsuMech is built on. <!-- rename:keep -->
+The engine, the zone and the sim core, and most of the scenarios, all started there.
+
 Thanks for contributors:
 * [WorstAquaPlayer](https://github.com/WorstAquaPlayer) - rewriting core & fixing crashes, extra scenarios
 * [Wydox](https://github.com/Wydox) - core improvements, extra scenarios and strategies
-* [Evernow](https://github.com/Evernow) - multiplayer (WIP), core improvements, extra scenarions and strategies
+* [Evernow](https://github.com/Evernow) - multiplayer (WIP), core improvements, extra scenarios and strategies, TEA, TOP P1 / P3 / P4 / P6
+* [AlexisLynd](https://github.com/AlexisLynd) - files that make TEA look like the real fight
+* [Ziggycuff](https://github.com/Ziggycuff) - job actions (MNK, VPR, BRD, RDM, NIN and more)
+* [AppleCronch](https://github.com/AppleCronch) - Tuufless strategies for TOP P5 Delta and Sigma
 * [RoarkGit](https://github.com/RoarkGit) - win streaks, extra scenarios
 * [grayparser](https://github.com/grayparser) - core improvements, extra scenarios
 * [altair9x](https://github.com/altair9x) - extra strategies

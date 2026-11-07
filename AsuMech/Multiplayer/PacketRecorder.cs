@@ -321,6 +321,12 @@ internal sealed class PacketRecorder
 
     private void RecordWorld(GamePacket packet) => Add(packet);
 
+    private void RecordBattleTalk(uint speakerNameId, uint textId, uint durationMs)
+    {
+        if (Recording) SimAssets.WarnIfUnknown(SimAssetKind.BattleTalk, textId, "BattleTalk");
+        Add(new BattleTalkPacket(speakerNameId, textId, durationMs));
+    }
+
     private void RecordHaters(IReadOnlyList<Hater> haters)
     {
         var sent = new List<HaterPacket>();
@@ -364,16 +370,19 @@ internal sealed class PacketRecorder
         public bool IsDrawObjectVisible { get => inner.IsDrawObjectVisible; set => inner.IsDrawObjectVisible = value; }
         public byte ModelState => inner.ModelState;
         public float ModelScale { get => inner.ModelScale; set => inner.ModelScale = value; }
+        public NpcAppearance? Appearance => inner.Appearance;
         public bool IsCasting => inner.IsCasting;
         public uint CastActionId => inner.CastActionId;
         public float CurrentCastTime => inner.CurrentCastTime;
         public float TotalCastTime => inner.TotalCastTime;
         public uint Health => inner.Health;
         public uint MaxHealth => inner.MaxHealth;
+        public void SetMaxHealth(uint maxHealth) => inner.SetMaxHealth(maxHealth);
         public uint Mana => inner.Mana;
         public uint MaxMana => inner.MaxMana;
         public byte TargetableStatus => inner.TargetableStatus;
         public ushort GetTetherId(byte slot) => inner.GetTetherId(slot);
+        public bool ShowsStatus(ushort statusId) => inner.ShowsStatus(statusId);
         public string DescribeDrawState() => inner.DescribeDrawState();
         public string DescribeActionTimeline() => inner.DescribeActionTimeline();
         public string DescribeTimelineSlotIds() => inner.DescribeTimelineSlotIds();
@@ -524,6 +533,13 @@ internal sealed class PacketRecorder
         {
             recorder.realDirector.Commence();
             recorder.RecordWorld(new CommencePacket());
+        }
+
+        public bool BattleTalk(uint speakerNameId, uint textId, uint durationMs)
+        {
+            if (!recorder.realDirector.BattleTalk(speakerNameId, textId, durationMs)) return false;
+            recorder.RecordBattleTalk(speakerNameId, textId, durationMs);
+            return true;
         }
     }
 

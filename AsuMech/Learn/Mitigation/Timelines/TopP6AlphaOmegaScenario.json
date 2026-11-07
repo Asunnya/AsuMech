@@ -1,0 +1,864 @@
+{
+  "scenario": "TopP6AlphaOmegaScenario",
+  "casts": [
+    {
+      "actionId": 31649,
+      "name": "Cosmo Memory",
+      "start": 7.233,
+      "resolve": 12.933,
+      "occurrence": 1
+    },
+    {
+      "actionId": 4240,
+      "name": "Land Waker",
+      "start": 8.733,
+      "resolve": 8.733,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31747,
+      "name": "",
+      "start": 17.667,
+      "resolve": 17.667,
+      "occurrence": 1
+    },
+    {
+      "actionId": 32223,
+      "name": "",
+      "start": 18.467,
+      "resolve": 18.467,
+      "occurrence": 2
+    },
+    {
+      "actionId": 31747,
+      "name": "",
+      "start": 20.783,
+      "resolve": 20.783,
+      "occurrence": 3
+    },
+    {
+      "actionId": 32223,
+      "name": "",
+      "start": 21.583,
+      "resolve": 21.583,
+      "occurrence": 4
+    },
+    {
+      "actionId": 31650,
+      "name": "Cosmo Arrow",
+      "start": 21.583,
+      "resolve": 27.283,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31651,
+      "name": "Cosmo Arrow",
+      "start": 21.583,
+      "resolve": 29.283,
+      "occurrence": 2
+    },
+    {
+      "actionId": 32337,
+      "name": "Inhale",
+      "start": 21.583,
+      "resolve": 26.783,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31651,
+      "name": "Cosmo Arrow",
+      "start": 23.6,
+      "resolve": 31.3,
+      "occurrence": 3
+    },
+    {
+      "actionId": 32337,
+      "name": "Inhale",
+      "start": 23.6,
+      "resolve": 28.8,
+      "occurrence": 2
+    },
+    {
+      "actionId": 31652,
+      "name": "Cosmo Arrow",
+      "start": 31.65,
+      "resolve": 31.65,
+      "occurrence": 4
+    },
+    {
+      "actionId": 31652,
+      "name": "Cosmo Arrow",
+      "start": 33.666,
+      "resolve": 33.666,
+      "occurrence": 5
+    },
+    {
+      "actionId": 31652,
+      "name": "Cosmo Arrow",
+      "start": 35.666,
+      "resolve": 35.666,
+      "occurrence": 6
+    },
+    {
+      "actionId": 31654,
+      "name": "Cosmo Dive",
+      "start": 36.716,
+      "resolve": 42.016,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31652,
+      "name": "Cosmo Arrow",
+      "start": 37.666,
+      "resolve": 37.666,
+      "occurrence": 7
+    },
+    {
+      "actionId": 31652,
+      "name": "Cosmo Arrow",
+      "start": 39.666,
+      "resolve": 39.666,
+      "occurrence": 8
+    },
+    {
+      "actionId": 31652,
+      "name": "Cosmo Arrow",
+      "start": 41.683,
+      "resolve": 41.683,
+      "occurrence": 9
+    },
+    {
+      "actionId": 31652,
+      "name": "Cosmo Arrow",
+      "start": 43.7,
+      "resolve": 43.7,
+      "occurrence": 10
+    },
+    {
+      "actionId": 31655,
+      "name": "Cosmo Dive",
+      "start": 45.066,
+      "resolve": 45.066,
+      "occurrence": 2
+    },
+    {
+      "actionId": 31656,
+      "name": "Cosmo Dive",
+      "start": 45.066,
+      "resolve": 45.066,
+      "occurrence": 3
+    },
+    {
+      "actionId": 31747,
+      "name": "",
+      "start": 51.783,
+      "resolve": 51.783,
+      "occurrence": 5
+    },
+    {
+      "actionId": 32223,
+      "name": "",
+      "start": 52.599,
+      "resolve": 52.599,
+      "occurrence": 6
+    },
+    {
+      "actionId": 31747,
+      "name": "",
+      "start": 54.899,
+      "resolve": 54.899,
+      "occurrence": 7
+    },
+    {
+      "actionId": 32223,
+      "name": "",
+      "start": 55.716,
+      "resolve": 55.716,
+      "occurrence": 8
+    },
+    {
+      "actionId": 31660,
+      "name": "Unlimited Wave Cannon",
+      "start": 55.716,
+      "resolve": 60.416,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31661,
+      "name": "Wave Cannon",
+      "start": 55.716,
+      "resolve": 67.416,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31661,
+      "name": "Wave Cannon",
+      "start": 56.749,
+      "resolve": 68.449,
+      "occurrence": 2
+    },
+    {
+      "actionId": 31661,
+      "name": "Wave Cannon",
+      "start": 57.733,
+      "resolve": 69.433,
+      "occurrence": 3
+    },
+    {
+      "actionId": 31661,
+      "name": "Wave Cannon",
+      "start": 58.749,
+      "resolve": 70.449,
+      "occurrence": 4
+    },
+    {
+      "actionId": 31663,
+      "name": "Wave Cannon",
+      "start": 65.75,
+      "resolve": 68.45,
+      "occurrence": 5
+    },
+    {
+      "actionId": 31663,
+      "name": "Wave Cannon",
+      "start": 67.767,
+      "resolve": 70.466995,
+      "occurrence": 6
+    },
+    {
+      "actionId": 31662,
+      "name": "Wave Cannon",
+      "start": 68.834,
+      "resolve": 68.834,
+      "occurrence": 7
+    },
+    {
+      "actionId": 31663,
+      "name": "Wave Cannon",
+      "start": 69.767,
+      "resolve": 72.466995,
+      "occurrence": 8
+    },
+    {
+      "actionId": 31662,
+      "name": "Wave Cannon",
+      "start": 69.834,
+      "resolve": 69.834,
+      "occurrence": 9
+    },
+    {
+      "actionId": 31662,
+      "name": "Wave Cannon",
+      "start": 70.834,
+      "resolve": 70.834,
+      "occurrence": 10
+    },
+    {
+      "actionId": 31663,
+      "name": "Wave Cannon",
+      "start": 71.768,
+      "resolve": 74.467995,
+      "occurrence": 11
+    },
+    {
+      "actionId": 31662,
+      "name": "Wave Cannon",
+      "start": 71.834,
+      "resolve": 71.834,
+      "occurrence": 12
+    },
+    {
+      "actionId": 31662,
+      "name": "Wave Cannon",
+      "start": 72.818,
+      "resolve": 72.818,
+      "occurrence": 13
+    },
+    {
+      "actionId": 31663,
+      "name": "Wave Cannon",
+      "start": 73.785,
+      "resolve": 76.485,
+      "occurrence": 14
+    },
+    {
+      "actionId": 31662,
+      "name": "Wave Cannon",
+      "start": 73.818,
+      "resolve": 73.818,
+      "occurrence": 15
+    },
+    {
+      "actionId": 31662,
+      "name": "Wave Cannon",
+      "start": 74.835,
+      "resolve": 74.835,
+      "occurrence": 16
+    },
+    {
+      "actionId": 31663,
+      "name": "Wave Cannon",
+      "start": 75.785,
+      "resolve": 78.485,
+      "occurrence": 17
+    },
+    {
+      "actionId": 31662,
+      "name": "Wave Cannon",
+      "start": 75.835,
+      "resolve": 75.835,
+      "occurrence": 18
+    },
+    {
+      "actionId": 31662,
+      "name": "Wave Cannon",
+      "start": 76.852,
+      "resolve": 76.852,
+      "occurrence": 19
+    },
+    {
+      "actionId": 31657,
+      "name": "Wave Cannon",
+      "start": 78.886,
+      "resolve": 89.486,
+      "occurrence": 20
+    },
+    {
+      "actionId": 31659,
+      "name": "Wave Cannon",
+      "start": 81.92,
+      "resolve": 81.92,
+      "occurrence": 21
+    },
+    {
+      "actionId": 31659,
+      "name": "Wave Cannon",
+      "start": 83.937,
+      "resolve": 83.937,
+      "occurrence": 22
+    },
+    {
+      "actionId": 31658,
+      "name": "Wave Cannon",
+      "start": 90.255,
+      "resolve": 90.255,
+      "occurrence": 23
+    },
+    {
+      "actionId": 31747,
+      "name": "",
+      "start": 94.639,
+      "resolve": 94.639,
+      "occurrence": 9
+    },
+    {
+      "actionId": 32223,
+      "name": "",
+      "start": 95.439,
+      "resolve": 95.439,
+      "occurrence": 10
+    },
+    {
+      "actionId": 31747,
+      "name": "",
+      "start": 97.756,
+      "resolve": 97.756,
+      "occurrence": 11
+    },
+    {
+      "actionId": 31650,
+      "name": "Cosmo Arrow",
+      "start": 98.573,
+      "resolve": 104.272995,
+      "occurrence": 11
+    },
+    {
+      "actionId": 31651,
+      "name": "Cosmo Arrow",
+      "start": 98.573,
+      "resolve": 106.272995,
+      "occurrence": 12
+    },
+    {
+      "actionId": 32337,
+      "name": "Inhale",
+      "start": 98.573,
+      "resolve": 103.772995,
+      "occurrence": 3
+    },
+    {
+      "actionId": 32223,
+      "name": "",
+      "start": 98.573,
+      "resolve": 98.573,
+      "occurrence": 12
+    },
+    {
+      "actionId": 31651,
+      "name": "Cosmo Arrow",
+      "start": 100.59,
+      "resolve": 108.28999,
+      "occurrence": 13
+    },
+    {
+      "actionId": 32337,
+      "name": "Inhale",
+      "start": 100.59,
+      "resolve": 105.78999,
+      "occurrence": 4
+    },
+    {
+      "actionId": 31652,
+      "name": "Cosmo Arrow",
+      "start": 108.642,
+      "resolve": 108.642,
+      "occurrence": 14
+    },
+    {
+      "actionId": 31652,
+      "name": "Cosmo Arrow",
+      "start": 110.659,
+      "resolve": 110.659,
+      "occurrence": 15
+    },
+    {
+      "actionId": 31652,
+      "name": "Cosmo Arrow",
+      "start": 112.66,
+      "resolve": 112.66,
+      "occurrence": 16
+    },
+    {
+      "actionId": 31657,
+      "name": "Wave Cannon",
+      "start": 112.693,
+      "resolve": 123.293,
+      "occurrence": 24
+    },
+    {
+      "actionId": 31652,
+      "name": "Cosmo Arrow",
+      "start": 114.66,
+      "resolve": 114.66,
+      "occurrence": 17
+    },
+    {
+      "actionId": 31659,
+      "name": "Wave Cannon",
+      "start": 115.727,
+      "resolve": 115.727,
+      "occurrence": 25
+    },
+    {
+      "actionId": 31652,
+      "name": "Cosmo Arrow",
+      "start": 116.66,
+      "resolve": 116.66,
+      "occurrence": 18
+    },
+    {
+      "actionId": 31659,
+      "name": "Wave Cannon",
+      "start": 117.744,
+      "resolve": 117.744,
+      "occurrence": 26
+    },
+    {
+      "actionId": 31652,
+      "name": "Cosmo Arrow",
+      "start": 118.678,
+      "resolve": 118.678,
+      "occurrence": 19
+    },
+    {
+      "actionId": 31652,
+      "name": "Cosmo Arrow",
+      "start": 120.678,
+      "resolve": 120.678,
+      "occurrence": 20
+    },
+    {
+      "actionId": 31658,
+      "name": "Wave Cannon",
+      "start": 124.062,
+      "resolve": 124.062,
+      "occurrence": 27
+    },
+    {
+      "actionId": 31747,
+      "name": "",
+      "start": 128.463,
+      "resolve": 128.463,
+      "occurrence": 13
+    },
+    {
+      "actionId": 32223,
+      "name": "",
+      "start": 129.263,
+      "resolve": 129.263,
+      "occurrence": 14
+    },
+    {
+      "actionId": 31747,
+      "name": "",
+      "start": 131.579,
+      "resolve": 131.579,
+      "occurrence": 15
+    },
+    {
+      "actionId": 32223,
+      "name": "",
+      "start": 132.378,
+      "resolve": 132.378,
+      "occurrence": 16
+    },
+    {
+      "actionId": 31660,
+      "name": "Unlimited Wave Cannon",
+      "start": 132.378,
+      "resolve": 137.078,
+      "occurrence": 2
+    },
+    {
+      "actionId": 31661,
+      "name": "Wave Cannon",
+      "start": 132.378,
+      "resolve": 144.078,
+      "occurrence": 28
+    },
+    {
+      "actionId": 31661,
+      "name": "Wave Cannon",
+      "start": 133.412,
+      "resolve": 145.112,
+      "occurrence": 29
+    },
+    {
+      "actionId": 31661,
+      "name": "Wave Cannon",
+      "start": 134.395,
+      "resolve": 146.095,
+      "occurrence": 30
+    },
+    {
+      "actionId": 31661,
+      "name": "Wave Cannon",
+      "start": 135.411,
+      "resolve": 147.111,
+      "occurrence": 31
+    },
+    {
+      "actionId": 31663,
+      "name": "Wave Cannon",
+      "start": 142.426,
+      "resolve": 145.12599,
+      "occurrence": 32
+    },
+    {
+      "actionId": 31663,
+      "name": "Wave Cannon",
+      "start": 144.426,
+      "resolve": 147.12599,
+      "occurrence": 33
+    },
+    {
+      "actionId": 31662,
+      "name": "Wave Cannon",
+      "start": 145.492,
+      "resolve": 145.492,
+      "occurrence": 34
+    },
+    {
+      "actionId": 31663,
+      "name": "Wave Cannon",
+      "start": 146.425,
+      "resolve": 149.125,
+      "occurrence": 35
+    },
+    {
+      "actionId": 31662,
+      "name": "Wave Cannon",
+      "start": 146.492,
+      "resolve": 146.492,
+      "occurrence": 36
+    },
+    {
+      "actionId": 31662,
+      "name": "Wave Cannon",
+      "start": 147.491,
+      "resolve": 147.491,
+      "occurrence": 37
+    },
+    {
+      "actionId": 31663,
+      "name": "Wave Cannon",
+      "start": 148.441,
+      "resolve": 151.14099,
+      "occurrence": 38
+    },
+    {
+      "actionId": 31662,
+      "name": "Wave Cannon",
+      "start": 148.491,
+      "resolve": 148.491,
+      "occurrence": 39
+    },
+    {
+      "actionId": 31662,
+      "name": "Wave Cannon",
+      "start": 149.491,
+      "resolve": 149.491,
+      "occurrence": 40
+    },
+    {
+      "actionId": 31663,
+      "name": "Wave Cannon",
+      "start": 150.441,
+      "resolve": 153.14099,
+      "occurrence": 41
+    },
+    {
+      "actionId": 31662,
+      "name": "Wave Cannon",
+      "start": 150.491,
+      "resolve": 150.491,
+      "occurrence": 42
+    },
+    {
+      "actionId": 31654,
+      "name": "Cosmo Dive",
+      "start": 150.541,
+      "resolve": 155.841,
+      "occurrence": 4
+    },
+    {
+      "actionId": 31662,
+      "name": "Wave Cannon",
+      "start": 151.49,
+      "resolve": 151.49,
+      "occurrence": 43
+    },
+    {
+      "actionId": 31663,
+      "name": "Wave Cannon",
+      "start": 152.44,
+      "resolve": 155.14,
+      "occurrence": 44
+    },
+    {
+      "actionId": 31662,
+      "name": "Wave Cannon",
+      "start": 152.49,
+      "resolve": 152.49,
+      "occurrence": 45
+    },
+    {
+      "actionId": 31662,
+      "name": "Wave Cannon",
+      "start": 153.523,
+      "resolve": 153.523,
+      "occurrence": 46
+    },
+    {
+      "actionId": 4242,
+      "name": "Dragonsong Dive",
+      "start": 158.255,
+      "resolve": 158.255,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31655,
+      "name": "Cosmo Dive",
+      "start": 158.889,
+      "resolve": 158.889,
+      "occurrence": 5
+    },
+    {
+      "actionId": 31656,
+      "name": "Cosmo Dive",
+      "start": 158.889,
+      "resolve": 158.889,
+      "occurrence": 6
+    },
+    {
+      "actionId": 31747,
+      "name": "",
+      "start": 165.62,
+      "resolve": 165.62,
+      "occurrence": 17
+    },
+    {
+      "actionId": 32223,
+      "name": "",
+      "start": 166.42,
+      "resolve": 166.42,
+      "occurrence": 18
+    },
+    {
+      "actionId": 202,
+      "name": "Final Heaven",
+      "start": 167.353,
+      "resolve": 167.353,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31747,
+      "name": "",
+      "start": 168.72,
+      "resolve": 168.72,
+      "occurrence": 19
+    },
+    {
+      "actionId": 32223,
+      "name": "",
+      "start": 169.536,
+      "resolve": 169.536,
+      "occurrence": 20
+    },
+    {
+      "actionId": 31664,
+      "name": "Cosmo Meteor",
+      "start": 172.652,
+      "resolve": 177.35199,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31666,
+      "name": "Cosmo Meteor",
+      "start": 177.667,
+      "resolve": 181.367,
+      "occurrence": 2
+    },
+    {
+      "actionId": 205,
+      "name": "Meteor",
+      "start": 180.65,
+      "resolve": 180.65,
+      "occurrence": 1
+    },
+    {
+      "actionId": 32699,
+      "name": "Cosmo Meteor",
+      "start": 183.149,
+      "resolve": 183.149,
+      "occurrence": 3
+    },
+    {
+      "actionId": 32699,
+      "name": "Cosmo Meteor",
+      "start": 184.182,
+      "resolve": 184.182,
+      "occurrence": 4
+    },
+    {
+      "actionId": 32699,
+      "name": "Cosmo Meteor",
+      "start": 189.165,
+      "resolve": 189.165,
+      "occurrence": 5
+    },
+    {
+      "actionId": 32699,
+      "name": "Cosmo Meteor",
+      "start": 190.198,
+      "resolve": 190.198,
+      "occurrence": 6
+    },
+    {
+      "actionId": 31667,
+      "name": "Cosmo Meteor",
+      "start": 201.178,
+      "resolve": 201.178,
+      "occurrence": 7
+    },
+    {
+      "actionId": 31668,
+      "name": "Cosmo Meteor",
+      "start": 201.178,
+      "resolve": 201.178,
+      "occurrence": 8
+    },
+    {
+      "actionId": 31665,
+      "name": "Cosmo Meteor",
+      "start": 202.211,
+      "resolve": 202.211,
+      "occurrence": 9
+    },
+    {
+      "actionId": 31670,
+      "name": "Magic Number",
+      "start": 208.043,
+      "resolve": 212.743,
+      "occurrence": 1
+    },
+    {
+      "actionId": 199,
+      "name": "Last Bastion",
+      "start": 209.293,
+      "resolve": 209.293,
+      "occurrence": 1
+    },
+    {
+      "actionId": 208,
+      "name": "Pulse of Life",
+      "start": 215.425,
+      "resolve": 215.425,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31670,
+      "name": "Magic Number",
+      "start": 224.206,
+      "resolve": 228.90599,
+      "occurrence": 2
+    },
+    {
+      "actionId": 4240,
+      "name": "Land Waker",
+      "start": 225.106,
+      "resolve": 225.106,
+      "occurrence": 2
+    },
+    {
+      "actionId": 4247,
+      "name": "Angel Feathers",
+      "start": 231.204,
+      "resolve": 231.204,
+      "occurrence": 1
+    },
+    {
+      "actionId": 31648,
+      "name": "Run: ****mi*",
+      "start": 238.386,
+      "resolve": 254.086,
+      "occurrence": 1
+    },
+    {
+      "actionId": 4242,
+      "name": "Dragonsong Dive",
+      "start": 253.132,
+      "resolve": 253.132,
+      "occurrence": 2
+    }
+  ],
+  "names": [
+    "Cosmo Memory",
+    "Land Waker",
+    "",
+    "Cosmo Arrow",
+    "Inhale",
+    "Cosmo Dive",
+    "Unlimited Wave Cannon",
+    "Wave Cannon",
+    "Dragonsong Dive",
+    "Final Heaven",
+    "Cosmo Meteor",
+    "Meteor",
+    "Magic Number",
+    "Last Bastion",
+    "Pulse of Life",
+    "Angel Feathers",
+    "Run: ****mi*"
+  ]
+}

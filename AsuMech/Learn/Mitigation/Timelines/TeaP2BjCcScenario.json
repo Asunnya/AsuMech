@@ -1,0 +1,881 @@
+{
+  "scenario": "TeaP2BjCcScenario",
+  "casts": [
+    {
+      "actionId": 18516,
+      "name": "J Kick",
+      "start": 2.017,
+      "resolve": 2.017,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 10.183,
+      "resolve": 10.183,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 10.183,
+      "resolve": 10.183,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18882,
+      "name": "Whirlwind",
+      "start": 10.2,
+      "resolve": 13.9,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18494,
+      "name": "Judgment Nisi",
+      "start": 13.2,
+      "resolve": 16.9,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 19.267,
+      "resolve": 19.267,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18495,
+      "name": "Link-up",
+      "start": 20.317,
+      "resolve": 23.017,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 22.3,
+      "resolve": 22.3,
+      "occurrence": 4
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 25.333,
+      "resolve": 25.333,
+      "occurrence": 5
+    },
+    {
+      "actionId": 18517,
+      "name": "Eye of the Chakram",
+      "start": 26.233,
+      "resolve": 31.932999,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 28.366,
+      "resolve": 28.366,
+      "occurrence": 6
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 28.366,
+      "resolve": 28.366,
+      "occurrence": 7
+    },
+    {
+      "actionId": 18479,
+      "name": "Optical Sight",
+      "start": 29.333,
+      "resolve": 31.033,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 31.383,
+      "resolve": 31.383,
+      "occurrence": 8
+    },
+    {
+      "actionId": 18481,
+      "name": "Hawk Blaster",
+      "start": 31.516,
+      "resolve": 36.216,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 34.416,
+      "resolve": 34.416,
+      "occurrence": 9
+    },
+    {
+      "actionId": 18486,
+      "name": "Photon",
+      "start": 35.466,
+      "resolve": 38.166,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 37.45,
+      "resolve": 37.45,
+      "occurrence": 10
+    },
+    {
+      "actionId": 18487,
+      "name": "Photon",
+      "start": 38.8,
+      "resolve": 38.8,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 40.483,
+      "resolve": 40.483,
+      "occurrence": 11
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 43.516,
+      "resolve": 43.516,
+      "occurrence": 12
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 43.516,
+      "resolve": 43.516,
+      "occurrence": 13
+    },
+    {
+      "actionId": 19058,
+      "name": "Spin Crusher",
+      "start": 45.616,
+      "resolve": 48.316,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 46.533,
+      "resolve": 46.533,
+      "occurrence": 14
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 49.566,
+      "resolve": 49.566,
+      "occurrence": 15
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 52.599,
+      "resolve": 52.599,
+      "occurrence": 16
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 52.599,
+      "resolve": 52.599,
+      "occurrence": 17
+    },
+    {
+      "actionId": 18496,
+      "name": "Crashing Wave",
+      "start": 53.216,
+      "resolve": 53.216,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18497,
+      "name": "Crashing Thunder",
+      "start": 53.216,
+      "resolve": 53.216,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 55.633,
+      "resolve": 55.633,
+      "occurrence": 18
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 55.633,
+      "resolve": 55.633,
+      "occurrence": 19
+    },
+    {
+      "actionId": 18509,
+      "name": "Missile Command",
+      "start": 57.516,
+      "resolve": 60.216,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 58.666,
+      "resolve": 58.666,
+      "occurrence": 20
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 61.683,
+      "resolve": 61.683,
+      "occurrence": 21
+    },
+    {
+      "actionId": 18510,
+      "name": "Earth Missile",
+      "start": 61.683,
+      "resolve": 64.382996,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18513,
+      "name": "Hidden Minefield",
+      "start": 63.683,
+      "resolve": 66.382996,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 64.716,
+      "resolve": 64.716,
+      "occurrence": 22
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 64.716,
+      "resolve": 64.716,
+      "occurrence": 23
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 67.75,
+      "resolve": 67.75,
+      "occurrence": 24
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 67.75,
+      "resolve": 67.75,
+      "occurrence": 25
+    },
+    {
+      "actionId": 18512,
+      "name": "Enumeration",
+      "start": 68.734,
+      "resolve": 68.734,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18511,
+      "name": "Earth Missile",
+      "start": 68.734,
+      "resolve": 68.734,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18514,
+      "name": "Hidden Mine",
+      "start": 70.017,
+      "resolve": 70.017,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18514,
+      "name": "Hidden Mine",
+      "start": 70.684,
+      "resolve": 70.684,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 70.784,
+      "resolve": 70.784,
+      "occurrence": 26
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 70.784,
+      "resolve": 70.784,
+      "occurrence": 27
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 73.801,
+      "resolve": 73.801,
+      "occurrence": 28
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 73.801,
+      "resolve": 73.801,
+      "occurrence": 29
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 76.835,
+      "resolve": 76.835,
+      "occurrence": 30
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 76.835,
+      "resolve": 76.835,
+      "occurrence": 31
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 79.869,
+      "resolve": 79.869,
+      "occurrence": 32
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 79.869,
+      "resolve": 79.869,
+      "occurrence": 33
+    },
+    {
+      "actionId": 18491,
+      "name": "Verdict",
+      "start": 80.703,
+      "resolve": 84.403,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 82.903,
+      "resolve": 82.903,
+      "occurrence": 34
+    },
+    {
+      "actionId": 18496,
+      "name": "Crashing Wave",
+      "start": 82.903,
+      "resolve": 82.903,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18497,
+      "name": "Crashing Thunder",
+      "start": 82.903,
+      "resolve": 82.903,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 85.921,
+      "resolve": 85.921,
+      "occurrence": 35
+    },
+    {
+      "actionId": 18483,
+      "name": "Limit Cut",
+      "start": 87.804,
+      "resolve": 89.504,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18501,
+      "name": "Flarethrower",
+      "start": 87.838,
+      "resolve": 91.437996,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 91.989,
+      "resolve": 91.989,
+      "occurrence": 36
+    },
+    {
+      "actionId": 18502,
+      "name": "Flarethrower",
+      "start": 92.022,
+      "resolve": 92.022,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 95.022,
+      "resolve": 95.022,
+      "occurrence": 37
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 98.056,
+      "resolve": 98.056,
+      "occurrence": 38
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 98.056,
+      "resolve": 98.056,
+      "occurrence": 39
+    },
+    {
+      "actionId": 18882,
+      "name": "Whirlwind",
+      "start": 99.957,
+      "resolve": 103.657,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 101.074,
+      "resolve": 101.074,
+      "occurrence": 40
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 104.108,
+      "resolve": 104.108,
+      "occurrence": 41
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 107.142,
+      "resolve": 107.142,
+      "occurrence": 42
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 107.142,
+      "resolve": 107.142,
+      "occurrence": 43
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 110.176,
+      "resolve": 110.176,
+      "occurrence": 44
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 110.176,
+      "resolve": 110.176,
+      "occurrence": 45
+    },
+    {
+      "actionId": 18496,
+      "name": "Crashing Wave",
+      "start": 112.66,
+      "resolve": 112.66,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18497,
+      "name": "Crashing Thunder",
+      "start": 112.66,
+      "resolve": 112.66,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 113.193,
+      "resolve": 113.193,
+      "occurrence": 46
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 113.193,
+      "resolve": 113.193,
+      "occurrence": 47
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 116.227,
+      "resolve": 116.227,
+      "occurrence": 48
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 116.227,
+      "resolve": 116.227,
+      "occurrence": 49
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 119.261,
+      "resolve": 119.261,
+      "occurrence": 50
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 119.261,
+      "resolve": 119.261,
+      "occurrence": 51
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 122.295,
+      "resolve": 122.295,
+      "occurrence": 52
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 122.295,
+      "resolve": 122.295,
+      "occurrence": 53
+    },
+    {
+      "actionId": 18482,
+      "name": "Propeller Wind",
+      "start": 125.129,
+      "resolve": 130.829,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 125.312,
+      "resolve": 125.312,
+      "occurrence": 54
+    },
+    {
+      "actionId": 18492,
+      "name": "Gavel",
+      "start": 128.146,
+      "resolve": 132.846,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 134.411,
+      "resolve": 134.411,
+      "occurrence": 55
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 137.444,
+      "resolve": 137.444,
+      "occurrence": 56
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 137.444,
+      "resolve": 137.444,
+      "occurrence": 57
+    },
+    {
+      "actionId": 18486,
+      "name": "Photon",
+      "start": 140.31,
+      "resolve": 143.01,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 140.476,
+      "resolve": 140.476,
+      "occurrence": 58
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 143.492,
+      "resolve": 143.492,
+      "occurrence": 59
+    },
+    {
+      "actionId": 18487,
+      "name": "Photon",
+      "start": 143.659,
+      "resolve": 143.659,
+      "occurrence": 4
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 146.525,
+      "resolve": 146.525,
+      "occurrence": 60
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 146.525,
+      "resolve": 146.525,
+      "occurrence": 61
+    },
+    {
+      "actionId": 18503,
+      "name": "Double Rocket Punch",
+      "start": 147.358,
+      "resolve": 151.058,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 149.558,
+      "resolve": 149.558,
+      "occurrence": 62
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 152.59,
+      "resolve": 152.59,
+      "occurrence": 63
+    },
+    {
+      "actionId": 18505,
+      "name": "Super Jump",
+      "start": 154.506,
+      "resolve": 158.106,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 155.623,
+      "resolve": 155.623,
+      "occurrence": 64
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 158.655,
+      "resolve": 158.655,
+      "occurrence": 65
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 158.655,
+      "resolve": 158.655,
+      "occurrence": 66
+    },
+    {
+      "actionId": 18506,
+      "name": "Super Jump",
+      "start": 158.822,
+      "resolve": 158.822,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18507,
+      "name": "Apocalyptic Ray",
+      "start": 161.171,
+      "resolve": 161.171,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 161.671,
+      "resolve": 161.671,
+      "occurrence": 67
+    },
+    {
+      "actionId": 18508,
+      "name": "Apocalyptic Ray",
+      "start": 161.805,
+      "resolve": 161.805,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18508,
+      "name": "Apocalyptic Ray",
+      "start": 162.871,
+      "resolve": 162.871,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18508,
+      "name": "Apocalyptic Ray",
+      "start": 163.937,
+      "resolve": 163.937,
+      "occurrence": 4
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 164.704,
+      "resolve": 164.704,
+      "occurrence": 68
+    },
+    {
+      "actionId": 18508,
+      "name": "Apocalyptic Ray",
+      "start": 165.004,
+      "resolve": 165.004,
+      "occurrence": 5
+    },
+    {
+      "actionId": 18508,
+      "name": "Apocalyptic Ray",
+      "start": 166.07,
+      "resolve": 166.07,
+      "occurrence": 6
+    },
+    {
+      "actionId": 18882,
+      "name": "Whirlwind",
+      "start": 167.587,
+      "resolve": 171.287,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 170.769,
+      "resolve": 170.769,
+      "occurrence": 69
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 173.802,
+      "resolve": 173.802,
+      "occurrence": 70
+    },
+    {
+      "actionId": 18882,
+      "name": "Whirlwind",
+      "start": 175.701,
+      "resolve": 179.401,
+      "occurrence": 4
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 176.834,
+      "resolve": 176.834,
+      "occurrence": 71
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 179.85,
+      "resolve": 179.85,
+      "occurrence": 72
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 182.883,
+      "resolve": 182.883,
+      "occurrence": 73
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 182.883,
+      "resolve": 182.883,
+      "occurrence": 74
+    },
+    {
+      "actionId": 18811,
+      "name": "",
+      "start": 185.915,
+      "resolve": 185.915,
+      "occurrence": 75
+    },
+    {
+      "actionId": 18810,
+      "name": "",
+      "start": 185.915,
+      "resolve": 185.915,
+      "occurrence": 76
+    },
+    {
+      "actionId": 18518,
+      "name": "Final Sentence",
+      "start": 187.965,
+      "resolve": 195.665,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18490,
+      "name": "Eternal Darkness",
+      "start": 187.965,
+      "resolve": 195.665,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "J Kick",
+    "",
+    "Whirlwind",
+    "Judgment Nisi",
+    "Link-up",
+    "Eye of the Chakram",
+    "Optical Sight",
+    "Hawk Blaster",
+    "Photon",
+    "Spin Crusher",
+    "Crashing Wave",
+    "Crashing Thunder",
+    "Missile Command",
+    "Earth Missile",
+    "Hidden Minefield",
+    "Enumeration",
+    "Hidden Mine",
+    "Verdict",
+    "Limit Cut",
+    "Flarethrower",
+    "Propeller Wind",
+    "Gavel",
+    "Double Rocket Punch",
+    "Super Jump",
+    "Apocalyptic Ray",
+    "Final Sentence",
+    "Eternal Darkness"
+  ]
+}
