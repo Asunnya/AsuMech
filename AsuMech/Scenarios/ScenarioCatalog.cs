@@ -50,6 +50,8 @@ using AsuMech.Scenarios.Ucob.P3Blackfire;
 using AsuMech.Scenarios.Ucob.P3Quickmarch;
 using AsuMech.Scenarios.Ucob.P3Fellruin;
 using AsuMech.Scenarios.Ucob.P3Heavensfall;
+using AsuMech.Scenarios.Ucob.P3GrandOctet;
+using AsuMech.Scenarios.Ucob.P3Tenstrike;
 using AsuMech.Scenarios.Ucob.P5Exaflares;
 using AsuMech.Scenarios.Ucob.P5GoldenBahamut;
 using AsuMech.Scenarios.Umad;
@@ -149,6 +151,8 @@ public sealed class ScenarioCatalog
         new UcobP3BlackfireScenario(),
         new UcobP3FellruinScenario(),
         new UcobP3HeavensfallScenario(),
+        new UcobP3TenstrikeScenario(),
+        new UcobP3GrandOctetScenario(),
         new UcobP5ExaflaresScenario(),
         new UcobP5GoldenBahamutScenario(),
         new DsrP1KnightsScenario(),

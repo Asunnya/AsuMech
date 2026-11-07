@@ -67,10 +67,6 @@ public sealed class UcobP1TwintaniaScenario : IScenario
     private const float HatchMarkerLead = 0.09f;
     private const float GenerateCastSeconds = 2.7f;
     public const float OviformChaseAfterCast = 1.25f;
-    public const float OviformSpeed = 5f;
-    // Follow stops at the hitbox edge.
-    private const float OviformContactSlack = 0.3f;
-    private const float ManaHypersensitivitySeconds = 15.96f;
     public const float FliesOff = 141.50f;
     public const float End = 144f;
 
@@ -80,31 +76,18 @@ public sealed class UcobP1TwintaniaScenario : IScenario
         (89.41f, 0.322f), (119.14f, 0.122f), (122.27f, 0.109f), (138.55f, 0.015f), (FliesOff, 0f),
     ];
 
-    private const float EffectCarrierLinger = 3f;
-    private const int HelperPoolSize = 8;
-
     private SimWorld world = null!;
     private SimParty party = null!;
     private DamageSolver damage = null!;
     private State state = null!;
     private SimEnemy? twintania;
     private readonly List<SimEnemy> spawned = [];
-    private readonly Queue<SimEnemy> helperPool = [];
     private readonly List<SimEventObject> eobjs = [];
-    private readonly UcobNeurolinks neurolinks = new();
-    private readonly UcobTwisters twisters = new();
     private readonly List<Puddle> puddles = [];
-    private readonly List<Oviform> oviforms = [];
+    private UcobHatches hatches = null!;
+    private UcobTwisters twisters = null!;
 
     private sealed record Puddle(Vector2 At, float FadesAt);
-
-    private sealed class Oviform(SimEnemy enemy, SimCharacter target)
-    {
-        public SimEnemy Enemy { get; } = enemy;
-        public SimCharacter Target { get; } = target;
-        public bool Chasing { get; set; }
-        public bool Hatched { get; set; }
-    }
 
     public void Run(SimWorld worldParam, int? selectedAi)
     {
@@ -113,12 +96,10 @@ public sealed class UcobP1TwintaniaScenario : IScenario
         damage = new DamageSolver(party);
         state = new State(world.Rng, settingsWindow.Overrides);
         spawned.Clear();
-        helperPool.Clear();
         eobjs.Clear();
-        neurolinks.Clear();
-        twisters.Clear();
         puddles.Clear();
-        oviforms.Clear();
+        hatches = new UcobHatches(world);
+        twisters = new UcobTwisters(world);
         twintania = null;
 
         if (selectedAi is { } idx && idx < AiStrats.Count)
@@ -127,7 +108,6 @@ public sealed class UcobP1TwintaniaScenario : IScenario
         world.Events.Add(0f, () => world.EnforceArenaBoundary(Geometry.P1ArenaRadius, "Fell into the death wall"));
         world.Events.Add(0f, () => world.PlaceWaymarks(AetherWaymarks));
         world.Events.Add(0f, SpawnTwintania);
-        world.Events.Add(0f, FillHelperPool);
         world.Events.Add(0.3f, () => twintania?.MoveTo(ToWorld(NorthCamp), 6f, MathF.PI));
         world.Events.Add(3.21f, () => twintania?.AddStatus(StatusId.TwintaniaNeurolink));
 
@@ -165,7 +145,7 @@ public sealed class UcobP1TwintaniaScenario : IScenario
         {
             var set = i;
             world.Events.Add(GenerateCasts[i] - HatchMarkerLead, () => Generate(set));
-            world.Events.Add(GenerateCasts[i] + GenerateCastSeconds + OviformChaseAfterCast, () => ChaseHatchTargets(set));
+            world.Events.Add(GenerateCasts[i] + GenerateCastSeconds + OviformChaseAfterCast, hatches.Chase);
         }
 
         world.Events.Add(FliesOff, FlyOff);
@@ -182,10 +162,9 @@ public sealed class UcobP1TwintaniaScenario : IScenario
             if (!boss.IsCasting && !boss.IsMoving && party.Get(AggroTank(now)) is { } tank && tank.IsAlive()) boss.Face(tank);
             boss.SetHealth(0, HealthAt(now));
         }
-        neurolinks.Tick(party);
-        twisters.Tick(world, BlastTwister);
+        hatches.Tick();
+        twisters.Tick();
         BurnInPuddles(now);
-        MoveOviforms();
     }
 
     private static float HealthAt(float t)
@@ -230,18 +209,9 @@ public sealed class UcobP1TwintaniaScenario : IScenario
 
     private void DropTwisters(int set)
     {
-        foreach (var role in state.TwisterTargets[set])
-            if (party.Get(role) is { } member && member.IsAlive())
-                twisters.Drop(world, Flat(member.Position));
-    }
-
-    private void BlastTwister(Vector2 at, SimCharacter toucher)
-    {
-        PlayFromHelper(ActionId.TwisterBlast, ToWorld(at));
-        foreach (var hit in AliveMembers().Where(m => Vector2.Distance(Flat(m.Position), at) <= State.TwisterBlastRadius).ToList())
-            hit.Die(ActionId.TwisterBlast, ReferenceEquals(hit, toucher)
-                ? "touched a Twister (move off your spot as the cast ends)"
-                : "launched into the death wall by a Twister someone touched");
+        if (twintania is not { } boss) return;
+        var spots = state.TwisterTargets[set].Select(r => party.Get(r)).Where(m => m != null && m.IsAlive()).Select(m => Flat(m!.Position)).ToList();
+        twisters.Drop(boss, spots);
     }
 
     private void Fireball(PartyRole role)
@@ -277,11 +247,8 @@ public sealed class UcobP1TwintaniaScenario : IScenario
 
     private void DropNeurolink()
     {
-        if (twintania is not { } boss) return;
-        neurolinks.Drop(world, Flat(boss.Position));
+        if (twintania is { } boss) hatches.AddNeurolink(Flat(boss.Position));
     }
-
-    private bool InNeurolink(SimCharacter member) => neurolinks.Contains(member);
 
     private void LiquidHell(bool targeted)
     {
@@ -325,78 +292,7 @@ public sealed class UcobP1TwintaniaScenario : IScenario
     {
         if (twintania is not { } boss) return;
         CastSelf(boss, ActionId.Generate, GenerateCastSeconds);
-        foreach (var role in state.HatchTargets[set])
-        {
-            if (party.Get(role) is not { } target || !target.IsAlive()) continue;
-            target.AttachLockonVfx(LockonId.Hatch);
-            var enemy = world.SpawnEnemy(new EnemySpawnConfig(
-                BNpcBaseId: BNpcBaseId.Oviform,
-                NameId: BNpcNameId.Oviform,
-                Level: Level,
-                Targetable: false,
-                EnemyList: EnemyListMode.Never,
-                Placement: new Placement(boss.Position, boss.Rotation)));
-            if (enemy == null) continue;
-            spawned.Add(enemy);
-            oviforms.Add(new Oviform(enemy, target));
-        }
-    }
-
-    private void ChaseHatchTargets(int set)
-    {
-        foreach (var oviform in oviforms.Where(o => !o.Chasing && !o.Hatched))
-        {
-            oviform.Chasing = true;
-            oviform.Enemy.Follow(oviform.Target, OviformSpeed);
-        }
-    }
-
-    private void MoveOviforms()
-    {
-        foreach (var oviform in oviforms.Where(o => o.Chasing && !o.Hatched).ToList())
-        {
-            if (!oviform.Target.IsAlive())
-            {
-                oviform.Hatched = true;
-                oviform.Enemy.Despawn();
-                continue;
-            }
-            var contact = oviform.Enemy.HitboxRadius + oviform.Target.HitboxRadius + OviformContactSlack;
-            if (Vector2.Distance(Flat(oviform.Enemy.Position), Flat(oviform.Target.Position)) <= contact) Hatch(oviform);
-        }
-    }
-
-    private void Hatch(Oviform oviform)
-    {
-        oviform.Hatched = true;
-        var enemy = oviform.Enemy;
-        var target = oviform.Target;
-        enemy.Follow(null);
-        if (!InNeurolink(target))
-        {
-            PlayEffect(enemy, ActionId.DeepHatch, 1.1f);
-            foreach (var member in AliveMembers().ToList())
-                member.Die(ActionId.DeepHatch, ReferenceEquals(member, target)
-                    ? "the Hatch reached you outside a Neurolink (run into one before it arrives)"
-                    : "Deep Hatch: the marked player wasn't in a Neurolink");
-        }
-        else
-        {
-            PlayEffect(enemy, ActionId.Hatch, 1.1f, target: target.GameObjectId, at: target.Position);
-            foreach (var hit in AliveMembers().Where(m => Vector2.Distance(Flat(m.Position), Flat(target.Position)) <= State.HatchRadius).ToList())
-            {
-                if (hit.HasStatus(StatusId.ManaHypersensitivity))
-                    hit.Die(ActionId.Hatch, "took a second Hatch with Mana Hypersensitivity (Hatches go to separate Neurolinks)");
-                else if (!InNeurolink(hit))
-                    hit.Die(ActionId.Hatch, "caught in a Hatch outside a Neurolink (keep 8y away from the marked player)");
-                else
-                {
-                    damage.ApplyDamage(hit, 0.1f, ActionId.Hatch, "Hatch", lethal: false);
-                    hit.AddStatus(StatusId.ManaHypersensitivity, ManaHypersensitivitySeconds);
-                }
-            }
-        }
-        world.Events.Add(0.65f, enemy.Despawn);
+        hatches.Generate(boss, state.HatchTargets[set].Select(r => party.Get(r)).OfType<SimCharacter>());
     }
 
     private void FlyOff()
@@ -404,11 +300,7 @@ public sealed class UcobP1TwintaniaScenario : IScenario
         if (twintania is not { } boss) return;
         boss.SetTargetable(false);
         boss.RemoveStatus(StatusId.TwintaniaNeurolink);
-        foreach (var oviform in oviforms.Where(o => !o.Hatched))
-        {
-            oviform.Hatched = true;
-            oviform.Enemy.Despawn();
-        }
+        hatches.RecallOviforms();
         world.Events.Add(1.5f, () => boss.SetVisible(false));
     }
 
@@ -418,11 +310,9 @@ public sealed class UcobP1TwintaniaScenario : IScenario
         eobjs.Clear();
         foreach (var enemy in spawned) enemy.Despawn();
         spawned.Clear();
-        helperPool.Clear();
         twisters.Clear();
         puddles.Clear();
-        oviforms.Clear();
-        neurolinks.Clear();
+        hatches.Clear();
     }
 
     private SimEventObject? SpawnEObj(uint eobjId, Vector2 at)
@@ -435,36 +325,6 @@ public sealed class UcobP1TwintaniaScenario : IScenario
         });
         if (eobj != null) eobjs.Add(eobj);
         return eobj;
-    }
-
-    // A helper spawned in the frame it acts drops the effect, so they wait in a pool.
-    private void FillHelperPool()
-    {
-        for (var i = 0; i < HelperPoolSize; i++)
-            if (SpawnHelper(new Placement(Vector3.Zero, 0f)) is { } helper) helperPool.Enqueue(helper);
-    }
-
-    private SimEnemy? SpawnHelper(Placement placement)
-    {
-        var helper = world.SpawnEnemy(new EnemySpawnConfig(
-            BNpcBaseId: BNpcBaseId.Dummy,
-            NameId: BNpcNameId.Twintania,
-            Level: Level,
-            Targetable: false,
-            EnemyList: EnemyListMode.Never,
-            Visibility: SimEnemy.LegacyVisibility(true, true),
-            Placement: placement));
-        if (helper != null) spawned.Add(helper);
-        return helper;
-    }
-
-    private void PlayFromHelper(uint actionId, Vector3 at)
-    {
-        var helper = helperPool.TryDequeue(out var pooled) ? pooled : SpawnHelper(new Placement(at, 0f));
-        if (helper == null) return;
-        helper.SetPosition(new Placement(at, 0f));
-        PlayEffect(helper, actionId, 1.1f, at: at);
-        world.Events.Add(EffectCarrierLinger, () => helperPool.Enqueue(helper));
     }
 
     private IEnumerable<SimCharacter> AliveMembers()

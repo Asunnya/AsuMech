@@ -26,6 +26,8 @@ public class UcobConstants
 
         // Twintania's P1 neurolinks stay down for the rest of the fight, wherever she dropped them.
         public static readonly Vector2[] P3Neurolinks = [new(-0.16f, -8.40f), new(-8.51f, 5.74f), new(8.53f, 5.61f)];
+        // P1's Neurolinks, still up in P3.
+        public static readonly Vector2[] Neurolinks = [new(0.1f, -8.5f), new(-7.7f, 5.9f), new(9.3f, 5.5f)];
     }
 
     // UNVERIFIED: one or two took lethal hits, five or more lived.
@@ -103,6 +105,10 @@ public class UcobConstants
         public const ushort Transcendent = 0x1A2;
         public const ushort PhoenixsBlessing = 0x59C;
         public const ushort EarthResistanceDownII = 0x41D;
+        public const ushort LastBastion = 196;
+        public const ushort LandWaker = 863;
+        public const ushort DarkForce = 864;
+        public const ushort GunmetalSoul = 1931;
     }
 
     public const uint HeavensfallKnockback = 115;
@@ -118,6 +124,8 @@ public class UcobConstants
         // UNVERIFIED which dive each one marks.
         public const uint MegaflareDive = 0x29;
         public const uint TwistingDive = 0x2A;
+        public const uint DragonDive = 0x14;
+        public const uint LunarDive = 0x77;
     }
 
     public class EObjId
@@ -127,6 +135,7 @@ public class UcobConstants
         public const uint Twister = 2001168;
         public const uint WingsOfSalvationCleanse = 2003412;
         public const uint HypernovaPuddle = 2003393;
+        public const uint EarthShakerPuddle = 2004579;
     }
 
     public class TetherId
@@ -157,6 +166,7 @@ public class UcobConstants
         public const ushort TwintaniaTrioLeave = 0x1E3A;
         public const ushort TrioLand = 0x1E43;
         public const ushort TwintaniaTrioLand = 0x1E44;
+        public const ushort NaelOrBahamutArrives = 0x1E43;
     }
 
     public const uint MusicDirector = 0x80000004;
@@ -217,6 +227,8 @@ public class UcobConstants
         public const uint EarthShakerCone = 0x26DA;
         public const uint MegaflareSpread = 0x26DC;
         public const uint MegaflarePuddle = 0x26DD;
+        public const uint CauterizeTail = 0x26CE;
+        public const uint CauterizeFang = 0x26CF;
         public const uint MegaflareStack = 0x26DE;
         public const uint MegaflareTower = 0x26DF;
         public const uint MegaflareStrike = 0x26E0;
@@ -229,5 +241,7 @@ public class UcobConstants
         public const uint TempestWingSplash = 0x26D8;
         public const uint FellruinTrio = 0x26E4;
         public const uint HeavensfallTrio = 0x26E5;
+        public const uint TenstrikeTrio = 0x26E6;
+        public const uint GrandOctet = 0x26E7;
     }
 }

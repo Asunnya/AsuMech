@@ -8,9 +8,11 @@ using static AsuMech.Scenarios.Ucob.UcobConstants;
 
 namespace AsuMech.Scenarios.Ucob;
 
-// Twintania's twisters: once armed, the first player to touch one sets it off.
+// Twintania's twisters: once armed, the first player to touch one sets it off. Built with a world,
+// a touch casts Twister's blast from Twintania; without, the caller resolves it.
 public sealed class UcobTwisters
 {
+    public const float TriggerRadius = 2f; // UNVERIFIED
     public const float Arms = 0.9f;
     public const float Fades = 5.56f;
     private const float Gone = 6.62f;
@@ -24,13 +26,25 @@ public sealed class UcobTwisters
         public bool Spent { get; set; }
     }
 
+    private readonly SimWorld? world;
     private readonly List<Twister> twisters = [];
     private readonly List<SimEventObject> eobjs = [];
+    private SimEnemy? owner;
 
-    public void Drop(SimWorld world, Vector2 at)
+    public UcobTwisters() { }
+
+    public UcobTwisters(SimWorld world) => this.world = world;
+
+    public void Drop(SimEnemy twintania, IEnumerable<Vector2> spots)
     {
-        var now = world.Events.Elapsed;
-        var eobj = world.SpawnEventObject(new EventObjectSpawnConfig
+        owner = twintania;
+        foreach (var at in spots) Drop(world!, at);
+    }
+
+    public void Drop(SimWorld on, Vector2 at)
+    {
+        var now = on.Events.Elapsed;
+        var eobj = on.SpawnEventObject(new EventObjectSpawnConfig
         {
             EObjId = EObjId.Twister,
             Placement = new Placement(new Vector3(at.X, 0f, at.Y), 0f),
@@ -39,23 +53,25 @@ public sealed class UcobTwisters
         if (eobj != null) eobjs.Add(eobj);
         var twister = new Twister(at, eobj, now + Arms, now + Fades);
         twisters.Add(twister);
-        world.Events.Add(Fades, () => eobj?.FadeOut());
-        world.Events.Add(Gone, () =>
+        on.Events.Add(Fades, () => eobj?.FadeOut());
+        on.Events.Add(Gone, () =>
         {
             eobj?.SetState(0);
             twisters.Remove(twister);
         });
     }
 
+    public void Tick() => Tick(world!, (at, _) => owner?.CastFromHelper(UcobActions.TwisterBlast, at: new Placement(new Vector3(at.X, 0f, at.Y), 0f)));
+
     // `blast` gets the twister's spot and who touched it.
-    public void Tick(SimWorld world, Action<Vector2, SimCharacter> blast)
+    public void Tick(SimWorld on, Action<Vector2, SimCharacter> blast)
     {
-        var now = world.Events.Elapsed;
+        var now = on.Events.Elapsed;
         foreach (var twister in twisters.Where(t => !t.Spent && now >= t.ArmsAt && now < t.FadesAt).ToList())
         {
             SimCharacter? toucher = null;
             for (var slot = 0; slot < 8 && toucher == null; slot++)
-                if (world.Party.Get(slot) is { } member && member.IsAlive()
+                if (on.Party.Get(slot) is { } member && member.IsAlive()
                     && Vector2.Distance(new Vector2(member.Position.X, member.Position.Z), twister.At) <= Geometry.TwisterTriggerRadius)
                     toucher = member;
             if (toucher == null) continue;
