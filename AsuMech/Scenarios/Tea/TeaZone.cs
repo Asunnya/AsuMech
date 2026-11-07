@@ -46,6 +46,10 @@ public sealed class TeaZone : IZone
     private readonly SimEventObject?[] arenaFeatures = new SimEventObject?[8];
 
     public string Name => "The Epic of Alexander";
+
+    public string ShortName => "TEA";
+
+    public string? Expansion => "Shadowbringers";
     public uint TerritoryId => 887;
     public Vector3 Origin => new(100f, 0f, 100f);
     public byte Level => TeaConstants.Level;

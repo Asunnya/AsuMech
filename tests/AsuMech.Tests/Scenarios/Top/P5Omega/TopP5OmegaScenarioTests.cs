@@ -218,7 +218,7 @@ public class TopP5OmegaScenarioTests
     [Test]
     public void ABlasterTetherHolderNeverTakesTheOther()
     {
-        var shown = ShownRun.Execute(typeof(TopP5OmegaScenario), 0, 4242, new ScenarioRunOptions
+        var shown = ShownRun.Execute(typeof(TopP5OmegaScenario), 0, 4230, new ScenarioRunOptions
         {
             PlayerRole = OffTank,
             StopAt = 47.0f,

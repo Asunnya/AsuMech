@@ -1,0 +1,785 @@
+{
+  "scenario": "TeaP3AlexanderPrimeScenario",
+  "casts": [
+    {
+      "actionId": 7533,
+      "name": "Provoke",
+      "start": 3.317,
+      "resolve": 3.317,
+      "occurrence": 1
+    },
+    {
+      "actionId": 19072,
+      "name": "Chastening Heat",
+      "start": 7.217,
+      "resolve": 11.917,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18812,
+      "name": "",
+      "start": 14.267,
+      "resolve": 14.267,
+      "occurrence": 1
+    },
+    {
+      "actionId": 19074,
+      "name": "Divine Spear",
+      "start": 15.383,
+      "resolve": 15.383,
+      "occurrence": 1
+    },
+    {
+      "actionId": 19074,
+      "name": "Divine Spear",
+      "start": 17.467,
+      "resolve": 17.467,
+      "occurrence": 2
+    },
+    {
+      "actionId": 19074,
+      "name": "Divine Spear",
+      "start": 19.567,
+      "resolve": 19.567,
+      "occurrence": 3
+    },
+    {
+      "actionId": 7533,
+      "name": "Provoke",
+      "start": 20.917,
+      "resolve": 20.917,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18812,
+      "name": "",
+      "start": 21.583,
+      "resolve": 21.583,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18812,
+      "name": "",
+      "start": 24.616,
+      "resolve": 24.616,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18543,
+      "name": "Inception Formation",
+      "start": 24.783,
+      "resolve": 28.483002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18545,
+      "name": "",
+      "start": 35.25,
+      "resolve": 35.25,
+      "occurrence": 4
+    },
+    {
+      "actionId": 18523,
+      "name": "Judgment Crystal",
+      "start": 40.25,
+      "resolve": 42.95,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18524,
+      "name": "Judgment Crystal",
+      "start": 49.016,
+      "resolve": 49.016,
+      "occurrence": 2
+    },
+    {
+      "actionId": 19020,
+      "name": "Undying Affection",
+      "start": 49.016,
+      "resolve": 49.016,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18546,
+      "name": "Aetheroplasm",
+      "start": 50.799,
+      "resolve": 50.799,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18546,
+      "name": "Aetheroplasm",
+      "start": 51.933,
+      "resolve": 51.933,
+      "occurrence": 2
+    },
+    {
+      "actionId": 19080,
+      "name": "Tetrashatter",
+      "start": 54.866,
+      "resolve": 54.866,
+      "occurrence": 1
+    },
+    {
+      "actionId": 19080,
+      "name": "Tetrashatter",
+      "start": 55.799,
+      "resolve": 55.799,
+      "occurrence": 2
+    },
+    {
+      "actionId": 19023,
+      "name": "",
+      "start": 55.799,
+      "resolve": 55.799,
+      "occurrence": 5
+    },
+    {
+      "actionId": 18540,
+      "name": "Flarethrower",
+      "start": 60.366,
+      "resolve": 60.366,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18540,
+      "name": "Flarethrower",
+      "start": 62.483,
+      "resolve": 62.483,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18540,
+      "name": "Flarethrower",
+      "start": 64.616,
+      "resolve": 64.616,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18526,
+      "name": "Inception",
+      "start": 66.916,
+      "resolve": 71.616,
+      "occurrence": 1
+    },
+    {
+      "actionId": 19024,
+      "name": "",
+      "start": 75.952,
+      "resolve": 75.952,
+      "occurrence": 6
+    },
+    {
+      "actionId": 18529,
+      "name": "Plaint of Severity",
+      "start": 79.936,
+      "resolve": 79.936,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18530,
+      "name": "Plaint of Solidarity",
+      "start": 79.936,
+      "resolve": 79.936,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18531,
+      "name": "Plaint of Surety",
+      "start": 79.936,
+      "resolve": 79.936,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18527,
+      "name": "Sacrament",
+      "start": 80.236,
+      "resolve": 80.236,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18505,
+      "name": "Super Jump",
+      "start": 85.287,
+      "resolve": 88.887,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18539,
+      "name": "Alpha Sword",
+      "start": 86.254,
+      "resolve": 86.254,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18539,
+      "name": "Alpha Sword",
+      "start": 87.321,
+      "resolve": 87.321,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18539,
+      "name": "Alpha Sword",
+      "start": 88.388,
+      "resolve": 88.388,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18506,
+      "name": "Super Jump",
+      "start": 89.421,
+      "resolve": 89.421,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18812,
+      "name": "",
+      "start": 92.572,
+      "resolve": 92.572,
+      "occurrence": 7
+    },
+    {
+      "actionId": 7533,
+      "name": "Provoke",
+      "start": 93.505,
+      "resolve": 93.505,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18812,
+      "name": "",
+      "start": 95.606,
+      "resolve": 95.606,
+      "occurrence": 8
+    },
+    {
+      "actionId": 19072,
+      "name": "Chastening Heat",
+      "start": 96.673,
+      "resolve": 101.37299,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18812,
+      "name": "",
+      "start": 103.674,
+      "resolve": 103.674,
+      "occurrence": 9
+    },
+    {
+      "actionId": 18812,
+      "name": "",
+      "start": 106.692,
+      "resolve": 106.692,
+      "occurrence": 10
+    },
+    {
+      "actionId": 19074,
+      "name": "Divine Spear",
+      "start": 106.842,
+      "resolve": 106.842,
+      "occurrence": 4
+    },
+    {
+      "actionId": 19074,
+      "name": "Divine Spear",
+      "start": 108.942,
+      "resolve": 108.942,
+      "occurrence": 5
+    },
+    {
+      "actionId": 19074,
+      "name": "Divine Spear",
+      "start": 111.043,
+      "resolve": 111.043,
+      "occurrence": 6
+    },
+    {
+      "actionId": 7533,
+      "name": "Provoke",
+      "start": 111.909,
+      "resolve": 111.909,
+      "occurrence": 4
+    },
+    {
+      "actionId": 18812,
+      "name": "",
+      "start": 113.043,
+      "resolve": 113.043,
+      "occurrence": 11
+    },
+    {
+      "actionId": 18812,
+      "name": "",
+      "start": 116.077,
+      "resolve": 116.077,
+      "occurrence": 12
+    },
+    {
+      "actionId": 18542,
+      "name": "Wormhole Formation",
+      "start": 116.21,
+      "resolve": 119.909996,
+      "occurrence": 1
+    },
+    {
+      "actionId": 19215,
+      "name": "Limit Cut",
+      "start": 126.663,
+      "resolve": 128.363,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18495,
+      "name": "Link-up",
+      "start": 128.679,
+      "resolve": 131.379,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18534,
+      "name": "Void of Repentance",
+      "start": 131.679,
+      "resolve": 134.379,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18517,
+      "name": "Eye of the Chakram",
+      "start": 134.595,
+      "resolve": 140.295,
+      "occurrence": 1
+    },
+    {
+      "actionId": 7548,
+      "name": "Arm\u0027s Length",
+      "start": 137.611,
+      "resolve": 137.611,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18505,
+      "name": "Super Jump",
+      "start": 137.81,
+      "resolve": 141.41,
+      "occurrence": 3
+    },
+    {
+      "actionId": 7559,
+      "name": "Surecast",
+      "start": 139.01,
+      "resolve": 139.01,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18506,
+      "name": "Super Jump",
+      "start": 141.909,
+      "resolve": 141.909,
+      "occurrence": 4
+    },
+    {
+      "actionId": 18484,
+      "name": "Alpha Sword",
+      "start": 141.909,
+      "resolve": 141.909,
+      "occurrence": 4
+    },
+    {
+      "actionId": 7559,
+      "name": "Surecast",
+      "start": 142.009,
+      "resolve": 142.009,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18519,
+      "name": "Sacrament",
+      "start": 142.826,
+      "resolve": 148.526,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18883,
+      "name": "Super Blassty Charge",
+      "start": 143.376,
+      "resolve": 143.376,
+      "occurrence": 1
+    },
+    {
+      "actionId": 7548,
+      "name": "Arm\u0027s Length",
+      "start": 143.409,
+      "resolve": 143.409,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18507,
+      "name": "Apocalyptic Ray",
+      "start": 144.326,
+      "resolve": 144.326,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18508,
+      "name": "Apocalyptic Ray",
+      "start": 144.942,
+      "resolve": 144.942,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18508,
+      "name": "Apocalyptic Ray",
+      "start": 146.008,
+      "resolve": 146.008,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18484,
+      "name": "Alpha Sword",
+      "start": 146.142,
+      "resolve": 146.142,
+      "occurrence": 5
+    },
+    {
+      "actionId": 7548,
+      "name": "Arm\u0027s Length",
+      "start": 146.408,
+      "resolve": 146.408,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18537,
+      "name": "Repentance",
+      "start": 146.508,
+      "resolve": 146.508,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18508,
+      "name": "Apocalyptic Ray",
+      "start": 147.075,
+      "resolve": 147.075,
+      "occurrence": 4
+    },
+    {
+      "actionId": 18883,
+      "name": "Super Blassty Charge",
+      "start": 147.608,
+      "resolve": 147.608,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18508,
+      "name": "Apocalyptic Ray",
+      "start": 148.141,
+      "resolve": 148.141,
+      "occurrence": 5
+    },
+    {
+      "actionId": 18508,
+      "name": "Apocalyptic Ray",
+      "start": 149.224,
+      "resolve": 149.224,
+      "occurrence": 6
+    },
+    {
+      "actionId": 18484,
+      "name": "Alpha Sword",
+      "start": 150.391,
+      "resolve": 150.391,
+      "occurrence": 6
+    },
+    {
+      "actionId": 7559,
+      "name": "Surecast",
+      "start": 150.607,
+      "resolve": 150.607,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18536,
+      "name": "Repentance",
+      "start": 150.741,
+      "resolve": 150.741,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18883,
+      "name": "Super Blassty Charge",
+      "start": 151.857,
+      "resolve": 151.857,
+      "occurrence": 3
+    },
+    {
+      "actionId": 7548,
+      "name": "Arm\u0027s Length",
+      "start": 152.007,
+      "resolve": 152.007,
+      "occurrence": 4
+    },
+    {
+      "actionId": 18509,
+      "name": "Missile Command",
+      "start": 154.473,
+      "resolve": 157.173,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18484,
+      "name": "Alpha Sword",
+      "start": 154.623,
+      "resolve": 154.623,
+      "occurrence": 7
+    },
+    {
+      "actionId": 18535,
+      "name": "Repentance",
+      "start": 154.973,
+      "resolve": 154.973,
+      "occurrence": 3
+    },
+    {
+      "actionId": 19025,
+      "name": "Incinerating Heat",
+      "start": 155.989,
+      "resolve": 160.689,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18883,
+      "name": "Super Blassty Charge",
+      "start": 156.089,
+      "resolve": 156.089,
+      "occurrence": 4
+    },
+    {
+      "actionId": 18512,
+      "name": "Enumeration",
+      "start": 165.654,
+      "resolve": 165.654,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18812,
+      "name": "",
+      "start": 165.82,
+      "resolve": 165.82,
+      "occurrence": 13
+    },
+    {
+      "actionId": 18812,
+      "name": "",
+      "start": 168.853,
+      "resolve": 168.853,
+      "occurrence": 14
+    },
+    {
+      "actionId": 7533,
+      "name": "Provoke",
+      "start": 169.403,
+      "resolve": 169.403,
+      "occurrence": 5
+    },
+    {
+      "actionId": 19075,
+      "name": "Mega Holy",
+      "start": 169.936,
+      "resolve": 173.636,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18812,
+      "name": "",
+      "start": 175.901,
+      "resolve": 175.901,
+      "occurrence": 15
+    },
+    {
+      "actionId": 19075,
+      "name": "Mega Holy",
+      "start": 177.068,
+      "resolve": 180.76799,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18812,
+      "name": "",
+      "start": 182.949,
+      "resolve": 182.949,
+      "occurrence": 16
+    },
+    {
+      "actionId": 18812,
+      "name": "",
+      "start": 185.982,
+      "resolve": 185.982,
+      "occurrence": 17
+    },
+    {
+      "actionId": 19029,
+      "name": "Summon Alexander",
+      "start": 187.582,
+      "resolve": 190.282,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18550,
+      "name": "J Storm",
+      "start": 196.896,
+      "resolve": 196.896,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18552,
+      "name": "Divine Judgment",
+      "start": 198.012,
+      "resolve": 272.71198,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18549,
+      "name": "Eternal Darkness",
+      "start": 198.012,
+      "resolve": 222.71199,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18551,
+      "name": "J Wave",
+      "start": 202.011,
+      "resolve": 202.011,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18551,
+      "name": "J Wave",
+      "start": 205.044,
+      "resolve": 205.044,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18551,
+      "name": "J Wave",
+      "start": 208.077,
+      "resolve": 208.077,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18551,
+      "name": "J Wave",
+      "start": 211.109,
+      "resolve": 211.109,
+      "occurrence": 4
+    },
+    {
+      "actionId": 18551,
+      "name": "J Wave",
+      "start": 214.142,
+      "resolve": 214.142,
+      "occurrence": 5
+    },
+    {
+      "actionId": 18551,
+      "name": "J Wave",
+      "start": 217.174,
+      "resolve": 217.174,
+      "occurrence": 6
+    },
+    {
+      "actionId": 18551,
+      "name": "J Wave",
+      "start": 220.19,
+      "resolve": 220.19,
+      "occurrence": 7
+    },
+    {
+      "actionId": 18551,
+      "name": "J Wave",
+      "start": 223.223,
+      "resolve": 223.223,
+      "occurrence": 8
+    },
+    {
+      "actionId": 18551,
+      "name": "J Wave",
+      "start": 226.256,
+      "resolve": 226.256,
+      "occurrence": 9
+    },
+    {
+      "actionId": 18551,
+      "name": "J Wave",
+      "start": 229.288,
+      "resolve": 229.288,
+      "occurrence": 10
+    },
+    {
+      "actionId": 18551,
+      "name": "J Wave",
+      "start": 232.321,
+      "resolve": 232.321,
+      "occurrence": 11
+    },
+    {
+      "actionId": 18553,
+      "name": "Divine Judgment",
+      "start": 272.278,
+      "resolve": 272.278,
+      "occurrence": 2
+    },
+    {
+      "actionId": 19034,
+      "name": "",
+      "start": 273.027,
+      "resolve": 277.72702,
+      "occurrence": 18
+    },
+    {
+      "actionId": 18554,
+      "name": "Divine Judgment",
+      "start": 287.741,
+      "resolve": 287.741,
+      "occurrence": 3
+    }
+  ],
+  "names": [
+    "Provoke",
+    "Chastening Heat",
+    "",
+    "Divine Spear",
+    "Inception Formation",
+    "Judgment Crystal",
+    "Undying Affection",
+    "Aetheroplasm",
+    "Tetrashatter",
+    "Flarethrower",
+    "Inception",
+    "Plaint of Severity",
+    "Plaint of Solidarity",
+    "Plaint of Surety",
+    "Sacrament",
+    "Super Jump",
+    "Alpha Sword",
+    "Wormhole Formation",
+    "Limit Cut",
+    "Link-up",
+    "Void of Repentance",
+    "Eye of the Chakram",
+    "Arm\u0027s Length",
+    "Surecast",
+    "Super Blassty Charge",
+    "Apocalyptic Ray",
+    "Repentance",
+    "Missile Command",
+    "Incinerating Heat",
+    "Enumeration",
+    "Mega Holy",
+    "Summon Alexander",
+    "J Storm",
+    "Divine Judgment",
+    "Eternal Darkness",
+    "J Wave"
+  ]
+}

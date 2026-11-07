@@ -1,0 +1,68 @@
+{
+  "scenario": "TeaI2TemporalStasisScenario",
+  "casts": [
+    {
+      "actionId": 18522,
+      "name": "Temporal Stasis",
+      "start": 7.55,
+      "resolve": 15.25,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18531,
+      "name": "Plaint of Surety",
+      "start": 18.583,
+      "resolve": 18.583,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18529,
+      "name": "Plaint of Severity",
+      "start": 18.583,
+      "resolve": 18.583,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18539,
+      "name": "Alpha Sword",
+      "start": 20.633,
+      "resolve": 20.633,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18540,
+      "name": "Flarethrower",
+      "start": 20.867,
+      "resolve": 20.867,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18539,
+      "name": "Alpha Sword",
+      "start": 21.7,
+      "resolve": 21.7,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18539,
+      "name": "Alpha Sword",
+      "start": 22.766,
+      "resolve": 22.766,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18540,
+      "name": "Flarethrower",
+      "start": 23.2,
+      "resolve": 23.2,
+      "occurrence": 2
+    }
+  ],
+  "names": [
+    "Temporal Stasis",
+    "Plaint of Surety",
+    "Plaint of Severity",
+    "Alpha Sword",
+    "Flarethrower"
+  ]
+}

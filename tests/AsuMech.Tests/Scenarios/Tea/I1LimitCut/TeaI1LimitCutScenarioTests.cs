@@ -1,4 +1,5 @@
 using System.Numerics;
+using AsuMech.Core.Game.Ai;
 using AsuMech.Core.Game.Party;
 using AsuMech.Core.Native.Interfaces;
 using AsuMech.Core.SimObjects;
@@ -325,28 +326,35 @@ public class TeaI1LimitCutScenarioTests
         Assert.That(run.Passed, run.ToString);
     }
 
+    // Bots take no Sprint status here: the sim moves them at sprint speed, so the speed shows it.
     [Test]
     public void BotsSprintWhereRealNumbersDo()
     {
-        static bool Sprinting(ScenarioProbe p, PartyRole role) => p.Member(role)!.FindStatus(SprintHandler.SprintStatusId) != null;
-        bool? first = null, fifth = null, seventh = null, third = null, fourth = null;
+        var roles = new[] { ShieldHealer, CasterDps, MeleeDpsB, OffTank, RegenHealer };
+        var top = roles.ToDictionary(r => r, _ => 0f);
+        var last = new Dictionary<PartyRole, Vector3>();
+        var lastTime = 0f;
         var run = Run(MainTank, 22f, p =>
         {
-            if (p.Crossed(8f)) first = Sprinting(p, ShieldHealer);
-            if (p.Crossed(15f)) fifth = Sprinting(p, CasterDps);
-            if (!p.Crossed(21f)) return;
-            seventh = Sprinting(p, MeleeDpsB);
-            third = Sprinting(p, OffTank);
-            fourth = Sprinting(p, RegenHealer);
+            var dt = p.Time - lastTime;
+            foreach (var role in roles)
+            {
+                var at = p.Member(role)!.Position;
+                if (dt > 0f && last.TryGetValue(role, out var was))
+                    top[role] = MathF.Max(top[role], Vector2.Distance(new Vector2(at.X, at.Z), new Vector2(was.X, was.Z)) / dt);
+                last[role] = at;
+            }
+            lastTime = p.Time;
         });
         Assert.That(run.Passed, run.ToString);
+        const float overRun = AiManager.RunSpeed + 0.3f;
         Assert.Multiple(() =>
         {
-            Assert.That(first, Is.True, "#1");
-            Assert.That(fifth, Is.True, "#5");
-            Assert.That(seventh, Is.True, "#7");
-            Assert.That(third, Is.False, "#3");
-            Assert.That(fourth, Is.False, "#4");
+            Assert.That(top[ShieldHealer], Is.GreaterThan(overRun), "#1");
+            Assert.That(top[CasterDps], Is.GreaterThan(overRun), "#5");
+            Assert.That(top[MeleeDpsB], Is.GreaterThan(overRun), "#7");
+            Assert.That(top[OffTank], Is.LessThanOrEqualTo(overRun), "#3");
+            Assert.That(top[RegenHealer], Is.LessThanOrEqualTo(overRun), "#4");
         });
     }
 

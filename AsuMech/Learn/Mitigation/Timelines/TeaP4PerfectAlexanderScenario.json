@@ -1,0 +1,851 @@
+{
+  "scenario": "TeaP4PerfectAlexanderScenario",
+  "casts": [
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 6.833,
+      "resolve": 6.833,
+      "occurrence": 1
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 9.867,
+      "resolve": 9.867,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18557,
+      "name": "the Final Word",
+      "start": 12.017,
+      "resolve": 15.717,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18559,
+      "name": "Ordained Stillness",
+      "start": 19.167,
+      "resolve": 22.867,
+      "occurrence": 1
+    },
+    {
+      "actionId": 19040,
+      "name": "Ordained Stillness",
+      "start": 23.216,
+      "resolve": 23.216,
+      "occurrence": 2
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 28.05,
+      "resolve": 28.05,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18558,
+      "name": "Ordained Motion",
+      "start": 30.266,
+      "resolve": 33.966,
+      "occurrence": 1
+    },
+    {
+      "actionId": 19039,
+      "name": "Ordained Motion",
+      "start": 34.333,
+      "resolve": 34.333,
+      "occurrence": 2
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 37.133,
+      "resolve": 37.133,
+      "occurrence": 4
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 40.166,
+      "resolve": 40.166,
+      "occurrence": 5
+    },
+    {
+      "actionId": 18570,
+      "name": "Optical Sight",
+      "start": 41.483,
+      "resolve": 44.183002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18572,
+      "name": "Individual Reprobation",
+      "start": 46.583,
+      "resolve": 46.583,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18571,
+      "name": "Optical Sight",
+      "start": 47.566,
+      "resolve": 50.266003,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18573,
+      "name": "Collective Reprobation",
+      "start": 52.649,
+      "resolve": 52.649,
+      "occurrence": 1
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 55.316,
+      "resolve": 55.316,
+      "occurrence": 6
+    },
+    {
+      "actionId": 18581,
+      "name": "",
+      "start": 57.799,
+      "resolve": 57.799,
+      "occurrence": 7
+    },
+    {
+      "actionId": 18555,
+      "name": "Fate Projection \u03B1",
+      "start": 60.583,
+      "resolve": 65.283,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18556,
+      "name": "Fate Calibration \u03B1",
+      "start": 68.734,
+      "resolve": 90.434006,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18584,
+      "name": "",
+      "start": 73.818,
+      "resolve": 74.518,
+      "occurrence": 8
+    },
+    {
+      "actionId": 19213,
+      "name": "",
+      "start": 74.885,
+      "resolve": 74.885,
+      "occurrence": 9
+    },
+    {
+      "actionId": 18596,
+      "name": "",
+      "start": 80.836,
+      "resolve": 80.836,
+      "occurrence": 10
+    },
+    {
+      "actionId": 18598,
+      "name": "",
+      "start": 81.386,
+      "resolve": 81.386,
+      "occurrence": 11
+    },
+    {
+      "actionId": 18597,
+      "name": "",
+      "start": 81.92,
+      "resolve": 81.92,
+      "occurrence": 12
+    },
+    {
+      "actionId": 18858,
+      "name": "",
+      "start": 81.92,
+      "resolve": 82.619995,
+      "occurrence": 13
+    },
+    {
+      "actionId": 18586,
+      "name": "",
+      "start": 83.687,
+      "resolve": 83.687,
+      "occurrence": 14
+    },
+    {
+      "actionId": 18591,
+      "name": "",
+      "start": 83.92,
+      "resolve": 83.92,
+      "occurrence": 15
+    },
+    {
+      "actionId": 18591,
+      "name": "",
+      "start": 84.454,
+      "resolve": 84.454,
+      "occurrence": 16
+    },
+    {
+      "actionId": 18591,
+      "name": "",
+      "start": 84.987,
+      "resolve": 84.987,
+      "occurrence": 17
+    },
+    {
+      "actionId": 18859,
+      "name": "Ordained Motion",
+      "start": 97.906,
+      "resolve": 97.906,
+      "occurrence": 3
+    },
+    {
+      "actionId": 19039,
+      "name": "Ordained Motion",
+      "start": 97.973,
+      "resolve": 97.973,
+      "occurrence": 4
+    },
+    {
+      "actionId": 18528,
+      "name": "Plaint of Obloquy",
+      "start": 100.89,
+      "resolve": 100.89,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18530,
+      "name": "Plaint of Solidarity",
+      "start": 101.441,
+      "resolve": 101.441,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18860,
+      "name": "Ordained Stillness",
+      "start": 101.974,
+      "resolve": 101.974,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18529,
+      "name": "Plaint of Severity",
+      "start": 101.974,
+      "resolve": 101.974,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18569,
+      "name": "Sacrament",
+      "start": 101.974,
+      "resolve": 101.974,
+      "occurrence": 1
+    },
+    {
+      "actionId": 19040,
+      "name": "Ordained Stillness",
+      "start": 102.007,
+      "resolve": 102.007,
+      "occurrence": 4
+    },
+    {
+      "actionId": 18569,
+      "name": "Sacrament",
+      "start": 102.507,
+      "resolve": 102.507,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18569,
+      "name": "Sacrament",
+      "start": 103.041,
+      "resolve": 103.041,
+      "occurrence": 3
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 109.859,
+      "resolve": 109.859,
+      "occurrence": 18
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 112.893,
+      "resolve": 112.893,
+      "occurrence": 19
+    },
+    {
+      "actionId": 18578,
+      "name": "Ordained Capital Punishment",
+      "start": 113.226,
+      "resolve": 115.925995,
+      "occurrence": 1
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 118.944,
+      "resolve": 118.944,
+      "occurrence": 20
+    },
+    {
+      "actionId": 18579,
+      "name": "Ordained Capital Punishment",
+      "start": 119.311,
+      "resolve": 119.311,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18579,
+      "name": "Ordained Capital Punishment",
+      "start": 120.395,
+      "resolve": 120.395,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18577,
+      "name": "Ordained Punishment",
+      "start": 120.395,
+      "resolve": 125.09499,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18579,
+      "name": "Ordained Capital Punishment",
+      "start": 121.461,
+      "resolve": 121.461,
+      "occurrence": 4
+    },
+    {
+      "actionId": 7533,
+      "name": "Provoke",
+      "start": 122.595,
+      "resolve": 122.595,
+      "occurrence": 1
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 128.046,
+      "resolve": 128.046,
+      "occurrence": 21
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 131.062,
+      "resolve": 131.062,
+      "occurrence": 22
+    },
+    {
+      "actionId": 18581,
+      "name": "",
+      "start": 132.678,
+      "resolve": 132.678,
+      "occurrence": 23
+    },
+    {
+      "actionId": 19219,
+      "name": "Fate Projection \u03B2",
+      "start": 135.461,
+      "resolve": 140.161,
+      "occurrence": 1
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 143.192,
+      "resolve": 143.192,
+      "occurrence": 24
+    },
+    {
+      "actionId": 19220,
+      "name": "Fate Calibration \u03B2",
+      "start": 143.626,
+      "resolve": 178.326,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18588,
+      "name": "",
+      "start": 155.589,
+      "resolve": 155.589,
+      "occurrence": 25
+    },
+    {
+      "actionId": 18588,
+      "name": "",
+      "start": 156.739,
+      "resolve": 156.739,
+      "occurrence": 26
+    },
+    {
+      "actionId": 18587,
+      "name": "",
+      "start": 156.773,
+      "resolve": 156.773,
+      "occurrence": 27
+    },
+    {
+      "actionId": 18598,
+      "name": "",
+      "start": 157.806,
+      "resolve": 157.806,
+      "occurrence": 28
+    },
+    {
+      "actionId": 18589,
+      "name": "",
+      "start": 158.772,
+      "resolve": 158.772,
+      "occurrence": 29
+    },
+    {
+      "actionId": 18593,
+      "name": "",
+      "start": 164.304,
+      "resolve": 164.304,
+      "occurrence": 30
+    },
+    {
+      "actionId": 18595,
+      "name": "",
+      "start": 166.387,
+      "resolve": 166.387,
+      "occurrence": 31
+    },
+    {
+      "actionId": 18590,
+      "name": "",
+      "start": 169.819,
+      "resolve": 169.819,
+      "occurrence": 32
+    },
+    {
+      "actionId": 18531,
+      "name": "Plaint of Surety",
+      "start": 190.798,
+      "resolve": 190.798,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18530,
+      "name": "Plaint of Solidarity",
+      "start": 190.798,
+      "resolve": 190.798,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18565,
+      "name": "J Jump",
+      "start": 191.797,
+      "resolve": 191.797,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18862,
+      "name": "Optical Sight",
+      "start": 195.813,
+      "resolve": 195.813,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18573,
+      "name": "Collective Reprobation",
+      "start": 197.912,
+      "resolve": 197.912,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18566,
+      "name": "Radiant Sacrament",
+      "start": 202.828,
+      "resolve": 202.828,
+      "occurrence": 1
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 209.843,
+      "resolve": 209.843,
+      "occurrence": 33
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 212.875,
+      "resolve": 212.875,
+      "occurrence": 34
+    },
+    {
+      "actionId": 18578,
+      "name": "Ordained Capital Punishment",
+      "start": 213.159,
+      "resolve": 215.859,
+      "occurrence": 5
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 218.941,
+      "resolve": 218.941,
+      "occurrence": 35
+    },
+    {
+      "actionId": 18579,
+      "name": "Ordained Capital Punishment",
+      "start": 219.257,
+      "resolve": 219.257,
+      "occurrence": 6
+    },
+    {
+      "actionId": 18579,
+      "name": "Ordained Capital Punishment",
+      "start": 220.324,
+      "resolve": 220.324,
+      "occurrence": 7
+    },
+    {
+      "actionId": 18577,
+      "name": "Ordained Punishment",
+      "start": 220.324,
+      "resolve": 225.024,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18579,
+      "name": "Ordained Capital Punishment",
+      "start": 221.39,
+      "resolve": 221.39,
+      "occurrence": 8
+    },
+    {
+      "actionId": 7533,
+      "name": "Provoke",
+      "start": 222.073,
+      "resolve": 222.073,
+      "occurrence": 2
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 228.022,
+      "resolve": 228.022,
+      "occurrence": 36
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 231.054,
+      "resolve": 231.054,
+      "occurrence": 37
+    },
+    {
+      "actionId": 18574,
+      "name": "Almighty Judgment",
+      "start": 232.504,
+      "resolve": 235.204,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18575,
+      "name": "Almighty Judgment",
+      "start": 238.603,
+      "resolve": 239.803,
+      "occurrence": 2
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 240.152,
+      "resolve": 240.152,
+      "occurrence": 38
+    },
+    {
+      "actionId": 18575,
+      "name": "Almighty Judgment",
+      "start": 240.602,
+      "resolve": 241.802,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18575,
+      "name": "Almighty Judgment",
+      "start": 242.585,
+      "resolve": 243.785,
+      "occurrence": 4
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 243.185,
+      "resolve": 243.185,
+      "occurrence": 39
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 246.201,
+      "resolve": 246.201,
+      "occurrence": 40
+    },
+    {
+      "actionId": 18576,
+      "name": "Almighty Judgment",
+      "start": 246.634,
+      "resolve": 246.634,
+      "occurrence": 5
+    },
+    {
+      "actionId": 18580,
+      "name": "Irresistible Grace",
+      "start": 246.684,
+      "resolve": 251.384,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18576,
+      "name": "Almighty Judgment",
+      "start": 248.633,
+      "resolve": 248.633,
+      "occurrence": 6
+    },
+    {
+      "actionId": 18576,
+      "name": "Almighty Judgment",
+      "start": 250.616,
+      "resolve": 250.616,
+      "occurrence": 7
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 255.298,
+      "resolve": 255.298,
+      "occurrence": 41
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 258.331,
+      "resolve": 258.331,
+      "occurrence": 42
+    },
+    {
+      "actionId": 18578,
+      "name": "Ordained Capital Punishment",
+      "start": 258.831,
+      "resolve": 261.531,
+      "occurrence": 9
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 264.396,
+      "resolve": 264.396,
+      "occurrence": 43
+    },
+    {
+      "actionId": 18579,
+      "name": "Ordained Capital Punishment",
+      "start": 264.929,
+      "resolve": 264.929,
+      "occurrence": 10
+    },
+    {
+      "actionId": 18579,
+      "name": "Ordained Capital Punishment",
+      "start": 265.996,
+      "resolve": 265.996,
+      "occurrence": 11
+    },
+    {
+      "actionId": 18577,
+      "name": "Ordained Punishment",
+      "start": 265.996,
+      "resolve": 270.696,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18579,
+      "name": "Ordained Capital Punishment",
+      "start": 267.062,
+      "resolve": 267.062,
+      "occurrence": 12
+    },
+    {
+      "actionId": 7533,
+      "name": "Provoke",
+      "start": 269.245,
+      "resolve": 269.245,
+      "occurrence": 3
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 273.477,
+      "resolve": 273.477,
+      "occurrence": 44
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 276.51,
+      "resolve": 276.51,
+      "occurrence": 45
+    },
+    {
+      "actionId": 18574,
+      "name": "Almighty Judgment",
+      "start": 277.943,
+      "resolve": 280.643,
+      "occurrence": 8
+    },
+    {
+      "actionId": 18575,
+      "name": "Almighty Judgment",
+      "start": 284.058,
+      "resolve": 285.25803,
+      "occurrence": 9
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 285.591,
+      "resolve": 285.591,
+      "occurrence": 46
+    },
+    {
+      "actionId": 18575,
+      "name": "Almighty Judgment",
+      "start": 286.041,
+      "resolve": 287.241,
+      "occurrence": 10
+    },
+    {
+      "actionId": 18575,
+      "name": "Almighty Judgment",
+      "start": 288.04,
+      "resolve": 289.24002,
+      "occurrence": 11
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 288.624,
+      "resolve": 288.624,
+      "occurrence": 47
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 291.656,
+      "resolve": 291.656,
+      "occurrence": 48
+    },
+    {
+      "actionId": 18576,
+      "name": "Almighty Judgment",
+      "start": 292.089,
+      "resolve": 292.089,
+      "occurrence": 12
+    },
+    {
+      "actionId": 18580,
+      "name": "Irresistible Grace",
+      "start": 292.123,
+      "resolve": 296.823,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18576,
+      "name": "Almighty Judgment",
+      "start": 294.072,
+      "resolve": 294.072,
+      "occurrence": 13
+    },
+    {
+      "actionId": 18576,
+      "name": "Almighty Judgment",
+      "start": 296.072,
+      "resolve": 296.072,
+      "occurrence": 14
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 300.754,
+      "resolve": 300.754,
+      "occurrence": 49
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 303.77,
+      "resolve": 303.77,
+      "occurrence": 50
+    },
+    {
+      "actionId": 18581,
+      "name": "",
+      "start": 304.253,
+      "resolve": 304.253,
+      "occurrence": 51
+    },
+    {
+      "actionId": 19083,
+      "name": "",
+      "start": 306.803,
+      "resolve": 306.803,
+      "occurrence": 52
+    },
+    {
+      "actionId": 18582,
+      "name": "Temporal Interference",
+      "start": 306.869,
+      "resolve": 311.569,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18583,
+      "name": "Temporal Prison",
+      "start": 315.067,
+      "resolve": 356.767,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "",
+    "the Final Word",
+    "Ordained Stillness",
+    "Ordained Motion",
+    "Optical Sight",
+    "Individual Reprobation",
+    "Collective Reprobation",
+    "Fate Projection \u03B1",
+    "Fate Calibration \u03B1",
+    "Plaint of Obloquy",
+    "Plaint of Solidarity",
+    "Plaint of Severity",
+    "Sacrament",
+    "Ordained Capital Punishment",
+    "Ordained Punishment",
+    "Provoke",
+    "Fate Projection \u03B2",
+    "Fate Calibration \u03B2",
+    "Plaint of Surety",
+    "J Jump",
+    "Radiant Sacrament",
+    "Almighty Judgment",
+    "Irresistible Grace",
+    "Temporal Interference",
+    "Temporal Prison"
+  ]
+}

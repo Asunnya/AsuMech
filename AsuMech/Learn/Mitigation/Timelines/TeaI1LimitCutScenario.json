@@ -1,0 +1,195 @@
+{
+  "scenario": "TeaI1LimitCutScenario",
+  "casts": [
+    {
+      "actionId": 18480,
+      "name": "Hawk Blaster",
+      "start": 5.283,
+      "resolve": 5.283,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18480,
+      "name": "Hawk Blaster",
+      "start": 7.5,
+      "resolve": 7.5,
+      "occurrence": 2
+    },
+    {
+      "actionId": 7559,
+      "name": "Surecast",
+      "start": 9.65,
+      "resolve": 9.65,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18480,
+      "name": "Hawk Blaster",
+      "start": 9.7,
+      "resolve": 9.7,
+      "occurrence": 3
+    },
+    {
+      "actionId": 7559,
+      "name": "Surecast",
+      "start": 11.15,
+      "resolve": 11.15,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18480,
+      "name": "Hawk Blaster",
+      "start": 11.917,
+      "resolve": 11.917,
+      "occurrence": 4
+    },
+    {
+      "actionId": 18484,
+      "name": "Alpha Sword",
+      "start": 12.65,
+      "resolve": 12.65,
+      "occurrence": 1
+    },
+    {
+      "actionId": 18480,
+      "name": "Hawk Blaster",
+      "start": 14.067,
+      "resolve": 14.067,
+      "occurrence": 5
+    },
+    {
+      "actionId": 19279,
+      "name": "Super Blassty Charge",
+      "start": 14.15,
+      "resolve": 14.15,
+      "occurrence": 1
+    },
+    {
+      "actionId": 7548,
+      "name": "Arm\u0027s Length",
+      "start": 14.317,
+      "resolve": 14.317,
+      "occurrence": 1
+    },
+    {
+      "actionId": 7548,
+      "name": "Arm\u0027s Length",
+      "start": 15.817,
+      "resolve": 15.817,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18480,
+      "name": "Hawk Blaster",
+      "start": 16.267,
+      "resolve": 16.267,
+      "occurrence": 6
+    },
+    {
+      "actionId": 18484,
+      "name": "Alpha Sword",
+      "start": 17.317,
+      "resolve": 17.317,
+      "occurrence": 2
+    },
+    {
+      "actionId": 18480,
+      "name": "Hawk Blaster",
+      "start": 18.5,
+      "resolve": 18.5,
+      "occurrence": 7
+    },
+    {
+      "actionId": 19279,
+      "name": "Super Blassty Charge",
+      "start": 18.817,
+      "resolve": 18.817,
+      "occurrence": 2
+    },
+    {
+      "actionId": 7548,
+      "name": "Arm\u0027s Length",
+      "start": 20.433,
+      "resolve": 20.433,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18480,
+      "name": "Hawk Blaster",
+      "start": 20.683,
+      "resolve": 20.683,
+      "occurrence": 8
+    },
+    {
+      "actionId": 18484,
+      "name": "Alpha Sword",
+      "start": 21.967,
+      "resolve": 21.967,
+      "occurrence": 3
+    },
+    {
+      "actionId": 18480,
+      "name": "Hawk Blaster",
+      "start": 22.833,
+      "resolve": 22.833,
+      "occurrence": 9
+    },
+    {
+      "actionId": 19279,
+      "name": "Super Blassty Charge",
+      "start": 23.433,
+      "resolve": 23.433,
+      "occurrence": 3
+    },
+    {
+      "actionId": 7559,
+      "name": "Surecast",
+      "start": 23.583,
+      "resolve": 23.583,
+      "occurrence": 3
+    },
+    {
+      "actionId": 7548,
+      "name": "Arm\u0027s Length",
+      "start": 25.066,
+      "resolve": 25.066,
+      "occurrence": 4
+    },
+    {
+      "actionId": 18480,
+      "name": "Hawk Blaster",
+      "start": 25.083,
+      "resolve": 25.083,
+      "occurrence": 10
+    },
+    {
+      "actionId": 18484,
+      "name": "Alpha Sword",
+      "start": 26.583,
+      "resolve": 26.583,
+      "occurrence": 4
+    },
+    {
+      "actionId": 19279,
+      "name": "Super Blassty Charge",
+      "start": 28.066,
+      "resolve": 28.066,
+      "occurrence": 4
+    },
+    {
+      "actionId": 18516,
+      "name": "J Kick",
+      "start": 31.266,
+      "resolve": 31.266,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Hawk Blaster",
+    "Surecast",
+    "Alpha Sword",
+    "Super Blassty Charge",
+    "Arm\u0027s Length",
+    "J Kick"
+  ]
+}
