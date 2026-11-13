@@ -35,8 +35,9 @@ public sealed class UmadP1TeleTrouncingAi : IScenarioAi<UmadP1TeleTrouncingState
         // No arrivalTime: this move starts on the arrow the role just placed, and deferring the
         // walk kept it parked there past the arrow's 3.0s grace.
         ai.Move(17.5f, () => ConfettiSpots(state), jitter: 0.5f);
-        // After the 22.78s Confetti knockback finishes sliding (0.7s); an earlier MoveTo cancels it.
-        ai.Move(23.6f, () => TetherSpots(state), jitter: 0.5f, arrivalTime: 27.5f);
+        // After the 22.78s Confetti knockback lands (23.5s) and finishes sliding (0.75s): an earlier
+        // MoveTo cancels the slide, or plans the walk from the spot before it.
+        ai.Move(24.3f, () => TetherSpots(state), jitter: 0.5f, arrivalTime: 27.5f);
 
         // Mystery Magic: lines 41.26s, gaze 41.36s, Flagrant Fire 42.06s. One move, then an
         // in-place turn.

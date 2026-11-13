@@ -6,6 +6,7 @@ using AsuMech.Core.Game.Party;
 using AsuMech.Core.Game.Geometry;
 using AsuMech.Learn;
 using AsuMech.Learn.Toolbox;
+using AsuMech.Learn.Tools;
 using AsuMech.Network;
 using AsuMech.Windows.Asu;
 using Dalamud.Bindings.ImGui;
@@ -63,7 +64,7 @@ internal sealed class ToolboxViewer : Window
                 subscribed.StepChanged += OnStepChanged;
                 plan = ToolboxPlans.Load(tb.PlanId);
                 link = tb;
-                own = plan is null ? [] : tb.Steps.Values.Where(i => i >= 0 && i < plan.Steps.Count).Distinct().Order().ToList();
+                own = plan is null ? [] : tb.AllPages.Where(i => i >= 0 && i < plan.Steps.Count).Distinct().Order().ToList();
                 role = session.Role;
                 shown = own.Count > 0 ? own[0] : 0;
                 follow = true;
@@ -91,7 +92,8 @@ internal sealed class ToolboxViewer : Window
     private void Show(ActiveStep step)
     {
         if (link is null || step.Step is null) return;
-        if (link.Steps.TryGetValue(MasteryStore.StepId(step.Step.Key), out var index)) shown = index;
+        var rolls = LearnSession.Current is { } session ? StateSnapshot.Of(session.Scenario) : [];
+        if (link.PageFor(MasteryStore.StepId(step.Step.Key), rolls) is { } index) shown = index;
     }
 
     private IDisposable? theme;

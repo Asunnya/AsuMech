@@ -115,7 +115,7 @@ internal sealed class LearnSession : IDisposable
         {
             sawLive = true;
             if (game.World.Party.Player is { } player)
-                Director.Tick(game.World.Events.Elapsed, player.Position);
+                Director.Tick(game.World.Events.Elapsed, player.Position, player.SpeedFactor());
             return;
         }
         waited += deltaSeconds;

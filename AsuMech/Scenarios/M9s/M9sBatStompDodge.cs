@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using AsuMech.Core.Game.Ai;
 using AsuMech.Core.SimObjects;
 using static AsuMech.Scenarios.M9s.M9sConstants;
 
@@ -9,6 +10,8 @@ namespace AsuMech.Scenarios.M9s;
 
 public sealed class M9sBatStompDodge(SimWorld world, M9sBatPattern pattern, Func<Vector3, bool> isInsideArena, IReadOnlyList<float> radii)
 {
+    private readonly AiManager ai = new(world);
+
     public static readonly float[] ToxicMarkerBearings = [0f, 180f, 225f, 135f, 270f, 90f, 315f, 45f];
 
     public const float MarkerRadius = 12f;
@@ -44,22 +47,20 @@ public sealed class M9sBatStompDodge(SimWorld world, M9sBatPattern pattern, Func
         var vulnUntil = new float[8];
         var planned = new Dictionary<int, Trajectory>();
         for (var slot = 0; slot < 8; slot++)
-        {
-            if (world.Party.Get(slot) is not { } member || !member.IsAlive()) continue;
-            vulnUntil[slot] = decidedAt + (member.FindStatus(StatusId.MagicVulnerabilityUp)?.Remaining ?? float.NegativeInfinity);
-            if (!world.Party.IsBotDriven(member))
-                planned[slot] = new Trajectory(pattern, decidedAt, Flat(member.Position), Flat(member.Position), IsCursed(member), steps);
-        }
+            if (world.Party.Get(slot) is { } member && member.IsAlive())
+                vulnUntil[slot] = decidedAt + (member.FindStatus(StatusId.MagicVulnerabilityUp)?.Remaining ?? float.NegativeInfinity);
 
+        // The player's seat first, so the bots plan around the spot the player is shown.
         foreach (var slot in Enumerable.Range(0, 8).OrderBy(slot => slot != playerSlot))
         {
-            if (world.Party.Get(slot) is not { } bot || !bot.IsAlive() || !world.Party.IsBotDriven(bot)) continue;
-            var from = Flat(bot.Position);
-            var cursed = IsCursed(bot);
+            if (world.Party.Get(slot) is not { } member || !member.IsAlive()) continue;
+            var from = Flat(member.Position);
+            var cursed = IsCursed(member);
             var choice = SafestSpotNearMarker(slot, from, cursed, blasts, blastAt, decidedAt, steps, planned, vulnUntil, playerSlot);
             var spot = choice?.Spot ?? WidestBerthNearMarker(ToxicMarkerBearings[slot], blasts);
             planned[slot] = choice?.Path ?? new Trajectory(pattern, decidedAt, from, Flat(spot), cursed, steps);
-            bot.MoveTo(spot);
+            ai.Order(member, spot, decidedAt);
+            if (world.Party.IsBotDriven(member)) member.MoveTo(spot);
         }
     }
 

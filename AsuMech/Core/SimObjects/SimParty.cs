@@ -100,7 +100,11 @@ public sealed partial class SimParty : ISimObject
             seated[i] = slot;
             if (slot is PlayerSlot)
             {
-                player ??= new SimPlayer(world.Coordinates, world.Obstacles);
+                if (player is null)
+                {
+                    player = new SimPlayer(world.Coordinates, world.Obstacles);
+                    player.ForcedMoveStarted += () => this.world?.Guidance?.OnForcedMove();
+                }
                 SetSlot(role, player);
             }
             else if (slot is not null && PartyCreator.Spawn(slot, world, role, placement) is { } member)

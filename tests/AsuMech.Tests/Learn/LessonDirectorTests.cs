@@ -87,9 +87,34 @@ public class LessonDirectorTests
         var resolved = new List<(string, StepResult)>();
         director.StepResolved += (s, r) => resolved.Add((s.Title, r));
         director.OnMove(Order(1f, new Vector3(10f, 0f, 0f), arrival: 5f));
+        director.Tick(1.1f, Vector3.Zero);
         director.Tick(2f, Vector3.Zero);
         director.OnMove(Order(3f, Vector3.Zero));
         Assert.That(resolved, Is.EqualTo(new[] { ("go", StepResult.WrongPlace) }));
+    }
+
+    [Test]
+    public void TheNextOrderClosesAStepThePlayerIsStandingOnAsOnTime()
+    {
+        var resolved = new List<(string, StepResult)>();
+        director.StepResolved += (s, r) => resolved.Add((s.Title, r));
+        director.OnMove(Order(1f, new Vector3(10f, 0f, 0f), arrival: 5f));
+        director.Tick(2f, new Vector3(10.5f, 0f, 0f));
+        director.OnMove(Order(3f, Vector3.Zero));
+        Assert.That(resolved, Is.EqualTo(new[] { ("go", StepResult.OnTime) }));
+    }
+
+    [Test]
+    public void AnOrderSupersededWhileThePlayerIsOnTheWayGetsNoVerdict()
+    {
+        var resolved = new List<(string, StepResult)>();
+        director.StepResolved += (s, r) => resolved.Add((s.Title, r));
+        director.OnMove(Order(1f, new Vector3(10f, 0f, 0f), arrival: 5f));
+        director.Tick(1f, Vector3.Zero);
+        director.Tick(2f, new Vector3(4f, 0f, 0f));
+        director.OnMove(Order(3f, Vector3.Zero));
+        Assert.That(resolved, Is.Empty);
+        Assert.That(director.Results, Is.Empty);
     }
 
     [Test]
@@ -126,6 +151,19 @@ public class LessonDirectorTests
     {
         director.OnMove(Order(1f, Vector3.Zero));
         Assert.That(director.Current!.Evaluation.Deadline, Is.EqualTo(1f + LessonDirector.DefaultWindowSeconds));
+    }
+
+    [Test]
+    public void AKnockbackSettlesTheStepBeforeItsDeadlineAndTheSlideAfterwardsChangesNothing()
+    {
+        director.OnMove(Order(1f, Vector3.Zero));
+        director.Tick(1.5f, new Vector3(0.5f, 0f, 0f));
+        director.OnForcedMove();
+        director.Tick(2f, new Vector3(20f, 0f, 0f));
+        director.OnMove(Order(3f, Vector3.Zero));
+        Assert.That(director.Results[0].Result, Is.EqualTo(StepResult.OnTime));
+        Assert.That(director.Results[0].Step.Evaluation.ResolvedDistance, Is.EqualTo(0.5f).Within(0.01f));
+        Assert.That(director.Results, Has.Count.EqualTo(1));
     }
 
     [Test]

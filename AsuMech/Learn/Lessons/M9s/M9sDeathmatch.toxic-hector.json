@@ -86,19 +86,19 @@
       },
       "title": "After Sanguine Scratch resolves",
       "cue": "Sanguine Scratch resolves",
-      "rule": "Depends on NorthSouth and Cycles has DeathmatchCycle { FirstConeOffset = 22.5, Spin = 1, Group1BatIsCircle = True }: true & no → at C; true & yes → S 4m; false & yes → E 4m; false & no → at B.",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NorthSouth).",
       "roles": {
         "OffTank": {
-          "rule": "Depends on NorthSouth and Cycles has DeathmatchCycle { FirstConeOffset = 22.5, Spin = 1, Group1BatIsCircle = True }: true & no → N 4m; true & yes → at A; false & yes → at D; false & no → W 4m."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NorthSouth)."
         },
         "ShieldHealer": {
-          "rule": "Depends on NorthSouth and Cycles has DeathmatchCycle { FirstConeOffset = 22.5, Spin = 1, Group1BatIsCircle = True }: true & no → N 4m; true & yes → at A; false & yes → at D; false & no → W 4m."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NorthSouth)."
         },
         "MeleeDpsB": {
-          "rule": "Depends on NorthSouth and Cycles has DeathmatchCycle { FirstConeOffset = 22.5, Spin = 1, Group1BatIsCircle = True }: true & no → N 4m; true & yes → at A; false & yes → at D; false & no → W 4m."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NorthSouth)."
         },
         "CasterDps": {
-          "rule": "Depends on NorthSouth and Cycles has DeathmatchCycle { FirstConeOffset = 22.5, Spin = 1, Group1BatIsCircle = True }: true & no → N 4m; true & yes → at A; false & yes → at D; false & no → W 4m."
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: NorthSouth)."
         }
       },
       "tolerance": 2,

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using AsuMech.Core.Game.Ai;
+using AsuMech.Core.Game.Motion;
 using AsuMech.Core.Game.Party;
 using AsuMech.Core.SimObjects;
 using static AsuMech.Scenarios.Umad.UmadConstants;
@@ -29,6 +30,7 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
 
     private UmadP3BlackHoleState state = null!;
     private SimWorld world = null!;
+    private AiManager ai = null!;
 
     public void Run(UmadP3BlackHoleState stateParam, SimWorld worldParam)
     {
@@ -38,7 +40,7 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
         setHoles.Clear();
         implosionChaos = null;
         implosionSpots = null;
-        var ai = new AiManager(world);
+        ai = new AiManager(world);
 
         // Kept here so a peer's debug-bot replay gets it from the same Run.
         world.Events.Add(25.17f, () => state.ScenarioObjects.TetherSortFrom = state.KefkaPosition[0]);
@@ -53,13 +55,13 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
         ai.Move(18f, () => DodgeSlap(slapIndex: 0, kefkaIndex: 0));
         // A full second before GrabTether, or StackCentre's deferred MoveTo cancels the Intercept.
         ai.Move(25f, StackCentre);
-        world.Events.Add(26.2f, () => GrabNewTether(tetherIndex: 0, playerIndex: 4));
+        world.Events.Add(26.2f, () => GrabNewTether(tetherIndex: 0, playerIndex: 4, at: 26.2f));
         ScheduleTetherRegrab(26.6f, 28.2f, tetherIndex: 0, playerIndex: 4);
-        world.Events.Add(28.2f, () => PullTether(playerIndex: 4));
-        world.Events.Add(32.4f, () => GrabNewTether(tetherIndex: 0, playerIndex: 4));
-        world.Events.Add(32.4f, () => GrabNewTether(tetherIndex: 1, playerIndex: 0));
-        world.Events.Add(34.4f, () => PullTether(playerIndex: 4));
-        world.Events.Add(34.4f, () => PullTether(playerIndex: 0));
+        world.Events.Add(28.2f, () => PullTether(playerIndex: 4, at: 28.2f));
+        world.Events.Add(32.4f, () => GrabNewTether(tetherIndex: 0, playerIndex: 4, at: 32.4f));
+        world.Events.Add(32.4f, () => GrabNewTether(tetherIndex: 1, playerIndex: 0, at: 32.4f));
+        world.Events.Add(34.4f, () => PullTether(playerIndex: 4, at: 34.4f));
+        world.Events.Add(34.4f, () => PullTether(playerIndex: 0, at: 34.4f));
         // Follow self-sustains, so no AiMove. Right after the 39.33 Nothingness: MT's pull spot can
         // be ~19y from Exdeath, too far to run before the 42.63 hit.
         world.Events.Add(39.4f, ResolveFirstThunder);
@@ -74,16 +76,16 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
         // in the ~1.7s available.
         ai.Move(50.6f, () => DodgeSlap(slapIndex: 1, kefkaIndex: 1), sprint: true);
         ai.Move(56f, StackCentre);
-        world.Events.Add(58.1f, () => GrabNewTether(tetherIndex: 0, playerIndex: 4));
-        world.Events.Add(58.1f, () => GrabNewTether(tetherIndex: 1, playerIndex: 0));
-        world.Events.Add(58.1f, () => GrabNewTether(tetherIndex: 2, playerIndex: 3));
-        world.Events.Add(60.1f, () => PullTether(playerIndex: 4));
-        world.Events.Add(60.1f, () => PullTether(playerIndex: 0));
-        world.Events.Add(60.1f, () => PullTether(playerIndex: 3));
-        world.Events.Add(64f, () => GrabTether(tetherIndex: 0, playerIndex: 5, intercept: 1f));
-        world.Events.Add(66f, () => ReturnToMiddle(playerIndex: 4));
-        world.Events.Add(69f, () => GrabTether(tetherIndex: 1, playerIndex: 1, intercept: 1f));
-        world.Events.Add(71f, () => ReturnToMiddle(playerIndex: 0));
+        world.Events.Add(58.1f, () => GrabNewTether(tetherIndex: 0, playerIndex: 4, at: 58.1f));
+        world.Events.Add(58.1f, () => GrabNewTether(tetherIndex: 1, playerIndex: 0, at: 58.1f));
+        world.Events.Add(58.1f, () => GrabNewTether(tetherIndex: 2, playerIndex: 3, at: 58.1f));
+        world.Events.Add(60.1f, () => PullTether(playerIndex: 4, at: 60.1f));
+        world.Events.Add(60.1f, () => PullTether(playerIndex: 0, at: 60.1f));
+        world.Events.Add(60.1f, () => PullTether(playerIndex: 3, at: 60.1f));
+        world.Events.Add(64f, () => GrabTether(tetherIndex: 0, playerIndex: 5, intercept: 1f, at: 64f));
+        world.Events.Add(66f, () => ReturnToMiddle(playerIndex: 4, at: 66f));
+        world.Events.Add(69f, () => GrabTether(tetherIndex: 1, playerIndex: 1, intercept: 1f, at: 69f));
+        world.Events.Add(71f, () => ReturnToMiddle(playerIndex: 0, at: 71f));
         ai.Move(73.1f, DodgeEdictAndLookUpon);
         ai.Move(80f, StackCentre);
         world.Events.Add(82f, ResolveSecondThunder);
@@ -94,35 +96,35 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
             ScheduleThunderClearance(80.5f, 84.5f, 84.9f, 87.5f, set2First, set2Second);
         }
         ai.Move(88f, StackCentre);
-        world.Events.Add(92.3f, () => GrabNewTether(tetherIndex: 0, playerIndex: 5));
-        world.Events.Add(92.3f, () => GrabNewTether(tetherIndex: 1, playerIndex: 1));
-        world.Events.Add(92.3f, () => GrabNewTether(tetherIndex: 2, playerIndex: 7));
-        world.Events.Add(94.3f, () => PullTether(playerIndex: 5));
-        world.Events.Add(94.3f, () => PullTether(playerIndex: 1));
-        world.Events.Add(94.3f, () => PullTether(playerIndex: 7));
-        world.Events.Add(98f, () => GrabTether(tetherIndex: 0, playerIndex: 6, intercept: 1f));
-        world.Events.Add(100f, () => ReturnToMiddle(playerIndex: 5));
-        world.Events.Add(103f, () => GrabTether(tetherIndex: 1, playerIndex: 2, intercept: 1f));
-        world.Events.Add(105f, () => ReturnToMiddle(playerIndex: 1));
+        world.Events.Add(92.3f, () => GrabNewTether(tetherIndex: 0, playerIndex: 5, at: 92.3f));
+        world.Events.Add(92.3f, () => GrabNewTether(tetherIndex: 1, playerIndex: 1, at: 92.3f));
+        world.Events.Add(92.3f, () => GrabNewTether(tetherIndex: 2, playerIndex: 7, at: 92.3f));
+        world.Events.Add(94.3f, () => PullTether(playerIndex: 5, at: 94.3f));
+        world.Events.Add(94.3f, () => PullTether(playerIndex: 1, at: 94.3f));
+        world.Events.Add(94.3f, () => PullTether(playerIndex: 7, at: 94.3f));
+        world.Events.Add(98f, () => GrabTether(tetherIndex: 0, playerIndex: 6, intercept: 1f, at: 98f));
+        world.Events.Add(100f, () => ReturnToMiddle(playerIndex: 5, at: 100f));
+        world.Events.Add(103f, () => GrabTether(tetherIndex: 1, playerIndex: 2, intercept: 1f, at: 103f));
+        world.Events.Add(105f, () => ReturnToMiddle(playerIndex: 1, at: 105f));
         // 7, 6 and 2 hold their tether spots until the wave's holes despawn (~109.3): earlier,
         // a still-tethered hole's next Nothingness would follow them into the stack. Recalled
         // with lead time before Implosion.
-        world.Events.Add(109.5f, () => ReturnToMiddle(playerIndex: 7));
-        world.Events.Add(110.5f, () => ReturnToMiddle(playerIndex: 6));
-        world.Events.Add(111.5f, () => ReturnToMiddle(playerIndex: 2));
-        world.Events.Add(110f, () => AnchorMtForImplosion(kefkaIndex: 3));
+        world.Events.Add(109.5f, () => ReturnToMiddle(playerIndex: 7, at: 109.5f));
+        world.Events.Add(110.5f, () => ReturnToMiddle(playerIndex: 6, at: 110.5f));
+        world.Events.Add(111.5f, () => ReturnToMiddle(playerIndex: 2, at: 111.5f));
+        world.Events.Add(110f, () => AnchorMtForImplosion(kefkaIndex: 3, at: 110f));
         // arrivalTime = each hit's actual resolve time, so a role that needs more than RunSpeed
         // sprints instead of arriving late.
         ai.Move(117f, () => DodgeImplosion(shockwaveIndex: 0, slapIndex: 2, slapKefkaIndex: 3), jitter: 0f, arrivalTime: 119.09f);
         ai.Move(119.2f, () => DodgeImplosion(shockwaveIndex: 1, slapIndex: 2, slapKefkaIndex: 3), jitter: 0f, arrivalTime: 121.11f);
         ai.Move(121.3f, () => DodgeSlap(slapIndex: 2, kefkaIndex: 3), sprint: true);
         ai.Move(124f, StackCentre);
-        world.Events.Add(125.9f, () => GrabNewTether(tetherIndex: 0, playerIndex: 6));
-        world.Events.Add(125.9f, () => GrabNewTether(tetherIndex: 1, playerIndex: 2));
-        world.Events.Add(127.9f, () => PullTether(playerIndex: 6));
-        world.Events.Add(127.9f, () => PullTether(playerIndex: 2));
-        world.Events.Add(130.8f, () => GrabTether(tetherIndex: 0, playerIndex: 2));
-        world.Events.Add(130.8f, () => ReturnToMiddle(playerIndex: 6));
+        world.Events.Add(125.9f, () => GrabNewTether(tetherIndex: 0, playerIndex: 6, at: 125.9f));
+        world.Events.Add(125.9f, () => GrabNewTether(tetherIndex: 1, playerIndex: 2, at: 125.9f));
+        world.Events.Add(127.9f, () => PullTether(playerIndex: 6, at: 127.9f));
+        world.Events.Add(127.9f, () => PullTether(playerIndex: 2, at: 127.9f));
+        world.Events.Add(130.8f, () => GrabTether(tetherIndex: 0, playerIndex: 2, at: 130.8f));
+        world.Events.Add(130.8f, () => ReturnToMiddle(playerIndex: 6, at: 130.8f));
         ScheduleTetherRegrab(131.2f, 134f, tetherIndex: 0, playerIndex: 2);
         ai.Move(134f, () => DodgeLookUponSplitHolder(tetherPlayerIndex: 2, lookKefkaIndex: 4, leaveWithoutTether: false), sprint: true);
         ai.Move(134f, () => DodgeLookUponSplitOthers(tetherPlayerIndex: 2, lookKefkaIndex: 4), sprint: true);
@@ -227,8 +229,9 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
 
     // Keeps every other role at least ThunderClearDistance from Exdeath, reasserted repeatedly
     // rather than predicted once, since Exdeath keeps chasing OffTank. Exdeath only: MainTank
-    // permanently follows Chaos, and only Exdeath casts Thunder III.
-    private void EnforceThunderClearanceOnce(PartyRole first, PartyRole? second)
+    // permanently follows Chaos, and only Exdeath casts Thunder III. Each displacement is an order
+    // keyed by the clearance window, so the player's seat sees the spot to keep to.
+    private void EnforceThunderClearanceOnce(PartyRole first, PartyRole? second, float at)
     {
         // Re-seated against first's live position each check; first is still converging on Exdeath.
         if (second is { } secondRole
@@ -246,6 +249,7 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
                 var seatClearRadius = ArenaRadius - 1f;
                 if (seat.LengthSquared() > seatClearRadius * seatClearRadius)
                     seat = seat.LengthSquared() > 1e-4f ? Vector2.Normalize(seat) * seatClearRadius : seat;
+                ai.Order(secondMember, new Vector3(seat.X, 0f, seat.Y), at);
                 secondMember.MoveTo(new Vector3(seat.X, 0f, seat.Y));
             }
         }
@@ -267,6 +271,7 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
                 var clearRadius = ArenaRadius - 1f;
                 if (target.LengthSquared() > clearRadius * clearRadius)
                     target = target.LengthSquared() > 1e-4f ? Vector2.Normalize(target) * clearRadius : target;
+                ai.Order(member, new Vector3(target.X, 0f, target.Y), at);
                 member.MoveTo(new Vector3(target.X, 0f, target.Y));
             }
         }
@@ -279,10 +284,10 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
     private void ScheduleThunderClearance(float fromTime, float swapStart, float swapLand, float toTime, PartyRole first, PartyRole? second)
     {
         for (var t = fromTime; t < swapStart; t += ThunderClearanceInterval)
-            world.Events.Add(t, () => EnforceThunderClearanceOnce(first, second));
+            world.Events.Add(t, () => EnforceThunderClearanceOnce(first, second, at: fromTime));
         var postSwapExcluded = second ?? first;
         for (var t = swapLand; t <= toTime; t += ThunderClearanceInterval)
-            world.Events.Add(t, () => EnforceThunderClearanceOnce(postSwapExcluded, null));
+            world.Events.Add(t, () => EnforceThunderClearanceOnce(postSwapExcluded, null, at: swapLand));
     }
 
     // Dodge the edict by tucking just behind the casting boss, but as close to arena
@@ -463,16 +468,21 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
     // Park the MT 45 degrees clockwise from Kefka's facing (Kefka sits centre, oriented
     // to KefkaPosition[kefkaIndex]) so Chaos, which the MT holds, is dragged to that known
     // angle before the implosion cast locks in its cone axis. MT looks at Chaos on arrival.
-    private void AnchorMtForImplosion(int kefkaIndex)
+    private void AnchorMtForImplosion(int kefkaIndex, float at)
     {
         var mt = world.Party.Get(PartyRole.MainTank);
         if (mt is null) return;
         var spot = state.KefkaPosition[kefkaIndex].Rotate(1).Apply(new Vector3(0f, 0f, -5f));
+        ai.Order(mt, spot, at);
         mt.MoveTo(spot);
     }
 
-    private void ReturnToMiddle(int playerIndex) =>
-        state.Roles.Get(TetherSeat(playerIndex))?.MoveTo(new Vector3(0f, 0f, 0f));
+    private void ReturnToMiddle(int playerIndex, float at)
+    {
+        if (state.Roles.Get(TetherSeat(playerIndex)) is not { } player) return;
+        ai.Order(player, Vector3.Zero, at);
+        player.MoveTo(Vector3.Zero);
+    }
 
     // Look Upon (rect along the KefkaPosition[lookKefkaIndex] axis through centre, 16y
     // wide) split. The tether holder rides the last black hole's tether out to the arena
@@ -546,21 +556,21 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
 
     // A new set's tether, grabbed once this client shows the set: a tether at tetherIndex, and none
     // of a hole an earlier set's grab took.
-    private void GrabNewTether(int tetherIndex, int playerIndex) => GrabNewTether(tetherIndex, playerIndex, world.Events.Elapsed, 0f);
+    private void GrabNewTether(int tetherIndex, int playerIndex, float at) => GrabNewTether(tetherIndex, playerIndex, at, world.Events.Elapsed, 0f);
 
-    private void GrabNewTether(int tetherIndex, int playerIndex, float dueAt, float waited)
+    private void GrabNewTether(int tetherIndex, int playerIndex, float at, float dueAt, float waited)
     {
         var tethers = state.ScenarioObjects.Tethers;
         var shown = tetherIndex < tethers.Count
                     && !tethers.Any(t => t.A is { } hole && setHoles.TryGetValue(hole, out var at) && at < dueAt);
         if (!shown && waited < NewSetMaxWaitSeconds)
         {
-            world.Events.Add(NewSetPollSeconds, () => GrabNewTether(tetherIndex, playerIndex, dueAt, waited + NewSetPollSeconds));
+            world.Events.Add(NewSetPollSeconds, () => GrabNewTether(tetherIndex, playerIndex, at, dueAt, waited + NewSetPollSeconds));
             return;
         }
         if (waited > 0f)
             AsuMech.Core.DiagnosticLog.Info($"[UmadP3BlackHoleAi] GrabTether: the new set showed {waited:F2}s after the grab was due{(shown ? "" : " -- gave up waiting")}.");
-        if (GrabTether(tetherIndex, playerIndex)?.A is not { } hole) return;
+        if (GrabTether(tetherIndex, playerIndex, at)?.A is not { } hole) return;
         setHoles.TryAdd(hole, dueAt);
         world.Events.Add(TetherRegrabInterval, () => HoldOnTo(hole, playerIndex, dueAt + NewSetMaxWaitSeconds));
     }
@@ -576,7 +586,7 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
         world.Events.Add(TetherRegrabInterval, () => HoldOnTo(hole, playerIndex, until));
     }
 
-    private SimTether? GrabTether(int tetherIndex, int playerIndex, float intercept = 3f)
+    private SimTether? GrabTether(int tetherIndex, int playerIndex, float at, float intercept = 3f)
     {
         var seat = TetherSeat(playerIndex);
         var player = state.Roles.Get(seat);
@@ -591,6 +601,8 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
         var bh = tether.A is { } a ? new Vector2(a.Position.X, a.Position.Z) : Vector2.Zero;
         var from = player is null ? "(no player)" : $"({player.Position.X:F1},{player.Position.Z:F1})";
         AsuMech.Core.DiagnosticLog.Info($"[UmadP3BlackHoleAi] GrabTether: {role} intercepting tetherIndex {tetherIndex} (black hole at ({bh.X:F1},{bh.Y:F1})) from {from}, margin={intercept}.");
+        if (player is not null && TetherIntercept.Point(tether, player.Position, intercept, world.Obstacles) is { } point)
+            ai.Order(player, new Vector3(point.X, 0f, point.Y), at);
         player?.Intercept(tether, intercept);
         return tether;
     }
@@ -599,7 +611,7 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
     // arrival would otherwise no-op and strand the player.
     private const int PullTetherMaxRetries = 4;
 
-    private void PullTether(int playerIndex, int retriesLeft = PullTetherMaxRetries)
+    private void PullTether(int playerIndex, float at, int retriesLeft = PullTetherMaxRetries)
     {
         var seat = TetherSeat(playerIndex);
         var player = state.Roles.Get(seat);
@@ -611,7 +623,7 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
         {
             AsuMech.Core.DiagnosticLog.Warn($"[UmadP3BlackHoleAi] PullTether: {role} does not hold their assigned tether yet -- pull skipped (still mid-Intercept, grab never happened, or a different hole's random seed briefly gave them someone else's). Current pos ({player?.Position.X:F1},{player?.Position.Z:F1}). Retries left: {retriesLeft}.");
             if (retriesLeft > 0)
-                world.Events.Add(1f, () => PullTether(playerIndex, retriesLeft - 1));
+                world.Events.Add(1f, () => PullTether(playerIndex, at, retriesLeft - 1));
             return;
         }
         var bhPos = new Vector2(blackHole.Position.X, blackHole.Position.Z);
@@ -622,7 +634,8 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
         // ClampOutside and Steer fight and the bot stalls; push it clear up front.
         var spot = world.Obstacles.ClampOutside(rawSpot, margin: 2f);
         AsuMech.Core.DiagnosticLog.Info($"[UmadP3BlackHoleAi] PullTether: {role} held at ({heldPos.X:F1},{heldPos.Y:F1}), black hole at ({bhPos.X:F1},{bhPos.Y:F1}) -- moving to ({spot.X:F1},{spot.Y:F1}) (dist {Vector2.Distance(heldPos, spot):F1}y){(spot != rawSpot ? $" [nudged from ({rawSpot.X:F1},{rawSpot.Y:F1}) to clear an obstacle]" : "")}.");
-        player?.MoveTo(new Vector3(spot.X, 0f, spot.Y));
+        ai.Order(held, new Vector3(spot.X, 0f, spot.Y), at);
+        held.MoveTo(new Vector3(spot.X, 0f, spot.Y));
     }
 
     // A teammate walking through the beam takes the tether, and Intercept ends once the grab lands.
@@ -631,14 +644,14 @@ public sealed class UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder tetherOrder)
     private void ScheduleTetherRegrab(float fromTime, float toTime, int tetherIndex, int playerIndex)
     {
         for (var t = fromTime; t < toTime; t += TetherRegrabInterval)
-            world.Events.Add(t, () => RegrabTetherIfLost(tetherIndex, playerIndex));
+            world.Events.Add(t, () => RegrabTetherIfLost(tetherIndex, playerIndex, t));
     }
 
-    private void RegrabTetherIfLost(int tetherIndex, int playerIndex)
+    private void RegrabTetherIfLost(int tetherIndex, int playerIndex, float at)
     {
         var player = state.Roles.Get(TetherSeat(playerIndex));
         if (player is null || player.IsIntercepting || TetherHeldBy(player) is not null) return;
-        GrabTether(tetherIndex, playerIndex);
+        GrabTether(tetherIndex, playerIndex, at);
     }
 
     private SimTether? TetherHeldBy(SimCharacter? player) =>

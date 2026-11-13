@@ -328,4 +328,35 @@ public class UcobP2NaelScenarioTests
             })
             .TeleportAt(153.7f, to: Vector2.Zero)
             .ShouldKill(ActionId.DalamudDive, AllBut(MainTank, OffTank, RegenHealer));
+
+    // Heavensfall's knockback rides in its ActionEffect: the player's own client only slides from that entry.
+    [Test]
+    public void HeavensfallCarriesTheKnockbackForEveryone()
+    {
+        var run = ScenarioRun.Execute(typeof(UcobP2NaelScenario), 0, 1, new ScenarioRunOptions { StopAt = UcobP2NaelScenario.Heavensfall + 1f });
+        Assert.That(run.Passed, run.ToString);
+        var rows = ((FakeBattleCharas)Natives.BattleCharas).Timeline.Rows
+            .Where(r => r["kind"] == "ability" && r["id"] == ActionId.Heavensfall.ToString()).ToList();
+        Assert.That(rows, Has.Count.EqualTo(1));
+        Assert.That(rows[0]["knockback"], Is.EqualTo(HeavensfallKnockback.ToString()));
+        Assert.That(rows[0]["targets"].Split(' '), Has.Length.EqualTo(8));
+    }
+
+    // Both sets of Thermionic Burst show all eight slices (the relay report's seed showed one on the second).
+    [Test]
+    public void BothThermionicBurstSetsCastEightSlices([Values(1, 1142358212)] int seed)
+    {
+        var run = ScenarioRun.Execute(typeof(UcobP2NaelScenario), 0, seed, new ScenarioRunOptions { StopAt = UcobP2NaelScenario.DalamudDive });
+        Assert.That(run.Passed, run.ToString);
+        var rows = ((FakeBattleCharas)Natives.BattleCharas).Timeline.Rows.Where(r => r["id"] == ActionId.ThermionicBurst.ToString()).ToList();
+        Assert.Multiple(() =>
+        {
+            foreach (var at in UcobP2NaelScenario.ThermionicBurstCasts)
+            {
+                bool InSet(Dictionary<string, string> r) => float.Parse(r["t"], System.Globalization.CultureInfo.InvariantCulture) is var t && t >= at - 0.1f && t < at + 4f;
+                Assert.That(rows.Where(r => r["kind"] == "cast" && InSet(r)).Select(r => r["rot"]).Distinct().Count(), Is.EqualTo(8), $"casts at {at}");
+                Assert.That(rows.Where(r => r["kind"] == "ability" && InSet(r)).Select(r => r["rot"]).Distinct().Count(), Is.EqualTo(8), $"hits at {at}");
+            }
+        });
+    }
 }

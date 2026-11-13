@@ -100,17 +100,30 @@ public static class LessonDraft
         if (rule.Fields.Count == 1 && rule.Fields[0].EndsWith(" has " + rule.Role, StringComparison.Ordinal) && rule.SpotByValue.Count == 2
             && rule.SpotByValue.TryGetValue("yes", out var inside) && rule.SpotByValue.TryGetValue("no", out var outside))
             return $"If you are in {glossary.Field(rule.Fields[0][..^(" has ".Length + rule.Role.Length)])}: {Place(inside)}; otherwise: {Place(outside)}.";
-        if (rule.Fields.Count > 0)
+        if (rule.Fields.Count > 0 && rule.Fields.All(Readable) && rule.SpotByValue.Keys.All(Readable))
         {
             var clauses = rule.SpotByValue.Select(kv => (Words: Conditions(kv.Key, rule.Fields, glossary), Spot: kv.Value)).ToList();
             if (clauses.All(c => c.Words != null))
                 return string.Join("; ", clauses.Select((c, i) => $"{(i == 0 ? "When" : "when")} {c.Words}, {Lower(Place(c.Spot))}")) + ".";
             return $"Depends on {string.Join(" and ", rule.Fields.Select(f => glossary.Apply(f)))}: {string.Join("; ", rule.SpotByValue.Select(kv => $"{ValueWords(kv.Key, rule.Fields, glossary)} → {kv.Value}"))}.";
         }
-        var closest = rule.NearestField is { } near && rule.Purity >= 0.6f ? $" (closest roll: {glossary.Apply(near)})" : "";
+        var nearest = rule.NearestField ?? rule.Fields.FirstOrDefault();
+        var closest = nearest is { } near && (rule.Purity >= 0.6f || rule.Fields.Count > 0) ? $" (closest roll: {glossary.Apply(FieldName(near))})" : "";
         return method is { Length: > 0 }
             ? $"Read the strat's {method}: the spot follows a rule the rolls alone don't show{closest}."
             : $"The spot follows a rule the rolls alone don't show; read the strat{closest}.";
+    }
+
+    // A roll value a player could read; a record list printed whole ("SawCycle { CastAt = … }") is not.
+    private const int ReadableLength = 60;
+    private static bool Readable(string text) => text.Length <= ReadableLength && !text.Contains('{');
+
+    // "Cycles has SawCycle { … }" -> "Cycles": the item is unreadable, the field still names the roll.
+    private static string FieldName(string field)
+    {
+        if (Readable(field)) return field;
+        var has = field.IndexOf(" has ", StringComparison.Ordinal);
+        return has > 0 ? field[..has] : field[..Math.Min(field.Length, ReadableLength)];
     }
 
     // "the nails' close pair is west and the safe side is right", or null when a value has no words.
@@ -127,6 +140,7 @@ public static class LessonDraft
             if (has > 0)
             {
                 var item = Words(field[..has], field[(has + 5)..], glossary) ?? field[(has + 5)..];
+                if (!Readable(item)) return null;
                 if (value == "yes") clauses.Add($"{glossary.Field(field[..has])} includes {item}");
                 else if (value == "no") clauses.Add($"{glossary.Field(field[..has])} leaves out {item}");
                 else return null;

@@ -80,6 +80,13 @@ public sealed class LessonDirector : IPlayerGuidanceSink
         StepChanged?.Invoke(Current);
     }
 
+    // A knockback or pull settles a step the player was holding the spot of when it hit.
+    public void OnForcedMove()
+    {
+        if (!Judging || Current is not { Evaluation.Result: null } current) return;
+        if (current.Evaluation.Settle() != null) Resolve(current);
+    }
+
     public void OnMechanicFailed()
     {
         if (!Judging || Current is not { Evaluation.Result: null } current) return;
@@ -87,8 +94,8 @@ public sealed class LessonDirector : IPlayerGuidanceSink
         Resolve(current);
     }
 
-    // Once per frame with the sim clock and the player's local position.
-    public void Tick(float now, Vector3 playerPosition)
+    // Once per frame with the sim clock, the player's local position and movement speed factor.
+    public void Tick(float now, Vector3 playerPosition, float speedFactor = 1f)
     {
         if (Current is not { } current)
         {
@@ -97,7 +104,7 @@ public sealed class LessonDirector : IPlayerGuidanceSink
         }
         if (!Judging) return;
         var wasResolved = current.Evaluation.Result != null;
-        current.Evaluation.Sample(now, playerPosition);
+        current.Evaluation.Sample(now, playerPosition, speedFactor);
         if (!wasResolved && current.Evaluation.Result != null) Resolve(current);
         var onTheWay = current.Evaluation.Result == null && !current.Evaluation.Within;
         Speed(Level == LearnLevel.Guided && onTheWay ? GuidedSlowScale : 1f);
@@ -113,11 +120,7 @@ public sealed class LessonDirector : IPlayerGuidanceSink
     private void CloseCurrent()
     {
         if (!Judging || Current is not { } current) return;
-        if (current.Evaluation.Result == null)
-        {
-            current.Evaluation.Close();
-            Resolve(current);
-        }
+        if (current.Evaluation.Result == null && current.Evaluation.Close() != null) Resolve(current);
     }
 
     private void Resolve(ActiveStep step)

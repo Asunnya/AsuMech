@@ -53,10 +53,26 @@
   ],
   "toolbox": {
     "planId": "3wODYtApXBtYAdu0",
-    "roleMap": {},
-    "steps": {},
-    "exampleSeed": 1,
-    "residual": 0
+    "roleMap": {
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "MeleeDpsA": "dps1",
+      "MeleeDpsB": "dps2",
+      "PhysRangedDps": "dps3",
+      "CasterDps": "dps4"
+    },
+    "steps": {
+      "UmadP5FloodAi@1.1": 3
+    },
+    "exampleSeed": 4,
+    "residual": 6.1,
+    "pages": [
+      4,
+      5,
+      6
+    ]
   },
   "draft": true
 }

@@ -71,7 +71,7 @@ public sealed class DsrP2ThordanAi : IScenarioAi<DsrP2ThordanState>
         ai.Move(56.95f, () => AiMove.Create(TanksStepIntoTheirTethers()).NaturalOrder(), jitter: 0f, sprint: true);
         ai.Move(57.7f, () => AiMove.Create(TanksCrossTethersToThordan()).NaturalOrder(), jitter: 0f, sprint: true);
         ai.Move(62.0f, () => AiMove.Create(SoakTowers()).NaturalOrder(), jitter: 0.1f);
-        ai.Move(67.3f, () => AiMove.Create(TanksSouthPartyNorthOfThordan()).NaturalOrder());
+        ai.Move(68.05f, () => AiMove.Create(TanksSouthPartyNorthOfThordan()).NaturalOrder());
 
         ai.Move(106.3f, () => AiMove.Create(PlungeGroupsOnTheWall(PlungeGroupOffsetDegrees)).NaturalOrder(), jitter: 0f);
         world.Events.Add(113.9f, FaceAwayFromBothGazes);

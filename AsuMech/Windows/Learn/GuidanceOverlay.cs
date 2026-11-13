@@ -3,6 +3,8 @@ using System.Numerics;
 using AsuMech.Learn;
 using AsuMech.Windows.Asu;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface;
+using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
 
@@ -143,24 +145,30 @@ internal sealed class GuidanceOverlay : Window
         var x = (ImGui.GetIO().DisplaySize.X - width) * 0.5f;
         var y = PanelTopPx * scale;
         var step = session.Director.Current;
+        var collapsed = Plugin.Config.GuidanceTextCollapsed;
         var lines = new System.Collections.Generic.List<(string Text, Vector4 Color)>();
         if (step != null)
         {
             lines.Add((step.Title, AsuTheme.Text));
-            if (step.Cue is { } cue) lines.Add(($"Watch for: {cue}", AsuTheme.Muted));
-            if (step.HintVisible(session.World.Events.Elapsed)) { if (step.Rule is { } rule) lines.Add((rule, AsuTheme.Text)); }
-            else lines.Add((step.ShowAt == float.MaxValue ? "Mastered: no hint." : "Hint coming…", AsuTheme.Muted));
+            if (!collapsed)
+            {
+                if (step.Cue is { } cue) lines.Add(($"Watch for: {cue}", AsuTheme.Muted));
+                if (step.HintVisible(session.World.Events.Elapsed)) { if (step.Rule is { } rule) lines.Add((rule, AsuTheme.Text)); }
+                else lines.Add((step.ShowAt == float.MaxValue ? "Mastered: no hint." : "Hint coming…", AsuTheme.Muted));
+            }
         }
         else
             lines.Add((session.Lesson is null ? "No lesson for this strat: watching the strat play." : "Waiting for the next step…", AsuTheme.Muted));
         if (result is { } r && DateTime.UtcNow < r.Until) lines.Add((r.Text, r.Color));
 
-        // Grows to the longest line up to the width cap, then wraps.
+        // Grows to the longest line up to the width cap, then wraps; the right padding leaves room for the fold button.
+        var button = ImGui.GetFrameHeight();
+        var right = padding.X + button + 4f * scale;
         var maxWidth = ImGui.GetIO().DisplaySize.X * PanelMaxWidthFraction;
         foreach (var (text, _) in lines)
-            width = Math.Min(maxWidth, Math.Max(width, ImGui.CalcTextSize(text).X + padding.X * 2));
+            width = Math.Min(maxWidth, Math.Max(width, ImGui.CalcTextSize(text).X + padding.X + right));
         x = (ImGui.GetIO().DisplaySize.X - width) * 0.5f;
-        var wrap = width - padding.X * 2;
+        var wrap = width - padding.X - right;
         var spacing = ImGui.GetTextLineHeightWithSpacing() - ImGui.GetTextLineHeight();
         var height = padding.Y * 2 - spacing;
         foreach (var (text, _) in lines) height += ImGui.CalcTextSize(text, false, wrap).Y + spacing;
@@ -173,5 +181,26 @@ internal sealed class GuidanceOverlay : Window
             draw.AddText(font, ImGui.GetFontSize(), cursor, AsuTheme.U32(color), text, wrap);
             cursor.Y += ImGui.CalcTextSize(text, false, wrap).Y + spacing;
         }
+        DrawFoldButton(new Vector2(x + width - padding.X * 0.5f - button, y + (padding.Y - 4f * scale)), collapsed);
+    }
+
+    // Its own small window: the overlay takes no input, so clicks reach the game everywhere else.
+    private static void DrawFoldButton(Vector2 at, bool collapsed)
+    {
+        ImGui.SetNextWindowPos(at, ImGuiCond.Always);
+        const ImGuiWindowFlags flags = ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.AlwaysAutoResize
+            | ImGuiWindowFlags.NoSavedSettings | ImGuiWindowFlags.NoFocusOnAppearing | ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoMove;
+        ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
+        if (ImGui.Begin("##AsuMechGuidanceFold", flags))
+        {
+            if (ImGuiComponents.IconButton("fold", collapsed ? FontAwesomeIcon.ChevronDown : FontAwesomeIcon.ChevronUp))
+            {
+                Plugin.Config.GuidanceTextCollapsed = !collapsed;
+                Plugin.Config.Save();
+            }
+            if (ImGui.IsItemHovered()) ImGui.SetTooltip(collapsed ? "Show the step's text" : "Show only the step's title");
+        }
+        ImGui.End();
+        ImGui.PopStyleVar();
     }
 }

@@ -34,8 +34,6 @@ public sealed class UcobP2NaelState
         new("Fleeting light! 'Neath the red moon, scorch you the earth!'", NaelMove.DalamudDive, NaelMove.ThermionicBeam),
     ];
 
-    public const float ThermionicBurstRange = 24f;
-    public const float ThermionicBurstHalfAngle = UcobConstants.Geometry.ThermionicBurstHalfAngle;
     public const float MeteorStreamRadius = 4f;
     public const float DalamudDiveRadius = 5f;
     public const float LunarDynamoInner = UcobConstants.Geometry.LunarDynamoInner;

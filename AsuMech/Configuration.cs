@@ -80,6 +80,8 @@ public class Configuration : IPluginConfiguration
     public bool ShowBotInspector { get; set; } = true;
     // TimelinePanel: the next casts of the embedded timeline, top right, during a lesson.
     public bool ShowTimelinePanel { get; set; } = true;
+    // GuidanceOverlay: the step panel shows only the title, hiding the cue and rule.
+    public bool GuidanceTextCollapsed { get; set; } = false;
     // HazardOverlay: the areas about to resolve, drawn on the ground, per lesson level.
     public bool ShowHazardsAssisted { get; set; } = true;
     public bool ShowHazardsGuided { get; set; } = false;

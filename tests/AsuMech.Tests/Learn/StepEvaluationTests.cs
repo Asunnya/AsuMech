@@ -15,7 +15,7 @@ public class StepEvaluationTests
     public void InPlaceAtTheDeadlineIsOnTime()
     {
         var e = New();
-        e.Sample(8f, Far);
+        e.Sample(1f, Far);
         e.Sample(9f, Target + new Vector3(1f, 0f, 0f));
         Assert.That(e.Result, Is.Null);
         e.Sample(10f, Target);
@@ -26,9 +26,32 @@ public class StepEvaluationTests
     public void ArrivingAfterTheDeadlineIsLate()
     {
         var e = New();
-        e.Sample(10f, Far);
+        e.Sample(1f, Far);
         e.Sample(12f, Target);
         Assert.That(e.Result, Is.EqualTo(StepResult.Late));
+    }
+
+    [Test]
+    public void TheDeadlineIsNeverSoonerThanARunFromWhereThePlayerStoodAtTheOrder()
+    {
+        var e = New();
+        e.Sample(9.5f, Far);
+        Assert.That(e.Deadline, Is.EqualTo(9.5f + 21.2f / 6.5f + StepEvaluation.ReactionGraceSeconds).Within(0.05f));
+        e.Sample(12f, Target);
+        e.Sample(13.5f, Target);
+        Assert.That(e.Result, Is.EqualTo(StepResult.OnTime));
+        var slowed = New();
+        slowed.Sample(9.5f, Far, speedFactor: 0.5f);
+        Assert.That(slowed.Deadline, Is.EqualTo(9.5f + 21.2f / 3.25f + StepEvaluation.ReactionGraceSeconds).Within(0.05f));
+    }
+
+    [Test]
+    public void SupersededBeforeAnyoneCouldReactHasNoVerdict()
+    {
+        var e = New();
+        e.Sample(3f, Far);
+        e.Sample(3.2f, Far);
+        Assert.That(e.Close(), Is.Null);
     }
 
     [Test]
@@ -42,11 +65,36 @@ public class StepEvaluationTests
     }
 
     [Test]
+    public void SupersededOnTheWayBeforeTheDeadlineHasNoVerdict()
+    {
+        var e = New();
+        e.Sample(3f, Far);
+        e.Sample(4f, (Far + Target) / 2f);
+        Assert.That(e.Close(), Is.Null);
+        Assert.That(e.Result, Is.Null);
+    }
+
+    [Test]
     public void NeverArrivingIsWrongPlaceWhenClosed()
     {
         var e = New();
+        e.Sample(1f, Far);
         e.Sample(11f, Far);
         Assert.That(e.Close(), Is.EqualTo(StepResult.WrongPlace));
+    }
+
+    [Test]
+    public void AForcedMoveSettlesOnlyAStepThePlayerWasHoldingTheSpotOf()
+    {
+        var e = New();
+        e.Sample(3f, Target);
+        Assert.That(e.Settle(), Is.EqualTo(StepResult.OnTime));
+        var far = New();
+        far.Sample(3f, Far);
+        Assert.That(far.Settle(), Is.Null, "the push may land on the spot");
+        far.Sample(10f, Target);
+        Assert.That(far.Result, Is.EqualTo(StepResult.OnTime));
+        Assert.That(New().Settle(), Is.Null, "never sampled");
     }
 
     [Test]
@@ -71,6 +119,7 @@ public class StepEvaluationTests
     public void TheDistanceAtTheVerdictIsKeptWhileLaterSamplesMoveOn()
     {
         var e = New();
+        e.Sample(1f, Far);
         e.Sample(9f, Far);
         e.Close();
         Assert.That(e.ResolvedDistance, Is.EqualTo(Vector2.Distance(new Vector2(20f, 20f), new Vector2(5f, 5f))).Within(0.01f));
