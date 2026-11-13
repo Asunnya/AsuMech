@@ -4,6 +4,7 @@ using System.Linq;
 using AsuMech.Core.Game;
 using AsuMech.Learn.Toolbox;
 using AsuMech.Scenarios.Fru;
+using AsuMech.Scenarios.Ucob;
 using NUnit.Framework;
 
 namespace AsuMech.Tests.Learn.Toolbox;
@@ -59,5 +60,42 @@ public class RaidplanIoProviderTests
         Assert.That(converted.Steps[0].Label, Is.EqualTo("Pairs assigned to WM colours"));
         Assert.That(converted.Steps[0].Note, Does.StartWith("Mech is solved in color pairs"));
         Assert.That(converted.Steps[1].Objects.Count(o => o.Kind == "zone" && o.Shape == "circle"), Is.GreaterThanOrEqualTo(2));
+    }
+
+    // NAUR's UCoB P1 plan draws plain role icons with no MT/H1 text (the Liquid Hell lesson showed no players).
+    private static byte[] RoleIcons => File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "Learn", "Toolbox", "Fixtures", "raidplan-9WEG4AEGVdru3hyF.first2.json"));
+
+    [Test]
+    public void UnlabelledRoleIconsTakeTheirGroupsSeats()
+    {
+        var (converted, report) = new RaidplanIoProvider().Convert(RoleIcons, "x", new UcobZone().WaymarkPresets[0]);
+        var all = new[] { "tank1", "tank2", "healer1", "healer2", "dps1", "dps2", "dps3", "dps4" };
+        Assert.Multiple(() =>
+        {
+            foreach (var step in converted.Steps)
+                Assert.That(step.Objects.Where(o => o.Kind == "player").Select(o => o.Key), Is.EquivalentTo(all), step.Label);
+            Assert.That(converted.Steps[0].Objects.Single(o => o.Key == "tank1").Label, Is.EqualTo("MT"));
+            Assert.That(report.RoleMap, Has.Count.EqualTo(8));
+        });
+    }
+
+    // A seat keeps to the icon nearest where it stood, so a player doesn't swap with its partner between steps.
+    [Test]
+    public void ASeatFollowsTheNearestIconOnTheNextStep()
+    {
+        var (converted, _) = new RaidplanIoProvider().Convert(RoleIcons, "x", new UcobZone().WaymarkPresets[0]);
+        float Moved(string seat)
+        {
+            var a = converted.Steps[0].Objects.Single(o => o.Key == seat);
+            var b = converted.Steps[1].Objects.Single(o => o.Key == seat);
+            return MathF.Sqrt((a.X - b.X) * (a.X - b.X) + (a.Z - b.Z) * (a.Z - b.Z));
+        }
+        float Swapped(string seat, string partner)
+        {
+            var a = converted.Steps[0].Objects.Single(o => o.Key == seat);
+            var b = converted.Steps[1].Objects.Single(o => o.Key == partner);
+            return MathF.Sqrt((a.X - b.X) * (a.X - b.X) + (a.Z - b.Z) * (a.Z - b.Z));
+        }
+        Assert.That(Moved("healer1") + Moved("healer2"), Is.LessThanOrEqualTo(Swapped("healer1", "healer2") + Swapped("healer2", "healer1") + 0.01f));
     }
 }

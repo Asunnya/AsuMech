@@ -23,6 +23,19 @@ public sealed class RaidplanIoProvider : IRaidplanProvider
         ["MT"] = "tank1", ["ST"] = "tank2", ["OT"] = "tank2", ["H1"] = "healer1", ["H2"] = "healer2",
         ["D1"] = "dps1", ["D2"] = "dps2", ["D3"] = "dps3", ["D4"] = "dps4",
         ["M1"] = "dps1", ["M2"] = "dps2", ["R1"] = "dps3", ["R2"] = "dps4",
+        ["Phys. Range"] = "dps3", ["Phys Range"] = "dps3", ["Caster"] = "dps4",
+    };
+    // An unlabelled role or job icon takes a free seat of its group, the one nearest where that seat
+    // stood on the step before.
+    private static readonly Dictionary<string, string[]> Groups = new()
+    {
+        ["tank"] = ["tank1", "tank2"], ["healer"] = ["healer1", "healer2"],
+        ["melee"] = ["dps1", "dps2"], ["ranged"] = ["dps3", "dps4"], ["caster"] = ["dps4", "dps3"],
+    };
+    private static readonly Dictionary<string, string> SeatLabels = new()
+    {
+        ["tank1"] = "MT", ["tank2"] = "ST", ["healer1"] = "H1", ["healer2"] = "H2",
+        ["dps1"] = "M1", ["dps2"] = "M2", ["dps3"] = "R1", ["dps4"] = "R2",
     };
     private static readonly Dictionary<string, string> Jobs = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -85,10 +98,12 @@ public sealed class RaidplanIoProvider : IRaidplanProvider
         var header = Str(root, "header_notes_raw");
         var steps = new List<ToolboxStep>();
         var roleMap = new Dictionary<string, string>();
+        var lastSeat = new Dictionary<string, Vector2>();
         for (var i = 0; i < count; i++)
         {
             var objects = new List<ToolboxObject>();
             var seen = new HashSet<string>();
+            var unseated = new List<(string Group, string Text, Vector2 At, float W, float H, string? Job)>();
             var n = 0;
             foreach (var node in nodes.Where(x => Step(x) == i))
             {
@@ -99,9 +114,14 @@ public sealed class RaidplanIoProvider : IRaidplanProvider
                 {
                     case "marker":
                         var text = Str(attr, "text");
-                        if (!Slots.TryGetValue(text, out var slot)) { if (text.Length > 0) objects.Add(new ToolboxObject("text", $"text{n++}", text, at.X, at.Y, w * scale, h * scale, 0f, "text")); break; }
-                        // A job icon and a role icon stacked on one slot: the job one names the job.
                         var job = JobOf(Str(attr, "asset"));
+                        if (!Slots.TryGetValue(text, out var slot))
+                        {
+                            if (GroupOf(Str(attr, "asset"), job) is { } group) unseated.Add((group, text, at, w * scale, h * scale, job));
+                            else if (text.Length > 0) objects.Add(new ToolboxObject("text", $"text{n++}", text, at.X, at.Y, w * scale, h * scale, 0f, "text"));
+                            break;
+                        }
+                        // A job icon and a role icon stacked on one slot: the job one names the job.
                         if (!seen.Add(slot))
                         {
                             if (job != null) objects[objects.FindIndex(o => o.Key == slot)] = objects.First(o => o.Key == slot) with { Job = job };
@@ -132,6 +152,8 @@ public sealed class RaidplanIoProvider : IRaidplanProvider
                         break;
                 }
             }
+            Seat(unseated, objects, seen, lastSeat);
+            foreach (var o in objects.Where(o => o.Kind == "player")) lastSeat[o.Key] = new Vector2(o.X, o.Z);
             var note = i < notes.Count ? notes[i] : i == 0 ? header : "";
             var label = objects.Where(o => o.Kind == "text").Select(o => o.Label.Split('\n')[0]).FirstOrDefault(l => l.Length > 0) ?? $"Step {i + 1}";
             steps.Add(new ToolboxStep(i, label, note, objects));
@@ -140,6 +162,40 @@ public sealed class RaidplanIoProvider : IRaidplanProvider
             roleMap[slot] = RoleOf(slot);
         return (new ToolboxPlan(id, Str(root, "name") is { Length: > 0 } nm ? nm : header.Split('\n')[0], Str(root, "author"), layout.Name, scale, steps),
             new ImportReport(count, count, false, scale, residual, ToolboxImport.Dedupe(roleMap), warnings));
+    }
+
+    // Each icon in turn takes the free seat of its group that stood nearest it on the step before.
+    private static void Seat(List<(string Group, string Text, Vector2 At, float W, float H, string? Job)> unseated, List<ToolboxObject> objects,
+        HashSet<string> seen, Dictionary<string, Vector2> lastSeat)
+    {
+        foreach (var icon in unseated)
+        {
+            var free = Groups[icon.Group].Where(s => !seen.Contains(s)).ToList();
+            if (free.Count == 0) continue;
+            var seat = free.OrderBy(s => lastSeat.TryGetValue(s, out var was) ? Vector2.Distance(was, icon.At) : float.MaxValue).ThenBy(free.IndexOf).First();
+            seen.Add(seat);
+            var label = icon.Text.Length > 0 ? icon.Text : SeatLabels[seat];
+            objects.Add(new ToolboxObject("player", seat, label, icon.At.X, icon.At.Y, icon.W, icon.H, 0f, "circle", Job: icon.Job));
+        }
+    }
+
+    private static string? GroupOf(string asset, string? job)
+    {
+        var file = asset.Split('/').LastOrDefault() ?? "";
+        if (file.StartsWith("role_", StringComparison.OrdinalIgnoreCase))
+            return file[5..].Split('.')[0].ToLowerInvariant() switch
+            {
+                "tank" => "tank", "healer" => "healer", "melee" => "melee", "ranged" => "ranged", "magic" or "caster" => "caster", _ => null,
+            };
+        return job switch
+        {
+            "PLD" or "WAR" or "DRK" or "GNB" => "tank",
+            "WHM" or "SCH" or "AST" or "SGE" => "healer",
+            "MNK" or "DRG" or "NIN" or "SAM" or "RPR" or "VPR" => "melee",
+            "BRD" or "MCH" or "DNC" => "ranged",
+            "BLM" or "SMN" or "RDM" or "PCT" => "caster",
+            _ => null,
+        };
     }
 
     // The label already says the seat; the opener refines ties within a group later.

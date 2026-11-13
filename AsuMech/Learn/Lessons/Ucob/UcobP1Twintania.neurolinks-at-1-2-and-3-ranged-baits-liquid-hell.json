@@ -527,10 +527,30 @@
   ],
   "toolbox": {
     "planId": "9WEG4AEGVdru3hyF\u002B19yavfslOUU0l1Gp",
-    "roleMap": {},
-    "steps": {},
-    "exampleSeed": 1,
-    "residual": 0
+    "roleMap": {
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "MeleeDpsA": "dps2",
+      "MeleeDpsB": "dps1",
+      "PhysRangedDps": "dps4",
+      "CasterDps": "dps3"
+    },
+    "steps": {
+      "UcobP1TwintaniaAi@0.5": 0,
+      "UcobP1TwintaniaAi@12.72": 1,
+      "UcobP1TwintaniaAi@30.6": 2,
+      "UcobP1TwintaniaAi@35.4-134.37": 3,
+      "UcobP1TwintaniaAi@41.24-135.56": 13,
+      "UcobP1TwintaniaAi@44": 18,
+      "UcobP1TwintaniaAi@48.6": 17,
+      "UcobP1TwintaniaAi@70.06": 4,
+      "UcobP1TwintaniaAi@106": 5,
+      "UcobP1TwintaniaAi@116.16": 6
+    },
+    "exampleSeed": 6,
+    "residual": 8.900372
   },
   "draft": true
 }
