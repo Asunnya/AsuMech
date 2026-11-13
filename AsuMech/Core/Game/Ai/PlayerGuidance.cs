@@ -27,4 +27,6 @@ public sealed record GuidanceOrder(GuidanceKey Key, PartyRole Role, Vector3 Targ
 public interface IPlayerGuidanceSink
 {
     void OnMove(GuidanceOrder order);
+    // A mechanic is about to move the player's character (knockback, pull, carry).
+    void OnForcedMove() { }
 }

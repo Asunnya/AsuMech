@@ -118,8 +118,8 @@ internal sealed class Navigator(INavigated walker)
     // tether or an endpoint is gone. logDetail only on the initial Intercept() call.
     private void RetargetIntercept(bool logDetail = false)
     {
-        var margin = interceptMargin;
-        if (interceptTether is not { A: { } a, B: { } b } || !a.IsAlive() || !b.IsAlive())
+        var position = walker.Position;
+        if (TetherIntercept.Point(interceptTether, position, interceptMargin, walker.Obstacles) is not { } target)
         {
             DiagnosticLog.Warn(
                 $"[Navigator] RetargetIntercept self-cancelled: tether={(interceptTether == null ? "null" : "present")} "
@@ -128,31 +128,9 @@ internal sealed class Navigator(INavigated walker)
             interceptTether = null;
             return;
         }
-        var position = walker.Position;
-        var src = new Vector2(a.Position.X, a.Position.Z);
-        var seg = new Vector2(b.Position.X, b.Position.Z) - src;
-        var len = seg.Length();
-        internalReissue = true;
-        if (len < 1e-6f)
-        {
-            MoveTo(new Vector3(src.X, position.Y, src.Y), 6f, null);
-            internalReissue = false;
-            return;
-        }
-        var rel = new Vector2(position.X, position.Z) - src;
-        // Park `margin` yards short of either endpoint instead of standing right on it.
-        // On a segment under 2*margin long the two insets cross, so settle on the midpoint.
-        var inset = margin / len;
-        var (tMin, tMax) = 2f * inset >= 1f ? (0.5f, 0.5f) : (inset, 1f - inset);
-        var t = Math.Clamp(Vector2.Dot(rel, seg) / (len * len), tMin, tMax);
-        // Slide the parked point along the tether line to the nearest spot clear of
-        // obstacles, so the bot lands on the grab corridor instead of being parked
-        // perpendicular off it when a black hole sits on the line.
-        var target = walker.Obstacles.NearestClearOnSegment(src, src + seg, t, tMin, tMax);
         if (logDetail)
-            DiagnosticLog.Info(
-                $"[Navigator] RetargetIntercept: from ({position.X:F1},{position.Z:F1}) toward "
-                + $"target ({target.X:F1},{target.Y:F1}) on segment A({src.X:F1},{src.Y:F1})-B({(src + seg).X:F1},{(src + seg).Y:F1}), t={t:F2}.");
+            DiagnosticLog.Info($"[Navigator] RetargetIntercept: from ({position.X:F1},{position.Z:F1}) toward target ({target.X:F1},{target.Y:F1}).");
+        internalReissue = true;
         MoveTo(new Vector3(target.X, position.Y, target.Y), 6f, null);
         internalReissue = false;
     }

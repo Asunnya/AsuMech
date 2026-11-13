@@ -96,8 +96,8 @@
     {
       "key": {
         "cls": "UmadP1TeleTrouncingAi",
-        "time": 23.6,
-        "line": 39
+        "time": 24.3,
+        "line": 40
       },
       "title": "After a tether lands on you",
       "cue": "A tether lands on you",
@@ -135,35 +135,35 @@
       "key": {
         "cls": "UmadP1TeleTrouncingAi",
         "time": 34.6,
-        "line": 43
+        "line": 44
       },
       "title": "After Bind on you",
       "cue": "Bind on you",
       "rule": "Each role has its own spot.",
       "roles": {
         "MainTank": {
-          "rule": "Depends on FireIsStack and DifferentPolarity has (ShieldHealer,false): true \u0026 no \u2192 near 3 (SE 9m); true \u0026 yes \u2192 near 3 (SE 9m); false \u0026 no \u2192 at 2; false \u0026 yes \u2192 centre."
+          "rule": "Depends on FireIsStack and DifferentPolarity has (ShieldHealer,false): true & no → near 3 (SE 9m); true & yes → near 3 (SE 9m); false & no → at 2; false & yes → centre."
         },
         "OffTank": {
-          "rule": "Depends on DpsGetsDifferent and FireIsLie: true \u0026 true \u2192 near 3 (SE 9m); false \u0026 false \u2192 near 3 (SE 9m); false \u0026 true \u2192 at 3."
+          "rule": "Depends on DpsGetsDifferent and FireIsLie: true & true → near 3 (SE 9m); false & false → near 3 (SE 9m); false & true → at 3."
         },
         "RegenHealer": {
-          "rule": "Depends on FireIsStack: true \u2192 near 3 (SE 9m); false \u2192 S wall."
+          "rule": "Depends on FireIsStack: true → near 3 (SE 9m); false → S wall."
         },
         "ShieldHealer": {
-          "rule": "Depends on FireIsStack: true \u2192 near 3 (SE 9m); false \u2192 E wall."
+          "rule": "Depends on FireIsStack: true → near 3 (SE 9m); false → E wall."
         },
         "MeleeDpsA": {
           "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ThunderRealOffset)."
         },
         "MeleeDpsB": {
-          "rule": "Depends on FireIsStack and ThunderRealOffset: true \u0026 1 \u2192 near 1 (NW 9m); true \u0026 0 \u2192 near 1 (NW 12m); false \u0026 0 \u2192 at 4; false \u0026 1 \u2192 E 2m."
+          "rule": "Depends on FireIsStack and ThunderRealOffset: true & 1 → near 1 (NW 9m); true & 0 → near 1 (NW 12m); false & 0 → at 4; false & 1 → E 2m."
         },
         "PhysRangedDps": {
-          "rule": "Depends on FireIsStack and ThunderRealOffset: true \u0026 1 \u2192 near 1 (NW 9m); true \u0026 0 \u2192 near 1 (NW 12m); false \u0026 0 \u2192 N wall; false \u0026 1 \u2192 N wall."
+          "rule": "Depends on FireIsStack and ThunderRealOffset: true & 1 → near 1 (NW 9m); true & 0 → near 1 (NW 12m); false & 0 → N wall; false & 1 → N wall."
         },
         "CasterDps": {
-          "rule": "Depends on FireIsStack and ThunderRealOffset: true \u0026 1 \u2192 near 1 (NW 9m); true \u0026 0 \u2192 near 1 (NW 12m); false \u0026 0 \u2192 W wall; false \u0026 1 \u2192 W wall."
+          "rule": "Depends on FireIsStack and ThunderRealOffset: true & 1 → near 1 (NW 9m); true & 0 → near 1 (NW 12m); false & 0 → W wall; false & 1 → W wall."
         }
       },
       "tolerance": 2.5,
@@ -215,7 +215,7 @@
         }
       },
       {
-        "title": "Gaze \u002B Fire \u002B Lightning: static spots",
+        "title": "Gaze + Fire + Lightning: static spots",
         "image": "Umad/gaze-static-spots.png",
         "text": "After the teleports, preposition in the shown spots.",
         "roles": {
@@ -230,7 +230,7 @@
         }
       },
       {
-        "title": "Gaze \u002B Fire \u002B Lightning: spread",
+        "title": "Gaze + Fire + Lightning: spread",
         "image": "Umad/gaze-spread.png",
         "text": "Solve the gaze (on the statue) and the lightning lines. Melee on the unsafe half move under the boss.",
         "roles": {
@@ -245,7 +245,7 @@
         }
       },
       {
-        "title": "Gaze \u002B Fire \u002B Lightning: stack",
+        "title": "Gaze + Fire + Lightning: stack",
         "image": "Umad/gaze-stack.png",
         "text": "Supports on 3, DPS on 1.",
         "roles": {
@@ -264,7 +264,7 @@
       "UmadP1TeleTrouncingAi@7.5": 0,
       "UmadP1TeleTrouncingAi@14.4": 1,
       "UmadP1TeleTrouncingAi@17.5": 2,
-      "UmadP1TeleTrouncingAi@23.6": 3,
+      "UmadP1TeleTrouncingAi@24.3": 3,
       "UmadP1TeleTrouncingAi@34.6": 4
     }
   }

@@ -84,6 +84,42 @@
     },
     {
       "key": {
+        "cls": "M9sBatStompDodge",
+        "time": 11.72,
+        "line": 62
+      },
+      "title": "Dodge the bat ring",
+      "cue": "Bats appear",
+      "rule": "Near your marker, step to the spot the bats' blasts leave clear; back towards the marker between rings.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sBatStompDodge",
+        "time": 16.02,
+        "line": 62
+      },
+      "title": "Dodge the bat ring",
+      "cue": "Bats appear",
+      "rule": "Near your marker, step to the spot the bats' blasts leave clear; back towards the marker between rings.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M9sBatStompDodge",
+        "time": 19.52,
+        "line": 62
+      },
+      "title": "Dodge the bat ring",
+      "cue": "Bats appear",
+      "rule": "Near your marker, step to the spot the bats' blasts leave clear; back towards the marker between rings.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
         "cls": "M9sFinalAi",
         "time": 23.02,
         "line": 33

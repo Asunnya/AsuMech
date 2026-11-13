@@ -197,9 +197,15 @@ public abstract partial class SimCharacter : ISimObject, IPositioned
         if (this.IsAlive() || target is null) Motion.Force(new ForcedMove.Follow(target.IsAlive() ? target : null, speed));
     }
 
+    // Raised as a mechanic takes the character, before it has moved; a lesson judges the spot it
+    // was holding then.
+    public event Action? ForcedMoveStarted;
+
     private void Force(ForcedMove move)
     {
-        if (this.IsAlive()) Motion.Force(move);
+        if (!this.IsAlive()) return;
+        ForcedMoveStarted?.Invoke();
+        Motion.Force(move);
     }
 
     internal bool WalksWith(INavigated walker) => ReferenceEquals(Motion, walker);
@@ -380,7 +386,7 @@ public abstract partial class SimCharacter : ISimObject, IPositioned
 
     private readonly List<(ushort StatusId, ushort Param)> speedStatuses = [];
 
-    private float SpeedFactor()
+    public float SpeedFactor()
     {
         speedStatuses.Clear();
         foreach (var status in statusList)
