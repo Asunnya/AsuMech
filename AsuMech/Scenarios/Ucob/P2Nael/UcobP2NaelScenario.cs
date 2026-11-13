@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using AsuMech.Core.EnemyActions;
 using AsuMech.Core.Game;
 using AsuMech.Core.Game.Ai;
 using AsuMech.Core.Game.Party;
@@ -10,6 +11,7 @@ using AsuMech.Scenarios.Legacy;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using static AsuMech.Scenarios.Ucob.UcobConstants;
+using Actions = AsuMech.Scenarios.Ucob.UcobActions;
 using State = AsuMech.Scenarios.Ucob.P2Nael.UcobP2NaelState;
 
 namespace AsuMech.Scenarios.Ucob.P2Nael;
@@ -96,7 +98,8 @@ public sealed class UcobP2NaelScenario : IScenario
     // Checked just before the status itself runs out and is gone.
     private const float DoomCheckLead = 0.05f;
     private const float EffectCarrierLinger = 3f;
-    private const int HelperPoolSize = 24;
+    // Meteor Streams and Chain Lightning splashes; the zone's pool casts everything else.
+    private const int HelperPoolSize = 8;
 
     private SimWorld world = null!;
     private SimParty party = null!;
@@ -142,7 +145,6 @@ public sealed class UcobP2NaelScenario : IScenario
         {
             var offset = i * MathF.PI / 8f;
             world.Events.Add(ThermionicBurstCasts[i], () => CastThermionicBursts(offset));
-            world.Events.Add(ThermionicBurstCasts[i] + ThermionicBurstCastSeconds, () => ThermionicBursts(offset));
         }
         for (var i = 0; i < MeteorStreams.Length; i++)
         {
@@ -270,48 +272,23 @@ public sealed class UcobP2NaelScenario : IScenario
         if (nael != null) spawned.Add(nael);
     }
 
-    private void HeavensfallHit()
-    {
-        PlayFromHelper(ActionId.Heavensfall, Vector3.Zero);
-        foreach (var member in AliveMembers().ToList())
-        {
-            damage.ApplyDamage(member, 0.3f, ActionId.Heavensfall, "Heavensfall", lethal: false);
-            member.Knockback(Vector3.Zero, HeavensfallKnockback);
-        }
-    }
+    // Through the zone's helpers, so the knockback rides in the ActionEffect the player's client slides from.
+    private void HeavensfallHit() => nael?.CastFromHelper(HeavensfallAction, at: new Placement(Vector3.Zero, 0f));
 
-    private readonly List<SimEnemy> burstCasters = [];
+    // Instant: the player's client slides as the ActionEffect lands, so the bots go with it.
+    private static readonly EnemyAction HeavensfallAction = Actions.Heavensfall with { Timing = new() { DamageDelay = 0f } };
+
+    // The log's slices land 3s after the cast, sooner than the sheet's cast time.
+    private static readonly EnemyAction ThermionicBurstAction = Actions.ThermionicBurst with
+    {
+        Cast = Actions.ThermionicBurst.Cast with { CastSecondsOverride = ThermionicBurstCastSeconds - CastSpec.ActionEffectOffset },
+        DeathExplanation = "stood in a Thermionic Burst slice (stand between the glowing slices)",
+    };
 
     private void CastThermionicBursts(float offset)
     {
-        burstCasters.Clear();
         for (var k = 0; k < 8; k++)
-        {
-            var rotation = offset + k * MathF.PI / 4f;
-            if (TakeHelper(new Placement(Vector3.Zero, rotation)) is not { } helper) continue;
-            helper.NativeCast(ActionId.ThermionicBurst, ActionType.Action, 0f, 2.7f, false, rotation: rotation, position: Vector3.Zero);
-            burstCasters.Add(helper);
-        }
-    }
-
-    private void ThermionicBursts(float offset)
-    {
-        foreach (var helper in burstCasters)
-        {
-            PlayEffect(helper, ActionId.ThermionicBurst, 1.1f, helper.Rotation, at: Vector3.Zero);
-            var used = helper;
-            world.Events.Add(EffectCarrierLinger, () => helperPool.Enqueue(used));
-        }
-        burstCasters.Clear();
-        foreach (var member in AliveMembers().ToList())
-        {
-            var at = Flat(member.Position);
-            if (at.Length() > State.ThermionicBurstRange || at.Length() < 0.01f) continue;
-            var bearing = MathF.Atan2(at.X, at.Y) - offset;
-            var fromWedge = MathF.Abs(MathF.IEEERemainder(bearing, MathF.PI / 4f));
-            if (fromWedge <= State.ThermionicBurstHalfAngle)
-                member.Die(ActionId.ThermionicBurst, "stood in a Thermionic Burst slice (stand between the glowing slices)");
-        }
+            nael?.CastFromHelper(ThermionicBurstAction, at: new Placement(Vector3.Zero, offset + k * MathF.PI / 4f));
     }
 
     // Anyone two Meteor Streams land on dies; one is survivable.
