@@ -51,6 +51,16 @@ public class RuleMinerTests
     }
 
     [Test]
+    public void AListOfListsSplitsIntoWholeSublists()
+    {
+        var dump = new OrderDump("S", "A", 0,
+            [Order(1, "MainTank", 0f, 0f), Order(2, "MainTank", 0f, 12f), Order(3, "MainTank", 0f, 0f), Order(4, "MainTank", 0f, 12f)],
+            [Run(1, ("Pairs", "[[0,1],[2,3]]")), Run(2, ("Pairs", "[[0,2],[1,3]]")), Run(3, ("Pairs", "[[2,3],[0,1]]")), Run(4, ("Pairs", "[[1,3],[0,2]]"))]);
+        var rule = RuleMiner.Mine(dump).Single();
+        Assert.That(rule.Fields, Is.EqualTo(new[] { "Pairs has [0,1]" }).Or.EqualTo(new[] { "Pairs has [2,3]" }));
+    }
+
+    [Test]
     public void AFieldAsVariedAsTheSeedsExplainsNothing()
     {
         var dump = new OrderDump("S", "A", 0,

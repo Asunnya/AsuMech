@@ -111,4 +111,20 @@ public class LessonDraftTests
         Assert.That(LessonDraft.Sentence(new MinedRule("Ai", 1, 1f, "MainTank", [spot, spot], ["Side"], new() { ["East"] = "E wall", ["West"] = "W wall" }, 2)),
             Is.EqualTo("Depends on Side: East → E wall; West → W wall."));
     }
+
+    [Test]
+    public void ARollPrintedAsARecordNeverReachesTheText()
+    {
+        const string record = "SawCycle { CastAt = 16.19, Boss = Placement { Position = <12, 0, 0>, Rotation = 0 }, Spin = 1 }";
+        var two = new List<MinedSpot> { new("N wall", 0, -19, [1]), new("S wall", 0, 19, [2]) };
+        var membership = new MinedRule("Ai", 1, 1f, "MainTank", two, [$"Cycles has {record}"], new() { ["yes"] = "N wall", ["no"] = "S wall" }, 2);
+        var byValue = new MinedRule("Ai", 1, 1f, "MainTank", two, ["Cycle"], new() { [record] = "N wall", ["SawCycle { Spin = -1 }"] = "S wall" }, 2);
+        foreach (var rule in new[] { membership, byValue })
+        {
+            var text = LessonDraft.Sentence(rule);
+            Assert.That(text, Does.Not.Contain("{"));
+            Assert.That(text, Does.Contain("read the strat"));
+        }
+        Assert.That(LessonDraft.Sentence(membership), Does.Contain("(closest roll: Cycles)"));
+    }
 }

@@ -215,8 +215,8 @@ public static class RuleMiner
         var start = 0;
         for (var i = 0; i < inner.Length; i++)
         {
-            if (inner[i] is '(' or '{') depth++;
-            else if (inner[i] is ')' or '}') depth--;
+            if (inner[i] is '(' or '{' or '[') depth++;
+            else if (inner[i] is ')' or '}' or ']') depth--;
             else if (inner[i] == ',' && depth == 0) { items.Add(inner[start..i]); start = i + 1; }
         }
         if (inner.Length > 0) items.Add(inner[start..]);

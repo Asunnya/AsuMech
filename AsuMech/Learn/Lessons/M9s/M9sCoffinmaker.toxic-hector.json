@@ -68,7 +68,7 @@
       },
       "title": "After Half Moon cast starts",
       "cue": "Half Moon cast starts",
-      "rule": "When Cycles includes SawCycle { CastAt = 16.19, Boss = Placement { Position = <12, 0, 0>, Rotation = -1.5707964, Position2 = <12, 0> }, Order = RightFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = -3.1415927, LongRotation = 0 } and Cycles leaves out SawCycle { CastAt = 16.19, Boss = Placement { Position = <-12, 0, 0>, Rotation = 1.5707964, Position2 = <-12, 0> }, Order = LeftFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = 3.1415927, LongRotation = 6.2831855 }, go to 10m south-east of the centre; when Cycles leaves out SawCycle { CastAt = 16.19, Boss = Placement { Position = <12, 0, 0>, Rotation = -1.5707964, Position2 = <12, 0> }, Order = RightFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = -3.1415927, LongRotation = 0 } and Cycles includes SawCycle { CastAt = 16.19, Boss = Placement { Position = <-12, 0, 0>, Rotation = 1.5707964, Position2 = <-12, 0> }, Order = LeftFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = 3.1415927, LongRotation = 6.2831855 }, go to 7m south-west of the centre; when Cycles leaves out SawCycle { CastAt = 16.19, Boss = Placement { Position = <12, 0, 0>, Rotation = -1.5707964, Position2 = <12, 0> }, Order = RightFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = -3.1415927, LongRotation = 0 } and Cycles leaves out SawCycle { CastAt = 16.19, Boss = Placement { Position = <-12, 0, 0>, Rotation = 1.5707964, Position2 = <-12, 0> }, Order = LeftFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = 3.1415927, LongRotation = 6.2831855 }, go to 7m south-east of the centre.",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Cycles).",
       "tolerance": 2,
       "skip": false
     },
@@ -80,7 +80,7 @@
       },
       "title": "After Half Moon resolves",
       "cue": "Half Moon resolves",
-      "rule": "When Cycles includes SawCycle { CastAt = 16.19, Boss = Placement { Position = <12, 0, 0>, Rotation = -1.5707964, Position2 = <12, 0> }, Order = RightFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = -3.1415927, LongRotation = 0 } and Cycles leaves out SawCycle { CastAt = 16.19, Boss = Placement { Position = <-12, 0, 0>, Rotation = 1.5707964, Position2 = <-12, 0> }, Order = LeftFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = 3.1415927, LongRotation = 6.2831855 }, stand near waymark C, 12m south of the centre; when Cycles leaves out SawCycle { CastAt = 16.19, Boss = Placement { Position = <12, 0, 0>, Rotation = -1.5707964, Position2 = <12, 0> }, Order = RightFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = -3.1415927, LongRotation = 0 } and Cycles includes SawCycle { CastAt = 16.19, Boss = Placement { Position = <-12, 0, 0>, Rotation = 1.5707964, Position2 = <-12, 0> }, Order = LeftFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = 3.1415927, LongRotation = 6.2831855 }, stand near waymark C, 12m south of the centre; when Cycles leaves out SawCycle { CastAt = 16.19, Boss = Placement { Position = <12, 0, 0>, Rotation = -1.5707964, Position2 = <12, 0> }, Order = RightFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = -3.1415927, LongRotation = 0 } and Cycles leaves out SawCycle { CastAt = 16.19, Boss = Placement { Position = <-12, 0, 0>, Rotation = 1.5707964, Position2 = <-12, 0> }, Order = LeftFirst, FillerActionId = 45928, FillerStartZ = -10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = 3.1415927, LongRotation = 6.2831855 }, stand near waymark 3, 14m south-east of the centre.",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Cycles).",
       "tolerance": 2,
       "skip": false
     },
@@ -104,7 +104,7 @@
       },
       "title": "After Half Moon cast starts",
       "cue": "Half Moon cast starts",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Cycles has SawCycle { CastAt = 51, Boss = Placement { Position = <0, 0, 21.8>, Rotation = 3.1415927, Position2 = <0, 21.8> }, Order = LeftFirst, FillerActionId = 45930, FillerStartZ = 10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = 4.712389, LongRotation = 7.853982 }).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Cycles).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -116,7 +116,7 @@
       },
       "title": "After Half Moon resolves",
       "cue": "Half Moon resolves",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Cycles has SawCycle { CastAt = 51, Boss = Placement { Position = <0, 0, 21.8>, Rotation = 3.1415927, Position2 = <0, 21.8> }, Order = LeftFirst, FillerActionId = 45930, FillerStartZ = 10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = 4.712389, LongRotation = 7.853982 }).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Cycles).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -128,7 +128,7 @@
       },
       "title": "After Half Moon cast starts",
       "cue": "Half Moon cast starts",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Cycles has SawCycle { CastAt = 61.19, Boss = Placement { Position = <0, 0, 21.8>, Rotation = 3.1415927, Position2 = <0, 21.8> }, Order = RightFirst, FillerActionId = 45930, FillerStartZ = 10, FirstWave = <>z__ReadOnlyArray`1[System.Single], SecondWave = <>z__ReadOnlyArray`1[System.Single], ShortRotation = 1.5707964, LongRotation = 4.712389 }).",
+      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Cycles).",
       "tolerance": 2.5,
       "skip": false
     },
