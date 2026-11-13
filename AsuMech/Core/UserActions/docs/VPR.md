@@ -7,7 +7,7 @@ _✅ works · ⚠️ partial · ❌ not simulated · ➖ nothing to simulate (pu
 |--------|----|:------:|------|
 | Steel Fangs | 34606 | ✅ | Honed Reavers; clears Honed Steel |
 | Hunter's Sting | 34608 | ✅ | Hunter's Instinct |
-| Reaving Fangs | 34607 | ✅ | Honed Steel; clears Honed Reavers |
+| Reaving Fangs | 34607 | ✅ | Honed Steel; clears Honed Reavers; starts the Sting combo as Steel Fangs (sheet chains only Steel Fangs) |
 | Writhing Snap | 34632 | ➖ | Ranged filler |
 | Swiftskin's Sting | 34609 | ✅ | Swiftscaled |
 | Steel Maw | 34614 | ✅ | Honed Reavers (AoE) |
@@ -15,7 +15,7 @@ _✅ works · ⚠️ partial · ❌ not simulated · ➖ nothing to simulate (pu
 | Flanksbane Fang | 34611 | ✅ | +10 SO; grants Hindsbane, consumes Flanksbane |
 | Hindsting Strike | 34612 | ✅ | +10 SO; grants Flanksbane, consumes Hindstung |
 | Hindsbane Fang | 34613 | ✅ | +10 SO; grants Flankstung, consumes Hindsbane |
-| Reaving Maw | 34615 | ✅ | Honed Steel (AoE) |
+| Reaving Maw | 34615 | ✅ | Honed Steel (AoE); starts the Bite combo as Steel Maw |
 | Slither | 34646 | ➖ | Native gap-closer/charges |
 | Hunter's Bite | 34616 | ✅ | Hunter's Instinct (AoE) |
 | Swiftskin's Bite | 34617 | ✅ | Swiftscaled (AoE) |
