@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -62,5 +63,26 @@ public sealed record ToolboxPlan(string Id, string Label, string Author, string 
 // for a replay on top of ExampleSeed.
 // Residual: the oracle's mean distance (m) between the plan and the strat over the aligned steps when
 // the lesson was authored; CI refuses a lesson that drifts past it by more than a metre.
+// A Steps key may carry rolls after '|' ("Ai@15.74|AxeTrophyFirst=false"): that page wins when the
+// run rolled them. Pages: more of the plan to page through, though no step jumps to them.
 public sealed record LessonToolbox(string PlanId, Dictionary<string, string> RoleMap, Dictionary<string, int> Steps, int? ExampleSeed = null,
-    Dictionary<string, string>? Example = null, float? Residual = null);
+    Dictionary<string, string>? Example = null, float? Residual = null, List<int>? Pages = null)
+{
+    public IEnumerable<int> AllPages => Steps.Values.Concat(Pages ?? []);
+
+    public int? PageFor(string stepId, IReadOnlyDictionary<string, string> rolls)
+    {
+        int? plain = null;
+        foreach (var (key, page) in Steps)
+        {
+            var bar = key.IndexOf('|');
+            if (bar < 0) { if (key == stepId) plain = page; continue; }
+            if (key[..bar] != stepId) continue;
+            var conditions = key[(bar + 1)..].Split('&', StringSplitOptions.RemoveEmptyEntries);
+            if (conditions.All(c => c.Split('=', 2) is [var name, var value] && rolls.TryGetValue(name.Trim(), out var rolled)
+                    && string.Equals(rolled, value.Trim(), StringComparison.OrdinalIgnoreCase)))
+                return page;
+        }
+        return plain;
+    }
+}
