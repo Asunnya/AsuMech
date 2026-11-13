@@ -35,17 +35,20 @@ internal static unsafe class PlayerCombo
     }
 
     // Actions the sheet doesn't chain but the game combos as another: RDM's enchanted melee, whose swap
-    // is gone by the time the press resolves, having spent the mana it read, and Verholy, which leads
-    // into Scorch as Verflare does though the sheet names only Verflare.
+    // is gone by the time the press resolves, having spent the mana it read, Verholy, which leads
+    // into Scorch as Verflare does though the sheet names only Verflare, and VPR's Reaving Fangs and
+    // Maw, which open the Stings and Bites as Steel Fangs and Maw do though the sheet names only those.
     private static readonly Dictionary<uint, uint> ComboForms = new()
     {
         [7527] = 7504, [45960] = 7504, // Enchanted Riposte
         [7528] = 7512, [45961] = 7512, // Enchanted Zwerchhau
         [7529] = 7516, [45962] = 7516, // Enchanted Redoublement
         [7526] = 7525,                 // Verholy
+        [34607] = 34606,               // Reaving Fangs
+        [34615] = 34614,               // Reaving Maw
     };
 
-    private static uint ComboId(uint actionId) => ComboForms.GetValueOrDefault(actionId, actionId);
+    internal static uint ComboId(uint actionId) => ComboForms.GetValueOrDefault(actionId, actionId);
 
     // The action `actionId` combos from (0 = it isn't a continuation).
     private static uint PrerequisiteOf(uint actionId)
