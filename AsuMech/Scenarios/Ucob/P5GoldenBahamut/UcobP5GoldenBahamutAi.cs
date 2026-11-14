@@ -11,9 +11,9 @@ using State = AsuMech.Scenarios.Ucob.P5GoldenBahamut.UcobP5GoldenBahamutState;
 
 namespace AsuMech.Scenarios.Ucob.P5GoldenBahamut;
 
-public sealed class UcobP5GoldenBahamutAi : IScenarioAi<State>
+public class UcobP5GoldenBahamutAi : IScenarioAi<State>
 {
-    public string Name => "Center stacks, uptime exaflare dodge";
+    public virtual string Name => "Center stacks, uptime exaflare dodge";
 
     public static readonly Vector2 CenterOfTheBoss = Vector2.Zero;
     public static readonly Vector2 AkhMornTankSpotWhereHeFaces = new(0f, -3f);
@@ -63,12 +63,16 @@ public sealed class UcobP5GoldenBahamutAi : IScenarioAi<State>
 
     private Vector2?[] AkhMornSpots(int akhMorn)
     {
-        var spots = Enumerable.Repeat<Vector2?>(PartyBehindTheBoss, 8).ToArray();
+        var spots = Enumerable.Repeat<Vector2?>(AkhMornPartySpot(akhMorn), 8).ToArray();
         var holder = state.AkhMornTargets[akhMorn];
-        spots[(int)holder] = AkhMornTankSpotWhereHeFaces;
-        if (!State.IsInvulnAkhMorn(akhMorn)) spots[(int)State.OtherTank(holder)] = AkhMornTankSpotWhereHeFaces;
+        spots[(int)holder] = AkhMornTankSpot(akhMorn);
+        if (!State.IsInvulnAkhMorn(akhMorn)) spots[(int)State.OtherTank(holder)] = AkhMornTankSpot(akhMorn);
         return spots;
     }
+
+    protected virtual Vector2 AkhMornTankSpot(int akhMorn) => AkhMornTankSpotWhereHeFaces;
+
+    protected virtual Vector2 AkhMornPartySpot(int akhMorn) => PartyBehindTheBoss;
 
     private void InvulnTheLoneTank(int akhMorn)
     {

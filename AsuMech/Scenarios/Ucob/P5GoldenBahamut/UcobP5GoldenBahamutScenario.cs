@@ -21,7 +21,7 @@ public sealed class UcobP5GoldenBahamutScenario : IScenario
     public string Name => "Golden Bahamut";
     public IPhase Phase => UcobZone.P5;
 
-    public IReadOnlyList<IScenarioAi> AiStrats => [new UcobP5GoldenBahamutAi()];
+    public IReadOnlyList<IScenarioAi> AiStrats => [new UcobP5GoldenBahamutAi(), new UcobP5GoldenBahamutTuuflessAi()];
 
     private readonly UcobP5GoldenBahamutSettingsWindow settingsWindow = new();
     public void DrawSettings() => settingsWindow.Draw();
