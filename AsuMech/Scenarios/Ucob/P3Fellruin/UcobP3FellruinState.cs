@@ -55,8 +55,10 @@ public sealed class UcobP3FellruinState
     public Vector2 Nael => OnBearing(NaelBearing, BossDistance);
     public Vector2 Twintania => OnBearing(TwintaniaBearing, BossDistance);
 
-    public static Vector2 NeurolinkNearest(float bearing)
-        => Geometry.P3Neurolinks.MinBy(n => Vector2.Distance(Vector2.Normalize(n), OnBearing(bearing, 1f)));
+    public static Vector2 NeurolinkNearest(float bearing) => NeurolinkNearest(bearing, UcobMarkers.Aether);
+
+    public static Vector2 NeurolinkNearest(float bearing, UcobMarkers markers)
+        => markers.Place(Geometry.P3Neurolinks).MinBy(n => Vector2.Distance(Vector2.Normalize(n), OnBearing(bearing, 1f)));
 
     // Degrees clockwise from north; north is -Z.
     public static Vector2 OnBearing(float degrees, float distance)

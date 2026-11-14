@@ -19,7 +19,7 @@ public sealed class UcobP3FellruinScenario : IScenario
     public string Name => "Fellruin Trio";
     public IPhase Phase => UcobZone.P3;
 
-    public IReadOnlyList<IScenarioAi> AiStrats => [new UcobP3FellruinAi()];
+    public IReadOnlyList<IScenarioAi> AiStrats => [new UcobP3FellruinAi(), new UcobP3FellruinAi(tuufless: true)];
 
     private readonly UcobP3FellruinSettingsWindow settingsWindow = new();
     public void DrawSettings() => settingsWindow.Draw();
