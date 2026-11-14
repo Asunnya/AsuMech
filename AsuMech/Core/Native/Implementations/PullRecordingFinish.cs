@@ -22,23 +22,21 @@ internal static class PullRecordingFinish
     // Off the framework thread; only the chat lines come back to it.
     public static async Task RunAsync(string path, SliceRequest? slice, UploadRequest? send)
     {
-        var files = new List<string> { path };
         if (slice != null)
         {
             await Task.Delay(SliceDelay).ConfigureAwait(false);
             try
             {
-                var (log, message) = WriteSlice(path, slice);
-                if (log != null) files.Add(log);
-                if (message != null) ChatLater(message);
+                if (UseActLog(path, slice) is { } message) ChatLater(message);
             }
             catch (Exception e)
             {
-                DiagnosticLog.Warn($"[PullRecorder] ACT log slice failed: {e}");
-                ChatLater($"ACT log not saved: {e.Message}");
+                DiagnosticLog.Warn($"[PullRecorder] reading the ACT log failed: {e}");
             }
         }
         if (send == null) return;
+        var files = new List<string> { path };
+        if (File.Exists(RecordingFiles.ActLogPath(path))) files.Add(RecordingFiles.ActLogPath(path));
         var notes = new List<string>();
         var allSent = true;
         foreach (var file in files)
@@ -52,14 +50,11 @@ internal static class PullRecordingFinish
         ChatLater($"Upload: {string.Join("; ", notes)}{(allSent && !send.Keep ? DeleteSent(files) : "")}");
     }
 
-    // A player without ACT or IINACT gets no chat line about it.
-    private static (string? Path, string? Message) WriteSlice(string recordingPath, SliceRequest request)
+    // The player's own ACT/IINACT log, when there is one for the pull, replaces the .log the
+    // recorder wrote: it holds what the client never shows (full status lists, effect results).
+    private static string? UseActLog(string recordingPath, SliceRequest request)
     {
-        if (ActLogFolder.Find(request.Dir, request.From) is not { } dir)
-        {
-            DiagnosticLog.Info("[PullRecorder] no ACT/IINACT log written during the recording");
-            return (null, null);
-        }
+        if (ActLogFolder.Find(request.Dir, request.From) is not { } dir) return null;
         var labels = request.Labels;
         string Label(uint id)
         {
@@ -67,12 +62,17 @@ internal static class PullRecordingFinish
             return label;
         }
         var output = RecordingFiles.ActLogPath(recordingPath);
+        var partial = output + ".part";
         int lines;
-        using (var writer = new StreamWriter(output, false, new UTF8Encoding(false)) { NewLine = "\r\n" })
+        using (var writer = new StreamWriter(partial, false, new UTF8Encoding(false)) { NewLine = "\r\n" })
             lines = ActLogSlice.Write(ActLogSlice.Lines(dir, request.From, request.To), writer, new ActLogAnonymizer(request.RealNames, Label));
-        if (lines > 0) return (output, $"ACT log saved: {lines} lines, {output}");
-        File.Delete(output);
-        return (null, $"The ACT log in {dir} has nothing for this pull.");
+        if (lines == 0)
+        {
+            File.Delete(partial);
+            return null;
+        }
+        File.Move(partial, output, overwrite: true);
+        return $"Took the pull's {lines} lines from your ACT log into {output}";
     }
 
     private static void ChatLater(string text)

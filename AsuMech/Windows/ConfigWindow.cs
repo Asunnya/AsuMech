@@ -312,14 +312,14 @@ public class ConfigWindow : Window, IDisposable
         }
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Point this at the repo's datalogs/replays so the recordings sit next to the ACT logs.");
-        var slice = configuration.SaveActLogSlice;
-        if (Pills.Checkbox("Save the pull's ACT/IINACT log beside the recording", ref slice))
+        var slice = configuration.PreferActLog;
+        if (Pills.Checkbox("Use my ACT/IINACT log for the pull's .log when I have one", ref slice))
         {
-            configuration.SaveActLogSlice = slice;
+            configuration.PreferActLog = slice;
             configuration.Save();
         }
         if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("When the recording ends, the part of your ACT or IINACT network log it covers is saved as a .log next to it (and sent with it). Player names become \"player 1\", \"player 2\"... as in the recording, and chat between players is left out.");
+            ImGui.SetTooltip("Every recording comes with an ACT-format .log of the pull, written by AsuMech. With this on and ACT or IINACT running, the part of their log the pull covers is used instead. Either way player names become \"player 1\", \"player 2\"... as in the recording, and chat between players is left out.");
         if (slice)
         {
             var actDir = configuration.ActLogDir;

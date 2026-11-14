@@ -75,21 +75,22 @@ public static class ActLogSlice
         return DateTimeOffset.TryParse(line.AsSpan(a + 1, b - a - 1), CultureInfo.InvariantCulture, DateTimeStyles.None, out var at) ? at : null;
     }
 
+    // Each kept line is re-hashed in the slice's own sequence, so the slice checks out as a log.
     public static int Write(IEnumerable<string> lines, TextWriter output, ActLogAnonymizer anonymizer)
     {
+        var seal = new ActLogSeal();
         var written = 0;
         foreach (var line in lines)
         {
             if (anonymizer.Rewrite(line) is not { } kept) continue;
-            output.WriteLine(kept);
+            output.WriteLine(seal.Reseal(kept));
             written++;
         }
         return written;
     }
 }
 
-// Players renamed to the recording's labels and conversation dropped, since the slice is sent on.
-// A rewritten line's trailing hash no longer matches, so FFLogs won't take it.
+// Players renamed to the recording's labels and conversation dropped, since the log is sent on.
 public sealed class ActLogAnonymizer
 {
     private readonly Func<uint, string> label;
