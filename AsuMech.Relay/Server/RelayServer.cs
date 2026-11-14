@@ -1135,23 +1135,29 @@ public sealed class RelayServer : IAsyncDisposable
 
     private static readonly System.Text.RegularExpressions.Regex RecordingNamePattern = new("^[A-Za-z0-9][A-Za-z0-9_.-]{0,79}$");
 
+    // A recording is the plugin's .csv; a .log is a network log of the same pull sent along with it.
+    private static readonly string[] RecordingExtensions = [".csv", ".log"];
+
     // The client's own file name (its stem) plus who sent it, so two senders' pulls of the same
     // duty at the same second don't collide; anything outside a safe character set is refused.
+    // A name without a known extension is stored as a .csv.
     internal static string? RecordingFileName(string? requested, Guid peerId)
     {
         if (requested is null) return null;
-        var stem = requested.EndsWith(".csv", StringComparison.OrdinalIgnoreCase) ? requested[..^4] : requested;
+        var extension = RecordingExtensions.FirstOrDefault(e => requested.EndsWith(e, StringComparison.OrdinalIgnoreCase)) ?? ".csv";
+        var stem = requested.EndsWith(extension, StringComparison.OrdinalIgnoreCase) ? requested[..^extension.Length] : requested;
         if (!RecordingNamePattern.IsMatch(stem) || stem.Contains("..")) return null;
-        return $"{stem}_{peerId.ToString("N")[..8]}.csv.gz";
+        return $"{stem}_{peerId.ToString("N")[..8]}{extension}.gz";
     }
 
     internal static bool IsStoredRecordingName(string name)
-        => name.EndsWith(".csv.gz", StringComparison.Ordinal) && RecordingNamePattern.IsMatch(name[..^".csv.gz".Length]) && !name.Contains("..");
+        => RecordingExtensions.Any(e => name.EndsWith(e + ".gz", StringComparison.Ordinal)
+            && RecordingNamePattern.IsMatch(name[..^(e.Length + ".gz".Length)])) && !name.Contains("..");
 
     public List<RecordingInfo> ListRecordings()
     {
         if (options.RecordingsDir is null || !Directory.Exists(options.RecordingsDir)) return [];
-        return new DirectoryInfo(options.RecordingsDir).EnumerateFiles("*.csv.gz")
+        return new DirectoryInfo(options.RecordingsDir).EnumerateFiles("*.gz")
             .Where(f => IsStoredRecordingName(f.Name))
             .OrderBy(f => f.LastWriteTimeUtc)
             .Select(f => new RecordingInfo(f.Name, f.Length, f.LastWriteTimeUtc))
