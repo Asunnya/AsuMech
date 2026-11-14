@@ -19,7 +19,7 @@ namespace AsuMech.Scenarios.Tea.P3AlexanderPrime;
 // real kill so every mechanic shows up; a practice runs Inception alone, or Wormhole on to the end. The
 // Temporal Stasis intermission before it and Perfect Alexander's arrival after it are their own
 // scenarios. Scenario time 0 is 2s before he turns targetable.
-public sealed class TeaP3AlexanderPrimeScenario : IMultiplayerReplayable
+public sealed class TeaP3AlexanderPrimeScenario : IMultiplayerReplayable, ISectionedScenario
 {
     // The fight's own clock counts from Temporal Stasis' cast start.
     private const float StasisToStart = 17.25f;
@@ -99,6 +99,14 @@ public sealed class TeaP3AlexanderPrimeScenario : IMultiplayerReplayable
     public bool HasPerPlayerSettings => true;
     public void DrawPerPlayerSettings() => settingsWindow.DrawPerPlayer();
     public object SettingsOverrides => settingsWindow.Overrides;
+
+    public IReadOnlyList<ScenarioSection> Sections { get; } = TeaP3AlexanderPrimePractice.All.Select(e => new ScenarioSection(e.Label, e.Covers)).ToList();
+
+    public int SelectedSection
+    {
+        get => (int)settingsWindow.Overrides.Practice;
+        set => settingsWindow.Overrides.Practice = (P3Practice)value;
+    }
     public IReadOnlyList<string> SettingsConflicts => settingsWindow.Overrides.Validate().Problems;
     public float BgmSecondsAtStart => Practiced.Start;
 

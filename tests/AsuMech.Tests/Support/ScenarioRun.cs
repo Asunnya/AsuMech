@@ -23,6 +23,13 @@ internal sealed record ScenarioRunOptions
     // Called after every frame; see ScenarioProbe.
     public Action<ScenarioProbe>? Probe { get; init; }
 
+    // Plays the scenario's whole fight as Run to end does, from its first scenario; the run passes
+    // once the last one clears.
+    public bool RunToEnd { get; init; }
+
+    // Every scenario a Run to end started, in order.
+    public Action<IScenario>? Started { get; init; }
+
     // Writes the artifact folder even for a passing run.
     public bool AlwaysWriteArtifacts { get; init; }
 
@@ -129,16 +136,31 @@ internal sealed record ScenarioRun(
                 setOverrides(scenario.SettingsOverrides
                              ?? throw new InvalidOperationException($"{scenarioType.Name} has no settings overrides."));
             game.ZoneIn(scenario.Phase.Zone, SessionMode.Local);
-            game.StartScenario(new RunScenarioParams(scenario, new LocalPartyProvider { RoleOverride = role }, strat, 0, seed));
+            var start = new RunScenarioParams(scenario, new LocalPartyProvider { RoleOverride = role }, strat, 0, seed);
+            RunScenarioParams? current = null;
+            game.RunStarted += (p, _) =>
+            {
+                current = p;
+                options.Started?.Invoke(p.Scenario);
+            };
+            if (options.RunToEnd)
+            {
+                var practice = new PracticeLoop(game) { RunToEnd = true };
+                start = practice.Starting(start);
+            }
+            game.StartScenario(start);
             fake.Frame(FrameSeconds, game.Tick);
             if (game.Status < SessionStatus.Running)
                 failure = "did not start";
 
-            while (failure is null && game.Status is not (SessionStatus.Succeeded or SessionStatus.CompletedFailed or SessionStatus.Frozen))
+            var timeout = options.RunToEnd ? TimeoutSeconds * game.Catalog.FightOf(scenario.Phase.Zone).Count : TimeoutSeconds;
+            bool ChainGoesOn() => options.RunToEnd && game.Status == SessionStatus.Succeeded
+                && current is { } c && FightChain.Next(game.Catalog, c) is not null;
+            while (failure is null && (ChainGoesOn() || game.Status is not (SessionStatus.Succeeded or SessionStatus.CompletedFailed or SessionStatus.Frozen)))
             {
-                if (elapsed >= TimeoutSeconds)
+                if (elapsed >= timeout)
                 {
-                    failure = $"not finished after {TimeoutSeconds} s";
+                    failure = $"not finished after {timeout} s";
                     break;
                 }
                 if (options.StopAt is { } stopAt && game.World.Events.Elapsed >= stopAt)

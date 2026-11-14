@@ -139,7 +139,7 @@ public sealed partial class AsuMainWindow
         if (inSession) return "Learn is solo only: a session runs at 1× with every seat played.";
         if (LearnSession.Current is { Ended: false }) return "A lesson is already running.";
         if (Picker.SelectedAi == null) return "Learn needs a strat.";
-        if (lesson == null && learnLevel != LearnLevel.Observe) return "This strat has no lesson yet; Observe is the only level that works without one.";
+        if (lesson == null && learnLevel != LearnLevel.Observe && !Plugin.Practice.RunToEnd) return "This strat has no lesson yet; Observe is the only level that works without one.";
         return plugin.Runs.StartRefusal(Picker.Selection, SoloSelected);
     }
 
@@ -147,8 +147,16 @@ public sealed partial class AsuMainWindow
     {
         EndWatch();
         Plugin.Practice.AutoRestart = false;
+        var strat = Picker.SelectedAi!;
+        if (Plugin.Practice.RunToEnd && Picker.Selection is { } picked
+            && FightChain.First(Plugin.Game.Catalog, new RunScenarioParams(picked.Scenario, new LocalPartyProvider(), picked.Strat, picked.Waymark)) is { SelectedAi: { } first } opening)
+        {
+            scenario = opening.Scenario;
+            strat = scenario.AiStrats[first];
+            lesson = LessonLoader.For(scenario, strat);
+        }
         var role = LearnRole();
-        var session = new LearnSession(Plugin.Game, scenario, Picker.SelectedAi!, lesson, role, learnLevel);
+        var session = new LearnSession(Plugin.Game, scenario, strat, lesson, role, learnLevel);
         var selection = Picker.Selection;
         if (selection != null && ReplaySeed(lesson, role) is { } seed)
         {

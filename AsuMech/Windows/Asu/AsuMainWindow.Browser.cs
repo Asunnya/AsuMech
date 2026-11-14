@@ -42,7 +42,23 @@ public sealed partial class AsuMainWindow
             Muted("Pick a fight.");
             return;
         }
+        DrawSectionRow();
         DrawDetailLine(inSession);
+    }
+
+    // A scenario played one stretch at a time picks the stretch here, where it can't be missed.
+    private void DrawSectionRow()
+    {
+        if (Selected is not ISectionedScenario sectioned) return;
+        var runToEnd = Plugin.Practice.RunToEnd;
+        var items = sectioned.Sections
+            .Select(s => new TabRowItem(s.Label, Tooltip: runToEnd ? "Run to end plays the whole phase." : s.Covers)).ToList();
+        var selected = runToEnd ? 0 : sectioned.SelectedSection;
+        ImGui.BeginDisabled(runToEnd || RunState.IsGuest);
+        var clicked = OverflowTabRow.Draw("sections", items, selected);
+        ImGui.EndDisabled();
+        if (clicked >= 0 && clicked != selected) sectioned.SelectedSection = clicked;
+        if (selected >= 0 && selected < items.Count) Muted(sectioned.Sections[selected].Covers);
     }
 
     // Edge to edge behind the tab rows, drawn on the channel under them.
@@ -111,29 +127,39 @@ public sealed partial class AsuMainWindow
         Muted($"{scenario.Phase.Zone.Name} · {length}{best}");
 
         var practice = Plugin.Practice;
-        if (inSession) practice.AutoRestart = false;
+        if (inSession)
+        {
+            practice.AutoRestart = false;
+            practice.RunToEnd = false;
+        }
         Flow.SameLineRight(detailRightWidth);
         ImGui.BeginGroup();
         ImGui.BeginDisabled(inSession);
-        bool single, loop;
-        using (!practice.AutoRestart ? AsuTheme.PushAccentButton() : null)
+        bool single, loop, toEnd;
+        using (!practice.AutoRestart && !practice.RunToEnd ? AsuTheme.PushAccentButton() : null)
             single = ImGui.SmallButton("Single");
         ImGui.SameLine(0f, 0f);
         using (practice.AutoRestart ? AsuTheme.PushAccentButton() : null)
             loop = ImGui.SmallButton("Loop");
-        ImGui.EndDisabled();
         if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
             ImGui.SetTooltip(inSession
                 ? "Disabled in a multiplayer session."
                 : "Restart the same scenario after every clean run. A failed run turns this back off.");
-        if (single) practice.AutoRestart = false;
-        if (loop) practice.AutoRestart = true;
-        ImGui.SameLine();
-        ImGui.BeginDisabled();
-        ImGui.SmallButton("Run to end");
+        ImGui.SameLine(0f, 0f);
+        using (practice.RunToEnd ? AsuTheme.PushAccentButton() : null)
+            toEnd = ImGui.SmallButton("Run to end");
         ImGui.EndDisabled();
         if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
-            ImGui.SetTooltip("Needs scenario chaining in the engine.");
+            ImGui.SetTooltip(inSession
+                ? "Disabled in a multiplayer session."
+                : $"Start plays all of {scenario.Phase.Zone.Name} from its first scenario, each one going straight on to the next. A death ends the run.");
+        if (single)
+        {
+            practice.AutoRestart = false;
+            practice.RunToEnd = false;
+        }
+        if (loop) practice.AutoRestart = true;
+        if (toEnd) practice.RunToEnd = true;
         ImGui.EndGroup();
         detailRightWidth = ImGui.GetItemRectSize().X;
     }

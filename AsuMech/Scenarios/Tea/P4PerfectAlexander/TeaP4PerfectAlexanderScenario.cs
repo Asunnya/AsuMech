@@ -18,7 +18,7 @@ namespace AsuMech.Scenarios.Tea.P4PerfectAlexander;
 // Perfect Alexander from just before it turns targetable to its death, at the slowest real kill so
 // every mechanic shows up; a practice runs one of its mechanics alone. Scenario time 0 is 12s before
 // The Final Word.
-public sealed class TeaP4PerfectAlexanderScenario : IMultiplayerReplayable
+public sealed class TeaP4PerfectAlexanderScenario : IMultiplayerReplayable, ISectionedScenario
 {
     // The engine builds a spawned actor up to ~0.3s later and drops an instant cast made before then.
     private const float HelperLead = 1f;
@@ -149,6 +149,14 @@ public sealed class TeaP4PerfectAlexanderScenario : IMultiplayerReplayable
     public bool HasPerPlayerSettings => true;
     public void DrawPerPlayerSettings() => settingsWindow.DrawPerPlayer();
     public object SettingsOverrides => settingsWindow.Overrides;
+
+    public IReadOnlyList<ScenarioSection> Sections { get; } = TeaP4PerfectAlexanderPractice.All.Select(e => new ScenarioSection(e.Label, e.Covers)).ToList();
+
+    public int SelectedSection
+    {
+        get => (int)settingsWindow.Overrides.Practice;
+        set => settingsWindow.Overrides.Practice = (P4Practice)value;
+    }
     public IReadOnlyList<string> SettingsConflicts => settingsWindow.Overrides.Validate().Problems;
     public float BgmSecondsAtStart => BgmAtStart + Practiced.Start;
 

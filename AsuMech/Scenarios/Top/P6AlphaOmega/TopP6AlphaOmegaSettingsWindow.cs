@@ -41,7 +41,6 @@ public sealed class TopP6AlphaOmegaSettingsWindow
         }
         if (SettingsGrid.Begin("##p6alphaomega"))
         {
-            DrawPractice();
             if (ReachesFirstArrow)
                 Overrides.FirstArrowInFirst = ArrowRow("Cosmo Arrow 1:", "##arrow1", Overrides.FirstArrowInFirst);
             if (ReachesSecondArrow)
@@ -61,18 +60,6 @@ public sealed class TopP6AlphaOmegaSettingsWindow
             if (solo) DrawPlayerRows(SoloRole(), everyRow: false);
             SettingsGrid.End();
         }
-    }
-
-    private void DrawPractice()
-    {
-        SettingsGrid.Row("Practice:");
-        var index = (int)Overrides.Practice;
-        FitWidth(PracticeLabels);
-        if (ImGui.Combo("##p6practice", ref index, PracticeLabels, PracticeLabels.Length) && index >= 0 && index < PracticeLabels.Length)
-            Overrides.Practice = (P6Practice)index;
-        var entry = TopP6AlphaOmegaPractice.Of(Overrides.Practice);
-        SettingsGrid.Row("");
-        ImGui.TextDisabled(entry.Covers);
     }
 
     private bool Reaches(params P6Practice[] mechanics)

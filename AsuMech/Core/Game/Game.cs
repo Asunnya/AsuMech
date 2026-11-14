@@ -272,4 +272,5 @@ public sealed class Game : IDisposable
 
 // A null Seed draws a fresh one on every start
 // A null SelectedAi runs no strat: solo, or a peer
-public sealed record RunScenarioParams(IScenario Scenario, IPartyProvider Party, int? SelectedAi, int SelectedWaymark, int? Seed = null);
+// Continued: the next scenario of a Run to end, so the party carries on from where it stands
+public sealed record RunScenarioParams(IScenario Scenario, IPartyProvider Party, int? SelectedAi, int SelectedWaymark, int? Seed = null, bool Continued = false);

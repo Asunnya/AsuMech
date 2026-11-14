@@ -152,7 +152,7 @@ public sealed class ScenarioSession
         world.Reseed(seed);
         world.Failed += OnMechanicFailed;
         Plugin.Log.Info($"Game: {Scenario.Name} seed {seed}");
-        world.ApplyParty(roster);
+        world.ApplyParty(roster, keepPlaces: run.Continued);
         instance.ApplyPhase(phase);
         Natives.Director.Commence();
         // zone.Run also creates the arena boundary PlacePlayer's out-of-arena check reads, so that
