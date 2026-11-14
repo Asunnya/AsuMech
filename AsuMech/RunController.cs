@@ -51,7 +51,7 @@ internal sealed class RunController
             return;
         }
         var party = new LocalPartyProvider { RoleOverride = selection!.RoleOverride, Solo = solo };
-        var p = new RunScenarioParams(selection.Scenario, party, solo ? null : selection.Strat, selection.Waymark, selection.Seed);
+        var p = Plugin.Practice.Starting(new RunScenarioParams(selection.Scenario, party, solo ? null : selection.Strat, selection.Waymark, selection.Seed));
         ZoneControl.EndSpeedBuffs();
         if (ZoneControl.StartBlockedReason(out var settling) != null && settling != null)
         {

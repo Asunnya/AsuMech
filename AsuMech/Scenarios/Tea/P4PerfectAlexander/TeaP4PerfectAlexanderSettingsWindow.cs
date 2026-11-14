@@ -11,7 +11,6 @@ public sealed class TeaP4PerfectAlexanderSettingsWindow
     // Which seat the per-player rows are showing. UI state only; never broadcast.
     private PartyRole editingSeat = PartyRole.MainTank;
 
-    private static readonly string[] PracticeLabels = TeaP4PerfectAlexanderPractice.All.Select(e => e.Label).ToArray();
     private static readonly string[] OrdainedLabels = ["Random", "Motion first", "Stillness first"];
     private static readonly string[] OpticalLabels = ["Random", "Spread first", "Stack first"];
     private static readonly string[] SafeCloneLabels = ["Random", "Second Alexander", "Third Alexander"];
@@ -50,14 +49,6 @@ public sealed class TeaP4PerfectAlexanderSettingsWindow
         }
 
         if (!SettingsGrid.Begin("##teap4")) return;
-        SettingsGrid.Row("Practice:");
-        var practice = (int)Overrides.Practice;
-        SettingsGrid.ItemWidth(220);
-        if (ImGui.Combo("##teap4practice", ref practice, PracticeLabels, PracticeLabels.Length) && practice >= 0 && practice < PracticeLabels.Length)
-            Overrides.Practice = (P4Practice)practice;
-        SettingsGrid.Row("");
-        ImGui.TextDisabled(TeaP4PerfectAlexanderPractice.Of(Overrides.Practice).Covers);
-
         Overrides.FinalWordMotionFirst = BoolRow("The Final Word:", "##teap4ordained", OrdainedLabels, Overrides.FinalWordMotionFirst);
         Overrides.OpticalSpreadFirst = BoolRow("Optical Sight:", "##teap4optical", OpticalLabels, Overrides.OpticalSpreadFirst);
 

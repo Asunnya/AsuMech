@@ -20,7 +20,7 @@ namespace AsuMech.Scenarios.Top.P6AlphaOmega;
 
 public enum LimitBreakKind { Tank, Healer, Melee, PhysRanged, Caster }
 
-public sealed class TopP6AlphaOmegaScenario : IMultiplayerReplayable, IPartyLimitBreakScenario
+public sealed class TopP6AlphaOmegaScenario : IMultiplayerReplayable, IPartyLimitBreakScenario, ISectionedScenario
 {
     public string Name => "Alpha Omega";
     // A practice past the opening finds the arena edge already up.
@@ -28,6 +28,14 @@ public sealed class TopP6AlphaOmegaScenario : IMultiplayerReplayable, IPartyLimi
     public float BgmSecondsAtStart => 9.73f + Practiced.Start;
     public void DrawSettings() => settingsWindow.Draw();
     public object SettingsOverrides => settingsWindow.Overrides;
+
+    public IReadOnlyList<ScenarioSection> Sections { get; } = TopP6AlphaOmegaPractice.All.Select(e => new ScenarioSection(e.Label, e.Covers)).ToList();
+
+    public int SelectedSection
+    {
+        get => (int)settingsWindow.Overrides.Practice;
+        set => settingsWindow.Overrides.Practice = (P6Practice)value;
+    }
     public IReadOnlyList<string> SettingsSummary => settingsWindow.Summary();
     public bool HasPerPlayerSettings => true;
     public void DrawPerPlayerSettings() => settingsWindow.DrawPerPlayer();

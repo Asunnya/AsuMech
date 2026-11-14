@@ -52,7 +52,16 @@ internal sealed class LearnSession : IDisposable
         game.MechanicFailed += OnMechanicFailed;
         game.World.ActionResolved += OnActionResolved;
         Director.StepResolved += OnStepResolved;
+        Plugin.Practice.Advancing += OnAdvancing;
         Current = this;
+    }
+
+    // Run to end: the lesson goes on with the next scenario's, at the same level and seat.
+    private void OnAdvancing(RunScenarioParams next)
+    {
+        if (Ended || Drill != null || next.SelectedAi is not { } i) return;
+        var strat = next.Scenario.AiStrats[i];
+        _ = new LearnSession(game, next.Scenario, strat, LessonLoader.For(next.Scenario, strat), Role, Level);
     }
 
     // Every judged step goes to the step stats: the lesson report's map and the adaptive drill.
@@ -162,6 +171,7 @@ internal sealed class LearnSession : IDisposable
         game.MechanicFailed -= OnMechanicFailed;
         game.World.ActionResolved -= OnActionResolved;
         Director.StepResolved -= OnStepResolved;
+        Plugin.Practice.Advancing -= OnAdvancing;
         if (Drill != null) game.RunStarted -= OnRunStarted;
         if (pinned != null) ExampleOverrides.Lift(pinned, pinnedKeys);
         if (ReferenceEquals(game.World.Guidance, Director)) game.World.Guidance = null;

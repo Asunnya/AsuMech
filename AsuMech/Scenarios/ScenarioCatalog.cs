@@ -128,6 +128,9 @@ public sealed class ScenarioCatalog
     public IReadOnlyList<IPhase> PhasesOf(IZone zone) => phasesByZone[zone];
     public IReadOnlyList<IScenario> ScenariosOf(IPhase phase) => scenariosByPhase[phase];
 
+    // The fight's scenarios in the order the fight plays them.
+    public IReadOnlyList<IScenario> FightOf(IZone zone) => PhasesOf(zone).SelectMany(ScenariosOf).ToList();
+
     public static ScenarioCatalog Create() => new(
     [
         new UmadP1TeleTrouncingScenario(),

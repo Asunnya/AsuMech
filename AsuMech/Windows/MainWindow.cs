@@ -479,6 +479,16 @@ public unsafe class MainWindow : Window, IDisposable, IPanelHost
         if (ImGui.TreeNodeEx("Scenario settings###scenario-config-v3",
                 ImGuiTreeNodeFlags.FramePadding))
         {
+            if (scenario is ISectionedScenario sectioned)
+            {
+                var labels = sectioned.Sections.Select(s => s.Label).ToArray();
+                var section = sectioned.SelectedSection;
+                ImGui.BeginDisabled(mpGuest);
+                ImGui.SetNextItemWidth(260);
+                if (ImGui.Combo("Practice##scenario-section", ref section, labels, labels.Length)) sectioned.SelectedSection = section;
+                ImGui.EndDisabled();
+                ImGui.TextDisabled(sectioned.Sections[sectioned.SelectedSection].Covers);
+            }
             if (inSession)
                 multiplayerUi.DrawScenarioSettings(scenario);
             else

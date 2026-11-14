@@ -255,9 +255,9 @@ public sealed partial class SimWorld : ISimObject, IDisposable
 
     // Seats the run's roster, spawning only the seats that changed since the last run. Must be
     // called after ScenarioOrigin is set and the run reseeded: the spawn ring draws from it.
-    public void ApplyParty(IReadOnlyList<PartySlot?> roster)
+    public void ApplyParty(IReadOnlyList<PartySlot?> roster, bool keepPlaces = false)
     {
-        SeatParty(roster);
+        Party.Apply(roster, this, keepPlaces);
         Party.SetInCombat(true);
     }
 

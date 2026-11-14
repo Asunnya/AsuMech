@@ -11,7 +11,6 @@ public sealed class TeaP3AlexanderPrimeSettingsWindow
     // Which seat the per-player rows are showing. UI state only; never broadcast.
     private PartyRole editingSeat = PartyRole.MainTank;
 
-    private static readonly string[] PracticeLabels = TeaP3AlexanderPrimePractice.All.Select(e => e.Label).ToArray();
     private static readonly string[] TankLabels = ["Random", "MT", "OT"];
     private static readonly string[] EdgeLabels = ["Random", "South", "North"];
     private static readonly string[] SpotLabels = ["Random", "NNE", "ENE", "ESE", "SSE", "SSW", "WSW", "WNW", "NNW"];
@@ -43,14 +42,6 @@ public sealed class TeaP3AlexanderPrimeSettingsWindow
         }
 
         if (!SettingsGrid.Begin("##teap3")) return;
-        SettingsGrid.Row("Practice:");
-        var practice = (int)Overrides.Practice;
-        SettingsGrid.ItemWidth(220);
-        if (ImGui.Combo("##teap3practice", ref practice, PracticeLabels, PracticeLabels.Length) && practice >= 0 && practice < PracticeLabels.Length)
-            Overrides.Practice = (P3Practice)practice;
-        SettingsGrid.Row("");
-        ImGui.TextDisabled(TeaP3AlexanderPrimePractice.Of(Overrides.Practice).Covers);
-
         SettingsGrid.Row("Restraining Order tank:");
         var tank = Overrides.RestrainingOrderTank switch { PartyRole.MainTank => 1, PartyRole.OffTank => 2, _ => 0 };
         SettingsGrid.ItemWidth(140);

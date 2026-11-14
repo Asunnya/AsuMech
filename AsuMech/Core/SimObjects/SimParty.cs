@@ -78,8 +78,8 @@ public sealed partial class SimParty : ISimObject
     private readonly PartySlot?[] seated = new PartySlot?[8];
     private SimPlayer? player;
 
-    // A kept bot goes back to its spawn-ring spot; puppets stay where their owners stand.
-    internal void Apply(IReadOnlyList<PartySlot?> roster, SimWorld world)
+    // A kept bot goes back to its spawn-ring spot unless keepPlaces; puppets stay where their owners stand.
+    internal void Apply(IReadOnlyList<PartySlot?> roster, SimWorld world, bool keepPlaces = false)
     {
         this.world = world;
         var ring = world.Stream("party-spawn");
@@ -90,7 +90,7 @@ public sealed partial class SimParty : ISimObject
             var placement = PartyCreator.RingPlacement(role, slot, ring);
             if (Equals(slot, seated[i]) && slots[i] is { IsActive: true } kept)
             {
-                if (slot is BotSlot) kept.SetPosition(placement);
+                if (slot is BotSlot && !keepPlaces) kept.SetPosition(placement);
                 continue;
             }
             // The player only changes seats.
