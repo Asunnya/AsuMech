@@ -111,6 +111,10 @@ public sealed class NetworkLogAnonymizer
         {
             case "00" when IsConversation(fields[2]):
                 return null;
+            case "12" when fields.Length > ContentIdField:
+                fields[ContentIdField] = "00000000";
+                line = string.Join("|", fields);
+                break;
             case "02" or "03" or "04" when Hex(fields[2]) is { } id:
                 Learn(id, fields[3]);
                 break;
@@ -125,6 +129,11 @@ public sealed class NetworkLogAnonymizer
         return line;
     }
 
+    // The character's content id: identifying, so it never leaves the machine.
+    private const int ContentIdField = 18;
+
+    public void Know(uint id, string name) => Learn(id, name);
+
     private void Learn(uint id, string name)
     {
         if (id >> 28 != 1 || name.Length == 0 || aliases.ContainsKey(name)) return;
@@ -132,12 +141,13 @@ public sealed class NetworkLogAnonymizer
         longestFirst = null;
     }
 
-    // Player chat, emotes and echo; battle, system and NPC lines stay.
+    // Player chat, emotes, echo, and the announcements that name people outside the party (free
+    // company, novice network, PvP team, logins); battle, system and NPC lines stay.
     private static bool IsConversation(string code)
     {
         if (!int.TryParse(code, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var value)) return false;
         var channel = value & 0x7F;
-        return channel is >= 0x0A and <= 0x25 or 0x38 or >= 0x65 and <= 0x6B;
+        return channel is >= 0x0A and <= 0x25 or 0x38 or >= 0x45 and <= 0x4E or >= 0x65 and <= 0x6B;
     }
 
     private static uint? Hex(string text)

@@ -130,6 +130,15 @@ public class NetworkLogWriterTests
     }
 
     [Test]
+    public void ALineBreakInAChatTextStaysOnOneLine()
+    {
+        var (log, text) = Writer();
+        log.Chat(0x44, "Nael deus Darnus", "From on high I descend,\nthe iron path to call!");
+        Assert.That(text.ToString().TrimEnd('\n').Split('\n'), Has.Length.EqualTo(1));
+        Assert.That(Body(text), Is.EqualTo("0044|Nael deus Darnus|From on high I descend, the iron path to call!"));
+    }
+
+    [Test]
     public void TheLogReaderTakesTheWrittenLog()
     {
         var t = At;

@@ -219,7 +219,7 @@ public sealed class NetworkLogWriter
 
     private void Write(int type, string body)
     {
-        var line = $"{type.ToString(CultureInfo.InvariantCulture).PadLeft(2, '0')}|{clock().ToString("O", CultureInfo.InvariantCulture)}|{body.Replace('\0', ' ')}";
+        var line = $"{type.ToString(CultureInfo.InvariantCulture).PadLeft(2, '0')}|{clock().ToString("O", CultureInfo.InvariantCulture)}|{OneLine(body)}";
         if (rewrite != null)
         {
             if (rewrite(line) is not { } kept) return;
@@ -234,6 +234,9 @@ public sealed class NetworkLogWriter
         var p = c is { } known ? LogFrame(known.Position) : (Vector3?)null;
         return I($"{hp}|{maxHp}|{mp}|{maxMp}|{shield}||{p?.X:0.00}|{p?.Y:0.00}|{p?.Z:0.00}|{c?.Heading:0.00}");
     }
+
+    // A line break inside a chat text would split the line and its hash.
+    private static string OneLine(string body) => body.Replace('\0', ' ').Replace('\r', ' ').Replace('\n', ' ');
 
     private static string Hex2(params uint[] values) => string.Join("|", values.Select(v => v.ToString("X2", CultureInfo.InvariantCulture)));
 

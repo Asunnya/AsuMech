@@ -53,22 +53,41 @@ public class UnclaimedPacketsTests
     {
         var packets = new UnclaimedPackets();
         var seen = new HashSet<uint> { 0x8B6, 0x8B7, 0x8B8 };
-        Assert.That(packets.Classify(0x320, EffectResult(0x8B6, Player), Player, seen.Contains, 0, 0), Is.EqualTo(UnclaimedPackets.Shape.Unknown));
-        Assert.That(packets.Classify(0x320, EffectResult(0x8B7, Player), Player, seen.Contains, 0, 0), Is.EqualTo(UnclaimedPackets.Shape.Unknown));
-        Assert.That(packets.Classify(0x320, EffectResult(0x8B8, Player), Player, seen.Contains, 0, 0), Is.EqualTo(UnclaimedPackets.Shape.EffectResult));
-        Assert.That(packets.Classify(0x320, new byte[8], Player, seen.Contains, 0, 0), Is.EqualTo(UnclaimedPackets.Shape.EffectResult), "learned");
+        Assert.That(packets.Classify(0x320, EffectResult(0x8B6, Player), Player, seen.Contains, () => (0u, (byte)0)), Is.EqualTo(UnclaimedPackets.Shape.Unknown));
+        Assert.That(packets.Classify(0x320, EffectResult(0x8B7, Player), Player, seen.Contains, () => (0u, (byte)0)), Is.EqualTo(UnclaimedPackets.Shape.Unknown));
+        Assert.That(packets.Classify(0x320, EffectResult(0x8B8, Player), Player, seen.Contains, () => (0u, (byte)0)), Is.EqualTo(UnclaimedPackets.Shape.EffectResult));
+        Assert.That(packets.Classify(0x320, new byte[8], Player, seen.Contains, () => (0u, (byte)0)), Is.EqualTo(UnclaimedPackets.Shape.EffectResult), "learned");
     }
 
     [Test]
-    public void AMismatchStartsTheCountOver()
+    public void APacketThatReadsAsNothingDoesNotUndoTheVotes()
     {
         var packets = new UnclaimedPackets();
         var seen = new HashSet<uint> { 1, 2, 3 };
-        packets.Classify(0x320, EffectResult(1, Player), Player, seen.Contains, 0, 0);
-        packets.Classify(0x320, EffectResult(2, Player), Player, seen.Contains, 0, 0);
-        packets.Classify(0x320, EffectResult(99, Player), Player, seen.Contains, 0, 0);
-        Assert.That(packets.Classify(0x320, EffectResult(3, Player), Player, seen.Contains, 0, 0), Is.EqualTo(UnclaimedPackets.Shape.Unknown));
-        Assert.That(packets.Learned(0x320), Is.EqualTo(UnclaimedPackets.Shape.Unknown));
+        packets.Classify(0x320, EffectResult(1, Player), Player, seen.Contains, () => (0u, (byte)0));
+        packets.Classify(0x320, EffectResult(99, Player), Player, seen.Contains, () => (0u, (byte)0));
+        packets.Classify(0x320, EffectResult(2, Player), Player, seen.Contains, () => (0u, (byte)0));
+        Assert.That(packets.Classify(0x320, EffectResult(3, Player), Player, seen.Contains, () => (0u, (byte)0)), Is.EqualTo(UnclaimedPackets.Shape.EffectResult));
+    }
+
+    [Test]
+    public void AnOpcodeThatNeverMatchesIsGivenUpOn()
+    {
+        var packets = new UnclaimedPackets();
+        for (var i = 0; i < 64; i++) packets.Classify(0x100, new byte[0x40], Player, _ => false, () => (0u, (byte)0));
+        Assert.That(packets.WorthTrying(0x100), Is.False);
+        Assert.That(packets.WorthTrying(0x101), Is.True);
+    }
+
+    [Test]
+    public void TheTargetIsOnlyLookedUpForAPacketLongEnoughForAStatusList()
+    {
+        var packets = new UnclaimedPackets();
+        var lookups = 0;
+        packets.Classify(0x320, EffectResult(1, Player), Player, _ => true, () => { lookups++; return (0u, (byte)0); });
+        Assert.That(lookups, Is.Zero);
+        packets.Classify(0x321, StatusList(), Carbuncle, _ => false, () => { lookups++; return (16288u, (byte)0); });
+        Assert.That(lookups, Is.EqualTo(1));
     }
 
     [Test]

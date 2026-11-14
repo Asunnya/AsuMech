@@ -27,6 +27,7 @@ internal sealed unsafe partial class PullRecorder
     private const long SingleTargetListOffset = 0x120, MaxEffectPacketOffset = 0x1000;
 
     private StreamWriter? netLogFile;
+    private NetworkLogAnonymizer? anonymizer;
     private NetworkLogWriter? netLog;
     private readonly Dictionary<uint, CombatantInfo> combatants = [];
 
@@ -49,16 +50,28 @@ internal sealed unsafe partial class PullRecorder
             netLog = null;
             return;
         }
-        var anonymizer = new NetworkLogAnonymizer(new Dictionary<uint, string>(), PlayerLabel);
+        anonymizer = new NetworkLogAnonymizer(realNames, PlayerLabel);
         netLog = new NetworkLogWriter(netLogFile, () => DateTimeOffset.Now, anonymizer.Rewrite);
         netLog.Version($"This is AsuMech {typeof(PullRecorder).Assembly.GetName().Version} network log of the pull");
         netLog.Zone(territory, zoneName);
-        if (Plugin.ObjectTable.LocalPlayer is { } player) netLog.PrimaryPlayer(player.EntityId, player.Name.TextValue);
+        if (Plugin.ObjectTable.LocalPlayer is { } player)
+        {
+            KnowName(player.EntityId, player.Name.TextValue);
+            netLog.PrimaryPlayer(player.EntityId, player.Name.TextValue);
+        }
+    }
+
+    // A name is renamed in every line from the moment the recorder learns it, not only after an 03 line.
+    private void KnowName(uint id, string name)
+    {
+        realNames[id] = name;
+        anonymizer?.Know(id, name);
     }
 
     private void CloseNetworkLog()
     {
         netLog = null;
+        anonymizer = null;
         netLogFile?.Dispose();
         netLogFile = null;
     }

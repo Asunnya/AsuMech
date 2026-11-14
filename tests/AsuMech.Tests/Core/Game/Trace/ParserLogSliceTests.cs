@@ -123,6 +123,27 @@ public class ParserLogSliceTests
     }
 
     [Test]
+    public void TheContentIdAndAnnouncementsNamingStrangersDoNotLeave()
+    {
+        var at = new DateTimeOffset(2026, 11, 13, 20, 0, 0, Brt);
+        var anonymizer = new NetworkLogAnonymizer(new Dictionary<uint, string>(), id => "player 1");
+        var stats = anonymizer.Rewrite(Line("12", at, "40|174|293|1211|337|1327|488|174|364|1251|1327|1327|983|364|528|364|4000174C4A600C"));
+        Assert.That(stats!.Split('|')[18], Is.EqualTo("00000000"));
+        Assert.That(anonymizer.Rewrite(Line("00", at, "0046|Someone Else|Someone Else has logged in.")), Is.Null, "free company login");
+        Assert.That(anonymizer.Rewrite(Line("00", at, "0039||player 1 has died.")), Is.Not.Null, "system lines stay");
+    }
+
+    [Test]
+    public void ANameTaughtUpFrontIsRenamedBeforeAnyCombatantLine()
+    {
+        var at = new DateTimeOffset(2026, 11, 13, 20, 0, 0, Brt);
+        var anonymizer = new NetworkLogAnonymizer(new Dictionary<uint, string>(), id => "player 1");
+        anonymizer.Know(0x100B0290, "Creatina Whey");
+        Assert.That(anonymizer.Rewrite(Line("26", at, "4DB|Dive Ready|15.00|100B0290|Creatina Whey|100B0290|Creatina Whey|00|1|1")),
+            Does.Not.Contain("Creatina"));
+    }
+
+    [Test]
     public void WriteCountsTheLinesItKept()
     {
         var at = new DateTimeOffset(2026, 11, 13, 20, 0, 0, Brt);

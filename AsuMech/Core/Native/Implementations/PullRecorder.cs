@@ -47,12 +47,15 @@ internal sealed unsafe partial class PullRecorder : IDisposable
 {
     private const uint NoTarget = 0xE0000000;
     private const long PoseIntervalMs = 100;
+    // In combat the party is sampled at up to 60 Hz, whatever the frame rate.
+    private const long PartyPoseIntervalMs = 16;
     private const long HealthIntervalMs = 500;
     private static readonly TimeSpan SliceMargin = TimeSpan.FromSeconds(2);
     private const int RawBytes = 0x40;
     private const int RawRowsPerOpcode = 50;
     private const int IpcHeaderSize = 0x10;
     private const int SegmentHeaderSize = 0x10;
+    private const ushort IpcSegmentType = 3;
     private const int MaxSegmentSize = 0x10000;
     private const int RecentSequences = 512;
     // Retail's snapshot is 0x88 bytes: 65 states. UNVERIFIED that no duty sends a longer one.
@@ -83,6 +86,7 @@ internal sealed unsafe partial class PullRecorder : IDisposable
     private readonly Dictionary<uint, string> realNames = [];
     private HashSet<uint> present = [];
     private long lastPoseMs;
+    private long lastPartyPoseMs;
     private long lastHealthMs;
     private bool inCombat;
     private DateTimeOffset startedAt;
@@ -337,7 +341,7 @@ internal sealed unsafe partial class PullRecorder : IDisposable
             var (relay, token) = config.RecordingsDestination();
             send = new PullRecordingFinish.UploadRequest(relay, token, RelayWire.RelayCredential(config.EnsurePeerSecret(), relay), config.KeepRecordingsAfterUpload);
         }
-        if (slice != null || send != null) _ = PullRecordingFinish.RunAsync(path, slice, send);
+        if (upload && (slice != null || send != null)) _ = PullRecordingFinish.RunAsync(path, slice, send);
     }
 
     // ── Chat ──────────────────────────────────────────────────────────────────
@@ -364,6 +368,8 @@ internal sealed unsafe partial class PullRecorder : IDisposable
         var now = clock.ElapsedMilliseconds;
         var samplePoses = now - lastPoseMs >= PoseIntervalMs;
         if (samplePoses) lastPoseMs = now;
+        var samplePartyPoses = inCombat && now - lastPartyPoseMs >= PartyPoseIntervalMs;
+        if (samplePartyPoses) lastPartyPoseMs = now;
         var sampleHealth = now - lastHealthMs >= HealthIntervalMs;
         if (sampleHealth) lastHealthMs = now;
         var combat = Plugin.Condition[ConditionFlag.InCombat];
@@ -381,7 +387,7 @@ internal sealed unsafe partial class PullRecorder : IDisposable
             if (obj.ObjectKind is not (DalamudObjectKind.Pc or DalamudObjectKind.BattleNpc or DalamudObjectKind.EventObj)) continue;
             var id = obj.EntityId;
             seen.Add(id);
-            if (id >> 28 == 1 && !realNames.ContainsKey(id) && obj.Name.TextValue is { Length: > 0 } realName) realNames[id] = realName;
+            if (id >> 28 == 1 && !realNames.ContainsKey(id) && obj.Name.TextValue is { Length: > 0 } realName) KnowName(id, realName);
             LogSeen(obj);
             if (obj is IBattleChara chara)
             {
@@ -393,7 +399,7 @@ internal sealed unsafe partial class PullRecorder : IDisposable
             TickObjectClient(obj);
             if (!samplePoses)
             {
-                if (inCombat && id >> 28 == 1) SamplePose(obj);
+                if (samplePartyPoses && id >> 28 == 1) SamplePose(obj, toNetworkLog: false);
                 continue;
             }
             if (id >> 28 == 1)
@@ -476,7 +482,7 @@ internal sealed unsafe partial class PullRecorder : IDisposable
             detail: $"pct={SimTimeline.F(chara.MaxHp == 0 ? 0f : 100f * chara.CurrentHp / chara.MaxHp, "F1")} shield={chara.ShieldPercentage}");
     }
 
-    private void SamplePose(IGameObject obj)
+    private void SamplePose(IGameObject obj, bool toNetworkLog = true)
     {
         var position = obj.Position;
         var rotation = obj.Rotation;
@@ -484,7 +490,7 @@ internal sealed unsafe partial class PullRecorder : IDisposable
             && Vector3.DistanceSquared(position, last.Position) < 0.0001f && MathF.Abs(rotation - last.Rotation) < 0.001f)
             return;
         poses[obj.EntityId] = (position, rotation);
-        LogPose(obj);
+        if (toNetworkLog) LogPose(obj);
         timeline!.Add("pos", obj.EntityId, NameOf(obj.EntityId), position: position, rotation: rotation,
             detail: obj.ObjectKind == DalamudObjectKind.EventObj ? "eobj" : "");
     }
@@ -514,21 +520,25 @@ internal sealed unsafe partial class PullRecorder : IDisposable
         }
     }
 
-    // UNVERIFIED: the segment header sits right before the IPC header, its first field the
-    // segment's size; anything implausible there leaves the packet undecoded.
-    private static int PayloadLength(nint packet)
+    // UNVERIFIED: the segment header (size, source, target, type) sits right before the IPC
+    // header. It is only trusted when its source is the packet's actor and its type is IPC; else
+    // the packet stays undecoded.
+    private static int PayloadLength(nint packet, uint actor)
     {
-        var size = *(uint*)(packet - SegmentHeaderSize);
+        var header = (byte*)(packet - SegmentHeaderSize);
+        var size = *(uint*)header;
+        if (*(uint*)(header + 4) != actor || *(ushort*)(header + 0xC) != IpcSegmentType) return 0;
         return size is >= SegmentHeaderSize + IpcHeaderSize and <= MaxSegmentSize ? (int)size - SegmentHeaderSize - IpcHeaderSize : 0;
     }
 
     private bool DecodeUnclaimed(ushort opcode, uint targetId, nint packet)
     {
-        var length = PayloadLength(packet);
-        if (length == 0) return false;
+        if (!unclaimed.WorthTrying(opcode)) return false;
+        var length = PayloadLength(packet, targetId);
+        if (length < UnclaimedPackets.EffectResultSize) return false;
         var payload = new ReadOnlySpan<byte>((byte*)(packet + IpcHeaderSize), length);
-        var chara = Plugin.ObjectTable.SearchByEntityId(targetId) as IBattleChara;
-        var shape = unclaimed.Classify(opcode, payload, targetId, recentSequences.Contains, chara?.MaxHp ?? 0, (byte)(chara?.ClassJob.RowId ?? 0));
+        var shape = unclaimed.Classify(opcode, payload, targetId, recentSequences.Contains, () =>
+            Plugin.ObjectTable.SearchByEntityId(targetId) is IBattleChara chara ? (chara.MaxHp, (byte)chara.ClassJob.RowId) : (0u, (byte)0));
         switch (shape)
         {
             case UnclaimedPackets.Shape.EffectResult when length >= UnclaimedPackets.EffectResultSize:
@@ -727,7 +737,7 @@ internal sealed unsafe partial class PullRecorder : IDisposable
         if (!Begin()) return;
         ref var c = ref packet->Common;
         var name = PlayerLabel(targetId);
-        if (c.NameString is { Length: > 0 } realName) realNames[targetId] = realName;
+        if (c.NameString is { Length: > 0 } realName) KnowName(targetId, realName);
         LogAdd(targetId, new CombatantInfo(0, LogName(targetId), c.ClassJobId, c.Level, packet->HomeWorldId, "", 0, 0),
             new CombatantState(c.HealthPoints, c.MaxHealthPoints, 0, 0, c.Position, MathUtil.DequantizeRotation(c.Rotation)));
         timeline!.Add("spawn_player", targetId, name, c.ClassJobId.ToString(), "ClassJob", position: c.Position, rotation: MathUtil.DequantizeRotation(c.Rotation),

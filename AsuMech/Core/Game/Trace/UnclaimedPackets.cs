@@ -5,9 +5,11 @@ using System.Collections.Generic;
 namespace AsuMech.Core.Game.Trace;
 
 // Packets no recorder hook claims, told apart by what they carry rather than by opcode, which moves
-// every patch. An opcode is trusted once three packets in a row read as the same shape:
+// every patch. An opcode is trusted once three packets read as the same shape:
 // - an effect result names its own target and the sequence of an action effect just seen;
 // - a status list opens with the target's job and carries its max HP.
+// A packet that reads as neither is no evidence against its opcode (a tick's sequence may be
+// unknown); an opcode that never matched in its first packets is not looked at again.
 public sealed class UnclaimedPackets
 {
     public enum Shape { Unknown, EffectResult, StatusList }
@@ -16,18 +18,26 @@ public sealed class UnclaimedPackets
     public const int StatusListSize = 0x14 + StatusEntries * 12;
     public const int StatusEntries = 30;
     private const int VotesToLearn = 3;
+    private const int MissesToGiveUp = 64;
 
-    private readonly Dictionary<ushort, (Shape Shape, int Votes)> votes = [];
+    private readonly Dictionary<ushort, (Shape Shape, int Votes, int Misses)> votes = [];
 
     public Shape Learned(ushort opcode)
         => votes.TryGetValue(opcode, out var v) && v.Votes >= VotesToLearn ? v.Shape : Shape.Unknown;
 
-    public Shape Classify(ushort opcode, ReadOnlySpan<byte> payload, uint targetId, Func<uint, bool> recentSequence, uint targetMaxHp, byte targetJob)
+    public bool WorthTrying(ushort opcode)
+        => !votes.TryGetValue(opcode, out var v) || v.Votes > 0 || v.Misses < MissesToGiveUp;
+
+    // `target` is only asked for when the payload is long enough to be a status list.
+    public Shape Classify(ushort opcode, ReadOnlySpan<byte> payload, uint targetId, Func<uint, bool> recentSequence, Func<(uint MaxHp, byte Job)> target)
     {
         if (Learned(opcode) is var known and not Shape.Unknown) return known;
-        var guess = Guess(payload, targetId, recentSequence, targetMaxHp, targetJob);
-        votes[opcode] = guess == Shape.Unknown ? (Shape.Unknown, 0)
-            : votes.TryGetValue(opcode, out var v) && v.Shape == guess ? (guess, v.Votes + 1) : (guess, 1);
+        var (maxHp, job) = payload.Length >= StatusListSize ? target() : (0u, (byte)0);
+        var guess = Guess(payload, targetId, recentSequence, maxHp, job);
+        var v = votes.GetValueOrDefault(opcode);
+        votes[opcode] = guess == Shape.Unknown ? v with { Misses = v.Misses + 1 }
+            : v.Shape == guess ? v with { Votes = v.Votes + 1 }
+            : (guess, 1, v.Misses);
         return Learned(opcode);
     }
 

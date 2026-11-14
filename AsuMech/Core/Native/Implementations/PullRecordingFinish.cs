@@ -38,16 +38,16 @@ internal static class PullRecordingFinish
         if (send == null) return;
         var files = new[] { path, RecordingFiles.LogPath(path), RecordingFiles.ParserLogPath(path) }.Where(File.Exists).ToList();
         var notes = new List<string>();
-        var allSent = true;
+        var sent = new List<string>();
         foreach (var file in files)
         {
             Multiplayer.RecordingUploader.Result result;
             try { result = await Multiplayer.RecordingUploader.UploadAsync(file, send.Relay, send.Token, send.PeerSecret).ConfigureAwait(false); }
             catch (Exception e) { result = new Multiplayer.RecordingUploader.Result(false, e.Message); }
             notes.Add(result.Ok ? result.Message : $"{System.IO.Path.GetFileName(file)} failed: {result.Message}");
-            allSent &= result.Ok;
+            if (result.Ok) sent.Add(file);
         }
-        ChatLater($"Upload: {string.Join("; ", notes)}{(allSent && !send.Keep ? DeleteSent(files) : "")}");
+        ChatLater($"Upload: {string.Join("; ", notes)}{(!send.Keep && sent.Count > 0 ? DeleteSent(sent) : "")}");
     }
 
     // The pull's part of the player's combat parser log, kept beside the recorder's own.
@@ -63,14 +63,17 @@ internal static class PullRecordingFinish
         var output = RecordingFiles.ParserLogPath(recordingPath);
         var partial = output + ".part";
         int lines;
-        using (var writer = new StreamWriter(partial, false, new UTF8Encoding(false)) { NewLine = "\r\n" })
-            lines = ParserLogSlice.Write(ParserLogSlice.Lines(dir, request.From, request.To), writer, new NetworkLogAnonymizer(request.RealNames, Label));
-        if (lines == 0)
+        try
         {
-            File.Delete(partial);
-            return null;
+            using (var writer = new StreamWriter(partial, false, new UTF8Encoding(false)) { NewLine = "\r\n" })
+                lines = ParserLogSlice.Write(ParserLogSlice.Lines(dir, request.From, request.To), writer, new NetworkLogAnonymizer(request.RealNames, Label));
+            if (lines > 0) File.Move(partial, output, overwrite: true);
         }
-        File.Move(partial, output, overwrite: true);
+        finally
+        {
+            if (File.Exists(partial)) File.Delete(partial);
+        }
+        if (lines == 0) return null;
         return $"Took the pull's {lines} lines from your parser log into {output}";
     }
 
@@ -89,6 +92,6 @@ internal static class PullRecordingFinish
                 all = false;
             }
         }
-        return all ? "; removed from your disk" : "";
+        return all ? $"; {paths.Count()} sent file(s) removed from your disk" : "";
     }
 }
