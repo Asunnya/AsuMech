@@ -87,7 +87,7 @@ public sealed class UcobP3HeavensfallScenario : IScenario
             ((IScenarioAi<State>)AiStrats[idx]).Run(state, world);
 
         world.Events.Add(0f, () => world.EnforceArenaBoundary(Geometry.P1ArenaRadius, "Fell into the death wall"));
-        world.Events.Add(0f, () => world.PlaceWaymarks(AetherWaymarks));
+        world.Events.Add(0f, () => world.PlaceWaymarks(UcobMarkers.Of(AiStrats, selectedAi).Waymarks));
         world.Events.Add(0f, SpawnBosses);
 
         world.Events.Add(HeavensfallTrio, () => bahamut?.Cast(ActionId.HeavensfallTrio));

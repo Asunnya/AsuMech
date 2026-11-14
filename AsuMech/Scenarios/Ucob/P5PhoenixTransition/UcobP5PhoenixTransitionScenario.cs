@@ -42,7 +42,7 @@ public sealed class UcobP5PhoenixTransitionScenario : IScenario
         bahamut = null;
         phoenix = null;
 
-        world.Events.Add(0f, () => world.PlaceWaymarks(AetherWaymarks));
+        world.Events.Add(0f, () => world.PlaceWaymarks(UcobMarkers.Of(AiStrats, selectedAi).Waymarks));
         world.Events.Add(0f, () => bahamut = SpawnBahamut(world, BahamutEdge));
         world.Events.Add(PhoenixCry, () => world.Announce("The Phoenix's shrill cry cuts through the pall of desperation!"));
         world.Events.Add(PhoenixAppears, SpawnPhoenix);

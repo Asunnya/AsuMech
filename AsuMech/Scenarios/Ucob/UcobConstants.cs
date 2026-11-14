@@ -45,6 +45,19 @@ public class UcobConstants
         new(WaymarkSlot.Four,  new Vector3(      0f, 0f,   0.000f)),
     ];
 
+    // Elemental PF's markers: the neurolinks sit on 1/2/3, an inverted triangle.
+    public static IReadOnlyList<Waymark> ElementalWaymarks =>
+    [
+        new(WaymarkSlot.A,     new Vector3(-11.472f, 0f, -16.383f)),
+        new(WaymarkSlot.B,     new Vector3( 11.472f, 0f, -16.383f)),
+        new(WaymarkSlot.C,     new Vector3( 19.319f, 0f,   5.176f)),
+        new(WaymarkSlot.D,     new Vector3(-19.319f, 0f,   5.176f)),
+        new(WaymarkSlot.One,   new Vector3( -7.570f, 0f,  -4.380f)),
+        new(WaymarkSlot.Two,   new Vector3(  7.570f, 0f,  -4.380f)),
+        new(WaymarkSlot.Three, new Vector3(      0f, 0f,   8.750f)),
+        new(WaymarkSlot.Four,  new Vector3(      0f, 0f,   0.000f)),
+    ];
+
     // The arena's SharedGroup EObjs (UcobZone), by the layout each binds to; the pieces are only
     // bound, never played.
     public class ArenaLayoutId

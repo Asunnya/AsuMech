@@ -42,7 +42,10 @@ public sealed class UcobZone : IZone
     public Vector3 Origin => new(0f, 0f, 0f);
 
     public IReadOnlyList<WaymarkLayout> WaymarkPresets { get; } =
-        [new WaymarkLayout("Aether Markers", UcobConstants.AetherWaymarks)];
+        [
+            new WaymarkLayout("Aether Markers", UcobConstants.AetherWaymarks),
+            new WaymarkLayout("Elemental", UcobConstants.ElementalWaymarks),
+        ];
 
     public DutyInitData DutyInitData => UcobReplayData.DutyInitData;
 

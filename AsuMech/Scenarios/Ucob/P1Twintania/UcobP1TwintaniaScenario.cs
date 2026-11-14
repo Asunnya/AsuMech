@@ -108,9 +108,10 @@ public sealed class UcobP1TwintaniaScenario : IScenario
             ((IScenarioAi<State>)AiStrats[idx]).Run(state, world);
 
         world.Events.Add(0f, () => world.EnforceArenaBoundary(Geometry.P1ArenaRadius, "Fell into the death wall"));
-        world.Events.Add(0f, () => world.PlaceWaymarks(AetherWaymarks));
+        world.Events.Add(0f, () => world.PlaceWaymarks(UcobMarkers.Of(AiStrats, selectedAi).Waymarks));
         world.Events.Add(0f, SpawnTwintania);
-        world.Events.Add(0.3f, () => twintania?.MoveTo(ToWorld(NorthCamp), 6f, MathF.PI));
+        var markers = UcobMarkers.Of(AiStrats, selectedAi);
+        world.Events.Add(0.3f, () => twintania?.MoveTo(ToWorld(markers.Place(NorthCamp)), 6f, markers.Face(MathF.PI)));
         world.Events.Add(3.21f, () => twintania?.AddStatus(StatusId.TwintaniaNeurolink));
 
         foreach (var at in PlummetHits) world.Events.Add(at, Plummet);
@@ -133,9 +134,9 @@ public sealed class UcobP1TwintaniaScenario : IScenario
             world.Events.Add(at + DeathSentenceCastSeconds - 0.02f, DeathSentence);
         }
         foreach (var at in NeurolinkDrops) world.Events.Add(at, DropNeurolink);
-        world.Events.Add(ToFirstWestCamp, () => twintania?.MoveTo(ToWorld(FirstWestCamp), 4.3f));
-        world.Events.Add(ToSecondWestCamp, () => twintania?.MoveTo(ToWorld(SecondWestCamp), 7f));
-        world.Events.Add(ToEastCamp, () => twintania?.MoveTo(ToWorld(EastCamp), 6.6f));
+        world.Events.Add(ToFirstWestCamp, () => twintania?.MoveTo(ToWorld(markers.Place(FirstWestCamp)), 4.3f));
+        world.Events.Add(ToSecondWestCamp, () => twintania?.MoveTo(ToWorld(markers.Place(SecondWestCamp)), 7f));
+        world.Events.Add(ToEastCamp, () => twintania?.MoveTo(ToWorld(markers.Place(EastCamp)), 6.6f));
 
         for (var set = 0; set < LiquidHellDrops.Length; set++)
         {

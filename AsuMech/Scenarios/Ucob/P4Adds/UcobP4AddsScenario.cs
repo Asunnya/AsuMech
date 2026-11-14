@@ -122,14 +122,14 @@ public sealed class UcobP4AddsScenario : IScenario
             ((IScenarioAi<State>)AiStrats[idx]).Run(state, world);
 
         world.Events.Add(0f, () => world.EnforceArenaBoundary(Geometry.P1ArenaRadius, "Fell into the death wall"));
-        world.Events.Add(0f, () => world.PlaceWaymarks(AetherWaymarks));
+        world.Events.Add(0f, () => world.PlaceWaymarks(UcobMarkers.Of(AiStrats, selectedAi).Waymarks));
         world.Events.Add(0f, () =>
         {
             bahamut = Spawn(BNpcBaseId.BahamutPrime, BNpcNameId.BahamutPrime, BahamutSpot, EnemyListMode.Never);
             bahamut?.PlayActionTimeline(TimelineId.BahamutPrimeLands);
         });
         world.Events.Add(0f, () => helpers.Fill(HelperPoolSize));
-        world.Events.Add(0f, DropNeurolinks);
+        world.Events.Add(0f, () => DropNeurolinks(UcobMarkers.Of(AiStrats, selectedAi)));
         world.Events.Add(AddsAppear, SpawnAdds);
         world.Events.Add(ReturnAnimations, PlayReturnAnimations);
         world.Events.Add(FavorTethers, TetherAddsToBahamut);
@@ -217,11 +217,11 @@ public sealed class UcobP4AddsScenario : IScenario
         return enemy;
     }
 
-    private void DropNeurolinks()
+    private void DropNeurolinks(UcobMarkers markers)
     {
-        neurolinks.Drop(AddsNeurolinks.North);
-        neurolinks.Drop(AddsNeurolinks.West);
-        neurolinks.Drop(AddsNeurolinks.East);
+        neurolinks.Drop(markers.Place(AddsNeurolinks.North));
+        neurolinks.Drop(markers.Place(AddsNeurolinks.West));
+        neurolinks.Drop(markers.Place(AddsNeurolinks.East));
     }
 
     private void PlayReturnAnimations()
