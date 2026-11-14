@@ -21,7 +21,7 @@ public sealed class UcobP4AddsScenario : IScenario
     public string Name => "Adds";
     public IPhase Phase => UcobZone.P4;
 
-    public IReadOnlyList<IScenarioAi> AiStrats => [new UcobP4AddsAi()];
+    public IReadOnlyList<IScenarioAi> AiStrats => [new UcobP4AddsAi(), new UcobP4AddsTuuflessAi()];
 
     private readonly UcobP4AddsSettingsWindow settingsWindow = new();
     public void DrawSettings() => settingsWindow.Draw();
