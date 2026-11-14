@@ -40,9 +40,18 @@
   "toolbox": {
     "planId": "Y4WRFLhdHSQ7oLN_",
     "roleMap": {},
-    "steps": {},
+    "steps": {
+      "UcobP5ExaflaresAi@5.01-13.26": 2
+    },
     "exampleSeed": 1,
-    "residual": 0
+    "residual": 0.0,
+    "pages": [
+      3,
+      13,
+      14,
+      15,
+      16
+    ]
   },
   "draft": true
 }
