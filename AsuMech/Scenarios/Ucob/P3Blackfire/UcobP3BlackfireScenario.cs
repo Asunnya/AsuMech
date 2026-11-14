@@ -18,7 +18,7 @@ public sealed class UcobP3BlackfireScenario : IScenario
     public string Name => "Blackfire Trio";
     public IPhase Phase => UcobZone.P3;
 
-    public IReadOnlyList<IScenarioAi> AiStrats => [new UcobP3BlackfireAi()];
+    public IReadOnlyList<IScenarioAi> AiStrats => [new UcobP3BlackfireAi(), new UcobP3BlackfireAi(tuufless: true)];
 
     private readonly UcobP3BlackfireSettingsWindow settingsWindow = new();
     public void DrawSettings() => settingsWindow.Draw();

@@ -18,7 +18,7 @@ public sealed class UcobP3QuickmarchScenario : IScenario
     public string Name => "Quickmarch Trio";
     public IPhase Phase => UcobZone.P3;
 
-    public IReadOnlyList<IScenarioAi> AiStrats => [new UcobP3QuickmarchAi()];
+    public IReadOnlyList<IScenarioAi> AiStrats => [new UcobP3QuickmarchAi(), new UcobP3QuickmarchAi(tuufless: true)];
 
     private readonly UcobP3QuickmarchSettingsWindow settingsWindow = new();
     public void DrawSettings() => settingsWindow.Draw();

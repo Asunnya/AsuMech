@@ -11,9 +11,11 @@ using State = AsuMech.Scenarios.Ucob.P3Blackfire.UcobP3BlackfireState;
 
 namespace AsuMech.Scenarios.Ucob.P3Blackfire;
 
-public sealed class UcobP3BlackfireAi : IScenarioAi<UcobP3BlackfireState>
+public sealed class UcobP3BlackfireAi(bool tuufless = false) : IScenarioAi<UcobP3BlackfireState>, IUcobStrat
 {
-    public string Name => "Party toward Nael, DPS counterclockwise, supports clockwise";
+    public string Name => tuufless ? "Tuufless (Elemental)" : "Party toward Nael, DPS counterclockwise, supports clockwise";
+
+    public UcobMarkers Markers => tuufless ? UcobMarkers.Elemental : UcobMarkers.Aether;
 
     private static readonly PartyRole[] Roles = Enum.GetValues<PartyRole>();
 
@@ -27,6 +29,7 @@ public sealed class UcobP3BlackfireAi : IScenarioAi<UcobP3BlackfireState>
     private const float NearTowerBearing = 45f;
     private const float FarTowerBearing = 135f;
     private const float TowerDistance = 14f;
+    private const float BesideTheTowerDistance = 18.5f;
     private const float StackDetourDistance = 9f;
     private const float StackBearing = 180f;
     private const float StackDistance = 9f;
@@ -54,24 +57,35 @@ public sealed class UcobP3BlackfireAi : IScenarioAi<UcobP3BlackfireState>
         ai.Move(LeadTheLiquidHellsTowardNael, () => Spots(r => AroundNael(0f, r == state.LiquidHellTarget ? LiquidHellLeadTowardNael : PackTowardNael)), jitter: 0f);
         ai.Move(SplitAlongTheRim, () => Spots(r => r == state.LiquidHellTarget ? AroundNael(0f, LiquidHellLeadTowardNael) : RimTurn(r)), jitter: 0f, sprint: true);
         ai.Move(Scenario.LiquidHells[^1] + LeaveTheLastLiquidHell, () => Spots(RimTurn), jitter: 0f, sprint: true);
-        ai.Move(TakeTowersOrDetourToTheStack, () => Spots(TowerOrStackDetour), jitter: 0f, sprint: true);
-        ai.Move(StackOppositeNael, () => Spots(r => StackTargeted(r) ? AroundNael(StackBearing, StackDistance) : TowerOrStackDetour(r)), jitter: 0f, sprint: true);
+        if (tuufless)
+        {
+            ai.Move(TakeTowersOrDetourToTheStack, () => Spots(r => TowerOrStackDetour(r, BesideTheTowerDistance)), jitter: 0f, sprint: true);
+            ai.Move(StackOppositeNael, () => Spots(r => StackTargeted(r) ? AroundNael(StackBearing, StackDistance) : TowerOrStackDetour(r, BesideTheTowerDistance)), jitter: 0f, sprint: true);
+            ai.Move(Scenario.Hypernovas[1], () => Spots(r => StackTargeted(r) ? AroundNael(StackBearing, StackDistance) : TowerOrStackDetour(r, TowerDistance)), jitter: 0f, sprint: true);
+        }
+        else
+        {
+            ai.Move(TakeTowersOrDetourToTheStack, () => Spots(r => TowerOrStackDetour(r, TowerDistance)), jitter: 0f, sprint: true);
+            ai.Move(StackOppositeNael, () => Spots(r => StackTargeted(r) ? AroundNael(StackBearing, StackDistance) : TowerOrStackDetour(r, TowerDistance)), jitter: 0f, sprint: true);
+        }
         ai.Move(RegroupForGigaflare, () => Spots(r => r == MainTank ? AroundNael(0f, MainTankGigaflareDistance) : AroundNael(StackBearing, GigaflareStackDistance)), jitter: 0f, sprint: true);
     }
 
     private Vector2 RimTurn(PartyRole role) => AroundNael(Side(role) * RimTurnBearing, RimTurnDistance);
 
-    private static float Side(PartyRole role) => State.Supports.Contains(role) ? 1f : -1f;
+    private float Side(PartyRole role) => State.Supports.Contains(role) == SupportsTurnClockwise ? 1f : -1f;
+
+    private bool SupportsTurnClockwise => !tuufless;
 
     private bool StackTargeted(PartyRole role) => state.StackTargets.Contains(role);
 
-    private Vector2 TowerOrStackDetour(PartyRole role)
+    private Vector2 TowerOrStackDetour(PartyRole role, float towerDistance)
     {
         if (StackTargeted(role)) return AroundNael(Side(role) * FarTowerBearing, StackDetourDistance);
         var group = State.Supports.Contains(role) ? State.Supports : State.Dps;
         var soakers = group.Where(r => !StackTargeted(r)).OrderBy(r => (int)r).ToList();
         var bearing = soakers.IndexOf(role) == 0 ? NearTowerBearing : FarTowerBearing;
-        return AroundNael(Side(role) * bearing, TowerDistance);
+        return AroundNael(Side(role) * bearing, towerDistance);
     }
 
     private Vector2 AroundNael(float bearing, float distance)
