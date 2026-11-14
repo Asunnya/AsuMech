@@ -11,9 +11,9 @@ using State = AsuMech.Scenarios.Ucob.P3GrandOctet.UcobP3GrandOctetState;
 
 namespace AsuMech.Scenarios.Ucob.P3GrandOctet;
 
-public sealed class UcobP3GrandOctetAi(bool tankLimitBreak) : IScenarioAi<UcobP3GrandOctetState>
+public class UcobP3GrandOctetAi(bool tankLimitBreak) : IScenarioAi<UcobP3GrandOctetState>
 {
-    public string Name => tankLimitBreak
+    public virtual string Name => tankLimitBreak
         ? "Run the rim from opposite Bahamut, tank LB3 for the stacks"
         : "Run the rim from opposite Bahamut, no LB3: stack clockwise of Twintania";
 
@@ -43,7 +43,7 @@ public sealed class UcobP3GrandOctetAi(bool tankLimitBreak) : IScenarioAi<UcobP3
     private static readonly Vector2[] StackHuddle = [new(-0.3f, -0.3f), new(0.3f, -0.3f), new(-0.3f, 0.3f), new(0.3f, 0.3f)];
     private static readonly ushort[] LimitBreakStatuses = [StatusId.LastBastion, StatusId.LandWaker, StatusId.DarkForce, StatusId.GunmetalSoul];
 
-    private State state = null!;
+    protected State state = null!;
     private SimWorld world = null!;
     private int runFromSlot;
     private bool stacksIgnored;
@@ -67,7 +67,7 @@ public sealed class UcobP3GrandOctetAi(bool tankLimitBreak) : IScenarioAi<UcobP3
         }
         ai.Move(BackToCentre, () => AiMove.Create(Everyone(Vector2.Zero)).NaturalOrder(), jitter: 0f, sprint: true);
         ai.Move(LeaveCentreForPosts, () => AiMove.Create(BaitToTheLeftOfTwintania()).NaturalOrder(), jitter: 0f, sprint: true);
-        if (tankLimitBreak) world.Events.Add(Scenario.StackMarkers + 0.03f, MainTankLimitBreak);
+        if (tankLimitBreak) world.Events.Add(Scenario.StackMarkers + 0.03f, TankLimitBreak);
         ai.Move(Scenario.StackMarkers + 0.03f, () => AiMove.Create(TowerSoakersOnTheirTowers()).NaturalOrder(), jitter: 0f);
         ai.Move(tankLimitBreak ? LimitBreakCheck : Scenario.StackMarkers + 0.03f, () => AiMove.Create(StackersToTheirSpots()).NaturalOrder(), jitter: 0f);
         ai.Move(BaitLeaves, () => AiMove.Create(BaitToItsPost()).NaturalOrder(), jitter: 0f, sprint: true);
@@ -90,7 +90,11 @@ public sealed class UcobP3GrandOctetAi(bool tankLimitBreak) : IScenarioAi<UcobP3
 
     private Vector2 StackSpot => State.AtBearing(TwintaniaBearing + StackOffset, StackRadius);
 
-    private void MainTankLimitBreak() => world.Party.UseLimitBreak(PartyRole.MainTank);
+    protected bool UsesTankLimitBreak => tankLimitBreak;
+
+    protected virtual PartyRole LimitBreakTank => PartyRole.MainTank;
+
+    private void TankLimitBreak() => world.Party.UseLimitBreak(LimitBreakTank);
 
     private Vector2?[] BaitToTheLeftOfTwintania()
     {

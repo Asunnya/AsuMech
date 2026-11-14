@@ -20,7 +20,7 @@ public sealed class UcobP3HeavensfallScenario : IScenario
     public string Name => "Heavensfall Trio";
     public IPhase Phase => UcobZone.P3;
 
-    public IReadOnlyList<IScenarioAi> AiStrats => [new UcobP3HeavensfallAi()];
+    public IReadOnlyList<IScenarioAi> AiStrats => [new UcobP3HeavensfallAi(), new UcobP3HeavensfallTuuflessAi()];
 
     private readonly UcobP3HeavensfallSettingsWindow settingsWindow = new();
     public void DrawSettings() => settingsWindow.Draw();
