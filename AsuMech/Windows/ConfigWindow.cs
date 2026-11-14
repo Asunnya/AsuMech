@@ -312,6 +312,26 @@ public class ConfigWindow : Window, IDisposable
         }
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Point this at the repo's datalogs/replays so the recordings sit next to the ACT logs.");
+        var slice = configuration.SaveActLogSlice;
+        if (Pills.Checkbox("Save the pull's ACT/IINACT log beside the recording", ref slice))
+        {
+            configuration.SaveActLogSlice = slice;
+            configuration.Save();
+        }
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("When the recording ends, the part of your ACT or IINACT network log it covers is saved as a .log next to it (and sent with it). Player names become \"player 1\", \"player 2\"... as in the recording, and chat between players is left out.");
+        if (slice)
+        {
+            var actDir = configuration.ActLogDir;
+            ImGui.SetNextItemWidth(260f * ImGuiHelpers.GlobalScale);
+            if (ImGui.InputTextWithHint("ACT log folder##act-log-dir", "found on its own (IINACT, ACT)", ref actDir, 260))
+            {
+                configuration.ActLogDir = actDir;
+                configuration.Save();
+            }
+            if (ImGui.IsItemHovered())
+                ImGui.SetTooltip("Only needed when your logs aren't where IINACT or ACT keep them by default.");
+        }
         DrawSavedRecordings(recorder);
         if (configuration.RecordAlwaysTerritories.Count > 0)
         {

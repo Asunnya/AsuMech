@@ -27,6 +27,10 @@ public class Configuration : IPluginConfiguration
     public bool UploadRecordings { get; set; } = true;
     // A sent recording is deleted from disk unless this is on.
     public bool KeepRecordingsAfterUpload { get; set; } = false;
+    // Saves the pull's stretch of the ACT/IINACT log beside the recording (and sends it with it).
+    public bool SaveActLogSlice { get; set; } = true;
+    // Where the ACT/IINACT network logs are; empty looks in IINACT's and ACT's own folders.
+    public string ActLogDir { get; set; } = "";
     // Override of DefaultRecordingsRelay; both empty means no upload destination.
     public string RecordingsRelayUrl { get; set; } = "";
     public string RecordingsRelayToken { get; set; } = "";

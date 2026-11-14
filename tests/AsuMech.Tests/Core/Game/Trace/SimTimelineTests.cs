@@ -28,7 +28,7 @@ public class SimTimelineTests
         Assert.That(lines[0], Is.EqualTo(string.Join(",", SimTimeline.Columns)));
         Assert.That(lines, Has.Length.EqualTo(4));
         Assert.That(lines[1], Does.StartWith("1.500,cast,40001A2B,Wicked Thunder,37917,Wrath of Zeus,,,100.00,100.00,3.14,cast=4.70s interruptible=0 rel_rot=0.00,0.0,"));
-        Assert.That(lines[1], Does.EndWith(",0.00,,Scenario.cs:42"));
+        Assert.That(lines[1], Does.EndWith(",0.00,,Scenario.cs:42,,,"));
         Assert.That(lines[2], Does.Contain("\"hits=2 [Creatina Whey, Alpha \"\"Bot\"\"]\""));
         Assert.That(lines[3], Does.Contain(",\"0x0,0x54,0x10001234\","));
     }
@@ -63,12 +63,29 @@ public class SimTimelineTests
         var timeline = new SimTimeline(sink) { Clock = () => t };
         Assert.That(sink.ToString(), Is.Empty);
         timeline.Add("duty", id: "start");
-        Assert.That(sink.ToString(), Is.EqualTo(string.Join(",", SimTimeline.Columns) + "\n0.000,duty,,,start,,,,,,,,,,,,,,,,\n"));
+        Assert.That(sink.ToString(), Is.EqualTo(string.Join(",", SimTimeline.Columns) + "\n0.000,duty,,,start,,,,,,,,,,,,,,,,,,,\n"));
         t = 2f;
         timeline.Add("duty", id: "wipe");
         Assert.That(sink.ToString().Split('\n', StringSplitOptions.RemoveEmptyEntries), Has.Length.EqualTo(3));
         Assert.That(timeline.Rows, Is.Empty);
         Assert.That(timeline.Count, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void AbilityTargetsAndEffectsReachTheFile()
+    {
+        var sink = new StringWriter { NewLine = "\n" };
+        var timeline = new SimTimeline(sink);
+        timeline.Add("ability", 0x40000001, "boss", "100", extra: new Dictionary<string, string>
+        {
+            ["targets"] = "10000001 10000002",
+            ["target_pos"] = "100.00 0.00 95.00",
+            ["effects"] = "10000001:03.00.00.00.00.00.1F40",
+        });
+        var row = SimTimeline.Read(sink.ToString()).Single();
+        Assert.That(row["targets"], Is.EqualTo("10000001 10000002"));
+        Assert.That(row["target_pos"], Is.EqualTo("100.00 0.00 95.00"));
+        Assert.That(row["effects"], Is.EqualTo("10000001:03.00.00.00.00.00.1F40"));
     }
 
     [Test]

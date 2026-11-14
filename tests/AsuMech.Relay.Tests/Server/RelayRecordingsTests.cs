@@ -137,6 +137,9 @@ public class RelayRecordingsTests
         Assert.That(RelayServer.IsStoredRecordingName("pull_01234567.csv.gz"));
         Assert.That(RelayServer.IsStoredRecordingName("pull.csv"), Is.False);
         Assert.That(RelayServer.IsStoredRecordingName("../x.csv.gz"), Is.False);
+        Assert.That(RelayServer.RecordingFileName("1232_20261105_213000.log", peer), Is.EqualTo("1232_20261105_213000_01234567.log.gz"));
+        Assert.That(RelayServer.IsStoredRecordingName("1232_20261105_213000_01234567.log.gz"));
+        Assert.That(RelayServer.IsStoredRecordingName("pull_01234567.txt.gz"), Is.False);
     }
 
     private static async Task<(int Status, string Body)> Post(int port, string name, string? secret, byte[] body, string? token = null, string? origin = null)

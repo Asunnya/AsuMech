@@ -404,8 +404,9 @@ pulls without asking for files. Off unless the relay opts in:
 asumech-relay --token <join-token> --admin-token <admin-token> --recordings-dir /srv/asumech/recordings
 ```
 
-- `--recordings-dir <path>`: where uploads land, one `.csv.gz` per recording, named after the
-  uploader's file plus the first 8 characters of their peer id. Enabling it needs `--token` or at
+- `--recordings-dir <path>`: where uploads land, one `.csv.gz` per recording (plus a `.log.gz`
+  when the sender's ACT/IINACT log of the pull came along), named after the uploader's file plus
+  the first 8 characters of their peer id. Enabling it needs `--token` or at
   least one `--recordings-from`, so nobody anonymous can fill the disk.
 - `--recordings-from <peer id>` (repeatable): only these peers may upload. The peer id is the
   identity the relay derives from the plugin's credential, shown in the plugin's Multiplayer
@@ -422,7 +423,7 @@ asumech-relay --admin --host https://relay.yourdomain.com --admin-token <admin-t
 ```
 
 That lists `GET /recordings`, downloads every file not already in `--out` and expands it back to
-the `.csv` the plugin wrote; run it again after each raid night. `GET /recordings/<name>` serves
+the `.csv` (and `.log`) the plugin wrote; run it again after each raid night. `GET /recordings/<name>` serves
 one file. Both need the `X-AsuMech-Admin-Token` header, like the other admin endpoints.
 
 ### Lesson feedback
@@ -477,7 +478,7 @@ domain. The token is in the source, so treat it as a filter against scanners, no
 cap the disk with `--max-recording-bytes`, and list the people you expect with
 `--recordings-from` (each sees their id under Settings, "Copy my id") once the group is known.
 The uploads are already files on your disk; `--admin --recordings --out datalogs/replays` is only
-the step that expands them to `.csv` where `replay-diff` reads.
+the step that expands them to `.csv` and `.log` where `replay-diff` reads.
 
 ---
 

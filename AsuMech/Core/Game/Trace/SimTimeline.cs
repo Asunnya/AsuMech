@@ -18,7 +18,8 @@ public sealed class SimTimeline
 {
     public static readonly string[] Columns =
         ["t", "kind", "actor", "actor_name", "id", "name", "target", "target_name", "x", "z", "rot", "detail",
-         "omen_delay", "ballista", "anim_lock", "anim_var", "knockback", "damage_type", "y", "p", "source"];
+         "omen_delay", "ballista", "anim_lock", "anim_var", "knockback", "damage_type", "y", "p", "source",
+         "targets", "target_pos", "effects"];
 
     private readonly List<Dictionary<string, string>> rows = [];
     private readonly TextWriter? sink;
