@@ -34,6 +34,8 @@ internal sealed class ToolboxViewer : Window
     private const float OtherRoleAlpha = 0.3f;
     private const float MinMapPx = 120f;
     private const float MaxMapLabelFraction = 0.4f;
+    // The floor is a shade off the window; its edge needs a line the eye can find.
+    private const float ArenaEdgePx = 1.5f;
 
     private ToolboxPlan? plan;
     private LessonToolbox? link;
@@ -147,7 +149,9 @@ internal sealed class ToolboxViewer : Window
         var avail = ImGui.GetContentRegionAvail();
         var texts = step.Objects.Where(o => o.Kind == "text" && o.Label.Trim().Length > 0 && !plan.Footer.Contains(o.Label.Trim())).ToList();
         var captions = texts.Where(o => !FitsOnMap(o.Label, avail.X)).Select(o => o.Label.Trim()).ToList();
-        var note = step.Note.Length > 0 ? step.Note.Split('\n')[0] : null;
+        // Some authors write every step in its note rather than on the drawing, so the whole note shows.
+        var noteLines = step.Note.Split('\n').Select(l => l.Trim()).Where(l => l.Length > 0).ToList();
+        var note = noteLines.Count > 0 ? string.Join('\n', noteLines) : null;
         var below = captions.Concat(note is null ? Array.Empty<string>() : [note])
             .Sum(t => ImGui.CalcTextSize(t, false, avail.X).Y + ImGui.GetStyle().ItemSpacing.Y);
         var size = Math.Max(MinMapPx * ImGuiHelpers.GlobalScale, Math.Min(avail.X, avail.Y - below));
@@ -165,16 +169,16 @@ internal sealed class ToolboxViewer : Window
                 px = size / (square.HalfWidth * 2f + ArenaMarginYalms * 2f);
                 var half = new Vector2(square.HalfWidth * px);
                 draw.AddRectFilled(centre - half, centre + half, AsuTheme.U32(AsuTheme.Element));
-                draw.AddRect(centre - half, centre + half, AsuTheme.U32(AsuTheme.Line));
+                draw.AddRect(centre - half, centre + half, AsuTheme.U32(AsuTheme.Muted), 0f, ImDrawFlags.None, ArenaEdgePx);
                 break;
             case CircleArena circle:
                 px = size / (circle.Radius * 2f + ArenaMarginYalms * 2f);
                 draw.AddCircleFilled(centre, circle.Radius * px, AsuTheme.U32(AsuTheme.Element));
-                draw.AddCircle(centre, circle.Radius * px, AsuTheme.U32(AsuTheme.Line));
+                draw.AddCircle(centre, circle.Radius * px, AsuTheme.U32(AsuTheme.Muted), 64, ArenaEdgePx);
                 break;
             default:
                 draw.AddCircleFilled(centre, size * 0.5f, AsuTheme.U32(AsuTheme.Element));
-                draw.AddCircle(centre, size * 0.5f, AsuTheme.U32(AsuTheme.Line));
+                draw.AddCircle(centre, size * 0.5f, AsuTheme.U32(AsuTheme.Muted), 64, ArenaEdgePx);
                 break;
         }
         draw.AddText(new Vector2(centre.X - 4f, origin.Y), AsuTheme.U32(AsuTheme.Muted), "N");
