@@ -7,22 +7,22 @@ using AsuMech.Core.Game.Trace;
 
 namespace AsuMech.Core.Native.Implementations;
 
-// Where the player's ACT or IINACT writes its network logs.
-internal static class ActLogFolder
+// Where the player's combat parser writes its network logs.
+internal static class ParserLogFolder
 {
     // The first candidate holding a log written since `since`, or null.
     public static string? Find(string configured, DateTimeOffset since)
-        => Candidates(configured).FirstOrDefault(dir => ActLogSlice.Files(dir, since).Count > 0);
+        => Candidates(configured).FirstOrDefault(dir => ParserLogSlice.Files(dir, since).Count > 0);
 
     private static IEnumerable<string> Candidates(string configured)
     {
         if (configured.Trim() is { Length: > 0 } dir) yield return dir;
-        if (IinactConfigured() is { } iinact) yield return iinact;
+        if (ConfiguredFolder() is { } fromConfig) yield return fromConfig;
         yield return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "IINACT");
         yield return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Advanced Combat Tracker", "FFXIVLogs");
     }
 
-    private static string? IinactConfigured()
+    private static string? ConfiguredFolder()
     {
         try
         {
@@ -33,7 +33,7 @@ internal static class ActLogFolder
         }
         catch (Exception e) when (e is IOException or JsonException or UnauthorizedAccessException)
         {
-            DiagnosticLog.Warn($"[ActLogFolder] reading IINACT's config failed: {e.Message}");
+            DiagnosticLog.Warn($"[ParserLogFolder] reading the parser's config failed: {e.Message}");
             return null;
         }
     }

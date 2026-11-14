@@ -312,25 +312,25 @@ public class ConfigWindow : Window, IDisposable
         }
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("Point this at the repo's datalogs/replays so the recordings sit next to the ACT logs.");
-        var slice = configuration.PreferActLog;
-        if (Pills.Checkbox("Use my ACT/IINACT log for the pull's .log when I have one", ref slice))
+        var slice = configuration.AttachParserLog;
+        if (Pills.Checkbox("Also save my combat parser's log of the pull", ref slice))
         {
-            configuration.PreferActLog = slice;
+            configuration.AttachParserLog = slice;
             configuration.Save();
         }
         if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("Every recording comes with an ACT-format .log of the pull, written by AsuMech. With this on and ACT or IINACT running, the part of their log the pull covers is used instead. Either way player names become \"player 1\", \"player 2\"... as in the recording, and chat between players is left out.");
+            ImGui.SetTooltip("Every recording comes with a network .log of the pull written by AsuMech. With this on and a combat parser running, the part of its network log the pull covers is saved beside it as _parser.log. Player names become \"player 1\", \"player 2\"... as in the recording, and chat between players is left out.");
         if (slice)
         {
-            var actDir = configuration.ActLogDir;
+            var parserDir = configuration.ParserLogDir;
             ImGui.SetNextItemWidth(260f * ImGuiHelpers.GlobalScale);
-            if (ImGui.InputTextWithHint("ACT log folder##act-log-dir", "found on its own (IINACT, ACT)", ref actDir, 260))
+            if (ImGui.InputTextWithHint("Parser log folder##parser-log-dir", "found on its own", ref parserDir, 260))
             {
-                configuration.ActLogDir = actDir;
+                configuration.ParserLogDir = parserDir;
                 configuration.Save();
             }
             if (ImGui.IsItemHovered())
-                ImGui.SetTooltip("Only needed when your logs aren't where IINACT or ACT keep them by default.");
+                ImGui.SetTooltip("Only needed when your parser keeps its network logs somewhere other than its default folder.");
         }
         DrawSavedRecordings(recorder);
         if (configuration.RecordAlwaysTerritories.Count > 0)

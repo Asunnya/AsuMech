@@ -404,8 +404,8 @@ pulls without asking for files. Off unless the relay opts in:
 asumech-relay --token <join-token> --admin-token <admin-token> --recordings-dir /srv/asumech/recordings
 ```
 
-- `--recordings-dir <path>`: where uploads land, one `.csv.gz` per recording plus its ACT-format
-  `.log.gz` (the sender's own ACT/IINACT log of the pull when they run one), named after the uploader's file plus
+- `--recordings-dir <path>`: where uploads land, one `.csv.gz` per recording plus its network
+  `.log.gz` (and a `_parser.log.gz` when the sender's combat parser logged the pull too), named after the uploader's file plus
   the first 8 characters of their peer id. Enabling it needs `--token` or at
   least one `--recordings-from`, so nobody anonymous can fill the disk.
 - `--recordings-from <peer id>` (repeatable): only these peers may upload. The peer id is the

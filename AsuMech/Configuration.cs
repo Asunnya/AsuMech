@@ -27,11 +27,11 @@ public class Configuration : IPluginConfiguration
     public bool UploadRecordings { get; set; } = true;
     // A sent recording is deleted from disk unless this is on.
     public bool KeepRecordingsAfterUpload { get; set; } = false;
-    // Every recording gets an ACT-format .log; with this on it is the player's own ACT/IINACT log
-    // of the pull when there is one, else the one the recorder writes.
-    public bool PreferActLog { get; set; } = true;
-    // Where the ACT/IINACT network logs are; empty looks in IINACT's and ACT's own folders.
-    public string ActLogDir { get; set; } = "";
+    // Every recording gets a network .log written by the recorder; with this on, the pull's part of
+    // the player's own combat parser log is saved beside it too.
+    public bool AttachParserLog { get; set; } = true;
+    // Where the combat parser's network logs are; empty looks in the parsers' default folders.
+    public string ParserLogDir { get; set; } = "";
     // Override of DefaultRecordingsRelay; both empty means no upload destination.
     public string RecordingsRelayUrl { get; set; } = "";
     public string RecordingsRelayToken { get; set; } = "";

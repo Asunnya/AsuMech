@@ -52,6 +52,9 @@ internal sealed unsafe partial class PullRecorder : IDisposable
     private const int RawBytes = 0x40;
     private const int RawRowsPerOpcode = 50;
     private const int IpcHeaderSize = 0x10;
+    private const int SegmentHeaderSize = 0x10;
+    private const int MaxSegmentSize = 0x10000;
+    private const int RecentSequences = 512;
     // Retail's snapshot is 0x88 bytes: 65 states. UNVERIFIED that no duty sends a longer one.
     private const int SnapshotStates = 65;
 
@@ -76,7 +79,7 @@ internal sealed unsafe partial class PullRecorder : IDisposable
     private readonly Dictionary<uint, bool> dead = [];
     private readonly Dictionary<uint, bool> targetable = [];
     private readonly Dictionary<ushort, int> rawCounts = [];
-    // Players' real names, never written to the CSV: only the ACT log slice is renamed with them.
+    // Players' real names, never written to the CSV: only the network logs are renamed with them.
     private readonly Dictionary<uint, string> realNames = [];
     private HashSet<uint> present = [];
     private long lastPoseMs;
@@ -84,6 +87,10 @@ internal sealed unsafe partial class PullRecorder : IDisposable
     private bool inCombat;
     private DateTimeOffset startedAt;
     private bool handled;
+    private nint dispatchingPayload;
+    private readonly UnclaimedPackets unclaimed = new();
+    private readonly HashSet<uint> recentSequences = [];
+    private readonly Queue<uint> recentSequenceOrder = new();
 
     public string? Path { get; private set; }
     public bool Recording => timeline != null;
@@ -147,6 +154,7 @@ internal sealed unsafe partial class PullRecorder : IDisposable
         battleTalkHook = TryHook<PacketDispatcherPointers.HandleBattleTalkPacketDelegate>("BattleTalk",
             () => Marshal.GetFunctionPointerForDelegate(PacketDispatcherPointers.HandleBattleTalkPacket
                 ?? throw new InvalidOperationException("signature not found")), OnBattleTalk);
+        HookClient();
 
         Plugin.DutyState.DutyStarted += OnDutyStarted;
         Plugin.DutyState.DutyWiped += OnDutyWiped;
@@ -287,13 +295,16 @@ internal sealed unsafe partial class PullRecorder : IDisposable
         lastHealthMs = -HealthIntervalMs;
         inCombat = false;
         startedAt = DateTimeOffset.Now;
+        ResetClient();
+        recentSequences.Clear();
+        recentSequenceOrder.Clear();
         clock.Restart();
         timeline = new SimTimeline(writer) { Clock = () => (float)clock.Elapsed.TotalSeconds };
         var place = Plugin.DataManager.GetExcelSheet<LuminaTerritoryType>()?.GetRowOrDefault(territory)?.PlaceName.ValueNullable?.Name.ExtractText() ?? "";
         var player = Plugin.ObjectTable.LocalPlayer;
         timeline.Add("recording", player?.EntityId ?? 0, player is null ? "" : PlayerLabel(player.EntityId), territory.ToString(), place,
             detail: $"started={DateTime.Now:O} game={new string(FFXIVClientStructs.FFXIV.Client.System.Framework.Framework.Instance()->GameVersionString)} missing_hooks={string.Join("/", missingHooks)}");
-        OpenActLog(territory, place, Path);
+        OpenNetworkLog(territory, place, Path);
         foreach (var hook in hooks) hook.Enable();
         DiagnosticLog.Info($"[PullRecorder] recording {place} ({territory}) to {Path}");
     }
@@ -308,7 +319,7 @@ internal sealed unsafe partial class PullRecorder : IDisposable
         timeline.Flush();
         writer?.Dispose();
         writer = null;
-        CloseActLog();
+        CloseNetworkLog();
         var rows = timeline.Count;
         timeline = null;
         clock.Stop();
@@ -316,8 +327,8 @@ internal sealed unsafe partial class PullRecorder : IDisposable
         Chat($"Recording saved: {rows} rows, {Path}");
         if (Path is not { } path) return;
         var config = Plugin.Config;
-        var slice = config.PreferActLog
-            ? new PullRecordingFinish.SliceRequest(config.ActLogDir, startedAt - SliceMargin, DateTimeOffset.Now + SliceMargin,
+        var slice = config.AttachParserLog
+            ? new PullRecordingFinish.SliceRequest(config.ParserLogDir, startedAt - SliceMargin, DateTimeOffset.Now + SliceMargin,
                 names.Where(kv => kv.Key >> 28 == 1).ToDictionary(), new Dictionary<uint, string>(realNames))
             : null;
         PullRecordingFinish.UploadRequest? send = null;
@@ -360,8 +371,9 @@ internal sealed unsafe partial class PullRecorder : IDisposable
         {
             inCombat = combat;
             timeline!.Add("combat", id: combat ? "start" : "end");
-            actLog?.InCombat(combat);
+            netLog?.InCombat(combat);
         }
+        TickClient();
         var seen = new HashSet<uint>();
         foreach (var obj in Plugin.ObjectTable)
         {
@@ -378,7 +390,12 @@ internal sealed unsafe partial class PullRecorder : IDisposable
                 if (sampleHealth) SampleHealth(chara);
             }
             if (obj.ObjectKind == DalamudObjectKind.BattleNpc) DiffTargetable(obj);
-            if (!samplePoses) continue;
+            TickObjectClient(obj);
+            if (!samplePoses)
+            {
+                if (inCombat && id >> 28 == 1) SamplePose(obj);
+                continue;
+            }
             if (id >> 28 == 1)
             {
                 if (obj is ICharacter character && announced.Add(id))
@@ -397,13 +414,14 @@ internal sealed unsafe partial class PullRecorder : IDisposable
             health.Remove(gone);
             dead.Remove(gone);
             targetable.Remove(gone);
+            ForgetClient(gone);
         }
         present = seen;
         if (samplePoses) timeline!.Flush();
     }
 
     // A status put back on before it ran out shows up as its timer jumping up, or its stacks changing.
-    // ACT logs a refresh when the expiry moves by more than 2 s; this follows it.
+    // A refresh counts when the expiry moves by more than 2 s, as parsers count it.
     private void DiffStatuses(uint id, BattleChara* chara)
     {
         var now = new Dictionary<(ushort StatusId, uint Source), (float Remaining, ushort Param)>();
@@ -476,11 +494,14 @@ internal sealed unsafe partial class PullRecorder : IDisposable
     private void OnReceivePacket(PacketDispatcher* self, uint targetId, nint packet)
     {
         handled = false;
+        dispatchingPayload = packet == nint.Zero ? 0 : packet + IpcHeaderSize;
         receiveHook!.Original(self, targetId, packet);
+        dispatchingPayload = 0;
         if (timeline == null || handled || packet == nint.Zero) return;
         try
         {
             var opcode = *(ushort*)(packet + 2);
+            if (DecodeUnclaimed(opcode, targetId, packet)) return;
             var count = rawCounts.GetValueOrDefault(opcode) + 1;
             rawCounts[opcode] = count;
             if (count > RawRowsPerOpcode) return;
@@ -491,6 +512,51 @@ internal sealed unsafe partial class PullRecorder : IDisposable
         {
             DiagnosticLog.Warn($"[PullRecorder] raw row failed: {e.Message}");
         }
+    }
+
+    // UNVERIFIED: the segment header sits right before the IPC header, its first field the
+    // segment's size; anything implausible there leaves the packet undecoded.
+    private static int PayloadLength(nint packet)
+    {
+        var size = *(uint*)(packet - SegmentHeaderSize);
+        return size is >= SegmentHeaderSize + IpcHeaderSize and <= MaxSegmentSize ? (int)size - SegmentHeaderSize - IpcHeaderSize : 0;
+    }
+
+    private bool DecodeUnclaimed(ushort opcode, uint targetId, nint packet)
+    {
+        var length = PayloadLength(packet);
+        if (length == 0) return false;
+        var payload = new ReadOnlySpan<byte>((byte*)(packet + IpcHeaderSize), length);
+        var chara = Plugin.ObjectTable.SearchByEntityId(targetId) as IBattleChara;
+        var shape = unclaimed.Classify(opcode, payload, targetId, recentSequences.Contains, chara?.MaxHp ?? 0, (byte)(chara?.ClassJob.RowId ?? 0));
+        switch (shape)
+        {
+            case UnclaimedPackets.Shape.EffectResult when length >= UnclaimedPackets.EffectResultSize:
+            {
+                var r = UnclaimedPackets.ReadEffectResult(payload);
+                timeline!.Add("effect_result", targetId, NameOf(targetId), $"0x{r.Sequence:X}",
+                    detail: $"hp={r.Hp}/{r.MaxHp} mp={r.Mp} shield={r.Shield} groups={string.Join(",", r.Groups.Select(g => g.ToString("X")))}");
+                netLog?.EffectResult(targetId, LogName(targetId), r.Sequence, r.Hp, r.MaxHp, r.Mp, r.Shield, Snapshot(targetId), r.Groups);
+                return true;
+            }
+            case UnclaimedPackets.Shape.StatusList when length >= UnclaimedPackets.StatusListSize:
+            {
+                var r = UnclaimedPackets.ReadStatusList(payload);
+                timeline!.Add("status_list", targetId, NameOf(targetId), $"0x{r.JobLevels:X8}",
+                    detail: $"hp={r.Hp}/{r.MaxHp} mp={r.Mp}/{r.MaxMp} shield={r.Shield} entries={string.Join(",", r.Entries.Select(g => g.ToString("X")))}");
+                netLog?.StatusList(targetId, LogName(targetId), r.JobLevels, r.Hp, r.MaxHp, r.Mp, r.MaxMp, r.Shield, Snapshot(targetId), r.Entries);
+                return true;
+            }
+            default:
+                return false;
+        }
+    }
+
+    private void NoteSequence(uint sequence)
+    {
+        if (!recentSequences.Add(sequence)) return;
+        recentSequenceOrder.Enqueue(sequence);
+        while (recentSequenceOrder.Count > RecentSequences) recentSequences.Remove(recentSequenceOrder.Dequeue());
     }
 
     private void OnActorControl(uint entityId, uint category, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, uint arg6, uint arg7, uint arg8,
@@ -510,6 +576,7 @@ internal sealed unsafe partial class PullRecorder : IDisposable
     {
         actionEffectHook!.Original(casterEntityId, caster, targetPos, header, targetEffects, targetIds);
         if (!Begin()) return;
+        NoteSequence(header->GlobalSequence);
         LogAbility(casterEntityId, caster, targetPos, header, targetEffects, targetIds);
         var count = header->NumTargets;
         var hits = new List<string>(count);
@@ -548,7 +615,7 @@ internal sealed unsafe partial class PullRecorder : IDisposable
                 ["target_pos"] = targetPos != null && *targetPos != Vector3.Zero
                     ? $"{SimTimeline.F(targetPos->X)} {SimTimeline.F(targetPos->Y)} {SimTimeline.F(targetPos->Z)}"
                     : "",
-                // Per target, ACT's 8-byte effect entries: type.p0.p1.p2.p3.p4.value, hex.
+                // Per target, the 8-byte effect entries: type.p0.p1.p2.p3.p4.value, hex.
                 ["effects"] = string.Join(" ", perTarget),
             });
     }
@@ -578,7 +645,7 @@ internal sealed unsafe partial class PullRecorder : IDisposable
     {
         effectResultHook!.Original(entityId, packet, replay);
         if (!Begin()) return;
-        actLog?.EffectResultBasic(entityId, LogName(entityId), packet->GlobalSequence, packet->CurrentHP, Snapshot(entityId));
+        netLog?.EffectResultBasic(entityId, LogName(entityId), packet->GlobalSequence, packet->CurrentHP, Snapshot(entityId));
         if (entityId >> 28 != 1 || !effects.TryGetValue(packet->GlobalSequence, out var effect)) return;
         timeline!.Add("impact", effect.Caster, NameOf(effect.Caster), effect.ActionId.ToString(), ActionName(effect.ActionId), entityId, NameOf(entityId),
             detail: $"hp={packet->CurrentHP} index={packet->TargetIndex}");
@@ -589,7 +656,7 @@ internal sealed unsafe partial class PullRecorder : IDisposable
         mapEffectHook!.Original(framework, packet);
         if (!Begin()) return;
         var flags = (uint)packet->State | ((uint)packet->Timeline << 16);
-        actLog?.MapEffect(packet->DirectorId, flags, packet->Index);
+        netLog?.MapEffect(packet->DirectorId, flags, packet->Index);
         timeline!.Add("map_effect", id: packet->Index.ToString(), name: "MapEffect",
             detail: $"state={packet->State} timeline={packet->Timeline} flags=0x{flags:X} director=0x{packet->DirectorId:X}");
     }
@@ -637,7 +704,7 @@ internal sealed unsafe partial class PullRecorder : IDisposable
             + $"mode=0x{(byte)c.CharacterMode:X} mode_param={c.ModeParam} mode_attr=0x{c.ModelAttributeFlags:X} model_state=0x{c.ModelState:X} model_scale={c.ModelScaleId} "
             + $"gimmick=0x{packet->GimmickId:X} event_npc=0x{packet->EventNpcInstanceId:X} tether={c.TetherId}->0x{c.TetherTargetId:X}");
         LogAdd(targetId, new CombatantInfo(owner, name, 0, c.Level, 0, "", c.NameId, c.BaseId),
-            new ActCombatant(c.HealthPoints, c.MaxHealthPoints, 0, 0, c.Position, MathUtil.DequantizeRotation(c.Rotation)));
+            new CombatantState(c.HealthPoints, c.MaxHealthPoints, 0, 0, c.Position, MathUtil.DequantizeRotation(c.Rotation)));
     }
 
     private void OnSpawnObject(uint targetId, SpawnObjectPacket* packet)
@@ -662,7 +729,7 @@ internal sealed unsafe partial class PullRecorder : IDisposable
         var name = PlayerLabel(targetId);
         if (c.NameString is { Length: > 0 } realName) realNames[targetId] = realName;
         LogAdd(targetId, new CombatantInfo(0, LogName(targetId), c.ClassJobId, c.Level, packet->HomeWorldId, "", 0, 0),
-            new ActCombatant(c.HealthPoints, c.MaxHealthPoints, 0, 0, c.Position, MathUtil.DequantizeRotation(c.Rotation)));
+            new CombatantState(c.HealthPoints, c.MaxHealthPoints, 0, 0, c.Position, MathUtil.DequantizeRotation(c.Rotation)));
         timeline!.Add("spawn_player", targetId, name, c.ClassJobId.ToString(), "ClassJob", position: c.Position, rotation: MathUtil.DequantizeRotation(c.Rotation),
             detail: $"level={c.Level} hp={c.HealthPoints}/{c.MaxHealthPoints} world={packet->HomeWorldId}");
     }
@@ -675,7 +742,7 @@ internal sealed unsafe partial class PullRecorder : IDisposable
             MathUtil.DequantizePosition(packet->PositionZ));
         timeline!.Add("move", entityId, NameOf(entityId), position: position, rotation: MathUtil.DequantizeRotation(packet->RotationInt),
             detail: $"flags=0x{packet->MoveFlags:X} state={packet->State} speed={packet->Speed}");
-        if (entityId >= 0x40000000) actLog?.ActorMove(entityId, MathUtil.DequantizeRotation(packet->RotationInt), packet->MoveFlags, packet->Speed, position);
+        if (entityId >= 0x40000000) netLog?.ActorMove(entityId, MathUtil.DequantizeRotation(packet->RotationInt), packet->MoveFlags, packet->Speed, position);
     }
 
     private void OnActorSetPos(uint entityId, ActorSetPosPacket* packet)
@@ -684,7 +751,7 @@ internal sealed unsafe partial class PullRecorder : IDisposable
         if (!Begin()) return;
         timeline!.Add("set_pos", entityId, NameOf(entityId), position: new Vector3(packet->X, packet->Y, packet->Z),
             rotation: MathUtil.DequantizeRotation(packet->RotationInt), detail: $"type={packet->Type} flags=0x{packet->Flags:X}");
-        actLog?.ActorSetPos(entityId, MathUtil.DequantizeRotation(packet->RotationInt), packet->Type, packet->Flags, new Vector3(packet->X, packet->Y, packet->Z));
+        netLog?.ActorSetPos(entityId, MathUtil.DequantizeRotation(packet->RotationInt), packet->Type, packet->Flags, new Vector3(packet->X, packet->Y, packet->Z));
     }
 
     private void OnNpcKnockback(uint entityId, NpcKnockbackPacket* packet)
@@ -715,7 +782,7 @@ internal sealed unsafe partial class PullRecorder : IDisposable
         for (var i = 0; i < textArgCount; i++) args[i] = textArgs[i];
         timeline!.Add("battle_talk", speaker, NameOf(speaker), textId.ToString(), speakerNameId.ToString(),
             detail: $"kind={speakerKind} dur={durationMs}ms director=0x{directorId:X}", p: SimTimeline.Params(args));
-        actLog?.BattleTalk(speaker, directorId, speakerNameId, textId, durationMs,
+        netLog?.BattleTalk(speaker, directorId, speakerNameId, textId, durationMs,
             textArgCount > 0 ? args[0] : 0, textArgCount > 1 ? args[1] : 0, textArgCount > 2 ? args[2] : 0, textArgCount > 3 ? args[3] : 0);
     }
 
@@ -724,7 +791,7 @@ internal sealed unsafe partial class PullRecorder : IDisposable
     {
         if (timeline == null) return;
         var type = (XivChatType)(int)message.LogKind;
-        actLog?.Chat((uint)type, message.Sender.TextValue, message.Message.TextValue);
+        netLog?.Chat((uint)type, message.Sender.TextValue, message.Message.TextValue);
         if (type is not (XivChatType.NPCDialogue or XivChatType.NPCDialogueAnnouncements)) return;
         timeline.Add("npc_say", actorName: message.Sender.TextValue, id: ((int)type).ToString(), detail: message.Message.TextValue);
     }

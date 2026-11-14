@@ -7,9 +7,9 @@ using System.Text;
 
 namespace AsuMech.Core.Game.Trace;
 
-// The part of the player's ACT/IINACT network log a pull recording covers.
+// The part of the network log the player's combat parser wrote that a pull recording covers.
 // Logs reach a gigabyte a day, so each file is binary-searched for the window's start.
-public static class ActLogSlice
+public static class ParserLogSlice
 {
     private const long ScanThreshold = 1 << 16;
 
@@ -76,9 +76,9 @@ public static class ActLogSlice
     }
 
     // Each kept line is re-hashed in the slice's own sequence, so the slice checks out as a log.
-    public static int Write(IEnumerable<string> lines, TextWriter output, ActLogAnonymizer anonymizer)
+    public static int Write(IEnumerable<string> lines, TextWriter output, NetworkLogAnonymizer anonymizer)
     {
-        var seal = new ActLogSeal();
+        var seal = new NetworkLogSeal();
         var written = 0;
         foreach (var line in lines)
         {
@@ -91,13 +91,13 @@ public static class ActLogSlice
 }
 
 // Players renamed to the recording's labels and conversation dropped, since the log is sent on.
-public sealed class ActLogAnonymizer
+public sealed class NetworkLogAnonymizer
 {
     private readonly Func<uint, string> label;
     private readonly Dictionary<string, string> aliases = new(StringComparer.Ordinal);
     private List<KeyValuePair<string, string>>? longestFirst;
 
-    public ActLogAnonymizer(IReadOnlyDictionary<uint, string> knownNames, Func<uint, string> label)
+    public NetworkLogAnonymizer(IReadOnlyDictionary<uint, string> knownNames, Func<uint, string> label)
     {
         this.label = label;
         foreach (var (id, name) in knownNames) Learn(id, name);

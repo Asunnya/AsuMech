@@ -1135,7 +1135,7 @@ public sealed class RelayServer : IAsyncDisposable
 
     private static readonly System.Text.RegularExpressions.Regex RecordingNamePattern = new("^[A-Za-z0-9][A-Za-z0-9_.-]{0,79}$");
 
-    // A recording is the plugin's .csv; the .log is the ACT log slice sent along with it.
+    // A recording is the plugin's .csv; a .log is a network log of the same pull sent along with it.
     private static readonly string[] RecordingExtensions = [".csv", ".log"];
 
     // The client's own file name (its stem) plus who sent it, so two senders' pulls of the same

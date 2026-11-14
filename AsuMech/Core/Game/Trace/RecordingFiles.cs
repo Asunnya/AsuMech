@@ -10,17 +10,20 @@ namespace AsuMech.Core.Game.Trace;
 public static class RecordingFiles
 {
     private static readonly Regex Name = new(@"^\d+_\d{8}_\d{6}\.csv$");
-    private static readonly Regex ActLogName = new(@"^\d+_\d{8}_\d{6}\.log$");
+    private static readonly Regex LogName = new(@"^\d+_\d{8}_\d{6}(_parser)?\.log$");
 
     public static bool IsRecording(string path) => Name.IsMatch(Path.GetFileName(path));
 
-    // The ACT log slice saved beside a recording.
-    public static string ActLogPath(string recordingPath) => Path.ChangeExtension(recordingPath, ".log");
+    // The network log written beside a recording.
+    public static string LogPath(string recordingPath) => Path.ChangeExtension(recordingPath, ".log");
+
+    // The combat parser's own log of the pull, when the player runs one.
+    public static string ParserLogPath(string recordingPath) => Path.ChangeExtension(recordingPath, null) + "_parser.log";
 
     public static List<FileInfo> List(string dir)
         => Directory.Exists(dir) ? new DirectoryInfo(dir).EnumerateFiles("*.csv").Where(f => IsRecording(f.Name)).OrderBy(f => f.Name).ToList() : [];
 
-    // Every recording but `except` (the one being written), with its ACT log slice; returns how
+    // Every recording but `except` (the one being written), with its logs; returns how
     // many recordings went.
     public static int DeleteAll(string dir, string? except = null)
     {
@@ -31,8 +34,8 @@ public static class RecordingFiles
             if (TryDelete(file.FullName)) deleted++;
         }
         if (Directory.Exists(dir))
-            foreach (var log in new DirectoryInfo(dir).EnumerateFiles("*.log").Where(f => ActLogName.IsMatch(f.Name)))
-                if (except == null || Path.GetFullPath(log.FullName) != Path.GetFullPath(ActLogPath(except)))
+            foreach (var log in new DirectoryInfo(dir).EnumerateFiles("*.log").Where(f => LogName.IsMatch(f.Name)))
+                if (except == null || !new[] { LogPath(except), ParserLogPath(except) }.Any(p => Path.GetFullPath(p) == Path.GetFullPath(log.FullName)))
                     TryDelete(log.FullName);
         return deleted;
     }

@@ -2,7 +2,7 @@ using AsuMech.Core.Game.Trace;
 
 namespace AsuMech.Tests.Core.Game.Trace;
 
-public class ActLogSliceTests
+public class ParserLogSliceTests
 {
     private static readonly TimeSpan Brt = TimeSpan.FromHours(-3);
 
@@ -10,7 +10,7 @@ public class ActLogSliceTests
 
     private static string Line(string type, DateTimeOffset at, string rest) => $"{type}|{Stamp(at)}|{rest}|0123456789abcdef";
 
-    private static string TempDir() => Directory.CreateTempSubdirectory("asumech-actlog-").FullName;
+    private static string TempDir() => Directory.CreateTempSubdirectory("asumech-parserlog-").FullName;
 
     // One line every 50 ms for `seconds`: a few hundred KB, past the binary search's scan threshold.
     private static List<string> WriteLog(string path, DateTimeOffset start, int seconds)
@@ -33,13 +33,13 @@ public class ActLogSliceTests
             var from = start.AddSeconds(200);
             var to = start.AddSeconds(260);
 
-            var slice = ActLogSlice.Lines(dir, from, to).ToList();
+            var slice = ParserLogSlice.Lines(dir, from, to).ToList();
 
-            var expected = lines.Where(l => ActLogSlice.Timestamp(l) is { } at && at >= from && at <= to).ToList();
+            var expected = lines.Where(l => ParserLogSlice.Timestamp(l) is { } at && at >= from && at <= to).ToList();
             Assert.That(new FileInfo(Path.Combine(dir, "Network_30305_20261113.log")).Length, Is.GreaterThan(1 << 17));
             Assert.That(slice, Is.EqualTo(expected));
-            Assert.That(ActLogSlice.Timestamp(slice[0]), Is.EqualTo(from));
-            Assert.That(ActLogSlice.Timestamp(slice[^1]), Is.EqualTo(to));
+            Assert.That(ParserLogSlice.Timestamp(slice[0]), Is.EqualTo(from));
+            Assert.That(ParserLogSlice.Timestamp(slice[^1]), Is.EqualTo(to));
         }
         finally { Directory.Delete(dir, true); }
     }
@@ -59,10 +59,10 @@ public class ActLogSliceTests
             File.SetLastWriteTimeUtc(first, midnight.UtcDateTime);
             File.SetLastWriteTimeUtc(second, midnight.AddMinutes(10).UtcDateTime);
 
-            var slice = ActLogSlice.Lines(dir, midnight.AddMinutes(-1), midnight.AddMinutes(1)).ToList();
+            var slice = ParserLogSlice.Lines(dir, midnight.AddMinutes(-1), midnight.AddMinutes(1)).ToList();
 
             Assert.That(slice, Has.Count.EqualTo(2 * 60 * 20 + 1));
-            Assert.That(slice.Select(l => ActLogSlice.Timestamp(l)), Is.Ordered);
+            Assert.That(slice.Select(l => ParserLogSlice.Timestamp(l)), Is.Ordered);
         }
         finally { Directory.Delete(dir, true); }
     }
@@ -77,8 +77,8 @@ public class ActLogSliceTests
             WriteLog(old, new DateTimeOffset(2026, 11, 8, 20, 0, 0, Brt), 10);
             File.SetLastWriteTimeUtc(old, new DateTime(2026, 11, 8, 23, 0, 10, DateTimeKind.Utc));
 
-            Assert.That(ActLogSlice.Files(dir, new DateTimeOffset(2026, 11, 13, 20, 0, 0, Brt)), Is.Empty);
-            Assert.That(ActLogSlice.Files(Path.Combine(dir, "missing"), DateTimeOffset.MinValue), Is.Empty);
+            Assert.That(ParserLogSlice.Files(dir, new DateTimeOffset(2026, 11, 13, 20, 0, 0, Brt)), Is.Empty);
+            Assert.That(ParserLogSlice.Files(Path.Combine(dir, "missing"), DateTimeOffset.MinValue), Is.Empty);
         }
         finally { Directory.Delete(dir, true); }
     }
@@ -93,7 +93,7 @@ public class ActLogSliceTests
             if (!labels.TryGetValue(id, out var label)) labels[id] = label = $"player {labels.Count + 1}";
             return label;
         }
-        var anonymizer = new ActLogAnonymizer(new Dictionary<uint, string> { [0x100B0290] = "Creatina Whey" }, Label);
+        var anonymizer = new NetworkLogAnonymizer(new Dictionary<uint, string> { [0x100B0290] = "Creatina Whey" }, Label);
 
         var input = new[]
         {
@@ -126,10 +126,10 @@ public class ActLogSliceTests
     public void WriteCountsTheLinesItKept()
     {
         var at = new DateTimeOffset(2026, 11, 13, 20, 0, 0, Brt);
-        var anonymizer = new ActLogAnonymizer(new Dictionary<uint, string>(), id => $"player {id & 0xF}");
+        var anonymizer = new NetworkLogAnonymizer(new Dictionary<uint, string>(), id => $"player {id & 0xF}");
         var output = new StringWriter();
 
-        var written = ActLogSlice.Write([Line("00", at, "000E|A B|x"), Line("260", at, "1|0|1|0")], output, anonymizer);
+        var written = ParserLogSlice.Write([Line("00", at, "000E|A B|x"), Line("260", at, "1|0|1|0")], output, anonymizer);
 
         Assert.That(written, Is.EqualTo(1));
         Assert.That(output.ToString(), Does.StartWith("260|"));
