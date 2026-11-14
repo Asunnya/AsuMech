@@ -11,12 +11,25 @@ using Scenario = AsuMech.Scenarios.Ucob.P1Twintania.UcobP1TwintaniaScenario;
 
 namespace AsuMech.Scenarios.Ucob.P1Twintania;
 
-public sealed class UcobP1TwintaniaAi : IScenarioAi<UcobP1TwintaniaState>
+public sealed class UcobP1TwintaniaAi : IScenarioAi<UcobP1TwintaniaState>, IUcobStrat
 {
-    public string Name => "Neurolinks at 1, 2 and 3, ranged baits Liquid Hell";
+    public static UcobP1TwintaniaAi NeurolinksAt123 => new("Neurolinks at 1, 2 and 3, ranged baits Liquid Hell", UcobMarkers.Aether, [PhysRangedDps, CasterDps, MeleeDpsB], []);
+    public static UcobP1TwintaniaAi Tuufless => new("Tuufless (Elemental)", UcobMarkers.Elemental, [PhysRangedDps, ShieldHealer], [PhysRangedDps, CasterDps]);
+
+    public string Name { get; }
+    public UcobMarkers Markers { get; }
+    private readonly PartyRole[] baitOrder;
+    private readonly PartyRole[] firstFireballSitOutOrder;
+
+    private UcobP1TwintaniaAi(string name, UcobMarkers markers, PartyRole[] baitOrder, PartyRole[] firstFireballSitOutOrder)
+    {
+        Name = name;
+        Markers = markers;
+        this.baitOrder = baitOrder;
+        this.firstFireballSitOutOrder = firstFireballSitOutOrder;
+    }
 
     private static readonly PartyRole[] NonTanks = [RegenHealer, ShieldHealer, MeleeDpsA, MeleeDpsB, PhysRangedDps, CasterDps];
-    private static readonly PartyRole[] BaitOrder = [PhysRangedDps, CasterDps, MeleeDpsB];
 
     private sealed record Camp(Vector2 Boss, Vector2 Front, Vector2 Side, Vector2 Stack, Vector2 FrontDodge, Vector2 SideDodge);
 
@@ -39,6 +52,7 @@ public sealed class UcobP1TwintaniaAi : IScenarioAi<UcobP1TwintaniaState>
     private static readonly Vector2 EastStackOffTheOviformPaths = new(5.3f, 9.5f);
     private static readonly Vector2[] TargetedLiquidHellLoop = [new(11.7f, 18.1f), new(16.7f, 13.6f), new(20.2f, 7.4f), new(21.5f, 1.3f), new(19.6f, -5.6f)];
     private const float RingRadius = 6.5f;
+    private const float OutOfTheFireballRadius = 9f;
     private const float StepOff = 0.08f;
     private const float AfterDrop = 0.02f;
     private const float LeaveNeurolinkAfterHatch = 1.3f;
@@ -51,42 +65,42 @@ public sealed class UcobP1TwintaniaAi : IScenarioAi<UcobP1TwintaniaState>
         state = stateParam;
         var ai = new AiManager(world);
 
-        ai.Move(0.5f, () => AiMove.Create(CampSpots(North, 0.5f)).NaturalOrder(), jitter: 0f);
-        ai.Move(9.0f, () => AiMove.Create(Ring(North.Stack, RingRadius, 180f, 0f, NonTanks)).NaturalOrder(), jitter: 0f);
-        ai.Move(Scenario.TwisterSnapshots[0] + StepOff, () => AiMove.Create(CampSpotsDodgingTwisters(North, Scenario.TwisterSnapshots[0] + StepOff)).NaturalOrder(), jitter: 0f, sprint: true);
-        ai.Move(Scenario.AggroSwaps[0] - 0.4f, () => AiMove.Create(CampSpots(North, Scenario.AggroSwaps[0])).NaturalOrder(), jitter: 0f);
+        ai.Move(0.5f, () => OnMarkers(CampSpots(North, 0.5f)).NaturalOrder(), jitter: 0f);
+        ai.Move(9.0f, () => OnMarkers(Ring(North.Stack, RingRadius, 180f, 0f, NonTanks)).NaturalOrder(), jitter: 0f);
+        ai.Move(Scenario.TwisterSnapshots[0] + StepOff, () => OnMarkers(StackForTheFirstFireballDodgingTwisters(Scenario.TwisterSnapshots[0] + StepOff)).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(Scenario.AggroSwaps[0] - 0.4f, () => OnMarkers(CampSpots(North, Scenario.AggroSwaps[0])).NaturalOrder(), jitter: 0f);
 
-        ai.Move(Scenario.ToFirstWestCamp, () => AiMove.Create(CampSpotsWithBaiter(FirstWest, Scenario.ToFirstWestCamp, 0)).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(Scenario.ToFirstWestCamp, () => OnMarkers(CampSpotsWithBaiter(FirstWest, Scenario.ToFirstWestCamp, 0)).NaturalOrder(), jitter: 0f, sprint: true);
         FollowBaitPath(ai, 0);
         GoIntoNeurolinks(ai, 0, Scenario.GenerateCasts[0]);
-        ai.Move(BaitStarts[1], () => AiMove.Create(Only(Baiter(1), BaitPaths[1][0])).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(BaitStarts[1], () => OnMarkers(Only(Baiter(1), BaitPaths[1][0])).NaturalOrder(), jitter: 0f, sprint: true);
         FollowBaitPath(ai, 1);
-        ai.Move(HatchResolvesBy(0) + LeaveNeurolinkAfterHatch, () => AiMove.Create(Cluster(FirstWest.Stack, state.HatchTargets[0].Where(r => r != Baiter(1)))).NaturalOrder(), jitter: 0f);
+        ai.Move(HatchResolvesBy(0) + LeaveNeurolinkAfterHatch, () => OnMarkers(Cluster(FirstWest.Stack, state.HatchTargets[0].Where(r => r != Baiter(1)))).NaturalOrder(), jitter: 0f);
 
-        ai.Move(Scenario.ToSecondWestCamp, () => AiMove.Create(CampSpots(SecondWest, Scenario.ToSecondWestCamp)).NaturalOrder(), jitter: 0f, sprint: true);
-        ai.Move(Scenario.AggroSwaps[1] - 1f, () => AiMove.Create(Tanking(SecondWest, Scenario.AggroSwaps[1])).NaturalOrder(), jitter: 0f);
-        ai.Move(Scenario.GenerateCasts[1], () => AiMove.Create(Only(state.HatchTargets[1], [FarSideOfNeurolink(State.NorthNeurolink, SecondWest.Boss)])).NaturalOrder(), jitter: 0f, sprint: true);
-        ai.Move(66f, () => AiMove.Create(Ring(SecondWest.Stack, RingRadius, -30f, 150f, NonTanks.Except(state.HatchTargets[1]))).NaturalOrder(), jitter: 0f);
-        ai.Move(Scenario.TwisterSnapshots[1] + StepOff, () => AiMove.Create(DodgeIntoNeurolinks(SecondWest, SecondWest.Stack, Scenario.TwisterSnapshots[1] + StepOff, 1)).NaturalOrder(), jitter: 0f, sprint: true);
-        ai.Move(TwistersGone(1), () => AiMove.Create(Cluster(SecondWest.Stack, state.HatchTargets[1])).NaturalOrder(), jitter: 0f);
+        ai.Move(Scenario.ToSecondWestCamp, () => OnMarkers(CampSpots(SecondWest, Scenario.ToSecondWestCamp)).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(Scenario.AggroSwaps[1] - 1f, () => OnMarkers(Tanking(SecondWest, Scenario.AggroSwaps[1])).NaturalOrder(), jitter: 0f);
+        ai.Move(Scenario.GenerateCasts[1], () => OnMarkers(Only(state.HatchTargets[1], [FarSideOfNeurolink(State.NorthNeurolink, SecondWest.Boss)])).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(66f, () => OnMarkers(Ring(SecondWest.Stack, RingRadius, -30f, 150f, NonTanks.Except(state.HatchTargets[1]))).NaturalOrder(), jitter: 0f);
+        ai.Move(Scenario.TwisterSnapshots[1] + StepOff, () => OnMarkers(DodgeIntoNeurolinks(SecondWest, SecondWest.Stack, Scenario.TwisterSnapshots[1] + StepOff, 1)).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(TwistersGone(1), () => OnMarkers(Cluster(SecondWest.Stack, state.HatchTargets[1])).NaturalOrder(), jitter: 0f);
 
-        ai.Move(Scenario.ToEastCamp + 0.1f, () => AiMove.Create(CampSpotsWithBaiter(East, Scenario.ToEastCamp, 2)).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(Scenario.ToEastCamp + 0.1f, () => OnMarkers(CampSpotsWithBaiter(East, Scenario.ToEastCamp, 2)).NaturalOrder(), jitter: 0f, sprint: true);
         FollowBaitPath(ai, 2);
-        ai.Move(Scenario.LiquidHellDrops[2][^1] + AfterDrop, () => AiMove.Create(Cluster(East.Stack, [Baiter(2)])).NaturalOrder(), jitter: 0f);
-        ai.Move(Scenario.GenerateCasts[2], () => AiMove.Create(StackAwayFromTheTargetedLiquidHell()).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(Scenario.LiquidHellDrops[2][^1] + AfterDrop, () => OnMarkers(Cluster(East.Stack, [Baiter(2)])).NaturalOrder(), jitter: 0f);
+        ai.Move(Scenario.GenerateCasts[2], () => OnMarkers(StackAwayFromTheTargetedLiquidHell()).NaturalOrder(), jitter: 0f, sprint: true);
         RunTheTargetedLiquidHellLoop(ai);
-        ai.Move(HatchResolvesBy(2) + LeaveNeurolinkAfterHatch, () => AiMove.Create(Cluster(East.Stack, NonTanks.Where(r => r != state.LiquidHellTarget))).NaturalOrder(), jitter: 0f);
-        ai.Move(TankSpotsFreeOfPuddles, () => AiMove.Create(CampSpots(EastClearOfTheLoop, TankSpotsFreeOfPuddles)).NaturalOrder(), jitter: 0f);
-        ai.Move(Scenario.AggroSwaps[2] - 1.4f, () => AiMove.Create(Tanking(East, Scenario.AggroSwaps[2])).NaturalOrder(), jitter: 0f);
+        ai.Move(HatchResolvesBy(2) + LeaveNeurolinkAfterHatch, () => OnMarkers(Cluster(East.Stack, NonTanks.Where(r => r != state.LiquidHellTarget))).NaturalOrder(), jitter: 0f);
+        ai.Move(TankSpotsFreeOfPuddles, () => OnMarkers(CampSpots(EastClearOfTheLoop, TankSpotsFreeOfPuddles)).NaturalOrder(), jitter: 0f);
+        ai.Move(Scenario.AggroSwaps[2] - 1.4f, () => OnMarkers(Tanking(East, Scenario.AggroSwaps[2])).NaturalOrder(), jitter: 0f);
 
-        ai.Move(Scenario.GenerateCasts[3], () => AiMove.Create(HatchTargetsWaitBesideTheirNeurolinks(3)).NaturalOrder(), jitter: 0f, sprint: true);
-        ai.Move(BaitStarts[4], () => AiMove.Create(SpreadForTheLastTwisters()).NaturalOrder(), jitter: 0f);
-        ai.Move(Scenario.TwisterSnapshots[2] + StepOff, () => AiMove.Create(DodgeIntoNeurolinks(East, EastStackOffTheOviformPaths, Scenario.TwisterSnapshots[2] + StepOff, 3)).NaturalOrder(), jitter: 0f, sprint: true);
-        ai.Move(TwistersGone(2), () => AiMove.Create(Cluster(East.Stack, state.HatchTargets[3].Where(r => r != Baiter(4)))).NaturalOrder(), jitter: 0f);
+        ai.Move(Scenario.GenerateCasts[3], () => OnMarkers(HatchTargetsWaitBesideTheirNeurolinks(3)).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(BaitStarts[4], () => OnMarkers(SpreadForTheLastTwisters()).NaturalOrder(), jitter: 0f);
+        ai.Move(Scenario.TwisterSnapshots[2] + StepOff, () => OnMarkers(DodgeIntoNeurolinks(East, EastStackOffTheOviformPaths, Scenario.TwisterSnapshots[2] + StepOff, 3)).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(TwistersGone(2), () => OnMarkers(Cluster(East.Stack, state.HatchTargets[3].Where(r => r != Baiter(4)))).NaturalOrder(), jitter: 0f);
         FollowBaitPath(ai, 4);
-        ai.Move(Scenario.LiquidHellDrops[4][^1] + AfterDrop, () => AiMove.Create(Cluster(East.Stack, [Baiter(4)])).NaturalOrder(), jitter: 0f);
+        ai.Move(Scenario.LiquidHellDrops[4][^1] + AfterDrop, () => OnMarkers(Cluster(East.Stack, [Baiter(4)])).NaturalOrder(), jitter: 0f);
         GoIntoNeurolinks(ai, 4, Scenario.GenerateCasts[4]);
-        ai.Move(Scenario.GenerateCasts[4], () => AiMove.Create(Cluster(EastStackOffTheOviformPaths, NonTanks.Except(state.HatchTargets[4]))).NaturalOrder(), jitter: 0f);
+        ai.Move(Scenario.GenerateCasts[4], () => OnMarkers(Cluster(EastStackOffTheOviformPaths, NonTanks.Except(state.HatchTargets[4]))).NaturalOrder(), jitter: 0f);
     }
 
     private PartyRole Baiter(int set)
@@ -97,7 +111,7 @@ public sealed class UcobP1TwintaniaAi : IScenarioAi<UcobP1TwintaniaState>
             4 => state.HatchTargets[3],
             _ => [],
         };
-        return BaitOrder.First(r => !busy.Contains(r));
+        return baitOrder.First(r => !busy.Contains(r));
     }
 
     private static float TwistersGone(int set) => Scenario.TwisterSnapshots[set] + Scenario.TwisterFades + 0.1f;
@@ -117,12 +131,12 @@ public sealed class UcobP1TwintaniaAi : IScenarioAi<UcobP1TwintaniaState>
         for (var i = 0; i < drops.Length; i++)
         {
             var next = path[i + 1];
-            ai.Move(drops[i] + AfterDrop, () => AiMove.Create(Only(Baiter(set), next)).NaturalOrder(), jitter: 0f, sprint: true);
+            ai.Move(drops[i] + AfterDrop, () => OnMarkers(Only(Baiter(set), next)).NaturalOrder(), jitter: 0f, sprint: true);
         }
     }
 
     private void GoIntoNeurolinks(AiManager ai, int set, float at)
-        => ai.Move(at, () => AiMove.Create(Neurolinks(set)).NaturalOrder(), jitter: 0f, sprint: true);
+        => ai.Move(at, () => OnMarkers(Neurolinks(set)).NaturalOrder(), jitter: 0f, sprint: true);
 
     private Vector2?[] Neurolinks(int set)
     {
@@ -175,6 +189,20 @@ public sealed class UcobP1TwintaniaAi : IScenarioAi<UcobP1TwintaniaState>
         return spots;
     }
 
+    private Vector2?[] StackForTheFirstFireballDodgingTwisters(float at)
+    {
+        var spots = CampSpotsDodgingTwisters(North, at);
+        foreach (var outside in firstFireballSitOutOrder.Where(r => r != state.FireballTargets[0]).Take(1))
+            spots[(int)outside] = StepOutwardFromTheRing(outside);
+        return spots;
+    }
+
+    private static Vector2 StepOutwardFromTheRing(PartyRole role)
+    {
+        var ringSpot = Ring(North.Stack, RingRadius, 180f, 0f, NonTanks)[(int)role]!.Value;
+        return North.Stack + (ringSpot - North.Stack) * (OutOfTheFireballRadius / RingRadius);
+    }
+
     private static Vector2?[] TanksSidestep(Camp camp, float at)
     {
         var spots = new Vector2?[8];
@@ -217,7 +245,7 @@ public sealed class UcobP1TwintaniaAi : IScenarioAi<UcobP1TwintaniaState>
         for (var i = 0; i < drops.Length; i++)
         {
             var next = i + 1 < TargetedLiquidHellLoop.Length ? TargetedLiquidHellLoop[i + 1] : East.Stack;
-            ai.Move(drops[i] + AfterDrop, () => AiMove.Create(Only(target, next)).NaturalOrder(), jitter: 0f, sprint: true);
+            ai.Move(drops[i] + AfterDrop, () => OnMarkers(Only(target, next)).NaturalOrder(), jitter: 0f, sprint: true);
         }
     }
 
@@ -234,6 +262,9 @@ public sealed class UcobP1TwintaniaAi : IScenarioAi<UcobP1TwintaniaState>
         }
         return spots;
     }
+
+    private IAssignStep OnMarkers(Vector2?[] aetherSpots)
+        => AiMove.Create(aetherSpots.Select(s => s is { } spot ? Markers.Place(spot) : (Vector2?)null).ToArray());
 
     private static Vector2?[] Only(PartyRole role, Vector2 spot)
     {

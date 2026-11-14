@@ -21,7 +21,7 @@ public sealed class UcobP1TwintaniaScenario : IScenario
     public string Name => "Twintania";
     public IPhase Phase => UcobZone.P1;
 
-    public IReadOnlyList<IScenarioAi> AiStrats => [new UcobP1TwintaniaAi()];
+    public IReadOnlyList<IScenarioAi> AiStrats => [UcobP1TwintaniaAi.NeurolinksAt123, UcobP1TwintaniaAi.Tuufless];
 
     private readonly UcobP1TwintaniaSettingsWindow settingsWindow = new();
     public void DrawSettings() => settingsWindow.Draw();
