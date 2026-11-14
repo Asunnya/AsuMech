@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using AsuMech.Learn;
+using AsuMech.Learn.Tools;
 using AsuMech.Learn.Toolbox;
 using NUnit.Framework;
 
@@ -38,4 +40,15 @@ public class LessonToolboxTests
     [Test]
     public void ExtraPagesCanBePagedThrough()
         => Assert.That(Link(new() { ["Ai@1"] = 2 }, [4, 5]).AllPages.Order(), Is.EqualTo(new[] { 2, 4, 5 }));
+
+    [Test]
+    public void TheWrittenLessonCarriesOnlyTheAuthoredPages()
+    {
+        var json = LessonSkeleton.ToJson(new Lesson("S", "strat", [], [], Link(new() { ["Ai@1"] = 2 }, [4, 5])));
+        Assert.Multiple(() =>
+        {
+            Assert.That(json, Does.Contain("\"pages\""));
+            Assert.That(json, Does.Not.Contain("allPages"));
+        });
+    }
 }

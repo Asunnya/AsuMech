@@ -30,6 +30,8 @@ dotnet $TOOL record   --scenario UwuP1GarudaScenario --strat 0 --seeds 1..8 --ou
 dotnet $TOOL mine     --dump garuda.dump.json --zone UwuZone --layout Naur
 dotnet $TOOL cues     --dump garuda.dump.json [--window 8]
 dotnet $TOOL oracle   --plan AsuMech/Learn/Toolbox/Plans/122994122467471.json --lesson <lesson.json> --dump garuda.dump.json [--write] [--pinned-dump pinned.dump.json]
+# an embedded plan against a lesson whose toolbox block has no step map: links the plan's steps by the lesson's role map
+dotnet $TOOL align    --plan AsuMech/Learn/Toolbox/Plans/802461081524561.json --lesson AsuMech/Learn/Lessons/Dsr/DsrP1Knights.toolbox-pf.json --dump knights.dump.json [--write]
 dotnet $TOOL skeleton --dump garuda.dump.json --out lesson.json
 dotnet $TOOL rekey    --lesson AsuMech/Learn/Lessons/Uwu/P1Garuda.zeal-the-balance.json --dump garuda.dump.json
 dotnet $TOOL check    --lesson AsuMech/Learn/Lessons/Uwu/P1Garuda.zeal-the-balance.json --dump garuda.dump.json

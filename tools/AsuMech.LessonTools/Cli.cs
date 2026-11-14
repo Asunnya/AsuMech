@@ -79,6 +79,7 @@ internal static class Cli
                 "mine" => Mine(opts),
                 "cues" => Cues(opts),
                 "oracle" => Oracle(opts),
+                "align" => Align(opts),
                 "author" => Author(opts),
                 "context" => Context(opts),
                 "draft" => Draft(opts),
@@ -993,6 +994,36 @@ internal static class Cli
             Console.WriteLine($"exampleSeed {report.ExampleSeed} written to {lessonPath}");
         }
         return report.Disagreements.Any() ? 1 : 0;
+    }
+
+    // Links an embedded plan's steps to a lesson that has the plan but no step map (or a stale one), by the
+    // lesson's own role map; the oracle then scores the result.
+    private static int Align(Dictionary<string, string> opts)
+    {
+        var plan = ToolboxPlan.Parse(File.ReadAllText(Need(opts, "plan")));
+        var lessonPath = Need(opts, "lesson");
+        var lesson = LessonLoader.Parse(File.ReadAllText(lessonPath));
+        var dump = OrderDump.Parse(File.ReadAllText(Need(opts, "dump")));
+        if (lesson.Toolbox is not { } link) throw new ArgumentException("the lesson has no toolbox block; run toolbox-import --write first");
+        var slotByRole = link.RoleMap.ToDictionary(kv => kv.Value, kv => kv.Key);
+        var steps = new Dictionary<string, int>();
+        foreach (var (tb, stepId, distance) in ToolboxImport.Align(plan, lesson, dump, slotByRole))
+        {
+            var label = plan.Steps[tb].Label;
+            Console.WriteLine(stepId is null ? $"  {tb,2} {label,-40} unmatched ({distance:F1} m)" : $"  {tb,2} {label,-40} -> {stepId} ({distance:F1} m)");
+            if (stepId != null) steps.TryAdd(stepId, tb);
+        }
+        var linked = link with { Steps = steps };
+        var report = ToolboxOracle.Check(plan, lesson, linked, dump);
+        PrintOracle(report);
+        Console.WriteLine($"{steps.Count} of {lesson.Steps.Count(s => !s.Skip)} lesson steps linked");
+        if (opts.ContainsKey("write"))
+        {
+            File.WriteAllText(lessonPath, LessonSkeleton.ToJson(lesson with { Toolbox = linked with { ExampleSeed = report.ExampleSeed, Residual = MeanResidual(report) } }));
+            Console.WriteLine($"step map written to {lessonPath}");
+        }
+        else Console.WriteLine("(add --write to store the step map in the lesson)");
+        return 0;
     }
 
     private static float MeanResidual(OracleReport report) => report.Steps.Count == 0 ? 0f : report.TotalResidual / report.Steps.Count;

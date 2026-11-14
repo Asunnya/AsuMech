@@ -68,6 +68,7 @@ public sealed record ToolboxPlan(string Id, string Label, string Author, string 
 public sealed record LessonToolbox(string PlanId, Dictionary<string, string> RoleMap, Dictionary<string, int> Steps, int? ExampleSeed = null,
     Dictionary<string, string>? Example = null, float? Residual = null, List<int>? Pages = null)
 {
+    [JsonIgnore]
     public IEnumerable<int> AllPages => Steps.Values.Concat(Pages ?? []);
 
     public int? PageFor(string stepId, IReadOnlyDictionary<string, string> rolls)
