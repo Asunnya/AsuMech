@@ -17,7 +17,7 @@ public sealed class UcobP3TenstrikeScenario : IScenario
     public string Name => "Tenstrike Trio";
     public IPhase Phase => UcobZone.P3;
 
-    public IReadOnlyList<IScenarioAi> AiStrats => [new UcobP3TenstrikeAi()];
+    public IReadOnlyList<IScenarioAi> AiStrats => [new UcobP3TenstrikeAi(), new UcobP3TenstrikeTuuflessAi()];
 
     private readonly UcobP3TenstrikeSettingsWindow settingsWindow = new();
     public void DrawSettings() => settingsWindow.Draw();

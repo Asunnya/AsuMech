@@ -13,12 +13,14 @@ using Scenario = AsuMech.Scenarios.Ucob.P3Heavensfall.UcobP3HeavensfallScenario;
 
 namespace AsuMech.Scenarios.Ucob.P3Heavensfall;
 
-public sealed class UcobP3HeavensfallAi : IScenarioAi<UcobP3HeavensfallState>
+public class UcobP3HeavensfallAi : IScenarioAi<UcobP3HeavensfallState>
 {
-    public string Name => "R1 tower under Nael, R towers clockwise, L towers counter-clockwise";
+    public virtual string Name => "R1 tower under Nael, R towers clockwise, L towers counter-clockwise";
 
     private static readonly PartyRole[] RightTowersInOrder = [OffTank, ShieldHealer, CasterDps, MeleeDpsB];
     private static readonly PartyRole[] LeftTowersInOrder = [MainTank, RegenHealer, PhysRangedDps, MeleeDpsA];
+    protected virtual PartyRole[] ClockwiseTowersFromNael => RightTowersInOrder;
+    protected virtual PartyRole[] CounterClockwiseTowersFromNael => LeftTowersInOrder;
     private const float DiveSpreadRadius = 19f;
     private const float PuddleBaitRadius = 13f;
     private const float InsideThePuddlesRadius = 5f;
@@ -34,7 +36,7 @@ public sealed class UcobP3HeavensfallAi : IScenarioAi<UcobP3HeavensfallState>
     private static readonly float[] RadiusNudges = [0f, -2f, 2f, -4f, 4f, 6f, 8f];
     private const float FurthestSpot = 22f;
 
-    private State state = null!;
+    protected State state = null!;
     private SimWorld world = null!;
     private readonly Dictionary<PartyRole, Vector2> spreadSpots = [];
     private readonly List<Vector2> twisterSpots = [];
@@ -57,14 +59,14 @@ public sealed class UcobP3HeavensfallAi : IScenarioAi<UcobP3HeavensfallState>
         ai.Move(Scenario.BurstCasts[^1] + Scenario.BurstCastSeconds + After, () => AiMove.Create(StackAt(Vector2.Zero)).NaturalOrder(), jitter: 0f, sprint: true);
     }
 
-    private float MiddleBossBearing => state.Formation switch
+    protected float MiddleBossBearing => state.Formation switch
     {
         HeavensfallFormation.NaelBetween => state.NaelBearing,
         HeavensfallFormation.NaelCounterClockwise => state.NaelBearing + 45f,
         _ => state.NaelBearing - 45f,
     };
 
-    private float DiveSpreadBearing(PartyRole role) => role switch
+    protected virtual float DiveSpreadBearing(PartyRole role) => role switch
     {
         MainTank => state.NaelBearing - 10f,
         OffTank => state.NaelBearing + 10f,
@@ -145,8 +147,8 @@ public sealed class UcobP3HeavensfallAi : IScenarioAi<UcobP3HeavensfallState>
     {
         var right = state.TowerSlotsTaken.OrderBy(s => s).Take(4).ToList();
         var left = state.TowerSlotsTaken.Except(right).OrderByDescending(s => s).ToList();
-        var r = Array.IndexOf(RightTowersInOrder, role);
-        return state.TowerBearing(r >= 0 ? right[r] : left[Array.IndexOf(LeftTowersInOrder, role)]);
+        var r = Array.IndexOf(ClockwiseTowersFromNael, role);
+        return state.TowerBearing(r >= 0 ? right[r] : left[Array.IndexOf(CounterClockwiseTowersFromNael, role)]);
     }
 
     private Vector2?[] OnTowerBearing(float radius)
