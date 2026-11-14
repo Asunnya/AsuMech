@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using AsuMech.Core;
 using AsuMech.Core.Game.Ai;
 using AsuMech.Core.Game.Party;
@@ -171,12 +172,13 @@ public sealed class TopP1ProgramLoopAi(bool automarkers) : IScenarioAi<TopP1Prog
         }
     }
 
-    private void TakeYourTether(float from, PartyRole taker, int takerNumber, float carryAt, int cardinal, float walkOutAt, bool viaSouth, float until)
+    private void TakeYourTether(float from, PartyRole taker, int takerNumber, float carryAt, int cardinal, float walkOutAt, bool viaSouth, float until,
+        [CallerLineNumber] int line = 0)
     {
         var carrying = false;
         void Look()
         {
-            if (!Drives(taker) || world.Party.Get(taker) is not { } member || !member.IsAlive() || world.Events.Elapsed > until) return;
+            if (world.Party.Get(taker) is not { } member || !member.IsAlive() || world.Events.Elapsed > until) return;
             if (member.HasTetherInSlot0(TetherId.PassableTether))
             {
                 if (!carrying) CarryTetherOut(taker, carryAt, cardinal, walkOutAt, viaSouth);
@@ -185,7 +187,7 @@ public sealed class TopP1ProgramLoopAi(bool automarkers) : IScenarioAi<TopP1Prog
             else
             {
                 carrying = false;
-                if (TetherToTake(taker, takerNumber) is { } holder) MoveNow(taker, GrabPoint(holder.Position), Precise);
+                if (TetherToTake(taker, takerNumber) is { } holder) MoveNow(taker, GrabPoint(holder.Position), Precise, from, line);
             }
             world.Events.Add(LookEvery, Look);
         }
@@ -230,56 +232,56 @@ public sealed class TopP1ProgramLoopAi(bool automarkers) : IScenarioAi<TopP1Prog
             && member.HasTetherInSlot0(TetherId.PassableTether);
         world.Events.Add(MathF.Max(0f, carryAt - world.Events.Elapsed), () =>
         {
-            if (!Drives(holder) || !StillCarrying()) return;
+            if (!StillCarrying()) return;
             var target = TopCompass.Point(GrabRadius, cardinal * 90f);
             var from = Live(holder);
             List<Vector2> path = viaSouth
                 ? [TopCompass.Point(GrabRadius, 180f), .. Arc(TopCompass.Point(GrabRadius, 180f), target, GrabRadius)]
                 : Arc(from, target, GrabRadius);
-            var arrives = WalkPath(holder, from, path, Precise);
+            var arrives = WalkPath(holder, from, path, Precise, carryAt);
             world.Events.Add(MathF.Max(arrives, walkOutAt - world.Events.Elapsed), () =>
             {
-                if (StillCarrying()) MoveNow(holder, HoldSpot(cardinal), Precise);
+                if (StillCarrying()) MoveNow(holder, HoldSpot(cardinal), Precise, walkOutAt);
             });
         });
     }
 
-    private void LeaveOnceTaken(float from, PartyRole passed, Vector2 destination, float deadline, int towerSet)
+    private void LeaveOnceTaken(float from, PartyRole passed, Vector2 destination, float deadline, int towerSet, [CallerLineNumber] int line = 0)
     {
         planned[passed] = destination;
         var giveUp = from + HandOverPatience;
         void Look()
         {
-            if (!Drives(passed) || world.Party.Get(passed) is not { } member || !member.IsAlive()) return;
+            if (world.Party.Get(passed) is not { } member || !member.IsAlive()) return;
             if (member.HasTetherInSlot0(TetherId.PassableTether))
             {
                 if (world.Events.Elapsed < giveUp) world.Events.Add(LookEvery, Look);
                 return;
             }
-            WalkAroundTethers(passed, destination, deadline, mustArrive: false, towerSet)();
+            WalkAroundTethers(passed, destination, deadline, mustArrive: false, towerSet, from, line)();
         }
         At(from, Look);
     }
 
-    private void WalkAround(float time, PartyRole role, Vector2 destination, float deadline, bool mustArrive, int towerSet)
+    private void WalkAround(float time, PartyRole role, Vector2 destination, float deadline, bool mustArrive, int towerSet, [CallerLineNumber] int line = 0)
     {
         planned[role] = destination;
-        At(time, WalkAroundTethers(role, destination, deadline, mustArrive, towerSet));
+        At(time, WalkAroundTethers(role, destination, deadline, mustArrive, towerSet, time, line));
     }
 
-    private Action WalkAroundTethers(PartyRole role, Vector2 destination, float deadline, bool mustArrive, int towerSet)
+    private Action WalkAroundTethers(PartyRole role, Vector2 destination, float deadline, bool mustArrive, int towerSet, float at, int line)
     {
         Vector2? aside = null;
         void Look()
         {
-            if (!Drives(role) || world.Party.Get(role) is not { } member || !member.IsAlive()) return;
+            if (world.Party.Get(role) is not { } member || !member.IsAlive()) return;
             var now = world.Events.Elapsed;
             var here = Live(role);
             var lines = LongTethers(member);
             var route = AroundCenter(here, destination);
             if (FirstCrossed(here, route, lines) is not { } blocker)
             {
-                WalkPath(role, here, route, Loose);
+                WalkPath(role, here, route, Loose, at, line);
                 return;
             }
             var beyond = blocker * ((blocker.Length() + BeyondHolder) / blocker.Length());
@@ -288,20 +290,20 @@ public sealed class TopP1ProgramLoopAi(bool automarkers) : IScenarioAi<TopP1Prog
                 List<Vector2> detour = [.. AroundCenter(here, beyond), .. AroundCenter(beyond, destination)];
                 if (FirstCrossed(here, detour, lines) == null && now + MovePrompt + PathLength(here, detour) / AiManager.RunSpeed <= deadline)
                 {
-                    WalkPath(role, here, detour, Loose);
+                    WalkPath(role, here, detour, Loose, at, line);
                     return;
                 }
             }
             if (mustArrive && now + LookEvery + MovePrompt + PathLength(here, route) / AiManager.RunSpeed > deadline)
             {
-                WalkPath(role, here, route, Loose);
+                WalkPath(role, here, route, Loose, at, line);
                 return;
             }
             if (now >= deadline) return;
             if (!mustArrive && SafeAside(here, destination, lines, towerSet) is { } spot && (aside is not { } previous || Vector2.Distance(spot, previous) > 1f))
             {
                 aside = spot;
-                WalkPath(role, here, AroundCenter(here, spot), Precise);
+                WalkPath(role, here, AroundCenter(here, spot), Precise, at, line);
             }
             world.Events.Add(LookEvery, Look);
         }
@@ -385,12 +387,12 @@ public sealed class TopP1ProgramLoopAi(bool automarkers) : IScenarioAi<TopP1Prog
                     if (!Drives(role) || world.Party.Get(role) is not { } member || !member.IsAlive() || member.HasTetherInSlot0(TetherId.PassableTether)) continue;
                     if (state.NumberOf(role) == set + 1)
                     {
-                        DodgeInsideYourTower(role, set, blasts);
+                        DodgeInsideYourTower(role, set, blasts, BlasterTimes[set] - look);
                         continue;
                     }
                     var here = Live(role);
                     if (blasts.All(blast => Vector2.Distance(here, blast) >= BlastReach + BlastMargin)) continue;
-                    if (SafeStepFrom(here, blasts, towers, lines) is { } step) MoveNow(role, step, Precise);
+                    if (SafeStepFrom(here, blasts, towers, lines) is { } step) MoveNow(role, step, Precise, BlasterTimes[set] - look);
                 }
             });
     }
@@ -416,7 +418,7 @@ public sealed class TopP1ProgramLoopAi(bool automarkers) : IScenarioAi<TopP1Prog
         return best;
     }
 
-    private void DodgeInsideYourTower(PartyRole soaker, int set, IReadOnlyList<Vector2> blasts)
+    private void DodgeInsideYourTower(PartyRole soaker, int set, IReadOnlyList<Vector2> blasts, float at)
     {
         var here = Live(soaker);
         var room = blasts.Count == 0 ? float.MaxValue : blasts.Min(blast => Vector2.Distance(here, blast)) - BlastReach - BlastMargin;
@@ -433,7 +435,7 @@ public sealed class TopP1ProgramLoopAi(bool automarkers) : IScenarioAi<TopP1Prog
                 room = spotRoom;
                 best = spot;
             }
-        if (best is { } dodge) MoveNow(soaker, dodge, Precise);
+        if (best is { } dodge) MoveNow(soaker, dodge, Precise, at);
     }
 
     private void ClaimYourTower(int set)
@@ -446,7 +448,7 @@ public sealed class TopP1ProgramLoopAi(bool automarkers) : IScenarioAi<TopP1Prog
                 var tower = TowerSpot(state.Towers[set], TowerCardinal(state.Towers[set], left));
                 var mine = Vector2.Distance(Live(soaker), tower);
                 if (mine <= TowerRadius) continue;
-                MoveNow(soaker, SoakSpot(state.Towers[set], left), Precise);
+                MoveNow(soaker, SoakSpot(state.Towers[set], left), Precise, TowerTimes[set] - ClaimBeforeTower);
             }
         });
 
@@ -519,19 +521,19 @@ public sealed class TopP1ProgramLoopAi(bool automarkers) : IScenarioAi<TopP1Prog
 
     private int Claim(PartyRole role) => orders[role] = orders.GetValueOrDefault(role) + 1;
 
-    private void Go(float time, PartyRole role, Vector2 destination, float jitter)
-        => At(time, () => MoveNow(role, destination, jitter));
+    private void Go(float time, PartyRole role, Vector2 destination, float jitter, [CallerLineNumber] int line = 0)
+        => At(time, () => MoveNow(role, destination, jitter, time, line));
 
-    private void MoveNow(PartyRole role, Vector2 destination, float jitter)
+    private void MoveNow(PartyRole role, Vector2 destination, float jitter, float at, [CallerLineNumber] int line = 0)
     {
         var order = Claim(role);
         world.Events.Add(0f, () =>
         {
-            if (orders[role] == order) ai.Move(MovePrompt, () => AiMove.Single(role, destination), jitter: jitter);
+            if (orders[role] == order) ai.Move(MovePrompt, () => AiMove.Single(role, destination), jitter: jitter, at: at + MovePrompt, line: line);
         });
     }
 
-    private float WalkPath(PartyRole role, Vector2 from, IEnumerable<Vector2> waypoints, float jitter)
+    private float WalkPath(PartyRole role, Vector2 from, IEnumerable<Vector2> waypoints, float jitter, float at, [CallerLineNumber] int line = 0)
     {
         var order = Claim(role);
         var after = 0f;
@@ -540,7 +542,7 @@ public sealed class TopP1ProgramLoopAi(bool automarkers) : IScenarioAi<TopP1Prog
             var spot = waypoint;
             world.Events.Add(after, () =>
             {
-                if (orders[role] == order) ai.Move(MovePrompt, () => AiMove.Single(role, spot), jitter: jitter);
+                if (orders[role] == order) ai.Move(MovePrompt, () => AiMove.Single(role, spot), jitter: jitter, at: at + MovePrompt, line: line);
             });
             after += Vector2.Distance(from, waypoint) / AiManager.RunSpeed + 0.05f;
             from = waypoint;

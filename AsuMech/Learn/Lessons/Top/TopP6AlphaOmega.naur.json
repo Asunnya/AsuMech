@@ -1,0 +1,858 @@
+{
+  "scenario": "TopP6AlphaOmegaScenario",
+  "strat": "NAUR",
+  "sources": [
+    {
+      "label": "NAUR - P6: Alpha Omega (Toolbox)",
+      "url": "https://ff14.toolboxgaming.space/?id=829484027197761&preview=1"
+    },
+    {
+      "label": "NAUR - P6: Alpha Omega (Slides)",
+      "url": "https://docs.google.com/presentation/d/1NjFeRT-6ORKjR8ZZzDdktTOnJwuLNGyuUif1aNvKwU8/edit?usp=sharing"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 0.8,
+        "line": 85
+      },
+      "title": "Main tank takes Alpha Omega north",
+      "cue": "Alpha Omega appears",
+      "rule": "Main tank picks up the boss and holds it about 7m north of the centre.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 0.8,
+        "line": 86
+      },
+      "title": "Off tank waits at waymark 2",
+      "cue": "Alpha Omega appears",
+      "rule": "Off tank waits on waymark 2 (south-east), away from the party.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 0.8,
+        "line": 89
+      },
+      "title": "Party gathers south-west",
+      "cue": "Alpha Omega appears",
+      "rule": "Everyone but the tanks lines up together south-west of the boss, between the centre and waymark 3.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 16.3,
+        "line": 92
+      },
+      "title": "Off tank baits from waymark 2",
+      "cue": "Cosmo Memory resolves",
+      "rule": "Off tank steps out to the south-east, just past waymark 2, before Cosmo Arrow.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 22.869999,
+        "line": 112
+      },
+      "title": "In first: start 9m south-west",
+      "cue": "Cosmo Arrow, the cross fires in the middle first",
+      "rule": "When the inner cross goes first, the whole party stacks south-west about 9m out, outside the cross but inside the outer lines.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 22.869999,
+        "line": 118
+      },
+      "title": "Out first: start on waymark 3",
+      "cue": "Cosmo Arrow, the outer pinwheel fires first",
+      "rule": "When the outer pinwheel goes first, the whole party stacks on waymark 3 (south-west), between the outer lines and the centre cross.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 29.939999,
+        "line": 113
+      },
+      "title": "In first: step in behind the cross",
+      "cue": "First Exasquares fire",
+      "rule": "Once the middle cross fires, step in to about 5m south-west, onto the cells it just cleared.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 29.939999,
+        "line": 119
+      },
+      "title": "Out first: run out to the wall",
+      "cue": "First Exasquares fire",
+      "rule": "After the first pulse, move out to the south-west wall onto the cells the outer lines already cleared.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 33.989998,
+        "line": 114
+      },
+      "title": "In first: run out to the wall",
+      "cue": "Third pulse of Exasquares",
+      "rule": "Run back out to the south-west wall, past waymark 3, as the lines sweep inward.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 34.039997,
+        "line": 120
+      },
+      "title": "Out first: back to waymark 3",
+      "cue": "Third pulse of Exasquares",
+      "rule": "Step back in to waymark 3.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 36.039997,
+        "line": 121
+      },
+      "title": "Out first: out to the wall again",
+      "cue": "Fourth pulse of Exasquares",
+      "rule": "Out to the south-west wall once more.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 38.05,
+        "line": 122
+      },
+      "title": "Out first: settle on waymark 3",
+      "cue": "Fifth pulse of Exasquares",
+      "rule": "Back in to waymark 3 and stay there for Cosmo Dive.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "from": 39.25,
+        "to": 41.25,
+        "line": 102
+      },
+      "title": "Left dive tank goes north",
+      "cue": "Cosmo Dive cast",
+      "rule": "The left dive tank moves 7m north of the boss to take one Cosmo Dive buster; the party stays south-west for the stack.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "from": 39.25,
+        "to": 41.25,
+        "line": 103
+      },
+      "title": "Right dive tank goes east",
+      "cue": "Cosmo Dive cast",
+      "rule": "The right dive tank moves 7m east of the boss to take the other Cosmo Dive buster; the party stays south-west for the stack.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 40.05,
+        "line": 115
+      },
+      "title": "In first: settle on waymark 3",
+      "cue": "Last Exasquares fire",
+      "rule": "Come back in to waymark 3 for Cosmo Dive.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 45.8,
+        "line": 127
+      },
+      "title": "Main tank back north",
+      "cue": "Cosmo Dive resolves",
+      "rule": "Main tank returns to the boss's north side to hold autos.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 45.8,
+        "line": 128
+      },
+      "title": "Off tank baits by the wall",
+      "cue": "Cosmo Dive resolves",
+      "rule": "Off tank goes out to the wall on their dive side, a little past it, to keep autos off the party.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "from": 57.202778,
+        "to": 135.49423,
+        "line": 140
+      },
+      "title": "Gather in the middle",
+      "cue": "Unlimited Wave Cannon cast",
+      "rule": "Everyone huddles tight in the centre: the first puddle drops under the whole group there.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 66.083,
+        "line": 152
+      },
+      "title": "Puddle 1 dropped: step toward the free octant",
+      "cue": "Your puddle lands",
+      "rule": "Your first puddle went down in the middle. Walk about 5m out toward the free octant: the one just behind where the exaflares start, opposite the way they turn.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 68.088,
+        "line": 152
+      },
+      "title": "Puddle 2: out to the wall",
+      "cue": "Your puddle lands",
+      "rule": "Run on out to the wall (15m) in that same octant and drop the next puddle there.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 70.093,
+        "line": 152
+      },
+      "title": "Puddle 3: follow the exaflares along the wall",
+      "cue": "Your puddle lands",
+      "rule": "Walk along the wall about 25 degrees in the direction the exaflares turn, staying behind them.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 72.098,
+        "line": 152
+      },
+      "title": "Puddle 4: keep walking",
+      "cue": "Your puddle lands",
+      "rule": "Keep following along the wall, about 55 degrees from where you reached it.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 74.103,
+        "line": 152
+      },
+      "title": "Puddle 5: last step along the wall",
+      "cue": "Your puddle lands",
+      "rule": "One more step along the wall, about 90 degrees from where you reached it; the last puddle drops here.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 142.753,
+        "line": 152
+      },
+      "title": "Puddle 1 dropped: step toward the free octant",
+      "cue": "Your puddle lands",
+      "rule": "Your first puddle went down in the middle. Walk about 5m out toward the free octant: the one just behind where the exaflares start, opposite the way they turn.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 144.758,
+        "line": 152
+      },
+      "title": "Puddle 2: out to the wall",
+      "cue": "Your puddle lands",
+      "rule": "Run on out to the wall (15m) in that same octant and drop the next puddle there.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 146.763,
+        "line": 152
+      },
+      "title": "Puddle 3: follow the exaflares along the wall",
+      "cue": "Your puddle lands",
+      "rule": "Walk along the wall about 25 degrees in the direction the exaflares turn, staying behind them.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 148.768,
+        "line": 152
+      },
+      "title": "Puddle 4: keep walking",
+      "cue": "Your puddle lands",
+      "rule": "Keep following along the wall, about 55 degrees from where you reached it.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 150.773,
+        "line": 152
+      },
+      "title": "Puddle 5: last step along the wall",
+      "cue": "Your puddle lands",
+      "rule": "One more step along the wall, about 90 degrees from where you reached it; the last puddle drops here.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 76.10801,
+        "line": 173
+      },
+      "title": "Head for your clock spot",
+      "cue": "Last puddle drops",
+      "rule": "After the last puddle, walk to your clock spot about 8m out: tanks N/S, healers W/E, melees SW/SE, ranged NE/NW.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 79.158005,
+        "line": 288
+      },
+      "title": "Protean on your clock spot",
+      "cue": "Wave Cannon cast",
+      "rule": "Stand on your clock spot about 12m out so the proteans don't overlap: MT north, OT south, H1 west, H2 east, D1 SW, D2 SE, D3 NE, D4 NW.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "from": 84.600006,
+        "to": 119.100006,
+        "line": 544
+      },
+      "title": "Wild Charge: second tank behind",
+      "cue": "Wave Cannon resolves",
+      "rule": "Line up south of the boss for Wild Charge. The tank using invuln stands first, 5m out; the other tank right behind at 7m.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "from": 84.600006,
+        "to": 119.100006,
+        "line": 543
+      },
+      "title": "Wild Charge: invuln tank in front",
+      "cue": "Wave Cannon resolves",
+      "rule": "Line up south of the boss for Wild Charge. The tank using invuln stands first, 5m out; the other tank right behind at 7m.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "from": 84.600006,
+        "to": 119.100006,
+        "line": 544
+      },
+      "title": "Wild Charge: party in the line",
+      "cue": "Wave Cannon resolves",
+      "rule": "Non-tanks stack in a tight line behind the tanks, 9-11m south of the boss.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "from": 91.3,
+        "to": 125.3,
+        "line": 553
+      },
+      "title": "Main tank back north",
+      "cue": "Wild Charge resolves",
+      "rule": "Main tank returns to the boss's north side.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "from": 91.8,
+        "to": 125.8,
+        "line": 554
+      },
+      "title": "Off tank baits south-east",
+      "cue": "Wild Charge resolves",
+      "rule": "Off tank goes out toward the south-east wall to bait autos away from the party.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 99.87,
+        "line": 596
+      },
+      "title": "In first: supports beside your partner",
+      "cue": "Cosmo Arrow, the cross fires in the middle first",
+      "rule": "Supports stand 10m out between their own cardinal and their DPS partner's diagonal (MT with D3, OT with D1, H1 with D4, H2 with D2), outside the centre cross.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 99.87,
+        "line": 574
+      },
+      "title": "In first: DPS 9m on your diagonal",
+      "cue": "Cosmo Arrow, the cross fires in the middle first",
+      "rule": "DPS stand about 9m out on their own diagonal (D1 SW, D2 SE, D3 NE, D4 NW), outside the centre cross.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 99.87,
+        "line": 603
+      },
+      "title": "Out first: supports beside your partner",
+      "cue": "Cosmo Arrow, the outer pinwheel fires first",
+      "rule": "Supports stand 11m out between their own cardinal and their DPS partner's diagonal (MT with D3, OT with D1, H1 with D4, H2 with D2).",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 99.87,
+        "line": 580
+      },
+      "title": "Out first: DPS on your waymark",
+      "cue": "Cosmo Arrow, the outer pinwheel fires first",
+      "rule": "DPS stand on their diagonal waymark (D1 3, D2 2, D3 1, D4 4), between the pinwheel and the centre cross.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 106.94,
+        "line": 597
+      },
+      "title": "In first: supports step in with your DPS",
+      "cue": "First Exasquares fire",
+      "rule": "Step in to 5m on your partner's diagonal, next to them.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 106.94,
+        "line": 575
+      },
+      "title": "In first: DPS step in",
+      "cue": "First Exasquares fire",
+      "rule": "Step in to 5m on your diagonal onto the cells the cross just cleared.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 106.94,
+        "line": 604
+      },
+      "title": "Out first: supports to the corner",
+      "cue": "First Exasquares fire",
+      "rule": "Go out to the wall on your partner's diagonal, next to them.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 106.94,
+        "line": 581
+      },
+      "title": "Out first: DPS out to the wall",
+      "cue": "First Exasquares fire",
+      "rule": "Move out to the wall on your diagonal.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 110.990005,
+        "line": 598
+      },
+      "title": "In first: supports out to the wall",
+      "cue": "Third pulse of Exasquares",
+      "rule": "Run out to 13m, still between your cardinal and your partner's diagonal.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 110.990005,
+        "line": 576
+      },
+      "title": "In first: DPS out to the wall",
+      "cue": "Third pulse of Exasquares",
+      "rule": "Run out to the wall on your diagonal.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 111.04,
+        "line": 605
+      },
+      "title": "Out first: supports back in",
+      "cue": "Third pulse of Exasquares",
+      "rule": "Step back in to 11m, between your cardinal and your partner's diagonal.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 111.04,
+        "line": 582
+      },
+      "title": "Out first: DPS back to your waymark",
+      "cue": "Third pulse of Exasquares",
+      "rule": "Step back in to your diagonal waymark.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 113.04,
+        "line": 606
+      },
+      "title": "Out first: supports onto your cardinal",
+      "cue": "Fourth pulse of Exasquares",
+      "rule": "Move onto your cardinal waymark: MT A, OT C, H1 D, H2 B.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 113.04,
+        "line": 583
+      },
+      "title": "Out first: DPS out again",
+      "cue": "Fourth pulse of Exasquares",
+      "rule": "Out toward the wall on your diagonal again.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 115.05,
+        "line": 599
+      },
+      "title": "In first: supports onto your cardinal",
+      "cue": "Fifth pulse of Exasquares",
+      "rule": "Move onto your cardinal waymark: MT A, OT C, H1 D, H2 B.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 116.060005,
+        "line": 607
+      },
+      "title": "Out first: supports in for the protean",
+      "cue": "Wave Cannon resolves",
+      "rule": "Step in to 8m on your cardinal for the first protean.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 116.060005,
+        "line": 584
+      },
+      "title": "Out first: DPS in for the protean",
+      "cue": "Wave Cannon resolves",
+      "rule": "Come back in to about 11m on your diagonal for the first protean.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 117.05,
+        "line": 600
+      },
+      "title": "In first: supports in for the protean",
+      "cue": "Last Exasquares fire",
+      "rule": "Step in to about 9m on your cardinal for the first protean.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 117.05,
+        "line": 577
+      },
+      "title": "In first: DPS onto your waymark",
+      "cue": "Last Exasquares fire",
+      "rule": "Come back in to your diagonal waymark (D1 3, D2 2, D3 1, D4 4) for the proteans.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 152.798,
+        "line": 302
+      },
+      "title": "Party to the second Cosmo Dive spot",
+      "cue": "Last puddle drops",
+      "rule": "After the last puddle, keep going around the wall in the exaflares' direction and stack 12m out there for Cosmo Dive.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 153.728,
+        "line": 304
+      },
+      "title": "Dive tanks to their sides",
+      "cue": "Last puddle drops",
+      "rule": "Tanks go 7m from the boss on the side away from the party, one to each side, so the dive busters land clear of the stack.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 159.6,
+        "line": 326
+      },
+      "title": "Main tank opposite the party",
+      "cue": "Cosmo Dive resolves",
+      "rule": "Main tank takes the boss 6.5m on the side opposite the party.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "from": 160.02571,
+        "to": 161.36568,
+        "line": 334
+      },
+      "title": "Healers step in toward the party",
+      "cue": "Cosmo Dive resolves",
+      "rule": "Healers drift in to about 8m on the party's side to heal up.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 160.1,
+        "line": 327
+      },
+      "title": "Off tank baits by the wall",
+      "cue": "Cosmo Dive resolves",
+      "rule": "Off tank goes out to the wall on their dive side, a little past it, to bait autos.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "from": 171.53098,
+        "to": 172.28209,
+        "line": 340
+      },
+      "title": "Healers gather in the middle",
+      "cue": "Cosmo Meteor is coming",
+      "rule": "Healers move to the centre first to start healing for Cosmo Meteor.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "from": 173.30508,
+        "to": 174.49582,
+        "line": 346
+      },
+      "title": "Everyone gathers in the middle",
+      "cue": "Cosmo Meteor cast",
+      "rule": "Everyone else joins the healers in the centre.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "from": 178.1,
+        "to": 178.59947,
+        "line": 348
+      },
+      "title": "Spread for Cosmo Meteor",
+      "cue": "Cosmo Meteor cast",
+      "rule": "Spread to your meteor spot: R1 north wall, MT NE, H2 east, D2 SE, OT south, D1 SW, H1 west, caster NW.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 184.5,
+        "line": 349
+      },
+      "title": "Middle healer steps in",
+      "cue": "Cosmo Meteor hits",
+      "rule": "The middle healer steps in to about 6m from the centre on their side.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 191.1,
+        "line": 351
+      },
+      "title": "Other healer steps in",
+      "cue": "Cosmo Meteor hits",
+      "rule": "The other healer steps in to 7m on their side.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 193.8,
+        "line": 386
+      },
+      "title": "Stack north, or south if R1 is a flare",
+      "cue": "Flare markers land",
+      "rule": "Everyone without a flare stacks at the north wall with R1. If R1 has a flare, R1 stays north and the stack moves to the south wall instead.",
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "time": 193.8,
+        "line": 381
+      },
+      "title": "Flares to a free cardinal",
+      "cue": "Flare marker on you",
+      "rule": "With a flare marker, run to the nearest free cardinal at the wall, 18m out, on a side the stack doesn't use.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP6AlphaOmegaAi",
+        "from": 201.80267,
+        "to": 204.27199,
+        "line": 446
+      },
+      "title": "Clump under Alpha Omega",
+      "cue": "Cosmo Meteor ends",
+      "rule": "Everyone clumps tight under the boss.",
+      "tolerance": 2,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "829484027197761",
+    "roleMap": {
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "ShieldHealer": "healer1",
+      "RegenHealer": "healer2",
+      "MeleeDpsB": "dps1",
+      "CasterDps": "dps2",
+      "PhysRangedDps": "dps3",
+      "MeleeDpsA": "dps4"
+    },
+    "steps": {
+      "TopP6AlphaOmegaAi@22.87": 4,
+      "TopP6AlphaOmegaAi@33.99": 7,
+      "TopP6AlphaOmegaAi@39.25-41.25": 11,
+      "TopP6AlphaOmegaAi@57.2-135.49": 22,
+      "TopP6AlphaOmegaAi@91.3-125.3": 28,
+      "TopP6AlphaOmegaAi@115.05": 46,
+      "TopP6AlphaOmegaAi@171.53-172.28": 53
+    },
+    "exampleSeed": 7,
+    "residual": 0.8049158
+  },
+  "draft": true
+}

@@ -1,0 +1,191 @@
+{
+  "scenario": "TopP3IntermissionScenario",
+  "strat": "NA (automarkers)",
+  "sources": [
+    {
+      "label": "NAUR - P3: Omega Reconfigured (Final Omega) (Toolbox)",
+      "url": "https://ff14.toolboxgaming.space/?id=243183080764761&preview=1"
+    },
+    {
+      "label": "NAUR - P3: Omega Reconfigured (Final Omega) (Slides)",
+      "url": "https://docs.google.com/presentation/d/1ncZ3riDOf056wxkCAFto3aX-4TWOMVO4gFfrQkQNMdY/edit?usp=sharing"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "TopP3IntermissionAi",
+        "time": 0.8,
+        "line": 116
+      },
+      "title": "Conga line south",
+      "cue": "Omega-F appears",
+      "rule": "Line up 11m south of the middle, west to east: H1, caster, D1, MT, OT, D2, ranged, H2. The line order decides who takes which home spot once the debuffs come.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "Stand on waymark 3."
+        },
+        "ShieldHealer": {
+          "rule": "Stand on waymark 2."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to 11m south of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand near waymark 2, 13m south-east of the centre."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark 3, 13m south-west of the centre."
+        }
+      },
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP3IntermissionAi",
+        "from": 11.306453,
+        "to": 15.692823,
+        "line": 66
+      },
+      "title": "Go to your home on the wall",
+      "cue": "Sniper Cannon debuffs land",
+      "rule": "Leave the line for your home on the wall. Spreads, in line order from the west: west, north-north-west, north-north-east, east. Stack and unmarked pair up: the first pair south-south-west, the second pair south-south-east, unmarked just inside the stack.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP3IntermissionAi",
+        "from": 14.7,
+        "to": 17.749853,
+        "line": 67
+      },
+      "title": "Hug the edge of the first hand",
+      "cue": "The first Wave Repeater ring goes off",
+      "rule": "Slide along the wall away from the nearest hand until you are clear of its cleave, about 38 degrees off the hand.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "Go to the south-west wall."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP3IntermissionAi",
+        "time": 19.8,
+        "line": 68
+      },
+      "title": "Duck under the outer ring",
+      "cue": "The next Wave Repeater ring is coming",
+      "rule": "Step in to about 15m so the outer repeater ring passes over you, staying on the same bearing.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "If you are in Spreads: Stand near waymark D, the west wall; otherwise: Stand near waymark 3, the south-west wall."
+        },
+        "ShieldHealer": {
+          "rule": "If you are in Spreads: Stand near waymark B, the east wall; otherwise: Stand near waymark 2, the south-east wall."
+        },
+        "CasterDps": {
+          "rule": "If you are in Spreads: Stand near waymark D, the west wall; otherwise: Go to the south wall."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP3IntermissionAi",
+        "time": 22.099998,
+        "line": 69
+      },
+      "title": "Back to the wall",
+      "cue": "The repeater ring has passed",
+      "rule": "Step straight back out to the wall on the same bearing to dodge the inner rings.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "Depends on FirstHands and Spreads has RegenHealer: South & no → SW wall; North & no → S wall; North & yes → W wall; South & yes → W wall."
+        },
+        "ShieldHealer": {
+          "rule": "Depends on FirstHands and Spreads has ShieldHealer: South & no → SE wall; North & yes → E wall; South & yes → E wall; North & no → S wall."
+        },
+        "CasterDps": {
+          "rule": "Depends on FirstHands and Spreads has CasterDps: South & yes → W wall; North & yes → W wall; North & no → S wall; South & no → SW wall."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP3IntermissionAi",
+        "time": 27.599998,
+        "line": 70
+      },
+      "title": "Tuck into the hand that already hit",
+      "cue": "Colossal Blow from the first hands resolves",
+      "rule": "Move toward the hand that just went off and tuck in about 14 degrees inside it, 16m out; that side is now safe from the second set of hands.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "Depends on FirstHands and Spreads has RegenHealer: South & no → S wall; North & no → near 3 (SW wall); North & yes → W wall; South & yes → W wall."
+        },
+        "ShieldHealer": {
+          "rule": "Depends on FirstHands and Spreads has ShieldHealer: South & no → S wall; North & yes → E wall; South & yes → E wall; North & no → near 2 (SE wall)."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP3IntermissionAi",
+        "from": 30.400974,
+        "to": 30.890728,
+        "line": 71
+      },
+      "title": "Clock spots for Hello World",
+      "cue": "Colossal Blow and the snipes resolve",
+      "rule": "Walk in to 10m and around to your Hello World clock spot: MT north, R1 north-east, H2 east, D2 south-east, OT south, D1 south-west, H1 west, D3 north-west.",
+      "roles": {
+        "OffTank": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat."
+        },
+        "RegenHealer": {
+          "rule": "Go to 10m south of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand near waymark 4, 10m north-west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand near waymark 1, 10m north-east of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Go to 10m east of the centre."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "243183080764761+stgy-a82a1b1e",
+    "roleMap": {
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "ShieldHealer": "healer1",
+      "PhysRangedDps": "healer2",
+      "MeleeDpsB": "dps1",
+      "MeleeDpsA": "dps2",
+      "RegenHealer": "dps3",
+      "CasterDps": "dps4"
+    },
+    "steps": {
+      "TopP3IntermissionAi@30.4-30.89": 9
+    },
+    "exampleSeed": 1,
+    "residual": 2.8159425
+  },
+  "draft": true
+}

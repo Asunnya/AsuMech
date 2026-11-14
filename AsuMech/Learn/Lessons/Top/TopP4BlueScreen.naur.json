@@ -1,0 +1,246 @@
+{
+  "scenario": "TopP4BlueScreenScenario",
+  "strat": "NAUR",
+  "sources": [
+    {
+      "label": "NAUR - P4: Blue Screen (Toolbox)",
+      "url": "https://ff14.toolboxgaming.space/?id=142998596798471&preview=1"
+    },
+    {
+      "label": "NAUR - P4: Blue Screen (Slides)",
+      "url": "https://docs.google.com/presentation/d/1wsYwsYXF9zIj2hXFJ3aTz_WLvIbaieKAApS6ExRdOsk/edit?usp=sharing"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "TopP4BlueScreenAi",
+        "time": 0.8,
+        "line": 50
+      },
+      "title": "Spread to your Quickmarch spots",
+      "cue": "Debuggers land on the party",
+      "rule": "Take your Quickmarch spot on the ring: tanks top west/east, casters on D and B, healers below them, melee on 3 and 2. West half and east half stay on their own side for the whole mechanic.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 14m west of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 14m east of the centre."
+        },
+        "RegenHealer": {
+          "rule": "Go to 13m south-west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Go to 13m south-east of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand on waymark 3."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand on waymark 2."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand on waymark B."
+        },
+        "CasterDps": {
+          "rule": "Stand on waymark D."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP4BlueScreenAi",
+        "time": 24.699999,
+        "line": 51
+      },
+      "title": "Move south for the first stacks",
+      "cue": "Wave Cannon resolves",
+      "rule": "Walk south along your side and stand in your half's stack: west half on the west stack, east half on the east one, about 5m either side of C. If both stack markers are on the same half, the lower of the two in the lineup swaps sides and the melee from the other half swaps with them.",
+      "roles": {
+        "ShieldHealer": {
+          "rule": "Go to 15m south of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Go to 15m south of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to 15m south of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Rng)."
+        }
+      },
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP4BlueScreenAi",
+        "time": 29.75,
+        "line": 52
+      },
+      "title": "Walk back along the ring",
+      "cue": "Wave Cannon resolves",
+      "rule": "After the stacks go off, walk back to your Quickmarch spot along the outer ring, not through the middle where the Wave Repeater rings land.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 14m south-west of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 14m south-east of the centre."
+        },
+        "RegenHealer": {
+          "rule": "Go to 13m south-west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: StackTargets has ShieldHealer)."
+        },
+        "MeleeDpsA": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: StackTargets has MeleeDpsA)."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark 3, 14m south-west of the centre."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP4BlueScreenAi",
+        "from": 34.75,
+        "to": 36.2,
+        "line": 53
+      },
+      "title": "Duck inside the repeater, then stack",
+      "cue": "Wave Repeater fires its first ring",
+      "rule": "Cut in to about 9-10m between your spot and your stack to dodge the outer repeater ring, then step out onto your half's stack as soon as it passes. Same swap rule as before if both markers are on one half.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 9m south-west of the centre."
+        },
+        "RegenHealer": {
+          "rule": "Go to 10m south-west of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Go to 10m south-west of the centre."
+        },
+        "CasterDps": {
+          "rule": "Go to 10m south-west of the centre."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP4BlueScreenAi",
+        "time": 39.899998,
+        "line": 54
+      },
+      "title": "Back to Quickmarch spots",
+      "cue": "Wave Cannon resolves",
+      "rule": "Return to your Quickmarch spot on the outer ring for the next protean; stay on the third ring out until the exa-rings pass.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 14m west of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 14m east of the centre."
+        },
+        "RegenHealer": {
+          "rule": "Go to 13m south-west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Go to 13m south-east of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand on waymark 3."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand on waymark 2."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand on waymark B."
+        },
+        "CasterDps": {
+          "rule": "Stand on waymark D."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP4BlueScreenAi",
+        "time": 45.1,
+        "line": 55
+      },
+      "title": "South again for the last stacks",
+      "cue": "Wave Cannon resolves",
+      "rule": "Walk south to your half's stack while staying on the outer ring until the exa-rings resolve. Same swap rule if both markers are on one half.",
+      "roles": {
+        "ShieldHealer": {
+          "rule": "Go to 15m south of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Go to 15m south of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to 15m south of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Rng)."
+        }
+      },
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP4BlueScreenAi",
+        "time": 51.55,
+        "line": 56
+      },
+      "title": "Clump south for Blue Screen",
+      "cue": "The last Wave Repeater ring hits",
+      "rule": "As soon as the last ring passes, move in and clump just south of the middle, 7-9m out, ready for Blue Screen.",
+      "roles": {
+        "OffTank": {
+          "rule": "Go to 8m south-east of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to 9m south-east of the centre."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "142998596798471",
+    "roleMap": {
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "MeleeDpsB": "healer1",
+      "MeleeDpsA": "healer2",
+      "ShieldHealer": "dps1",
+      "CasterDps": "dps2",
+      "PhysRangedDps": "dps3",
+      "RegenHealer": "dps4"
+    },
+    "steps": {
+      "TopP4BlueScreenAi@0.8": 0,
+      "TopP4BlueScreenAi@24.7": 3,
+      "TopP4BlueScreenAi@39.9": 5,
+      "TopP4BlueScreenAi@45.1": 11,
+      "TopP4BlueScreenAi@51.55": 13
+    },
+    "exampleSeed": 2,
+    "residual": 1.766988
+  },
+  "draft": true
+}

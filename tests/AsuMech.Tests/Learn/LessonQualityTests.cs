@@ -55,19 +55,39 @@ public class LessonQualityTests
         {
             if (step.Key.Line is not { } line) continue;
             if (!sources.TryGetValue(step.Key.Cls, out var file)) { stale.Add($"{lesson.Scenario}: no source file named {step.Key.Cls}.cs"); continue; }
-            var lines = File.ReadAllLines(file);
-            if (line < 1 || line > lines.Length) { stale.Add($"{lesson.Scenario}: {step.Key.Cls}.cs has no line {line}"); continue; }
-            var text = lines[line - 1];
             var time = step.Key.Time ?? step.Key.From;
             var literal = time?.ToString("0.##", CultureInfo.InvariantCulture);
+            // A subclass that overrides only the position function is keyed by its own name, while the
+            // Move call sits on the base strat's line.
+            var text = LineAt(file, line);
+            if (text is null) { stale.Add($"{lesson.Scenario}: {step.Key.Cls}.cs has no line {line}"); continue; }
+            if (!HoldsLiteral(text, literal) && LineAt(BaseFile(file, sources), line) is { } baseText && HoldsLiteral(baseText, literal)) continue;
             // A call whose time is computed (bait - 3f) cannot be checked for its literal; it still has to be a call.
-            var holdsLiteral = time is { } && literal != null && System.Text.RegularExpressions.Regex.IsMatch(text, $@"(?<![\d.]){System.Text.RegularExpressions.Regex.Escape(literal)}(?![\d])");
-            var isCall = System.Text.RegularExpressions.Regex.IsMatch(text, @"\b(Move|MoveNow|Order|Automarker|MoveTo|Loop)\s*\(") || text.Contains("ai.", StringComparison.Ordinal);
+            var holdsLiteral = HoldsLiteral(text, literal);
+            // A strat helper that forwards its caller's line to the order (WalkAround(...), PairUp(...)) counts as a call too.
+            var isCall = System.Text.RegularExpressions.Regex.IsMatch(text, @"\b(Move|MoveNow|Order|Automarker|MoveTo|Loop)\s*\(") || text.Contains("ai.", StringComparison.Ordinal)
+                         || System.Text.RegularExpressions.Regex.IsMatch(text, @"^\s*(var\s+\w+\s*=\s*)?[A-Z]\w*\s*\(|=>\s*[A-Z]\w*\s*\(");
             if (!holdsLiteral && !isCall)
                 stale.Add($"{lesson.Scenario} / {lesson.Strat}: {step.Key.Cls}.cs:{line} no longer holds {literal} ({text.Trim()})");
         }
         Assert.That(stale, Is.Empty, "run: rekey-all --write");
     }
+
+    private static string? LineAt(string? file, int line)
+    {
+        if (file is null) return null;
+        var lines = File.ReadAllLines(file);
+        return line >= 1 && line <= lines.Length ? lines[line - 1] : null;
+    }
+
+    private static string? BaseFile(string file, Dictionary<string, string> sources)
+    {
+        var match = System.Text.RegularExpressions.Regex.Match(File.ReadAllText(file), @"class\s+\w+(?:\([^)]*\))?\s*:\s*(\w+)");
+        return match.Success && sources.TryGetValue(match.Groups[1].Value, out var baseFile) ? baseFile : null;
+    }
+
+    private static bool HoldsLiteral(string text, string? literal)
+        => literal != null && System.Text.RegularExpressions.Regex.IsMatch(text, $@"(?<![\d.]){System.Text.RegularExpressions.Regex.Escape(literal)}(?![\d])");
 
     public static IEnumerable<TestCaseData> LessonsWithAResidual()
         => LessonLoader.All.Where(l => l.Toolbox is { ExampleSeed: not null, Residual: not null })
