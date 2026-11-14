@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using AsuMech.Core;
 using AsuMech.Core.Game.Ai;
 using AsuMech.Core.Game.Party;
@@ -117,23 +118,23 @@ public sealed class TopP3IntermissionAi(bool automarkers) : IScenarioAi<TopP3Int
         }
     }
 
-    private float HeadHomeToTheWall(float time, Plan plan)
-        => GoAlong(time, plan.Role, [TopCompass.Point(Wall, plan.Home)], 0.2f);
+    private float HeadHomeToTheWall(float time, Plan plan, [CallerLineNumber] int line = 0)
+        => GoAlong(time, plan.Role, [TopCompass.Point(Wall, plan.Home)], 0.2f, line);
 
-    private void HugTheFirstHandsEdge(float time, Plan plan)
-        => GoAlong(time, plan.Role, Arc(Wall, plan.Home, plan.Edge), 0f);
+    private void HugTheFirstHandsEdge(float time, Plan plan, [CallerLineNumber] int line = 0)
+        => GoAlong(time, plan.Role, Arc(Wall, plan.Home, plan.Edge), 0f, line);
 
-    private void DuckUnderTheOuterRing(float time, Plan plan)
-        => GoAlong(time, plan.Role, [TopCompass.Point(UnderTheOuterRing, plan.Edge)], 0f);
+    private void DuckUnderTheOuterRing(float time, Plan plan, [CallerLineNumber] int line = 0)
+        => GoAlong(time, plan.Role, [TopCompass.Point(UnderTheOuterRing, plan.Edge)], 0f, line);
 
-    private void BackToTheWall(float time, Plan plan)
-        => GoAlong(time, plan.Role, [TopCompass.Point(Wall, plan.Edge)], 0f);
+    private void BackToTheWall(float time, Plan plan, [CallerLineNumber] int line = 0)
+        => GoAlong(time, plan.Role, [TopCompass.Point(Wall, plan.Edge)], 0f, line);
 
-    private void TuckIntoTheBlownHand(float time, Plan plan)
-        => GoAlong(time, plan.Role, [TopCompass.Point(TuckRadius - plan.Inset, plan.Tuck)], 0f);
+    private void TuckIntoTheBlownHand(float time, Plan plan, [CallerLineNumber] int line = 0)
+        => GoAlong(time, plan.Role, [TopCompass.Point(TuckRadius - plan.Inset, plan.Tuck)], 0f, line);
 
-    private void TakeTheHelloWorldClockSpot(float time, Plan plan)
-        => GoAlong(time, plan.Role, [TopCompass.Point(ClockRadius, plan.Tuck), .. Arc(ClockRadius, plan.Tuck, ClockSpots[plan.Role])], 0.2f);
+    private void TakeTheHelloWorldClockSpot(float time, Plan plan, [CallerLineNumber] int line = 0)
+        => GoAlong(time, plan.Role, [TopCompass.Point(ClockRadius, plan.Tuck), .. Arc(ClockRadius, plan.Tuck, ClockSpots[plan.Role])], 0.2f, line);
 
     private IEnumerable<Plan> Plans()
     {
@@ -156,12 +157,13 @@ public sealed class TopP3IntermissionAi(bool automarkers) : IScenarioAi<TopP3Int
         return new Plan(role, home, hand + side * HandEdge, hand + side * InsideTheHand, inset);
     }
 
-    private float GoAlong(float time, PartyRole role, IEnumerable<Vector2> waypoints, float jitter)
+    private float GoAlong(float time, PartyRole role, IEnumerable<Vector2> waypoints, float jitter, int line)
     {
         var from = planned[role];
+        var step = time + MovePrompt;
         foreach (var waypoint in waypoints)
         {
-            ai.Move(time + MovePrompt, () => AiMove.Single(role, waypoint), jitter);
+            ai.Move(time + MovePrompt, () => AiMove.Single(role, waypoint), jitter, at: step, line: line);
             time += Vector2.Distance(from, waypoint) / AiManager.RunSpeed + 0.05f;
             from = waypoint;
         }

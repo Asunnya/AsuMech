@@ -99,3 +99,34 @@ P5 Omega pt. 1
 
 P5 Omega pt. 2
 [stgy:aCkFO4KUgqDWJoCovdCsWnRTBZxnaaObF-ToDS6Jnu0AUmwr1XxEM74HWBKTybF2nHNtQBkAOS2dunEVQDbVuRwhQKuhjJR-DIbOO1a1IrUUqCbUpQIofQGJBjlUcg9yZx4pq5X7GFqOjEgA1SxI7aSHwtjrw+i3vvczDZhUwZS9Qw2dAsvI2gLk6rF0ez2cQiLqX2oOtvhJp0dcGNxTHQLwx6BgAU78ti65WVn57w17B7jSdU0Hs4lRaR0LESygnxddfsTiD2szA7NbzrQWv+JuXSM1a9ITxZgyESgA5HrMYLxh7u9+PJlKhoByuz7PGRxp2Y1lWXDuw2-ApsJbYaZjshoBcv2i2XuhNxPTs41JFlyexxOHRJY2k5RhbWIJschYUJoCKQez8Fjv+Aul173LRZdN4rrrmBHcEgGHP6-vCsbj3FgvsSetwz55n5BtisoGnVsVdnwgmp28jOiH-zQacqk57sFaexERGz++AwhonFXi+q14+i75X8O8n8cOojTpG4I0tEA2lVZULDiIAYK8ZOQw6Wy9KHWa9fse]
+
+------------------------------------------------------------------------
+P5: Run: Dynamis (Delta Version) - text guide (pasted 2026-11-14)
+------------------------------------------------------------------------
+@scenarios: TopP5DeltaScenario
+@strat: Tuufless (Elemental)
+@plans: -
+Text guide, Delta section
+  (URL not captured)
+Toolbox the guide follows
+  (URL not captured)
+Initial tether split and fist adjustments
+  - Blues to Beetle: Remote Regression pairs go toward Beetle Omega, Local Regression (red-green) pairs toward Final Omega; each group lines its tethers up parallel.
+  - The pair closer to the centre is the inner tether, the pair closer to the edge the outer tether.
+  - Inner tethers check their fist: if it matches the colour of the fist next to them (not their partner's), they swap with their partner.
+  - Red-greens then stack on the two intercardinal waymarks by Final Omega.
+  - Outer blues stand far enough apart to break as soon as the tether activates, but close to their inner blue fist partner; inner blues stay close enough not to break.
+  - Never step past the inner side of the intercardinal waymarks: that is the eye's cleave.
+  - When the outer blue tether breaks, outer blues run onto their inner blue partner to stack fists; everyone waits for the fist AoE under them.
+Arm unit baits, Beyond Defense and monitors
+  - Outer red-greens bait the two arms nearest Final Omega, inner red-greens the two in the middle, outer blues the two nearest Beetle; hug the arm so its laser turns out of the arena, and wait for the orange laser telegraphs before moving.
+  - Inner blues go into the middle and split around Omega-M (breaking their tether) to bait Beyond Defense.
+  - Red-greens spread to the wall afterwards to take the four monitor hits.
+  - Monitor player: run to Omega-M on the side Final Omega isn't cleaving and face the monitor that way, leaving a safe lane; share Pile Pitch.
+  - Beyond Defense target can't share Pile Pitch: shift sideways inside the safe lane (still covering the same area if also monitor).
+  - Other blues stack next to Omega-M on the side Final Omega isn't cleaving and share Pile Pitch (three needed).
+Swivel Cannon and Hello World
+  - The red-green pair closest to Beetle breaks: the player in the cleave breaks it (only after every Twice-come Ruin is gone from the party list), the safe-side player plants on the intercardinal waymark closest to Beetle; the breaker pushes to the cleave edge in line with that waymark.
+  - The outer red-green pair rotates: the safe player goes to the wall where the cleave meets the edge, the player in the cleave rotates all the way to Beetle.
+  - With the cleave north: Hello, Near World hugs the cleave edge on the north-south line, Hello, Distant World goes to the wall on the same line; the two blues without debuffs back up to the wall on the intercardinal far from Beetle.
+  - After the Hello World magic vulnerability falls off, the last red-green tether breaks; max melee on opposite sides of Omega-M doesn't break it.

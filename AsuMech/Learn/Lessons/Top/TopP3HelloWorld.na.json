@@ -1,0 +1,405 @@
+{
+  "scenario": "TopP3HelloWorldScenario",
+  "strat": "NA",
+  "sources": [
+    {
+      "label": "NAUR - P3: Omega Reconfigured (Final Omega) (Toolbox)",
+      "url": "https://ff14.toolboxgaming.space/?id=243183080764761&preview=1"
+    },
+    {
+      "label": "NAUR - P3: Omega Reconfigured (Final Omega) (Slides)",
+      "url": "https://docs.google.com/presentation/d/1ncZ3riDOf056wxkCAFto3aX-4TWOMVO4gFfrQkQNMdY/edit?usp=sharing"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "TopP3HelloWorldAi",
+        "time": 1.3,
+        "line": 94
+      },
+      "title": "Hello World clock spots",
+      "cue": "Omega starts Hello World",
+      "rule": "Spread 10m out on your clock spot: MT north, R1 north-east, H2 east, D2 south-east, OT south, D1 south-west, H1 west, D3 north-west.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand near waymark A, 10m north of the centre."
+        },
+        "OffTank": {
+          "rule": "Stand near waymark C, 10m south of the centre."
+        },
+        "RegenHealer": {
+          "rule": "Stand near waymark D, 10m west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Stand near waymark B, 10m east of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand near waymark 3, 10m south-west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand near waymark 2, 10m south-east of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Stand near waymark 1, 10m north-east of the centre."
+        },
+        "CasterDps": {
+          "rule": "Stand near waymark 4, 10m north-west of the centre."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP3HelloWorldAi",
+        "from": 22.56,
+        "to": 83.86001,
+        "line": 428
+      },
+      "title": "Local tethers: wait under Omega",
+      "rule": "With the Local Regression (green) tether, wait 5.5m from the middle, a quarter turn either side of your partner; on the last round stand together at 3m.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 6m north of the centre."
+        },
+        "OffTank": {
+          "rule": "Go to 6m south of the centre."
+        },
+        "RegenHealer": {
+          "rule": "Go to 6m west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Go to 6m east of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Go to 6m south-west of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to 6m south-east of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Go to 6m north-east of the centre."
+        },
+        "CasterDps": {
+          "rule": "Go to 6m north-west of the centre."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "The towers for this round are about to appear"
+    },
+    {
+      "key": {
+        "cls": "TopP3HelloWorldAi",
+        "from": 22.56,
+        "to": 85.700005,
+        "line": 115
+      },
+      "title": "Defamations: take your towers",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "The towers appear",
+      "rule": "With Critical Overflow Bug, soak one of the two towers of your rot's colour, standing at max melee on the outside; you and your partner take one each."
+    },
+    {
+      "key": {
+        "cls": "TopP3HelloWorldAi",
+        "from": 22.56,
+        "to": 83.86001,
+        "line": 423
+      },
+      "title": "Remote tethers: wait under Omega",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "The towers for this round are about to appear",
+      "rule": "With the Remote Regression (blue) tether, wait 3m from the middle, next to your partner on the side you are already on."
+    },
+    {
+      "key": {
+        "cls": "TopP3HelloWorldAi",
+        "from": 22.56,
+        "to": 85.700005,
+        "line": 116
+      },
+      "title": "Stacks: take the other towers",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "The towers appear",
+      "rule": "With Critical Synchronization Bug, soak one of the two towers on the opposite side, on its inner edge toward the other stack."
+    },
+    {
+      "key": {
+        "cls": "TopP3HelloWorldAi",
+        "from": 23.96,
+        "to": 87.100006,
+        "line": 118
+      },
+      "title": "Local: lean toward your defamation",
+      "cue": "Latent Defect starts casting",
+      "rule": "Stay 5.5m from the middle on the side of the defamation player you will pair with (on the last round, the stack at 3m).",
+      "roles": {
+        "MainTank": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat."
+        },
+        "ShieldHealer": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Towers)."
+        },
+        "MeleeDpsA": {
+          "rule": "Go to 6m south of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to 6m south of the centre."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP3HelloWorldAi",
+        "from": 23.96,
+        "to": 87.100006,
+        "line": 117
+      },
+      "title": "Remote: lean toward your stack",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Latent Defect starts casting",
+      "rule": "Stay 3m from the middle and turn to face the stack player you will pair with."
+    },
+    {
+      "key": {
+        "cls": "TopP3HelloWorldAi",
+        "from": 29.819998,
+        "to": 71.96001,
+        "line": 129
+      },
+      "title": "Local: flank your defamation",
+      "cue": "The rots are about to go off",
+      "rule": "Go out to the flank of your defamation player's tower, about 30 degrees off it at 15m, clear of the defamation and the other towers but close enough to take the rot.",
+      "roles": {
+        "OffTank": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Towers)."
+        },
+        "ShieldHealer": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Towers)."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand near waymark D, 15m west of the centre."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: DefamationColor)."
+        },
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Towers)."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP3HelloWorldAi",
+        "from": 29.819998,
+        "to": 93.04,
+        "line": 119
+      },
+      "title": "Remote: meet your stack",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "The rots are about to go off",
+      "rule": "Just before the rots go off, step out next to your stack player, within 4m, out of the towers and away from the defamations."
+    },
+    {
+      "key": {
+        "cls": "TopP3HelloWorldAi",
+        "from": 32.469997,
+        "to": 75.560005,
+        "line": 132
+      },
+      "title": "Local: take the defamation rot",
+      "cue": "Critical Overflow Bug resolves",
+      "rule": "Walk up to your defamation player as it goes off and step onto them to pick up the rot.",
+      "roles": {
+        "OffTank": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: DefamationColor)."
+        },
+        "ShieldHealer": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Towers)."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand near waymark 4, 15m north-west of the centre."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: DefamationColor)."
+        },
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Towers)."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP3HelloWorldAi",
+        "from": 33.42,
+        "to": 75.560005,
+        "line": 133
+      },
+      "title": "Local: break the green tether",
+      "cue": "The blue tethers break",
+      "rule": "Once the blue tethers have broken, go to 15.5m about 15 degrees off the defamation side, then move toward your partner until the green tether breaks.",
+      "roles": {
+        "MainTank": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat."
+        },
+        "OffTank": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: DefamationColor)."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to the north wall."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: DefamationColor)."
+        },
+        "MeleeDpsA": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP3HelloWorldAi",
+        "from": 33.42,
+        "to": 75.560005,
+        "line": 130
+      },
+      "title": "Remote: take the stack rot",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Critical Synchronization Bug resolves",
+      "rule": "As the stack goes off, step onto your stack player to pick up their rot."
+    },
+    {
+      "key": {
+        "cls": "TopP3HelloWorldAi",
+        "from": 33.42,
+        "to": 75.560005,
+        "line": 131
+      },
+      "title": "Remote: step clear with the rot",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "You picked up the rot",
+      "rule": "With the rot, go out to 15.5m about 50 degrees off the stack side, the spot on your side of your partner, away from the old rots."
+    },
+    {
+      "key": {
+        "cls": "TopP3HelloWorldAi",
+        "time": 93.04,
+        "line": 123
+      },
+      "title": "Local: stand between the stacks",
+      "cue": "The last rots are about to go off",
+      "rule": "On the last round, stand between the two stacks, a little toward the middle, clear of the towers and defamations.",
+      "roles": {
+        "CasterDps": {
+          "rule": "Go to 10m north of the centre."
+        },
+        "MainTank": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: DefamationColor)."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP3HelloWorldAi",
+        "time": 96.84,
+        "line": 124
+      },
+      "title": "Last round: remotes spread",
+      "cue": "The last rots resolve",
+      "rule": "Remote players move to 8m about 70 degrees off the stack side, one on each side.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: DefamationColor)."
+        },
+        "MainTank": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Towers)."
+        },
+        "MeleeDpsA": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: DefamationColor)."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Towers)."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP3HelloWorldAi",
+        "time": 96.84,
+        "line": 125
+      },
+      "title": "Last round: locals come in",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "The last rots resolve",
+      "rule": "Local players move in to 3m about 20 degrees off the stack side, one on each side."
+    },
+    {
+      "key": {
+        "cls": "TopP3HelloWorldAi",
+        "time": 106.3,
+        "line": 102
+      },
+      "title": "Gather for the next phase",
+      "cue": "Critical Performance Bug resolves",
+      "rule": "Everyone gathers in a loose circle 3m south of the middle.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "Go to 3m west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Go to 3m north-west of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Go to 3m north of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to 3m north-east of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Go to 3m east of the centre."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "243183080764761",
+    "roleMap": {
+      "OffTank": "tank1",
+      "MainTank": "tank2",
+      "ShieldHealer": "healer1",
+      "PhysRangedDps": "healer2",
+      "MeleeDpsB": "dps1",
+      "CasterDps": "dps2",
+      "RegenHealer": "dps3",
+      "MeleeDpsA": "dps4"
+    },
+    "steps": {},
+    "exampleSeed": 1,
+    "residual": 0
+  },
+  "draft": true
+}

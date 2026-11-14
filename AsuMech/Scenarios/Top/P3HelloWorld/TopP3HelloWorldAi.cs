@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using AsuMech.Core.Game.Ai;
 using AsuMech.Core.Game.Party;
 using AsuMech.Core.SimObjects;
@@ -76,7 +77,7 @@ public sealed class TopP3HelloWorldAi : IScenarioAi<TopP3HelloWorldState>
     private bool steering;
 
     private sealed record Walk(int Route, List<Vector2> Intended, List<Vector2> Path, List<int> Legs, List<float> Fires,
-                               PartyRole? Meeting, float Jitter, Dictionary<PartyRole, Vector2> Seen);
+                               PartyRole? Meeting, float Jitter, Dictionary<PartyRole, Vector2> Seen, float At, int Line);
 
     public void Run(TopP3HelloWorldState s, SimWorld w)
     {
@@ -127,13 +128,13 @@ public sealed class TopP3HelloWorldAi : IScenarioAi<TopP3HelloWorldState>
 
         Meet(resolve - MeetFrom, resolve - MeetUntil, HelloWorldRole.Local, HelloWorldRole.Defamation, patch, BesideDefamation);
         TakeTheRots(float.MaxValue, resolve + PickUpAfter, patch, HelloWorldRole.Remote, HelloWorldRole.Stack, state.StackColor,
-            remote => StepClearOfTheRots(remote, patch, Either(stackSide, 50f)));
+            remote => StepClearOfTheRots(remote, patch, Either(stackSide, 50f), resolve + PickUpAfter));
         TakeTheRots(resolve + WalkUpAfter, resolve + PickUpAfter, patch, HelloWorldRole.Local, HelloWorldRole.Defamation, state.DefamationColor,
-            local => ComeTogetherOnceTheBlueTetherBreaks(local, patch, Either(defamationSide, 15f)));
+            local => ComeTogetherOnceTheBlueTetherBreaks(local, patch, Either(defamationSide, 15f), resolve + PickUpAfter));
         WaitUnderOmega(patch + 1, resolve + 9.3f);
     }
 
-    private void LeanUnderOmega(int patch, HelloWorldRole tetherRole, HelloWorldRole holderRole, float radius)
+    private void LeanUnderOmega(int patch, HelloWorldRole tetherRole, HelloWorldRole holderRole, float radius, [CallerLineNumber] int line = 0)
     {
         var tethers = Members(tetherRole, patch);
         var holders = Members(holderRole, patch);
@@ -142,16 +143,16 @@ public sealed class TopP3HelloWorldAi : IScenarioAi<TopP3HelloWorldState>
         {
             if (world.Events.Elapsed > until) return;
             AssignPartners(patch, tethers, holders);
-            foreach (var tether in tethers.Where(Drives).Where(IsAlive))
+            foreach (var tether in tethers.Where(IsAlive))
                 if (meetings[patch].TryGetValue(tether, out var holder))
-                    GoNow(tether, [TopCompass.Point(radius, TopCompass.Bearing(Live(holder)))], 0f);
+                    GoNow(tether, [TopCompass.Point(radius, TopCompass.Bearing(Live(holder)))], 0f, TowerCasts[patch] + LeanAfterTowers, line);
             world.Events.Add(MeetEvery, Look);
         }
         world.Events.Add(TowerCasts[patch] + LeanAfterTowers, Look);
     }
 
     private void Meet(float from, float until, HelloWorldRole tetherRole, HelloWorldRole holderRole, int patch,
-        Func<PartyRole, PartyRole, int, Vector2?> spotFor)
+        Func<PartyRole, PartyRole, int, Vector2?> spotFor, [CallerLineNumber] int line = 0)
     {
         var tethers = Members(tetherRole, patch);
         var holders = Members(holderRole, patch);
@@ -159,9 +160,9 @@ public sealed class TopP3HelloWorldAi : IScenarioAi<TopP3HelloWorldState>
         {
             if (world.Events.Elapsed > until) return;
             AssignPartners(patch, tethers, holders);
-            foreach (var tether in tethers.Where(Drives).Where(IsAlive))
+            foreach (var tether in tethers.Where(IsAlive))
                 if (meetings[patch].TryGetValue(tether, out var holder) && spotFor(tether, holder, patch) is { } spot)
-                    GoNow(tether, [spot], 0f);
+                    GoNow(tether, [spot], 0f, from, line);
             world.Events.Add(MeetEvery, Look);
         }
         world.Events.Add(from, Look);
@@ -302,7 +303,7 @@ public sealed class TopP3HelloWorldAi : IScenarioAi<TopP3HelloWorldState>
     }
 
     private void TakeTheRots(float walkUpFrom, float stepOnFrom, int patch, HelloWorldRole tetherRole, HelloWorldRole holderRole, RotColor color,
-                             Action<PartyRole> onceTaken)
+                             Action<PartyRole> onceTaken, [CallerLineNumber] int line = 0)
     {
         var tethers = Members(tetherRole, patch);
         var holders = Members(holderRole, patch);
@@ -312,7 +313,7 @@ public sealed class TopP3HelloWorldAi : IScenarioAi<TopP3HelloWorldState>
             var giveUp = stepOnFrom + PickUpPatience;
             void Look()
             {
-                if (!Drives(tether) || !IsAlive(tether) || world.Events.Elapsed > giveUp) return;
+                if (!IsAlive(tether) || world.Events.Elapsed > giveUp) return;
                 if (world.Party.Get(tether) is { } member && member.HasStatus(color.RotStatusId))
                 {
                     onceTaken(tether);
@@ -323,8 +324,8 @@ public sealed class TopP3HelloWorldAi : IScenarioAi<TopP3HelloWorldState>
                 {
                     var there = Live(holder);
                     var here = Live(tether);
-                    if (world.Events.Elapsed >= stepOn) GoNow(tether, [there], 0f, holder);
-                    else if (Vector2.Distance(here, there) > Standoff + 0.5f) GoNow(tether, [there + Vector2.Normalize(here - there) * Standoff], 0f);
+                    if (world.Events.Elapsed >= stepOn) GoNow(tether, [there], 0f, stepOnFrom, line, holder);
+                    else if (Vector2.Distance(here, there) > Standoff + 0.5f) GoNow(tether, [there + Vector2.Normalize(here - there) * Standoff], 0f, MathF.Min(walkUpFrom, stepOnFrom), line);
                 }
                 world.Events.Add(PickUpEvery, Look);
             }
@@ -332,7 +333,7 @@ public sealed class TopP3HelloWorldAi : IScenarioAi<TopP3HelloWorldState>
         }
     }
 
-    private void StepClearOfTheRots(PartyRole remote, int patch, (float First, float Second) markers)
+    private void StepClearOfTheRots(PartyRole remote, int patch, (float First, float Second) markers, float at, [CallerLineNumber] int line = 0)
     {
         var oldRots = Members(HelloWorldRole.Stack, patch).Concat(Members(HelloWorldRole.Defamation, patch)).Where(IsAlive).Select(Live).ToList();
         var here = Live(remote);
@@ -340,7 +341,7 @@ public sealed class TopP3HelloWorldAi : IScenarioAi<TopP3HelloWorldState>
         var spot = OwnSpotOfTheTwo(remote, Members(HelloWorldRole.Remote, patch), spots)
                    ?? spots.OrderBy(candidate => oldRots.Sum(rot => Under(Vector2.Distance(candidate, rot), RotClear)))
                        .ThenBy(candidate => Vector2.Distance(candidate, here)).First();
-        GoNow(remote, [spot], 0.2f);
+        GoNow(remote, [spot], 0.2f, at, line);
     }
 
     private Vector2? OwnSpotOfTheTwo(PartyRole role, IReadOnlyList<PartyRole> pair, Vector2[] spots)
@@ -352,7 +353,7 @@ public sealed class TopP3HelloWorldAi : IScenarioAi<TopP3HelloWorldState>
         return (role == inRoleOrder[0]) != crossed ? spots[0] : spots[1];
     }
 
-    private void ComeTogetherOnceTheBlueTetherBreaks(PartyRole local, int patch, (float First, float Second) spots)
+    private void ComeTogetherOnceTheBlueTetherBreaks(PartyRole local, int patch, (float First, float Second) spots, float at, [CallerLineNumber] int line = 0)
     {
         var remotes = Members(HelloWorldRole.Remote, patch);
         var partner = Members(HelloWorldRole.Local, patch).FirstOrDefault(role => role != local);
@@ -361,7 +362,7 @@ public sealed class TopP3HelloWorldAi : IScenarioAi<TopP3HelloWorldState>
         Vector2? heading = null;
         void Look()
         {
-            if (!Drives(local) || !IsAlive(local)) return;
+            if (!IsAlive(local)) return;
             var blueUp = remotes.Any(remote => world.Party.Get(remote) is { } member && member.IsAlive() && member.HasStatus(StatusId.HWRemoteTether));
             if (world.Events.Elapsed < TethersLive[patch] + 0.5f || blueUp || AnyoneVulnerable())
             {
@@ -381,7 +382,7 @@ public sealed class TopP3HelloWorldAi : IScenarioAi<TopP3HelloWorldState>
                 var candidates = new[] { TopCompass.Point(DefamationSpot, spots.First), TopCompass.Point(DefamationSpot, spots.Second) };
                 heading = OwnSpotOfTheTwo(local, Members(HelloWorldRole.Local, patch), candidates)
                           ?? candidates.MinBy(candidate => Vector2.Distance(candidate, here));
-                GoNow(local, [heading.Value], 0f);
+                GoNow(local, [heading.Value], 0f, at, line);
             }
             else if (world.Party.Get(local) is not { } self || !self.HasStatus(StatusId.HWLocalTether))
                 return;
@@ -389,7 +390,7 @@ public sealed class TopP3HelloWorldAi : IScenarioAi<TopP3HelloWorldState>
                      && CloserToThePartner(here, Live(partner), StillTicking(oldRots)) is { } closer)
             {
                 heading = closer;
-                GoNow(local, [closer], 0f);
+                GoNow(local, [closer], 0f, at, line);
             }
             world.Events.Add(PickUpEvery, Look);
         }
@@ -428,7 +429,7 @@ public sealed class TopP3HelloWorldAi : IScenarioAi<TopP3HelloWorldState>
     }
 
     private void PairUp(float time, HelloWorldRole kind, int patch, Func<(float First, float Second)> spots, Func<Vector2, float, List<Vector2>> path,
-                        float jitter, float watch = 2.4f)
+                        float jitter, float watch = 2.4f, [CallerLineNumber] int line = 0)
     {
         var pair = Members(kind, patch);
         var bearings = new float[2];
@@ -441,9 +442,9 @@ public sealed class TopP3HelloWorldAi : IScenarioAi<TopP3HelloWorldState>
             {
                 var role = pair[i];
                 var bearing = bearings[crossed ? 1 - i : i];
-                if (!Drives(role) || (going.TryGetValue(role, out var current) && current == bearing)) continue;
+                if (going.TryGetValue(role, out var current) && current == bearing) continue;
                 going[role] = bearing;
-                GoNow(role, path(Live(role), bearing), jitter);
+                GoNow(role, path(Live(role), bearing), jitter, time, line);
             }
         }
         world.Events.Add(time, () =>
@@ -466,7 +467,7 @@ public sealed class TopP3HelloWorldAi : IScenarioAi<TopP3HelloWorldState>
         return length;
     }
 
-    private void GoNow(PartyRole role, IEnumerable<Vector2> waypoints, float jitter, PartyRole? meeting = null)
+    private void GoNow(PartyRole role, IEnumerable<Vector2> waypoints, float jitter, float at, int line, PartyRole? meeting = null)
     {
         var route = routes[role] = routes.GetValueOrDefault(role) + 1;
         var from = Live(role);
@@ -479,13 +480,13 @@ public sealed class TopP3HelloWorldAi : IScenarioAi<TopP3HelloWorldState>
             fires.Add(world.Events.Elapsed + delay);
             world.Events.Add(delay, () =>
             {
-                if (routes[role] == route) ai.Move(PromptMoveDelay, () => AiMove.Single(role, waypoint), jitter: jitter);
+                if (routes[role] == route) ai.Move(PromptMoveDelay, () => AiMove.Single(role, waypoint), jitter: jitter, at: at + PromptMoveDelay, line: line);
             });
             delay += Vector2.Distance(from, waypoint) / AiManager.RunSpeed + 0.05f;
             from = waypoint;
         }
         if (!Drives(role) || path.Count == 0) return;
-        walks[role] = new Walk(route, intended, path, legs, fires, meeting, jitter, PerRole.All.ToDictionary(other => other, Live));
+        walks[role] = new Walk(route, intended, path, legs, fires, meeting, jitter, PerRole.All.ToDictionary(other => other, Live), at, line);
         if (steering) return;
         steering = true;
         world.Events.Add(SteerEvery, KeepOutOfEachOthersWay);
@@ -507,7 +508,7 @@ public sealed class TopP3HelloWorldAi : IScenarioAi<TopP3HelloWorldState>
                 continue;
             }
             if (PerRole.All.Any(other => other != role && Vector2.Distance(Live(other), walk.Seen[other]) > NoticeMoved) && StillInTheWay(role, walk, step))
-                GoNow(role, StillAhead(Live(role), walk.Intended.Skip(walk.Legs[step])), walk.Jitter, walk.Meeting);
+                GoNow(role, StillAhead(Live(role), walk.Intended.Skip(walk.Legs[step])), walk.Jitter, walk.At, walk.Line, walk.Meeting);
         }
         steering = walks.Count > 0;
         if (steering) world.Events.Add(SteerEvery, KeepOutOfEachOthersWay);

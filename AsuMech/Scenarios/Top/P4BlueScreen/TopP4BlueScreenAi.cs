@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using AsuMech.Core.Game.Ai;
 using AsuMech.Core.Game.Party;
 using AsuMech.Core.SimObjects;
@@ -55,19 +56,19 @@ public sealed class TopP4BlueScreenAi : IScenarioAi<TopP4BlueScreenState>
         ClumpSouthForBlueScreen(51.25f);
     }
 
-    private void LineUp(float time)
+    private void LineUp(float time, [CallerLineNumber] int line = 0)
     {
         foreach (var role in PerRole.All)
-            Go(time, role, LineupSpots[role]);
+            Go(time, role, LineupSpots[role], time, line);
     }
 
-    private void TakeStacks(float time, int set)
+    private void TakeStacks(float time, int set, [CallerLineNumber] int line = 0)
     {
         foreach (var role in PerRole.All)
-            Go(time, role, () => StackSpot(set, role));
+            Go(time, role, () => StackSpot(set, role), time, line);
     }
 
-    private void WalkBackAlongTheRing(float time, int set)
+    private void WalkBackAlongTheRing(float time, int set, [CallerLineNumber] int line = 0)
     {
         foreach (var role in PerRole.All)
         {
@@ -75,26 +76,26 @@ public sealed class TopP4BlueScreenAi : IScenarioAi<TopP4BlueScreenState>
             var at = time;
             foreach (var step in RingPath(from, LineupSpots[role]))
             {
-                Go(at, role, step);
+                Go(at, role, step, time, line);
                 at += Vector2.Distance(from, step) / AiManager.RunSpeed + StepSlack;
                 from = step;
             }
         }
     }
 
-    private void DuckUnderTheRepeaterOnTheWayToTheStacks(float duck, float stack, int set)
+    private void DuckUnderTheRepeaterOnTheWayToTheStacks(float duck, float stack, int set, [CallerLineNumber] int line = 0)
     {
         foreach (var role in PerRole.All)
         {
-            Go(duck, role, InsideTheRepeater(LineupSpots[role], StackCentre(set, role)));
-            Go(stack, role, () => StackSpot(set, role));
+            Go(duck, role, InsideTheRepeater(LineupSpots[role], StackCentre(set, role)), duck, line);
+            Go(stack, role, () => StackSpot(set, role), stack, line);
         }
     }
 
-    private void ClumpSouthForBlueScreen(float time)
+    private void ClumpSouthForBlueScreen(float time, [CallerLineNumber] int line = 0)
     {
         foreach (var role in PerRole.All)
-            Go(time, role, BlueScreenSpots[role]);
+            Go(time, role, BlueScreenSpots[role], time, line);
     }
 
     private Vector2 StackSpot(int set, PartyRole role)
@@ -137,8 +138,8 @@ public sealed class TopP4BlueScreenAi : IScenarioAi<TopP4BlueScreenState>
         return TopCompass.Point(InsideRepeaterRadius, start + TopCompass.Turn(start, TopCompass.Bearing(to)) / 2f);
     }
 
-    private void Go(float time, PartyRole role, Vector2 spot) => Go(time, role, () => spot);
+    private void Go(float time, PartyRole role, Vector2 spot, float step, int line) => Go(time, role, () => spot, step, line);
 
-    private void Go(float time, PartyRole role, Func<Vector2> spot)
-        => ai.Move(time + MovePrompt, () => AiMove.Single(role, spot()), jitter: 0.15f);
+    private void Go(float time, PartyRole role, Func<Vector2> spot, float step, int line)
+        => ai.Move(time + MovePrompt, () => AiMove.Single(role, spot()), jitter: 0.15f, at: step + MovePrompt, line: line);
 }

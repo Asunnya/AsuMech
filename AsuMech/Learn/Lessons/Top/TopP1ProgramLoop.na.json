@@ -1,0 +1,321 @@
+{
+  "scenario": "TopP1ProgramLoopScenario",
+  "strat": "NA",
+  "sources": [
+    {
+      "label": "NAUR - P1: Omega (Beetle) (Toolbox)",
+      "url": "https://ff14.toolboxgaming.space/?id=832999250798471&preview=1"
+    },
+    {
+      "label": "NAUR - P1: Omega (Beetle) (Slides)",
+      "url": "https://docs.google.com/presentation/d/1eOViXZYLosAFmuOWAQwAK6KwnfoC3iTQUeM6nQyKL48/edit?usp=sharing"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "TopP1ProgramLoopAi",
+        "time": 0.3,
+        "line": 84
+      },
+      "title": "Stack south",
+      "cue": "Omega appears",
+      "rule": "Everyone stacks on C, south of Omega.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP1ProgramLoopAi",
+        "time": 3.5,
+        "line": 85
+      },
+      "title": "Main tank pulls Omega",
+      "cue": "Omega appears",
+      "rule": "Pull Omega a few metres north-west of the middle; the party stays south.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP1ProgramLoopAi",
+        "time": 10.62,
+        "line": 86
+      },
+      "title": "Main tank rejoins the group",
+      "cue": "Omega starts Program Loop",
+      "rule": "Walk around the outside of Omega's hitbox back to the group on C.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP1ProgramLoopAi",
+        "time": 15.62,
+        "line": 114
+      },
+      "title": "Column south by number",
+      "cue": "Your In Line number lands",
+      "rule": "The two #3s stand just south of the middle (4.5m and 6m out) to take the first tethers. Everyone else lines up behind them, straight south from 12.5m out.",
+      "roles": {
+        "OffTank": {
+          "rule": "Stand on waymark C."
+        },
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Towers)."
+        }
+      },
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP1ProgramLoopAi",
+        "time": 20.92,
+        "line": 132
+      },
+      "title": "#4: wait to take the tether",
+      "cue": "Tethers appear",
+      "rule": "Wait beside the tower closest to your side's tether drop. You take the tether from your side's #3 right after the first Blaster.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand on waymark C."
+        },
+        "MeleeDpsA": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat."
+        },
+        "MeleeDpsB": {
+          "rule": "Stand on waymark 3."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP1ProgramLoopAi",
+        "from": 20.92,
+        "to": 49.690002,
+        "line": 241
+      },
+      "title": "Carry the tether to your cardinal",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "A tether is on you",
+      "rule": "Holding a tether, walk close around the middle to your drop cardinal: the free cardinal (no tower) on your side. The first holders go via south."
+    },
+    {
+      "key": {
+        "cls": "TopP1ProgramLoopAi",
+        "time": 20.92,
+        "line": 129
+      },
+      "title": "#1: soak your tower",
+      "tolerance": 1.5,
+      "skip": false,
+      "cue": "Tethers appear",
+      "rule": "Walk around the outside to your side's first tower and stand in it on the side away from the nearest tether drop."
+    },
+    {
+      "key": {
+        "cls": "TopP1ProgramLoopAi",
+        "time": 20.92,
+        "line": 130
+      },
+      "title": "#2: wait beside your tower",
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "Tethers appear",
+      "rule": "Stand next to your side's tower, a few metres to the side and slightly out, clear of the tower and the tether blasts. You soak the next set."
+    },
+    {
+      "key": {
+        "cls": "TopP1ProgramLoopAi",
+        "from": 25.92,
+        "to": 52.99,
+        "line": 244
+      },
+      "title": "Walk the tether out",
+      "cue": "You are at your cardinal",
+      "rule": "Walk straight out to 15m on your cardinal and hold the tether there until Blaster goes off.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: FirstTetherHolders)."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: FirstTetherHolders has MainTank)."
+        },
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat."
+        },
+        "CasterDps": {
+          "rule": "Stand on waymark D."
+        }
+      },
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP1ProgramLoopAi",
+        "from": 28.859999,
+        "to": 46.79,
+        "line": 149
+      },
+      "title": "Take the next tether",
+      "cue": "Blaster resolves",
+      "rule": "The next holders (#4 after the first Blaster, then #1, then #2) step to 3m from the middle toward their side's tether holder and take the tether, then carry it out like before.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to 3m south of the centre."
+        },
+        "OffTank": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Rng)."
+        },
+        "PhysRangedDps": {
+          "rule": "When FirstTetherHolders leaves out OT, go to 3m south of the centre; when FirstTetherHolders includes OT, go to 3m north of the centre."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: FirstTetherHolders)."
+        },
+        "RegenHealer": {
+          "rule": "Go to 3m west of the centre."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP1ProgramLoopAi",
+        "from": 29.159998,
+        "to": 47.09,
+        "line": 159
+      },
+      "title": "Next soaker: take your tower",
+      "cue": "Blaster resolves",
+      "rule": "If you soak this set (#2 after the first Blaster, then #3, then #4), walk around the outside into your side's new tower, on the side away from the tether drop.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: FirstTetherHolders has RegenHealer)."
+        },
+        "ShieldHealer": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: FirstTetherHolders has RegenHealer)."
+        },
+        "CasterDps": {
+          "rule": "When FirstTetherHolders leaves out R1, stand on waymark 3; when FirstTetherHolders includes R1, stand on waymark B."
+        },
+        "MeleeDpsA": {
+          "rule": "Stand near waymark 3, 13m south-west of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Towers)."
+        }
+      },
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP1ProgramLoopAi",
+        "from": 29.859999,
+        "to": 47.79,
+        "line": 165
+      },
+      "title": "Just soaked: get ready to take a tether",
+      "cue": "Blaster resolves",
+      "rule": "After soaking, wait beside the tower closest to your side's tether drop: you take the tether after the next Blaster. After the last set, just stand beside your tower.",
+      "roles": {
+        "MeleeDpsA": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: FirstTetherHolders)."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat."
+        },
+        "MainTank": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Towers)."
+        },
+        "OffTank": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP1ProgramLoopAi",
+        "from": 31.759998,
+        "to": 49.690002,
+        "line": 157
+      },
+      "title": "Tether passed: step beside a tower",
+      "cue": "Your tether was taken",
+      "rule": "Once your tether is taken, walk to the side of the nearest tower of the new set, out of its circle and away from the new tether drops.",
+      "roles": {
+        "PhysRangedDps": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat."
+        },
+        "CasterDps": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat."
+        },
+        "MeleeDpsB": {
+          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: FirstTetherHolders has MainTank)."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP1ProgramLoopAi",
+        "from": 36.62,
+        "to": 46.09,
+        "line": 395
+      },
+      "title": "Step out of a misplaced blast",
+      "tolerance": 2.0,
+      "skip": true
+    },
+    {
+      "key": {
+        "cls": "TopP1ProgramLoopAi",
+        "time": 36.62,
+        "line": 438
+      },
+      "title": "Dodge inside your tower",
+      "tolerance": 2.0,
+      "skip": true
+    },
+    {
+      "key": {
+        "cls": "TopP1ProgramLoopAi",
+        "from": 36.97,
+        "to": 45.98,
+        "line": 451
+      },
+      "title": "Claim your tower",
+      "tolerance": 1.5,
+      "skip": true
+    }
+  ],
+  "toolbox": {
+    "planId": "832999250798471",
+    "roleMap": {
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "PhysRangedDps": "dps1",
+      "MeleeDpsA": "dps2",
+      "CasterDps": "dps3",
+      "MeleeDpsB": "dps4"
+    },
+    "steps": {
+      "TopP1ProgramLoopAi@10.62": 15
+    },
+    "exampleSeed": 1,
+    "residual": 2.7292192
+  },
+  "draft": true
+}

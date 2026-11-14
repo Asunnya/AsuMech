@@ -1,0 +1,191 @@
+{
+  "scenario": "TopP5SigmaScenario",
+  "strat": "Tuufless (Elemental)",
+  "sources": [
+    {
+      "label": "NAUR - P5: Run: Dynamis - Sigma (Toolbox)",
+      "url": "https://ff14.toolboxgaming.space/?id=107380954136761&preview=1"
+    },
+    {
+      "label": "NAUR - P5: Run: Dynamis - Sigma (Slides)",
+      "url": "https://docs.google.com/presentation/d/1iLZQxsN1pN0YwGf1u0QtpASi2Q-PSxhJrnMZjw1246I/edit?usp=sharing"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "TopP5SigmaAi",
+        "time": 0.5,
+        "line": 30
+      },
+      "title": "Tanks north, party south",
+      "cue": "Omega-M appears",
+      "rule": "Party stacks 6\u20137 m south of the centre in two short columns; tanks wait 5 m north.",
+      "roles": {
+        "MainTank": {
+          "rule": "Wait 5 m north of the centre, a little west."
+        },
+        "OffTank": {
+          "rule": "Wait 5 m north of the centre, a little east."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5SigmaTuuflessAi",
+        "time": 14.1,
+        "line": 31
+      },
+      "title": "Line up by symbol between the arms",
+      "cue": "Symbols and tethers land",
+      "rule": "Line up with your symbol partner on the side away from Omega-M, between the two arm units: left partner west, right partner east. Rows from Omega-M's side outward: third pair, first pair, fourth pair, second pair, 2 m apart.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5SigmaAi",
+        "time": 20,
+        "line": 32
+      },
+      "title": "Wave Cannon spread",
+      "cue": "Wave Cannon markers land",
+      "rule": "Spread to a clock spot, north toward Omega-M, 12.5 m out (to the wall with the far glitch). Pairs where both partners are marked take the cardinals facing each other; in each half-marked pair, the unmarked player and their partner take opposite intercardinals.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5SigmaAi",
+        "time": 32,
+        "line": 33
+      },
+      "title": "Collapse in for the knockback",
+      "cue": "Looper on you",
+      "rule": "Walk straight in to 4 m from the centre on the same clock spot.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5SigmaAi",
+        "time": 36,
+        "line": 34
+      },
+      "title": "Knockback spot",
+      "cue": "Discharger cast starts",
+      "rule": "Stand 1\u20132 m from the centre on the side of your tower so the Discharger throws you into it.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5SigmaAi",
+        "time": 41.5,
+        "line": 35
+      },
+      "title": "Take your tower",
+      "cue": "Discharger resolves",
+      "rule": "Stand in the tower your clock spot was knocked into: with the mid glitch the two west-ish and two east-ish spots share the pair towers and the rest take solos; with the far glitch the north pair, south-west pair and south-east pair share and west and east take solos.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5SigmaAi",
+        "time": 44,
+        "line": 37
+      },
+      "title": "Back to the stack",
+      "cue": "Towers resolve",
+      "rule": "Return to the start: party 6\u20137 m south, tanks 5 m north.",
+      "roles": {
+        "MainTank": {
+          "rule": "Wait 5 m north of the centre, a little west."
+        },
+        "OffTank": {
+          "rule": "Wait 5 m north of the centre, a little east."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5SigmaAi",
+        "time": 50,
+        "line": 38
+      },
+      "title": "Split for Omega-F",
+      "cue": "Rear Lasers unit appears",
+      "rule": "Three players take the side in front of Omega-M: the Dynamis holders first, then by priority, never a Hello World target. Everyone else goes to the far side. Each group stands off the centre line on the side the spinner turns away from.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5SigmaAi",
+        "time": 58,
+        "line": 39
+      },
+      "title": "Legs: go to the wall",
+      "cue": "Omega-F shows legs",
+      "rule": "If Omega-F has the legs, both groups slide out to 18 m, near the wall, just off the centre line. With the staff, hold where you are.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5SigmaAi",
+        "time": 62,
+        "line": 40
+      },
+      "title": "Hello World spread by marker",
+      "cue": "Head markers land",
+      "rule": "Spread by your marker, north toward Omega-M, mirrored by the spin: Attack 1 and Attack 2 bait the arms at the two north corners, Ignore 1 the north wall, Bind 1 the east wall with Bind 2 just south of it, Ignore 2 the south wall. Triangle and Cross (Hello World) stand 10 m east and 10 m south.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5SigmaAi",
+        "time": 73,
+        "line": 41
+      },
+      "title": "Regroup",
+      "cue": "Quickening Dynamis on you",
+      "rule": "Return to the start: party 6\u20137 m south, tanks 5 m north.",
+      "roles": {
+        "MainTank": {
+          "rule": "Wait 5 m north of the centre, a little west."
+        },
+        "OffTank": {
+          "rule": "Wait 5 m north of the centre, a little east."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "107380954136761+stgy-f3f6e30d+stgy-cd5e154e+stgy-74f579c7",
+    "roleMap": {
+      "OffTank": "tank1",
+      "MainTank": "tank2",
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "CasterDps": "dps1",
+      "PhysRangedDps": "dps2",
+      "MeleeDpsB": "dps3",
+      "MeleeDpsA": "dps4"
+    },
+    "steps": {
+      "TopP5SigmaAi@0.5": 0
+    },
+    "exampleSeed": 1,
+    "residual": 3.2806418
+  },
+  "draft": true
+}

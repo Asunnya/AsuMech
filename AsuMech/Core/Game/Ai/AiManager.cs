@@ -34,7 +34,8 @@ public sealed class AiManager
     /// <summary>Schedule bots movement</summary> 
     /// <param name="arrivalTime">If not empty, this is expected arrival time for bots. They will sprint if there is not enough time to walk, and they will leave as late as possible otherwise</param>
     /// <param name="sprint">Ignored if arrivalTime is set. Sprint towards target instead of walking</param>
-    public void Move(float time, Func<IAiMove> positions, float jitter = DefaultJitter, float? arrivalTime = null, bool sprint = false,
+    /// <param name="at">The step's time literal for the guidance key when `time` is relative (a move scheduled from inside an event)</param>
+    public void Move(float time, Func<IAiMove> positions, float jitter = DefaultJitter, float? arrivalTime = null, bool sprint = false, float? at = null,
         [CallerFilePath] string file = "", [CallerLineNumber] int line = 0)
     {
         world.Events.Add(time, () =>
@@ -57,7 +58,7 @@ public sealed class AiManager
                 var speed = sprinting ? SprintSpeed : RunSpeed;
                 if (partyMember is { } seat)
                 {
-                    var order = new GuidanceOrder(GuidanceKey.Of(positions, time, $"{System.IO.Path.GetFileName(file)}:{line}"), seat.Role, target, world.Events.Elapsed, arrivalTime, sprinting);
+                    var order = new GuidanceOrder(GuidanceKey.Of(positions, at ?? time, $"{System.IO.Path.GetFileName(file)}:{line}"), seat.Role, target, world.Events.Elapsed, arrivalTime, sprinting);
                     world.RecordOrder(order);
                     if (isPlayer && world.Guidance is { } sink) sink.OnMove(order);
                 }

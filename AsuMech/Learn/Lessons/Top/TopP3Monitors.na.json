@@ -1,0 +1,124 @@
+{
+  "scenario": "TopP3MonitorsScenario",
+  "strat": "NA",
+  "sources": [
+    {
+      "label": "NAUR - P3: Omega Reconfigured (Final Omega) (Toolbox)",
+      "url": "https://ff14.toolboxgaming.space/?id=243183080764761&preview=1"
+    },
+    {
+      "label": "NAUR - P3: Omega Reconfigured (Final Omega) (Slides)",
+      "url": "https://docs.google.com/presentation/d/1ncZ3riDOf056wxkCAFto3aX-4TWOMVO4gFfrQkQNMdY/edit?usp=sharing"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "TopP3MonitorsAi",
+        "time": 1.3,
+        "line": 43
+      },
+      "title": "Conga west of Omega",
+      "cue": "Debuggers land",
+      "rule": "Line up north to south on the west side, 13m out: H1, caster, D1, MT, OT, D2, ranged, H2. Your place in the line decides your spot once the monitors are known.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "Stand near waymark 4, the north-west wall."
+        },
+        "ShieldHealer": {
+          "rule": "Stand near waymark 3, the south-west wall."
+        },
+        "MeleeDpsB": {
+          "rule": "Go to 13m west of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Go to 15m south-west of the centre."
+        },
+        "CasterDps": {
+          "rule": "Go to 15m north-west of the centre."
+        }
+      },
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP3MonitorsAi",
+        "from": 12.017021,
+        "to": 12.991281,
+        "line": 67
+      },
+      "title": "Head for your layout spot",
+      "cue": "Omega starts Oversampled Wave Cannon",
+      "rule": "Monitor players go to the side Omega's cannon covers (east for the right-hand cast, west for the left): first in line to the north corner, second to the south corner, third south on the far side. Everyone else spreads on the other side in line order: north, north corner, two along the wall, south.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP3MonitorsAi",
+        "from": 15.807432,
+        "to": 16.698147,
+        "line": 68
+      },
+      "title": "Settle on your spot",
+      "cue": "Oversampled Wave Cannon is about to go off",
+      "rule": "Finish the last steps onto your spot. Monitors face so their beam points away from the party.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP3MonitorsAi",
+        "time": 21.099998,
+        "line": 51
+      },
+      "title": "Main tank returns to Omega",
+      "cue": "Oversampled Wave Cannon resolves",
+      "rule": "Everyone else holds.",
+      "tolerance": 2.0,
+      "skip": false,
+      "roles": {
+        "MainTank": {
+          "rule": "Run back next to Omega, just north-west of the middle, to pick it up."
+        }
+      }
+    },
+    {
+      "key": {
+        "cls": "TopP3MonitorsAi",
+        "time": 24.199999,
+        "line": 52
+      },
+      "title": "Main tank pulls Omega north",
+      "cue": "Omega is picked up",
+      "rule": "Everyone else holds.",
+      "tolerance": 2.0,
+      "skip": false,
+      "roles": {
+        "MainTank": {
+          "rule": "Drag Omega north onto A."
+        }
+      }
+    }
+  ],
+  "toolbox": {
+    "planId": "243183080764761+stgy-5b80c73a",
+    "roleMap": {
+      "OffTank": "tank1",
+      "MainTank": "tank2",
+      "ShieldHealer": "healer1",
+      "PhysRangedDps": "healer2",
+      "RegenHealer": "dps1",
+      "CasterDps": "dps2",
+      "MeleeDpsB": "dps3",
+      "MeleeDpsA": "dps4"
+    },
+    "steps": {
+      "TopP3MonitorsAi@12.02-12.99": 16
+    },
+    "exampleSeed": 1,
+    "residual": 2.221884
+  },
+  "draft": true
+}

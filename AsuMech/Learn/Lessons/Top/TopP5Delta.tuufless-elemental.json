@@ -1,0 +1,213 @@
+{
+  "scenario": "TopP5DeltaScenario",
+  "strat": "Tuufless (Elemental)",
+  "sources": [
+    {
+      "label": "NAUR - P5: Run: Dynamis - Delta (Toolbox)",
+      "url": "https://ff14.toolboxgaming.space/?id=732288275415761&preview=1"
+    },
+    {
+      "label": "NAUR - P5: Run: Dynamis - Delta (Slides)",
+      "url": "https://docs.google.com/presentation/d/1yjCvFiTwW19vQVdMSQ6CPYUFFgaGLCaiF0uxESCyUvo/edit?usp=sharing"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "TopP5DeltaAi",
+        "time": 0.5,
+        "line": 30
+      },
+      "title": "Tanks north, party south",
+      "cue": "Omega-M appears",
+      "rule": "Party stacks 6–7 m south of the centre in two short columns; tanks wait 5 m north.",
+      "roles": {
+        "MainTank": {
+          "rule": "Wait 5 m north of the centre, a little west."
+        },
+        "OffTank": {
+          "rule": "Wait 5 m north of the centre, a little east."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5DeltaAi",
+        "time": 13,
+        "line": 31
+      },
+      "title": "Blues to Beetle, red-greens to Final",
+      "cue": "Blue and green tethers land",
+      "rule": "Line up with the tethers parallel: Remote (blue) tethers toward Beetle Omega, Local (red-green) tethers toward Final Omega. The pair nearer the middle is the inner tether, the other the outer tether. Outer blues stand far enough apart that their tether breaks as soon as it activates; inner blues stay close. Stay off the inner side of the intercardinal waymarks: that's the eye's cleave.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5DeltaAi",
+        "time": 21,
+        "line": 32
+      },
+      "title": "Fist check: inner tethers swap",
+      "cue": "Rocket punches appear",
+      "rule": "Inner tethers: if the fist over your head matches the colour of the fist next to you (not your partner's), swap places with your partner. Red-greens then stack on their intercardinal waymarks by Final Omega; inner blues hold near the outer blues so the fists can pair up.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5DeltaAi",
+        "time": 28.8,
+        "line": 33
+      },
+      "title": "Outer blues: break, then stack fists",
+      "cue": "The outer blue tether breaks",
+      "rule": "As soon as the outer blue tether breaks, run onto your inner blue fist partner so your fists stack. Everyone else holds still until the fist AoE appears under them.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5DeltaAi",
+        "time": 31.2,
+        "line": 34
+      },
+      "title": "Bait the arm units",
+      "cue": "Beyond Defense cast starts",
+      "rule": "Once the fist AoEs appear: outer red-greens bait the two arms nearest Final Omega, inner red-greens the two in the middle, outer blues the two nearest Beetle. Hug the arm so its laser turns out of the arena. Inner blues go to Omega-M and split north and south of it, breaking their tether, to bait Beyond Defense.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5DeltaAi",
+        "time": 36.2,
+        "line": 35
+      },
+      "title": "Pile Pitch and monitor lanes",
+      "cue": "Hyper Pulse cast starts on the arms",
+      "rule": "Blues stack next to Omega-M on the side Final Omega's monitor isn't cleaving to share Pile Pitch; the Beyond Defense target shifts sideways out of the stack, inside the safe lane. Red-greens wait for the arm lasers to lock, then head for the walls.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5DeltaAi",
+        "time": 38.4,
+        "line": 36
+      },
+      "title": "Red-greens to the walls for the monitors",
+      "cue": "Hyper Pulse resolves",
+      "rule": "Red-greens spread to the walls in the four corners to take the monitor hits: the pair nearest Beetle on its side, the other pair on Final Omega's side. Blues hold by Omega-M.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5DeltaAi",
+        "time": 40,
+        "line": 37
+      },
+      "title": "Monitor: aim away from the party",
+      "cue": "Twice-come Ruin on you",
+      "rule": "With the player monitor, stand by Omega-M on the side Final Omega isn't cleaving and face your monitor out to that side, leaving a safe lane between both cleaves.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5DeltaAi",
+        "time": 46,
+        "line": 38
+      },
+      "title": "Swivel Cannon positions",
+      "cue": "Swivel Cannon cast starts",
+      "rule": "Read which side Beetle Omega cleaves (lights and smoke). Hello, Near World hugs the edge of the cleave on the north-south line, Hello, Distant World goes to the wall on the same line, away from the cleave. The two blues without a debuff back up to the wall on the intercardinal far from Beetle. Outer red-green pair: whoever is already safe goes to the wall where the cleave meets the edge, the one in the cleave rotates all the way to Beetle.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5DeltaTuuflessAi",
+        "time": 49.2,
+        "line": 14
+      },
+      "title": "Red-greens by Beetle: get ready to break",
+      "cue": "Swivel Cannon cast starts",
+      "rule": "The red-green pair nearest Beetle comes together on the safe-side intercardinal by Beetle. Wait until every Twice-come Ruin is gone from the party list before breaking.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5DeltaTuuflessAi",
+        "time": 51,
+        "line": 15
+      },
+      "title": "Break the tether by Beetle",
+      "cue": "Every Twice-come Ruin is gone from the party list",
+      "rule": "The player on the safe side plants on the intercardinal waymark nearest Beetle; the player in the cleave pushes out to the edge of Swivel Cannon in line with that waymark, breaking the tether.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5DeltaAi",
+        "time": 56,
+        "line": 40
+      },
+      "title": "Back in after Hello World",
+      "cue": "Hello World resolves",
+      "rule": "After the six Hello World hits, regroup by Omega-M on the safe side. The remaining red-green pair stays apart (max melee on opposite sides is fine) and keeps out of the hitbox.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5DeltaAi",
+        "time": 56.5,
+        "line": 41
+      },
+      "title": "Off tank steps forward",
+      "cue": "Party regroups",
+      "rule": "The off tank moves 8 m from the centre on the side away from the party stack.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "TopP5DeltaAi",
+        "time": 61,
+        "line": 42
+      },
+      "title": "Break the last tether",
+      "cue": "Quickening Dynamis on you",
+      "rule": "Once the magic vulnerability from Hello World is gone, the last red-green pair walks in together to break their tether.",
+      "tolerance": 2.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "732288275415761",
+    "roleMap": {
+      "OffTank": "tank1",
+      "MainTank": "tank2",
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "CasterDps": "dps1",
+      "PhysRangedDps": "dps2",
+      "MeleeDpsB": "dps3",
+      "MeleeDpsA": "dps4"
+    },
+    "steps": {
+      "TopP5DeltaAi@0.5": 0,
+      "TopP5DeltaAi@40": 12,
+      "TopP5DeltaAi@61": 25
+    },
+    "exampleSeed": 1,
+    "residual": 2.7616806
+  },
+  "draft": true
+}

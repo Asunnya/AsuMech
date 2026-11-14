@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using AsuMech.Core.Game;
 using AsuMech.Core.Game.Ai;
 using AsuMech.Core.Game.Party;
@@ -148,8 +149,8 @@ public sealed class TopP6AlphaOmegaAi : IScenarioAi<TopP6AlphaOmegaState>
                 ? role => Huddle(role, TopCompass.Point(PuddleRadii[nextWave], free + turn * PuddleBearings[nextWave]), 0.6f)
                 : afterwards;
             var nextDrop = PuddleDrop(cast, wave + 1);
-            LookFirst(dropped + LookAfterDrop, PerRole.All, role => LooseHuddle(role, spot), role => Huddle(role, spot, 0.6f), nextDrop);
-            LookAgain(dropped + LookAfterDrop + LookAgainAfter, PerRole.All, nextDrop, nextDrop + LookAfterDrop + MovePrompt, then);
+            var step = LookFirst(dropped + LookAfterDrop, PerRole.All, role => LooseHuddle(role, spot), role => Huddle(role, spot, 0.6f), nextDrop);
+            LookAgain(dropped + LookAfterDrop + LookAgainAfter, PerRole.All, nextDrop, nextDrop + LookAfterDrop + MovePrompt, then, step);
         }
         return PuddleDrop(cast, PuddleWaves);
     }
@@ -169,9 +170,9 @@ public sealed class TopP6AlphaOmegaAi : IScenarioAi<TopP6AlphaOmegaState>
     private void LeaveTheLastPuddleForWaveCannonOne(float lastPuddle)
     {
         var protean = lastPuddle + ProteanLineUp;
-        LookFirst(lastPuddle + LookAfterDrop, PerRole.All, ClockApproach, ClockApproach, protean);
+        var step = LookFirst(lastPuddle + LookAfterDrop, PerRole.All, ClockApproach, ClockApproach, protean);
         LookAgain(lastPuddle + LookAfterDrop + LookAgainAfter, PerRole.All, protean, protean + MovePrompt,
-            role => TopCompass.Point(ProteanRing, ClockSpots[role]));
+            role => TopCompass.Point(ProteanRing, ClockSpots[role]), step);
     }
 
     private void SeeTheExaflaresComing(float cast, ExaflareSweep sweep)
@@ -192,25 +193,30 @@ public sealed class TopP6AlphaOmegaAi : IScenarioAi<TopP6AlphaOmegaState>
                 hazards.Add(new(Live(role), TopP6AlphaOmegaPuddleRun.PuddleRadius, lands));
     }
 
-    private void LookFirst(float time, IReadOnlyList<PartyRole> roles, Func<PartyRole, Vector2> guide, Func<PartyRole, Vector2> nominal, float arriveBy)
+    // A look-again corrects the walk its look-first started, so it shares that step's key.
+    private readonly record struct StepKey(float At, int Line);
+
+    private StepKey LookFirst(float time, IReadOnlyList<PartyRole> roles, Func<PartyRole, Vector2> guide, Func<PartyRole, Vector2> nominal, float arriveBy,
+        [CallerLineNumber] int line = 0)
     {
         if (!Covered)
         {
-            foreach (var role in roles) Go(time, role, nominal(role));
-            return;
+            foreach (var role in roles) Go(time, role, nominal(role), line: line);
+            return new StepKey(time, line);
         }
         world.Events.Add(time, () =>
         {
             foreach (var role in roles)
             {
-                if (!Drives(role) || world.Party.Get(role) is not { } member || !member.IsAlive()) continue;
+                if (world.Party.Get(role) is not { } member || !member.IsAlive()) continue;
                 var spot = stepGuides[role] = guide(role);
-                ChooseAndWalk(role, spot, arriveBy, time + LookAgainAfter + MovePrompt, spot, Hesitation());
+                ChooseAndWalk(role, spot, arriveBy, time + LookAgainAfter + MovePrompt, spot, Hesitation(), time, line);
             }
         });
+        return new StepKey(time, line);
     }
 
-    private void LookAgain(float time, IReadOnlyList<PartyRole> roles, float arriveBy, float nextDeparts, Func<PartyRole, Vector2> then)
+    private void LookAgain(float time, IReadOnlyList<PartyRole> roles, float arriveBy, float nextDeparts, Func<PartyRole, Vector2> then, StepKey step)
     {
         At(time, () =>
         {
@@ -218,7 +224,7 @@ public sealed class TopP6AlphaOmegaAi : IScenarioAi<TopP6AlphaOmegaState>
             hazards.RemoveAll(h => h.Lands <= now);
             foreach (var role in roles)
             {
-                if (!Drives(role) || world.Party.Get(role) is not { } member || !member.IsAlive() || !stepGuides.TryGetValue(role, out var guide)) continue;
+                if (world.Party.Get(role) is not { } member || !member.IsAlive() || !stepGuides.TryGetValue(role, out var guide)) continue;
                 var planned = PlannedWalk(role, now);
                 var current = ActualWalk(role, now);
                 var afterwards = then(role);
@@ -227,12 +233,12 @@ public sealed class TopP6AlphaOmegaAi : IScenarioAi<TopP6AlphaOmegaState>
                 var clear = TopP6AlphaOmegaPuddleRun.StaysClear(planned, nextDeparts, afterwards, hazards);
                 var closer = Vector2.Distance(plan.Spot, guide) < Vector2.Distance(planned.To, guide) - 1f;
                 if (clear && (!plan.Safe || !closer)) continue;
-                WalkTo(role, plan.Spot, reaction + plan.Delay, current, now);
+                WalkTo(role, plan.Spot, reaction + plan.Delay, current, now, step.At, step.Line);
             }
         });
     }
 
-    private void ChooseAndWalk(PartyRole role, Vector2 guide, float arriveBy, float nextDeparts, Vector2 afterwards, float hesitation)
+    private void ChooseAndWalk(PartyRole role, Vector2 guide, float arriveBy, float nextDeparts, Vector2 afterwards, float hesitation, float at, int line)
     {
         var now = world.Events.Elapsed;
         hazards.RemoveAll(h => h.Lands <= now);
@@ -243,17 +249,17 @@ public sealed class TopP6AlphaOmegaAi : IScenarioAi<TopP6AlphaOmegaState>
             plan = hesitant;
         else
             hesitation = 0f;
-        WalkTo(role, plan.Spot, hesitation + plan.Delay, current, now);
+        WalkTo(role, plan.Spot, hesitation + plan.Delay, current, now, at, line);
     }
 
-    private void WalkTo(PartyRole role, Vector2 spot, float after, TopP6AlphaOmegaPuddleRun.Walk current, float now)
+    private void WalkTo(PartyRole role, Vector2 spot, float after, TopP6AlphaOmegaPuddleRun.Walk current, float now, float at, int line)
     {
         var order = walkOrders[role] = walkOrders.GetValueOrDefault(role) + 1;
         var departs = now + after + MovePrompt;
         plannedWalks[role] = new TopP6AlphaOmegaPuddleRun.Walk(current.At(departs), departs, spot, AiManager.RunSpeed);
         world.Events.Add(after, () =>
         {
-            if (walkOrders[role] == order) ai.Move(MovePrompt, () => AiMove.Single(role, spot), jitter: SpotJitter);
+            if (walkOrders[role] == order) ai.Move(MovePrompt, () => AiMove.Single(role, spot), jitter: SpotJitter, at: at + MovePrompt, line: line);
         });
     }
 
@@ -293,23 +299,24 @@ public sealed class TopP6AlphaOmegaAi : IScenarioAi<TopP6AlphaOmegaState>
     private void TakeCosmoDiveTwo(float lastPuddle)
     {
         var settled = lastPuddle + DiveSettled;
-        LookFirst(lastPuddle + 0.07f, NonTanks, SecondDiveSpot, SecondDiveSpot, settled);
-        LookAgain(lastPuddle + 0.07f + LookAgainAfter, NonTanks, settled, settled + MovePrompt, SecondDiveSpot);
-        LookFirst(lastPuddle + 1.0f, TankSeats, SecondDiveSpot, SecondDiveSpot, settled);
-        LookAgain(lastPuddle + 1.0f + LookAgainAfter, TankSeats, settled, settled + MovePrompt, SecondDiveSpot);
-        WalkOnToTheSpotOnceTheyLand(settled, PerRole.All, SecondDiveSpot);
+        var party = LookFirst(lastPuddle + 0.07f, NonTanks, SecondDiveSpot, SecondDiveSpot, settled);
+        LookAgain(lastPuddle + 0.07f + LookAgainAfter, NonTanks, settled, settled + MovePrompt, SecondDiveSpot, party);
+        var tanks = LookFirst(lastPuddle + 1.0f, TankSeats, SecondDiveSpot, SecondDiveSpot, settled);
+        LookAgain(lastPuddle + 1.0f + LookAgainAfter, TankSeats, settled, settled + MovePrompt, SecondDiveSpot, tanks);
+        WalkOnToTheSpotOnceTheyLand(settled, NonTanks, SecondDiveSpot, party);
+        WalkOnToTheSpotOnceTheyLand(settled, TankSeats, SecondDiveSpot, tanks);
     }
 
-    private void WalkOnToTheSpotOnceTheyLand(float time, IReadOnlyList<PartyRole> roles, Func<PartyRole, Vector2> spot)
+    private void WalkOnToTheSpotOnceTheyLand(float time, IReadOnlyList<PartyRole> roles, Func<PartyRole, Vector2> spot, StepKey step)
         => At(time, () =>
         {
             var now = world.Events.Elapsed;
             foreach (var role in roles)
             {
-                if (!Drives(role) || world.Party.Get(role) is not { } member || !member.IsAlive()) continue;
+                if (world.Party.Get(role) is not { } member || !member.IsAlive()) continue;
                 var destination = spot(role);
                 if (Vector2.Distance(PlannedWalk(role, now).To, destination) > OnTheSpot)
-                    WalkTo(role, destination, 0f, ActualWalk(role, now), now);
+                    WalkTo(role, destination, 0f, ActualWalk(role, now), now, step.At, step.Line);
             }
         });
 
@@ -371,7 +378,7 @@ public sealed class TopP6AlphaOmegaAi : IScenarioAi<TopP6AlphaOmegaState>
         {
             chosen = NearestCardinals(movingFlares, freeCardinals);
             foreach (var (role, cardinal) in chosen)
-                Go(0f, role, FlareSpot(cardinal));
+                Go(0f, role, FlareSpot(cardinal), at: time + MovePrompt);
         });
         for (var look = LookEvery; look <= 3f + 0.01f; look += LookEvery)
             At(time + look, () => chosen = YieldToFlaresNotOurs(chosen, freeCardinals));
@@ -609,9 +616,9 @@ public sealed class TopP6AlphaOmegaAi : IScenarioAi<TopP6AlphaOmegaState>
         return centre + TopCompass.Point(radius, index * 45f);
     }
 
-    private void Go(float time, PartyRole role, Vector2 spot, float jitter = 0.15f)
+    private void Go(float time, PartyRole role, Vector2 spot, float jitter = 0.15f, float? at = null, [CallerLineNumber] int line = 0)
     {
-        if (Covered) ai.Move(time + MovePrompt, () => AiMove.Single(role, spot), jitter: jitter);
+        if (Covered) ai.Move(time + MovePrompt, () => AiMove.Single(role, spot), jitter: jitter, at: at, line: line);
         else if (time < practiceStart && (!startSpots.TryGetValue(role, out var known) || time >= known.Time)) startSpots[role] = (time, spot);
     }
 
