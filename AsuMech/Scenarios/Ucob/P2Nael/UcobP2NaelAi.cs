@@ -11,9 +11,9 @@ using Scenario = AsuMech.Scenarios.Ucob.P2Nael.UcobP2NaelScenario;
 
 namespace AsuMech.Scenarios.Ucob.P2Nael;
 
-public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
+public class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
 {
-    public string Name => "Stack north of Nael, rotate clockwise, fire in-out-in-in";
+    public virtual string Name => "Stack north of Nael, rotate clockwise, fire in-out-in-in";
 
     private static readonly Dictionary<PartyRole, float> SpreadDegrees = new()
     {
@@ -302,7 +302,7 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
 
     private static float MidwayClockwise(int firstSlot, int secondSlot) => (firstSlot + secondSlot) * 45f / 2f;
 
-    private static Vector2 Compass(float degrees)
+    protected static Vector2 Compass(float degrees)
     {
         var r = degrees * MathF.PI / 180f;
         return new Vector2(MathF.Sin(r), -MathF.Cos(r));
@@ -426,16 +426,13 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
 
     private Vector2?[] Spots(float now)
     {
-        if (now < Scenario.Heavensfall + 0.1f) return Cluster(PreHeavensfallStack, Enum.GetValues<PartyRole>());
+        if (now < Scenario.Heavensfall + 0.1f) return Cluster(StackForHeavensfall, Enum.GetValues<PartyRole>());
         if (now < Scenario.DalamudDive)
         {
             var secondSet = now >= Scenario.ThermionicBurstCasts[0] + Scenario.ThermionicBurstCastSeconds;
             var spots = new Vector2?[8];
-            foreach (var (role, degrees) in SpreadDegrees)
-            {
-                var radius = secondSet && role == MainTank ? DiveRadius : SpreadRadius;
-                spots[(int)role] = Bearing(degrees + (secondSet ? 0f : 22.5f)) * radius;
-            }
+            foreach (var role in Enum.GetValues<PartyRole>())
+                spots[(int)role] = OpenerSpot(role, secondSet);
             return spots;
         }
 
@@ -471,7 +468,7 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
         if (q == 2)
         {
             if (now < Scenario.QuoteMoves[2][0] + After)
-                return nael + Rotate(Inward, ClockDegrees(role)) * ClockRadius;
+                return RavenSpreadSpot(role, nael, Inward);
             if (ravenSpot is { } raven) return raven;
         }
         if (ravenSpot is { } fourthFire) return fourthFire;
@@ -516,7 +513,7 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
 
     private Vector2 Ear(int set, int holder, float now)
     {
-        if (set == 0) return nael + Rotate(Inward, holder == 0 ? -90f : 90f) * CloseEarRadius;
+        if (set == 0) return FirstThunderEar(nael, Inward, state.ThunderTargets[0], holder);
         if (fixedEars.TryGetValue((set, holder), out var known)) return known.Spot;
         var away = Vector2.Normalize(nael - Cluster() + new Vector2(0.001f, 0f));
         var sign = FarEarDegrees[holder] < 0f ? -1f : 1f;
@@ -540,6 +537,20 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
     private readonly Dictionary<(int Set, int Holder), (Vector2 Spot, float Until)> fixedEars = [];
     private readonly List<(Vector2 At, float Until)> livePuddles = [];
 
+    protected virtual Vector2 StackForHeavensfall => PreHeavensfallStack;
+
+    protected virtual Vector2 OpenerSpot(PartyRole role, bool secondSet)
+    {
+        var radius = secondSet && role == MainTank ? DiveRadius : SpreadRadius;
+        return Bearing(SpreadDegrees[role] + (secondSet ? 0f : 22.5f)) * radius;
+    }
+
+    protected virtual Vector2 FirstThunderEar(Vector2 naelAt, Vector2 inward, IReadOnlyList<PartyRole> holders, int holder)
+        => naelAt + Rotate(inward, holder == 0 ? -90f : 90f) * CloseEarRadius;
+
+    protected virtual Vector2 RavenSpreadSpot(PartyRole role, Vector2 naelAt, Vector2 inward)
+        => naelAt + Rotate(inward, ClockDegrees(role)) * ClockRadius;
+
     private static float ClockDegrees(PartyRole role) => role switch
     {
         MainTank => 180f, OffTank => 0f, RegenHealer => 45f, ShieldHealer => 315f,
@@ -552,7 +563,7 @@ public sealed class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
 
     private Vector2 Inward => nael.LengthSquared() < 0.01f ? new Vector2(0f, -1f) : Vector2.Normalize(-nael);
 
-    private static Vector2 Rotate(Vector2 v, float degrees)
+    protected static Vector2 Rotate(Vector2 v, float degrees)
     {
         var r = degrees * MathF.PI / 180f;
         return new Vector2(v.X * MathF.Cos(r) - v.Y * MathF.Sin(r), v.X * MathF.Sin(r) + v.Y * MathF.Cos(r));

@@ -24,7 +24,7 @@ public sealed class UcobP2NaelScenario : IScenario
     public string Name => "Nael deus Darnus";
     public IPhase Phase => UcobZone.P2;
 
-    public IReadOnlyList<IScenarioAi> AiStrats => [new UcobP2NaelAi()];
+    public IReadOnlyList<IScenarioAi> AiStrats => [new UcobP2NaelAi(), new UcobP2NaelTuuflessAi()];
 
     private readonly UcobP2NaelSettingsWindow settingsWindow = new();
     public void DrawSettings() => settingsWindow.Draw();
