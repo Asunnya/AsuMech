@@ -100,6 +100,10 @@ public static class EnemyActionEffects
     public static IEnemyActionEffect OnHavingStatus(ushort statusId, params IEnemyActionEffect[] effect)
         => new FilteredEffect(effect, (_, hits) => hits.Where(t => t.HasStatus(statusId)));
 
+    // `effect` applied to those hit who don't carry `statusId` when it runs.
+    public static IEnemyActionEffect OnLackingStatus(ushort statusId, params IEnemyActionEffect[] effect)
+        => new FilteredEffect(effect, (_, hits) => hits.Where(t => !t.HasStatus(statusId)));
+
     // `effect` applied to the NPCs of `bnpcBaseId` the area caught instead of the party hits (UWU's
     // Razor Plumes, pushed by Super Cyclone).
     public static IEnemyActionEffect OnNpcs(uint bnpcBaseId, params IEnemyActionEffect[] effect)
