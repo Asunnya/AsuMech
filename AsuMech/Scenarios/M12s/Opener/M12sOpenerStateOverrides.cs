@@ -7,5 +7,5 @@ public sealed class M12sOpenerStateOverrides
 {
     public bool? PurpleEast { get; set; }
     // Each pair's two orbs; set together with a matching PurpleEast.
-    public IReadOnlyList<IReadOnlyList<MortalOrb>>? Orbs { get; set; }
+    internal IReadOnlyList<IReadOnlyList<MortalOrb>>? Orbs { get; set; }
 }
