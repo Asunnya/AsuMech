@@ -14,7 +14,6 @@ public sealed class UcobP3QuickmarchState
 
     public static readonly PartyRole[] NonTanks = [RegenHealer, ShieldHealer, MeleeDpsA, MeleeDpsB, PhysRangedDps, CasterDps];
     public static readonly PartyRole[] Dps = [MeleeDpsA, MeleeDpsB, PhysRangedDps, CasterDps];
-    public static readonly PartyRole[] TetherTargets = [MainTank, OffTank];
 
     public Direction DiveFrom { get; }
     public IReadOnlyList<PartyRole> TwisterTargets { get; }

@@ -57,8 +57,7 @@ public sealed class UcobP3FellruinScenario : IScenario
     private SimEnemy? twintania;
     private readonly List<SimEnemy> gemini = [];
     private readonly UcobNeurolinks neurolinks = new();
-    private readonly List<SimTether> tempestTethers = [];
-    private bool tethersFollow;
+    private readonly UcobTempestWing tempestWing = new();
 
     public void Run(SimWorld worldParam, int? selectedAi)
     {
@@ -66,8 +65,7 @@ public sealed class UcobP3FellruinScenario : IScenario
         party = world.Party;
         state = new State(world.Rng, settingsWindow.Overrides);
         neurolinks.Clear();
-        tempestTethers.Clear();
-        tethersFollow = false;
+        tempestWing.Clear();
 
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<State>)AiStrats[idx]).Run(state, world);
@@ -106,7 +104,7 @@ public sealed class UcobP3FellruinScenario : IScenario
     public void Tick(float delta, float elapsed)
     {
         neurolinks.Tick(party);
-        if (tethersFollow) FollowTheNearestTwo();
+        tempestWing.Tick();
     }
 
     private void SpawnBosses()
@@ -168,39 +166,15 @@ public sealed class UcobP3FellruinScenario : IScenario
             nael?.Cast(Actions.RavenDive, target);
     }
 
-    // The two players nearest Bahamut Prime hold them until they go off.
-    private void TetherTempestWing()
-    {
-        tethersFollow = true;
-        FollowTheNearestTwo();
-    }
-
-    private void FollowTheNearestTwo()
-    {
-        if (bahamut is not { } boss) return;
-        var nearest = AliveMembers().OrderBy(m => Vector3.DistanceSquared(m.Position, boss.Position)).Take(2).ToList();
-        foreach (var tether in tempestTethers.Where(t => t.B is not { } holder || !nearest.Contains(holder)).ToList())
-        {
-            tether.Despawn();
-            tempestTethers.Remove(tether);
-        }
-        foreach (var member in nearest.Where(m => tempestTethers.All(t => !ReferenceEquals(t.B, m))))
-            tempestTethers.Add(world.Tether(boss, member, TetherId.TempestWing));
-    }
+    private void TetherTempestWing() => tempestWing.Start(world, bahamut);
 
     private void ResolveTempestWing()
     {
-        tethersFollow = false;
-        foreach (var tether in tempestTethers)
+        foreach (var holder in tempestWing.Release())
         {
-            if (tether.B is { } holder && holder.IsAlive() && bahamut is { } boss)
-            {
-                boss.Cast(ActionId.TempestWing, holder);
-                boss.CastFromHelper(Actions.TempestWingSplash, holder, holder.Placement());
-            }
-            tether.Despawn();
+            bahamut?.Cast(ActionId.TempestWing, holder);
+            bahamut?.CastFromHelper(Actions.TempestWingSplash, holder, holder.Placement());
         }
-        tempestTethers.Clear();
     }
 
     private void GeminiLandOnTheirTargets()
@@ -227,21 +201,13 @@ public sealed class UcobP3FellruinScenario : IScenario
 
     private void DespawnAll()
     {
-        foreach (var tether in tempestTethers) tether.Despawn();
-        tempestTethers.Clear();
+        tempestWing.Clear();
         neurolinks.Clear();
         bahamut?.Despawn();
         nael?.Despawn();
         twintania?.Despawn();
         foreach (var geminus in gemini) geminus.Despawn();
         gemini.Clear();
-    }
-
-    private IEnumerable<SimCharacter> AliveMembers()
-    {
-        for (var slot = 0; slot < 8; slot++)
-            if (party.Get(slot) is { } member && member.IsAlive())
-                yield return member;
     }
 
     private static Vector3 ToWorld(Vector2 at) => new(at.X, 0f, at.Y);

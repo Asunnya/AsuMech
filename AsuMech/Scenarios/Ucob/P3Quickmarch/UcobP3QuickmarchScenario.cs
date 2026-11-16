@@ -68,6 +68,7 @@ public sealed class UcobP3QuickmarchScenario : IScenario
     private SimEnemy? nael;
     private SimEnemy? twintania;
     private readonly List<Twister> twisters = [];
+    private readonly UcobTempestWing tempestWing = new();
 
     private sealed class Twister(Vector2 at, SimEventObject? eobj, float armsAt, float fadesAt)
     {
@@ -83,6 +84,7 @@ public sealed class UcobP3QuickmarchScenario : IScenario
         world = worldParam;
         state = new State(world.Rng, settingsWindow.Overrides);
         twisters.Clear();
+        tempestWing.Clear();
 
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<State>)AiStrats[idx]).Run(state, world);
@@ -125,22 +127,10 @@ public sealed class UcobP3QuickmarchScenario : IScenario
             TankBahamut();
         });
         world.Events.Add(EarthShakerMarkers, () => Mark(state.EarthShakerTargets, LockonId.EarthShaker));
-        world.Events.Add(Tethers, TetherTanks);
+        world.Events.Add(Tethers, () => tempestWing.Start(world, bahamut));
         world.Events.Add(MegaflareStack, StackMegaflare);
         world.Events.Add(EarthShakers, CastEarthShakers);
-        world.Events.Add(TempestWing, () =>
-        {
-            foreach (var tank in Alive(State.TetherTargets)) bahamut?.CastFromHelper(Actions.TempestWing, tank);
-        });
-        for (var i = 0; i < State.TetherTargets.Length; i++)
-        {
-            var role = State.TetherTargets[i];
-            world.Events.Add(TempestWingBlasts[i], () =>
-            {
-                if (world.Party.Get(role) is { } tank && tank.IsAlive())
-                    bahamut?.CastFromHelper(Actions.TempestWingBlast, tank, at: new Placement(tank.Position, 0f));
-            });
-        }
+        world.Events.Add(TempestWing, CastTempestWing);
         world.Events.Add(FlareBreath, () =>
         {
             if (world.Party.Get(PartyRole.MainTank) is { } tank && tank.IsAlive()) bahamut?.Cast(Actions.FlareBreath, tank);
@@ -148,7 +138,11 @@ public sealed class UcobP3QuickmarchScenario : IScenario
         world.Events.Add(End, DespawnAll);
     }
 
-    public void Tick(float delta, float elapsed) => TriggerTwisters(elapsed);
+    public void Tick(float delta, float elapsed)
+    {
+        TriggerTwisters(elapsed);
+        tempestWing.Tick();
+    }
 
     public void OnActionResolved(ActionResolved resolved)
     {
@@ -281,10 +275,18 @@ public sealed class UcobP3QuickmarchScenario : IScenario
             bahamut?.CastFromHelper(Actions.MegaflareSpread, member, at: new Placement(member.Position, 0f));
     }
 
-    private void TetherTanks()
+    private void CastTempestWing()
     {
-        foreach (var tank in Alive(State.TetherTargets))
-            world.Tether(bahamut, tank, TetherId.TempestWing, TempestWing - Tethers);
+        var holders = tempestWing.Release();
+        for (var i = 0; i < holders.Count && i < TempestWingBlasts.Length; i++)
+        {
+            var holder = holders[i];
+            bahamut?.CastFromHelper(Actions.TempestWing, holder);
+            world.Events.Add(TempestWingBlasts[i] - TempestWing, () =>
+            {
+                if (holder.IsAlive()) bahamut?.CastFromHelper(Actions.TempestWingBlast, holder, at: new Placement(holder.Position, 0f));
+            });
+        }
     }
 
     // On whichever marked player has the most of the others with them.
@@ -308,6 +310,7 @@ public sealed class UcobP3QuickmarchScenario : IScenario
     {
         foreach (var twister in twisters) twister.EObj?.Despawn();
         twisters.Clear();
+        tempestWing.Clear();
         foreach (var enemy in new[] { bahamut, nael, twintania }) enemy?.Despawn();
     }
 
