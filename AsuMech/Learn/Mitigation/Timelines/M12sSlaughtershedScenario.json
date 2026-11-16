@@ -1,0 +1,289 @@
+{
+  "scenario": "M12sSlaughtershedScenario",
+  "casts": [
+    {
+      "actionId": 46229,
+      "name": "Mortal Slayer",
+      "start": 3.483,
+      "resolve": 15.183,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46230,
+      "name": "Mortal Slayer",
+      "start": 15.567,
+      "resolve": 15.567,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46232,
+      "name": "Mortal Slayer",
+      "start": 15.567,
+      "resolve": 15.567,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46230,
+      "name": "Mortal Slayer",
+      "start": 18.583,
+      "resolve": 18.583,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46232,
+      "name": "Mortal Slayer",
+      "start": 18.583,
+      "resolve": 18.583,
+      "occurrence": 5
+    },
+    {
+      "actionId": 46230,
+      "name": "Mortal Slayer",
+      "start": 21.583,
+      "resolve": 21.583,
+      "occurrence": 6
+    },
+    {
+      "actionId": 46230,
+      "name": "Mortal Slayer",
+      "start": 24.566,
+      "resolve": 24.566,
+      "occurrence": 7
+    },
+    {
+      "actionId": 46278,
+      "name": "Slaughtershed",
+      "start": 36.766,
+      "resolve": 39.466,
+      "occurrence": 1
+    },
+    {
+      "actionId": 44489,
+      "name": "Slaughtershed",
+      "start": 42.233,
+      "resolve": 42.233,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46286,
+      "name": "",
+      "start": 43.883,
+      "resolve": 43.883,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46239,
+      "name": "Burst",
+      "start": 48.883,
+      "resolve": 51.083,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46292,
+      "name": "Dramatic Lysis",
+      "start": 50.899,
+      "resolve": 50.899,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46293,
+      "name": "Fourth-wall Fusion",
+      "start": 50.899,
+      "resolve": 50.899,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46288,
+      "name": "Raptor Knuckles",
+      "start": 56.533,
+      "resolve": 56.533,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47559,
+      "name": "Raptor Knuckles",
+      "start": 56.533,
+      "resolve": 57.033,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46287,
+      "name": "Raptor Knuckles",
+      "start": 61.083,
+      "resolve": 61.083,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47559,
+      "name": "Raptor Knuckles",
+      "start": 61.083,
+      "resolve": 61.583,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46278,
+      "name": "Slaughtershed",
+      "start": 65.683,
+      "resolve": 68.382996,
+      "occurrence": 3
+    },
+    {
+      "actionId": 44489,
+      "name": "Slaughtershed",
+      "start": 71.151,
+      "resolve": 71.151,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46285,
+      "name": "",
+      "start": 72.801,
+      "resolve": 72.801,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46239,
+      "name": "Burst",
+      "start": 77.802,
+      "resolve": 80.002,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46293,
+      "name": "Fourth-wall Fusion",
+      "start": 79.819,
+      "resolve": 79.819,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46292,
+      "name": "Dramatic Lysis",
+      "start": 79.819,
+      "resolve": 79.819,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46290,
+      "name": "Serpentine Scourge",
+      "start": 85.454,
+      "resolve": 85.454,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47548,
+      "name": "Serpentine Scourge",
+      "start": 85.454,
+      "resolve": 86.154,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46289,
+      "name": "Serpentine Scourge",
+      "start": 90.005,
+      "resolve": 90.005,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47548,
+      "name": "Serpentine Scourge",
+      "start": 90.005,
+      "resolve": 90.704994,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46278,
+      "name": "Slaughtershed",
+      "start": 94.589,
+      "resolve": 97.288994,
+      "occurrence": 5
+    },
+    {
+      "actionId": 44489,
+      "name": "Slaughtershed",
+      "start": 100.074,
+      "resolve": 100.074,
+      "occurrence": 6
+    },
+    {
+      "actionId": 46284,
+      "name": "",
+      "start": 101.724,
+      "resolve": 101.724,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46239,
+      "name": "Burst",
+      "start": 106.725,
+      "resolve": 108.924995,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46293,
+      "name": "Fourth-wall Fusion",
+      "start": 108.725,
+      "resolve": 108.725,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46292,
+      "name": "Dramatic Lysis",
+      "start": 108.725,
+      "resolve": 108.725,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46287,
+      "name": "Raptor Knuckles",
+      "start": 114.36,
+      "resolve": 114.36,
+      "occurrence": 5
+    },
+    {
+      "actionId": 47559,
+      "name": "Raptor Knuckles",
+      "start": 114.36,
+      "resolve": 114.86,
+      "occurrence": 6
+    },
+    {
+      "actionId": 46288,
+      "name": "Raptor Knuckles",
+      "start": 118.911,
+      "resolve": 118.911,
+      "occurrence": 7
+    },
+    {
+      "actionId": 47559,
+      "name": "Raptor Knuckles",
+      "start": 118.911,
+      "resolve": 119.411,
+      "occurrence": 8
+    },
+    {
+      "actionId": 46392,
+      "name": "Refreshing Overkill",
+      "start": 127.996,
+      "resolve": 137.696,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46393,
+      "name": "Refreshing Overkill",
+      "start": 138.21,
+      "resolve": 138.21,
+      "occurrence": 2
+    }
+  ],
+  "names": [
+    "Mortal Slayer",
+    "Slaughtershed",
+    "",
+    "Burst",
+    "Dramatic Lysis",
+    "Fourth-wall Fusion",
+    "Raptor Knuckles",
+    "Serpentine Scourge",
+    "Refreshing Overkill"
+  ]
+}

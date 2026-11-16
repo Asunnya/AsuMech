@@ -45,6 +45,7 @@ public static class M12sConstants
     {
         public const float P1HalfWidth = 20f;
         public const float P1HalfDepth = 15f;
+        public const float P2ArenaRadius = 20f;
     }
 
     public static class BNpcBaseId
@@ -54,6 +55,8 @@ public static class M12sConstants
         public const uint SnakeHead = 19196;
         public const uint PurpleOrb = 19200;
         public const uint GreenOrb = 19201;
+        public const uint LindwurmP2 = 19202;
+        public const uint Lindschrat = 19204;
     }
 
     public static class EObjId
@@ -65,6 +68,7 @@ public static class M12sConstants
     {
         public const uint LindwurmP1 = 14378;
         public const uint LindwurmP2 = 14379;
+        public const uint Lindschrat = 14380;
     }
 
     public static class ActionId
@@ -112,6 +116,22 @@ public static class M12sConstants
         public const uint CurtainCallFourthWallFusion = 0xB4D5;
         public const uint RefreshingOverkill = 0xB538;
         public const uint RefreshingOverkillRaidwide = 0xB539;
+        public const uint Replication = 0xB4D8;
+        public const uint Dash = 0xB4D9;
+        public const uint WingedScourgeVertical = 0xB4DA;
+        public const uint WingedScourgeHorizontal = 0xB4DB;
+        public const uint WingedScourge = 0xB4DC;
+        public const uint TopTierSlamCast = 0xB4DD;
+        public const uint TopTierSlam = 0xB4DE;
+        public const uint MightyMagicCast = 0xB4DF;
+        public const uint MightyMagic = 0xB4E0;
+        public const uint DoubleSobat = 0xB520;
+        // B521..B524: the same kick, each turning the follow-up by another quarter.
+        public const uint DoubleSobatBuster = 0xB521;
+        public const uint DoubleSobatRepeat = 0xB525;
+        public const uint EsotericFinisher = 0xB526;
+        public const uint SnakingKick = 0xB527;
+        public const uint ArcadiaAflame = 0xB528;
     }
 
     public static class StatusId
@@ -127,6 +147,8 @@ public static class M12sConstants
         public const ushort BondsOfFleshAlpha = 0x1290;
         public const ushort UnbreakableFleshAlpha = 0x1291;
         public const ushort RottingFlesh = 0x129B;
+        public const ushort FireResistanceDownII = 0xB79;
+        public const ushort DarkResistanceDownII = 0xCFB;
     }
 
     public static class LockonId
@@ -136,6 +158,7 @@ public static class M12sConstants
         public const uint CellChain = 0x291;
         public const uint SlaughtershedStack = 0x13D;
         public const uint SlaughtershedSpread = 0x177;
+        public const uint DoubleSobat = 0x256;
     }
 
     public static class TetherId

@@ -193,6 +193,7 @@ All using default NA pf strats unless noted otherwise:
     - Grotesquerie: Act 1 (spread or stack debuffs with an arrow cleave each, four chasing Phagocyte Spotlights, Ravenous Reach, blood vessel Bursts with tank busters and a healer stack, The Fixer)
     - Curtain Call (chasing puddles, Rotting Flesh cured in the dragon head's cleave while Bursting Grotesquerie spreads outside it, support–DPS chains broken apart, blood vessels bursting, Splattershed)
     - Slaughtershed (Mortal Slayer's eight orbs, three Slaughtersheds with stack and spreads by role, blood vessels, half-room cleaves or corner knockbacks, Refreshing Overkill)
+    - Replication 1 (Arcadia Aflame, two sets of Lindschrat clones with narrow cleaves, a fire partner stack and two dark baits, Snaking Kick's half-room cleave, Double Sobat's tank buster with its turning follow-up and Esoteric Finisher)
 
 ## Details
 

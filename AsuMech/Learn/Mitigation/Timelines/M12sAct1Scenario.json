@@ -1,0 +1,129 @@
+{
+  "scenario": "M12sAct1Scenario",
+  "casts": [
+    {
+      "actionId": 48829,
+      "name": "Grotesquerie: Act 1",
+      "start": 2.783,
+      "resolve": 5.483,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46185,
+      "name": "Ravenous Reach",
+      "start": 12,
+      "resolve": 12.7,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46238,
+      "name": "Phagocyte Spotlight",
+      "start": 12,
+      "resolve": 14.7,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46234,
+      "name": "",
+      "start": 13.067,
+      "resolve": 13.067,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46237,
+      "name": "Ravenous Reach",
+      "start": 13.067,
+      "resolve": 23.367,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46238,
+      "name": "Phagocyte Spotlight",
+      "start": 14,
+      "resolve": 16.7,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46238,
+      "name": "Phagocyte Spotlight",
+      "start": 15.967,
+      "resolve": 18.667,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46238,
+      "name": "Phagocyte Spotlight",
+      "start": 17.967,
+      "resolve": 20.667,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46953,
+      "name": "Ravenous Reach",
+      "start": 23.133,
+      "resolve": 23.133,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46255,
+      "name": "Hemorrhagic Projection",
+      "start": 23.916,
+      "resolve": 23.916,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46254,
+      "name": "Fourth-wall Fusion",
+      "start": 23.916,
+      "resolve": 23.916,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46250,
+      "name": "Dramatic Lysis",
+      "start": 23.916,
+      "resolve": 23.916,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46239,
+      "name": "Burst",
+      "start": 30.166,
+      "resolve": 32.366,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46294,
+      "name": "Visceral Burst",
+      "start": 33.183,
+      "resolve": 33.183,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47545,
+      "name": "Fourth-wall Fusion",
+      "start": 33.183,
+      "resolve": 33.183,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46295,
+      "name": "The Fixer",
+      "start": 38.266,
+      "resolve": 42.966,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Grotesquerie: Act 1",
+    "Ravenous Reach",
+    "Phagocyte Spotlight",
+    "",
+    "Hemorrhagic Projection",
+    "Fourth-wall Fusion",
+    "Dramatic Lysis",
+    "Burst",
+    "Visceral Burst",
+    "The Fixer"
+  ]
+}
