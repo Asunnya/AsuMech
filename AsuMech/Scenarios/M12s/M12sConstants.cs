@@ -45,20 +45,52 @@ public static class M12sConstants
     {
         public const float P1HalfWidth = 20f;
         public const float P1HalfDepth = 15f;
+        public const float P2ArenaRadius = 20f;
     }
 
     public static class BNpcBaseId
     {
         public const uint Helper = 9020;
+        public const uint LindwurmP2 = 19202;
+        public const uint Lindschrat = 19204;
     }
 
     public static class BNpcNameId
     {
         public const uint LindwurmP1 = 14378;
         public const uint LindwurmP2 = 14379;
+        public const uint Lindschrat = 14380;
     }
 
     public static class ActionId
     {
+        public const uint Replication = 0xB4D8;
+        public const uint Dash = 0xB4D9;
+        public const uint WingedScourgeVertical = 0xB4DA;
+        public const uint WingedScourgeHorizontal = 0xB4DB;
+        public const uint WingedScourge = 0xB4DC;
+        public const uint TopTierSlamCast = 0xB4DD;
+        public const uint TopTierSlam = 0xB4DE;
+        public const uint MightyMagicCast = 0xB4DF;
+        public const uint MightyMagic = 0xB4E0;
+        public const uint DoubleSobat = 0xB520;
+        // B521..B524: the same kick, each turning the follow-up by another quarter.
+        public const uint DoubleSobatBuster = 0xB521;
+        public const uint DoubleSobatRepeat = 0xB525;
+        public const uint EsotericFinisher = 0xB526;
+        public const uint SnakingKick = 0xB527;
+        public const uint ArcadiaAflame = 0xB528;
+    }
+
+    public static class StatusId
+    {
+        public const ushort DamageDown = 0xB5F;
+        public const ushort FireResistanceDownII = 0xB79;
+        public const ushort DarkResistanceDownII = 0xCFB;
+    }
+
+    public static class LockonId
+    {
+        public const uint DoubleSobat = 0x256;
     }
 }

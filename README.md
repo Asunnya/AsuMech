@@ -188,6 +188,8 @@ All using default NA pf strats unless noted otherwise:
     - Meteorain to Triple Tyrannhilation (proximity-baited meteors, shade tethers for the tanks, Fearsome Fireball lines blown into meteors, hiding from three shockwaves behind the last meteors)
     - Arena Split (Flatliner's knockback onto two platforms, towers that knock back, Meteowrath tethers to stretch, Fire Breath, chasing puddles and portal meteor lines twice, Massive Meteor stacks, last towers and Arcadion Avalanche)
     - Ecliptic Stampede to Heartbreak Kick (Mammoth Meteors, Atomic Impact puddles at the walls while the group baits meteors round the boss, one- and two-player towers, tethers to the corners, Two-way Fireball line stacks, Heartbreak Kick towers)
+- AAC Heavyweight M4 (Savage) — M12S _by [Asunnya](https://github.com/Asunnya)_
+    - Replication 1 (Arcadia Aflame, two sets of Lindschrat clones with narrow cleaves, a fire partner stack and two dark baits, Snaking Kick's half-room cleave, Double Sobat's tank buster with its turning follow-up and Esoteric Finisher)
 
 ## Details
 
