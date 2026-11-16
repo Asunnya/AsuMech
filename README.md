@@ -188,6 +188,9 @@ All using default NA pf strats unless noted otherwise:
     - Meteorain to Triple Tyrannhilation (proximity-baited meteors, shade tethers for the tanks, Fearsome Fireball lines blown into meteors, hiding from three shockwaves behind the last meteors)
     - Arena Split (Flatliner's knockback onto two platforms, towers that knock back, Meteowrath tethers to stretch, Fire Breath, chasing puddles and portal meteor lines twice, Massive Meteor stacks, last towers and Arcadion Avalanche)
     - Ecliptic Stampede to Heartbreak Kick (Mammoth Meteors, Atomic Impact puddles at the walls while the group baits meteors round the boss, one- and two-player towers, tethers to the corners, Two-way Fireball line stacks, Heartbreak Kick towers)
+- AAC Heavyweight M4 (Savage) — M12S _by [Asunnya](https://github.com/Asunnya)_
+    - The Fixer to Mortal Slayer (eight orbs in pairs, each on the player closest to the boss on its side; Roles Mortal Slayer)
+    - Grotesquerie: Act 1 (spread or stack debuffs with an arrow cleave each, four chasing Phagocyte Spotlights, Ravenous Reach, blood vessel Bursts with tank busters and a healer stack, The Fixer)
 
 ## Details
 

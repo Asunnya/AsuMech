@@ -50,6 +50,15 @@ public static class M12sConstants
     public static class BNpcBaseId
     {
         public const uint Helper = 9020;
+        public const uint LindwurmP1 = 19195;
+        public const uint SnakeHead = 19196;
+        public const uint PurpleOrb = 19200;
+        public const uint GreenOrb = 19201;
+    }
+
+    public static class EObjId
+    {
+        public const uint BloodVessel = 0x1EBF29;
     }
 
     public static class BNpcNameId
@@ -60,5 +69,42 @@ public static class M12sConstants
 
     public static class ActionId
     {
+        public const uint TheFixer = 0xB4D7;
+        public const uint MortalSlayer = 0xB495;
+        public const uint MortalSlayerGreen = 0xB496;
+        public const uint ArmySlayerGreen = 0xB497;
+        public const uint MortalSlayerPurple = 0xB498;
+        public const uint ArmySlayerPurple = 0xB499;
+        public const uint GrotesquerieAct1 = 0xBEBD;
+        public const uint RavenousReach = 0xB469;
+        public const uint RavenousReachFromWest = 0xB49A;
+        public const uint RavenousReachFromEast = 0xB49B;
+        public const uint RavenousReachHeadStrike = 0xB769;
+        public const uint RavenousReachCone = 0xB49D;
+        public const uint PhagocyteSpotlight = 0xB49E;
+        public const uint DramaticLysis = 0xB4AA;
+        public const uint FourthWallFusion = 0xB4AE;
+        public const uint HemorrhagicProjection = 0xB4AF;
+        public const uint Burst = 0xB49F;
+        public const uint VisceralBurst = 0xB4D6;
+        public const uint Act1FourthWallFusion = 0xB9B9;
+    }
+
+    public static class StatusId
+    {
+        public const ushort MagicVulnerabilityUp = 0xB7D;
+        public const ushort DamageDown = 0xB5F;
+        public const ushort PoisonResistanceDownII = 0xF5F;
+        public const ushort BurstingGrotesquerie = 0x1299;
+        public const ushort SharedGrotesquerie = 0x129A;
+        public const ushort DirectedGrotesquerie = 0x1370;
+        // Its param (0x40C-0x40F) draws the arrow over the head.
+        public const ushort DirectedArrow = 0xDE6;
+    }
+
+    public static class LockonId
+    {
+        public const uint Stack = 0xA1;
+        public const uint TankBuster = 0x158;
     }
 }
