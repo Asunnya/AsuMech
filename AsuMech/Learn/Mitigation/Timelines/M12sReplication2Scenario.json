@@ -1,0 +1,202 @@
+{
+  "scenario": "M12sReplication2Scenario",
+  "casts": [
+    {
+      "actionId": 46305,
+      "name": "Staging",
+      "start": 5.817,
+      "resolve": 8.517,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46296,
+      "name": "Replication",
+      "start": 19.967,
+      "resolve": 22.667,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46307,
+      "name": "Firefall Splash",
+      "start": 39.533,
+      "resolve": 44.933002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46308,
+      "name": "Firefall Splash",
+      "start": 45.199,
+      "resolve": 45.199,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46309,
+      "name": "Scalding Waves",
+      "start": 46.033,
+      "resolve": 46.033,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46310,
+      "name": "Mana Burst",
+      "start": 46.233,
+      "resolve": 46.233,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46311,
+      "name": "Mana Burst",
+      "start": 47.516,
+      "resolve": 47.516,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46312,
+      "name": "Heavy Slam",
+      "start": 52.983,
+      "resolve": 52.983,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46313,
+      "name": "Grotesquerie",
+      "start": 52.983,
+      "resolve": 52.983,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46375,
+      "name": "Snaking Kick",
+      "start": 53.533,
+      "resolve": 58.233,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46314,
+      "name": "Grotesquerie",
+      "start": 54.283,
+      "resolve": 54.283,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46255,
+      "name": "Hemorrhagic Projection",
+      "start": 54.816,
+      "resolve": 54.816,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46316,
+      "name": "Reenactment",
+      "start": 65.75,
+      "resolve": 68.45,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46382,
+      "name": "Netherwrath Near",
+      "start": 71.901,
+      "resolve": 76.601,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46317,
+      "name": "Firefall Splash",
+      "start": 76.835,
+      "resolve": 76.835,
+      "occurrence": 3
+    },
+    {
+      "actionId": 48099,
+      "name": "Mana Burst",
+      "start": 78.136,
+      "resolve": 78.136,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46384,
+      "name": "Timeless Spite",
+      "start": 78.186,
+      "resolve": 78.186,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47329,
+      "name": "Scalding Waves",
+      "start": 78.352,
+      "resolve": 78.352,
+      "occurrence": 2
+    },
+    {
+      "actionId": 48099,
+      "name": "Mana Burst",
+      "start": 82.103,
+      "resolve": 82.103,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46314,
+      "name": "Grotesquerie",
+      "start": 82.103,
+      "resolve": 82.103,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47394,
+      "name": "Hemorrhagic Projection",
+      "start": 82.637,
+      "resolve": 82.637,
+      "occurrence": 2
+    },
+    {
+      "actionId": 48733,
+      "name": "Heavy Slam",
+      "start": 86.321,
+      "resolve": 86.321,
+      "occurrence": 2
+    },
+    {
+      "actionId": 48099,
+      "name": "Mana Burst",
+      "start": 90.105,
+      "resolve": 90.105,
+      "occurrence": 5
+    },
+    {
+      "actionId": 46314,
+      "name": "Grotesquerie",
+      "start": 90.121,
+      "resolve": 90.121,
+      "occurrence": 4
+    },
+    {
+      "actionId": 47394,
+      "name": "Hemorrhagic Projection",
+      "start": 90.655,
+      "resolve": 90.655,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46297,
+      "name": "",
+      "start": 96.073,
+      "resolve": 96.073,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Staging",
+    "Replication",
+    "Firefall Splash",
+    "Scalding Waves",
+    "Mana Burst",
+    "Heavy Slam",
+    "Grotesquerie",
+    "Snaking Kick",
+    "Hemorrhagic Projection",
+    "Reenactment",
+    "Netherwrath Near",
+    "Timeless Spite",
+    ""
+  ]
+}

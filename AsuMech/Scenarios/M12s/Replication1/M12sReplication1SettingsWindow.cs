@@ -1,8 +1,8 @@
 using Dalamud.Bindings.ImGui;
 
-namespace AsuMech.Scenarios.M12s.ReplicationOne;
+namespace AsuMech.Scenarios.M12s.Replication1;
 
-public sealed class M12sReplicationOneSettingsWindow
+public sealed class M12sReplication1SettingsWindow
 {
     private static readonly string[] CardinalLabels = ["Random", "North", "East", "South", "West"];
     private static readonly string[] IntercardLabels = ["Random", "North-east", "South-east", "South-west", "North-west"];
@@ -10,7 +10,7 @@ public sealed class M12sReplicationOneSettingsWindow
     private static readonly string[] KickLabels = ["Random", "North-east", "North-west"];
     private static readonly string[] TurnLabels = ["Random", "Same side", "Quarter right", "Opposite", "Quarter left"];
 
-    public M12sReplicationOneStateOverrides Overrides { get; } = new();
+    public M12sReplication1StateOverrides Overrides { get; } = new();
 
     public void Draw()
     {

@@ -81,7 +81,7 @@ public sealed class M12sAct2Scenario : IScenario
         for (var b = 0; b < 4; b++)
         {
             var blob = b + 1;
-            world.Events.Add(SpotlightAt[b], () => boss?.CastFromHelper(Actions.PhagocyteSpotlight, ToWorld(state.BlobSpot(blob)), at: new Placement(ToWorld(state.BlobSpot(blob)), 0f)));
+            world.Events.Add(SpotlightAt[b], () => boss?.CastFromHelper(Actions.Act2PhagocyteSpotlight, ToWorld(state.BlobSpot(blob)), at: new Placement(ToWorld(state.BlobSpot(blob)), 0f)));
             world.Events.Add(BlobAppearsAt[b] - 0.3f, () => blobs[blob - 1] = SpawnVessel(state.BlobSpot(blob)));
             world.Events.Add(BlobAppearsAt[b], () => blobs[blob - 1]?.PlayActionTimeline(ActionTimeline.BloodVesselAppears));
         }
@@ -112,7 +112,7 @@ public sealed class M12sAct2Scenario : IScenario
             boss?.SetTargetable(true);
         });
         world.Events.Add(VesselsGoneAt, RemoveVessels);
-        world.Events.Add(SplattershedCastAt, () => boss?.Cast(ActionId.Splattershed, animationLock: 0.2f));
+        world.Events.Add(SplattershedCastAt, () => boss?.Cast(ActionId.Act2Splattershed, animationLock: 0.2f));
         world.Events.Add(SplattershedHitsAt, () => boss?.CastFromHelper(Actions.SplattershedRaidwide, at: new Placement(Vector3.Zero, 0f)));
         world.Events.Add(EndsAt, () => { });
     }

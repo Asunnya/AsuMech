@@ -196,6 +196,8 @@ All using default NA pf strats unless noted otherwise:
     - Curtain Call (chasing puddles, Rotting Flesh cured in the dragon head's cleave while Bursting Grotesquerie spreads outside it, support–DPS chains broken apart, blood vessels bursting, Splattershed)
     - Slaughtershed (Mortal Slayer's eight orbs, three Slaughtersheds with stack and spreads by role, blood vessels, half-room cleaves or corner knockbacks, Refreshing Overkill)
     - Replication 1 (Arcadia Aflame, two sets of Lindschrat clones with narrow cleaves, a fire partner stack and two dark baits, Snaking Kick's half-room cleave, Double Sobat's tank buster with its turning follow-up and Esoteric Finisher)
+    - Replication 2 (player clones, boss clone tethers to pick up, Firefall Splash with thin cleaves, defamations, light party stacks and facing cones, Snaking Kick, Netherwrath partner stacks while the clones replay in order)
+    - Mutating Cells to Double Sobat (α/β mutations twice, Blood Mana orbs popped into the black holes' second wave, Blood Wakening's two waves, Netherworld stack, Arcadia Aflame, Double Sobat's turned repeat and Esoteric Finisher)
 
 ## Details
 

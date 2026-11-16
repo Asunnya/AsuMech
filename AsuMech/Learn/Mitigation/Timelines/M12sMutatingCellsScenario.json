@@ -1,0 +1,239 @@
+{
+  "scenario": "M12sMutatingCellsScenario",
+  "casts": [
+    {
+      "actionId": 46341,
+      "name": "Mutating Cells",
+      "start": 4.25,
+      "resolve": 6.95,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46342,
+      "name": "",
+      "start": 8.517,
+      "resolve": 8.517,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46331,
+      "name": "Blood Mana",
+      "start": 10.433,
+      "resolve": 13.132999,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46333,
+      "name": "",
+      "start": 17.317,
+      "resolve": 17.317,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46334,
+      "name": "Bloody Burst",
+      "start": 24.333,
+      "resolve": 24.333,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46250,
+      "name": "Dramatic Lysis",
+      "start": 26.016,
+      "resolve": 26.016,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46335,
+      "name": "",
+      "start": 27.1,
+      "resolve": 27.1,
+      "occurrence": 3
+    },
+    {
+      "actionId": 48304,
+      "name": "",
+      "start": 27.1,
+      "resolve": 27.1,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46335,
+      "name": "",
+      "start": 30.033,
+      "resolve": 30.033,
+      "occurrence": 5
+    },
+    {
+      "actionId": 48304,
+      "name": "",
+      "start": 30.033,
+      "resolve": 30.033,
+      "occurrence": 6
+    },
+    {
+      "actionId": 46335,
+      "name": "",
+      "start": 33.05,
+      "resolve": 33.05,
+      "occurrence": 7
+    },
+    {
+      "actionId": 48304,
+      "name": "",
+      "start": 33.05,
+      "resolve": 33.05,
+      "occurrence": 8
+    },
+    {
+      "actionId": 46336,
+      "name": "Blood Wakening",
+      "start": 37.633,
+      "resolve": 40.333,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46332,
+      "name": "",
+      "start": 41.916,
+      "resolve": 41.916,
+      "occurrence": 9
+    },
+    {
+      "actionId": 46339,
+      "name": "Straightforward Thunder II",
+      "start": 42.416,
+      "resolve": 42.416,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46337,
+      "name": "Lindwurm\u0027s Water III",
+      "start": 42.416,
+      "resolve": 42.416,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46338,
+      "name": "Lindwurm\u0027s Aero III",
+      "start": 42.416,
+      "resolve": 42.416,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46340,
+      "name": "Sideways Fire II",
+      "start": 42.416,
+      "resolve": 42.416,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46379,
+      "name": "Netherworld Near",
+      "start": 46.833,
+      "resolve": 51.533,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46332,
+      "name": "",
+      "start": 46.999,
+      "resolve": 46.999,
+      "occurrence": 10
+    },
+    {
+      "actionId": 46340,
+      "name": "Sideways Fire II",
+      "start": 47.499,
+      "resolve": 47.499,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46338,
+      "name": "Lindwurm\u0027s Aero III",
+      "start": 47.499,
+      "resolve": 47.499,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46339,
+      "name": "Straightforward Thunder II",
+      "start": 47.499,
+      "resolve": 47.499,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46337,
+      "name": "Lindwurm\u0027s Water III",
+      "start": 47.499,
+      "resolve": 47.499,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46381,
+      "name": "Wailing Wave",
+      "start": 53.116,
+      "resolve": 53.116,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46376,
+      "name": "Arcadia Aflame",
+      "start": 54.983,
+      "resolve": 59.683002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46250,
+      "name": "Dramatic Lysis",
+      "start": 55.983,
+      "resolve": 55.983,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46368,
+      "name": "Double Sobat",
+      "start": 64.216,
+      "resolve": 68.916,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46371,
+      "name": "Double Sobat",
+      "start": 69.784,
+      "resolve": 69.784,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46373,
+      "name": "Double Sobat",
+      "start": 69.784,
+      "resolve": 74.084,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46374,
+      "name": "Esoteric Finisher",
+      "start": 76.835,
+      "resolve": 76.835,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Mutating Cells",
+    "",
+    "Blood Mana",
+    "Bloody Burst",
+    "Dramatic Lysis",
+    "Blood Wakening",
+    "Straightforward Thunder II",
+    "Lindwurm\u0027s Water III",
+    "Lindwurm\u0027s Aero III",
+    "Sideways Fire II",
+    "Netherworld Near",
+    "Wailing Wave",
+    "Arcadia Aflame",
+    "Double Sobat",
+    "Esoteric Finisher"
+  ]
+}

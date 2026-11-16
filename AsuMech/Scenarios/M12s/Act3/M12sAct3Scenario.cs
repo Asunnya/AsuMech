@@ -174,7 +174,7 @@ public sealed class M12sAct3Scenario : IScenario
         {
             if (Alive(role) is not { } member) continue;
             member.AddStatus(StatusId.MitoticPhase, MitoticPhaseLasts);
-            member.AddStatusParam(StatusId.DirectedGrotesquerie, M12sAct3State.GrowthParam(growth), LysisAt - GrowthAt);
+            member.AddStatusParam(StatusId.DirectedArrow, M12sAct3State.GrowthParam(growth), LysisAt - GrowthAt);
         }
     }
 

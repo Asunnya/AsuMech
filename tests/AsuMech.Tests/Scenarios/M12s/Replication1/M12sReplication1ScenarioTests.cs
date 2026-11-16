@@ -1,17 +1,17 @@
 using System.Numerics;
-using AsuMech.Scenarios.M12s.ReplicationOne;
+using AsuMech.Scenarios.M12s.Replication1;
 using static AsuMech.Core.Game.Party.PartyRole;
 using static AsuMech.Scenarios.M12s.M12sConstants;
 using static AsuMech.Tests.NegativeRun;
-using Scenario = AsuMech.Scenarios.M12s.ReplicationOne.M12sReplicationOneScenario;
+using Scenario = AsuMech.Scenarios.M12s.Replication1.M12sReplication1Scenario;
 
 namespace AsuMech.Tests;
 
 // Times are the scenario's absolute timeline; the player follows the strat until taken over.
-public class M12sReplicationOneScenarioTests
+public class M12sReplication1ScenarioTests
 {
     // Fire south, dark north (on the north pairs), cleaves north-south, outer fire south-east, follow-up kick on the same side.
-    private static void Pinned(M12sReplicationOneStateOverrides o)
+    private static void Pinned(M12sReplication1StateOverrides o)
     {
         o.FireCardinal = 2;
         o.VerticalCleaves = true;
@@ -33,7 +33,7 @@ public class M12sReplicationOneScenarioTests
             {
                 Overrides = o =>
                 {
-                    var overrides = (M12sReplicationOneStateOverrides)o;
+                    var overrides = (M12sReplication1StateOverrides)o;
                     overrides.FireCardinal = fire;
                     overrides.VerticalCleaves = vertical;
                     overrides.OuterFireIntercard = outer;
@@ -74,7 +74,7 @@ public class M12sReplicationOneScenarioTests
             var checkedIt = false;
             var run = ScenarioRun.Execute(typeof(Scenario), 0, turns, new ScenarioRunOptions
             {
-                Overrides = o => ((M12sReplicationOneStateOverrides)o).SobatTurns = turns,
+                Overrides = o => ((M12sReplication1StateOverrides)o).SobatTurns = turns,
                 Probe = p =>
                 {
                     if (!p.Crossed(Scenario.SobatRepeatAt + 1f)) return;
@@ -90,28 +90,28 @@ public class M12sReplicationOneScenarioTests
     [Test]
     public void FireBaitedAloneKills()
         => Negative<Scenario>(ShieldHealer)
-            .Overrides<M12sReplicationOneStateOverrides>(Pinned)
+            .Overrides<M12sReplication1StateOverrides>(Pinned)
             .TeleportAt(Scenario.FirstFireAt - 1f, to: new Vector2(0f, 8f))
             .ShouldKill(ActionId.TopTierSlam, ShieldHealer);
 
     [Test]
     public void BaitingDarkAgainWithADarkDebuffKillsTheBaiterAndTheCentrePartner()
         => Negative<Scenario>(MeleeDpsA)
-            .Overrides<M12sReplicationOneStateOverrides>(Pinned)
+            .Overrides<M12sReplication1StateOverrides>(Pinned)
             .TeleportAt(Scenario.SecondDarkAt - 2f, to: new Vector2(0.5f, 4f))
             .ShouldKill(ActionId.MightyMagic, MeleeDpsA, MainTank);
 
     [Test]
     public void StandingInFrontOfTheBossForDoubleSobatKills()
         => Negative<Scenario>(CasterDps)
-            .Overrides<M12sReplicationOneStateOverrides>(Pinned)
+            .Overrides<M12sReplication1StateOverrides>(Pinned)
             .TeleportAt(Scenario.SobatKickAt - 1f, to: new Vector2(3f, -6f))
             .ShouldKill(ActionId.DoubleSobatBuster, CasterDps);
 
     [Test]
     public void TheMarkedTankNeedsAnInvulnForDoubleSobat()
         => Negative<Scenario>(MainTank)
-            .Overrides<M12sReplicationOneStateOverrides>(Pinned)
+            .Overrides<M12sReplication1StateOverrides>(Pinned)
             .WithMitigationChecks()
             .TeleportAt(Scenario.SobatKickAt - 1f, to: new Vector2(0f, -4f))
             .ShouldKill(ActionId.DoubleSobatBuster, MainTank);
@@ -119,14 +119,14 @@ public class M12sReplicationOneScenarioTests
     [Test]
     public void ATankWhoStaysWithThePartyKillsItWithEsotericFinisher()
         => Negative<Scenario>(OffTank)
-            .Overrides<M12sReplicationOneStateOverrides>(Pinned)
+            .Overrides<M12sReplication1StateOverrides>(Pinned)
             .TeleportAt(Scenario.SobatRepeatAt + 0.5f, to: new Vector2(0f, 10f))
             .ShouldKill(ActionId.EsotericFinisher, AllBut(MainTank, OffTank));
 
     [Test]
     public void WalkingOffTheRoundArenaKills()
         => Negative<Scenario>(PhysRangedDps)
-            .Overrides<M12sReplicationOneStateOverrides>(Pinned)
+            .Overrides<M12sReplication1StateOverrides>(Pinned)
             .TeleportAt(5f, to: new Vector2(15f, 15f))
             .ShouldKill(TheEnvironment, PhysRangedDps);
 }

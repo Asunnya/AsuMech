@@ -1,5 +1,5 @@
 {
-  "scenario": "M12sReplicationOneScenario",
+  "scenario": "M12sReplication1Scenario",
   "casts": [
     {
       "actionId": 46376,

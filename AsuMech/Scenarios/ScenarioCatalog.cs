@@ -27,9 +27,11 @@ using AsuMech.Scenarios.M12s.Act1;
 using AsuMech.Scenarios.M12s.Opener;
 using AsuMech.Scenarios.M12s.CurtainCall;
 using AsuMech.Scenarios.M12s.Slaughtershed;
-using AsuMech.Scenarios.M12s.ReplicationOne;
+using AsuMech.Scenarios.M12s.Replication1;
 using AsuMech.Scenarios.M12s.Act2;
 using AsuMech.Scenarios.M12s.Act3;
+using AsuMech.Scenarios.M12s.MutatingCells;
+using AsuMech.Scenarios.M12s.Replication2;
 using AsuMech.Scenarios.M9s.Aetherletting;
 using AsuMech.Scenarios.M9s.Coffinmaker;
 using AsuMech.Scenarios.M9s.Deathmatch;
@@ -232,6 +234,8 @@ public sealed class ScenarioCatalog
         new M12sAct3Scenario(),
         new M12sCurtainCallScenario(),
         new M12sSlaughtershedScenario(),
-        new M12sReplicationOneScenario(),
+        new M12sReplication1Scenario(),
+        new M12sReplication2Scenario(),
+        new M12sMutatingCellsScenario(),
     ]);
 }

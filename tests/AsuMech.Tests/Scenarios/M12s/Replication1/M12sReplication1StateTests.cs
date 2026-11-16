@@ -1,12 +1,12 @@
 using System.Numerics;
 using AsuMech.Scenarios;
-using AsuMech.Scenarios.M12s.ReplicationOne;
+using AsuMech.Scenarios.M12s.Replication1;
 
 namespace AsuMech.Tests;
 
-public class M12sReplicationOneStateTests
+public class M12sReplication1StateTests
 {
-    private static M12sReplicationOneState Rolled(int seed) => new(new Rng(seed));
+    private static M12sReplication1State Rolled(int seed) => new(new Rng(seed));
 
     [Test]
     public void TheDarkCloneFacesTheFireCloneAcrossTheArenaAndTheCleavesTakeTheOtherAxis()
@@ -18,7 +18,7 @@ public class M12sReplicationOneStateTests
             foreach (var cleave in state.CleaveClones)
             {
                 Assert.That(Vector3.Dot(cleave, state.FireClone), Is.EqualTo(0f).Within(0.01f));
-                Assert.That(cleave.Length(), Is.EqualTo(M12sReplicationOneState.CloneRing).Within(0.01f));
+                Assert.That(cleave.Length(), Is.EqualTo(M12sReplication1State.CloneRing).Within(0.01f));
             }
         }
     }
@@ -28,7 +28,7 @@ public class M12sReplicationOneStateTests
     {
         for (var outer = 0; outer < 4; outer++)
         {
-            var state = new M12sReplicationOneState(new Rng(0), new M12sReplicationOneStateOverrides { OuterFireIntercard = outer });
+            var state = new M12sReplication1State(new Rng(0), new M12sReplication1StateOverrides { OuterFireIntercard = outer });
             var diagonal = Vector3.Normalize(state.OuterFire);
             Vector3[] line = [state.OuterFire, state.InnerDark, state.InnerFire, state.OuterDark];
             var along = line.Select(p => Vector3.Dot(p, diagonal)).ToArray();
@@ -43,18 +43,18 @@ public class M12sReplicationOneStateTests
     [Test]
     public void OverridesPinEveryRoll()
     {
-        var overrides = new M12sReplicationOneStateOverrides
+        var overrides = new M12sReplication1StateOverrides
         {
             FireCardinal = 3, VerticalCleaves = false, OuterFireIntercard = 2, SnakingKickEast = true, SobatTurns = 1,
         };
         for (var seed = 0; seed < 20; seed++)
         {
-            var state = new M12sReplicationOneState(new Rng(seed), overrides);
+            var state = new M12sReplication1State(new Rng(seed), overrides);
             Assert.That(state.FireCardinal, Is.EqualTo(3));
             Assert.That(state.VerticalCleaves, Is.False);
             Assert.That(state.CleaveHeadings, Is.EquivalentTo(new[] { MathF.PI / 2f, -MathF.PI / 2f }));
             Assert.That(state.OuterFireIntercard, Is.EqualTo(2));
-            Assert.That(state.SnakingKickHeading, Is.EqualTo(M12sReplicationOneState.SnakingKickTurn));
+            Assert.That(state.SnakingKickHeading, Is.EqualTo(M12sReplication1State.SnakingKickTurn));
             Assert.That(state.SobatTurns, Is.EqualTo(1));
         }
     }

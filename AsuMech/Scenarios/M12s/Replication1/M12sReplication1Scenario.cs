@@ -10,21 +10,21 @@ using AsuMech.Core.SimObjects;
 using static AsuMech.Scenarios.M12s.M12sConstants;
 using Actions = AsuMech.Scenarios.M12s.M12sActions;
 
-namespace AsuMech.Scenarios.M12s.ReplicationOne;
+namespace AsuMech.Scenarios.M12s.Replication1;
 
 // t=0 = P2 0:07.5, 3s before Arcadia Aflame. Replication's four clones on the cardinals: two cleave,
 // one slams fire on the nearest player, one casts dark on the two nearest. Snaking Kick, then the
 // clones split into a fire-dark-fire-dark line on one diagonal and do it again; Double Sobat ends it.
-public sealed class M12sReplicationOneScenario : IScenario
+public sealed class M12sReplication1Scenario : IScenario
 {
     public string Name => "Replication 1";
     public IPhase Phase => M12sZone.P2;
 
-    public IReadOnlyList<IScenarioAi> AiStrats => [new M12sReplicationOneAi()];
+    public IReadOnlyList<IScenarioAi> AiStrats => [new M12sReplication1Ai()];
 
     public void DrawSettings() => settingsWindow.Draw();
     public object SettingsOverrides => settingsWindow.Overrides;
-    private readonly M12sReplicationOneSettingsWindow settingsWindow = new();
+    private readonly M12sReplication1SettingsWindow settingsWindow = new();
 
     public const float ArcadiaCastAt = 3f;
     public const float BossDashAt = 15.25f;
@@ -53,7 +53,7 @@ public sealed class M12sReplicationOneScenario : IScenario
     private const float SplitOffset = 5f;
 
     private SimWorld world = null!;
-    private M12sReplicationOneState state = null!;
+    private M12sReplication1State state = null!;
     private SimEnemy? lindwurm;
     private SimEnemy? fireClone;
     private SimEnemy? darkClone;
@@ -68,7 +68,7 @@ public sealed class M12sReplicationOneScenario : IScenario
     public void Run(SimWorld worldParam, int? selectedAi)
     {
         world = worldParam;
-        state = new M12sReplicationOneState(world.Rng, settingsWindow.Overrides);
+        state = new M12sReplication1State(world.Rng, settingsWindow.Overrides);
         fireClone = darkClone = null;
         cleaveClones.Clear();
         secondFireClones.Clear();
@@ -77,7 +77,7 @@ public sealed class M12sReplicationOneScenario : IScenario
         coneHelpers.Clear();
         spreadHelpers.Clear();
         if (selectedAi is { } idx && idx < AiStrats.Count)
-            ((IScenarioAi<M12sReplicationOneState>)AiStrats[idx]).Run(state, world);
+            ((IScenarioAi<M12sReplication1State>)AiStrats[idx]).Run(state, world);
 
         // UNVERIFIED: whether retail's edge kills or walls.
         world.Events.Add(0f, () => world.EnforceArenaBoundary(new CircleArena(Geometry.P2ArenaRadius), "Walked off the arena"));

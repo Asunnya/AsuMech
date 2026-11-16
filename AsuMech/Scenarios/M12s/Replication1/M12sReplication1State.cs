@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 
-namespace AsuMech.Scenarios.M12s.ReplicationOne;
+namespace AsuMech.Scenarios.M12s.Replication1;
 
 // Cardinals count clockwise from north (0 N, 1 E, 2 S, 3 W), intercardinals from north-east (0 NE, 1 SE, 2 SW, 3 NW).
-public sealed class M12sReplicationOneState
+public sealed class M12sReplication1State
 {
     public const float CloneRing = 14f;
     public const float OuterLine = 14f;
@@ -25,9 +25,9 @@ public sealed class M12sReplicationOneState
     // Quarter turns from Double Sobat's kick to the follow-up, set by which of its four kicks the boss uses.
     public int SobatTurns { get; }
 
-    public M12sReplicationOneState(Rng rng, M12sReplicationOneStateOverrides? overrides = null)
+    public M12sReplication1State(Rng rng, M12sReplication1StateOverrides? overrides = null)
     {
-        overrides ??= new M12sReplicationOneStateOverrides();
+        overrides ??= new M12sReplication1StateOverrides();
         var fire = rng.Next(4);
         var vertical = rng.NextBool();
         var outerFire = rng.Next(4);

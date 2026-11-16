@@ -6,11 +6,11 @@ using AsuMech.Core.Game.Ai;
 using AsuMech.Core.Game.Party;
 using AsuMech.Core.SimObjects;
 using static AsuMech.Scenarios.M12s.M12sConstants;
-using Scenario = AsuMech.Scenarios.M12s.ReplicationOne.M12sReplicationOneScenario;
+using Scenario = AsuMech.Scenarios.M12s.Replication1.M12sReplication1Scenario;
 
-namespace AsuMech.Scenarios.M12s.ReplicationOne;
+namespace AsuMech.Scenarios.M12s.Replication1;
 
-public sealed class M12sReplicationOneAi : IScenarioAi<M12sReplicationOneState>
+public sealed class M12sReplication1Ai : IScenarioAi<M12sReplication1State>
 {
     public string Name => "DN Replication";
 
@@ -38,10 +38,10 @@ public sealed class M12sReplicationOneAi : IScenarioAi<M12sReplicationOneState>
         [2] = new(-1.4f, 6.7f),
     };
 
-    private M12sReplicationOneState state = null!;
+    private M12sReplication1State state = null!;
     private SimWorld world = null!;
 
-    public void Run(M12sReplicationOneState stateParam, SimWorld worldParam)
+    public void Run(M12sReplication1State stateParam, SimWorld worldParam)
     {
         state = stateParam;
         world = worldParam;
