@@ -7,12 +7,12 @@ using AsuMech.Core.Map;
 
 namespace AsuMech.Scenarios.M12s;
 
-// UNVERIFIED: the fight's music and weather; both phases keep the inn's for now.
+// UNVERIFIED: the fight's music; it keeps the inn's for now.
 public sealed class M12sZone : IZone
 {
     public static readonly M12sZone Instance = new();
-    public static readonly Phase P1 = new(Instance, "Phase 1", null, 0);
-    public static readonly Phase P2 = new(Instance, "Phase 2", null, 0);
+    public static readonly Phase P1 = new(Instance, "Phase 1", 108, 0);
+    public static readonly Phase P2 = new(Instance, "Phase 2", 105, 0);
 
     public string Name => "AAC Heavyweight M4 (Savage)";
 
