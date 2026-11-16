@@ -198,6 +198,8 @@ All using default NA pf strats unless noted otherwise:
     - Replication 1 (Arcadia Aflame, two sets of Lindschrat clones with narrow cleaves, a fire partner stack and two dark baits, Snaking Kick's half-room cleave, Double Sobat's tank buster with its turning follow-up and Esoteric Finisher)
     - Replication 2 (player clones, boss clone tethers to pick up, Firefall Splash with thin cleaves, defamations, light party stacks and facing cones, Snaking Kick, Netherwrath partner stacks while the clones replay in order)
     - Mutating Cells to Double Sobat (α/β mutations twice, Blood Mana orbs popped into the black holes' second wave, Blood Wakening's two waves, Netherworld stack, Arcadia Aflame, Double Sobat's turned repeat and Esoteric Finisher)
+    - Idyllic Dream (player clone tethers, Replication's remembered cleaves, defamation and stack tethers to grab, light spreads and element towers on two platforms, portents, Reenactment from the player clones and the platform and tear clones)
+    - Finale (second Idyllic Dream, Double Sobat, Esoteric Finisher on both tanks, Replication into two Arcadian Hells)
 
 ## Details
 

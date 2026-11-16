@@ -32,6 +32,8 @@ using AsuMech.Scenarios.M12s.Act2;
 using AsuMech.Scenarios.M12s.Act3;
 using AsuMech.Scenarios.M12s.MutatingCells;
 using AsuMech.Scenarios.M12s.Replication2;
+using AsuMech.Scenarios.M12s.Finale;
+using AsuMech.Scenarios.M12s.IdyllicDream;
 using AsuMech.Scenarios.M9s.Aetherletting;
 using AsuMech.Scenarios.M9s.Coffinmaker;
 using AsuMech.Scenarios.M9s.Deathmatch;
@@ -237,5 +239,7 @@ public sealed class ScenarioCatalog
         new M12sReplication1Scenario(),
         new M12sReplication2Scenario(),
         new M12sMutatingCellsScenario(),
+        new M12sIdyllicDreamScenario(),
+        new M12sFinaleScenario(),
     ]);
 }

@@ -64,6 +64,7 @@ public static class M12sConstants
         public const uint AeroSphere = 19207;
         public const uint ThunderSphere = 19208;
         public const uint FireSphere = 19209;
+        public const uint TemporalTear = 19211;
     }
 
     public static class EObjId
@@ -79,6 +80,7 @@ public static class M12sConstants
         public const uint BloodVessel = 14381;
         public const uint ManaSphere = 14382;
         public const uint Understudy = 14383;
+        public const uint TemporalTear = 14384;
     }
 
     public static class ActionId
@@ -96,6 +98,9 @@ public static class M12sConstants
         public const uint RavenousReachHeadStrike = 0xB769;
         public const uint RavenousReachCone = 0xB49D;
         public const uint PhagocyteSpotlight = 0xB49E;
+        public const uint IdyllicManaBurst = 0xB518;
+        public const uint IdyllicHeavySlam = 0xB519;
+        public const uint IdyllicUnmitigatedExplosion = 0xB4F5;
         public const uint Act2PhagocyteSpotlight = 0xB4B6;
         public const uint Act2Splattershed = 0xB9C4;
         public const uint CloneHemorrhagicProjection = 0xB4EB;
@@ -215,6 +220,45 @@ public static class M12sConstants
         public const uint NetherworldFar = 0xB52C;
         public const uint WailingWave = 0xB52D;
         public const uint BlackHolePulse = 0xBCB0;
+        public const uint P2Attack = 0xB51F;
+        public const uint IdyllicDream = 0xB509;
+        public const uint TwistedVision = 0xBBE2;
+        public const uint PowerGusherNorthClone = 0xB50F;
+        public const uint PowerGusherSouthClone = 0xB510;
+        public const uint SnakingKickRehearsal = 0xB511;
+        public const uint PowerGusherRehearsal = 0xB512;
+        public const uint PowerGusherNorthReplay = 0xB513;
+        public const uint PowerGusherSouthReplay = 0xB514;
+        public const uint SnakingKickReplayVisual = 0xB515;
+        public const uint SnakingKickReplay = 0xBE95;
+        public const uint PowerGusherReplay = 0xB516;
+        public const uint LindwurmsMeteor = 0xB4F2;
+        public const uint Downfall = 0xB4F3;
+        public const uint ArcadianArcanum = 0xB529;
+        public const uint ArcadianArcanumSpread = 0xB9D9;
+        public const uint ManaBurstMarker = 0xB517;
+        public const uint CosmicKiss = 0xB4F4;
+        public const uint LindwurmsDarkII = 0xB4F6;
+        public const uint LindwurmsStoneIII = 0xB4F7;
+        public const uint LindwurmsGlare = 0xB4F8;
+        public const uint PyreticWurm = 0xB4F9;
+        public const uint LindwurmsThunderII = 0xB4FA;
+        public const uint TemporalCurtain = 0xB51C;
+        public const uint IntoTheTear = 0xB51D;
+        public const uint CloneJump = 0xB4D9;
+        public const uint SnakingKickPlatform = 0xBCAF;
+        public const uint ReenactedHeavySlamMarker = 0xB4EF;
+        public const uint ReenactedManaBurstMarker = 0xB4EE;
+        public const uint ReenactedManaBurst = 0xBBE3;
+        public const uint ReenactedHeavySlam = 0xBE5D;
+        public const uint OutOfTheTear = 0xB51E;
+        public const uint PowerGusherFromTheTear = 0xB51A;
+        public const uint DoubleSobatFirst = 0xB521;
+        public const uint DoubleSobatSecond = 0xB525;
+        public const uint ReplicationFinale = 0xB46C;
+        public const uint ArcadianHell = 0xB533;
+        public const uint ArcadianHellFour = 0xB534;
+        public const uint ArcadianHellEight = 0xB535;
     }
 
     public static class StatusId
@@ -244,6 +288,12 @@ public static class M12sConstants
         public const ushort MutationAlpha = 4769;
         public const ushort MutatingCells = 4770;
         public const ushort MutationBeta = 4771;
+        public const ushort LightResistanceDownII = 0x1044;
+        public const ushort Doom = 0xD24;
+        public const ushort HotBlooded = 0x12A0;
+        public const ushort LindwurmsPortent = 0x129D;
+        public const ushort FarawayPortent = 0x129E;
+        public const ushort NearbyPortent = 0x129F;
     }
 
     public static class LockonId
@@ -266,6 +316,9 @@ public static class M12sConstants
         public const ushort CloneStack = 0x171;
         public const ushort Locked = 0x175;
         public const ushort BossJump = 0x176;
+        public const ushort ManaBurst = 0x170;
+        public const ushort HeavySlam = 0x171;
+        public const ushort Bound = 0x175;
     }
 
     // The boss's model states (ActorControl 0x3F) while a mechanic is up.
@@ -305,6 +358,24 @@ public static class M12sConstants
         public const uint CardinalHoles = 0x00200010;
         public const uint IntercardinalPlatforms = 0x02000100;
         public const uint IntercardinalHoles = 0x08000400;
+        public const byte DreamSlot = 0x01;
+        public const byte MiddleFloorSlot = 0x20;
+        public const byte FloorSlot = 0x21;
+        public const byte FirstTowerSlot = 0x22;
+        public const uint DreamBegins = 0x00080010;
+        public const uint VisionStarts = 0x00200040;
+        public const uint VisionShows = 0x00800100;
+        public const uint VisionEnds = 0x02000400;
+        public const uint VisionCleared = 0x08000010;
+        public const uint MeteorFalls = 0x00200010;
+        public const uint FloorSplits = 0x00800040;
+        public const uint FloorSplitsAgain = 0x02000040;
+        public const uint FloorRestored = 0x01000001;
+        public const uint MiddleShows = 0x00020001;
+        public const uint MiddleGone = 0x00080004;
+        public const uint TowerShows = 0x00020001;
+        public const uint TowerLit = 0x00200010;
+        public const uint TowerOff = 0x00080004;
     }
 
     public static class BattleTalk
