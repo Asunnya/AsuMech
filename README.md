@@ -191,6 +191,8 @@ All using default NA pf strats unless noted otherwise:
 - AAC Heavyweight M4 (Savage) — M12S _by [Asunnya](https://github.com/Asunnya)_
     - The Fixer to Mortal Slayer (eight orbs in pairs, each on the player closest to the boss on its side; Roles Mortal Slayer)
     - Grotesquerie: Act 1 (spread or stack debuffs with an arrow cleave each, four chasing Phagocyte Spotlights, Ravenous Reach, blood vessel Bursts with tank busters and a healer stack, The Fixer)
+    - Curtain Call (chasing puddles, Rotting Flesh cured in the dragon head's cleave while Bursting Grotesquerie spreads outside it, support–DPS chains broken apart, blood vessels bursting, Splattershed)
+    - Slaughtershed (Mortal Slayer's eight orbs, three Slaughtersheds with stack and spreads by role, blood vessels, half-room cleaves or corner knockbacks, Refreshing Overkill)
 
 ## Details
 

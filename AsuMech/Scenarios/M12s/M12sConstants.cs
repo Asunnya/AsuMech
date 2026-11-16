@@ -88,6 +88,30 @@ public static class M12sConstants
         public const uint Burst = 0xB49F;
         public const uint VisceralBurst = 0xB4D6;
         public const uint Act1FourthWallFusion = 0xB9B9;
+        public const uint CellShedding = 0xB4AC;
+        public const uint CellDeath = 0xB4AD;
+        public const uint ChainBreak = 0xB4B4;
+        public const uint ChainHeld = 0xB4B5;
+        public const uint GrotesquerieCurtainCall = 0xBEC0;
+        public const uint Splattershed = 0xB9C3;
+        public const uint SplattershedRaidwide = 0xB9C6;
+        public const uint SlaughtershedArms = 0xB4C3;
+        public const uint SlaughtershedHeads = 0xB4C6;
+        public const uint SlaughtershedRaidwide = 0xADC9;
+        public const uint SerpentineScourgeWestEast = 0xB4CB;
+        public const uint RaptorKnucklesWestEast = 0xB4CC;
+        public const uint SerpentineScourgeEastWest = 0xB4CD;
+        public const uint RaptorKnucklesEastWest = 0xB4CE;
+        public const uint RaptorKnucklesWest = 0xB4CF;
+        public const uint RaptorKnucklesEast = 0xB4D0;
+        public const uint SerpentineScourgeWest = 0xB4D1;
+        public const uint SerpentineScourgeEast = 0xB4D2;
+        public const uint SerpentineScourgeRect = 0xB9BC;
+        public const uint RaptorKnucklesKnockback = 0xB9C7;
+        public const uint CurtainCallDramaticLysis = 0xB4D4;
+        public const uint CurtainCallFourthWallFusion = 0xB4D5;
+        public const uint RefreshingOverkill = 0xB538;
+        public const uint RefreshingOverkillRaidwide = 0xB539;
     }
 
     public static class StatusId
@@ -100,11 +124,32 @@ public static class M12sConstants
         public const ushort DirectedGrotesquerie = 0x1370;
         // Its param (0x40C-0x40F) draws the arrow over the head.
         public const ushort DirectedArrow = 0xDE6;
+        public const ushort BondsOfFleshAlpha = 0x1290;
+        public const ushort UnbreakableFleshAlpha = 0x1291;
+        public const ushort RottingFlesh = 0x129B;
     }
 
     public static class LockonId
     {
         public const uint Stack = 0xA1;
         public const uint TankBuster = 0x158;
+        public const uint CellChain = 0x291;
+        public const uint SlaughtershedStack = 0x13D;
+        public const uint SlaughtershedSpread = 0x177;
+    }
+
+    public static class TetherId
+    {
+        public const ushort CellChain = 0x16E;
+    }
+
+    // The boss's model states (ActorControl 0x3F) while a mechanic is up.
+    public static class ModelState
+    {
+        public const byte Idle = 0;
+        public const byte CurtainCall = 4;
+        public const byte Slaughtershed = 7;
+        public const byte MortalSlayer = 0x1F;
+        public const byte SnakeHeadOut = 5;
     }
 }
