@@ -24,7 +24,7 @@ While simulating:
 **Fights**
 - Ultimates: Dancing Mad, Futures Rewritten, The Omega Protocol, The Epic of Alexander, Dragonsong's Reprise,
   The Weapon's Refrain and The Unending Coil of Bahamut.
-- Savage: AAC Heavyweight M1–M3 (M9S, M10S, M11S).
+- Savage: AAC Heavyweight M1–M4 (M9S, M10S, M11S, M12S).
 - See [Currently implemented](#currently-implemented) for every phase and strat.
 
 **Practice**
@@ -191,6 +191,8 @@ All using default NA pf strats unless noted otherwise:
 - AAC Heavyweight M4 (Savage) — M12S _by [Asunnya](https://github.com/Asunnya)_
     - The Fixer to Mortal Slayer (eight orbs in pairs, each on the player closest to the boss on its side; Roles Mortal Slayer)
     - Grotesquerie: Act 1 (spread or stack debuffs with an arrow cleave each, four chasing Phagocyte Spotlights, Ravenous Reach, blood vessel Bursts with tank busters and a healer stack, The Fixer)
+    - Grotesquerie: Act 2 (four blobs, Cruel Coil's spinning ring, four α/β chains stretched through the gap, blob and chain towers, Constrictor, Splattershed)
+    - Grotesquerie: Act 3 (growth arrows, snakes dropping the floor to cardinal or intercardinal platforms, Metamitosis towers thrown onto the next platform under spread bursts, Split Scourge line busters, Venomous Scourge spreads, The Fixer)
     - Curtain Call (chasing puddles, Rotting Flesh cured in the dragon head's cleave while Bursting Grotesquerie spreads outside it, support–DPS chains broken apart, blood vessels bursting, Splattershed)
     - Slaughtershed (Mortal Slayer's eight orbs, three Slaughtersheds with stack and spreads by role, blood vessels, half-room cleaves or corner knockbacks, Refreshing Overkill)
     - Replication 1 (Arcadia Aflame, two sets of Lindschrat clones with narrow cleaves, a fire partner stack and two dark baits, Snaking Kick's half-room cleave, Double Sobat's tank buster with its turning follow-up and Esoteric Finisher)

@@ -57,6 +57,7 @@ public static class M12sConstants
         public const uint GreenOrb = 19201;
         public const uint LindwurmP2 = 19202;
         public const uint Lindschrat = 19204;
+        public const uint BloodVessel = 19199;
     }
 
     public static class EObjId
@@ -69,6 +70,7 @@ public static class M12sConstants
         public const uint LindwurmP1 = 14378;
         public const uint LindwurmP2 = 14379;
         public const uint Lindschrat = 14380;
+        public const uint BloodVessel = 14381;
     }
 
     public static class ActionId
@@ -132,6 +134,36 @@ public static class M12sConstants
         public const uint EsotericFinisher = 0xB526;
         public const uint SnakingKick = 0xB527;
         public const uint ArcadiaAflame = 0xB528;
+        public const uint GrotesquerieAct2 = 0xBEBE;
+        public const uint GrotesquerieAct3 = 0xBEBF;
+        // Cruel Coil's four casts start the boss facing east, west, north and south.
+        public const uint CruelCoilEast = 0xB4B8;
+        public const uint CruelCoilBind = 0xB472;
+        public const uint SkinsplitterBoss = 0xB4BC;
+        public const uint SkinsplitterDonut = 0xB53E;
+        public const uint DramaticLysisChainBreak = 0xB4B4;
+        public const uint DramaticLysisChainFail = 0xB4B5;
+        public const uint RoilingMassChain = 0xB4B3;
+        public const uint RoilingMassBlob = 0xB4B7;
+        public const uint UnmitigatedExplosion = 0xB4B2;
+        // Same order as Cruel Coil's.
+        public const uint ConstrictorEast = 0xB4BD;
+        public const uint ConstrictorKill = 0xB4C2;
+        public const uint FeralFission = 0xBE09;
+        public const uint GrandEntranceAppear1 = 0xB4A0;
+        public const uint GrandEntranceAppear2 = 0xB4A1;
+        public const uint GrandEntranceAppear3 = 0xB4A2;
+        public const uint GrandEntranceDisappear = 0xB4A3;
+        public const uint BringDownTheHouseBoss = 0xBE0A;
+        public const uint BringDownTheHouseLarge = 0xB4A4;
+        public const uint BringDownTheHouseMedium = 0xB4A5;
+        public const uint BringDownTheHouseSmall = 0xB4A6;
+        public const uint MitoticDramaticLysis = 0xB4B0;
+        public const uint MetamitosisProjection = 0xB4B1;
+        public const uint MetamitosisTower = 0xB923;
+        public const uint SplitScourgeHead = 0xB4A7;
+        public const uint SplitScourge = 0xB4AB;
+        public const uint VenomousScourge = 0xB4A8;
     }
 
     public static class StatusId
@@ -149,6 +181,15 @@ public static class M12sConstants
         public const ushort RottingFlesh = 0x129B;
         public const ushort FireResistanceDownII = 0xB79;
         public const ushort DarkResistanceDownII = 0xCFB;
+        public const ushort Bind = 2518;
+        public const ushort FirstInLine = 3004;
+        public const ushort SecondInLine = 3005;
+        public const ushort ThirdInLine = 3006;
+        public const ushort FourthInLine = 3451;
+        public const ushort BondsOfFleshBeta = 4754;
+        public const ushort UnbreakableFleshBeta = 4755;
+        public const ushort MitoticPhase = 4764;
+        public const ushort FateOfTheWurm = 4772;
     }
 
     public static class LockonId
@@ -159,11 +200,13 @@ public static class M12sConstants
         public const uint SlaughtershedStack = 0x13D;
         public const uint SlaughtershedSpread = 0x177;
         public const uint DoubleSobat = 0x256;
+        public const uint CellChainSpawn = 657;
     }
 
     public static class TetherId
     {
         public const ushort CellChain = 0x16E;
+        public const ushort Cell = 366;
     }
 
     // The boss's model states (ActorControl 0x3F) while a mechanic is up.
@@ -174,5 +217,34 @@ public static class M12sConstants
         public const byte Slaughtershed = 7;
         public const byte MortalSlayer = 0x1F;
         public const byte SnakeHeadOut = 5;
+        public const byte Coiled = 0x1C;
+        public const byte Burrowed = 0x06;
+        public const byte Normal = 0x00;
+    }
+
+    // DirectedGrotesquerie's param: the way the growth points.
+    public static class GrowthParam
+    {
+        public const int North = 0x436;
+        public const int East = 0x437;
+        public const int South = 0x438;
+        public const int West = 0x439;
+    }
+
+    public static class ActionTimeline
+    {
+        public const ushort BloodVesselAppears = 0x2488;
+        public const ushort SnakeHeadRises = 0x11D3;
+    }
+
+    public static class MapEffect
+    {
+        public const byte ArenaSlot = 0x00;
+        public const uint SnakeShows = 0x00010001;
+        public const uint SnakeGone = 0x00040004;
+        public const uint CardinalPlatforms = 0x00020001;
+        public const uint CardinalHoles = 0x00200010;
+        public const uint IntercardinalPlatforms = 0x02000100;
+        public const uint IntercardinalHoles = 0x08000400;
     }
 }

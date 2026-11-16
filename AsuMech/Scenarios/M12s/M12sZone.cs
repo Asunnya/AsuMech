@@ -23,8 +23,12 @@ public sealed class M12sZone : IZone
     public string? Expansion => "Dawntrail";
     public uint TerritoryId => 1327;
     public Vector3 Origin => new(100f, 0f, 100f);
-    // The default entrance (16y south) falls outside P1's 40x30 floor.
-    public DutyInitData DutyInitData => new(new EntranceBarrier(0, 0, 0, Origin + new Vector3(0f, 0f, 12f), MathF.PI), default, [], [], []);
+    // The default entrance sits 16y south, past this arena's 15y south wall.
+    public DutyInitData DutyInitData => DutyInitData.Unknown(Origin) with
+    {
+        EntranceBarrier = new EntranceBarrier(0, 0, 0, Origin + new Vector3(0f, 0f, 13f), MathF.PI),
+        HelperPool = new HelperPool(M12sConstants.BNpcBaseId.Helper, 43),
+    };
     public IArenaShape Arena => new RectArena(M12sConstants.Geometry.P1HalfWidth, M12sConstants.Geometry.P1HalfDepth);
 
     public IReadOnlyList<WaymarkLayout> WaymarkPresets { get; } =
