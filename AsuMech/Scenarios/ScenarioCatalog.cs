@@ -23,6 +23,8 @@ using AsuMech.Scenarios.M11s.Meteorain;
 using AsuMech.Scenarios.M11s.Opener;
 using AsuMech.Scenarios.M11s.OrbitalOmen;
 using AsuMech.Scenarios.M11s.UltimateWeapons;
+using AsuMech.Scenarios.M12s.Act2;
+using AsuMech.Scenarios.M12s.Act3;
 using AsuMech.Scenarios.M9s.Aetherletting;
 using AsuMech.Scenarios.M9s.Coffinmaker;
 using AsuMech.Scenarios.M9s.Deathmatch;
@@ -219,5 +221,7 @@ public sealed class ScenarioCatalog
         new M11sMeteorainScenario(),
         new M11sArenaSplitScenario(),
         new M11sEclipticScenario(),
+        new M12sAct2Scenario(),
+        new M12sAct3Scenario(),
     ]);
 }
