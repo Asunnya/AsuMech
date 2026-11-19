@@ -64,10 +64,7 @@ public class LessonQualityTests
             if (!HoldsLiteral(text, literal) && LineAt(BaseFile(file, sources), line) is { } baseText && HoldsLiteral(baseText, literal)) continue;
             // A call whose time is computed (bait - 3f) cannot be checked for its literal; it still has to be a call.
             var holdsLiteral = HoldsLiteral(text, literal);
-            // A strat helper that forwards its caller's line to the order (WalkAround(...), PairUp(...)) counts as a call too.
-            var isCall = System.Text.RegularExpressions.Regex.IsMatch(text, @"\b(Move|MoveNow|Order|Automarker|MoveTo|Loop)\s*\(") || text.Contains("ai.", StringComparison.Ordinal)
-                         || System.Text.RegularExpressions.Regex.IsMatch(text, @"^\s*(var\s+\w+\s*=\s*)?[A-Z]\w*\s*\(|=>\s*[A-Z]\w*\s*\(");
-            if (!holdsLiteral && !isCall)
+            if (!holdsLiteral && !LessonSkeleton.LooksLikeCall(text))
                 stale.Add($"{lesson.Scenario} / {lesson.Strat}: {step.Key.Cls}.cs:{line} no longer holds {literal} ({text.Trim()})");
         }
         Assert.That(stale, Is.Empty, "run: rekey-all --write");
@@ -86,8 +83,7 @@ public class LessonQualityTests
         return match.Success && sources.TryGetValue(match.Groups[1].Value, out var baseFile) ? baseFile : null;
     }
 
-    private static bool HoldsLiteral(string text, string? literal)
-        => literal != null && System.Text.RegularExpressions.Regex.IsMatch(text, $@"(?<![\d.]){System.Text.RegularExpressions.Regex.Escape(literal)}(?![\d])");
+    private static bool HoldsLiteral(string text, string? literal) => literal != null && LessonSkeleton.HoldsLiteral(text, literal);
 
     public static IEnumerable<TestCaseData> LessonsWithAResidual()
         => LessonLoader.All.Where(l => l.Toolbox is { ExampleSeed: not null, Residual: not null })
