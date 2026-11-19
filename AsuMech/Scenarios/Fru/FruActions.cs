@@ -909,4 +909,24 @@ public static class FruActions
     };
 
     public static readonly EnemyAction CruelPathOfDarknessEcho = CruelPathOfLightEcho with { ActionId = ActionId.CruelPathOfDarknessEcho };
+
+    // UNVERIFIED that a tank LB3 alone is enough: retail parties stack more mitigation on top.
+    public static readonly EnemyAction PandorasBox = new(ActionId.PandorasBox)
+    {
+        Cast = new() { AnimationLock = 3.1f },
+        Effects =
+        [
+            Damage(ProtectedBy(StatusId.LastBastion).ProtectedBy(StatusId.LandWaker).ProtectedBy(StatusId.DarkForce).ProtectedBy(StatusId.GunmetalSoul),
+                Lethal),
+        ],
+        DeathExplanation = "Pandora's Box without a tank LB3",
+    };
+
+    // UNVERIFIED: no pull let it finish; it is the enrage.
+    public static readonly EnemyAction ParadiseLostEnrage = new(ActionId.ParadiseLostEnrage)
+    {
+        Cast = new() { AnimationLock = 2.1f },
+        Effects = [Damage(Lethal)],
+        DeathExplanation = "Paradise Lost, the enrage: Pandora wasn't down in time",
+    };
 }

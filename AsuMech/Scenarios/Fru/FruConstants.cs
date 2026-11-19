@@ -428,6 +428,9 @@ public static class FruConstants
         public const uint CruelPathOfDarkness = 40318;
         public const uint CruelPathOfLightEcho = 40119;
         public const uint CruelPathOfDarknessEcho = 40120;
+        public const uint PandorasBox = 40326;
+        public const uint ParadiseLost = 40327;
+        public const uint ParadiseLostEnrage = 40328;
     }
 
     public static class StatusId
@@ -474,6 +477,10 @@ public static class FruConstants
         public const ushort Wyrmclaw = 3263;
         public const ushort Wyrmfang = 3264;
         public const ushort MagicVulnerabilityUp = 2941;
+        public const ushort LastBastion = 196;
+        public const ushort LandWaker = 863;
+        public const ushort DarkForce = 864;
+        public const ushort GunmetalSoul = 1931;
         public const ushort LightsDesign = 4160;
         public const ushort DarknessDesign = 4161;
         public const ushort PhysicalVulnerabilityUp = 2940;

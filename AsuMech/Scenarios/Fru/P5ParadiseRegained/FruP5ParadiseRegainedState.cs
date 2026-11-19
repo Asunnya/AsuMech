@@ -14,17 +14,20 @@ public sealed class FruP5ParadiseRegainedState
     public static float TowerShowAt(int tower) => 6.35f + 3.52f * tower;
     public static float TowerHitAt(int tower) => 15.7f + 3.56f * tower;
 
-    public static float LinesAt(int round) => 37.06f + 4.68f * round;
-    public static float PathsCastAt(int round) => LinesAt(round) + 2.05f;
-    public static float EchoAt(int round) => LinesAt(round) + 2.6f;
+    private readonly float firstLinesAt;
+    public float LinesAt(int round) => firstLinesAt + 4.68f * round;
+    public float PolarizingStrikesAt => LinesAt(0) - 6.44f;
+    public float PathsCastAt(int round) => LinesAt(round) + 2.05f;
+    public float EchoAt(int round) => LinesAt(round) + 2.6f;
 
     // Which third the towers turn to, whether the east tower is second, and the wing order.
     public int Rotation { get; }
     public bool EastSecond { get; }
     public bool DarkFirst { get; }
 
-    public FruP5ParadiseRegainedState(Rng rng, FruP5ParadiseRegainedStateOverrides overrides)
+    public FruP5ParadiseRegainedState(Rng rng, FruP5ParadiseRegainedStateOverrides overrides, float firstLinesAt)
     {
+        this.firstLinesAt = firstLinesAt;
         Rotation = overrides.Rotation ?? rng.Next(3);
         EastSecond = overrides.EastSecond ?? rng.NextBool();
         DarkFirst = overrides.DarkFirst ?? rng.NextBool();

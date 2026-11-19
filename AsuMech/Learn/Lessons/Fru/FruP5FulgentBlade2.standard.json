@@ -1,0 +1,70 @@
+{
+  "scenario": "FruP5FulgentBlade2Scenario",
+  "strat": "Standard",
+  "sources": [
+    {
+      "label": "NAUR LesBin - UltiProject: full FRU Phase 5 guide",
+      "url": "https://slides.com/ultiproject/frup5/scroll"
+    },
+    {
+      "label": "NAUR LesBin - Advanced Exalines theory",
+      "url": "https://docs.google.com/document/d/1tJ0ANAgAwSqM1Ytc1eyRaal-ewbkGcdHmrup6sO0078/edit?tab=t.0#heading=h.kyvt2kb6brld"
+    },
+    {
+      "label": "NAUR LesBin - P5 Exawaves center-dodge guides",
+      "url": "https://docs.google.com/presentation/d/1ClPP-09eMGydyCoaxyN2x0hu_6O5CevudtTdoOh4q1g/edit#slide=id.p1"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "FruP5FulgentBladeAi",
+        "time": 13.2,
+        "line": 23
+      },
+      "title": "Gather in the open pocket",
+      "cue": "the exaline seams light up",
+      "rule": "All eight meet in the pocket the six seams leave open: 7m off the centre on a cardinal, inside the corner where the three crossing pairs meet.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP5FulgentBladeAi",
+        "time": 17.2,
+        "line": 24
+      },
+      "title": "Dodge into the first corner",
+      "cue": "the Path of Light and Path of Darkness casts start",
+      "rule": "Step into the corner of the pocket the first pair of seams leaves safe, right inside their crossing, and wait for the first strips to fire.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP5FulgentBladeAi",
+        "from": 21.65,
+        "to": 29.85,
+        "line": 28
+      },
+      "title": "Follow the strips through the pocket",
+      "cue": "a strip goes off",
+      "rule": "Each strip rolls on 5m every two seconds: after every wave, step into the space it just cleared, keeping inside the pocket, until the last pair has passed.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP5FulgentBladeAi",
+        "time": 31.9,
+        "line": 30
+      },
+      "title": "Light parties for Akh Morn",
+      "cue": "Akh Morn cast starts",
+      "rule": "Split into the two light parties either side of Pandora, about 6m out from the pocket: MT, RH, M1 and R a little clockwise of it, OT, SH, M2 and C a little counter-clockwise. Each side's stack lands on one of its four.",
+      "tolerance": 1.5,
+      "skip": false
+    }
+  ],
+  "draft": true
+}

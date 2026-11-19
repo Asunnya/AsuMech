@@ -1,0 +1,30 @@
+{
+  "scenario": "FruP5PandorasBoxScenario",
+  "strat": "Standard",
+  "sources": [
+    {
+      "label": "NAUR LesBin - UltiProject: full FRU Phase 5 guide",
+      "url": "https://slides.com/ultiproject/frup5/scroll"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "FruP5PandorasBoxAi",
+        "time": 2,
+        "line": 23
+      },
+      "title": "Stack behind the main tank for the tank LB3",
+      "cue": "Pandora's Box cast starts",
+      "rule": "Stack right behind the main tank, south of Pandora, inside the tank LB3's reach. The assigned tank presses LB3 around Pandora's second line, late enough that its 8s lasts to the end of the cast; anyone it doesn't cover dies.",
+      "tolerance": 2.0,
+      "skip": false,
+      "roles": {
+        "MainTank": {
+          "rule": "Hold Pandora 4m south of the centre, the party stacked right behind you."
+        }
+      }
+    }
+  ],
+  "draft": true
+}

@@ -3,6 +3,7 @@ using System.Numerics;
 using AsuMech.Core.Game;
 using AsuMech.Core.Map;
 using AsuMech.Core.SimObjects;
+using AsuMech.Core.UserActions;
 using static AsuMech.Scenarios.Fru.FruConstants;
 
 namespace AsuMech.Scenarios.Fru;
@@ -42,6 +43,8 @@ public sealed class FruZone : IZone
         [new WaymarkLayout("Inner Circle", InnerCircleWaymarks)];
 
     public DutyInitData DutyInitData => FruReplayData.DutyInitData;
+
+    public StatusLanding? TankLimitBreakLanding => new StatusLanding(1.4f, 0.124f);
 
     public void Run(SimWorld world) => world.EnforceArenaBoundary(Geometry.ArenaRadius);
 }
