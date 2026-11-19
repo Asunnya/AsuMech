@@ -6,7 +6,7 @@ namespace AsuMech.Core.Native.Interfaces;
 // The client-side zone a scenario runs in: entered from the inn, with the server firewalled off.
 public interface IZoneControl : IDisposable
 {
-    bool IsInInn();
+    bool IsInLaunchRoom();
 
     // Why a scenario can't start now, or null. `settling` names a transient state worth waiting
     // out (null when the refusal is final).

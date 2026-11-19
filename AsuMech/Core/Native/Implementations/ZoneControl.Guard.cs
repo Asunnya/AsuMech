@@ -135,7 +135,7 @@ public sealed unsafe partial class ZoneControl
     private static string? HoldBlockedReason()
     {
         if (!Plugin.ClientState.IsLoggedIn || Plugin.ObjectTable.LocalPlayer is not { } player) return "no local player";
-        if (!IsInInn()) return "not in an inn";
+        if (!IsInLaunchRoom()) return $"not in {LaunchRoomDescription}";
         if (Zoning()) return "zoning";
         if (player.IsCasting || IsServerActingSoon()) return "the server may still act on the last action";
         if (zoneChangePressedAt != null) return $"{Natives.Data.ActionName(zoneChangeActionId)} has not resolved";
@@ -250,7 +250,7 @@ public sealed unsafe partial class ZoneControl
         // firewall a second in.
         if (Current is { guardArmed: true }) return Settling("the previous run", out settling);
         if (!Plugin.ClientState.IsLoggedIn || Plugin.ObjectTable.LocalPlayer is not { } player) return "not logged in";
-        if (!IsInInn()) return "not in an inn";
+        if (!IsInLaunchRoom()) return $"not in {LaunchRoomDescription}";
         var c = Plugin.Condition;
         if (c[ConditionFlag.BetweenAreas] || c[ConditionFlag.BetweenAreas51]) return "zoning";
         if (SecondsSince(lastTerritoryChangeAt) < SettleSeconds) return Settling("the zone", out settling);

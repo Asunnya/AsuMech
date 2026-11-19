@@ -101,7 +101,7 @@ internal static class DiagnosticLog
     // assigned these statics.
     private static bool ShouldPersistToDisk()
         => ForcePersist
-           || (Natives.Zone?.IsInInn() ?? false)
+           || (Natives.Zone?.IsInLaunchRoom() ?? false)
            || Plugin.Game?.Zone != null
            || Plugin.Multiplayer?.SessionCode != null;
 

@@ -90,6 +90,15 @@ public class ConfigWindow : Window, IDisposable
             configuration.Save();
         }
 
+        var chambers = configuration.AllowFcChambers;
+        if (Pills.Checkbox("Allow starting from FC private chambers (experimental)", ref chambers))
+        {
+            configuration.AllowFcChambers = chambers;
+            configuration.Save();
+        }
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Leaving reloads the room on the client only: furniture may be missing until you\nwalk out and back in.");
+
         var newLayout = configuration.UseNewLayout;
         if (Pills.Checkbox("Use the new main window (preview)", ref newLayout))
             plugin.SetNewLayout(newLayout);

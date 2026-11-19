@@ -663,7 +663,7 @@ public unsafe class MainWindow : Window, IDisposable, IPanelHost
     private void DrawMultiplayerButton(Vector2 size = default)
     {
 #if DEBUG
-        if (!ZoneControl.IsInInn() || Plugin.Game.World.Map.IsInInstance) return;
+        if (!ZoneControl.IsInLaunchRoom() || Plugin.Game.World.Map.IsInInstance) return;
         ImGui.SameLine();
         if (ImGui.Button("Multiplayer", size)) _showMultiplayerSetup = true;
 #endif
@@ -800,9 +800,9 @@ public unsafe class MainWindow : Window, IDisposable, IPanelHost
 
     private void DrawLocationHint()
     {
-        if (ZoneControl.IsInInn()) return;
-        ImGui.TextDisabled("Scenarios only run in an inn");
+        if (ZoneControl.IsInLaunchRoom()) return;
+        ImGui.TextDisabled($"Scenarios only run in {ZoneControl.LaunchRoomDescription}");
         ImGui.SameLine();
-        ImGuiComponents.HelpMarker("Scenarios can only be started from an inn — return to one to run a scenario.");
+        ImGuiComponents.HelpMarker($"Scenarios can only be started from {ZoneControl.LaunchRoomDescription} — return to one to run a scenario.");
     }
 }

@@ -147,8 +147,8 @@ public sealed partial class AsuMainWindow : Window, IDisposable, IPanelHost
         DrawLauncher(game, inSession);
         DrawBrowser(inSession);
         DrawOptions(game, inSession);
-        if (!ZoneControl.IsInInn())
-            Muted("Scenarios only run in an inn.");
+        if (!ZoneControl.IsInLaunchRoom())
+            Muted($"Scenarios only run in {ZoneControl.LaunchRoomDescription}.");
     }
 
     private void FollowScenario(IScenario scenario, bool persist)

@@ -562,7 +562,7 @@ internal sealed class PacketRecorder
     {
         private IZoneControl Real => recorder.realZone;
 
-        public bool IsInInn() => Real.IsInInn();
+        public bool IsInLaunchRoom() => Real.IsInLaunchRoom();
         public string? StartBlockedReason(out string? settling) => Real.StartBlockedReason(out settling);
         public void EndSpeedBuffs() => Real.EndSpeedBuffs();
         public bool IsActive => Real.IsActive;
