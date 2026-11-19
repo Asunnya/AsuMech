@@ -53,7 +53,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
 
     internal static Configuration Config { get; private set; } = null!;
     internal static Game Game { get; private set; } = null!;
-    private readonly Windows.ReadyCheckNotifier readyCheckNotifier = new();
+    internal static Windows.ReadyCheckNotifier ReadyCheck { get; private set; } = null!;
     internal static Integrations.PullStateMirror PullState { get; private set; } = null!;
     internal static PracticeLoop Practice { get; private set; } = null!;
     internal static DrillTracker Drill { get; private set; } = null!;
@@ -118,6 +118,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
             opcodeUpdater = new OpcodeUpdater();
             Game = new Game();
             PullState = new Integrations.PullStateMirror();
+            ReadyCheck = new Windows.ReadyCheckNotifier();
             Windows.Asu.RunJournal.Install(Game);
             Drill = new DrillTracker(Config.BestStreaks, Config.Save);
             Mastery = new Learn.MasteryStore(Config.Mastery, Config.Save);
@@ -341,6 +342,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
         TimelineDebug.Shutdown();
         Recorder?.Dispose();
         Multiplayer?.Dispose();
+        ReadyCheck?.Dispose();
         Game?.Dispose();
         // After Game, whose teardown can still end a run; before Natives, whose revert lifts the firewall.
         PullState?.Dispose();
@@ -386,7 +388,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
         catch (Exception e) { DiagnosticLog.Warn($"[Plugin] Runs.Tick threw: {e}"); }
         try { Game.Tick(fw->FrameDeltaTime); }
         catch (Exception e) { DiagnosticLog.Warn($"[Plugin] Game.Tick threw: {e}"); }
-        try { readyCheckNotifier.Tick(); }
+        try { ReadyCheck.Tick(); }
         catch (Exception e) { DiagnosticLog.Warn($"[Plugin] ReadyCheckNotifier.Tick threw: {e}"); }
         try { PullState.Tick(Game); }
         catch (Exception e) { DiagnosticLog.Warn($"[Plugin] PullState.Tick threw: {e}"); }

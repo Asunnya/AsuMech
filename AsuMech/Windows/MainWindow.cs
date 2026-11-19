@@ -852,8 +852,10 @@ public unsafe class MainWindow : Window, IDisposable, IPanelHost
     {
         if (PartyReadyCheck() is { } readyCheck)
         {
-            DrawAlert($"Ready check from {readyCheck.From}: {Math.Ceiling(readyCheck.Left.TotalSeconds):F0}s left. Leave the sim to answer it.");
-            if (ImGui.Button("Leave and answer##ready-check")) Plugin.Game.Leave();
+            DrawAlert($"Ready check from {readyCheck.From}: {Math.Ceiling(readyCheck.Left.TotalSeconds):F0}s left. Your answer leaves the sim and is sent as soon as it's out.");
+            if (ImGui.Button("Ready##ready-check")) Plugin.ReadyCheck.Answer(true);
+            ImGui.SameLine();
+            if (ImGui.Button("Not ready##ready-check")) Plugin.ReadyCheck.Answer(false);
         }
         if (PartyRecruitmentEnded()) DrawAlert("Party Finder recruitment has ended");
     }
