@@ -13,7 +13,7 @@ namespace AsuMech.Scenarios.Ucob.P3SeventhUmbralEra;
 
 public sealed class UcobP3SeventhUmbralEraAi(bool tuufless = false) : IScenarioAi<UcobMarkers>, IUcobStrat
 {
-    public string Name => tuufless ? "Tuufless (Elemental)" : "Stack on marker 3, the south neurolink";
+    public string Name => tuufless ? "Tuufless (Elemental)" : "Stack on marker 3 for the knockback";
 
     public UcobMarkers Markers => tuufless ? UcobMarkers.Elemental : UcobMarkers.Aether;
 
