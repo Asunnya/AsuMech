@@ -34,6 +34,7 @@ internal sealed class MultiplayerRun
     private readonly List<(TestClient Client, double Frame, double LastFrame, double NextFrame, Random Hitches, double NextHitch, ConnectionProfile Link)> clients = [];
     private readonly List<Death> deaths = [];
     private readonly List<(double At, int Client, Action<TestClient> Input)> inputs = [];
+    private Action<TestClient>? beforeFrame;
 
     public TestRelay Relay { get; }
     public ConnectionProfile PeerLink { get; }
@@ -69,15 +70,17 @@ internal sealed class MultiplayerRun
     // as forced rolls replay it. interrupt: the faults to put on the links, by client (the host 0,
     // then the peers), before anyone connects. inputs: what a client's player does, by client and
     // seconds into the host's fight. configure: each client's own settings, before anyone connects.
+    // beforeFrame: a look at a client just before each of its frames.
     public static MultiplayerRun Play(Type scenarioType, int strat, int seed, PlayerSeat host, IReadOnlyList<PlayerSeat> peers,
         ConnectionProfile? hostLink = null, ConnectionProfile? peerLink = null, double timeout = 600, bool immortal = false, int runs = 1,
         Action<TestRelay>? interrupt = null, IEnumerable<(double At, int Client, Action<TestClient> Input)>? inputs = null,
-        Action<TestClient>? configure = null)
+        Action<TestClient>? configure = null, Action<TestClient>? beforeFrame = null)
     {
         var run = new MultiplayerRun(seed, host, peers, hostLink ?? TestRelay.Perfect, peerLink ?? TestRelay.Perfect);
         interrupt?.Invoke(run.Relay);
         foreach (var client in run.Peers.Prepend(run.Host)) configure?.Invoke(client);
         run.inputs.AddRange((inputs ?? []).OrderBy(i => i.At));
+        run.beforeFrame = beforeFrame;
         run.Host.Game.GodMode = immortal;
         run.Host.Game.PartyMemberKilled += (role, cause, actionId, statusId) => run.deaths.Add(new Death(role, cause, actionId, statusId, run.Host.Game.World.Events.Elapsed, ""));
         try
@@ -203,6 +206,7 @@ internal sealed class MultiplayerRun
             var (client, frame, last, next, hitches, nextHitch, link) = clients[index];
             Relay.AdvanceTo(next);
             RunInputs(index, client);
+            if (beforeFrame is { } look) client.Do(() => look(client));
             client.Frame((float)(next - last));
             var gap = frame;
             if (next >= nextHitch)
