@@ -53,3 +53,31 @@ public class FruP5FulgentBladeScenarioTests
             .TeleportAt(34.3f, to: new(3.5f, 6))
             .ShouldKill(ActionId.AkhMornPandoraRight, PhysRangedDps, OffTank, ShieldHealer, MeleeDpsB, CasterDps);
 }
+
+// The later passes run the same exalines and Akh Morn on the same clock.
+public class FruP5FulgentBladeRepeatsScenarioTests
+{
+    private static void Pin(FruP5FulgentBladeStateOverrides o)
+    {
+        o.PositionIndex = 0;
+        o.RotationIndex = 0;
+        o.Mirrored = false;
+        o.CardinalDarkInward = [true, true, true];
+        o.AkhMornLeftPick = 0;
+        o.AkhMornRightPick = 0;
+    }
+
+    [Test]
+    public void SecondPassExalineKills()
+        => Negative<FruP5FulgentBlade2Scenario>(MainTank)
+            .Overrides<FruP5FulgentBladeStateOverrides>(Pin)
+            .TeleportAt(18f, to: new(-3f, 18.5f))
+            .ShouldKill(ActionId.PathOfLightFirst, MainTank);
+
+    [Test]
+    public void ThirdPassAkhMornShortABodyKillsStackers()
+        => Negative<FruP5FulgentBlade3Scenario>(ShieldHealer)
+            .Overrides<FruP5FulgentBladeStateOverrides>(Pin)
+            .TeleportAt(34f, to: new(0, 15))
+            .ShouldKill(ActionId.AkhMornPandoraLeft, OffTank, MeleeDpsB, CasterDps);
+}

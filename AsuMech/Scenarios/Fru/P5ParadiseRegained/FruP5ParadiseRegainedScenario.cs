@@ -13,9 +13,29 @@ using Actions = AsuMech.Scenarios.Fru.FruActions;
 
 namespace AsuMech.Scenarios.Fru.P5ParadiseRegained;
 
-public sealed class FruP5ParadiseRegainedScenario : IScenario
+// The second pass comes after Pandora's Box: Polarizing Strikes follows the towers sooner, and
+// nobody talks.
+public class FruP5ParadiseRegainedScenario : IScenario
 {
-    public string Name => "Paradise Regained";
+    public FruP5ParadiseRegainedScenario() : this("Paradise Regained", firstLinesAt: 37.06f,
+    [
+        new(1.3f, 0x23, BNpcNameId.Pandora),
+        new(7.27f, 0x27, RyneBattleTalk),
+        new(12.4f, 0x28, GaiaBattleTalk),
+        new(49.74f, 0x29, GaiaBattleTalk),
+        new(54.86f, 0x2A, RyneBattleTalk),
+    ]) { }
+
+    protected FruP5ParadiseRegainedScenario(string name, float firstLinesAt, FruBattleTalk[] battleTalk)
+    {
+        Name = name;
+        this.firstLinesAt = firstLinesAt;
+        this.battleTalk = battleTalk;
+    }
+
+    public string Name { get; }
+    private readonly float firstLinesAt;
+    private readonly FruBattleTalk[] battleTalk;
     public IPhase Phase => FruZone.P5;
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new FruP5ParadiseRegainedAi()];
@@ -29,14 +49,13 @@ public sealed class FruP5ParadiseRegainedScenario : IScenario
     private SimEnemy? pandora;
     private readonly MapEffectTower?[] towers = new MapEffectTower?[3];
     private SimTether? wingTether;
-    private const uint NoActor = 0xE0000000;
     // Per round: where the light and the dark line point, from the center.
     private readonly (float Light, float Dark)?[] lineAims = new (float, float)?[4];
 
     public void Run(SimWorld worldParam, int? selectedAi)
     {
         world = worldParam;
-        state = new FruP5ParadiseRegainedState(world.Rng, settingsWindow.Overrides);
+        state = new FruP5ParadiseRegainedState(world.Rng, settingsWindow.Overrides, firstLinesAt);
         Array.Clear(lineAims);
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<FruP5ParadiseRegainedState>)AiStrats[idx]).Run(state, world);
@@ -45,7 +64,6 @@ public sealed class FruP5ParadiseRegainedScenario : IScenario
         world.Events.Add(1f, () => pandora?.SetTarget(world.Party.Get(PartyRole.MainTank), follow: false));
         world.Events.Add(1.3f, () => pandora?.Cast(ActionId.ParadiseRegained, animationLock: 3.1f));
         world.Events.Add(TowerShowAt(0), () => ShowTower(0));
-        world.Events.Add(7.27f, () => BattleTalk(0x27, RyneBattleTalk));
         world.Events.Add(8.52f, () =>
         {
             pandora?.SetModelState(4);
@@ -54,7 +72,6 @@ public sealed class FruP5ParadiseRegainedScenario : IScenario
         });
         world.Events.Add(TowerShowAt(1), () => ShowTower(1));
         world.Events.Add(12.6f, TargetWingBait);
-        world.Events.Add(12.4f, () => BattleTalk(0x28, GaiaBattleTalk));
         world.Events.Add(TowerShowAt(2), () => ShowTower(2));
         world.Events.Add(15.7f, () => FaceTank(PartyRole.MainTank));
         world.Events.Add(TowerHitAt(0), () => ResolveTower(0));
@@ -72,17 +89,17 @@ public sealed class FruP5ParadiseRegainedScenario : IScenario
             pandora?.SetTarget(world.Party.Get(PartyRole.MainTank), follow: false);
         });
 
-        world.Events.Add(30.62f, () => pandora?.Cast(ActionId.PolarizingStrikes, animationLock: 2.1f));
+        world.Events.Add(state.PolarizingStrikesAt, () => pandora?.Cast(ActionId.PolarizingStrikes, animationLock: 2.1f));
         for (var round = 0; round < 4; round++)
         {
             var r = round;
-            world.Events.Add(LinesAt(r) - 0.1f, () => AimLines(r));
-            world.Events.Add(LinesAt(r), () => CastLines(r));
-            if (r < 3) world.Events.Add(PathsCastAt(r), () => pandora?.Cast(ActionId.PolarizingPaths, animationLock: 2.1f));
-            world.Events.Add(EchoAt(r), () => Echo(r));
+            world.Events.Add(state.LinesAt(r) - 0.1f, () => AimLines(r));
+            world.Events.Add(state.LinesAt(r), () => CastLines(r));
+            if (r < 3) world.Events.Add(state.PathsCastAt(r), () => pandora?.Cast(ActionId.PolarizingPaths, animationLock: 2.1f));
+            world.Events.Add(state.EchoAt(r), () => Echo(r));
         }
-        world.Events.Add(49.74f, () => BattleTalk(0x29, GaiaBattleTalk));
-        world.Events.Add(54.86f, () => BattleTalk(0x2A, RyneBattleTalk));
+        foreach (var talk in battleTalk)
+            world.Events.Add(talk.At, () => talk.Say(world, pandora));
     }
 
     public void Tick(float delta, float elapsed)
@@ -109,8 +126,6 @@ public sealed class FruP5ParadiseRegainedScenario : IScenario
         world.Map.AddEffect(MapEffect.TowerBase, (byte)(slot - MapEffect.ParadiseFirstTower + MapEffect.ParadiseFirstTowerBase));
         towers[tower] = new MapEffectTower(world.Map, slot, state.TowerPosition(tower), TowerRadius, MapEffect.TowerOccupied[..2], MapEffect.DarklitTowerEmpty);
     }
-
-    private void BattleTalk(uint line, uint speaker) => world.Map.DirectorUpdate(0x80000027U, line, 0x2U, speaker, NoActor);
 
     private void FaceTank(PartyRole role)
     {

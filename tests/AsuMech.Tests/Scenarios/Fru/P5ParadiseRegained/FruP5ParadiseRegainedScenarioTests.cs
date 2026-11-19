@@ -88,3 +88,47 @@ public class FruP5ParadiseRegainedScenarioTests
             .TeleportAt(39.3f, to: new(-6, 6))
             .ShouldKill(ActionId.CruelPathOfLightEcho, RegenHealer);
 }
+
+// The second pass: the same towers and wings, then Polarizing Strikes 5.47s sooner, its first lines at 31.59.
+public class FruP5ParadiseRegained2ScenarioTests
+{
+    private static NegativeRun<FruP5ParadiseRegained2Scenario> Paradise(PartyRole player)
+        => Negative<FruP5ParadiseRegained2Scenario>(player)
+            .Overrides<FruP5ParadiseRegainedStateOverrides>(o =>
+            {
+                o.Rotation = 0;
+                o.EastSecond = true;
+                o.DarkFirst = true;
+            });
+
+    [Test]
+    public void TowerSoakedAloneWipes()
+        => Paradise(PhysRangedDps)
+            .TeleportAt(22.5f, to: new(-6f, -10f))
+            .ShouldKill(ActionId.ParadiseTowerFailure, PerRole.All);
+
+    [Test]
+    public void CruelPathShortABodyKillsStackers()
+        => Paradise(PhysRangedDps)
+            .TeleportAt(31.4f, to: new(-8, 0))
+            .ShouldKill(ActionId.CruelPathOfLight, MainTank, RegenHealer, MeleeDpsA);
+
+    [Test]
+    public void StandingInEchoDies()
+        => Paradise(RegenHealer)
+            .TeleportAt(33.8f, to: new(-6, 6))
+            .ShouldKill(ActionId.CruelPathOfLightEcho, RegenHealer);
+
+    [TestCase(37.06f, 31.59f)]
+    public void PolarizingStrikesFollowsItsFirstLines(float firstPass, float secondPass)
+    {
+        var first = new FruP5ParadiseRegainedState(new Rng(1), new FruP5ParadiseRegainedStateOverrides(), firstPass);
+        var second = new FruP5ParadiseRegainedState(new Rng(1), new FruP5ParadiseRegainedStateOverrides(), secondPass);
+        Assert.Multiple(() =>
+        {
+            Assert.That(first.PolarizingStrikesAt, Is.EqualTo(30.62f).Within(0.01f));
+            Assert.That(second.PolarizingStrikesAt, Is.EqualTo(25.15f).Within(0.01f));
+            Assert.That(second.EchoAt(3) - second.LinesAt(0), Is.EqualTo(first.EchoAt(3) - first.LinesAt(0)).Within(0.001f));
+        });
+    }
+}

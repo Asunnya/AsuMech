@@ -15,9 +15,19 @@ namespace AsuMech.Scenarios.Fru.P5FulgentBlade;
 // Pandora's exalines: three groups of two seams, each seam splitting into a light and a dark strip
 // telegraphed by its first cast's omen and then rolling on as instant hits.
 // Akh Morn closes it on one member of each light party.
-public sealed class FruP5FulgentBladeScenario : IScenario
+// Pandora runs it three times; the later passes only add their battle talk.
+public class FruP5FulgentBladeScenario : IScenario
 {
-    public string Name => "Fulgent Blade";
+    public FruP5FulgentBladeScenario() : this("Fulgent Blade", []) { }
+
+    protected FruP5FulgentBladeScenario(string name, FruBattleTalk[] battleTalk)
+    {
+        Name = name;
+        this.battleTalk = battleTalk;
+    }
+
+    public string Name { get; }
+    private readonly FruBattleTalk[] battleTalk;
     public IPhase Phase => FruZone.P5;
     public bool SupportsSolo => true;
 
@@ -93,6 +103,8 @@ public sealed class FruP5FulgentBladeScenario : IScenario
             world.Events.Add(34.05f, PickAkhMornTargets);
             world.Events.Add(34.45f, AkhMornOnLightParties);
         }
+        foreach (var talk in battleTalk)
+            world.Events.Add(talk.At, () => talk.Say(world, pandora));
     }
 
     private void SpawnActors()
