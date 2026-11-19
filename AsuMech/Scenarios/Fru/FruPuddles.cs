@@ -7,10 +7,10 @@ using static AsuMech.Scenarios.Fru.FruConstants;
 
 namespace AsuMech.Scenarios.Fru;
 
-// P2's light puddles: Diamond Dust's Sinbound Holy and Light Rampant's Luminous Hammer leave the same EObj.
-public sealed class FruHolyPuddles
+// P2's puddles: Diamond Dust's Sinbound Holy and Light Rampant's Luminous Hammer leave the same light EObj,
+// the Ice Veil's Hiemal Rays an ice one.
+public sealed class FruPuddles(uint eobjId, float radius)
 {
-    private const float Radius = 6f;
     private const uint Arg2Base = 0x50;
     private const float BleedingDuration = 30f;
     private const float BleedingKillsAfter = 1.5f;
@@ -20,6 +20,7 @@ public sealed class FruHolyPuddles
 
     private readonly List<Puddle> puddles = [];
     private readonly Dictionary<SimCharacter, Vector3> snapshots = [];
+    private uint shown;
 
     private sealed class Puddle(int wave, Vector3 position, float armedAt)
     {
@@ -34,6 +35,7 @@ public sealed class FruHolyPuddles
     {
         puddles.Clear();
         snapshots.Clear();
+        shown = 0;
     }
 
     public void Snapshot(SimCharacter target) => snapshots[target] = target.Position;
@@ -43,18 +45,16 @@ public sealed class FruHolyPuddles
 
     public void Show(SimWorld world, int wave)
     {
-        var i = 0;
         foreach (var puddle in puddles.Where(p => p.Wave == wave))
         {
             puddle.Visual = world.SpawnEventObject(new EventObjectSpawnConfig
             {
-                EObjId = EObjId.HolyPuddle,
+                EObjId = eobjId,
                 Placement = new Placement(puddle.Position, 0f),
                 EventId = DirectorEventId,
                 TargetableStatus = 5,
-                Arg2 = (Arg2Base + (uint)(wave * 2 + i)) << 16 | 3,
+                Arg2 = (Arg2Base + shown++) << 16 | 3,
             });
-            i++;
         }
     }
 
@@ -79,7 +79,7 @@ public sealed class FruHolyPuddles
     {
         foreach (var member in world.Party.ActiveMembers().ToList())
             if (!member.HasStatus(StatusId.Bleeding)
-                && puddles.Any(p => !p.Faded && elapsed >= p.ArmedAt && Vector3.Distance(p.Position, member.Position) <= Radius))
+                && puddles.Any(p => !p.Faded && elapsed >= p.ArmedAt && Vector3.Distance(p.Position, member.Position) <= radius))
             {
                 member.AddStatus(StatusId.Bleeding, BleedingDuration);
                 world.Events.Add(BleedingKillsAfter, () => member.DieOfStatus(StatusId.Bleeding, explanation));

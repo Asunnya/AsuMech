@@ -40,6 +40,10 @@ public sealed class UmadP3BlackHoleScenario : IMultiplayerReplayable
         new UmadP3BlackHoleAi(UmadP3BlackHoleAi.TetherOrder.SupportDpsAccretion),
     ];
 
+    // HP isn't simulated: Chaos and Exdeath fall when the clear's did, Exdeath midway through his Meteor.
+    public const float ChaosFalls = 173.39f;
+    public const float ExdeathFalls = 180.93f;
+
     private UmadP3BlackHoleState state = null!;
     private SimWorld world = null!;
     private SimParty party = null!;
@@ -269,6 +273,7 @@ public sealed class UmadP3BlackHoleScenario : IMultiplayerReplayable
         world.Events.Add(152.53f, () => chaos_4000414D?.Cast(UmadActions.ChaosAutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(155.57f, () => chaos_4000414D?.Cast(UmadActions.ChaosAutoAttack, party.Get(PartyRole.MainTank)));
         world.Events.Add(157.22f, () => chaos_4000414D?.Cast(ActionId.BigBang_Cast, animationLock: 3.1f));
+        world.Events.Add(ChaosFalls, () => chaos_4000414D?.Defeat());
         
         for (int i = 0; i < 2; i++)
         {
@@ -323,6 +328,8 @@ public sealed class UmadP3BlackHoleScenario : IMultiplayerReplayable
         world.Events.Add(150.66f, () => exdeath_4000414C?.Cast(UmadActions.ExdeathAutoAttack, party.Get(PartyRole.RegenHealer)));
         world.Events.Add(153.69f, () => exdeath_4000414C?.Cast(UmadActions.ExdeathAutoAttack, party.Get(PartyRole.RegenHealer)));
         world.Events.Add(156.95f, () => exdeath_4000414C?.Cast(ActionId.BlizzardIII_Raidwide, animationLock: 4.1f));
+        world.Events.Add(173.48f, () => exdeath_4000414C?.Cast(UmadActions.MeteorEnrage));
+        world.Events.Add(ExdeathFalls, () => exdeath_4000414C?.Defeat());
         
         RunThunder(1, 42.63f, exdeath_4000414C);
         RunThunder(2, 83.94f, exdeath_4000414C);

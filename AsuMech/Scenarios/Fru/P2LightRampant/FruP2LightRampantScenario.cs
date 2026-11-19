@@ -57,7 +57,7 @@ public sealed class FruP2LightRampantScenario : IMultiplayerReplayable
     private SimEnemy? usurper;
     private readonly List<SimEnemy?>[] orbs = [[], []];
     private readonly List<SimTether> links = [];
-    private readonly FruHolyPuddles puddles = new();
+    private readonly FruPuddles puddles = new(EObjId.HolyPuddle, 6f);
     private readonly List<MapEffectTower> towers = [];
     private MapEffectTower? centerTower;
 
@@ -89,7 +89,7 @@ public sealed class FruP2LightRampantScenario : IMultiplayerReplayable
         {
             var w = wave;
             var showsAt = HammerAt(w) + PuddleShowsAfterHammer;
-            world.Events.Add(HammerAt(w) - FruHolyPuddles.SnapshotBeforeHit, SnapshotHammerTargets);
+            world.Events.Add(HammerAt(w) - FruPuddles.SnapshotBeforeHit, SnapshotHammerTargets);
             world.Events.Add(HammerAt(w), () => LuminousHammer(w));
             world.Events.Add(showsAt, () => puddles.Show(world, w));
             world.Events.Add(showsAt + PuddleFadesAfterShowing, () => puddles.Fade(w));

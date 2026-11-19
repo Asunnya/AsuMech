@@ -41,7 +41,7 @@ public sealed class FruP2DiamondDustAi : IScenarioAi<FruP2DiamondDustState>
         for (var wave = 0; wave < HolyWaves; wave++)
         {
             var w = wave;
-            world.Events.Add(HolyAt(w) - FruHolyPuddles.SnapshotBeforeHit, () => RememberHolyPuddles(w));
+            world.Events.Add(HolyAt(w) - FruPuddles.SnapshotBeforeHit, () => RememberHolyPuddles(w));
             ai.Move(HolyAt(w), () => ByRole(role => HolySpot(role, w + 1)), arrivalTime: HolyAt(w + 1));
         }
         ai.Move(HolyAt(HolyWaves), () => ByRole(IceSpot), arrivalTime: 39.9f);

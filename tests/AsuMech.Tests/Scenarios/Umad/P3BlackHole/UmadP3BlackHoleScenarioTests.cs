@@ -1,11 +1,13 @@
 using System.Numerics;
 using AsuMech.Core.Game.Party;
+using AsuMech.Core.SimObjects;
 using AsuMech.Scenarios;
 using AsuMech.Scenarios.Umad.P3BlackHole;
 using static AsuMech.Core.Game.Party.PartyRole;
 using static AsuMech.Tests.NegativeRun;
 using ActionId = AsuMech.Scenarios.Umad.UmadConstants.ActionId;
 using StatusId = AsuMech.Scenarios.Umad.UmadConstants.StatusId;
+using BNpcBaseId = AsuMech.Scenarios.Umad.UmadConstants.BNpcBaseId;
 
 namespace AsuMech.Tests;
 
@@ -213,4 +215,34 @@ public class UmadP3BlackHoleScenarioTests
         => BlackHole(MainTank)
             .DropBelowArenaAt(3f, to: new(0, 20.5f))
             .ShouldKill(TheEnvironment, MainTank);
+
+    // HP isn't simulated: Chaos falls, Exdeath starts his enrage Meteor and falls before it lands.
+    [Test]
+    public void ExdeathFallsDuringHisEnrageMeteor()
+    {
+        uint? exdeathCast = null;
+        bool? chaosDown = null, exdeathDown = null;
+        var run = ScenarioRun.Execute(typeof(UmadP3BlackHoleScenario), 0, 1, new ScenarioRunOptions
+        {
+            Overrides = o => Pin((UmadP3BlackHoleStateOverrides)o),
+            Probe = p =>
+            {
+                SimEnemy? Boss(uint id) => p.World.Children.OfType<SimEnemy>().FirstOrDefault(e => e.BNpcBaseId == id);
+                if (p.Crossed(UmadP3BlackHoleScenario.ChaosFalls + 1f))
+                {
+                    chaosDown = Boss(BNpcBaseId.ChaosP3) is not { } chaos || !chaos.IsAlive();
+                    exdeathCast = Boss(BNpcBaseId.Exdeath)?.CastActionId;
+                }
+                if (p.Crossed(UmadP3BlackHoleScenario.ExdeathFalls + 0.5f))
+                    exdeathDown = Boss(BNpcBaseId.Exdeath) is not { } exdeath || !exdeath.IsAlive();
+            },
+        });
+        Assert.That(run.Passed, run.ToString);
+        Assert.Multiple(() =>
+        {
+            Assert.That(chaosDown, Is.True);
+            Assert.That(exdeathCast, Is.EqualTo(ActionId.MeteorEnrage));
+            Assert.That(exdeathDown, Is.True);
+        });
+    }
 }

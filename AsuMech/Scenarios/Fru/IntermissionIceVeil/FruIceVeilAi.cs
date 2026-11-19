@@ -26,19 +26,23 @@ public sealed class FruIceVeilAi : IScenarioAi<FruIceVeilState>
         var ai = new AiManager(world);
         ai.Move(0.5f, () => ByRole(role => Point(Octant(role), 2)), arrivalTime: 3f);
         ai.Move(31.8f, () => ByRole(role => Light(role) is { } light ? BesideLight(light, 1) : BehindDark(role)), jitter: 0f, arrivalTime: 36f);
-        for (var wave = 0; wave < StormAt.Length; wave++)
+        for (var wave = 0; wave < StormsDodgedBesideTheLight; wave++)
         {
             var w = wave;
             var side = w % 2 == 0 ? -1 : 1;
             ai.Move(StormAt[w] + 0.35f, () => ByRole(role => Light(role) is { } light && state.LightFallsAt(light) > StormAt[w] ? BesideLight(light, side) : null),
                 jitter: 0f, arrivalTime: StormAt[w] + 1.8f);
         }
-        for (var light = 0; light < 4; light++)
-        {
-            var l = light;
-            ai.Move(state.LightFallsAt(l) + 0.3f, () => ByRole(role => Light(role) == l ? Point(l * 2, VeilRadius) : null), jitter: 0f);
-        }
+        ai.Move(HiemalRayAt[1] + LeaveTheSecondRayPuddle, () => ByRole(role => Light(role) is { } light ? Point(light * 2, VeilRadius) : null), jitter: 0f);
+        ai.Move(StormAt[^1] + 0.35f, () => ByRole(role => Light(role) is { } light && state.LightFallsAt(light) > StormAt[^1] ? PastTheCentre(light) : null), jitter: 0f);
+        ai.Move(StormAt[^1] + StormResolves + 0.3f, () => ByRole(role => Light(role) is { } light ? Point(light * 2, VeilRadius) : null), jitter: 0f);
     }
+
+    private const int StormsDodgedBesideTheLight = 4;
+    private const float LeaveTheSecondRayPuddle = 1.28f;
+    private const float StormResolves = 3.3f;
+
+    private static Vector3 PastTheCentre(int light) => Point(light * 2 + 4, 1);
 
     private static int? Light(PartyRole role) => role switch
     {
