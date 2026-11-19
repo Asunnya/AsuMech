@@ -1,0 +1,113 @@
+{
+  "scenario": "FruP1TurnOfTheHeavensScenario",
+  "strat": "NA · LesBin",
+  "sources": [
+    {
+      "label": "NAUR LesBin P1 (Role + Fixed Tether Utopia, Conga Fall of Faith)",
+      "url": "https://tinyurl.com/lesbin-p1"
+    },
+    {
+      "label": "NAUR FRU guide",
+      "url": "https://naurffxiv.com/ultimate/fru/guide"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "FruCyclonicBreakDance",
+        "time": 0.6000004,
+        "line": 19
+      },
+      "title": "Cyclonic Break clock spots",
+      "cue": "Cyclonic Break cast, boss wreathed in fire or lightning",
+      "rule": "Take your clock spot around the boss: MT close in front (north), OT south, H1 west, H2 east, M1 south-west, M2 south-east, R1 north-west, R2 north-east. Every cone aims at its player, so keep apart.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruCyclonicBreakDance",
+        "time": 10.650001,
+        "line": 20
+      },
+      "title": "Dodge the repeat (spread or pairs)",
+      "cue": "First Cyclonic Break cones go off",
+      "rule": "The cones fire again where they first hit. Lightning: slide one cone-width clockwise and spread. Fire: meet your partner 8m out between your spots for Sinsmoke pairs: MT with R1, H2 with R2, OT with M2, H1 with M1.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruCyclonicBreakDance",
+        "time": 12.790001,
+        "line": 21
+      },
+      "title": "Back to your clock spot",
+      "cue": "Sinsmite or Sinsmoke goes off",
+      "rule": "Return to your original spot: the next set of cones turns one cone-width clockwise, onto the gap you just used.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruCyclonicBreakDance",
+        "time": 14.72,
+        "line": 22
+      },
+      "title": "Slide clockwise again",
+      "cue": "Turned Cyclonic Break cones go off",
+      "rule": "Once the turned cones go off, slide one cone-width clockwise again; the last set turns one more width past you.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP1TurnOfTheHeavensAi",
+        "time": 16.8,
+        "line": 26
+      },
+      "title": "Out of both Burnt Strikes",
+      "cue": "Turn of the Heavens and the west Burnt Strike cast",
+      "rule": "Run to the half where the halos don't match Turn of the Heavens' element (fire cast: the levin side), and stay north or south of the west Burnt Strike line on the half your clock spot was: MT, H1, R1, R2 north; OT, H2, M1, M2 south.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP1TurnOfTheHeavensAi",
+        "time": 20.8,
+        "line": 27
+      },
+      "title": "Sinsmoke groups",
+      "cue": "Bound of Faith tethers and Prey on two players",
+      "rule": "Split into the two stack groups on the safe half: supports north, DPS south, so each group holds one Bound of Faith target. Both tethers on supports: the later of the two (MT, OT, H1, H2 order) swaps with M1. Both on DPS: the later of the two (M1, M2, R1, R2 order) swaps with MT.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP1TurnOfTheHeavensAi",
+        "time": 24.75,
+        "line": 28
+      },
+      "title": "Hug the north line",
+      "cue": "North Burnt Strike goes off",
+      "rule": "Right after the north Burnt Strike line goes off, step in next to where it hit on the safe side, so Blastburn only pushes you a few metres into the safe half.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP1TurnOfTheHeavensAi",
+        "time": 29.15,
+        "line": 29
+      },
+      "title": "Stack for Sinsmoke",
+      "cue": "Brightfire halos explode",
+      "rule": "Gather with your group near the middle of your quarter on the safe half and stack on the tethered player as the image charges.",
+      "tolerance": 1.5,
+      "skip": false
+    }
+  ],
+  "draft": true
+}
