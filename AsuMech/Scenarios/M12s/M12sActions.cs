@@ -462,11 +462,10 @@ public static class M12sActions
         DeathExplanation = "take a defamation far from everyone",
     };
 
-    // UNVERIFIED: the minimum.
     public static readonly EnemyAction HeavySlam = new(ActionId.HeavySlam)
     {
         Cast = new() { AnimationLock = 4.1f, FaceTarget = false },
-        Effects = [Damage(VulnToMagic, split: Stack(2)), MagicVuln(4.96f)],
+        Effects = [Damage(VulnToMagic, split: Stack(3)), MagicVuln(4.96f)],
         Timing = new() { DamageDelay = 0.3f },
         DeathExplanation = "the light party shares the stack",
     };
