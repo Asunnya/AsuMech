@@ -797,12 +797,18 @@ public sealed unsafe partial class ZoneControl : IZoneControl
     }
 
     // Feeds one server-style packet to the client through the same entry the real ones take,
-    // bypassing the firewall: a byte-identical replay of a captured packet, for handlers
-    // FFXIVClientStructs doesn't expose. `body` is the IPC payload after the 16-byte header
+    // bypassing the firewall, during a session only: a byte-identical replay of a captured packet,
+    // for handlers FFXIVClientStructs doesn't expose. `body` is the IPC payload after the 16-byte header
     // built here; `sourceEntityId` is the actor the packet is about. Needs a real packet to
     // have passed the hook first (the heartbeat guarantees one within seconds of login).
     public bool InjectIncomingPacket(uint sourceEntityId, ushort opcode, ReadOnlySpan<byte> body, string what)
     {
+        // Outside a session the server never sent it, and nothing would undo what its handler did.
+        if (!IsActive)
+        {
+            AsuMech.Core.DiagnosticLog.Warn($"[ZoneControl] InjectIncomingPacket({what}): no session is active -- dropped.");
+            return false;
+        }
         if (dispatcher == null)
         {
             AsuMech.Core.DiagnosticLog.Warn($"[ZoneControl] InjectIncomingPacket({what}): no PacketDispatcher captured yet -- dropped.");

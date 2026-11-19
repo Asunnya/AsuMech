@@ -307,6 +307,15 @@ public class ZoneControlFirewallRulesTests
         AssertNone(EveryPathPasses(hold, guard, check, false, hookChange, "a send hook Enable/Disable"));
     }
 
+    // A replayed server packet bypasses the receive filter and runs the client's own handlers;
+    // outside a session the server never sent it and nothing would undo what it did.
+    [Test]
+    public void InjectedPackets_ReachTheClientOnlyDuringASession()
+    {
+        AssertNone(EveryPathPasses(IL.Method(Zone, "InjectIncomingPacket"), CallTo($"{Zone}::get_IsActive"), "IsActive", true,
+            CallTo("Dalamud.Hooking.Hook::get_Original"), "the original receive"));
+    }
+
     // A lift that fails part-way leaves the send filter up: nothing the client does reaches the server.
     [Test]
     public void DisableFirewall_LowersTheSendFilterOnlyOnceTheReceiveFilterIsDown()
