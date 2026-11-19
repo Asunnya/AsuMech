@@ -835,7 +835,8 @@ public sealed unsafe partial class ZoneControl : IZoneControl
             else
             {
                 System.Threading.Interlocked.Increment(ref heldInbound);
-                partyWatch?.Tracker.Observe(a3, a2, PartyClock.UtcNow);
+                var party = partyWatch?.Tracker.Observe(a3, a2, PartyClock.UtcNow) ?? false;
+                partyWatch?.NoteHeld(a3, a2, party);
             }
         }
         catch (Exception e)

@@ -93,6 +93,17 @@ internal sealed unsafe class ServerPartyWatch : IDisposable
 
     public PartyStatusTracker Tracker { get; }
 
+    // One line per packet the filter held, so a party change that didn't come back can be traced to
+    // what arrived and when. PartyEvent's kind byte tells a ready check (16, 17) from other events.
+    internal void NoteHeld(nint packet, uint actor, bool party)
+    {
+        var opcode = *(ushort*)(packet + 2);
+        var payload = (byte*)packet + 0x10;
+        var kind = opcode == Tracker.PartyEventOpcode && opcode != 0 ? $", PartyEvent kind {payload[PartyEvent.KindOffset]}" : "";
+        var head = Convert.ToHexString(new ReadOnlySpan<byte>(payload, 16));
+        AsuMech.Core.DiagnosticLog.Info($"[PartyWatch] Held 0x{opcode:X4} for 0x{actor:X}{(party ? " (party packet)" : "")}{kind}: {head}.");
+    }
+
     // The notice handler and the roster parser, 0 where not found. A scan takes tens of milliseconds, so
     // this runs before the watch is built on the framework thread.
     public static (nint Notice, nint Roster) FindHandlers()
