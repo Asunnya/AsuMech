@@ -41,14 +41,14 @@ public sealed class FruP2MirrorMirrorScenario : IScenario
         world.Events.Add(0.6f, () => usurper?.AddStatusParam(TransfigurationStatus, UsurperLightTransformation));
         world.Events.Add(2.23f, MarkRayTarget);
         world.Events.Add(2.23f, () => usurper?.Cast(ActionId.HallowedRayCast, animationLock: 1.1f));
-        world.Events.Add(7.35f, HallowedRay);
+        world.Events.Add(7.75f, HallowedRay);
         world.Events.Add(13.85f, () => usurper?.Cast(ActionId.MirrorMirror, animationLock: 2.1f));
         world.Events.Add(18.83f, ShowMirrors);
         world.Events.Add(19.3f, () => usurper?.MoveTo(state.BossSpot, finalRotation: new Placement(state.BossSpot, 0f).Face(Vector3.Zero).Rotation));
         world.Events.Add(25.02f, () => usurper?.VoiceLine(VoiceLineId.ScytheKick));
         world.Events.Add(25.02f, () => usurper?.Cast(Actions.ScytheKick));
-        world.Events.Add(30.7f, () => usurper?.CastFromHelper(Actions.ReflectedScytheKick, at: new Placement(state.Blue, 0f)));
         world.Events.Add(31f, RedMirrorsKick);
+        world.Events.Add(31.05f, () => usurper?.CastFromHelper(Actions.ReflectedScytheKick, at: new Placement(state.Blue, 0f)));
         world.Events.Add(31.37f, () => HouseOfLight(state.Blue));
         world.Events.Add(31.45f, () => HouseOfLight(state.BossSpot));
         world.Events.Add(33.07f, () => world.Map.AddEffect(MapEffect.MirrorHide, MirrorSlot(state.BlueOctant)));
