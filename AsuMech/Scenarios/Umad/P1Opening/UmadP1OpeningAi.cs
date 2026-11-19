@@ -57,7 +57,7 @@ public sealed class UmadP1OpeningAi : IScenarioAi<UmadP1OpeningState>
         ai.Move(0.3f, () => ByRole(role => OpeningSpot(role, PartyRole.MainTank, PartyRole.OffTank)), jitter: 0f);
         ai.Move(10.6f, () => ByRole(role => OpeningSpot(role, PartyRole.OffTank, PartyRole.MainTank)), jitter: 0f);
         ai.Move(22.0f, () => ByRole(WaitOnOwnSideForTheTells), jitter: 0f);
-        ai.Move(FirstMysteryMagicAt + 0.1f, () => ByRole(FirstSetSpotBeforeTheKnockback), jitter: 0f, arrivalTime: PulseWaveAt - 0.4f);
+        ai.Move(FirstMysteryMagicAt + 0.1f, () => ByRole(FirstSetSpotBeforeTheKnockback), jitter: 0f);
         ai.Move(PulseWaveAt + 1.3f, () => ByRole(FirstSetSpot), jitter: 0f);
         ai.Move(FireAt + 0.3f, () => ByRole(LaserLineSpot), jitter: 0f, arrivalTime: LaserAt - 0.4f);
         ai.Move(TowersAt + 0.1f, () => ByRole(TowerOrStepOutOfIt), jitter: 0f, arrivalTime: TowersAt + 2.6f);
