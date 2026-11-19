@@ -71,6 +71,7 @@ using AsuMech.Scenarios.Ucob.P1Twintania;
 using AsuMech.Scenarios.Ucob.P2Nael;
 using AsuMech.Scenarios.Ucob.P3Blackfire;
 using AsuMech.Scenarios.Ucob.P3Quickmarch;
+using AsuMech.Scenarios.Ucob.P3SeventhUmbralEra;
 using AsuMech.Scenarios.Ucob.P3Fellruin;
 using AsuMech.Scenarios.Ucob.P3Heavensfall;
 using AsuMech.Scenarios.Ucob.P3GrandOctet;
@@ -193,6 +194,7 @@ public sealed class ScenarioCatalog
         new TeaP4PerfectAlexanderScenario(),
         new UcobP1TwintaniaScenario(),
         new UcobP2NaelScenario(),
+        new UcobP3SeventhUmbralEraScenario(),
         new UcobP3QuickmarchScenario(),
         new UcobP3BlackfireScenario(),
         new UcobP3FellruinScenario(),

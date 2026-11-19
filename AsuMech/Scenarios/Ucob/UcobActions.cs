@@ -145,6 +145,28 @@ public static class UcobActions
         DeathExplanation = "outside a Neurolink for Aetheric Profusion",
     };
 
+    // -- P3 opener --
+
+    // Knocks everyone away from the centre, as Heavensfall does.
+    public static readonly EnemyAction SeventhUmbralEra = new(ActionId.SeventhUmbralEra)
+    {
+        Effects = [Damage(), Knockback(HeavensfallKnockback)],
+        Timing = new() { DamageDelay = 0.2f },
+    };
+
+    public static readonly EnemyAction CalamitousFlame = new(ActionId.CalamitousFlame)
+    {
+        Effects = [Damage()],
+        Timing = new() { DamageDelay = 0.2f },
+    };
+
+    // UNVERIFIED: its size; only seen under shields.
+    public static readonly EnemyAction CalamitousBlaze = new(ActionId.CalamitousBlaze)
+    {
+        Effects = [Damage()],
+        Timing = new() { DamageDelay = 0.2f },
+    };
+
     public static readonly EnemyAction Flatten = new(ActionId.Flatten)
     {
         Effects = [Damage(TankBuster)],

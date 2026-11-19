@@ -1,0 +1,90 @@
+{
+  "scenario": "UcobP3SeventhUmbralEraScenario",
+  "casts": [
+    {
+      "actionId": 9937,
+      "name": "Seventh Umbral Era",
+      "start": 2.717,
+      "resolve": 2.717,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9938,
+      "name": "Calamitous Flame",
+      "start": 5.7,
+      "resolve": 5.7,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9938,
+      "name": "Calamitous Flame",
+      "start": 6.767,
+      "resolve": 6.767,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9938,
+      "name": "Calamitous Flame",
+      "start": 7.833,
+      "resolve": 7.833,
+      "occurrence": 3
+    },
+    {
+      "actionId": 9939,
+      "name": "Calamitous Blaze",
+      "start": 10.7,
+      "resolve": 10.7,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9936,
+      "name": "",
+      "start": 13.733,
+      "resolve": 13.733,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9936,
+      "name": "",
+      "start": 16.767,
+      "resolve": 16.767,
+      "occurrence": 2
+    },
+    {
+      "actionId": 9936,
+      "name": "",
+      "start": 19.8,
+      "resolve": 19.8,
+      "occurrence": 3
+    },
+    {
+      "actionId": 9940,
+      "name": "Flare Breath",
+      "start": 19.883,
+      "resolve": 19.883,
+      "occurrence": 1
+    },
+    {
+      "actionId": 9936,
+      "name": "",
+      "start": 22.833,
+      "resolve": 22.833,
+      "occurrence": 4
+    },
+    {
+      "actionId": 9941,
+      "name": "Flatten",
+      "start": 23.983,
+      "resolve": 27.683,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Seventh Umbral Era",
+    "Calamitous Flame",
+    "Calamitous Blaze",
+    "",
+    "Flare Breath",
+    "Flatten"
+  ]
+}
