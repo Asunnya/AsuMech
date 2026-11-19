@@ -266,5 +266,8 @@ public class UcobConstants
         public const uint Megaflare = 0x26BA;
         public const uint WhiteFury = 0x26C4;
         public const uint PrimeBahamutsFavor = 0x26E8;
+        public const uint SeventhUmbralEra = 0x26D1;
+        public const uint CalamitousFlame = 0x26D2;
+        public const uint CalamitousBlaze = 0x26D3;
     }
 }

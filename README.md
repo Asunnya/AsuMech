@@ -154,6 +154,7 @@ All using default NA pf strats unless noted otherwise:
     - P1 Twintania (Plummet, Twister, Fireball stacks, Death Sentence tank swaps, Liquid Hell baits, Neurolinks and Hatches) _by [Asunnya](https://github.com/Asunnya)_
     - P2 Nael deus Darnus (Heavensfall, Thermionic Burst slices, Meteor Streams, Dalamud Dive, Nael's quotes, fire/ice, Thunderstruck, Doom and Wings of Salvation, Ravensbeak, then the push or, optionally, the divebombs) _by [Asunnya](https://github.com/Asunnya)_
     - P3 Bahamut Prime _by [Asunnya](https://github.com/Asunnya)_
+      - Seventh Umbral Era (Bahamut Prime lands: knockback raidwide, Calamitous Flames and Blaze, Flare Breath, Flatten)
       - Quickmarch Trio (dives, Twisters, Megaflare spreads and stack, Earth Shakers, Tempest Wing, Flare Breath)
       - Blackfire Trio (Liquid Hell, Thermionic Beam, Megaflare towers and stack, Hypernovas, Gigaflare)
       - Fellruin Trio (Nael's quote, Tempest Wing, Aetheric Profusion in the Neurolinks, Meteor Streams)
