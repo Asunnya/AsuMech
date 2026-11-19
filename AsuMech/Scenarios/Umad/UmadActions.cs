@@ -278,6 +278,14 @@ public static class UmadActions
         DeathExplanation = "Primordial Crust ran out",
     };
 
+    // Exdeath's slow enrage once Chaos is down: he has to fall before it lands.
+    public static readonly EnemyAction MeteorEnrage = new(UmadConstants.ActionId.MeteorEnrage)
+    {
+        Cast = new() { AnimationLock = 3.1f },
+        Effects = [Damage(Lethal)],
+        DeathExplanation = "Exdeath's Meteor (enrage: Exdeath wasn't killed in time)",
+    };
+
     // Lands on everyone for 0, typeless, whatever the sheet's AttackType says.
     public static readonly EnemyAction WhiteHole = new(UmadConstants.ActionId.WhiteHole)
     {

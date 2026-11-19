@@ -861,6 +861,13 @@
       "start": 157.672,
       "resolve": 157.672,
       "occurrence": 3
+    },
+    {
+      "actionId": 50718,
+      "name": "Meteor",
+      "start": 173.485,
+      "resolve": 183.185,
+      "occurrence": 1
     }
   ],
   "names": [
@@ -880,6 +887,7 @@
     "Blizzard III",
     "Stomp-a-Mole",
     "Knock Down",
-    "Big Bang"
+    "Big Bang",
+    "Meteor"
   ]
 }

@@ -273,6 +273,7 @@ public static class UmadConstants
         public const uint Earthquake                   = 0xC571U; // single-target, cast 5.0s
         public const uint Earthquake_Visual              = 0xC572U; // circle r=100, cast 5.0s
         public const uint ThrummingThunderIII_Cast     = 0xC5DEU; // single-target, cast 5.0s; P3 cast variant, base = 0xBA9F
+        public const uint MeteorEnrage                 = 0xC61EU; // circle r=100, cast 10.0s
         public const uint DoubleTroubleTrap_Cast       = 0xBAA6U; // single-target, cast 3.0s
         public const uint WaveCannon                   = 0xBAA8U; // rect 100x6 (len x width), instant
         public const uint PulseWave                    = 0xBAA9U; // single-target, instant; knockback 72
