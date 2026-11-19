@@ -27,7 +27,7 @@ public sealed class FruP4DarklitDragonsongAi(bool playerBaitsSomberDance) : ISce
         state = stateParam;
         world = worldParam;
         swapped = SwapFreeWaterToItsGroup();
-        somberTank = ChooseSomberTank();
+        somberTank = state.SomberTank ??= ChooseSomberTank();
         var ai = new AiManager(world);
         ai.Move(2f, () => ByRole(Middle), arrivalTime: 6.6f);
         ai.Move(6.65f, () => ByRole(OpeningSpread), arrivalTime: 8.8f);

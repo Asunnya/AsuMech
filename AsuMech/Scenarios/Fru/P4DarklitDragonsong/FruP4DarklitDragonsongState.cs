@@ -57,6 +57,28 @@ public sealed class FruP4DarklitDragonsongState
         LineupOrder = lineup;
     }
 
+    // Who baits Somber Dance, as the strat picked it on the host: it reads who plays which seat
+    // there, so a replay takes the host's pick.
+    public PartyRole? SomberTank { get; set; }
+
+    // A peer's shadow of the host's roll (see IMultiplayerReplayable): only what the Ai reads.
+    private FruP4DarklitDragonsongState(IReadOnlyList<PartyRole> lineupOrder, int tetherWaterIndex, int freeWaterIndex, bool eastWing, PartyRole somberTank)
+    {
+        links = [];
+        LineupOrder = lineupOrder;
+        TetherWaterIndex = tetherWaterIndex;
+        FreeWaterIndex = freeWaterIndex;
+        EastWing = eastWing;
+        SomberTank = somberTank;
+    }
+
+    public static FruP4DarklitDragonsongState? FromNetworkReplay(IReadOnlyList<PartyRole>? lineupOrder, int tetherWaterIndex, int freeWaterIndex,
+        bool eastWing, PartyRole somberTank)
+        => lineupOrder is { Count: 8 } && lineupOrder.All(Enum.IsDefined) && lineupOrder.Distinct().Count() == 8
+           && tetherWaterIndex is >= 0 and < 4 && freeWaterIndex is >= 0 and < 4 && somberTank.IsTank()
+            ? new(lineupOrder.ToList(), tetherWaterIndex, freeWaterIndex, eastWing, somberTank)
+            : null;
+
     public PartyRole TetherWater => LineupOrder[TetherWaterIndex];
     public PartyRole FreeWater => LineupOrder[4 + FreeWaterIndex];
     public PartyRole[] Waters => [TetherWater, FreeWater];

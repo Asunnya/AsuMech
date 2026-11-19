@@ -6,16 +6,18 @@ using AsuMech.Core.Game;
 using AsuMech.Core.Game.Ai;
 using AsuMech.Core.Game.Party;
 using AsuMech.Core.SimObjects;
+using AsuMech.Multiplayer;
 using static AsuMech.Scenarios.Fru.FruConstants;
 using static AsuMech.Scenarios.Fru.P2DiamondDust.FruP2DiamondDustState;
 using Actions = AsuMech.Scenarios.Fru.FruActions;
 
 namespace AsuMech.Scenarios.Fru.P2DiamondDust;
 
-public sealed class FruP2DiamondDustScenario : IScenario
+public sealed class FruP2DiamondDustScenario : IMultiplayerReplayable
 {
     public string Name => "Diamond Dust";
     public IPhase Phase => FruZone.P2;
+    public bool SupportsMultiplayer => true;
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new FruP2DiamondDustAi()];
 
@@ -235,5 +237,19 @@ public sealed class FruP2DiamondDustScenario : IScenario
     public void Tick(float delta, float elapsed)
     {
         puddles.BleedWhoeverStandsIn(world, elapsed, "stepped in a Sinbound Holy puddle");
+    }
+
+    public MpMessage? BuildReplayStateMessage()
+        => state is { } s
+            ? new FruP2DiamondDustAiReplayStateMessage(s.FirstIcicle, s.SupportsMarked, s.Axe, s.MirrorOctant, s.Stillness, s.GazeOctant)
+            : null;
+
+    public object? StartReplay(MpMessage message, int aiIndex, PartyRole myRole, SimWorld replayWorld)
+    {
+        if (message is not FruP2DiamondDustAiReplayStateMessage msg || aiIndex < 0 || aiIndex >= AiStrats.Count) return null;
+        var shadowState = FruP2DiamondDustState.FromNetworkReplay(msg.FirstIcicle, msg.SupportsMarked, msg.Axe, msg.MirrorOctant, msg.Stillness, msg.GazeOctant);
+        if (shadowState == null) return null;
+        ((IScenarioAi<FruP2DiamondDustState>)AiStrats[aiIndex]).Run(shadowState, replayWorld);
+        return shadowState;
     }
 }

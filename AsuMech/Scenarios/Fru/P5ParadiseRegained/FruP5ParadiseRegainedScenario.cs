@@ -7,16 +7,18 @@ using AsuMech.Core.Game.Ai;
 using AsuMech.Core.Game.Party;
 using AsuMech.Core.Map;
 using AsuMech.Core.SimObjects;
+using AsuMech.Multiplayer;
 using static AsuMech.Scenarios.Fru.FruConstants;
 using static AsuMech.Scenarios.Fru.P5ParadiseRegained.FruP5ParadiseRegainedState;
 using Actions = AsuMech.Scenarios.Fru.FruActions;
 
 namespace AsuMech.Scenarios.Fru.P5ParadiseRegained;
 
-public sealed class FruP5ParadiseRegainedScenario : IScenario
+public sealed class FruP5ParadiseRegainedScenario : IMultiplayerReplayable
 {
     public string Name => "Paradise Regained";
     public IPhase Phase => FruZone.P5;
+    public bool SupportsMultiplayer => true;
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new FruP5ParadiseRegainedAi()];
 
@@ -178,5 +180,17 @@ public sealed class FruP5ParadiseRegainedScenario : IScenario
         if (lineAims[round] is not { } aim) return;
         pandora?.CastFromHelper(Actions.CruelPathOfLightEcho, at: new Placement(Vector3.Zero, aim.Light));
         pandora?.CastFromHelper(Actions.CruelPathOfDarknessEcho, at: new Placement(Vector3.Zero, aim.Dark));
+    }
+
+    public MpMessage? BuildReplayStateMessage()
+        => state is { } s ? new FruP5ParadiseRegainedAiReplayStateMessage(s.Rotation, s.DarkFirst) : null;
+
+    public object? StartReplay(MpMessage message, int aiIndex, PartyRole myRole, SimWorld replayWorld)
+    {
+        if (message is not FruP5ParadiseRegainedAiReplayStateMessage msg || aiIndex < 0 || aiIndex >= AiStrats.Count) return null;
+        var shadowState = FruP5ParadiseRegainedState.FromNetworkReplay(msg.Rotation, msg.DarkFirst);
+        if (shadowState == null) return null;
+        ((IScenarioAi<FruP5ParadiseRegainedState>)AiStrats[aiIndex]).Run(shadowState, replayWorld);
+        return shadowState;
     }
 }

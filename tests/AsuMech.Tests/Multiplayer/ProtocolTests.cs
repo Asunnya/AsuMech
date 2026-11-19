@@ -86,6 +86,19 @@ public class ProtocolTests
         Assert.That(((GamePacketsMessage)received).Packets.Select(p => p.GetType()), Is.EqualTo(forms));
     }
 
+    // A carry with no timeline goes out as it did before Timeline existed, so a client without
+    // the field reads every carry but FRU's the same.
+    [Test]
+    public void ACarryNamesItsTimelineOnlyWhenItHasOne()
+    {
+        var id = RelayWire.PeerId(RelayWire.NewSecret());
+        var plain = JsonSerializer.SerializeToUtf8Bytes<MpMessage>(new CarryMessage(default, 1, 2, 3));
+        Assert.That(System.Text.Encoding.UTF8.GetString(plain), Does.Not.Contain("Timeline"));
+        Assert.That(((CarryMessage)Receive(plain, true, id)).Timeline, Is.Null);
+        var played = JsonSerializer.SerializeToUtf8Bytes<MpMessage>(new CarryMessage(default, 1, 2, 3, 0x1234));
+        Assert.That(((CarryMessage)Receive(played, true, id)).Timeline, Is.EqualTo(0x1234));
+    }
+
     private static T Sample<T>(Type type, Guid id)
     {
         var constructor = type.GetConstructors().Single();

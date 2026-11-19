@@ -9,16 +9,18 @@ using AsuMech.Core.Game.Party;
 using AsuMech.Core.Native.Interfaces;
 using AsuMech.Core.Map;
 using AsuMech.Core.SimObjects;
+using AsuMech.Multiplayer;
 using static AsuMech.Scenarios.Fru.FruConstants;
 using static AsuMech.Scenarios.Fru.P4DarklitDragonsong.FruP4DarklitDragonsongState;
 using Actions = AsuMech.Scenarios.Fru.FruActions;
 
 namespace AsuMech.Scenarios.Fru.P4DarklitDragonsong;
 
-public sealed class FruP4DarklitDragonsongScenario : IScenario
+public sealed class FruP4DarklitDragonsongScenario : IMultiplayerReplayable
 {
     public string Name => "Darklit Dragonsong";
     public IPhase Phase => FruZone.P4;
+    public bool SupportsMultiplayer => true;
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new FruP4DarklitDragonsongAi(playerBaitsSomberDance: false), new FruP4DarklitDragonsongAi(playerBaitsSomberDance: true)];
 
@@ -358,5 +360,19 @@ public sealed class FruP4DarklitDragonsongScenario : IScenario
     public void Tick(float delta, float elapsed)
     {
         foreach (var tower in towers) tower.Tick(world.Party);
+    }
+
+    public MpMessage? BuildReplayStateMessage()
+        => state is { SomberTank: { } somberTank } s
+            ? new FruP4DarklitDragonsongAiReplayStateMessage(s.LineupOrder.ToArray(), s.TetherWaterIndex, s.FreeWaterIndex, s.EastWing, somberTank)
+            : null;
+
+    public object? StartReplay(MpMessage message, int aiIndex, PartyRole myRole, SimWorld replayWorld)
+    {
+        if (message is not FruP4DarklitDragonsongAiReplayStateMessage msg || aiIndex < 0 || aiIndex >= AiStrats.Count) return null;
+        var shadowState = FruP4DarklitDragonsongState.FromNetworkReplay(msg.LineupOrder, msg.TetherWaterIndex, msg.FreeWaterIndex, msg.EastWing, msg.SomberTank);
+        if (shadowState == null) return null;
+        ((IScenarioAi<FruP4DarklitDragonsongState>)AiStrats[aiIndex]).Run(shadowState, replayWorld);
+        return shadowState;
     }
 }

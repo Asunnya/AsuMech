@@ -8,16 +8,20 @@ using AsuMech.Core.Game.Ai;
 using AsuMech.Core.Game.Party;
 using AsuMech.Core.Map;
 using AsuMech.Core.SimObjects;
+using AsuMech.Multiplayer;
 using static AsuMech.Scenarios.Fru.FruConstants;
 using static AsuMech.Scenarios.Fru.P2LightRampant.FruP2LightRampantState;
 using Actions = AsuMech.Scenarios.Fru.FruActions;
 
 namespace AsuMech.Scenarios.Fru.P2LightRampant;
 
-public sealed class FruP2LightRampantScenario : IScenario
+public sealed class FruP2LightRampantScenario : IMultiplayerReplayable
 {
     public string Name => "Light Rampant";
     public IPhase Phase => FruZone.P2;
+    public bool SupportsMultiplayer => true;
+    // The strat reads each player's Lightsteeped stacks.
+    public bool MirrorsHostStatuses => true;
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new FruP2LightRampantAi()];
 
@@ -292,5 +296,19 @@ public sealed class FruP2LightRampantScenario : IScenario
         foreach (var tower in towers) tower.Tick(world.Party);
         centerTower?.Tick(world.Party);
         puddles.BleedWhoeverStandsIn(world, elapsed, "stepped in a Luminous Hammer puddle");
+    }
+
+    public MpMessage? BuildReplayStateMessage()
+        => state is { } s
+            ? new FruP2LightRampantAiReplayStateMessage(Enumerable.Range(0, 8).Select(s.Slot).ToArray(), s.NorthOrbsFirst, s.Pairs)
+            : null;
+
+    public object? StartReplay(MpMessage message, int aiIndex, PartyRole myRole, SimWorld replayWorld)
+    {
+        if (message is not FruP2LightRampantAiReplayStateMessage msg || aiIndex < 0 || aiIndex >= AiStrats.Count) return null;
+        var shadowState = FruP2LightRampantState.FromNetworkReplay(msg.Slots, msg.NorthOrbsFirst, msg.Pairs);
+        if (shadowState == null) return null;
+        ((IScenarioAi<FruP2LightRampantState>)AiStrats[aiIndex]).Run(shadowState, replayWorld);
+        return shadowState;
     }
 }

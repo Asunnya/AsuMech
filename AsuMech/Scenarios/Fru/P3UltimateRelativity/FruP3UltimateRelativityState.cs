@@ -64,6 +64,26 @@ public sealed class FruP3UltimateRelativityState
         ShellCrusherTarget = overrides.ShellCrusherTarget ?? rng.NextRole();
     }
 
+    // A peer's shadow of the host's roll (see IMultiplayerReplayable): only what the Ai reads.
+    private FruP3UltimateRelativityState(IReadOnlyList<RelativityDebuff> debuffs, bool dpsIce, int north, int clockwiseMask)
+    {
+        foreach (var role in Enum.GetValues<PartyRole>()) this.debuffs[role] = debuffs[(int)role];
+        DpsIce = dpsIce;
+        North = north;
+        ClockwiseMask = clockwiseMask;
+    }
+
+    private static readonly RelativityDebuff[] SupportDeal =
+        [RelativityDebuff.ShortSupport, RelativityDebuff.MediumSupport, RelativityDebuff.LongSupport, RelativityDebuff.LongSupport];
+    private static readonly RelativityDebuff[] DpsDeal =
+        [RelativityDebuff.ShortDps, RelativityDebuff.ShortDps, RelativityDebuff.MediumDps, RelativityDebuff.LongDps];
+
+    public static FruP3UltimateRelativityState? FromNetworkReplay(IReadOnlyList<RelativityDebuff>? debuffs, bool dpsIce, int north, int clockwiseMask)
+        => debuffs is { Count: 8 } && debuffs.Take(4).Order().SequenceEqual(SupportDeal) && debuffs.Skip(4).Order().SequenceEqual(DpsDeal)
+           && north is >= 0 and < 8 && clockwiseMask is >= 0 and < 256
+            ? new(debuffs, dpsIce, north, clockwiseMask)
+            : null;
+
     public RelativityDebuff Debuff(PartyRole role) => debuffs[role];
 
     public PartyRole IceHolder => debuffs.First(d => d.Value == (DpsIce ? RelativityDebuff.LongDps : RelativityDebuff.ShortSupport)).Key;

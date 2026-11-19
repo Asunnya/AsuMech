@@ -36,6 +36,21 @@ public sealed class FruP3ApocalypseState
         SpiritTakerTarget = overrides.SpiritTakerTarget ?? rng.NextRole();
     }
 
+    // A peer's shadow of the host's roll (see IMultiplayerReplayable): only what the Ai reads.
+    private FruP3ApocalypseState(IReadOnlyList<int> waterDurations, int rotation, bool clockwise)
+    {
+        WaterDurations = waterDurations;
+        Rotation = rotation;
+        Clockwise = clockwise;
+    }
+
+    private static readonly int[] WaterDeal = [0, 0, 1, 1, 2, 2, 3, 3];
+
+    public static FruP3ApocalypseState? FromNetworkReplay(IReadOnlyList<int>? waterDurations, int rotation, bool clockwise)
+        => waterDurations != null && waterDurations.Order().SequenceEqual(WaterDeal) && rotation is >= 0 and < 4
+            ? new(waterDurations.ToList(), rotation, clockwise)
+            : null;
+
     public int WaterDuration(PartyRole role) => WaterDurations[(int)role];
 
     public IEnumerable<PartyRole> WaterHolders(int duration)
