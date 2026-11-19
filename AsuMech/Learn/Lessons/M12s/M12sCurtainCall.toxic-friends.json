@@ -1,0 +1,138 @@
+{
+  "scenario": "M12sCurtainCallScenario",
+  "strat": "Toxic Friends",
+  "sources": [
+    {
+      "label": "Toxic Friends raidplan",
+      "url": "https://raidplan.io/plan/m1AMDbG_jxkgkPRc"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "M12sCurtainCallAi",
+        "time": 0.5,
+        "line": 33
+      },
+      "title": "Stack to start the puddles",
+      "cue": "Lindwurm appears",
+      "rule": "Stack a few metres south of the centre, leaning toward the side the dragon head will cleave (west when the head rises east, east when it rises west).",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sCurtainCallAi",
+        "from": 7.71,
+        "to": 13.650001,
+        "line": 37
+      },
+      "title": "Walk the puddles in a loop",
+      "cue": "Phagocyte Spotlight drops a puddle under you",
+      "rule": "Each puddle lands where you stood, so move on as a group after each one: out to the cleave side, up that side to the north, across the north, then back in toward the middle on the head's side.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sCurtainCallAi",
+        "time": 15.610001,
+        "line": 39
+      },
+      "title": "Rotting in the cleave, Bursting by the head",
+      "cue": "The dragon head rises on one side",
+      "rule": "With Rotting Flesh, stand spread inside the head's cleave: the hit cures it and you then spread Cell Shedding. With Bursting Grotesquerie, spread on the head's side, out of the cleave. Each role's four players take the same four spots.",
+      "roles": {
+        "MainTank": {
+          "rule": "Rotting: in the cleave close to the middle, north half. Bursting: beside the head, at the north edge."
+        },
+        "MeleeDpsA": {
+          "rule": "Rotting: in the cleave close to the middle, north half. Bursting: beside the head, at the north edge."
+        },
+        "OffTank": {
+          "rule": "Rotting: deep in the cleave by the far wall, just north of the middle line. Bursting: the head-side wall, north half."
+        },
+        "MeleeDpsB": {
+          "rule": "Rotting: deep in the cleave by the far wall, just north of the middle line. Bursting: the head-side wall, north half."
+        },
+        "RegenHealer": {
+          "rule": "Rotting: in the cleave close to the middle, south half. Bursting: the head-side wall, south half."
+        },
+        "PhysRangedDps": {
+          "rule": "Rotting: in the cleave close to the middle, south half. Bursting: the head-side wall, south half."
+        },
+        "ShieldHealer": {
+          "rule": "Rotting: deep in the cleave toward the far south corner. Bursting: on the head's side near the south edge."
+        },
+        "CasterDps": {
+          "rule": "Rotting: deep in the cleave toward the far south corner. Bursting: on the head's side near the south edge."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sCurtainCallAi",
+        "time": 22.01,
+        "line": 40
+      },
+      "title": "Stack in the middle",
+      "cue": "Cell chain marker on everyone",
+      "rule": "Once the spreads go off, everyone stacks tight in the middle and waits for the chains.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sCurtainCallAi",
+        "time": 27.09,
+        "line": 41
+      },
+      "title": "Break the chains on the walls",
+      "cue": "Unbreakable Flesh α: you are chained to a partner",
+      "rule": "Pull your chain apart: supports run to the west wall, DPS to the east wall. Rows go north to south in support order (MT, OT, regen healer, shield healer); a DPS takes the row of the support it is chained to.",
+      "roles": {
+        "MainTank": {
+          "rule": "West wall, northern row."
+        },
+        "OffTank": {
+          "rule": "West wall, second row from the north."
+        },
+        "RegenHealer": {
+          "rule": "West wall, second row from the south."
+        },
+        "ShieldHealer": {
+          "rule": "West wall, southern row."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sCurtainCallAi",
+        "time": 29.94,
+        "line": 42
+      },
+      "title": "Safe corner on your side",
+      "cue": "Your chain breaks",
+      "rule": "The blood vessels leave two opposite corners clear (north-west and south-east, or north-east and south-west). Sprint to the clear corner on your wall and stack there for Burst: supports in the west one, DPS in the east one.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sCurtainCallAi",
+        "time": 35.48,
+        "line": 43
+      },
+      "title": "Stack north for Splattershed",
+      "cue": "Burst goes off",
+      "rule": "Regroup just north of the centre and stack for the Splattershed raidwide.",
+      "tolerance": 1.5,
+      "skip": false
+    }
+  ],
+  "draft": true
+}

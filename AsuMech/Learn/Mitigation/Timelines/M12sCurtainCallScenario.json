@@ -1,0 +1,112 @@
+{
+  "scenario": "M12sCurtainCallScenario",
+  "casts": [
+    {
+      "actionId": 48832,
+      "name": "Grotesquerie: Curtain Call",
+      "start": 3.65,
+      "resolve": 6.3500004,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46238,
+      "name": "Phagocyte Spotlight",
+      "start": 7.667,
+      "resolve": 10.367,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46238,
+      "name": "Phagocyte Spotlight",
+      "start": 9.633,
+      "resolve": 12.333,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46185,
+      "name": "Ravenous Reach",
+      "start": 9.8,
+      "resolve": 10.5,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46237,
+      "name": "Ravenous Reach",
+      "start": 10.883,
+      "resolve": 21.183,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46238,
+      "name": "Phagocyte Spotlight",
+      "start": 11.6,
+      "resolve": 14.3,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46238,
+      "name": "Phagocyte Spotlight",
+      "start": 13.617,
+      "resolve": 16.317,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46238,
+      "name": "Phagocyte Spotlight",
+      "start": 15.567,
+      "resolve": 18.267,
+      "occurrence": 5
+    },
+    {
+      "actionId": 46252,
+      "name": "Cell Shedding",
+      "start": 21.417,
+      "resolve": 21.417,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46250,
+      "name": "Dramatic Lysis",
+      "start": 21.867,
+      "resolve": 21.867,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46260,
+      "name": "Dramatic Lysis",
+      "start": 29.033,
+      "resolve": 29.033,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46239,
+      "name": "Burst",
+      "start": 32,
+      "resolve": 34.2,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47555,
+      "name": "Splattershed",
+      "start": 38.15,
+      "resolve": 40.850002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47558,
+      "name": "Splattershed",
+      "start": 43.633,
+      "resolve": 43.633,
+      "occurrence": 2
+    }
+  ],
+  "names": [
+    "Grotesquerie: Curtain Call",
+    "Phagocyte Spotlight",
+    "Ravenous Reach",
+    "Cell Shedding",
+    "Dramatic Lysis",
+    "Burst",
+    "Splattershed"
+  ]
+}

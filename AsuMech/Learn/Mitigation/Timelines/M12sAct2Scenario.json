@@ -1,0 +1,324 @@
+{
+  "scenario": "M12sAct2Scenario",
+  "casts": [
+    {
+      "actionId": 48830,
+      "name": "Grotesquerie: Act 2",
+      "start": 2.5,
+      "resolve": 5.2,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46262,
+      "name": "Phagocyte Spotlight",
+      "start": 11.733,
+      "resolve": 14.433,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46262,
+      "name": "Phagocyte Spotlight",
+      "start": 13.683,
+      "resolve": 16.383,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46262,
+      "name": "Phagocyte Spotlight",
+      "start": 15.7,
+      "resolve": 18.4,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46265,
+      "name": "Cruel Coil",
+      "start": 17.667,
+      "resolve": 20.367,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46262,
+      "name": "Phagocyte Spotlight",
+      "start": 17.717,
+      "resolve": 20.417,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46194,
+      "name": "",
+      "start": 21.683,
+      "resolve": 21.683,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46268,
+      "name": "Skinsplitter",
+      "start": 26.683,
+      "resolve": 26.683,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46398,
+      "name": "Skinsplitter",
+      "start": 27.083,
+      "resolve": 27.083,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46398,
+      "name": "Skinsplitter",
+      "start": 27.666,
+      "resolve": 27.666,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46268,
+      "name": "Skinsplitter",
+      "start": 31.633,
+      "resolve": 31.633,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46398,
+      "name": "Skinsplitter",
+      "start": 32.033,
+      "resolve": 32.033,
+      "occurrence": 5
+    },
+    {
+      "actionId": 46398,
+      "name": "Skinsplitter",
+      "start": 32.616,
+      "resolve": 32.616,
+      "occurrence": 6
+    },
+    {
+      "actionId": 46260,
+      "name": "Dramatic Lysis",
+      "start": 33.75,
+      "resolve": 33.75,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46259,
+      "name": "Roiling Mass",
+      "start": 34.866,
+      "resolve": 37.566,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46263,
+      "name": "Roiling Mass",
+      "start": 35.483,
+      "resolve": 38.183002,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46268,
+      "name": "Skinsplitter",
+      "start": 36.6,
+      "resolve": 36.6,
+      "occurrence": 7
+    },
+    {
+      "actionId": 46398,
+      "name": "Skinsplitter",
+      "start": 37,
+      "resolve": 37,
+      "occurrence": 8
+    },
+    {
+      "actionId": 46398,
+      "name": "Skinsplitter",
+      "start": 37.583,
+      "resolve": 37.583,
+      "occurrence": 9
+    },
+    {
+      "actionId": 46260,
+      "name": "Dramatic Lysis",
+      "start": 38.75,
+      "resolve": 38.75,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46259,
+      "name": "Roiling Mass",
+      "start": 39.866,
+      "resolve": 42.566,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46263,
+      "name": "Roiling Mass",
+      "start": 40.433,
+      "resolve": 43.133,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46268,
+      "name": "Skinsplitter",
+      "start": 41.55,
+      "resolve": 41.55,
+      "occurrence": 10
+    },
+    {
+      "actionId": 46398,
+      "name": "Skinsplitter",
+      "start": 41.95,
+      "resolve": 41.95,
+      "occurrence": 11
+    },
+    {
+      "actionId": 46398,
+      "name": "Skinsplitter",
+      "start": 42.533,
+      "resolve": 42.533,
+      "occurrence": 12
+    },
+    {
+      "actionId": 46260,
+      "name": "Dramatic Lysis",
+      "start": 43.733,
+      "resolve": 43.733,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46259,
+      "name": "Roiling Mass",
+      "start": 44.849,
+      "resolve": 47.549,
+      "occurrence": 5
+    },
+    {
+      "actionId": 46263,
+      "name": "Roiling Mass",
+      "start": 45.483,
+      "resolve": 48.183002,
+      "occurrence": 6
+    },
+    {
+      "actionId": 46268,
+      "name": "Skinsplitter",
+      "start": 46.499,
+      "resolve": 46.499,
+      "occurrence": 13
+    },
+    {
+      "actionId": 46398,
+      "name": "Skinsplitter",
+      "start": 46.899,
+      "resolve": 46.899,
+      "occurrence": 14
+    },
+    {
+      "actionId": 46398,
+      "name": "Skinsplitter",
+      "start": 47.483,
+      "resolve": 47.483,
+      "occurrence": 15
+    },
+    {
+      "actionId": 46260,
+      "name": "Dramatic Lysis",
+      "start": 48.733,
+      "resolve": 48.733,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46259,
+      "name": "Roiling Mass",
+      "start": 49.849,
+      "resolve": 52.549,
+      "occurrence": 7
+    },
+    {
+      "actionId": 46263,
+      "name": "Roiling Mass",
+      "start": 50.466,
+      "resolve": 53.166,
+      "occurrence": 8
+    },
+    {
+      "actionId": 46268,
+      "name": "Skinsplitter",
+      "start": 51.466,
+      "resolve": 51.466,
+      "occurrence": 16
+    },
+    {
+      "actionId": 46398,
+      "name": "Skinsplitter",
+      "start": 51.866,
+      "resolve": 51.866,
+      "occurrence": 17
+    },
+    {
+      "actionId": 46398,
+      "name": "Skinsplitter",
+      "start": 52.433,
+      "resolve": 52.433,
+      "occurrence": 18
+    },
+    {
+      "actionId": 46268,
+      "name": "Skinsplitter",
+      "start": 56.416,
+      "resolve": 56.416,
+      "occurrence": 19
+    },
+    {
+      "actionId": 46398,
+      "name": "Skinsplitter",
+      "start": 56.816,
+      "resolve": 56.816,
+      "occurrence": 20
+    },
+    {
+      "actionId": 46398,
+      "name": "Skinsplitter",
+      "start": 57.383,
+      "resolve": 57.383,
+      "occurrence": 21
+    },
+    {
+      "actionId": 46270,
+      "name": "Constrictor",
+      "start": 61.366,
+      "resolve": 61.366,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46274,
+      "name": "Constrictor",
+      "start": 61.366,
+      "resolve": 62.066,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47556,
+      "name": "Splattershed",
+      "start": 68.533,
+      "resolve": 71.232994,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47558,
+      "name": "Splattershed",
+      "start": 74.001,
+      "resolve": 74.001,
+      "occurrence": 2
+    }
+  ],
+  "names": [
+    "Grotesquerie: Act 2",
+    "Phagocyte Spotlight",
+    "Cruel Coil",
+    "",
+    "Skinsplitter",
+    "Dramatic Lysis",
+    "Roiling Mass",
+    "Constrictor",
+    "Splattershed"
+  ]
+}

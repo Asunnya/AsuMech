@@ -1,0 +1,82 @@
+{
+  "scenario": "M12sFinaleScenario",
+  "casts": [
+    {
+      "actionId": 46345,
+      "name": "Idyllic Dream",
+      "start": 3.017,
+      "resolve": 7.717,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46368,
+      "name": "Double Sobat",
+      "start": 11.15,
+      "resolve": 15.849999,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46369,
+      "name": "Double Sobat",
+      "start": 16.717,
+      "resolve": 16.717,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46373,
+      "name": "Double Sobat",
+      "start": 16.717,
+      "resolve": 21.016998,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46374,
+      "name": "Esoteric Finisher",
+      "start": 23.766,
+      "resolve": 23.766,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46188,
+      "name": "Replication",
+      "start": 32.583,
+      "resolve": 37.283,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46387,
+      "name": "Arcadian Hell",
+      "start": 46.099,
+      "resolve": 50.799,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46388,
+      "name": "Arcadian Hell",
+      "start": 46.099,
+      "resolve": 50.799,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46387,
+      "name": "Arcadian Hell",
+      "start": 62.366,
+      "resolve": 67.066,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46389,
+      "name": "Arcadian Hell",
+      "start": 62.366,
+      "resolve": 67.066,
+      "occurrence": 4
+    }
+  ],
+  "names": [
+    "Idyllic Dream",
+    "Double Sobat",
+    "Esoteric Finisher",
+    "Replication",
+    "Arcadian Hell"
+  ]
+}

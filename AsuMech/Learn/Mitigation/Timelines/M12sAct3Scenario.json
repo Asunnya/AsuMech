@@ -1,0 +1,142 @@
+{
+  "scenario": "M12sAct3Scenario",
+  "casts": [
+    {
+      "actionId": 48831,
+      "name": "Grotesquerie: Act 3",
+      "start": 2.783,
+      "resolve": 5.483,
+      "occurrence": 1
+    },
+    {
+      "actionId": 48649,
+      "name": "Feral Fission",
+      "start": 8.983,
+      "resolve": 10.683,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46241,
+      "name": "Grand Entrance",
+      "start": 8.983,
+      "resolve": 11.683,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46243,
+      "name": "Grand Entrance",
+      "start": 8.983,
+      "resolve": 12.183,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46240,
+      "name": "Grand Entrance",
+      "start": 9.617,
+      "resolve": 12.316999,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46243,
+      "name": "Grand Entrance",
+      "start": 9.617,
+      "resolve": 12.816999,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46241,
+      "name": "Grand Entrance",
+      "start": 9.933,
+      "resolve": 12.632999,
+      "occurrence": 5
+    },
+    {
+      "actionId": 46243,
+      "name": "Grand Entrance",
+      "start": 10.2,
+      "resolve": 13.4,
+      "occurrence": 6
+    },
+    {
+      "actionId": 48650,
+      "name": "Bring Down the House",
+      "start": 15.167,
+      "resolve": 15.167,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46245,
+      "name": "Bring Down the House",
+      "start": 15.167,
+      "resolve": 15.867,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46244,
+      "name": "Bring Down the House",
+      "start": 15.167,
+      "resolve": 15.867,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46257,
+      "name": "Metamitosis",
+      "start": 16.983,
+      "resolve": 18.183,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47395,
+      "name": "Metamitosis",
+      "start": 16.983,
+      "resolve": 18.483,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46256,
+      "name": "Dramatic Lysis",
+      "start": 18.55,
+      "resolve": 18.55,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46247,
+      "name": "Split Scourge",
+      "start": 27.516,
+      "resolve": 27.516,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46251,
+      "name": "Split Scourge",
+      "start": 28.683,
+      "resolve": 28.683,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46248,
+      "name": "Venomous Scourge",
+      "start": 31.133,
+      "resolve": 31.133,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46295,
+      "name": "The Fixer",
+      "start": 35.466,
+      "resolve": 40.166,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Grotesquerie: Act 3",
+    "Feral Fission",
+    "Grand Entrance",
+    "Bring Down the House",
+    "Metamitosis",
+    "Dramatic Lysis",
+    "Split Scourge",
+    "Venomous Scourge",
+    "The Fixer"
+  ]
+}

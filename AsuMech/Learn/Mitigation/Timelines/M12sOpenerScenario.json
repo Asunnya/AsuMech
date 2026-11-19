@@ -1,0 +1,65 @@
+{
+  "scenario": "M12sOpenerScenario",
+  "casts": [
+    {
+      "actionId": 46295,
+      "name": "The Fixer",
+      "start": 2.017,
+      "resolve": 6.717,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46229,
+      "name": "Mortal Slayer",
+      "start": 20.333,
+      "resolve": 32.033,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46230,
+      "name": "Mortal Slayer",
+      "start": 32.416,
+      "resolve": 32.416,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46232,
+      "name": "Mortal Slayer",
+      "start": 32.416,
+      "resolve": 32.416,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46230,
+      "name": "Mortal Slayer",
+      "start": 35.45,
+      "resolve": 35.45,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46232,
+      "name": "Mortal Slayer",
+      "start": 35.45,
+      "resolve": 35.45,
+      "occurrence": 5
+    },
+    {
+      "actionId": 46230,
+      "name": "Mortal Slayer",
+      "start": 38.45,
+      "resolve": 38.45,
+      "occurrence": 6
+    },
+    {
+      "actionId": 46230,
+      "name": "Mortal Slayer",
+      "start": 41.433,
+      "resolve": 41.433,
+      "occurrence": 7
+    }
+  ],
+  "names": [
+    "The Fixer",
+    "Mortal Slayer"
+  ]
+}

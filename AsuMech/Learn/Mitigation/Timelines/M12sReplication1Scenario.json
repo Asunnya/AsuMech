@@ -1,0 +1,170 @@
+{
+  "scenario": "M12sReplication1Scenario",
+  "casts": [
+    {
+      "actionId": 46376,
+      "name": "Arcadia Aflame",
+      "start": 3.017,
+      "resolve": 7.717,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46297,
+      "name": "",
+      "start": 15.267,
+      "resolve": 15.267,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46296,
+      "name": "Replication",
+      "start": 17.383,
+      "resolve": 20.083,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46301,
+      "name": "Top-tier Slam",
+      "start": 28.866,
+      "resolve": 31.566,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46303,
+      "name": "Mighty Magic",
+      "start": 28.866,
+      "resolve": 31.566,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46298,
+      "name": "Winged Scourge",
+      "start": 28.866,
+      "resolve": 31.566,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46300,
+      "name": "Winged Scourge",
+      "start": 28.966,
+      "resolve": 32.666,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46302,
+      "name": "Top-tier Slam",
+      "start": 32.116,
+      "resolve": 32.116,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46375,
+      "name": "Snaking Kick",
+      "start": 32.733,
+      "resolve": 37.433002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46304,
+      "name": "Mighty Magic",
+      "start": 33.083,
+      "resolve": 33.083,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46297,
+      "name": "",
+      "start": 46.249,
+      "resolve": 46.249,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46297,
+      "name": "",
+      "start": 47.266,
+      "resolve": 47.266,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46301,
+      "name": "Top-tier Slam",
+      "start": 50.383,
+      "resolve": 53.083,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46303,
+      "name": "Mighty Magic",
+      "start": 50.383,
+      "resolve": 53.083,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46298,
+      "name": "Winged Scourge",
+      "start": 50.383,
+      "resolve": 53.083,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46300,
+      "name": "Winged Scourge",
+      "start": 50.416,
+      "resolve": 54.116,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46302,
+      "name": "Top-tier Slam",
+      "start": 53.633,
+      "resolve": 53.633,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46304,
+      "name": "Mighty Magic",
+      "start": 54.649,
+      "resolve": 54.649,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46368,
+      "name": "Double Sobat",
+      "start": 56.916,
+      "resolve": 61.616,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46371,
+      "name": "Double Sobat",
+      "start": 62.466,
+      "resolve": 62.466,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46373,
+      "name": "Double Sobat",
+      "start": 62.466,
+      "resolve": 66.766,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46374,
+      "name": "Esoteric Finisher",
+      "start": 69.484,
+      "resolve": 69.484,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Arcadia Aflame",
+    "",
+    "Replication",
+    "Top-tier Slam",
+    "Mighty Magic",
+    "Winged Scourge",
+    "Snaking Kick",
+    "Double Sobat",
+    "Esoteric Finisher"
+  ]
+}

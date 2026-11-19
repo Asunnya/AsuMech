@@ -24,7 +24,7 @@ While simulating:
 **Fights**
 - Ultimates: Dancing Mad, Futures Rewritten, The Omega Protocol, The Epic of Alexander, Dragonsong's Reprise,
   The Weapon's Refrain and The Unending Coil of Bahamut.
-- Savage: AAC Heavyweight M1–M3 (M9S, M10S, M11S).
+- Savage: AAC Heavyweight M1–M4 (M9S, M10S, M11S, M12S).
 - See [Currently implemented](#currently-implemented) for every phase and strat.
 
 **Practice**
@@ -188,6 +188,18 @@ All using default NA pf strats unless noted otherwise:
     - Meteorain to Triple Tyrannhilation (proximity-baited meteors, shade tethers for the tanks, Fearsome Fireball lines blown into meteors, hiding from three shockwaves behind the last meteors)
     - Arena Split (Flatliner's knockback onto two platforms, towers that knock back, Meteowrath tethers to stretch, Fire Breath, chasing puddles and portal meteor lines twice, Massive Meteor stacks, last towers and Arcadion Avalanche)
     - Ecliptic Stampede to Heartbreak Kick (Mammoth Meteors, Atomic Impact puddles at the walls while the group baits meteors round the boss, one- and two-player towers, tethers to the corners, Two-way Fireball line stacks, Heartbreak Kick towers)
+- AAC Heavyweight M4 (Savage) — M12S _by [Asunnya](https://github.com/Asunnya)_
+    - The Fixer to Mortal Slayer (eight orbs in pairs, each on the player closest to the boss on its side; Roles Mortal Slayer)
+    - Grotesquerie: Act 1 (spread or stack debuffs with an arrow cleave each, four chasing Phagocyte Spotlights, Ravenous Reach, blood vessel Bursts with tank busters and a healer stack, The Fixer)
+    - Grotesquerie: Act 2 (four blobs, Cruel Coil's spinning ring, four α/β chains stretched through the gap, blob and chain towers, Constrictor, Splattershed)
+    - Grotesquerie: Act 3 (growth arrows, snakes dropping the floor to cardinal or intercardinal platforms, Metamitosis towers thrown onto the next platform under spread bursts, Split Scourge line busters, Venomous Scourge spreads, The Fixer)
+    - Curtain Call (chasing puddles, Rotting Flesh cured in the dragon head's cleave while Bursting Grotesquerie spreads outside it, support–DPS chains broken apart, blood vessels bursting, Splattershed)
+    - Slaughtershed (Mortal Slayer's eight orbs, three Slaughtersheds with stack and spreads by role, blood vessels, half-room cleaves or corner knockbacks, Refreshing Overkill)
+    - Replication 1 (Arcadia Aflame, two sets of Lindschrat clones with narrow cleaves, a fire partner stack and two dark baits, Snaking Kick's half-room cleave, Double Sobat's tank buster with its turning follow-up and Esoteric Finisher)
+    - Replication 2 (player clones, boss clone tethers to pick up, Firefall Splash with thin cleaves, defamations, light party stacks and facing cones, Snaking Kick, Netherwrath partner stacks while the clones replay in order)
+    - Mutating Cells to Double Sobat (α/β mutations twice, Blood Mana orbs popped into the black holes' second wave, Blood Wakening's two waves, Netherworld stack, Arcadia Aflame, Double Sobat's turned repeat and Esoteric Finisher)
+    - Idyllic Dream (player clone tethers, Replication's remembered cleaves, defamation and stack tethers to grab, light spreads and element towers on two platforms, portents, Reenactment from the player clones and the platform and tear clones)
+    - Finale (second Idyllic Dream, Double Sobat, Esoteric Finisher on both tanks, Replication into two Arcadian Hells)
 
 ## Details
 

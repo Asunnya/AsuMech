@@ -1,0 +1,79 @@
+{
+  "scenario": "M12sOpenerScenario",
+  "strat": "Roles Mortal Slayer",
+  "sources": [
+    {
+      "label": "Roles Mortal Slayer raidplan",
+      "url": "https://raidplan.io/plan/KbxeCHoPkzWbt_HB"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "M12sOpenerAi",
+        "time": 0.3,
+        "line": 37
+      },
+      "title": "Stack in the middle",
+      "cue": "Lindwurm appears",
+      "rule": "Group up just north of the centre while the boss opens.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sOpenerAi",
+        "time": 28.9,
+        "line": 38
+      },
+      "title": "Split sides for Mortal Slayer",
+      "cue": "the fourth pair of orbs appears",
+      "rule": "Supports take the side where the purple orbs fall, DPS the other side. Count the orbs on your side in the order they dropped: the next in your priority owns each one. If one of the first pair is yours, bait it in front of the boss on your side (first owner inside, second further out); otherwise wait just off the centre on your side.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to the purple side: you take the first purple orb, inner bait spot if it's in the first pair."
+        },
+        "OffTank": {
+          "rule": "Go to the purple side: you take the second purple orb."
+        },
+        "RegenHealer": {
+          "rule": "Go to the purple side: you take the first green orb that falls there."
+        },
+        "ShieldHealer": {
+          "rule": "Go to the purple side: you take the second green orb that falls there."
+        },
+        "MeleeDpsA": {
+          "rule": "Go to the all-green side: you take the first orb that falls there."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sOpenerAi",
+        "from": 32.51,
+        "to": 38.539997,
+        "line": 42
+      },
+      "title": "Rotate after each pair",
+      "cue": "Mortal Slayer hits",
+      "rule": "After each pair lands, whoever just baited (Poison Resistance Down II) moves back south and out, toward the wall on their side, and the owners of the next pair step up to the bait spots in front of the boss. Everyone else keeps waiting off the centre on their side.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sOpenerAi",
+        "time": 41.719997,
+        "line": 44
+      },
+      "title": "Regroup in the middle",
+      "cue": "the last orbs hit",
+      "rule": "Stack just north of the centre again.",
+      "tolerance": 1.5,
+      "skip": false
+    }
+  ],
+  "draft": true
+}

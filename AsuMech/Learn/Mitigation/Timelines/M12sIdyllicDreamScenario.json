@@ -1,0 +1,426 @@
+{
+  "scenario": "M12sIdyllicDreamScenario",
+  "casts": [
+    {
+      "actionId": 46345,
+      "name": "Idyllic Dream",
+      "start": 3.067,
+      "resolve": 7.7669997,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46305,
+      "name": "Staging",
+      "start": 11.25,
+      "resolve": 13.95,
+      "occurrence": 1
+    },
+    {
+      "actionId": 48098,
+      "name": "Twisted Vision",
+      "start": 25.416,
+      "resolve": 29.116001,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46296,
+      "name": "Replication",
+      "start": 32.566,
+      "resolve": 35.266003,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46353,
+      "name": "Snaking Kick",
+      "start": 44.016,
+      "resolve": 48.716,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46351,
+      "name": "Power Gusher",
+      "start": 44.016,
+      "resolve": 48.716,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46352,
+      "name": "Power Gusher",
+      "start": 44.016,
+      "resolve": 48.716,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46354,
+      "name": "Power Gusher",
+      "start": 44.016,
+      "resolve": 48.716,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46296,
+      "name": "Replication",
+      "start": 51.149,
+      "resolve": 53.849,
+      "occurrence": 2
+    },
+    {
+      "actionId": 48098,
+      "name": "Twisted Vision",
+      "start": 69.7,
+      "resolve": 73.399994,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46357,
+      "name": "Snaking Kick",
+      "start": 77.152,
+      "resolve": 77.152,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46355,
+      "name": "Power Gusher",
+      "start": 77.152,
+      "resolve": 77.152,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46356,
+      "name": "Power Gusher",
+      "start": 77.152,
+      "resolve": 77.152,
+      "occurrence": 5
+    },
+    {
+      "actionId": 46322,
+      "name": "Lindwurm\u0027s Meteor",
+      "start": 77.202,
+      "resolve": 81.902,
+      "occurrence": 1
+    },
+    {
+      "actionId": 48789,
+      "name": "Snaking Kick",
+      "start": 78.086,
+      "resolve": 78.086,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46358,
+      "name": "Power Gusher",
+      "start": 78.302,
+      "resolve": 78.302,
+      "occurrence": 6
+    },
+    {
+      "actionId": 46323,
+      "name": "Downfall",
+      "start": 85.354,
+      "resolve": 88.05399,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46377,
+      "name": "Arcadian Arcanum",
+      "start": 91.522,
+      "resolve": 94.222,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47577,
+      "name": "Arcadian Arcanum",
+      "start": 95.806,
+      "resolve": 95.806,
+      "occurrence": 2
+    },
+    {
+      "actionId": 48098,
+      "name": "Twisted Vision",
+      "start": 98.557,
+      "resolve": 102.256996,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46359,
+      "name": "Mana Burst",
+      "start": 109.042,
+      "resolve": 109.042,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46360,
+      "name": "Mana Burst",
+      "start": 110.326,
+      "resolve": 110.326,
+      "occurrence": 2
+    },
+    {
+      "actionId": 46361,
+      "name": "Heavy Slam",
+      "start": 114.077,
+      "resolve": 114.077,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46359,
+      "name": "Mana Burst",
+      "start": 119.044,
+      "resolve": 119.044,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46360,
+      "name": "Mana Burst",
+      "start": 120.328,
+      "resolve": 120.328,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46361,
+      "name": "Heavy Slam",
+      "start": 124.062,
+      "resolve": 124.062,
+      "occurrence": 2
+    },
+    {
+      "actionId": 48098,
+      "name": "Twisted Vision",
+      "start": 129.096,
+      "resolve": 132.79599,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46324,
+      "name": "Cosmic Kiss",
+      "start": 137.461,
+      "resolve": 137.461,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46327,
+      "name": "Lindwurm\u0027s Stone III",
+      "start": 138.044,
+      "resolve": 142.744,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46326,
+      "name": "Lindwurm\u0027s Dark II",
+      "start": 138.094,
+      "resolve": 138.094,
+      "occurrence": 1
+    },
+    {
+      "actionId": 7568,
+      "name": "Esuna",
+      "start": 141.01,
+      "resolve": 141.01,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46328,
+      "name": "Lindwurm\u0027s Glare",
+      "start": 148.025,
+      "resolve": 148.025,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46330,
+      "name": "Lindwurm\u0027s Thunder II",
+      "start": 148.025,
+      "resolve": 148.025,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46364,
+      "name": "Temporal Curtain",
+      "start": 153.523,
+      "resolve": 156.22299,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46365,
+      "name": "",
+      "start": 159.672,
+      "resolve": 159.672,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46297,
+      "name": "",
+      "start": 162.788,
+      "resolve": 162.788,
+      "occurrence": 2
+    },
+    {
+      "actionId": 48098,
+      "name": "Twisted Vision",
+      "start": 165.154,
+      "resolve": 168.854,
+      "occurrence": 5
+    },
+    {
+      "actionId": 48303,
+      "name": "Snaking Kick",
+      "start": 165.154,
+      "resolve": 169.854,
+      "occurrence": 4
+    },
+    {
+      "actionId": 46352,
+      "name": "Power Gusher",
+      "start": 165.154,
+      "resolve": 169.854,
+      "occurrence": 7
+    },
+    {
+      "actionId": 46316,
+      "name": "Reenactment",
+      "start": 172.285,
+      "resolve": 174.985,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46319,
+      "name": "Heavy Slam",
+      "start": 177.367,
+      "resolve": 177.367,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46318,
+      "name": "Mana Burst",
+      "start": 177.367,
+      "resolve": 177.367,
+      "occurrence": 5
+    },
+    {
+      "actionId": 48099,
+      "name": "Mana Burst",
+      "start": 178.667,
+      "resolve": 178.667,
+      "occurrence": 6
+    },
+    {
+      "actionId": 48733,
+      "name": "Heavy Slam",
+      "start": 178.884,
+      "resolve": 178.884,
+      "occurrence": 4
+    },
+    {
+      "actionId": 48098,
+      "name": "Twisted Vision",
+      "start": 180.45,
+      "resolve": 184.15,
+      "occurrence": 6
+    },
+    {
+      "actionId": 46357,
+      "name": "Snaking Kick",
+      "start": 187.932,
+      "resolve": 187.932,
+      "occurrence": 5
+    },
+    {
+      "actionId": 46356,
+      "name": "Power Gusher",
+      "start": 187.932,
+      "resolve": 187.932,
+      "occurrence": 8
+    },
+    {
+      "actionId": 48098,
+      "name": "Twisted Vision",
+      "start": 187.982,
+      "resolve": 191.68199,
+      "occurrence": 7
+    },
+    {
+      "actionId": 48789,
+      "name": "Snaking Kick",
+      "start": 188.881,
+      "resolve": 188.881,
+      "occurrence": 6
+    },
+    {
+      "actionId": 46358,
+      "name": "Power Gusher",
+      "start": 189.098,
+      "resolve": 189.098,
+      "occurrence": 9
+    },
+    {
+      "actionId": 46319,
+      "name": "Heavy Slam",
+      "start": 198.312,
+      "resolve": 198.312,
+      "occurrence": 5
+    },
+    {
+      "actionId": 46318,
+      "name": "Mana Burst",
+      "start": 198.312,
+      "resolve": 198.312,
+      "occurrence": 7
+    },
+    {
+      "actionId": 46366,
+      "name": "",
+      "start": 198.312,
+      "resolve": 198.312,
+      "occurrence": 3
+    },
+    {
+      "actionId": 48099,
+      "name": "Mana Burst",
+      "start": 199.612,
+      "resolve": 199.612,
+      "occurrence": 8
+    },
+    {
+      "actionId": 48733,
+      "name": "Heavy Slam",
+      "start": 199.845,
+      "resolve": 199.845,
+      "occurrence": 6
+    },
+    {
+      "actionId": 46362,
+      "name": "Power Gusher",
+      "start": 200.462,
+      "resolve": 203.162,
+      "occurrence": 10
+    },
+    {
+      "actionId": 46358,
+      "name": "Power Gusher",
+      "start": 204.594,
+      "resolve": 204.594,
+      "occurrence": 11
+    }
+  ],
+  "names": [
+    "Idyllic Dream",
+    "Staging",
+    "Twisted Vision",
+    "Replication",
+    "Snaking Kick",
+    "Power Gusher",
+    "Lindwurm\u0027s Meteor",
+    "Downfall",
+    "Arcadian Arcanum",
+    "Mana Burst",
+    "Heavy Slam",
+    "Cosmic Kiss",
+    "Lindwurm\u0027s Stone III",
+    "Lindwurm\u0027s Dark II",
+    "Esuna",
+    "Lindwurm\u0027s Glare",
+    "Lindwurm\u0027s Thunder II",
+    "Temporal Curtain",
+    "",
+    "Reenactment"
+  ]
+}

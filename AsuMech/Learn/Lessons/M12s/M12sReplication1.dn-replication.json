@@ -1,0 +1,142 @@
+{
+  "scenario": "M12sReplication1Scenario",
+  "strat": "DN Replication",
+  "sources": [
+    {
+      "label": "DN Replication 1 raidplan",
+      "url": "https://raidplan.io/plan/9ncP6UIDURcWuRuO"
+    },
+    {
+      "label": "Modified Bin (3VJ0)",
+      "url": "https://pastebin.com/qXLm3VJ0"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "M12sReplication1Ai",
+        "time": 0.3,
+        "line": 50
+      },
+      "title": "Pairs on the intercardinals",
+      "cue": "Lindwurm appears",
+      "rule": "Pair up on your intercardinal, about 11m out, with the healer or melee DPS of the pair a little nearer the north-south line. Whichever pairs end up beside the dark clone take Mighty Magic, the pair nearest the fire clone shares Top-tier Slam.",
+      "roles": {
+        "MainTank": {
+          "rule": "North-east with melee DPS A, on the east side of the pair."
+        },
+        "MeleeDpsA": {
+          "rule": "North-east with the main tank, on the north side of the pair."
+        },
+        "ShieldHealer": {
+          "rule": "South-east with the caster, on the south side of the pair."
+        },
+        "CasterDps": {
+          "rule": "South-east with the shield healer, on the east side of the pair."
+        },
+        "OffTank": {
+          "rule": "South-west with melee DPS B, on the west side of the pair."
+        },
+        "MeleeDpsB": {
+          "rule": "South-west with the off tank, on the south side of the pair."
+        },
+        "RegenHealer": {
+          "rule": "North-west with the physical ranged, on the north side of the pair."
+        },
+        "PhysRangedDps": {
+          "rule": "North-west with the regen healer, on the west side of the pair."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sReplication1Ai",
+        "time": 33.13,
+        "line": 51
+      },
+      "title": "Stack behind the boss",
+      "cue": "Lindwurm casts Snaking Kick",
+      "rule": "Sprint south and stack just behind the boss, out of the half Snaking Kick hits.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sReplication1Ai",
+        "time": 47.24,
+        "line": 52
+      },
+      "title": "Second clones: fire or dark",
+      "rule": "Players with Dark Resistance Down take fire, the rest take dark. Find the outer fire clone's intercardinal: the inner dark clone stands on the same diagonal, halfway in.",
+      "roles": {
+        "MainTank": {
+          "rule": "With Dark Resistance Down: stack in the middle with the other melee to share the inner fire. Without it: bait the inner dark from the earlier of the two numbers beside it (1-2-3-4 order), a step in toward the centre so you stay farther from the outer fire than the fire stack."
+        },
+        "OffTank": {
+          "rule": "With Dark Resistance Down: stack in the middle with the other melee to share the inner fire. Without it: bait the inner dark from the earlier of the two numbers beside it (1-2-3-4 order), a step in toward the centre so you stay farther from the outer fire than the fire stack."
+        },
+        "MeleeDpsA": {
+          "rule": "With Dark Resistance Down: stack in the middle with the other melee to share the inner fire. Without it: bait the inner dark from the later of the two numbers beside it (1-2-3-4 order), a step in toward the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "With Dark Resistance Down: stack in the middle with the other melee to share the inner fire. Without it: bait the inner dark from the later of the two numbers beside it (1-2-3-4 order), a step in toward the centre."
+        },
+        "RegenHealer": {
+          "rule": "With Dark Resistance Down: stack with the other ranged on the earlier letter beside the outer fire (A-B-C-D order) to share it. Without it: bait the outer dark from the earlier of its two letters."
+        },
+        "ShieldHealer": {
+          "rule": "With Dark Resistance Down: stack with the other ranged on the earlier letter beside the outer fire (A-B-C-D order) to share it. Without it: bait the outer dark from the earlier of its two letters."
+        },
+        "PhysRangedDps": {
+          "rule": "With Dark Resistance Down: stack with the other ranged on the earlier letter beside the outer fire (A-B-C-D order) to share it. Without it: bait the outer dark from the later of its two letters."
+        },
+        "CasterDps": {
+          "rule": "With Dark Resistance Down: stack with the other ranged on the earlier letter beside the outer fire (A-B-C-D order) to share it. Without it: bait the outer dark from the later of its two letters."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false,
+      "cue": "The split clones dash into a fire-dark-fire-dark line"
+    },
+    {
+      "key": {
+        "cls": "M12sReplication1Ai",
+        "time": 54.69,
+        "line": 53
+      },
+      "title": "Tank north, party south for Double Sobat",
+      "cue": "The second Mighty Magic lands",
+      "rule": "Sprint back behind the boss and stack south of it.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand just north of the boss and take the marked Double Sobat on an invulnerability, facing the boss away from the party."
+        }
+      },
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sReplication1Ai",
+        "time": 62.5,
+        "line": 54
+      },
+      "title": "Dodge the follow-up kick",
+      "cue": "Double Sobat's first kick lands",
+      "rule": "Watch which way the boss turns after the first kick: the follow-up hits that half. Sprint to the opposite side, about 10m out from the boss, and stack there.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go about 9m out to the right of the follow-up kick (looking the way it kicks), just behind the boss's line, to take your Esoteric Finisher circle away from everyone."
+        },
+        "OffTank": {
+          "rule": "Go about 9m out to the left of the follow-up kick (looking the way it kicks), just behind the boss's line, to take your Esoteric Finisher circle away from everyone."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    }
+  ],
+  "draft": true
+}

@@ -23,6 +23,17 @@ using AsuMech.Scenarios.M11s.Meteorain;
 using AsuMech.Scenarios.M11s.Opener;
 using AsuMech.Scenarios.M11s.OrbitalOmen;
 using AsuMech.Scenarios.M11s.UltimateWeapons;
+using AsuMech.Scenarios.M12s.Act1;
+using AsuMech.Scenarios.M12s.Opener;
+using AsuMech.Scenarios.M12s.CurtainCall;
+using AsuMech.Scenarios.M12s.Slaughtershed;
+using AsuMech.Scenarios.M12s.Replication1;
+using AsuMech.Scenarios.M12s.Act2;
+using AsuMech.Scenarios.M12s.Act3;
+using AsuMech.Scenarios.M12s.MutatingCells;
+using AsuMech.Scenarios.M12s.Replication2;
+using AsuMech.Scenarios.M12s.Finale;
+using AsuMech.Scenarios.M12s.IdyllicDream;
 using AsuMech.Scenarios.M9s.Aetherletting;
 using AsuMech.Scenarios.M9s.Coffinmaker;
 using AsuMech.Scenarios.M9s.Deathmatch;
@@ -219,5 +230,16 @@ public sealed class ScenarioCatalog
         new M11sMeteorainScenario(),
         new M11sArenaSplitScenario(),
         new M11sEclipticScenario(),
+        new M12sOpenerScenario(),
+        new M12sAct1Scenario(),
+        new M12sAct2Scenario(),
+        new M12sAct3Scenario(),
+        new M12sCurtainCallScenario(),
+        new M12sSlaughtershedScenario(),
+        new M12sReplication1Scenario(),
+        new M12sReplication2Scenario(),
+        new M12sMutatingCellsScenario(),
+        new M12sIdyllicDreamScenario(),
+        new M12sFinaleScenario(),
     ]);
 }
