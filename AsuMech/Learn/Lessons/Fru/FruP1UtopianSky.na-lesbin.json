@@ -1,0 +1,94 @@
+{
+  "scenario": "FruP1UtopianSkyScenario",
+  "strat": "NA · LesBin",
+  "sources": [
+    {
+      "label": "NAUR LesBin P1 (Role + Fixed Tether Utopia, Conga Fall of Faith)",
+      "url": "https://tinyurl.com/lesbin-p1"
+    },
+    {
+      "label": "NAUR FRU guide",
+      "url": "https://naurffxiv.com/ultimate/fru/guide"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "FruCyclonicBreakDance",
+        "time": 0.05000019,
+        "line": 19
+      },
+      "title": "Cyclonic Break clock spots",
+      "cue": "Cyclonic Break cast, boss wreathed in fire or lightning",
+      "rule": "Take your clock spot around the boss: MT close in front (north), OT south, H1 west, H2 east, M1 south-west, M2 south-east, R1 north-west, R2 north-east. Every cone aims at its player, so keep apart.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruCyclonicBreakDance",
+        "time": 10.1,
+        "line": 20
+      },
+      "title": "Dodge the repeat (spread or pairs)",
+      "cue": "First Cyclonic Break cones go off",
+      "rule": "The cones fire again where they first hit. Lightning: slide one cone-width clockwise and spread. Fire: meet your partner 8m out between your spots for Sinsmoke pairs: MT with R1, H2 with R2, OT with M2, H1 with M1.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruCyclonicBreakDance",
+        "time": 12.240001,
+        "line": 21
+      },
+      "title": "Back to your clock spot",
+      "cue": "Sinsmite or Sinsmoke goes off",
+      "rule": "Return to your original spot: the next set of cones turns one cone-width clockwise, onto the gap you just used.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruCyclonicBreakDance",
+        "time": 14.170001,
+        "line": 22
+      },
+      "title": "Slide clockwise again",
+      "cue": "Turned Cyclonic Break cones go off",
+      "rule": "Once the turned cones go off, slide one cone-width clockwise again; the last set turns one more width past you.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP1UtopianSkyAi",
+        "time": 27,
+        "line": 28
+      },
+      "title": "Check your image",
+      "cue": "Utopian Sky cast, Powder Mark Trail on the main tank",
+      "rule": "Go out to the wall in your direction and see whether that image raises its gunblade: MT north, R1 north-west, H1 west, M1 south-west, R2 south, M2 south-east, H2 east.",
+      "roles": {
+        "OffTank": {
+          "rule": "Check the north-east image from 14m in, so you are the closest player to the MT and take the second Powder Mark hit."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP1UtopianSkyAi",
+        "time": 36.5,
+        "line": 29
+      },
+      "title": "Line up on the safe axis",
+      "cue": "Three images cast Blasting Zone",
+      "rule": "The safe axis is the one with no raised gunblade on either end. Light party 1 (MT, H1, M1, R1) takes its west end (north if the axis is north-south), light party 2 (OT, H2, M2, R2) the other end. Sinbound Fire: stack with your light party. Sinbound Thunder: spread along the end, tank deepest, healer closest to the centre, melee clockwise and ranged counter-clockwise of the tank.",
+      "tolerance": 2.0,
+      "skip": false
+    }
+  ],
+  "draft": true
+}

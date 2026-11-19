@@ -24,6 +24,7 @@ Contents
 ------------------------------------------------------------------------
 P1: Fatebreaker
 ------------------------------------------------------------------------
+@scenarios: FruP1UtopianSkyScenario, FruP1TurnOfTheHeavensScenario, FruP1FallOfFaithScenario
 Entire phase - Role + Fixed Tether OR Role ONLY Utopia, Conga FoF
   https://tinyurl.com/lesbin-p1
   https://docs.google.com/presentation/d/1Pm3BkfrJqjcm7688RrNDdh4oYuYS_VmHr6ALqjbZInE/edit#slide=id.g319371557f7_0_162

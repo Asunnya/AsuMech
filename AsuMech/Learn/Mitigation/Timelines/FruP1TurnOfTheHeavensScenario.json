@@ -1,0 +1,144 @@
+{
+  "scenario": "FruP1TurnOfTheHeavensScenario",
+  "casts": [
+    {
+      "actionId": 40329,
+      "name": "Cyclonic Break",
+      "start": 3.017,
+      "resolve": 9.717,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40145,
+      "name": "Cyclonic Break",
+      "start": 10.6,
+      "resolve": 10.6,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40150,
+      "name": "Turn of the Heavens",
+      "start": 10.9,
+      "resolve": 17.599998,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40163,
+      "name": "Burnt Strike",
+      "start": 10.9,
+      "resolve": 18.599998,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40164,
+      "name": "Burnout",
+      "start": 10.9,
+      "resolve": 20.3,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40146,
+      "name": "Cyclonic Break",
+      "start": 12.617,
+      "resolve": 12.617,
+      "occurrence": 3
+    },
+    {
+      "actionId": 40147,
+      "name": "Sinsmoke",
+      "start": 12.75,
+      "resolve": 12.75,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40146,
+      "name": "Cyclonic Break",
+      "start": 14.683,
+      "resolve": 14.683,
+      "occurrence": 4
+    },
+    {
+      "actionId": 40146,
+      "name": "Cyclonic Break",
+      "start": 16.75,
+      "resolve": 16.75,
+      "occurrence": 5
+    },
+    {
+      "actionId": 40161,
+      "name": "Burnt Strike",
+      "start": 16.967,
+      "resolve": 24.667,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40162,
+      "name": "Blastburn",
+      "start": 16.967,
+      "resolve": 26.667,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40165,
+      "name": "Bound of Faith",
+      "start": 19.083,
+      "resolve": 28.783,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40153,
+      "name": "Brightfire",
+      "start": 21.133,
+      "resolve": 28.833,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40152,
+      "name": "Brightfire",
+      "start": 21.133,
+      "resolve": 28.833,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40171,
+      "name": "Floating Fetters",
+      "start": 29.616,
+      "resolve": 29.616,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40166,
+      "name": "Solemn Charge",
+      "start": 31.616,
+      "resolve": 31.616,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40167,
+      "name": "Sinsmoke",
+      "start": 32.95,
+      "resolve": 32.95,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40170,
+      "name": "Burnished Glory",
+      "start": 35.583,
+      "resolve": 40.283,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Cyclonic Break",
+    "Turn of the Heavens",
+    "Burnt Strike",
+    "Burnout",
+    "Sinsmoke",
+    "Blastburn",
+    "Bound of Faith",
+    "Brightfire",
+    "Floating Fetters",
+    "Solemn Charge",
+    "Burnished Glory"
+  ]
+}

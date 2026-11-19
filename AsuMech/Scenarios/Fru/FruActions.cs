@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using AsuMech.Core.EnemyActions;
 using AsuMech.Core.Game;
+using AsuMech.Core.SimObjects;
 using static AsuMech.Core.EnemyActions.Distribution;
 using static AsuMech.Core.EnemyActions.EnemyActionEffects;
 using static AsuMech.Core.EnemyActions.Severity;
@@ -23,6 +25,203 @@ public static class FruActions
     };
 
     private static readonly IEnemyActionEffect AddLightsteeped = ApplyStatus(StatusId.Lightsteeped, 36f, delayToEffectResult: true);
+
+    // -- P1 Fatebreaker --
+
+    private static readonly VulnSpec VulnToPhysical = VulnerableTo(StatusId.PhysicalVulnerabilityUp);
+
+    // UNVERIFIED width: 22.5°, so each later set sits one cone's width from the last.
+    private const float CyclonicConeHalfAngle = MathF.PI / 16f;
+
+    public static readonly EnemyAction CyclonicBreakBait = new(ActionId.CyclonicBreakBait)
+    {
+        Cast = new() { FaceTarget = false },
+        Area = new() { Size = CyclonicConeHalfAngle },
+        Effects = [Damage(VulnToPhysical), ApplyStatus(StatusId.PhysicalVulnerabilityUp, 1.94f)],
+        Timing = new() { DamageDelay = 0.4f },
+    };
+
+    public static readonly EnemyAction CyclonicBreakRepeat = new(ActionId.CyclonicBreakRepeat)
+    {
+        Cast = new() { FaceTarget = false },
+        Area = new() { Size = CyclonicConeHalfAngle },
+        Effects = [Damage(Lethal)],
+        Timing = new() { DamageDelay = 0.4f },
+        DeathExplanation = "stood in a later Cyclonic Break cone",
+    };
+
+    public static readonly EnemyAction CyclonicSinsmite = new(ActionId.CyclonicSinsmite)
+    {
+        Cast = new() { FaceTarget = false },
+        Effects = [Damage(VulnToMagic), ApplyStatus(StatusId.MagicVulnerabilityUp, 1.94f)],
+        Timing = new() { DamageDelay = 0.4f },
+    };
+
+    public static readonly EnemyAction CyclonicSinsmoke = new(ActionId.CyclonicSinsmoke)
+    {
+        Cast = new() { FaceTarget = false },
+        Effects = [Damage(VulnToMagic, split: Stack(2)), ApplyStatus(StatusId.MagicVulnerabilityUp, 1.94f)],
+        Timing = new() { DamageDelay = 0.4f },
+    };
+
+    public static readonly EnemyAction PowderMarkTrail = new(ActionId.PowderMarkTrail)
+    {
+        Cast = new() { AnimationLock = 2.1f },
+        Effects =
+        [
+            Damage(TankBuster),
+            ApplyStatus(StatusId.PowderMarkTrail, 15.98f),
+            ApplyStatus(StatusId.PhysicalVulnerabilityUp, 13.98f, delayToEffectResult: true),
+        ],
+        Timing = new() { DamageDelay = 0.77f },
+    };
+
+    public static readonly EnemyAction BurnMark = new(ActionId.BurnMark)
+    {
+        Cast = new() { FaceTarget = false },
+        Effects = [Damage(TankBuster)],
+        Timing = new() { DamageDelay = 0.4f },
+    };
+
+    public static readonly EnemyAction BlastingZone = new(ActionId.BlastingZone)
+    {
+        Effects = [Damage(Lethal)],
+        Timing = new() { DamageDelay = 0.4f },
+    };
+
+    public static readonly EnemyAction SinboundFireIII = new(ActionId.SinboundFireIII)
+    {
+        Cast = new() { FaceTarget = false },
+        Effects = [Damage(VulnToMagic, split: Stack(4)), ApplyStatus(StatusId.MagicVulnerabilityUp, 1.94f)],
+        Timing = new() { DamageDelay = 0.4f },
+    };
+
+    public static readonly EnemyAction SinboundThunderIII = new(ActionId.SinboundThunderIII)
+    {
+        Cast = new() { FaceTarget = false },
+        Effects = [Damage(VulnToMagic), ApplyStatus(StatusId.MagicVulnerabilityUp, 1.94f)],
+        Timing = new() { DamageDelay = 0.4f },
+    };
+
+    private static EnemyAction BurntStrikeLine(uint actionId) => new(actionId)
+    {
+        Cast = new() { AnimationLock = 2.1f },
+        Effects = [Damage(Lethal)],
+        Timing = new() { DamageDelay = 0.6f },
+    };
+
+    public static readonly EnemyAction BurntStrikeWest = BurntStrikeLine(ActionId.BurntStrikeWest);
+    public static readonly EnemyAction BurnoutWest = BurntStrikeLine(ActionId.BurnoutWest);
+    public static readonly EnemyAction BurntStrikeNorth = BurntStrikeLine(ActionId.BurntStrikeNorth);
+    public static readonly EnemyAction BurntStrikeFire = BurntStrikeLine(ActionId.BurntStrikeFire);
+    public static readonly EnemyAction BurntStrikeLightning = BurntStrikeLine(ActionId.BurntStrikeLightning);
+    public static readonly EnemyAction BurnoutTowers = BurntStrikeLine(ActionId.BurnoutTowers);
+
+    // A Knockback row each side of its line, pushing away from it.
+    private static EnemyAction Blastburn(uint actionId) => new(actionId)
+    {
+        Cast = new() { AnimationLock = 2.1f },
+        Effects =
+        [
+            Damage(Harmless),
+            Knockback(KnockbackId.BlastburnRight, (ctx, who) => RightOfCaster(ctx, who)),
+            Knockback(KnockbackId.BlastburnLeft, (ctx, who) => !RightOfCaster(ctx, who)),
+        ],
+        Timing = new() { DamageDelay = 0.6f },
+    };
+
+    private static bool RightOfCaster(EnemyActionContext ctx, SimCharacter who)
+    {
+        var offset = who.Position - ctx.Caster.Position;
+        return -offset.X * MathF.Cos(ctx.Caster.Rotation) + offset.Z * MathF.Sin(ctx.Caster.Rotation) > 0f;
+    }
+
+    public static readonly EnemyAction BlastburnNorth = Blastburn(ActionId.BlastburnNorth);
+    public static readonly EnemyAction BlastburnTowers = Blastburn(ActionId.BlastburnTowers);
+
+    private static EnemyAction Brightfire(uint actionId) => new(actionId)
+    {
+        Cast = new() { AnimationLock = 2.1f },
+        Effects = [Damage(Lethal)],
+        Timing = new() { DamageDelay = 0.6f },
+    };
+
+    public static readonly EnemyAction BrightfireSmall = Brightfire(ActionId.BrightfireSmall);
+    public static readonly EnemyAction BrightfireLarge = Brightfire(ActionId.BrightfireLarge);
+
+    // Fewer than four in it leaves Mark of Mortality in retail.
+    public static readonly EnemyAction BoundOfFaithSinsmoke = new(ActionId.BoundOfFaithSinsmoke)
+    {
+        Cast = new() { FaceTarget = false },
+        Effects = [Damage(VulnToMagic, split: Stack(4)), ApplyStatus(StatusId.MagicVulnerabilityUp, 1.94f)],
+        Timing = new() { DamageDelay = 0.4f },
+    };
+
+    public static readonly EnemyAction BurnishedGlory = new(ActionId.BurnishedGlory)
+    {
+        Cast = new() { AnimationLock = 2.1f },
+        Effects = [Damage(), ApplyStatus(StatusId.BurnishedGloryBleeding, 14.95f, delayToEffectResult: true)],
+        Timing = new() { DamageDelay = 0.8f },
+    };
+
+    // Snapshots with the blast, not the bar's end: a kill just after the bar still stops it.
+    public static readonly EnemyAction BurnishedGloryEnrage = new(ActionId.BurnishedGloryEnrage)
+    {
+        Cast = new() { AnimationLock = 2.1f },
+        Effects = [Damage(Lethal)],
+        Timing = new() { ResolveSnapshotOffset = CastSpec.ActionEffectOffset, DamageDelay = 0.5f },
+        DeathExplanation = "Fatebreaker's enrage",
+    };
+
+    public static readonly EnemyAction FallOfFaithSinsmite = new(ActionId.FallOfFaithSinsmite)
+    {
+        Cast = new() { FaceTarget = false },
+        Effects = [Damage(VulnToMagic), ApplyStatus(StatusId.MagicVulnerabilityUp, 3.94f)],
+        Timing = new() { DamageDelay = 0.4f },
+    };
+
+    public static readonly EnemyAction BowShock = new(ActionId.BowShock)
+    {
+        Cast = new() { FaceTarget = false },
+        Area = new() { Size = MathF.PI / 3f, ExcludeCaster = true },
+        Effects = [Damage(VulnToMagic), ApplyStatus(StatusId.MagicVulnerabilityUp, 3.94f)],
+        Timing = new() { DamageDelay = 0.4f },
+    };
+
+    // An LP stack: the cone needs three besides its holder, who stands at its point.
+    public static readonly EnemyAction Sinblaze = new(ActionId.Sinblaze)
+    {
+        Cast = new() { FaceTarget = false },
+        Area = new() { Size = MathF.PI / 4f, AdjustTargets = WithCastTarget },
+        Effects = [Damage(VulnToMagic, split: Stack(4)), ApplyStatus(StatusId.MagicVulnerabilityUp, 3.94f)],
+        Timing = new() { DamageDelay = 0.4f },
+    };
+
+    private static IReadOnlyList<SimCharacter> WithCastTarget(
+        EnemyActionContext ctx, IReadOnlyList<SimCharacter> hits)
+        => ctx.Target is { } holder && holder.IsAlive() && !hits.Contains(holder) ? [holder, .. hits] : hits;
+
+    private static EnemyAction Tower(uint actionId) => new(actionId)
+    {
+        Cast = new() { AnimationLock = 2.1f, FaceTarget = false },
+        Effects = [Damage()],
+        Timing = new() { DamageDelay = 0.5f },
+    };
+
+    public static readonly EnemyAction[] FireTowers = ActionId.FireTower.Select(Tower).ToArray();
+    public static readonly EnemyAction[] LightningTowers = ActionId.LightningTower.Select(Tower).ToArray();
+
+    // Retail's raidwide leaves Damage Down instead.
+    private static EnemyAction UnmitigatedExplosion(uint actionId) => new(actionId)
+    {
+        Cast = new() { FaceTarget = false },
+        Effects = [Damage(Lethal)],
+        Timing = new() { DamageDelay = 0.6f },
+        DeathExplanation = "a tower went unsoaked",
+    };
+
+    public static readonly EnemyAction UnmitigatedExplosionFire = UnmitigatedExplosion(ActionId.UnmitigatedExplosionFire);
+    public static readonly EnemyAction UnmitigatedExplosionLightning = UnmitigatedExplosion(ActionId.UnmitigatedExplosionLightning);
 
     // -- P2 Diamond Dust --
 

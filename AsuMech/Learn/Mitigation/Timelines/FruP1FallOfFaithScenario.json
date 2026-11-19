@@ -1,0 +1,194 @@
+{
+  "scenario": "FruP1FallOfFaithScenario",
+  "casts": [
+    {
+      "actionId": 40140,
+      "name": "Fall of Faith",
+      "start": 3.017,
+      "resolve": 11.717,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40137,
+      "name": "Fall of Faith",
+      "start": 6.033,
+      "resolve": 14.733,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40140,
+      "name": "Fall of Faith",
+      "start": 8.65,
+      "resolve": 17.349998,
+      "occurrence": 3
+    },
+    {
+      "actionId": 40137,
+      "name": "Fall of Faith",
+      "start": 11.083,
+      "resolve": 19.783,
+      "occurrence": 4
+    },
+    {
+      "actionId": 40171,
+      "name": "Floating Fetters",
+      "start": 12.617,
+      "resolve": 12.617,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40141,
+      "name": "Solemn Charge",
+      "start": 14.717,
+      "resolve": 14.717,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40171,
+      "name": "Floating Fetters",
+      "start": 15.633,
+      "resolve": 15.633,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40142,
+      "name": "Sinsmite",
+      "start": 16.017,
+      "resolve": 16.017,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40143,
+      "name": "Bow Shock",
+      "start": 16.317,
+      "resolve": 16.317,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40138,
+      "name": "Solemn Charge",
+      "start": 17.733,
+      "resolve": 17.733,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40171,
+      "name": "Floating Fetters",
+      "start": 18.25,
+      "resolve": 18.25,
+      "occurrence": 3
+    },
+    {
+      "actionId": 40156,
+      "name": "Sinblaze",
+      "start": 19.033,
+      "resolve": 19.033,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40138,
+      "name": "Solemn Charge",
+      "start": 20.35,
+      "resolve": 20.35,
+      "occurrence": 3
+    },
+    {
+      "actionId": 40171,
+      "name": "Floating Fetters",
+      "start": 20.683,
+      "resolve": 20.683,
+      "occurrence": 4
+    },
+    {
+      "actionId": 40142,
+      "name": "Sinsmite",
+      "start": 21.65,
+      "resolve": 21.65,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40143,
+      "name": "Bow Shock",
+      "start": 21.95,
+      "resolve": 21.95,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40138,
+      "name": "Solemn Charge",
+      "start": 22.783,
+      "resolve": 22.783,
+      "occurrence": 4
+    },
+    {
+      "actionId": 40156,
+      "name": "Sinblaze",
+      "start": 24.083,
+      "resolve": 24.083,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40170,
+      "name": "Burnished Glory",
+      "start": 26.833,
+      "resolve": 31.533,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40168,
+      "name": "Powder Mark Trail",
+      "start": 35.483,
+      "resolve": 40.183002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40129,
+      "name": "Burnt Strike",
+      "start": 45.349,
+      "resolve": 51.549,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40130,
+      "name": "Blastburn",
+      "start": 45.349,
+      "resolve": 53.549,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40122,
+      "name": "Explosion",
+      "start": 45.349,
+      "resolve": 55.549,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40169,
+      "name": "Burn Mark",
+      "start": 56.466,
+      "resolve": 56.466,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40128,
+      "name": "Burnished Glory",
+      "start": 61.099,
+      "resolve": 70.798996,
+      "occurrence": 2
+    }
+  ],
+  "names": [
+    "Fall of Faith",
+    "Floating Fetters",
+    "Solemn Charge",
+    "Sinsmite",
+    "Bow Shock",
+    "Sinblaze",
+    "Burnished Glory",
+    "Powder Mark Trail",
+    "Burnt Strike",
+    "Blastburn",
+    "Explosion",
+    "Burn Mark"
+  ]
+}

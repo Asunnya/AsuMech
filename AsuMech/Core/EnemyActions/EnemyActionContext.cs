@@ -73,6 +73,9 @@ public sealed class EnemyActionContext
             { AwayFromTarget: true } when Target is not null => Target.Position,
             // Pushed along the caster's facing: away from a point right behind the pushed one.
             { Direction: 3 } => who.Position - new System.Numerics.Vector3(System.MathF.Sin(Caster.Rotation), 0f, System.MathF.Cos(Caster.Rotation)),
+            // Pushed to the caster's right or left: away from a point on the other side.
+            { Direction: 4 } => who.Position + new System.Numerics.Vector3(System.MathF.Cos(Caster.Rotation), 0f, -System.MathF.Sin(Caster.Rotation)),
+            { Direction: 5 } => who.Position - new System.Numerics.Vector3(System.MathF.Cos(Caster.Rotation), 0f, -System.MathF.Sin(Caster.Rotation)),
             _ => Caster.Position,
         };
         Outcome(who).Push ??= new Push(from, distance, speed, delay, knockbackRow);

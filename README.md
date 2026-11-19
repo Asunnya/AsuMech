@@ -110,6 +110,9 @@ All using default NA pf strats unless noted otherwise:
     - P5 Celestriad _by [RoarkGit](https://github.com/RoarkGit)_
     - P5 Forsaken Null _no ai or damage_
 - Futures Rewritten (Ultimate) _by [grayparser](https://github.com/grayparser)_
+    - P1 Utopian Sky
+    - P1 Turn of the Heavens
+    - P1 Fall of Faith
     - P2 Diamond Dust 
     - P2 Light Rampant
     - P3 Ultimate Relativity

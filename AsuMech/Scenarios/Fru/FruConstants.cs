@@ -28,6 +28,9 @@ public static class FruConstants
 
     public static class WeatherId
     {
+        public const byte Fatebreaker = 2;
+        // Utopian Sky's fog.
+        public const byte Fog = 4;
         public const byte Usurper = 35;
         public const byte Oracle = 105;
         // Ultimate Relativity and Crystallize Time, while time is stopped.
@@ -100,6 +103,10 @@ public static class FruConstants
 
     public static class BNpcBaseId
     {
+        public const uint Fatebreaker = 17819;
+        public const uint FatebreakerImage = 17820;
+        public const uint HaloOfFlame = 17821;
+        public const uint HaloOfLevin = 17822;
         public const uint UsurperP2 = 17823;
         public const uint FrozenMirror = 17824;
         public const uint HolyLight = 17826;
@@ -130,6 +137,10 @@ public static class FruConstants
 
     public static class BNpcNameId
     {
+        public const uint Fatebreaker = 9707;
+        public const uint FatebreakerImage = 9708;
+        public const uint HaloOfFlame = 9710;
+        public const uint HaloOfLevin = 9711;
         public const uint Oracle = 9832;
         public const uint SorrowsHourglass = 9823;
         public const uint DelightsHourglass = 9825;
@@ -165,6 +176,10 @@ public static class FruConstants
 
     public static class LayoutId
     {
+        public const uint Fatebreaker = 0xA55BF4;
+        public const uint FatebreakerImage = 0xA55BF5;
+        public const uint HaloOfFlame = 0xA55BF6;
+        public const uint HaloOfLevin = 0xA55BF7;
         public const uint UsurperP2 = 0xA55BF8;
         public const uint FrozenMirror = 0xA55BF9;
         public const uint HolyLight = 0xA55BFA;
@@ -180,6 +195,7 @@ public static class FruConstants
         public const uint VisionOfGaia = 0xA5AF24;
     }
 
+    public const uint FatebreakerBattleTalk = 0x25EB;
     public const uint UsurperBattleTalk = 0x3209;
     public const uint RyneBattleTalk = 0x2483;
     public const uint GaiaBattleTalk = 0x246E;
@@ -191,6 +207,55 @@ public static class FruConstants
         // Unnamed; the Oracle uses it before walking back to the centre.
         public const uint OracleReposition = 40117;
         public const uint DrachenArmor = 40186;
+
+        // -- P1 Fatebreaker --
+        // Each fire / lightning pair is one cast; the element picks the id.
+        public const uint CyclonicBreakFire = 40144;
+        public const uint CyclonicBreakLightning = 40148;
+        public const uint CyclonicBreakImageFire = 40329;
+        public const uint CyclonicBreakImageLightning = 40330;
+        public const uint CyclonicBreakBait = 40145;
+        public const uint CyclonicBreakRepeat = 40146;
+        public const uint CyclonicSinsmoke = 40147;
+        public const uint CyclonicSinsmite = 40149;
+        public const uint PowderMarkTrail = 40168;
+        public const uint BurnMark = 40169;
+        public const uint UtopianSkyFire = 40154;
+        public const uint UtopianSkyLightning = 40155;
+        public const uint BlastingZoneCast = 40158;
+        public const uint BlastingZone = 40157;
+        public const uint SinboundFireIII = 40159;
+        public const uint SinboundThunderIII = 40160;
+        public const uint TurnOfTheHeavensFire = 40150;
+        public const uint TurnOfTheHeavensLightning = 40151;
+        public const uint BrightfireSmall = 40152;
+        public const uint BrightfireLarge = 40153;
+        public const uint BurntStrikeWest = 40163;
+        public const uint BurnoutWest = 40164;
+        public const uint BurntStrikeNorth = 40161;
+        public const uint BlastburnNorth = 40162;
+        public const uint BoundOfFaith = 40165;
+        public const uint BoundOfFaithCharge = 40166;
+        public const uint BoundOfFaithSinsmoke = 40167;
+        public const uint FloatingFetters = 40171;
+        public const uint BurnishedGlory = 40170;
+        public const uint FallOfFaithFire = 40137;
+        public const uint FallOfFaithLightning = 40140;
+        public const uint FallOfFaithChargeImage = 40138;
+        public const uint FallOfFaithChargeBoss = 40141;
+        public const uint FallOfFaithSinsmite = 40142;
+        public const uint BowShock = 40143;
+        public const uint Sinblaze = 40156;
+        public const uint BurntStrikeFire = 40129;
+        public const uint BlastburnTowers = 40130;
+        public const uint BurntStrikeLightning = 40133;
+        public const uint BurnoutTowers = 40134;
+        // Fire then lightning towers, by how many they take.
+        public static readonly uint[] FireTower = [40131, 40122, 40123, 40124];
+        public static readonly uint[] LightningTower = [40135, 40125, 40126, 40127];
+        public const uint UnmitigatedExplosionFire = 40132;
+        public const uint UnmitigatedExplosionLightning = 40136;
+        public const uint BurnishedGloryEnrage = 40128;
 
         // -- P2 Diamond Dust --
         public const uint MirrorImage = 40180;
@@ -325,6 +390,13 @@ public static class FruConstants
 
     public static class StatusId
     {
+        public const ushort Prey = 1051;
+        // UNVERIFIED that the client hides a Concealed actor from afar, as Utopian Sky's fog does.
+        public const ushort Concealed = 1621;
+        public const ushort FloatingFetters = 2304;
+        public const ushort BurnishedGloryBleeding = 2951;
+        public const ushort FatedBurnMark = 4165;
+        public const ushort PowderMarkTrail = 4166;
         public const ushort ThinIce = 911;
         public const ushort Levitation = 1390;
         public const ushort Incurable = 2398;
@@ -374,6 +446,8 @@ public static class FruConstants
 
     public static class TetherId
     {
+        public const ushort FaithFire = 249;
+        public const ushort FaithLightning = 287;
         public const ushort ChainsOfEverlastingLight = 110;
         public const ushort CurseOfEverlastingLight = 111;
         public const ushort Slow = 133;
@@ -384,6 +458,7 @@ public static class FruConstants
 
     public static class LockonId
     {
+        public const uint PowderMarkTrail = 218;
         public const uint Stack = 62;                // com_share0c
         public const uint Spread = 139;              // target_ae_s5f
         public const uint WaterCountdown = 184;      // m0581trg_dice0h
@@ -399,6 +474,9 @@ public static class FruConstants
 
     public static class KnockbackId
     {
+        // Blastburn: to the right or left of its caster's facing, away from its line.
+        public const uint BlastburnRight = 134;
+        public const uint BlastburnLeft = 135;
         public const uint HeavenlyStrike = 156;
         public const uint DarkestDance = 201;
         public const uint DarkAero = 139;

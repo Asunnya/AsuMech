@@ -42,6 +42,9 @@ using AsuMech.Scenarios.M9s.Flails;
 using AsuMech.Scenarios.M9s.HellInACell;
 using AsuMech.Scenarios.M9s.VampStomp;
 using AsuMech.Scenarios.M9s.VampStomp2;
+using AsuMech.Scenarios.Fru.P1FallOfFaith;
+using AsuMech.Scenarios.Fru.P1TurnOfTheHeavens;
+using AsuMech.Scenarios.Fru.P1UtopianSky;
 using AsuMech.Scenarios.Fru.P2DiamondDust;
 using AsuMech.Scenarios.Fru.P2LightRampant;
 using AsuMech.Scenarios.Fru.P3Apocalypse;
@@ -160,6 +163,9 @@ public sealed class ScenarioCatalog
         new UmadP5CelestriadScenario(),
         new UmadP5ExaflaresScenario(),
         new UmadP5ForsakenNull(),
+        new FruP1UtopianSkyScenario(),
+        new FruP1TurnOfTheHeavensScenario(),
+        new FruP1FallOfFaithScenario(),
         new FruP2DiamondDustScenario(),
         new FruP2LightRampantScenario(),
         new FruP3UltimateRelativityScenario(),

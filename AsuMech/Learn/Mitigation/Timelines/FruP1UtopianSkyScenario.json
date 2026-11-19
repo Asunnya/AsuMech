@@ -1,0 +1,98 @@
+{
+  "scenario": "FruP1UtopianSkyScenario",
+  "casts": [
+    {
+      "actionId": 40144,
+      "name": "Cyclonic Break",
+      "start": 3.017,
+      "resolve": 9.217,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40145,
+      "name": "Cyclonic Break",
+      "start": 10.05,
+      "resolve": 10.05,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40146,
+      "name": "Cyclonic Break",
+      "start": 12.067,
+      "resolve": 12.067,
+      "occurrence": 3
+    },
+    {
+      "actionId": 40147,
+      "name": "Sinsmoke",
+      "start": 12.2,
+      "resolve": 12.2,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40146,
+      "name": "Cyclonic Break",
+      "start": 14.133,
+      "resolve": 14.133,
+      "occurrence": 4
+    },
+    {
+      "actionId": 40168,
+      "name": "Powder Mark Trail",
+      "start": 15.017,
+      "resolve": 19.717,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40146,
+      "name": "Cyclonic Break",
+      "start": 16.2,
+      "resolve": 16.2,
+      "occurrence": 5
+    },
+    {
+      "actionId": 40154,
+      "name": "Utopian Sky",
+      "start": 26.516,
+      "resolve": 30.216002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40158,
+      "name": "Blasting Zone",
+      "start": 35.8,
+      "resolve": 45.5,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40169,
+      "name": "Burn Mark",
+      "start": 36,
+      "resolve": 36,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40157,
+      "name": "Blasting Zone",
+      "start": 44.916,
+      "resolve": 44.916,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40159,
+      "name": "Sinbound Fire III",
+      "start": 45.583,
+      "resolve": 45.583,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Cyclonic Break",
+    "Sinsmoke",
+    "Powder Mark Trail",
+    "Utopian Sky",
+    "Blasting Zone",
+    "Burn Mark",
+    "Sinbound Fire III"
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "scenario": "FruP1FallOfFaithScenario",
+  "strat": "NA · LesBin",
+  "sources": [
+    {
+      "label": "NAUR LesBin P1 (Role + Fixed Tether Utopia, Conga Fall of Faith)",
+      "url": "https://tinyurl.com/lesbin-p1"
+    },
+    {
+      "label": "NAUR FRU guide",
+      "url": "https://naurffxiv.com/ultimate/fru/guide"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "FruP1FallOfFaithAi",
+        "time": 0.5,
+        "line": 32
+      },
+      "title": "Conga into the first two tethers",
+      "cue": "Fall of Faith tether and Prey",
+      "rule": "The 1st and 3rd tethers go west, the 2nd and 4th east. Untethered players line up H1, H2, MT, OT, M1, M2, R1, R2: the first two take west, the next two east. The tethered player stands 5.5m out; red (Sinblaze) tether: both helpers stack tight just behind them; blue (Sinsmite) tether: one helper beside them to the north, one to the south. A second tethered player waiting on the same side stands behind.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP1FallOfFaithAi",
+        "time": 16.45,
+        "line": 33
+      },
+      "title": "West side: second tether",
+      "cue": "First Fall of Faith hit on the west",
+      "rule": "After the first west hit, the west group reforms the same way on the waiting tethered player, using its colour.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP1FallOfFaithAi",
+        "time": 19.45,
+        "line": 34
+      },
+      "title": "East side: second tether",
+      "cue": "First Fall of Faith hit on the east",
+      "rule": "After the first east hit, the east group reforms on the waiting tethered player, using its colour.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP1FallOfFaithAi",
+        "time": 24.5,
+        "line": 35
+      },
+      "title": "Back under the boss",
+      "cue": "Last Fall of Faith hit",
+      "rule": "Regroup close around Fatebreaker in your clock spot for Burnished Glory.",
+      "tolerance": 2.0,
+      "skip": true
+    },
+    {
+      "key": {
+        "cls": "FruP1FallOfFaithAi",
+        "time": 45.4,
+        "line": 36
+      },
+      "title": "Towers and Powder Mark",
+      "cue": "Burnt Strike cast and towers appear",
+      "rule": "Towers appear on one edge. H1 takes the north tower, H2 the middle, R2 the south; M1, then M2, then R1 fill the towers still missing players, north first. Lightning Burnt Strike: stand in your tower, clear of the wide line. Fire Burnt Strike: wait 7m in from your tower to get knocked into it.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to the side away from the towers, north, apart from everyone: the Powder Mark on the OT also hits the nearest player."
+        },
+        "OffTank": {
+          "rule": "You hold Powder Mark Trail: go to the side away from the towers, south, with only the MT near you."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP1FallOfFaithAi",
+        "time": 51.6,
+        "line": 37
+      },
+      "title": "Hug the line for the knockback",
+      "cue": "Burnt Strike line goes off",
+      "rule": "Fire only: step right up to the centre line on your side, level with your tower, so Blastburn throws you into it. Tanks do the same on the far side.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP1FallOfFaithAi",
+        "time": 57.2,
+        "line": 38
+      },
+      "title": "Back under the boss",
+      "cue": "Towers and Burn Mark go off",
+      "rule": "Regroup around Fatebreaker and burn before the Burnished Glory enrage.",
+      "tolerance": 2.0,
+      "skip": true
+    }
+  ],
+  "draft": true
+}
