@@ -46,24 +46,25 @@ public sealed class FruP5ParadiseRegainedScenario : IScenario
         world.Events.Add(1.3f, () => pandora?.Cast(ActionId.ParadiseRegained, animationLock: 3.1f));
         world.Events.Add(TowerShowAt(0), () => ShowTower(0));
         world.Events.Add(7.27f, () => BattleTalk(0x27, RyneBattleTalk));
-        world.Events.Add(8.3f, () =>
+        world.Events.Add(8.52f, () =>
         {
             pandora?.SetModelState(4);
             TetherWingBait(0);
             pandora?.Cast(state.DarkFirst ? ActionId.WingsDarkThenLight : ActionId.WingsLightThenDark, animationLock: 0.2f);
         });
         world.Events.Add(TowerShowAt(1), () => ShowTower(1));
-        world.Events.Add(12.4f, TargetWingBait);
+        world.Events.Add(12.6f, TargetWingBait);
         world.Events.Add(12.4f, () => BattleTalk(0x28, GaiaBattleTalk));
         world.Events.Add(TowerShowAt(2), () => ShowTower(2));
-        world.Events.Add(15.5f, () => FaceTank(PartyRole.MainTank));
-        world.Events.Add(TowerHitAt(0), () => { ResolveTower(0); WingCleave(0); });
-        world.Events.Add(16.5f, () => WingBuster(0));
-        world.Events.Add(17f, () => TetherWingBait(1));
+        world.Events.Add(15.7f, () => FaceTank(PartyRole.MainTank));
+        world.Events.Add(TowerHitAt(0), () => ResolveTower(0));
+        world.Events.Add(15.9f, () => WingCleave(0));
+        world.Events.Add(16.7f, () => WingBuster(0));
+        world.Events.Add(17.2f, () => TetherWingBait(1));
         world.Events.Add(TowerHitAt(1), () => ResolveTower(1));
-        world.Events.Add(19.4f, () => { FaceTank(PartyRole.OffTank); WingCleave(1); });
-        world.Events.Add(20.2f, () => { WingBuster(1); pandora?.SetModelState(0); });
-        world.Events.Add(20.7f, () => wingTether?.Despawn());
+        world.Events.Add(19.6f, () => { FaceTank(PartyRole.OffTank); WingCleave(1); });
+        world.Events.Add(20.45f, () => { WingBuster(1); pandora?.SetModelState(0); });
+        world.Events.Add(20.95f, () => wingTether?.Despawn());
         world.Events.Add(TowerHitAt(2), () => ResolveTower(2));
         world.Events.Add(23.1f, () =>
         {
@@ -71,7 +72,7 @@ public sealed class FruP5ParadiseRegainedScenario : IScenario
             pandora?.SetTarget(world.Party.Get(PartyRole.MainTank), follow: false);
         });
 
-        world.Events.Add(30.35f, () => pandora?.Cast(ActionId.PolarizingStrikes, animationLock: 2.1f));
+        world.Events.Add(30.62f, () => pandora?.Cast(ActionId.PolarizingStrikes, animationLock: 2.1f));
         for (var round = 0; round < 4; round++)
         {
             var r = round;
@@ -80,7 +81,8 @@ public sealed class FruP5ParadiseRegainedScenario : IScenario
             if (r < 3) world.Events.Add(PathsCastAt(r), () => pandora?.Cast(ActionId.PolarizingPaths, animationLock: 2.1f));
             world.Events.Add(EchoAt(r), () => Echo(r));
         }
-        world.Events.Add(49.45f, () => BattleTalk(0x29, GaiaBattleTalk));
+        world.Events.Add(49.74f, () => BattleTalk(0x29, GaiaBattleTalk));
+        world.Events.Add(54.86f, () => BattleTalk(0x2A, RyneBattleTalk));
     }
 
     public void Tick(float delta, float elapsed)

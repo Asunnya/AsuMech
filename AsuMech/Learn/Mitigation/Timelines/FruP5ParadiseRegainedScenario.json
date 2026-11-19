@@ -11,8 +11,8 @@
     {
       "actionId": 40233,
       "name": "Wings Dark and Light",
-      "start": 8.3,
-      "resolve": 14.9,
+      "start": 8.533,
+      "resolve": 15.132999,
       "occurrence": 1
     },
     {
@@ -25,183 +25,183 @@
     {
       "actionId": 40315,
       "name": "Wings Dark and Light",
-      "start": 15.717,
-      "resolve": 15.717,
+      "start": 15.917,
+      "resolve": 15.917,
       "occurrence": 2
     },
     {
       "actionId": 39880,
       "name": "Wings Dark and Light",
-      "start": 16.517,
-      "resolve": 16.517,
+      "start": 16.717,
+      "resolve": 16.717,
       "occurrence": 3
     },
     {
       "actionId": 40320,
       "name": "Explosion",
-      "start": 19.217,
-      "resolve": 19.217,
+      "start": 19.267,
+      "resolve": 19.267,
       "occurrence": 2
     },
     {
       "actionId": 40314,
       "name": "Wings Dark and Light",
-      "start": 19.417,
-      "resolve": 19.417,
+      "start": 19.617,
+      "resolve": 19.617,
       "occurrence": 4
     },
     {
       "actionId": 39879,
       "name": "Wings Dark and Light",
-      "start": 20.217,
-      "resolve": 20.217,
+      "start": 20.467,
+      "resolve": 20.467,
       "occurrence": 5
     },
     {
       "actionId": 40320,
       "name": "Explosion",
-      "start": 22.716,
-      "resolve": 22.716,
+      "start": 22.833,
+      "resolve": 22.833,
       "occurrence": 3
     },
     {
       "actionId": 40316,
       "name": "Polarizing Strikes",
-      "start": 30.366,
-      "resolve": 36.565998,
+      "start": 30.633,
+      "resolve": 36.833,
       "occurrence": 1
     },
     {
       "actionId": 40317,
       "name": "Cruel Path of Light",
-      "start": 36.916,
-      "resolve": 37.116,
+      "start": 37.066,
+      "resolve": 37.266003,
       "occurrence": 1
     },
     {
       "actionId": 40318,
       "name": "Cruel Path of Darkness",
-      "start": 36.916,
-      "resolve": 37.116,
+      "start": 37.066,
+      "resolve": 37.266003,
       "occurrence": 1
     },
     {
       "actionId": 40234,
       "name": "Polarizing Paths",
-      "start": 38.966,
-      "resolve": 41.166,
+      "start": 39.116,
+      "resolve": 41.316,
       "occurrence": 1
     },
     {
       "actionId": 40119,
       "name": "Cruel Path of Light",
-      "start": 39.516,
-      "resolve": 39.516,
+      "start": 39.666,
+      "resolve": 39.666,
       "occurrence": 2
     },
     {
       "actionId": 40120,
       "name": "Cruel Path of Darkness",
-      "start": 39.516,
-      "resolve": 39.516,
+      "start": 39.666,
+      "resolve": 39.666,
       "occurrence": 2
     },
     {
       "actionId": 40317,
       "name": "Cruel Path of Light",
-      "start": 41.516,
-      "resolve": 41.716,
+      "start": 41.75,
+      "resolve": 41.95,
       "occurrence": 3
     },
     {
       "actionId": 40318,
       "name": "Cruel Path of Darkness",
-      "start": 41.516,
-      "resolve": 41.716,
+      "start": 41.75,
+      "resolve": 41.95,
       "occurrence": 3
     },
     {
       "actionId": 40234,
       "name": "Polarizing Paths",
-      "start": 43.566,
-      "resolve": 45.766003,
+      "start": 43.8,
+      "resolve": 46,
       "occurrence": 2
     },
     {
       "actionId": 40119,
       "name": "Cruel Path of Light",
-      "start": 44.116,
-      "resolve": 44.116,
+      "start": 44.349,
+      "resolve": 44.349,
       "occurrence": 4
     },
     {
       "actionId": 40120,
       "name": "Cruel Path of Darkness",
-      "start": 44.116,
-      "resolve": 44.116,
+      "start": 44.349,
+      "resolve": 44.349,
       "occurrence": 4
     },
     {
       "actionId": 40317,
       "name": "Cruel Path of Light",
-      "start": 46.116,
-      "resolve": 46.316,
+      "start": 46.433,
+      "resolve": 46.633,
       "occurrence": 5
     },
     {
       "actionId": 40318,
       "name": "Cruel Path of Darkness",
-      "start": 46.116,
-      "resolve": 46.316,
+      "start": 46.433,
+      "resolve": 46.633,
       "occurrence": 5
     },
     {
       "actionId": 40234,
       "name": "Polarizing Paths",
-      "start": 48.166,
-      "resolve": 50.366,
+      "start": 48.483,
+      "resolve": 50.683002,
       "occurrence": 3
     },
     {
       "actionId": 40119,
       "name": "Cruel Path of Light",
-      "start": 48.716,
-      "resolve": 48.716,
+      "start": 49.033,
+      "resolve": 49.033,
       "occurrence": 6
     },
     {
       "actionId": 40120,
       "name": "Cruel Path of Darkness",
-      "start": 48.716,
-      "resolve": 48.716,
+      "start": 49.033,
+      "resolve": 49.033,
       "occurrence": 6
     },
     {
       "actionId": 40317,
       "name": "Cruel Path of Light",
-      "start": 50.716,
-      "resolve": 50.916,
+      "start": 51.116,
+      "resolve": 51.316,
       "occurrence": 7
     },
     {
       "actionId": 40318,
       "name": "Cruel Path of Darkness",
-      "start": 50.716,
-      "resolve": 50.916,
+      "start": 51.116,
+      "resolve": 51.316,
       "occurrence": 7
     },
     {
       "actionId": 40119,
       "name": "Cruel Path of Light",
-      "start": 53.316,
-      "resolve": 53.316,
+      "start": 53.716,
+      "resolve": 53.716,
       "occurrence": 8
     },
     {
       "actionId": 40120,
       "name": "Cruel Path of Darkness",
-      "start": 53.316,
-      "resolve": 53.316,
+      "start": 53.716,
+      "resolve": 53.716,
       "occurrence": 8
     }
   ],
