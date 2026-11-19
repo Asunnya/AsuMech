@@ -141,11 +141,11 @@ public static class M12sActions
         DeathExplanation = "the tank busters go to the tanks' spot, away from the party",
     };
 
-    // UNVERIFIED: the minimum; everyone but the tanks takes it.
+    // Everyone but the tanks takes it.
     public static readonly EnemyAction Act1FourthWallFusion = new(ActionId.Act1FourthWallFusion)
     {
         Cast = new() { AnimationLock = 0.6f, FaceTarget = false },
-        Effects = [Damage(VulnToMagic, split: Stack(4)), ApplyStatus(StatusId.MagicVulnerabilityUp, MagicVulnSeconds)],
+        Effects = [Damage(VulnToMagic, split: Stack(6)), ApplyStatus(StatusId.MagicVulnerabilityUp, MagicVulnSeconds)],
         Timing = new() { DamageDelay = 0.4f },
         DeathExplanation = "the party stacks on the healer while the tanks take the busters apart",
     };
