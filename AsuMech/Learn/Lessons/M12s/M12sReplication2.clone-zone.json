@@ -1,0 +1,177 @@
+{
+  "scenario": "M12sReplication2Scenario",
+  "strat": "Clone Zone",
+  "sources": [
+    {
+      "label": "Clone Zone (Replication 2) raidplan",
+      "url": "https://raidplan.io/plan/SFa6J6wDrU9PlCJ4"
+    },
+    {
+      "label": "Modified Bin (3VJ0)",
+      "url": "https://pastebin.com/qXLm3VJ0"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "M12sReplication2Ai",
+        "time": 0.3,
+        "line": 51
+      },
+      "title": "Stack south of the boss",
+      "cue": "Lindwurm appears",
+      "rule": "Group up just south of Lindwurm and watch which of the eight clones gets tethered to you: its spot decides your job.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sReplication2Ai",
+        "time": 29.37,
+        "line": 52
+      },
+      "title": "Take your clone's tether",
+      "cue": "Six lindschrat appear around the boss",
+      "rule": "Your clone's spot is your job. North clone: take the boss tether on Lindwurm. South clone: no tether, run to the south wall. The other six take the tether matching their clone and stand just inside that lindschrat: east-side clones (NE cone, E stack, SE defamation) take the first match going clockwise from the north lindschrat, west-side clones (NW cone, W stack, SW defamation) the first match going counter-clockwise from the north-west one.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sReplication2Ai",
+        "time": 39.59,
+        "line": 53
+      },
+      "title": "Line up for Firefall Splash",
+      "cue": "Firefall Splash cast starts",
+      "rule": "Boss tether: go north so Lindwurm lands there. Cones stand at the north wall just beside the middle, stacks a bit further out beside them, each on their own side. Defamations go to their side's wall (east or west); the untethered player stays at the south wall.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sReplication2Ai",
+        "time": 47.7,
+        "line": 54
+      },
+      "title": "Light party stacks",
+      "cue": "Mana Burst resolves",
+      "rule": "Split east and west of Lindwurm into light-party stacks for Heavy Slam: the west group is the west clones plus the south clone, the east group the east clones plus the boss tether. Cones stand on the outer edge of their stack.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sReplication2Ai",
+        "time": 54.960003,
+        "line": 56
+      },
+      "title": "Behind the boss",
+      "cue": "Hemorrhagic Projection resolves",
+      "rule": "Everyone runs behind Lindwurm to the north wall to dodge Snaking Kick.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sReplication2Ai",
+        "time": 58.82,
+        "line": 57
+      },
+      "title": "Back to your clone spot",
+      "cue": "Snaking Kick resolves",
+      "rule": "Cones and stacks return to their Firefall spots at the north wall. The defamations and their partners (south clone to the west, boss tether to the east) wait together north-west or north-east of the boss.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sReplication2Ai",
+        "time": 72.09,
+        "line": 58
+      },
+      "title": "Bait Netherwrath",
+      "cue": "Netherwrath Near or Netherwrath Far cast starts",
+      "rule": "Cones and stacks hold. Each defamation takes Timeless Spite with its partner sharing it: on Near the defamation stands closest to the boss with the partner just outside, on Far the defamation goes furthest out toward the wall with the partner just inside.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sReplication2Ai",
+        "time": 78.47,
+        "line": 59
+      },
+      "title": "Melee NE, ranged NW",
+      "cue": "Timeless Spite resolves",
+      "rule": "Melee go to the north-east wall, behind the north-east clone, clear of the south-west clone's defamation replay.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "Go to the north-west wall, clear of the south-west clone's defamation replay."
+        },
+        "ShieldHealer": {
+          "rule": "Go to the north-west wall, clear of the south-west clone's defamation replay."
+        },
+        "PhysRangedDps": {
+          "rule": "Go to the north-west wall, clear of the south-west clone's defamation replay."
+        },
+        "CasterDps": {
+          "rule": "Go to the north-west wall, clear of the south-west clone's defamation replay."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sReplication2Ai",
+        "time": 82.73,
+        "line": 60
+      },
+      "title": "Stack on the replayed stacks",
+      "cue": "The north-east clone's Hemorrhagic Projection resolves",
+      "rule": "Melee stack on B to share the east clone's Heavy Slam replay.",
+      "roles": {
+        "RegenHealer": {
+          "rule": "Stack on D to share the west clone's Heavy Slam replay."
+        },
+        "ShieldHealer": {
+          "rule": "Stack on D to share the west clone's Heavy Slam replay."
+        },
+        "PhysRangedDps": {
+          "rule": "Stack on D to share the west clone's Heavy Slam replay."
+        },
+        "CasterDps": {
+          "rule": "Stack on D to share the west clone's Heavy Slam replay."
+        }
+      },
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sReplication2Ai",
+        "time": 86.47,
+        "line": 61
+      },
+      "title": "Melee dodge north-east",
+      "cue": "Heavy Slam replay resolves",
+      "rule": "Melee move up to the north-east wall, away from the south-east clone's defamation replay; ranged stay on D.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sReplication2Ai",
+        "time": 91.14,
+        "line": 62
+      },
+      "title": "Regroup south of the boss",
+      "cue": "The last Hemorrhagic Projection replay resolves",
+      "rule": "Everyone groups up just south of the centre again.",
+      "tolerance": 2.5,
+      "skip": false
+    }
+  ],
+  "draft": true
+}

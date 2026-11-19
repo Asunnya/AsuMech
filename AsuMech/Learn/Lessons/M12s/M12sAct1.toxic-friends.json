@@ -1,0 +1,90 @@
+{
+  "scenario": "M12sAct1Scenario",
+  "strat": "Toxic Friends",
+  "sources": [
+    {
+      "label": "Toxic Friends raidplan",
+      "url": "https://raidplan.io/plan/m1AMDbG_jxkgkPRc"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "M12sAct1Ai",
+        "time": 0.3,
+        "line": 38
+      },
+      "title": "Stack at waymark 1",
+      "cue": "Lindwurm appears",
+      "rule": "Everyone stacks on the north-west wall at waymark 1, ready to drag the Phagocyte Spotlights east along the north edge.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sAct1Ai",
+        "from": 12.05,
+        "to": 16.01,
+        "line": 42
+      },
+      "title": "Walk the spotlights east",
+      "cue": "a Phagocyte Spotlight drops under the group",
+      "rule": "As each spotlight lands, step together a few metres east along the north edge: first to the middle of the north-west side, then just west of the boss, and for the last one in front of the boss toward the centre.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sAct1Ai",
+        "time": 19,
+        "line": 44
+      },
+      "title": "Spread or stack on the safe side",
+      "cue": "the last Phagocyte Spotlight resolves",
+      "rule": "Go to the half where the dragon head rises: Ravenous Reach sweeps the other half. The group with Bursting Grotesquerie fans out across that half (first in priority next to the boss, then inside, then the side wall, then the south), and the other group stacks in the north corner of that side around the Shared Grotesquerie. Then turn so your Directed Grotesquerie arrow sprays away from everyone: the first two spreaders aim at the unsafe half, the last two spreaders and the stack aim into the walls.",
+      "roles": {
+        "MainTank": {
+          "rule": "First of the supports: next to the boss if supports spread, the corner spot nearest the north wall if they stack."
+        },
+        "MeleeDpsA": {
+          "rule": "First of the DPS: next to the boss if DPS spread, the corner spot nearest the north wall if they stack."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sAct1Ai",
+        "time": 26.3,
+        "line": 46
+      },
+      "title": "Dodge the blood vessels",
+      "cue": "Hemorrhagic Projection goes off",
+      "rule": "The blood vessels leave one gap on each side wall, a corner on one side and the middle of the wall on the other. The party runs to the gap on the safe side and stacks on the marked healer.",
+      "roles": {
+        "MainTank": {
+          "rule": "Cross to the gap on the other side, away from the party, to take your buster."
+        },
+        "OffTank": {
+          "rule": "Cross to the gap on the other side with the main tank, away from the party, to take your buster."
+        }
+      },
+      "tolerance": 2,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sAct1Ai",
+        "time": 34,
+        "line": 47
+      },
+      "title": "Regroup for the Fixer",
+      "cue": "Visceral Burst hits",
+      "rule": "Stack just north of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    }
+  ],
+  "draft": true
+}

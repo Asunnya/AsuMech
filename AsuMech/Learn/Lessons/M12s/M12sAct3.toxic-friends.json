@@ -1,0 +1,126 @@
+{
+  "scenario": "M12sAct3Scenario",
+  "strat": "Toxic Friends",
+  "sources": [
+    {
+      "label": "Toxic Friends raidplan",
+      "url": "https://raidplan.io/plan/m1AMDbG_jxkgkPRc"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "M12sAct3Ai",
+        "time": 0.5,
+        "line": 29
+      },
+      "title": "Stack in the middle",
+      "cue": "Lindwurm appears",
+      "rule": "Everyone waits in the centre for Grotesquerie: Act 3.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sAct3Ai",
+        "time": 7.2,
+        "line": 30
+      },
+      "title": "Lean toward your platforms",
+      "cue": "Mitotic Phase on you",
+      "rule": "Your growth's arrow decides your platform, but the layout isn't shown yet: wait halfway between your cardinal platform and your intercardinal one. The support and DPS with the same arrow share a platform.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sAct3Ai",
+        "time": 9.1,
+        "line": 31
+      },
+      "title": "Take your platform",
+      "cue": "the snakes show which squares stay (Grand Entrance)",
+      "rule": "Stand on the platform your arrow points away from, so your tower is thrown onto the next one and you soak the tower thrown at yours. Cardinal platforms: East arrow on the west platform, West on east, North on south, South on north. Intercardinal platforms, towers go clockwise: East arrow north-west, South north-east, West south-east, North south-west.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sAct3Ai",
+        "from": 20,
+        "to": 23.9309,
+        "line": 162
+      },
+      "title": "Bait the snake heads",
+      "cue": "Dramatic Lysis hits you",
+      "rule": "When the floor comes back, walk around the holes to your bait spot. The tanks stand closest to the snake head on their side (main tank west, off tank east); everyone else stays further from the heads than the tanks.",
+      "roles": {
+        "MainTank": {
+          "rule": "Be the closest to the west snake head: north-west with cardinal platforms, about 9m west of the centre, a little north, with intercardinal ones."
+        },
+        "OffTank": {
+          "rule": "Be the closest to the east snake head: north-east with cardinal platforms, about 9m east of the centre, a little north, with intercardinal ones."
+        },
+        "RegenHealer": {
+          "rule": "Wait just west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Wait just east of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Cardinal platforms: just north of the centre, west side. Intercardinal: the outer corner of your platform."
+        },
+        "MeleeDpsB": {
+          "rule": "Cardinal platforms: just north of the centre, east side. Intercardinal: the outer corner of your platform."
+        },
+        "PhysRangedDps": {
+          "rule": "Cardinal platforms: about 11m west of the centre. Intercardinal: the outer corner of your platform."
+        },
+        "CasterDps": {
+          "rule": "Cardinal platforms: about 9m east of the centre. Intercardinal: the outer corner of your platform."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sAct3Ai",
+        "time": 29,
+        "line": 33
+      },
+      "title": "Spread for Venomous Scourge",
+      "cue": "Split Scourge hits the tanks",
+      "rule": "Venomous Scourge hits the three players furthest east and the three furthest west: tanks stack in the middle, and the other six spread three per side, apart from each other.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stack with the off tank in the middle (a little north of it with cardinal platforms)."
+        },
+        "OffTank": {
+          "rule": "Stack with the main tank in the middle (a little north of it with cardinal platforms)."
+        },
+        "RegenHealer": {
+          "rule": "Stand near waymark D, west."
+        },
+        "ShieldHealer": {
+          "rule": "Stand near waymark B, east."
+        },
+        "MeleeDpsA": {
+          "rule": "Cardinal platforms: north-west. Intercardinal: stay on the outer corner of your platform."
+        },
+        "MeleeDpsB": {
+          "rule": "Cardinal platforms: north-east. Intercardinal: stay on the outer corner of your platform."
+        },
+        "PhysRangedDps": {
+          "rule": "Cardinal platforms: the west wall. Intercardinal: stay on the outer corner of your platform."
+        },
+        "CasterDps": {
+          "rule": "Cardinal platforms: the east wall. Intercardinal: stay on the outer corner of your platform."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    }
+  ],
+  "draft": true
+}

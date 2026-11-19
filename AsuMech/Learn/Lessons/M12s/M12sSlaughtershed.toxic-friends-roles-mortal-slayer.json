@@ -1,0 +1,170 @@
+{
+  "scenario": "M12sSlaughtershedScenario",
+  "strat": "Toxic Friends, Roles Mortal Slayer",
+  "sources": [
+    {
+      "label": "Toxic Friends raidplan",
+      "url": "https://raidplan.io/plan/m1AMDbG_jxkgkPRc"
+    },
+    {
+      "label": "Roles Mortal Slayer raidplan",
+      "url": "https://raidplan.io/plan/KbxeCHoPkzWbt_HB"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "M12sSlaughtershedAi",
+        "time": 0.3,
+        "line": 39
+      },
+      "title": "Stack north of centre",
+      "cue": "Lindwurm appears",
+      "rule": "Stack together a few metres north of the centre, facing the boss.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sSlaughtershedAi",
+        "time": 4.81,
+        "line": 40
+      },
+      "title": "Orbs: split by side and line up",
+      "cue": "Mortal Slayer drops the first orbs",
+      "rule": "Supports go to the side the purple orbs fall on, DPS to the other side. Each orb takes the player on its side nearest the boss, so whoever owns the next orb on your side steps up toward the boss (first of the pair at the front, second just behind); everyone else waits in a line in the middle of their side.",
+      "tolerance": 2.0,
+      "skip": false,
+      "roles": {
+        "MainTank": {
+          "rule": "Purple side. You take the first purple orb."
+        },
+        "OffTank": {
+          "rule": "Purple side. You take the second purple orb."
+        },
+        "RegenHealer": {
+          "rule": "Purple side. You take the first green orb that falls on your side."
+        },
+        "ShieldHealer": {
+          "rule": "Purple side. You take the second green orb that falls on your side."
+        },
+        "MeleeDpsA": {
+          "rule": "Side without purples. You take the first orb that falls on your side."
+        },
+        "MeleeDpsB": {
+          "rule": "Side without purples. You take the second orb that falls on your side."
+        },
+        "PhysRangedDps": {
+          "rule": "Side without purples. You take the third orb that falls on your side."
+        },
+        "CasterDps": {
+          "rule": "Side without purples. You take the fourth orb that falls on your side."
+        }
+      }
+    },
+    {
+      "key": {
+        "cls": "M12sSlaughtershedAi",
+        "from": 15.650001,
+        "to": 21.67,
+        "line": 44
+      },
+      "title": "Take your orb in turn",
+      "cue": "The previous orbs land",
+      "rule": "After each pair of orbs lands, the players who just took one move out toward the north wall of their side, and the owners of the next orbs on that side step up toward the boss: the outer orb takes the closest player. Keep waiting in the middle line until it's your turn.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sSlaughtershedAi",
+        "time": 24.849998,
+        "line": 46
+      },
+      "title": "Regroup north of centre",
+      "cue": "The last orbs land",
+      "rule": "Everyone stacks again a few metres north of the centre.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sSlaughtershedAi",
+        "from": 44.29,
+        "to": 102.12,
+        "line": 52
+      },
+      "title": "Stack or spread in the north corners",
+      "cue": "Slaughtershed: spread markers on one role, a stack marker on the other",
+      "rule": "One blood vessel sits east or west of the middle. The stack role stacks in the north corner on that vessel's side; the spread role spreads in a square in the other north corner. Both corners keep you 12m from every vessel.",
+      "tolerance": 2.5,
+      "skip": false,
+      "roles": {
+        "MainTank": {
+          "rule": "If you spread: inner corner of the square, next to the north edge."
+        },
+        "MeleeDpsA": {
+          "rule": "If you spread: inner corner of the square, next to the north edge."
+        },
+        "OffTank": {
+          "rule": "If you spread: inner corner of the square, toward the middle."
+        },
+        "MeleeDpsB": {
+          "rule": "If you spread: inner corner of the square, toward the middle."
+        },
+        "RegenHealer": {
+          "rule": "If you spread: on the side wall, the southern spot of the square."
+        },
+        "PhysRangedDps": {
+          "rule": "If you spread: on the side wall, the southern spot of the square."
+        },
+        "ShieldHealer": {
+          "rule": "If you spread: tucked into the corner itself."
+        },
+        "CasterDps": {
+          "rule": "If you spread: tucked into the corner itself."
+        }
+      }
+    },
+    {
+      "key": {
+        "cls": "M12sSlaughtershedAi",
+        "from": 51.55,
+        "to": 109.38,
+        "line": 53
+      },
+      "title": "Dodge the first arm",
+      "cue": "Burst goes off; the boss's Serpentine Scourge or Raptor Knuckles cast names the order",
+      "rule": "Serpentine Scourge cleaves half the room: stack just north of centre on the side the first cleave doesn't hit. Raptor Knuckles knocks back from a north corner: stand right in front of the corner that punches first, so it throws you straight across to the other corner.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sSlaughtershedAi",
+        "from": 57.7,
+        "to": 116.91,
+        "line": 55
+      },
+      "title": "Dodge the second arm",
+      "rule": "Serpentine Scourge: cross to the side the first cleave just hit. Raptor Knuckles: you land in front of the other corner; hold that spot (sprint back if you drifted) and let the second punch throw you back across.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "The first arm lands"
+    },
+    {
+      "key": {
+        "cls": "M12sSlaughtershedAi",
+        "from": 62.57,
+        "to": 120.4,
+        "line": 56
+      },
+      "title": "Regroup north of centre",
+      "rule": "Stack again a few metres north of the centre for the next Slaughtershed.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "The second arm lands"
+    }
+  ],
+  "draft": true
+}

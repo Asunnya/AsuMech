@@ -1,0 +1,234 @@
+{
+  "scenario": "M12sIdyllicDreamScenario",
+  "strat": "DN",
+  "sources": [
+    {
+      "label": "DN Idyllic Dream raidplan",
+      "url": "https://raidplan.io/plan/zoeminUT6l2gaOWp"
+    },
+    {
+      "label": "Modified Bin (3VJ0)",
+      "url": "https://pastebin.com/qXLm3VJ0"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "M12sIdyllicDreamAi",
+        "time": 0.5,
+        "line": 48
+      },
+      "title": "Ring around the boss",
+      "cue": "Lindwurm appears",
+      "rule": "Spread in a ring 4m around Lindwurm: main tank north, then clockwise off tank, regen healer, shield healer, M1, M2, physical ranged, caster.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sIdyllicDreamAi",
+        "time": 52.14,
+        "line": 49
+      },
+      "title": "Wait in your number's quadrant",
+      "cue": "The second Replication cast starts",
+      "rule": "The clone that tethered you sets your job and number. N, NE, E and SE clones take a stack tether, S, SW, W and NW clones a defamation; N/S clones are 1, NE/SW 2, E/W 3, SE/NW 4. Wait about 6m out in your number's quadrant: 1 between N and NE, 2 between E and SE, 3 between S and SW, 4 between W and NW.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sIdyllicDreamAi",
+        "time": 65.700005,
+        "line": 50
+      },
+      "title": "Grab your boss clone's tether",
+      "cue": "The boss clones' tethers appear",
+      "rule": "Your quadrant holds one defamation clone and one stack clone: take the tether of your kind by standing next to that lindschrat.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sIdyllicDreamAi",
+        "time": 73.82,
+        "line": 51
+      },
+      "title": "Dodge the remembered cleaves",
+      "cue": "Twisted Vision resolves and the tethers lock",
+      "rule": "Go about 12m out on your light party's side (MT, regen, M1, physical ranged west; OT, shield, M2, caster east), on the north or south half away from the clone that showed east-west cones. Tanks and melee stand a step inside the healers and ranged.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sIdyllicDreamAi",
+        "time": 88.35,
+        "line": 52
+      },
+      "title": "Take your tower spot",
+      "cue": "Downfall splits the floor",
+      "rule": "On your light party's platform, tanks and melee take the inner pair of towers, healers and ranged the outer pair. Supports take the north tower on the west platform and the south tower on the east one; DPS the other.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sIdyllicDreamAi",
+        "time": 96.29,
+        "line": 53
+      },
+      "title": "Swap towers by the light",
+      "cue": "Arcadian Arcanum resolves",
+      "rule": "If the light hit you (Light Resistance Down II), you must hold an earth or fire tower; if not, a wind or doom tower. If your tower is the wrong kind, swap with the other player in your column.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sIdyllicDreamAi",
+        "time": 103.92,
+        "line": 54
+      },
+      "title": "First tethers resolve",
+      "cue": "Twisted Vision resolves and the floor comes back",
+      "rule": "The tethers go off in pairs by their clone: N/S, then NE/SW, E/W, SE/NW. Numbers 1 and 2 play north, 3 and 4 south. On a stack pair, the north group stacks on waymark 1 and the south group on waymark 3. On a defamation pair, the north group's holder runs to the east wall and the south group's to the west wall, while everyone else goes far north or far south with their group.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sIdyllicDreamAi",
+        "from": 110.45,
+        "to": 120.45,
+        "line": 58
+      },
+      "title": "Next three tethers",
+      "rule": "Same for each remaining pair: on a stack, your group stacks on waymark 1 (north) or 3 (south); on a defamation, the holder runs to their wall (north group east, south group west) and the rest go to their group's far edge.",
+      "tolerance": 2.5,
+      "skip": false,
+      "cue": "The previous tether pair resolves"
+    },
+    {
+      "key": {
+        "cls": "M12sIdyllicDreamAi",
+        "time": 125.45,
+        "line": 60
+      },
+      "title": "Soak your tower",
+      "rule": "Go back to your final tower before the floor splits again. Earth and fire: stand in the middle. Doom: stand on its north or south edge, away from the party, so the dark line points out. Wind: stand on the edge facing the arena's middle so the blast throws you onto the other platform.",
+      "tolerance": 1.5,
+      "skip": false,
+      "cue": "The last defamation resolves"
+    },
+    {
+      "key": {
+        "cls": "M12sIdyllicDreamAi",
+        "time": 138.18999,
+        "line": 61
+      },
+      "title": "Earth soaker out",
+      "cue": "The towers resolve",
+      "rule": "The earth tower soaker steps out to the platform's centre (B or D) before Lindwurm's Stone III. Everyone else holds still; the fire soaker is Hot-blooded and must not move.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sIdyllicDreamAi",
+        "time": 139.59999,
+        "line": 62
+      },
+      "title": "Wind soaker lands",
+      "cue": "Lindwurm's Portent on you",
+      "rule": "The wind soaker lands on the other platform and holds its inner edge, just north of the middle, to aim Faraway Portent.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sIdyllicDreamAi",
+        "time": 143.2,
+        "line": 65
+      },
+      "title": "Portent spots",
+      "cue": "Lindwurm's Stone III resolves",
+      "rule": "Doom soaker (Nearby Portent, Esuna'd by a healer): inner north corner of your platform. Inner earth or fire soaker: just outside them, to take their line. Outer earth or fire soaker: the outer south part of your platform, to take the line of the wind soaker who left it. The wind soaker stays where it landed.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sIdyllicDreamAi",
+        "time": 170.51,
+        "line": 66
+      },
+      "title": "Stack on the first replays",
+      "cue": "The floor comes back after Snaking Kick",
+      "rule": "The first clones to appear replay first. Of their two stack clones, the party stacks on the northern one (N or NE) and the tanks on the eastern one (E or SE); stand just beside it, away from the nearest defamation clone.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stack with the off tank on the eastern stack clone (E or SE), just beside it away from the nearest defamation clone."
+        },
+        "OffTank": {
+          "rule": "Stack with the main tank on the eastern stack clone (E or SE), just beside it away from the nearest defamation clone."
+        }
+      },
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sIdyllicDreamAi",
+        "time": 179.08,
+        "line": 67
+      },
+      "title": "To the cone clone's platform",
+      "cue": "The first reenacted Heavy Slams resolve",
+      "rule": "Go to the platform the Snaking Kick clone did not jump to. If its clone fires east-west cones, stand on the north end of the platform; if north-south cones, on its inner edge.",
+      "roles": {
+        "MainTank": {
+          "rule": "Go to the platform the Snaking Kick clone did not jump to. If its clone fires east-west cones, stand on the south end of the platform; if north-south cones, on its inner edge."
+        },
+        "OffTank": {
+          "rule": "Go to the platform the Snaking Kick clone did not jump to. If its clone fires east-west cones, stand on the south end of the platform; if north-south cones, on its inner edge."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sIdyllicDreamAi",
+        "time": 193.34,
+        "line": 68
+      },
+      "title": "Stack on the second replays",
+      "cue": "Twisted Vision resolves and the floor comes back",
+      "rule": "Now the other clones replay. Again the party stacks beside the northern stack clone (N or NE), away from the nearest defamation clone.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stack with the off tank beside the eastern stack clone (E or SE), away from the nearest defamation clone."
+        },
+        "OffTank": {
+          "rule": "Stack with the main tank beside the eastern stack clone (E or SE), away from the nearest defamation clone."
+        }
+      },
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sIdyllicDreamAi",
+        "time": 200.03,
+        "line": 69
+      },
+      "title": "Dodge the tear clone",
+      "cue": "The second reenacted Heavy Slams resolve",
+      "rule": "The clone that went into the tear comes back north of the middle with its cones. If they fire east-west, stand in the middle, just south of it; if north-south, stand level with it on your light party's side (west or east).",
+      "tolerance": 2.0,
+      "skip": false
+    }
+  ],
+  "draft": true
+}

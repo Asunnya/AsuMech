@@ -1,0 +1,127 @@
+{
+  "scenario": "M12sAct2Scenario",
+  "strat": "Toxic Friends",
+  "sources": [
+    {
+      "label": "Toxic Friends raidplan",
+      "url": "https://raidplan.io/plan/m1AMDbG_jxkgkPRc"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "M12sAct2Ai",
+        "time": 0.5,
+        "line": 35
+      },
+      "title": "Stack in the middle",
+      "cue": "Lindwurm appears",
+      "rule": "Everyone stacks in the centre to be wrapped by Cruel Coil.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sAct2Ai",
+        "from": 32.66,
+        "to": 47.66,
+        "line": 40
+      },
+      "title": "Stretch your chain",
+      "cue": "the chain tether and Unbreakable Flesh land on you",
+      "rule": "DPS (α) run out of the coil a quarter turn counter-clockwise from the current gap, where it opens next. Supports (β) step 8m the opposite way, toward the previous gap, so the chain snaps.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sAct2Ai",
+        "from": 35.11,
+        "to": 50.11,
+        "line": 45
+      },
+      "title": "Soak the chain tower",
+      "cue": "a chain snaps and leaves a tower",
+      "rule": "The support who snapped the chain walks back to the middle. The support two numbers later (First for Third, Second for Fourth, Third for First, Fourth for Second) steps 7m out onto the tower left where the chain broke.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sAct2Ai",
+        "from": 36.010002,
+        "to": 47.620003,
+        "line": 83
+      },
+      "title": "Walk to your outer blob",
+      "cue": "Unbreakable Flesh α on you",
+      "rule": "First and Second in Line DPS, now outside, walk around the outside of the coil to the outer blobs: First takes the third blob, Second the fourth. Never cut through the coil.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sAct2Ai",
+        "from": 36.47,
+        "to": 41.42,
+        "line": 68
+      },
+      "title": "Soak an inner blob",
+      "cue": "Roiling Mass cast starts on the blob",
+      "rule": "Third and Fourth in Line DPS, still inside the coil, soak the two inner blobs before leaving: Third takes the first blob, Fourth the second.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sAct2Ai",
+        "from": 38.61,
+        "to": 53.61,
+        "line": 50
+      },
+      "title": "Back to the middle",
+      "cue": "Roiling Mass resolves",
+      "rule": "After soaking a chain tower, walk back into the centre of the coil.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sAct2Ai",
+        "from": 38.670002,
+        "to": 43.62,
+        "line": 69
+      },
+      "title": "Back to the middle",
+      "cue": "Roiling Mass resolves",
+      "rule": "After soaking an inner blob, walk back into the centre of the coil.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sAct2Ai",
+        "time": 57.5,
+        "line": 57
+      },
+      "title": "Get out before Constrictor",
+      "cue": "the seventh Skinsplitter resolves",
+      "rule": "After the last Skinsplitter, every support leaves the coil the same way they stretched their chain; nobody may stay inside.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sAct2Ai",
+        "time": 63,
+        "line": 58
+      },
+      "title": "Regroup",
+      "cue": "Constrictor resolves",
+      "rule": "Stack back in the centre once the coil opens.",
+      "tolerance": 1.5,
+      "skip": false
+    }
+  ],
+  "draft": true
+}

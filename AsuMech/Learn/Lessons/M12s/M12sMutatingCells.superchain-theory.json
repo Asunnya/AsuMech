@@ -1,0 +1,109 @@
+{
+  "scenario": "M12sMutatingCellsScenario",
+  "strat": "Superchain Theory",
+  "sources": [
+    {
+      "label": "Superchain Theory raidplan",
+      "url": "https://raidplan.io/plan/OnhUS061LkI3xlmg"
+    },
+    {
+      "label": "Modified Bin (3VJ0)",
+      "url": "https://pastebin.com/qXLm3VJ0"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "M12sMutatingCellsAi",
+        "time": 0.3,
+        "line": 39
+      },
+      "title": "Stack south of the boss",
+      "cue": "Lindwurm appears",
+      "rule": "Group up just south of Lindwurm.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sMutatingCellsAi",
+        "time": 17.609999,
+        "line": 40
+      },
+      "title": "Betas pop the matching orbs",
+      "cue": "Mana spheres fly out around the two black holes",
+      "rule": "Mutation α: stay south of the boss and touch nothing. Mutation β: on the side where all four orbs sit far from the hole, find the two orbs whose shapes match the two close orbs on the other side and stand just inside where one lands, toward the hole, so it pops on you. The β tank takes the northern one, the β healer and DPS the southern one.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sMutatingCellsAi",
+        "time": 33.8,
+        "line": 41
+      },
+      "title": "Under the first safe hole",
+      "cue": "The last orbs are swallowed",
+      "rule": "Go to the hole whose first wave is aero and fire: the far-orb side if the close orbs were water and thunder, the close side if they were aero and fire. Mutation α stands just north of the hole, β just south.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sMutatingCellsAi",
+        "time": 42.61,
+        "line": 42
+      },
+      "title": "Swap holes",
+      "cue": "The first wave resolves",
+      "rule": "Cross to the other hole for the second wave, keeping the same split: α just north of it, β just south.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sMutatingCellsAi",
+        "time": 47.690002,
+        "line": 43
+      },
+      "title": "Netherworld stack",
+      "cue": "Netherworld Near or Netherworld Far cast starts",
+      "rule": "The β players (the ones who were α first) stack to take Wailing Wave and α keeps away. Near: β stack on the boss, α go far north toward A. Far: β stack at the south wall, α stand on the boss.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sMutatingCellsAi",
+        "time": 56.28,
+        "line": 44
+      },
+      "title": "Line up for Double Sobat",
+      "cue": "Dramatic Lysis resolves",
+      "rule": "Everyone groups a few metres south of the boss; the tank with β takes the Double Sobat buster just north of the boss.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sMutatingCellsAi",
+        "time": 69.979996,
+        "line": 46
+      },
+      "title": "Dodge the repeat, tanks apart",
+      "cue": "Double Sobat's first kick lands",
+      "rule": "Read how far Double Sobat turns for its second kick and move to the half it doesn't hit, about 7m out from the boss. The tanks go to the two edges of that half, far apart for Esoteric Finisher.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand at the right-hand edge of the safe half, looking out from the boss, well away from the off tank for Esoteric Finisher."
+        },
+        "OffTank": {
+          "rule": "Stand at the left-hand edge of the safe half, looking out from the boss, well away from the main tank for Esoteric Finisher."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    }
+  ],
+  "draft": true
+}

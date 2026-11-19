@@ -1,0 +1,67 @@
+{
+  "scenario": "M12sFinaleScenario",
+  "strat": "DN",
+  "sources": [
+    {
+      "label": "Modified Bin (3VJ0)",
+      "url": "https://pastebin.com/qXLm3VJ0"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "M12sFinaleAi",
+        "time": 0.5,
+        "line": 23
+      },
+      "title": "Tank north, party south",
+      "cue": "Lindwurm appears",
+      "rule": "Stack just inside waymark 3, behind the boss, and stay out of its front half for the Double Sobat on the main tank.",
+      "roles": {
+        "MainTank": {
+          "rule": "Tank Lindwurm from the north, halfway to waymark 1, facing it away from the party. Take the first kick of Double Sobat with mitigation."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sFinaleAi",
+        "time": 17.009998,
+        "line": 24
+      },
+      "title": "Tanks spread out of the second kick",
+      "cue": "The first Double Sobat kick lands",
+      "rule": "Stay stacked behind the boss on waymark 3. The second kick hits north again and Esoteric Finisher drops a circle on each tank.",
+      "roles": {
+        "MainTank": {
+          "rule": "Sprint north-west, out of the narrow second kick that follows the first, and take your Esoteric Finisher circle there."
+        },
+        "OffTank": {
+          "rule": "Go north-east, away from the party and the main tank, and take your Esoteric Finisher circle there."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sFinaleAi",
+        "time": 24.75,
+        "line": 25
+      },
+      "title": "Back to tank north, party south",
+      "cue": "Esoteric Finisher lands",
+      "rule": "Stack again just inside waymark 3, behind the boss.",
+      "roles": {
+        "MainTank": {
+          "rule": "Return to the north spot halfway to waymark 1 and keep the boss facing north."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    }
+  ],
+  "draft": true
+}
