@@ -833,8 +833,11 @@ public sealed unsafe partial class ZoneControl : IZoneControl
         Plugin.AddonLifecycle.UnregisterListener(AddonEvent.PostSetup, "Social", OnSocialPostSetup);
 
         // Game exit: no frames are left to revert or lift in, and the server still has the
-        // character in the inn. UNVERIFIED that what the closing client sends unfiltered is harmless.
+        // character in the inn. Dropping the hooks would let the closing client send its last
+        // packets from the sim zone, so a stay still open ends the process here, filter up: the
+        // server sees a disconnect in the inn.
         var gameClosing = Plugin.Framework.IsFrameworkUnloading;
+        if (gameClosing && (IsActive || guardArmed)) StopQuietly("the game closed during a run");
 
         // Plugin.DisposeAsync leaves the stay and waits out the lift first, so only an unload
         // that couldn't wait gets here. The inn reload finishes on the client's own time and then

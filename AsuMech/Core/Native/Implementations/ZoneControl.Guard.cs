@@ -7,6 +7,7 @@ using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using Dalamud.Game.ClientState.Conditions;
+using AsuMech.Core.Native.Implementations.Interop;
 using AsuMech.Core.Native.Interfaces;
 using FFXIVClientStructs.FFXIV.Client.Game;
 
@@ -252,6 +253,8 @@ public sealed unsafe partial class ZoneControl
         // firewall a second in.
         if (Current is { guardArmed: true }) return Settling("the previous run", out settling);
         if (!Plugin.ClientState.IsLoggedIn || Plugin.ObjectTable.LocalPlayer is not { } player) return "not logged in";
+        if (OpcodeUpdater.Downloading) return Settling("the firewall opcode download", out settling);
+        if (Current is { } zone && zone.OpcodeProblem() is { } opcodes) return opcodes;
         if (!IsInLaunchRoom()) return $"not in {LaunchRoomDescription}";
         var c = Plugin.Condition;
         if (c[ConditionFlag.BetweenAreas] || c[ConditionFlag.BetweenAreas51]) return "zoning";
@@ -442,9 +445,14 @@ public sealed unsafe partial class ZoneControl
         if (!sendPacketHook.IsEnabled || sendPacketHook.IsDisposed) { why = "the send filter did not arm"; return false; }
         if (!receivePacketHook.IsEnabled || receivePacketHook.IsDisposed) { why = "the receive filter did not arm"; return false; }
         if (heartbeatOpcode == 0) { why = "no heartbeat opcode"; return false; }
+        if (OpcodeProblem() is { } opcodes) { why = opcodes; return false; }
         why = "";
         return true;
     }
+
+    private string? OpcodeProblem()
+        => FirewallOpcodes.Problem(OpcodeUpdater.CurrentVersion, Plugin.Config.ZoneFirewallGameVersion, Plugin.Config.ZoneUpOpcode,
+            Plugin.Config.ZoneDownOpcodes.Length, heartbeatOpcode);
 
     // sessionSave was filled from the live player one statement earlier in Enter.
     // The house and room the chambers belong to, which the server set on the real zone-in; the
@@ -727,6 +735,13 @@ public sealed unsafe partial class ZoneControl
 
     // Environment.FailFast runs no finalizers, so nothing on the way out (Plugin.Dispose
     // included) can lift the firewall.
+    // Die without the dialog, for a client already on its way out.
+    private static void StopQuietly(string reason)
+    {
+        DiagnosticLog.Fatal($"[ZoneGuard] FATAL: {reason} -- stopping the game with the firewall up.");
+        Environment.FailFast($"AsuMech safety stop: {reason}");
+    }
+
     private static void Die(string reason)
     {
         var note = DiagnosticLog.Fatal($"[ZoneGuard] FATAL: {reason} -- stopping the game with the firewall up.");
