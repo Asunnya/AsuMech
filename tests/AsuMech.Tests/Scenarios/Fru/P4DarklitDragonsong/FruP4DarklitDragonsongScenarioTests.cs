@@ -1,4 +1,7 @@
+using System.Linq;
+using System.Numerics;
 using AsuMech.Core.Game.Party;
+using AsuMech.Core.SimObjects;
 using AsuMech.Scenarios;
 using AsuMech.Scenarios.Fru.P4DarklitDragonsong;
 using static AsuMech.Core.Game.Party.PartyRole;
@@ -118,4 +121,22 @@ public class FruP4DarklitDragonsongScenarioTests
         => Darklit(MeleeDpsA)
             .TeleportAt(67.5f, to: new(10, 10))
             .ShouldKill(ActionId.MornAfah, AllBut(MeleeDpsA));
+
+    [Test]
+    public void TheUsurperWaitsSouthWithHerWyrmUntilMovedToTheCentre()
+        => Darklit(MainTank)
+            .At(10f, p =>
+            {
+                Assert.That(Vector3.Distance(Enemy(p, BNpcBaseId.UsurperP4).Position, new Vector3(0, 0, 10)), Is.LessThan(0.01f));
+                Assert.That(Vector3.Distance(Enemy(p, BNpcBaseId.GreatWyrm).Position, new Vector3(0, 0, 10)), Is.LessThan(0.01f));
+            })
+            .At(15.6f, p =>
+            {
+                Assert.That(Enemy(p, BNpcBaseId.UsurperP4).Position.Length(), Is.LessThan(0.01f));
+                Assert.That(Enemy(p, BNpcBaseId.GreatWyrm).Position.Length(), Is.LessThan(0.01f));
+            })
+            .ShouldKillNoOneElse();
+
+    private static SimEnemy Enemy(ScenarioProbe p, uint bnpcBaseId)
+        => p.World.Children.OfType<SimEnemy>().Single(e => e.BNpcBaseId == bnpcBaseId);
 }

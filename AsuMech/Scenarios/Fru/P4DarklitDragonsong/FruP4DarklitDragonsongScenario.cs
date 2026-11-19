@@ -26,7 +26,6 @@ public sealed class FruP4DarklitDragonsongScenario : IScenario
     public object SettingsOverrides => settingsWindow.Overrides;
     private readonly FruP4DarklitDragonsongSettingsWindow settingsWindow = new();
 
-    private static readonly Vector3 FragmentPosition = new(0, 0, -16);
     // Curse chains stretched shorter than this snap. UNVERIFIED: retail's limit lies between 9.4 and 9.8.
     private const float CurseMinLength = 9.5f;
     // It takes every one of these and breaks on any other hit.
@@ -73,6 +72,8 @@ public sealed class FruP4DarklitDragonsongScenario : IScenario
         world.Events.Add(14.8f, () => usurper?.Cast(ActionId.Unnamed, animationLock: 1.1f));
         world.Events.Add(14.8f, () => oracle?.Face(OracleCenterSpot));
         world.Events.Add(14.8f, () => oracle?.Cast(ActionId.OracleReposition, animationLock: 1.1f));
+        world.Events.Add(15.4f, () => usurper?.SetPosition(Vector3.Zero));
+        world.Events.Add(15.4f, () => wyrm?.SetPosition(Vector3.Zero));
         world.Events.Add(15.4f, () => oracle?.SetPosition(OracleCenterSpot));
         world.Events.Add(16f, () => oracle?.SetRotation(0f));
         world.Events.Add(16f, () => BattleTalk(usurper, 0x6, UsurperBattleTalk));
@@ -128,15 +129,7 @@ public sealed class FruP4DarklitDragonsongScenario : IScenario
     // TODO: the Fragment's HP bar empties when it's hit; a spawned enemy's HP can't be set.
     private void SpawnActors()
     {
-        usurper = world.SpawnEnemy(new EnemySpawnConfig(
-            BNpcBaseId: BNpcBaseId.UsurperP4,
-            NameId: BNpcNameId.Usurper,
-            Level: Level,
-            Targetable: true,
-            EnemyList: EnemyListMode.Always,
-            Placement: new Placement(Vector3.Zero, MathF.PI),
-            InitialModeAttributeFlags: 0xFC,
-            LayoutId: LayoutId.UsurperP4));
+        usurper = world.SpawnEnemy(FruP4Actors.Usurper(shown: true));
         oracle = world.SpawnEnemy(new EnemySpawnConfig(
             BNpcBaseId: BNpcBaseId.OracleP4,
             NameId: BNpcNameId.Oracle,
@@ -146,38 +139,10 @@ public sealed class FruP4DarklitDragonsongScenario : IScenario
             Placement: new Placement(new Vector3(3.54f, 0, 0), MathF.PI / 4),
             LayoutId: LayoutId.OracleP4,
             Appearance: Appearance.Oracle));
-        fragment = world.SpawnEnemy(new EnemySpawnConfig(
-            BNpcBaseId: BNpcBaseId.FragmentOfFate,
-            NameId: BNpcNameId.FragmentOfFate,
-            Level: Level,
-            Targetable: true,
-            EnemyList: EnemyListMode.Never,
-            Placement: new Placement(FragmentPosition, 0f),
-            DisplayFlags: 0x40003,
-            LayoutId: LayoutId.FragmentOfFate,
-            IsHostile: false,
-            Statuses: [new(StatusId.Incurable)]));
-        gaia = SpawnVision(BNpcBaseId.VisionOfGaia, BNpcNameId.Gaia, Appearance.VisionOfGaia, new Placement(new Vector3(-0.71f, 0, -16), 1.22f),
-            0x4020B, LayoutId.VisionOfGaia, 0x79);
-        ryne = SpawnVision(BNpcBaseId.VisionOfRyne, BNpcNameId.Ryne, Appearance.VisionOfRyne, new Placement(new Vector3(0.71f, 0, -16), -0.84f),
-            0x4020A, LayoutId.VisionOfRyne, 0x07);
-
+        fragment = world.SpawnEnemy(FruP4Actors.Fragment());
+        gaia = world.SpawnEnemy(FruP4Actors.VisionOfGaia(shown: true));
+        ryne = world.SpawnEnemy(FruP4Actors.VisionOfRyne(shown: true));
     }
-
-    // Spawned as they stand once shown: retail's DisplayFlags less the hidden-until-shown bit.
-    private SimEnemy? SpawnVision(uint bnpcBaseId, uint nameId, NpcAppearance appearance, Placement placement, uint displayFlags, uint layoutId,
-        byte modelState) => world.SpawnEnemy(new EnemySpawnConfig(
-        BNpcBaseId: bnpcBaseId,
-        NameId: nameId,
-        Level: Level,
-        EnemyList: EnemyListMode.Never,
-        Placement: placement,
-        DisplayFlags: displayFlags,
-        LayoutId: layoutId,
-        IsHostile: false,
-        Appearance: appearance,
-        Statuses: [new(StatusId.Levitation, 200)],
-        ModelState: modelState));
 
     // On the Usurper, as retail spawns it.
     private void SpawnGreatWyrm() => wyrm = world.SpawnEnemy(new EnemySpawnConfig(
@@ -185,7 +150,7 @@ public sealed class FruP4DarklitDragonsongScenario : IScenario
         NameId: BNpcNameId.GreatWyrm,
         Level: Level,
         EnemyList: EnemyListMode.Never,
-        Placement: new Placement(Vector3.Zero, 1.99f)));
+        Placement: FruP4Actors.UsurperSpawn with { Rotation = 1.99f }));
 
 
     private void BattleTalk(SimEnemy? speaker, uint line, uint nameId)
