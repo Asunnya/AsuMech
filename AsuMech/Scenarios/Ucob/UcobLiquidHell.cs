@@ -18,7 +18,7 @@ public sealed class UcobLiquidHell(SimWorld world, DamageSolver damage)
     private const float PuddleFades = 11.7f;
     private const float PuddleGone = 12.7f;
     private const float BurnsSeconds = 15f;
-    private const float BurnsKill = 3f; // UNVERIFIED
+    private const float BurnsKill = 1.5f;
 
     private sealed record Puddle(Vector2 At, float HurtsAt, float FadesAt);
 

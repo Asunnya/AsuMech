@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Numerics;
 using AsuMech.Core.Game.Party;
 using AsuMech.Scenarios.Ucob.P1Twintania;
@@ -71,6 +72,56 @@ public class UcobP1TwintaniaScenarioTests
         => Negative<UcobP1TwintaniaScenario>(RegenHealer)
             .Overrides<UcobP1TwintaniaStateOverrides>(o => o.LiquidHellTarget = tank)
             .ShouldKillNoOneElse();
+
+    [Test]
+    public void AMissedSwapLeavesTheMainTankUnderHerAutoAttacks()
+        => Negative<UcobP1TwintaniaScenario>(OffTank)
+            .FreezeAt(20f)
+            .ShouldKill(ActionId.TwintaniaAttack, MainTank);
+
+    [Test]
+    public void AMissedSwapBackLeavesTheOffTankUnderHerAutoAttacks()
+        => Negative<UcobP1TwintaniaScenario>(MainTank)
+            .FreezeAt(58f)
+            .ShouldKill(ActionId.TwintaniaAttack, OffTank);
+
+    [Test]
+    public void HerAutoAttacksPauseFromEachDeathSentenceUntilTheSwap()
+    {
+        var swings = UcobP1TwintaniaScenario.AutoAttacks().ToList();
+        for (var i = 0; i < UcobP1TwintaniaScenario.DeathSentenceCasts.Length; i++)
+        {
+            var (cast, swap) = (UcobP1TwintaniaScenario.DeathSentenceCasts[i], UcobP1TwintaniaScenario.AggroSwaps[i]);
+            Assert.That(swings.Where(t => t >= cast && t < swap), Is.Empty);
+            Assert.That(swings, Does.Contain(swap));
+        }
+    }
+
+    [Test]
+    public void TheBotsClearWhenTheTargetedLiquidHellChasesAHatchTarget([Values(MeleeDpsA, PhysRangedDps)] PartyRole target, [Values(0, 1)] int strat)
+        => Negative<UcobP1TwintaniaScenario>(RegenHealer, strat)
+            .Overrides<UcobP1TwintaniaStateOverrides>(o =>
+            {
+                FirstHatchOnMeleeA(o);
+                o.LiquidHellTarget = target;
+            })
+            .Seed(3)
+            .ShouldKillNoOneElse();
+
+    [Test]
+    public void BurnsKillWithinTwoSecondsOfStandingInAPuddle()
+    {
+        float? burnt = null;
+        var run = ScenarioRun.Execute(typeof(UcobP1TwintaniaScenario), 0, 1, new ScenarioRunOptions
+        {
+            PlayerRole = CasterDps,
+            Takeovers = [new Takeover(36f, new Vector2(16.5f, -9.5f))],
+            Probe = p => burnt ??= p.Member(CasterDps)!.HasStatus(StatusId.Burns) ? p.World.Events.Elapsed : null,
+        });
+        var death = run.Deaths.First();
+        Assert.That(death.ActionId, Is.EqualTo(ActionId.LiquidHell));
+        Assert.That(death.Time - burnt, Is.LessThanOrEqualTo(1.6f));
+    }
 
     [Test]
     public void TheTanksTradeTwintaniaAfterEachDeathSentence()

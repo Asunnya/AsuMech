@@ -5,6 +5,7 @@ using System.Numerics;
 using AsuMech.Core.Game.Ai;
 using AsuMech.Core.Game.Party;
 using AsuMech.Core.SimObjects;
+using AsuMech.Core.UserActions;
 using static AsuMech.Core.Game.Party.PartyRole;
 using State = AsuMech.Scenarios.Ucob.P1Twintania.UcobP1TwintaniaState;
 using Scenario = AsuMech.Scenarios.Ucob.P1Twintania.UcobP1TwintaniaScenario;
@@ -51,19 +52,28 @@ public sealed class UcobP1TwintaniaAi : IScenarioAi<UcobP1TwintaniaState>, IUcob
     private static readonly Vector2 FifthBaitTwisterSpot = new(-18f, -8f);
     private static readonly Vector2 EastStackOffTheOviformPaths = new(5.3f, 9.5f);
     private static readonly Vector2[] TargetedLiquidHellLoop = [new(11.7f, 18.1f), new(16.7f, 13.6f), new(20.2f, 7.4f), new(21.5f, 1.3f), new(19.6f, -5.6f)];
+    private static readonly Vector2[] TargetedLiquidHellFromTheNorthNeurolink = [new(5f, -13f), new(11f, -14f), new(16f, -10f), new(19.5f, -4.5f)];
+    private static readonly Vector2[] TargetedLiquidHellFromTheWestNeurolink = [new(-8.5f, -0.5f), new(-6f, -7f), new(-1f, -12.5f), new(5f, -14.5f)];
+    private const float NeurolinkEdgeTowardsTheOviform = 1.4f;
+    private const float LeaveTheNeurolinkAfterTheFirstDrop = 0.45f;
     private const float RingRadius = 6.5f;
     private const float OutOfTheFireballRadius = 9f;
     private const float StepOff = 0.08f;
     private const float AfterDrop = 0.02f;
     private const float LeaveNeurolinkAfterHatch = 1.3f;
     private const float TankSpotsFreeOfPuddles = 106f;
+    private const float ProvokeBeforeTheSwap = 0.3f;
 
     private State state = null!;
+    private SimWorld world = null!;
 
-    public void Run(UcobP1TwintaniaState stateParam, SimWorld world)
+    public void Run(UcobP1TwintaniaState stateParam, SimWorld worldParam)
     {
         state = stateParam;
+        world = worldParam;
         var ai = new AiManager(world);
+        foreach (var swap in Scenario.AggroSwaps)
+            ai.UseAction(swap - ProvokeBeforeTheSwap, Scenario.AggroTank(swap), Enmity.ProvokeActionId, Twintania);
 
         ai.Move(0.5f, () => OnMarkers(CampSpots(North, 0.5f)).NaturalOrder(), jitter: 0f);
         ai.Move(9.0f, () => OnMarkers(Ring(North.Stack, RingRadius, 180f, 0f, NonTanks)).NaturalOrder(), jitter: 0f);
@@ -102,6 +112,9 @@ public sealed class UcobP1TwintaniaAi : IScenarioAi<UcobP1TwintaniaState>, IUcob
         GoIntoNeurolinks(ai, 4, Scenario.GenerateCasts[4]);
         ai.Move(Scenario.GenerateCasts[4], () => OnMarkers(Cluster(EastStackOffTheOviformPaths, NonTanks.Except(state.HatchTargets[4]))).NaturalOrder(), jitter: 0f);
     }
+
+    private SimCharacter? Twintania()
+        => world.Children.OfType<SimEnemy>().FirstOrDefault(e => e.IsActive && e.BNpcBaseId == UcobConstants.BNpcBaseId.Twintania);
 
     private PartyRole Baiter(int set)
     {
@@ -229,22 +242,50 @@ public sealed class UcobP1TwintaniaAi : IScenarioAi<UcobP1TwintaniaState>, IUcob
         return spots;
     }
 
+    private bool TargetedLiquidHellChasesAHatchTarget => state.HatchTargets[2].Contains(state.LiquidHellTarget);
+
+    private Vector2 HatchNeurolinkOfTheLiquidHellTarget
+        => Neurolinks(2)[(int)state.LiquidHellTarget]!.Value;
+
     private Vector2?[] StackAwayFromTheTargetedLiquidHell()
     {
         var spots = Cluster(EastStackOffTheOviformPaths, NonTanks.Except(state.HatchTargets[2]).Where(r => r != state.LiquidHellTarget));
         Place(spots, Neurolinks(2));
         Place(spots, Tanking(EastClearOfTheLoop, Scenario.GenerateCasts[2]));
-        spots[(int)state.LiquidHellTarget] = TargetedLiquidHellLoop[0];
+        spots[(int)state.LiquidHellTarget] = TargetedLiquidHellChasesAHatchTarget
+            ? NearSideOfNeurolink(HatchNeurolinkOfTheLiquidHellTarget, East.Boss)
+            : TargetedLiquidHellLoop[0];
         return spots;
     }
 
+    private static Vector2 NearSideOfNeurolink(Vector2 neurolink, Vector2 boss)
+        => neurolink + Vector2.Normalize(boss - neurolink) * NeurolinkEdgeTowardsTheOviform;
+
     private void RunTheTargetedLiquidHellLoop(AiManager ai)
     {
+        if (TargetedLiquidHellChasesAHatchTarget)
+        {
+            RunTheTargetedLiquidHellOutOfTheNeurolink(ai);
+            return;
+        }
         var drops = Scenario.LiquidHellDrops[Scenario.TargetedLiquidHellSet];
         var target = state.LiquidHellTarget;
         for (var i = 0; i < drops.Length; i++)
         {
             var next = i + 1 < TargetedLiquidHellLoop.Length ? TargetedLiquidHellLoop[i + 1] : East.Stack;
+            ai.Move(drops[i] + AfterDrop, () => OnMarkers(Only(target, next)).NaturalOrder(), jitter: 0f, sprint: true);
+        }
+    }
+
+    private void RunTheTargetedLiquidHellOutOfTheNeurolink(AiManager ai)
+    {
+        var drops = Scenario.LiquidHellDrops[Scenario.TargetedLiquidHellSet];
+        var target = state.LiquidHellTarget;
+        var loop = HatchNeurolinkOfTheLiquidHellTarget == State.NorthNeurolink ? TargetedLiquidHellFromTheNorthNeurolink : TargetedLiquidHellFromTheWestNeurolink;
+        ai.Move(drops[0] + LeaveTheNeurolinkAfterTheFirstDrop, () => OnMarkers(Only(target, loop[0])).NaturalOrder(), jitter: 0f, sprint: true);
+        for (var i = 1; i < drops.Length; i++)
+        {
+            var next = i < loop.Length ? loop[i] : East.Stack;
             ai.Move(drops[i] + AfterDrop, () => OnMarkers(Only(target, next)).NaturalOrder(), jitter: 0f, sprint: true);
         }
     }

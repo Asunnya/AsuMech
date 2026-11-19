@@ -18,6 +18,20 @@ public static class UcobActions
         Timing = new() { DamageDelay = 1.03f },
     };
 
+    public static readonly EnemyAction TwintaniaAttack = new(ActionId.TwintaniaAttack)
+    {
+        Cast = new() { AnimationLock = 0.1f },
+        Effects = [Damage()],
+        Timing = new() { DamageDelay = 0.5f }, // UNVERIFIED
+    };
+
+    // On a tank still carrying Death Sentence's Slashing Resistance Down II.
+    public static readonly EnemyAction TwintaniaAttackUnswapped = TwintaniaAttack with
+    {
+        Effects = [Damage(Lethal)],
+        DeathExplanation = "took Twintania's auto-attacks with Slashing Resistance Down II (the other tank provokes as Death Sentence lands)",
+    };
+
     // -- Exaflare --
 
     public static readonly EnemyAction Exaflare = new(ActionId.Exaflare)

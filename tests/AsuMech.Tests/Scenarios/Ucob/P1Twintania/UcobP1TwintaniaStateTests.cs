@@ -32,10 +32,11 @@ public class UcobP1TwintaniaStateTests
     }
 
     [Test]
-    public void TheTargetedLiquidHellSkipsThePlayersWaitingInANeurolink([Range(0, 49)] int seed)
+    public void TheTargetedLiquidHellCanChaseAnyoneEvenAHatchTarget()
     {
-        var state = new UcobP1TwintaniaState(new Rng(seed));
-        Assert.That(state.HatchTargets[UcobP1TwintaniaState.HatchesDuringTargetedLiquidHell], Does.Not.Contain(state.LiquidHellTarget));
+        var states = Enumerable.Range(0, 200).Select(i => new UcobP1TwintaniaState(new Rng(i * 104729 + 17))).ToList();
+        Assert.That(states.Select(s => s.LiquidHellTarget).Distinct().Count(), Is.EqualTo(8));
+        Assert.That(states.Any(s => s.HatchTargets[UcobP1TwintaniaState.HatchesDuringTargetedLiquidHell].Contains(s.LiquidHellTarget)));
     }
 
     [Test]

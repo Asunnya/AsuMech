@@ -47,6 +47,8 @@ public sealed class UcobP1TwintaniaScenario : IScenario
     private const float DeathSentenceCastSeconds = 3.7f;
     // The other tank provokes after each Death Sentence; the main tank holds her first.
     public static readonly float[] AggroSwaps = [24.93f, 61.54f, 111.87f];
+    private const float FirstAutoAttack = 3.4f;
+    private const float AutoAttackInterval = 3.03f;
     public static readonly float[] NeurolinkDrops = [27.04f, 72.18f, 142.48f];
     public static readonly float[][] LiquidHellDrops =
     [
@@ -64,7 +66,7 @@ public sealed class UcobP1TwintaniaScenario : IScenario
     private const float PuddleFades = 11.7f;
     private const float PuddleGone = 12.7f;
     private const float BurnsSeconds = 15f;
-    private const float BurnsKill = 3f; // UNVERIFIED
+    private const float BurnsKill = 1.5f;
     public static readonly float[] GenerateCasts = [41.24f, 63.86f, 86.42f, 116.16f, 135.56f];
     private const float HatchMarkerLead = 0.09f;
     private const float GenerateCastSeconds = 2.7f;
@@ -88,6 +90,7 @@ public sealed class UcobP1TwintaniaScenario : IScenario
     private readonly List<Puddle> puddles = [];
     private UcobHatches hatches = null!;
     private UcobTwisters twisters = null!;
+    private PartyRole aggro;
 
     private sealed record Puddle(Vector2 At, float HurtsAt, float FadesAt);
 
@@ -103,6 +106,7 @@ public sealed class UcobP1TwintaniaScenario : IScenario
         hatches = new UcobHatches(world);
         twisters = new UcobTwisters(world);
         twintania = null;
+        aggro = PartyRole.MainTank;
 
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<State>)AiStrats[idx]).Run(state, world);
@@ -130,9 +134,11 @@ public sealed class UcobP1TwintaniaScenario : IScenario
         }
         foreach (var at in DeathSentenceCasts)
         {
-            world.Events.Add(at, CastDeathSentence);
-            world.Events.Add(at + DeathSentenceCastSeconds - 0.02f, DeathSentence);
+            SimCharacter? sentenced = null;
+            world.Events.Add(at, () => sentenced = CastDeathSentence());
+            world.Events.Add(at + DeathSentenceCastSeconds - 0.02f, () => DeathSentence(sentenced));
         }
+        foreach (var at in AutoAttacks()) world.Events.Add(at, AutoAttack);
         foreach (var at in NeurolinkDrops) world.Events.Add(at, DropNeurolink);
         world.Events.Add(ToFirstWestCamp, () => twintania?.MoveTo(ToWorld(markers.Place(FirstWestCamp)), 4.3f));
         world.Events.Add(ToSecondWestCamp, () => twintania?.MoveTo(ToWorld(markers.Place(SecondWestCamp)), 7f));
@@ -155,14 +161,25 @@ public sealed class UcobP1TwintaniaScenario : IScenario
         world.Events.Add(End, DespawnAll);
     }
 
+    // The tank a strat that swaps on time has on her at `at`.
     public static PartyRole AggroTank(float at) => AggroSwaps.Count(s => s <= at) % 2 == 0 ? PartyRole.MainTank : PartyRole.OffTank;
+
+    // She swings on a steady beat, held back from each Death Sentence until the swap.
+    public static IEnumerable<float> AutoAttacks()
+    {
+        var starts = AggroSwaps.Prepend(FirstAutoAttack).ToList();
+        var ends = DeathSentenceCasts.Append(FliesOff).ToList();
+        for (var i = 0; i < starts.Count; i++)
+            for (var at = starts[i]; at < ends[i]; at += AutoAttackInterval)
+                yield return at;
+    }
 
     public void Tick(float delta, float elapsed)
     {
         var now = world.Events.Elapsed;
         if (twintania is { } boss)
         {
-            if (!boss.IsCasting && !boss.IsMoving && party.Get(AggroTank(now)) is { } tank && tank.IsAlive()) boss.Face(tank);
+            if (!boss.IsCasting && !boss.IsMoving && party.Get(aggro) is { } tank && tank.IsAlive()) boss.Face(tank);
             boss.SetHealth(0, HealthAt(now));
         }
         hatches.Tick();
@@ -190,12 +207,23 @@ public sealed class UcobP1TwintaniaScenario : IScenario
             Targetable: true,
             EnemyList: EnemyListMode.Always,
             Placement: new Placement(ToWorld(Spawn), 0f)));
-        if (twintania != null) spawned.Add(twintania);
+        if (twintania == null) return;
+        spawned.Add(twintania);
+        twintania.Provoked += by =>
+        {
+            if (by is ISimPartyMember member && by.IsAlive()) aggro = member.Role;
+        };
+    }
+
+    private void AutoAttack()
+    {
+        if (twintania is not { Targetable: true } boss || party.Get(aggro) is not { } tank || !tank.IsAlive()) return;
+        boss.Cast(tank.HasStatus(StatusId.SlashingResistanceDownII) ? UcobActions.TwintaniaAttackUnswapped : UcobActions.TwintaniaAttack, tank);
     }
 
     private void Plummet()
     {
-        if (twintania is not { } boss || party.Get(AggroTank(world.Events.Elapsed)) is not { } tank || !tank.IsAlive()) return;
+        if (twintania is not { } boss || party.Get(aggro) is not { } tank || !tank.IsAlive()) return;
         var facing = RotationTowards(boss.Position, tank.Position);
         boss.SetRotation(facing);
         PlayEffect(boss, ActionId.Plummet, 1.1f, facing, tank.GameObjectId);
@@ -229,15 +257,16 @@ public sealed class UcobP1TwintaniaScenario : IScenario
         }
     }
 
-    private void CastDeathSentence()
+    private SimCharacter? CastDeathSentence()
     {
-        if (party.Get(AggroTank(world.Events.Elapsed)) is not { } tank) return;
+        if (party.Get(aggro) is not { } tank) return null;
         twintania?.NativeCast(ActionId.DeathSentence, ActionType.Action, 0f, DeathSentenceCastSeconds, false, targetId: tank.GameObjectId);
+        return tank;
     }
 
-    private void DeathSentence()
+    private void DeathSentence(SimCharacter? tank)
     {
-        if (party.Get(AggroTank(world.Events.Elapsed)) is not { } tank || !tank.IsAlive()) return;
+        if (tank == null || !tank.IsAlive()) return;
         PlayEffect(twintania, ActionId.DeathSentence, 1.1f, target: tank.GameObjectId);
         if (tank.HasStatus(StatusId.SlashingResistanceDownII))
         {

@@ -31,7 +31,6 @@ public sealed class UcobP1TwintaniaState
     public IReadOnlyList<IReadOnlyList<PartyRole>> TwisterTargets { get; }
     public IReadOnlyList<PartyRole> FireballTargets { get; }
     public IReadOnlyList<IReadOnlyList<PartyRole>> HatchTargets { get; }
-    // Kept off the Hatch targets of that moment, who wait in a Neurolink where the puddles would land.
     public PartyRole LiquidHellTarget { get; }
 
     public UcobP1TwintaniaState(Rng rng, UcobP1TwintaniaStateOverrides? overrides = null)
@@ -42,8 +41,7 @@ public sealed class UcobP1TwintaniaState
         FireballTargets = overrides.FireballTargets.Select(pick => pick ?? rng.NextObj(NonTanks)).ToList();
         HatchTargets = overrides.HatchTargets
             ?? HatchCounts.Select((count, set) => RollHatch(rng, count, overrides.HatchIncludes[set])).ToList();
-        LiquidHellTarget = overrides.LiquidHellTarget
-            ?? rng.NextObj(Enum.GetValues<PartyRole>().Except(HatchTargets[HatchesDuringTargetedLiquidHell]).ToArray());
+        LiquidHellTarget = overrides.LiquidHellTarget ?? rng.NextObj(Enum.GetValues<PartyRole>());
     }
 
     private static IReadOnlyList<PartyRole> RollHatch(Rng rng, int count, PartyRole? include)
