@@ -22,8 +22,13 @@ public class ZoneControlFirewallRulesTests
 
     private static readonly Dictionary<string, string[]> HookOperations = new()
     {
-        [$"{Zone}::EnableFirewall"] = ["send:Enable", "receive:Enable"],
-        [$"{Zone}::DisableFirewall"] = ["send:Disable", "receive:Disable", "send:get_IsEnabled", "receive:get_IsEnabled"],
+        [$"{Zone}::EnableFirewall"] = ["send:Enable", "receive:Enable", "receive:get_IsEnabled"],
+        [$"{Zone}::DisableFirewall"] = ["send:Disable", "send:get_IsEnabled"],
+        // The receive hook stays on for good; whether it filters is receiveFilterUp.
+        [$"{Zone}::.ctor"] = ["receive:Enable"],
+        [$"{Zone}::get_ReceiveFiltering"] = ["receive:get_IsEnabled", "receive:get_IsDisposed"],
+        [$"{Zone}::DispatchUnfiltered"] = ["receive:get_OriginalDisposeSafe"],
+        [$"{Zone}::DisposeHooks"] = ["send:Dispose", "receive:Dispose"],
         [$"{Zone}::HoldSendFirewall"] = ["send:Enable", "send:Disable", "send:get_IsEnabled"],
         [$"{Zone}::get_HoldsSends"] = ["send:get_IsEnabled"],
         [$"{Zone}::SendPacketDetour"] = ["send:get_Original"],
@@ -82,21 +87,22 @@ public class ZoneControlFirewallRulesTests
         AssertNone(new[]
         {
             CallersMustBeIn($"{Zone}::EnableFirewall", true, $"{Zone}::Enter"),
-            CallersMustBeIn($"{Zone}::DisableFirewall", true, $"{Zone}::Enter", $"{Zone}::TryLift", $"{Zone}::Dispose"),
+            CallersMustBeIn($"{Zone}::DisableFirewall", true, $"{Zone}::Enter", $"{Zone}::TryLift", $"{Zone}::DisposeOnFrameworkThread"),
             CallersMustBeIn($"{Zone}::TryLift", true, $"{Zone}::LiftFirewallOrDie", $"{Zone}::TickSessionGuard"),
-            CallersMustBeIn($"{Zone}::LiftFirewallOrDie", true, $"{Zone}::Revert", $"{Zone}::Dispose"),
+            CallersMustBeIn($"{Zone}::LiftFirewallOrDie", true, $"{Zone}::Revert", $"{Zone}::DisposeOnFrameworkThread"),
             CallersMustBeIn($"{Zone}::LoadZoneInternal", true, $"{Zone}::Enter", $"{Zone}::Revert"),
             CallersMustBeIn($"{Zone}::Revert", true, $"{Zone}::Enter", $"{Zone}::{IZone}.Revert", "AsuMech.Plugin::DisposeOnceOutOfStay"),
             CallersMustBeIn($"{IZone}::Revert", true, "AsuMech.Core.Game.InstanceSession::Exit", $"{PeerZone}::Revert", $"{RecordingZone}::Revert"),
             CallersMustBeIn($"{Zone}::Enter", false),
             CallersMustBeIn($"{IZone}::Enter", true, "AsuMech.Core.Game.InstanceSession::Enter", $"{PeerZone}::Enter", $"{RecordingZone}::Enter"),
-            CallersMustBeIn($"{Zone}::HoldSendFirewall", true, $"{TimelineDebug}::Arm", $"{TimelineDebug}::OnUpdate", $"{TimelineDebug}::Shutdown", $"{Zone}::Dispose"),
+            CallersMustBeIn($"{Zone}::HoldSendFirewall", true, $"{TimelineDebug}::Arm", $"{TimelineDebug}::OnUpdate", $"{TimelineDebug}::Shutdown", $"{Zone}::DisposeOnFrameworkThread"),
             CallersMustBeIn($"{IZone}::HoldSendFirewall", false, $"{PeerZone}::HoldSendFirewall", $"{RecordingZone}::HoldSendFirewall"),
-            CallersMustBeIn($"{Zone}::InjectIncomingPacket", false),
+            // The lift replays the party packets the filter held.
+            CallersMustBeIn($"{Zone}::InjectIncomingPacket", false, $"{Zone}::TryLift"),
             CallersMustBeIn($"{IZone}::InjectIncomingPacket", false, $"{PeerZone}::InjectIncomingPacket", $"{RecordingZone}::InjectIncomingPacket"),
-            CallersMustBeIn($"{Zone}::Die", true, $"{Zone}::Enter", $"{Zone}::Revert", $"{Zone}::Trip", $"{Zone}::TryLift", $"{Zone}::Dispose"),
-            CallersMustBeIn($"{Zone}::StopQuietly", true, $"{Zone}::Dispose"),
-            CallersMustBeIn($"{Zone}::SetLocalPlayerPosition", true, $"{Zone}::LoadZoneInternal", $"{Zone}::RestoreBeforeLift", $"{Zone}::HoldSendFirewall", $"{Zone}::Dispose"),
+            CallersMustBeIn($"{Zone}::Die", true, $"{Zone}::Enter", $"{Zone}::Revert", $"{Zone}::Trip", $"{Zone}::TryLift", $"{Zone}::DisposeOnFrameworkThread"),
+            CallersMustBeIn($"{Zone}::StopQuietly", true, $"{Zone}::DisposeOnFrameworkThread"),
+            CallersMustBeIn($"{Zone}::SetLocalPlayerPosition", true, $"{Zone}::LoadZoneInternal", $"{Zone}::RestoreBeforeLift", $"{Zone}::HoldSendFirewall", $"{Zone}::DisposeOnFrameworkThread"),
             CallersMustBeIn("AsuMech.Core.Native.Implementations.ClientTerritory::TrySet", true, $"{Zone}::Enter", $"{Zone}::Revert"),
         }.SelectMany(x => x));
     }
@@ -110,6 +116,9 @@ public class ZoneControlFirewallRulesTests
         "AsuMech.Core.Native.Implementations.Interop.PreloadActionTmbTap::.ctor",
         // Observes inbound packets for the pull recording and calls each original unchanged.
         "AsuMech.Core.Native.Implementations.PullRecorder::TryHook",
+        // Observe the party's packets and handlers and call each original unchanged.
+        "AsuMech.Core.Native.Implementations.ServerPartyWatch::.ctor",
+        "AsuMech.Core.Native.Implementations.ServerPartyWatch::HookOrWarn",
         // Debug windows.
         "AsuMech.Windows.DebugMenu::TogglePositionLog",
         "AsuMech.Windows.DebugMenu::InstallRecastTimesTap",
@@ -308,24 +317,32 @@ public class ZoneControlFirewallRulesTests
     }
 
     // A replayed server packet bypasses the receive filter and runs the client's own handlers;
-    // outside a session the server never sent it and nothing would undo what it did.
+    // outside a session the server never sent it and nothing would undo what it did. The lift's
+    // replay of the packets the filter held is the one exception.
     [Test]
     public void InjectedPackets_ReachTheClientOnlyDuringASession()
     {
-        AssertNone(EveryPathPasses(IL.Method(Zone, "InjectIncomingPacket"), CallTo($"{Zone}::get_IsActive"), "IsActive", true,
+        var sessionOrReplay = (Func<Instruction, bool>)(i => CallTo($"{Zone}::get_IsActive")(i) || LoadOf($"{Zone}::replayingHeldPackets")(i));
+        AssertNone(EveryPathPasses(IL.Method(Zone, "InjectIncomingPacket"), sessionOrReplay, "IsActive or the lift's replay", true,
             CallTo("Dalamud.Hooking.Hook::get_Original"), "the original receive"));
     }
 
     // A lift that fails part-way leaves the send filter up: nothing the client does reaches the server.
+    // The receive hook stays on; the filter is down once receiveFilterUp is cleared.
     [Test]
     public void DisableFirewall_LowersTheSendFilterOnlyOnceTheReceiveFilterIsDown()
     {
         var disable = IL.Method(Zone, "DisableFirewall");
-        var receiveEnabled = disable.Body.Instructions.FirstOrDefault(i => PluginIL.Calls(i, "Dalamud.Hooking.Hook::get_IsEnabled")
-            && i.Previous?.Operand is FieldReference f && PluginIL.Name(f) == $"{Zone}::receivePacketHook");
+        var receiveDown = disable.Body.Instructions.FirstOrDefault(i => i.OpCode == Mono.Cecil.Cil.OpCodes.Stfld
+            && i.Operand is FieldReference f && PluginIL.Name(f) == $"{Zone}::receiveFilterUp" && i.Previous?.OpCode == Mono.Cecil.Cil.OpCodes.Ldc_I4_0);
         var sendDisable = (Func<Instruction, bool>)(i => PluginIL.Calls(i, "Dalamud.Hooking.Hook::Disable")
             && i.Previous?.Operand is FieldReference f && PluginIL.Name(f) == $"{Zone}::sendPacketHook");
-        Assert.That(receiveEnabled, Is.Not.Null, "DisableFirewall no longer reads whether the receive filter is still up; update this rule.");
-        AssertNone(EveryPathPasses(disable, i => i == receiveEnabled, "receivePacketHook.IsEnabled", false, sendDisable, "sendPacketHook.Disable"));
+        Assert.That(receiveDown, Is.Not.Null, "DisableFirewall no longer clears receiveFilterUp; update this rule.");
+        // Cleared in the entry block, ahead of any branch, so every path to the send Disable has passed it.
+        var body = disable.Body.Instructions.ToList();
+        var storeAt = body.IndexOf(receiveDown!);
+        Assert.That(body.Take(storeAt).Any(i => i.OpCode.FlowControl is FlowControl.Branch or FlowControl.Cond_Branch or FlowControl.Return), Is.False,
+            "receiveFilterUp is no longer cleared before DisableFirewall's first branch.");
+        Assert.That(body.Where(sendDisable).All(d => body.IndexOf(d) > storeAt), Is.True, "the send filter can come down before receiveFilterUp is cleared.");
     }
 }

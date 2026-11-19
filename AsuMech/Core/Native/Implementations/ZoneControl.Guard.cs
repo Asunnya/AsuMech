@@ -716,7 +716,11 @@ public sealed unsafe partial class ZoneControl
         if (!DisableFirewall()) Die($"a filter would not come down after the lift was verified ({when})");
         CheckHousingCameBack();
         DiagnosticLog.Info($"[ZoneGuard] Firewall lifted {when}: territory {innClientTerritory} (GameMain {NativeTerritory()}), player {here} vs inn {Describe(armedPosition, armedRotation)}, {counters}, held {heldInbound} inbound / {heldOutbound.Values.Sum()} outbound.");
-        var (applied, refresh) = partyWatch?.ApplyServerParty(InjectIncomingPacket) ?? (null, "the party watch is off");
+        replayingHeldPackets = true;
+        (string? applied, string? refresh) replay;
+        try { replay = partyWatch?.ApplyServerParty(InjectIncomingPacket) ?? (null, "the party watch is off"); }
+        finally { replayingHeldPackets = false; }
+        var (applied, refresh) = replay;
         if (applied != null) DiagnosticLog.Info($"[ZoneGuard] Applied {applied}.");
         if (partyResyncDue)
         {

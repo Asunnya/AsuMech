@@ -891,13 +891,19 @@ public sealed unsafe partial class ZoneControl : IZoneControl
     // for handlers FFXIVClientStructs doesn't expose. `body` is the IPC payload after the 16-byte header
     // built here; `sourceEntityId` is the actor the packet is about. Needs a real packet to
     // have reached the receive filter first (the first stay brings one within seconds).
+    private bool replayingHeldPackets;
+
     public bool InjectIncomingPacket(uint sourceEntityId, ushort opcode, ReadOnlySpan<byte> body, string what)
     {
-        // Outside a session the server never sent it, and nothing would undo what its handler did.
+        // Outside a session the server never sent it, and nothing would undo what its handler did. The
+        // lift's replay is the exception: those are the server's own packets the filter held.
         if (!IsActive)
         {
-            AsuMech.Core.DiagnosticLog.Warn($"[ZoneControl] InjectIncomingPacket({what}): no session is active -- dropped.");
-            return false;
+            if (!replayingHeldPackets)
+            {
+                AsuMech.Core.DiagnosticLog.Warn($"[ZoneControl] InjectIncomingPacket({what}): no session is active -- dropped.");
+                return false;
+            }
         }
         if (dispatcher == null)
         {
