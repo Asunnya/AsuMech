@@ -416,7 +416,7 @@ public sealed class UwuP2IfritScenario : IScenario
         if (Get(healer) is not { } holder || !holder.IsAlive()) return;
         var caster = SpawnHelper(holder.Position);
         PlayEffect(caster, ActionId.SearingWind, 1.1f, target: holder.GameObjectId);
-        damage.Resolve(holder, ActionId.SearingWind, [DamageType.Lethal], [], excludeTargets: [holder]);
+        UwuUtils.SearingWind(damage, holder);
         world.Events.Add(HelperLifetime, () => DespawnHelper(caster));
     }
 

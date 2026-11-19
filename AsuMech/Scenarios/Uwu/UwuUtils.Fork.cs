@@ -69,6 +69,15 @@ public partial class UwuUtils
             damage.ApplyDamage(hit, 1f, actionId, context, lethal: true);
     }
 
+    // Lethal around its holder, sparing the holder; whoever outlives it is thrown clear.
+    public static void SearingWind(DamageSolver damage, SimCharacter holder)
+    {
+        var hits = damage.Resolve(holder, ActionId.SearingWind, [DamageType.Lethal], [], excludeTargets: [holder]);
+        if (!KnockbackLookup.TryGet(KnockbackId.SearingWind, out var distance, out var speed)) return;
+        foreach (var hit in hits.Where(h => h.IsAlive()))
+            hit.Knockback(holder.Position, distance, speed);
+    }
+
     public void ResolveSnapshot(IReadOnlyList<SimCharacter> snapshot, uint actionId)
     {
         foreach (var character in snapshot)

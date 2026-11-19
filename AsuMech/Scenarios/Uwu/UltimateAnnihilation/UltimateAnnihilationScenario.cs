@@ -38,7 +38,6 @@ public sealed class UltimateAnnihilationScenario : IScenario
     private const float MesohighDamage = 0.16f;
     private const float SuperCycloneDamage = 0.03f;
     private const float InfernoHowlDamage = 0.1f;
-    private const float SearingWindDamage = 0.42f;
     // UNVERIFIED: everyone was shielded or anti-knockback, so how far it throws was never seen.
     private const float VulcanBurstDamage = 0.15f;
 
@@ -82,7 +81,6 @@ public sealed class UltimateAnnihilationScenario : IScenario
     private SimEnemy? titan;
     private readonly SimEnemy?[] dummies = new SimEnemy?[DummyCount];
     private readonly List<Orb> orbs = [];
-    private readonly HashSet<SimCharacter> searingWindHits = [];
     private readonly List<Vector3> superCycloneSpots = [];
     private IReadOnlyList<SimCharacter> crimsonCycloneSnapshot = [];
     private IReadOnlyList<SimCharacter> homingLasersSnapshot = [];
@@ -112,7 +110,6 @@ public sealed class UltimateAnnihilationScenario : IScenario
         damage = new DamageSolver(party);
         state = new UltimateAnnihilationState(world.Rng, party, settingsWindow.Overrides);
         orbs.Clear();
-        searingWindHits.Clear();
         superCycloneSpots.Clear();
         crimsonCycloneSnapshot = [];
         homingLasersSnapshot = [];
@@ -411,18 +408,13 @@ public sealed class UltimateAnnihilationScenario : IScenario
         damage.ApplyDamage(target, InfernoHowlDamage, ActionId.InfernoHowl, "Inferno Howl", false);
     }
 
-    // A second pulse on the same bystander is lethal.
     private void SearingWindPulse()
     {
         if (Get(state.SearingWindTarget) is not { } carrier || !carrier.IsAlive()) return;
         var pulse = Dummy(SearingWindDummy);
         pulse?.SetPosition(new Placement(carrier.Position, 0f));
         PlayEffect(pulse, ActionId.SearingWind, 1.1f);
-        foreach (var hit in party.Find.InsideActionAoe(ActionId.SearingWind, carrier.Placement()))
-        {
-            if (hit == carrier) continue;
-            damage.ApplyDamage(hit, SearingWindDamage, ActionId.SearingWind, "stood by the Searing Wind healer twice", !searingWindHits.Add(hit));
-        }
+        SearingWind(damage, carrier);
     }
 
     private void SnapshotCrimsonCyclone() =>
