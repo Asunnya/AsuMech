@@ -1,0 +1,426 @@
+{
+  "scenario": "UmadP1OpeningScenario",
+  "strat": "Merry-Go-Round",
+  "sources": [
+    {
+      "label": "WTFDIG (kefkabin), MIT",
+      "url": "https://github.com/mczub/wtfdig/tree/aa79375/src/routes/ultimates/umad"
+    },
+    {
+      "label": "NAUR Kefkabin - Strat: Merry-Go-Round (Slides)",
+      "url": "https://docs.google.com/presentation/d/1-E2rEKa586KKiVNvtt3EAMQY2YAEVBRGcMX0WzORIq8/edit?usp=sharing"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "UmadP1OpeningAi",
+        "time": 0.3,
+        "line": 57
+      },
+      "title": "Opening positions",
+      "cue": "Kefka appears",
+      "rule": "Stack 5m south of Kefka, behind him, out of Revolting Ruin III's cone.",
+      "roles": {
+        "MainTank": {
+          "rule": "Tank Kefka 5m north of the centre, facing him away from the party."
+        },
+        "OffTank": {
+          "rule": "Wait 4m west of the centre, ready to take over."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP1OpeningAi",
+        "time": 10.6,
+        "line": 58
+      },
+      "title": "Tank swap",
+      "cue": "Revolting Ruin III's second hit",
+      "rule": "The party stays stacked 5m south.",
+      "roles": {
+        "OffTank": {
+          "rule": "Provoke and take Kefka's spot 5m north for the next hits."
+        },
+        "MainTank": {
+          "rule": "Hand Kefka over and drop back to 4m west of the centre."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP1OpeningAi",
+        "time": 22,
+        "line": 59
+      },
+      "title": "Supports west, DPS east",
+      "cue": "Graven Image tethers one role group",
+      "rule": "Supports wait 5m west of Kefka, DPS 5m east. If your group has the Graven Image tethers, wait at the north wall on your side instead: the tether's Pulse Wave will push you back south.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP1OpeningAi",
+        "time": 24.4,
+        "line": 60
+      },
+      "title": "Read fire and ice, pre-position",
+      "cue": "Mystery Magic: fire and ice orbs on Kefka, fire markers",
+      "rule": "Pick the quadrant on your side that the real ice misses (a lie orb on Kefka means the telegraphed cones are the safe ones): supports in the west quadrant, DPS in the east one. Stack: the group gathers in the middle of that quadrant; spread: take your spread spot there. A lie fire orb means do the opposite of the markers. Tethered players stand 13m north of that spot so Pulse Wave pushes them into it.",
+      "roles": {
+        "MainTank": {
+          "rule": "Spread: on Kefka's hitbox, 6m north or south in your quadrant."
+        },
+        "MeleeDpsA": {
+          "rule": "Spread: on Kefka's hitbox, 6m north or south in your quadrant."
+        },
+        "OffTank": {
+          "rule": "Spread: 8m out, in the middle of your quadrant."
+        },
+        "MeleeDpsB": {
+          "rule": "Spread: 8m out, in the middle of your quadrant."
+        },
+        "RegenHealer": {
+          "rule": "Spread: far out at the edge of your quadrant."
+        },
+        "PhysRangedDps": {
+          "rule": "Spread: far out at the edge of your quadrant."
+        },
+        "ShieldHealer": {
+          "rule": "Spread: 6m out, close to the east-west line."
+        },
+        "CasterDps": {
+          "rule": "Spread: 6m out, close to the east-west line."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP1OpeningAi",
+        "time": 28.259998,
+        "line": 61
+      },
+      "title": "Settle for Flagrant Fire III",
+      "cue": "Pulse Wave knocks the tethered group south",
+      "rule": "After the knockback, settle into your stack or spread spot in your group's safe quadrant.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP1OpeningAi",
+        "time": 30.39,
+        "line": 62
+      },
+      "title": "Wave Cannon line",
+      "cue": "Flagrant Fire III resolves",
+      "rule": "Line up 3m south of the centre, west to east: H2, H1, OT, MT, M1, M2, R1, R2. Wave Cannon hits four of you and drops a tower under each.",
+      "roles": {
+        "ShieldHealer": {
+          "rule": "West end of the line, at the wall."
+        },
+        "RegenHealer": {
+          "rule": "Second from the west."
+        },
+        "OffTank": {
+          "rule": "Third from the west."
+        },
+        "MainTank": {
+          "rule": "Just west of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Just east of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Third from the east."
+        },
+        "PhysRangedDps": {
+          "rule": "Second from the east."
+        },
+        "CasterDps": {
+          "rule": "East end of the line, at the wall."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP1OpeningAi",
+        "time": 35.09,
+        "line": 63
+      },
+      "title": "Soak the towers",
+      "cue": "Explosion towers drop under the lasered players",
+      "rule": "If Wave Cannon hit you, step 6.5m north out of your tower. If not, soak a tower on your half: the free players of your group take its towers in the same west-to-east order as the line.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP1OpeningAi",
+        "time": 38.1,
+        "line": 64
+      },
+      "title": "First confetti stack",
+      "cue": "Double-trouble Trap on one support and one DPS",
+      "rule": "Supports stack 6m west, DPS 6m east. The Double-trouble Trap player of your group stands 2.5m further out, so the stack's knockback pushes the group in toward the middle.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP1OpeningAi",
+        "time": 43.05,
+        "line": 65
+      },
+      "title": "Dodge lightning and ice",
+      "cue": "Mystery Magic: ice and lightning orbs on Kefka",
+      "rule": "From where the knockback left you, move to the nearest spot clear of both the real ice quadrants and the real Thrumming Thunder III lanes. A lie orb flips its element: the telegraphed cones or lines are then the safe ones.",
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP1OpeningAi",
+        "time": 45.97,
+        "line": 66
+      },
+      "title": "Regroup for Light of Judgment",
+      "cue": "Mystery Magic resolves",
+      "rule": "Stack 5m south of Kefka again for Light of Judgment and the Hyperdrive busters.",
+      "roles": {
+        "OffTank": {
+          "rule": "Keep Kefka 5m north of the centre."
+        },
+        "MainTank": {
+          "rule": "Wait 4m west of the centre."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP1OpeningAi",
+        "time": 74.479996,
+        "line": 68
+      },
+      "title": "Stack north for the first puddles",
+      "cue": "Blizzard III Blowout and the gravity and rock tethers",
+      "rule": "Everyone stacks 11m north, on the side the real ice misses: north-east if the real cones hit north-west and south-east, otherwise north-west. Gravitas drops its puddles here.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP1OpeningAi",
+        "time": 79.61,
+        "line": 69
+      },
+      "title": "First rocks spread",
+      "cue": "Gravitas drops the first puddles",
+      "rule": "The gravity group gathers 3.5m south of the centre. The rock group spreads for Vitrophyre: MT and M1 at the far west, M2 at the far east, H1 and R1 south-west, H2 and R2 south-east.",
+      "roles": {
+        "OffTank": {
+          "rule": "Keep Kefka 5.5m north of the centre and bait Revolting Ruin III there."
+        },
+        "MainTank": {
+          "rule": "Rocks: far west. Gravity: stack south of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Rocks: far west. Gravity: stack south of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Rocks: far east. Gravity: stack south of the centre."
+        },
+        "RegenHealer": {
+          "rule": "Rocks: south-west, 8m south. Gravity: stack south of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Rocks: south-west, 8m south. Gravity: stack south of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Rocks: south-east, 8m south. Gravity: stack south of the centre."
+        },
+        "CasterDps": {
+          "rule": "Rocks: south-east, 8m south. Gravity: stack south of the centre."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP1OpeningAi",
+        "time": 88.43,
+        "line": 70
+      },
+      "title": "Dodge the first half-room Will",
+      "cue": "A Will statue winds up",
+      "rule": "Stack 6m out on the half away from the Will statue that winds up: the east statue cleaves the east half, the west one the west half.",
+      "roles": {
+        "OffTank": {
+          "rule": "Stay north on Kefka, sliding 4m to the safe side."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP1OpeningAi",
+        "time": 93.5,
+        "line": 71
+      },
+      "title": "Stack south for the second puddles",
+      "cue": "The half-room Will goes off",
+      "rule": "Everyone stacks on waymark C, south, so the second Gravitas puddles drop there.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP1OpeningAi",
+        "time": 98.07,
+        "line": 72
+      },
+      "title": "Second rocks spread",
+      "cue": "Gravitas drops the second puddles",
+      "rule": "The gravity group gathers 3m south of the centre. The rock group spreads across the north half: MT and M1 far west, OT and M2 8m west, H1 and R1 8m east, H2 and R2 far east.",
+      "roles": {
+        "MainTank": {
+          "rule": "Rocks: far west. Gravity: stack south of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "Rocks: far west. Gravity: stack south of the centre."
+        },
+        "OffTank": {
+          "rule": "Rocks: 8m west, slightly north. Gravity: stack south of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Rocks: 8m west, slightly north. Gravity: stack south of the centre."
+        },
+        "RegenHealer": {
+          "rule": "Rocks: 8m east, slightly north. Gravity: stack south of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Rocks: 8m east, slightly north. Gravity: stack south of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Rocks: far east. Gravity: stack south of the centre."
+        },
+        "CasterDps": {
+          "rule": "Rocks: far east. Gravity: stack south of the centre."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP1OpeningAi",
+        "time": 102.13,
+        "line": 73
+      },
+      "title": "Dodge the second half-room Will",
+      "cue": "Vitrophyre resolves, a Will statue winds up",
+      "rule": "Stack 6m out on the half away from the winding-up Will statue.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP1OpeningAi",
+        "time": 106.63,
+        "line": 74
+      },
+      "title": "Second confetti: line up through Kefka",
+      "rule": "Supports stack just north of Kefka, DPS just south of him in line with the north puddles. Each group's Double-trouble Trap player stands at the edge of the puddles on their own side, so the knockback throws the group through Kefka into the puddles opposite.",
+      "roles": {
+        "MainTank": {
+          "rule": "Just north of Kefka, or 6m north if you hold the Trap."
+        },
+        "OffTank": {
+          "rule": "Just north of Kefka, or 6m north if you hold the Trap."
+        },
+        "RegenHealer": {
+          "rule": "Just north of Kefka, or 6m north if you hold the Trap."
+        },
+        "ShieldHealer": {
+          "rule": "Just north of Kefka, or 6m north if you hold the Trap."
+        },
+        "MeleeDpsA": {
+          "rule": "Just south of Kefka, or 6m south if you hold the Trap."
+        },
+        "MeleeDpsB": {
+          "rule": "Just south of Kefka, or 6m south if you hold the Trap."
+        },
+        "PhysRangedDps": {
+          "rule": "Just south of Kefka, or 6m south if you hold the Trap."
+        },
+        "CasterDps": {
+          "rule": "Just south of Kefka, or 6m south if you hold the Trap."
+        }
+      },
+      "tolerance": 1.5,
+      "skip": false,
+      "cue": "The second Will goes off"
+    },
+    {
+      "key": {
+        "cls": "UmadP1OpeningAi",
+        "time": 111.72,
+        "line": 75
+      },
+      "title": "Pop the puddles",
+      "cue": "Double-trouble Trap knocks you through Kefka",
+      "rule": "Stand in the puddles you were knocked into: supports in the south ones, DPS in the north ones. Trap holders step back into the puddles behind them.",
+      "roles": {
+        "MeleeDpsA": {
+          "rule": "In the north puddles."
+        },
+        "MeleeDpsB": {
+          "rule": "In the north puddles."
+        },
+        "PhysRangedDps": {
+          "rule": "In the north puddles."
+        },
+        "CasterDps": {
+          "rule": "In the north puddles."
+        }
+      },
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP1OpeningAi",
+        "time": 113.799995,
+        "line": 76
+      },
+      "title": "Regroup for the second Light of Judgment",
+      "cue": "Gravity III goes off",
+      "rule": "Stack 5m south of Kefka.",
+      "roles": {
+        "MainTank": {
+          "rule": "Tank Kefka 5m north of the centre."
+        },
+        "OffTank": {
+          "rule": "Wait 4m west of the centre."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    }
+  ],
+  "draft": true
+}

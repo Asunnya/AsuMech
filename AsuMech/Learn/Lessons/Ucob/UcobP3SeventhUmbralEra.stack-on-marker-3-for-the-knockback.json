@@ -1,0 +1,57 @@
+{
+  "scenario": "UcobP3SeventhUmbralEraScenario",
+  "strat": "Stack on marker 3 for the knockback",
+  "sources": [
+    {
+      "label": "NAUR - Raidplan: Nael",
+      "url": "https://raidplan.io/plan/DpoJr4oE_kGz_gRU"
+    },
+    {
+      "label": "NAUR - Raidplan: Quickmarch",
+      "url": "https://raidplan.io/plan/3zSKK0DXeJgCLadx"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "UcobP3SeventhUmbralEraAi",
+        "time": 0.3,
+        "line": 39
+      },
+      "title": "Stack on marker 3",
+      "rule": "Stack tight on waymark 3, the south-east neurolink, so the whole party is together for Seventh Umbral Era and the tank LB.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UcobP3SeventhUmbralEraAi",
+        "time": 3.6,
+        "line": 40
+      },
+      "title": "Walk back after the knockback",
+      "tolerance": 1.5,
+      "skip": false,
+      "cue": "Seventh Umbral Era knocks you back",
+      "rule": "Walk straight back onto waymark 3 and stay stacked for the Calamitous Flame raidwides."
+    },
+    {
+      "key": {
+        "cls": "UcobP3SeventhUmbralEraAi",
+        "time": 11,
+        "line": 41
+      },
+      "title": "Pick up Bahamut Prime",
+      "cue": "Calamitous Blaze goes off",
+      "rule": "Bahamut Prime sits in the centre and turns to the main tank north of him: stack just south of him, behind his back, so Flare Breath's cone on the main tank misses you.",
+      "roles": {
+        "MainTank": {
+          "rule": "Stand 3m north of the centre (waymark 4) to pick him up and take Flare Breath and Flatten facing away from the party."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    }
+  ],
+  "draft": true
+}

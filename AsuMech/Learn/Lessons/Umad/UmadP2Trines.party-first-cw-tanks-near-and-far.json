@@ -1,0 +1,128 @@
+{
+  "scenario": "UmadP2TrinesScenario",
+  "strat": "Party first CW, tanks near and far",
+  "sources": [
+    {
+      "label": "WTFDIG (kefkabin), MIT",
+      "url": "https://github.com/mczub/wtfdig/tree/aa79375/src/routes/ultimates/umad"
+    },
+    {
+      "label": "Trines raidplan (party N CW, tanks NW CCW)",
+      "url": "https://raidplan.io/plan/apkh6ytq72w8pt3v"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "UmadP2TrinesAi",
+        "time": 0.3,
+        "line": 31
+      },
+      "title": "Wait in the middle",
+      "cue": "Kefka appears",
+      "rule": "Stack just south of Kefka in the middle while the trines appear.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2TrinesAi",
+        "time": 8.32,
+        "line": 32
+      },
+      "title": "Dodge the half-room wings",
+      "cue": "Wings of Destruction cast starts",
+      "rule": "Stack 3.5m out on the half Wings of Destruction doesn't cover: east if the wings sweep the west half, west if they sweep the east.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2TrinesAi",
+        "time": 12.3,
+        "line": 33
+      },
+      "title": "Wait outside the first trines",
+      "cue": "Wings of Destruction resolves",
+      "rule": "Step just outside the circles of the first three trines, as close as you can to the spot you dive into next: the party next to the first trine clockwise from north.",
+      "roles": {
+        "MainTank": {
+          "rule": "Wait next to your near spot: the clear spot closest to the centre that the later trines miss, away from the party."
+        },
+        "OffTank": {
+          "rule": "Wait next to your far spot: the outer edge clear of the later trines, on the west side when there's a choice."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2TrinesAi",
+        "time": 17.94,
+        "line": 34
+      },
+      "title": "Dive into the first explosion",
+      "cue": "The first trines explode",
+      "rule": "As the first trines go off, run into them. The party stacks in the first trine clockwise from north; tanks take their near and far spots for the Wings of Destruction busters on the nearest and farthest players.",
+      "roles": {
+        "MainTank": {
+          "rule": "Near spot: the clear spot closest to the centre, at least 4m out, that the later trines miss."
+        },
+        "OffTank": {
+          "rule": "Far spot: at the edge of the arena, clear of the later trines, on the west side when there's a choice."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2TrinesAi",
+        "time": 22.48,
+        "line": 35
+      },
+      "title": "Share Ultimate Embrace",
+      "cue": "The near and far Wings of Destruction busters land",
+      "rule": "The party holds its trine. The off tank joins the main tank at the near spot to share Ultimate Embrace.",
+      "roles": {
+        "OffTank": {
+          "rule": "Run from the edge to the main tank and share the buster."
+        },
+        "MainTank": {
+          "rule": "Hold the near spot; the off tank comes to you."
+        }
+      },
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP2TrinesAi",
+        "time": 29.64,
+        "line": 36
+      },
+      "title": "Back to the middle",
+      "cue": "Ultimate Embrace lands",
+      "rule": "Stack on Kefka in the middle for Aero III Assault.",
+      "tolerance": 1.5,
+      "skip": false
+    }
+  ],
+  "toolbox": {
+    "planId": "apkh6ytq72w8pt3v",
+    "roleMap": {
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "RegenHealer": "healer1",
+      "MeleeDpsA": "dps1",
+      "PhysRangedDps": "dps3"
+    },
+    "steps": {
+      "UmadP2TrinesAi@29.64": 12
+    },
+    "exampleSeed": 1,
+    "residual": 1.5044575
+  },
+  "draft": true
+}

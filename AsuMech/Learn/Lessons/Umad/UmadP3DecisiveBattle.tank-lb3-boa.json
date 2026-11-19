@@ -1,0 +1,190 @@
+{
+  "scenario": "UmadP3DecisiveBattleScenario",
+  "strat": "Tank LB3 BoA",
+  "sources": [
+    {
+      "label": "WTFDIG (kefkabin), MIT",
+      "url": "https://github.com/mczub/wtfdig/tree/aa79375/src/routes/ultimates/umad"
+    },
+    {
+      "label": "NAUR Kefkabin - Strat: Tank LB3 BoA + Kefka-relative Blackholes (Slides)",
+      "url": "https://docs.google.com/presentation/d/1w05ez7GscxTflgaMgVET42gjGryI2QSPR0zqRWXdWgI/edit?usp=sharing"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "UmadP3DecisiveBattleAi",
+        "time": 0.3,
+        "line": 31
+      },
+      "title": "Split for the Decisive Battle",
+      "cue": "Kefka appears",
+      "rule": "Chaos group (MT, H1, M1, M2) stands 4.5m west of the centre beside Chaos; Exdeath group (OT, H2, R1, R2) 4.5m east beside Exdeath. The four closest to Chaos become his heroes.",
+      "roles": {
+        "OffTank": {
+          "rule": "4.5m east, beside Exdeath."
+        },
+        "ShieldHealer": {
+          "rule": "4.5m east, beside Exdeath."
+        },
+        "PhysRangedDps": {
+          "rule": "4.5m east, beside Exdeath."
+        },
+        "CasterDps": {
+          "rule": "4.5m east, beside Exdeath."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3DecisiveBattleAi",
+        "time": 13.63,
+        "line": 32
+      },
+      "title": "Stack for Bowels of Agony",
+      "cue": "Epic Hero or Fated Hero on you",
+      "rule": "Everyone stacks 2.5m south of the centre as the bosses gather in the middle; the tank LB3 covers Bowels of Agony.",
+      "tolerance": 1.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3DecisiveBattleAi",
+        "time": 32.39,
+        "line": 33
+      },
+      "title": "Go to the wind crystal",
+      "cue": "Bowels of Agony: Entropy or Dynamic Fluid, Headwind or Tailwind",
+      "rule": "Stack at the wall by the wind crystal, where Chaos gets dragged. If the short debuff is Entropy (fire) and you hold it, spread 7m to the side of the group, supports to the left and DPS to the right as you face the crystal from the centre. If the short element is on someone else, the first two of R1, R2, M1, M2 without that debuff bait its crystal instead: stand at the wall by that crystal, outside the Thunder III circle, side by side (a few metres apart for water).",
+      "roles": {
+        "OffTank": {
+          "rule": "Hold Exdeath in the middle for now."
+        },
+        "MeleeDpsA": {
+          "rule": "Wind crystal stack, unless you are called to bait the short crystal."
+        },
+        "PhysRangedDps": {
+          "rule": "First choice to bait the short element's crystal; otherwise the wind crystal stack."
+        },
+        "CasterDps": {
+          "rule": "Second choice to bait the short element's crystal; otherwise the wind crystal stack."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3DecisiveBattleAi",
+        "time": 44.5,
+        "line": 34
+      },
+      "title": "Out of Thunder III",
+      "cue": "Thunder III cast starts",
+      "rule": "Hold the same spots, all outside the big Thunder III circle around Exdeath.",
+      "roles": {
+        "OffTank": {
+          "rule": "Leave Exdeath in the middle and join the wind crystal stack."
+        },
+        "MeleeDpsA": {
+          "rule": "Same spot as before: wind stack or short crystal."
+        },
+        "PhysRangedDps": {
+          "rule": "Same spot as before: short crystal or wind stack."
+        },
+        "CasterDps": {
+          "rule": "Same spot as before: short crystal or wind stack."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3DecisiveBattleAi",
+        "time": 52.5,
+        "line": 35
+      },
+      "title": "Swap to the long element",
+      "cue": "The short debuffs and their crystal go off",
+      "rule": "Once the short crystal fires, set up for the long debuff: stack at the wind crystal (a long Entropy holder spreads 7m to the side), and the first two of R1, R2, M1, M2 without the long debuff bait the long element's crystal.",
+      "roles": {
+        "OffTank": {
+          "rule": "Run back to Exdeath in the middle and take both Thunder III busters."
+        },
+        "MeleeDpsA": {
+          "rule": "Wind stack, unless you are called to bait the long crystal."
+        },
+        "PhysRangedDps": {
+          "rule": "First choice to bait the long element's crystal."
+        },
+        "CasterDps": {
+          "rule": "Second choice to bait the long element's crystal."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3DecisiveBattleAi",
+        "time": 68.4,
+        "line": 36
+      },
+      "title": "Dodge the first Implosion",
+      "cue": "Latitudinal or Longitudinal Implosion cast starts",
+      "rule": "Chaos at the wind wall casts Implosion: Latitudinal hits his sides first, Longitudinal his front and back first. If your long-element spot is in the first hit, step to the nearest safe spot beside it.",
+      "roles": {
+        "OffTank": {
+          "rule": "Stay on Exdeath in the middle unless the first hit covers it, then step aside."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "UmadP3DecisiveBattleAi",
+        "time": 74.1,
+        "line": 37
+      },
+      "title": "Dodge the second Implosion",
+      "cue": "The first Shockwave goes off",
+      "rule": "The other pair of cones hits next: move to the nearest spot it misses, close to your long-element spot.",
+      "tolerance": 2.5,
+      "skip": false,
+      "roles": {
+        "OffTank": {
+          "rule": "Head for the wind crystal stack, dodging the second hit on the way."
+        }
+      }
+    },
+    {
+      "key": {
+        "cls": "UmadP3DecisiveBattleAi",
+        "time": 76.11,
+        "line": 38
+      },
+      "title": "Long debuffs and crystal",
+      "cue": "The second Shockwave goes off",
+      "rule": "Settle into your long-element spot: wind crystal stack, the Entropy spread spot beside it, or the long crystal bait.",
+      "roles": {
+        "MeleeDpsA": {
+          "rule": "Wind stack, unless you are called to bait the long crystal."
+        },
+        "PhysRangedDps": {
+          "rule": "First choice to bait the long element's crystal."
+        },
+        "CasterDps": {
+          "rule": "Second choice to bait the long element's crystal."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    }
+  ],
+  "draft": true
+}

@@ -1,0 +1,142 @@
+{
+  "scenario": "FruIceVeilScenario",
+  "strat": "NA · LesBin",
+  "sources": [
+    {
+      "label": "NAUR LesBin Intermission",
+      "url": "https://tinyurl.com/lesbin-intermission"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "FruIceVeilAi",
+        "time": 0.5,
+        "line": 27
+      },
+      "title": "Pre-position for Swelling Frost",
+      "cue": "Usurper of Frost appears",
+      "rule": "Stand 2m out from the centre on your own direction: Swelling Frost knocks you 10m straight out and freezes you, so this is where you land.",
+      "tolerance": 2.5,
+      "skip": false,
+      "roles": {
+        "MainTank": {
+          "rule": "North of the centre."
+        },
+        "MeleeDpsA": {
+          "rule": "East of the centre."
+        },
+        "OffTank": {
+          "rule": "South of the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "West of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "North-east of the centre."
+        },
+        "CasterDps": {
+          "rule": "South-east of the centre."
+        },
+        "RegenHealer": {
+          "rule": "South-west of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "North-west of the centre."
+        }
+      }
+    },
+    {
+      "key": {
+        "cls": "FruIceVeilAi",
+        "time": 31.8,
+        "line": 28
+      },
+      "title": "Crystal positions",
+      "rule": "Tanks and melee: stand at the wall behind your Crystal of Light, 4m clockwise of it, so its Hiemal Storm puddles drop at the edge. Healers and ranged: stand just behind your Crystal of Darkness, so its Sinbound Blizzard cone points out at the wall and never reaches a Crystal of Light.",
+      "roles": {
+        "MainTank": {
+          "rule": "North wall, a step clockwise (east) of the north crystal."
+        },
+        "MeleeDpsA": {
+          "rule": "East wall, a step clockwise (south) of the east crystal."
+        },
+        "OffTank": {
+          "rule": "South wall, a step clockwise (west) of the south crystal."
+        },
+        "MeleeDpsB": {
+          "rule": "West wall, a step clockwise (north) of the west crystal."
+        },
+        "ShieldHealer": {
+          "rule": "Behind the north-east dark crystal, by waymark 2."
+        },
+        "CasterDps": {
+          "rule": "Behind the south-east dark crystal, by waymark 3."
+        },
+        "RegenHealer": {
+          "rule": "Behind the south-west dark crystal, by waymark 4."
+        },
+        "PhysRangedDps": {
+          "rule": "Behind the north-west dark crystal, by waymark 1."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruIceVeilAi",
+        "from": 45.17,
+        "to": 61.809998,
+        "line": 33
+      },
+      "title": "Sidestep the Hiemal Storms",
+      "cue": "Hiemal Storm cast starts",
+      "rule": "Each Hiemal Storm drops on the player nearest your Crystal of Light, which is you: as it starts, cross 8m along the wall to the other side of your crystal, first counter-clockwise, then back, until your crystal is destroyed. You also take your crystal's Hiemal Ray tether.",
+      "roles": {
+        "MainTank": {
+          "rule": "Alternate west and east of the north crystal."
+        },
+        "MeleeDpsA": {
+          "rule": "Alternate north and south of the east crystal."
+        },
+        "OffTank": {
+          "rule": "Alternate east and west of the south crystal."
+        },
+        "MeleeDpsB": {
+          "rule": "Alternate south and north of the west crystal."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruIceVeilAi",
+        "from": 58.85,
+        "to": 63.67,
+        "line": 39
+      },
+      "title": "Your crystal is down: move in",
+      "cue": "Your Crystal of Light is destroyed",
+      "rule": "Once your Crystal of Light falls, walk in to 7m on your cardinal, toward the Ice Veil.",
+      "roles": {
+        "MainTank": {
+          "rule": "Just inside waymark A, north."
+        },
+        "MeleeDpsA": {
+          "rule": "Just inside waymark B, east."
+        },
+        "OffTank": {
+          "rule": "Just inside waymark C, south."
+        },
+        "MeleeDpsB": {
+          "rule": "Just inside waymark D, west."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    }
+  ],
+  "draft": true
+}

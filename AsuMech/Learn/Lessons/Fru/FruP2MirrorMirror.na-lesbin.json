@@ -1,0 +1,149 @@
+{
+  "scenario": "FruP2MirrorMirrorScenario",
+  "strat": "NA · LesBin",
+  "sources": [
+    {
+      "label": "NAUR LesBin P2",
+      "url": "https://tinyurl.com/lesbin-p2"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "FruP2MirrorMirrorAi",
+        "time": 3,
+        "line": 28
+      },
+      "title": "Stack for Hallowed Ray",
+      "cue": "Hallowed Ray cast starts, marker on a player",
+      "rule": "Stack 4m north of the centre for the Hallowed Ray line stack. If the marker is on you, hold still: the party comes to you.",
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP2MirrorMirrorAi",
+        "time": 5.6,
+        "line": 29
+      },
+      "title": "Hold the Hallowed Ray stack",
+      "tolerance": 2,
+      "skip": true
+    },
+    {
+      "key": {
+        "cls": "FruP2MirrorMirrorAi",
+        "time": 19,
+        "line": 30
+      },
+      "title": "Scythe Kick baits",
+      "cue": "Mirror, Mirror: the blue and red mirrors appear",
+      "rule": "The Usurper walks to 7.5m opposite the blue mirror. Tanks and melee hug her, healers and ranged hug the blue mirror: Scythe Kick is a donut from both, so stay inside it, and your angle spreads the House of Light cones that follow.",
+      "roles": {
+        "MainTank": {
+          "rule": "Beside the boss, to her right as seen from the centre, slightly on the centre side."
+        },
+        "OffTank": {
+          "rule": "Beside the boss, to her left as seen from the centre, slightly on the centre side."
+        },
+        "MeleeDpsA": {
+          "rule": "Close behind the boss on the wall side, a little right as seen from the centre."
+        },
+        "MeleeDpsB": {
+          "rule": "Close behind the boss on the wall side, a little left as seen from the centre."
+        },
+        "RegenHealer": {
+          "rule": "Just inside the blue mirror, well off to its right as you face the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Just inside the blue mirror, well off to its left as you face the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Just inside the blue mirror, a little to its right as you face the centre, between H1 and the line to the centre."
+        },
+        "CasterDps": {
+          "rule": "Just inside the blue mirror, a little to its left as you face the centre, between H2 and the line to the centre."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP2MirrorMirrorAi",
+        "time": 32.3,
+        "line": 31
+      },
+      "title": "Red mirror baits",
+      "cue": "The House of Light from the boss and blue mirror resolves",
+      "rule": "Split to the two red mirrors and hug the one you take for its Scythe Kick and House of Light. Healers and ranged take the red mirror nearer the blue one (if both are equally near, the one clockwise of blue); tanks and melee take the other.",
+      "tolerance": 2.5,
+      "skip": false,
+      "roles": {
+        "MainTank": {
+          "rule": "At the melee group's red mirror, straight in from it toward the centre."
+        },
+        "OffTank": {
+          "rule": "At the melee group's red mirror, turned well toward the other red mirror."
+        },
+        "MeleeDpsA": {
+          "rule": "At the melee group's red mirror, angled away from the other red mirror."
+        },
+        "MeleeDpsB": {
+          "rule": "At the melee group's red mirror, turned well away from the other red mirror."
+        },
+        "RegenHealer": {
+          "rule": "At the ranged group's red mirror, straight in from it toward the centre."
+        },
+        "ShieldHealer": {
+          "rule": "At the ranged group's red mirror, turned well toward the other red mirror."
+        },
+        "PhysRangedDps": {
+          "rule": "At the ranged group's red mirror, angled away from the other red mirror."
+        },
+        "CasterDps": {
+          "rule": "At the ranged group's red mirror, turned well away from the other red mirror."
+        }
+      }
+    },
+    {
+      "key": {
+        "cls": "FruP2MirrorMirrorAi",
+        "time": 42.3,
+        "line": 32
+      },
+      "title": "Banish spreads or pairs",
+      "cue": "Banish III cast starts",
+      "rule": "Spread (Banish III): take your clock spot about 7.5m out: MT north, OT east, H1 west, H2 south, M1 south-west, M2 south-east, R1 north-west, R2 north-east. Pairs: DPS keep their intercard spot and each support joins one.",
+      "roles": {
+        "MainTank": {
+          "rule": "Spread: north, by waymark A. Pairs: join R1 north-west, by waymark 1."
+        },
+        "OffTank": {
+          "rule": "Spread: east, by waymark B. Pairs: join R2 north-east, by waymark 2."
+        },
+        "RegenHealer": {
+          "rule": "Spread: west, by waymark D. Pairs: join M1 south-west, by waymark 4."
+        },
+        "ShieldHealer": {
+          "rule": "Spread: south, by waymark C. Pairs: join M2 south-east, by waymark 3."
+        },
+        "MeleeDpsA": {
+          "rule": "South-west, by waymark 4."
+        },
+        "MeleeDpsB": {
+          "rule": "South-east, by waymark 3."
+        },
+        "PhysRangedDps": {
+          "rule": "North-west, by waymark 1."
+        },
+        "CasterDps": {
+          "rule": "North-east, by waymark 2."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    }
+  ],
+  "draft": true
+}
