@@ -17,23 +17,31 @@ namespace AsuMech.Scenarios.Dsr.P2Thordan;
 
 // From Thordan's arrival through Strength and Sanctity of the Ward to Ultimate End and Broad Swing.
 // Thordan's HP is not simulated: the run ends as the enrage (never reached in the logs) would fire.
-public sealed class DsrP2ThordanScenario : IScenario
+public sealed class DsrP2ThordanScenario : ISectionedScenario
 {
     // The meteors drill: just Sanctity of the Ward's second half, from the knights reappearing to the last towers.
     private const float MeteorsStart = 119.5f;
     private const float MeteorsEnd = 150.5f;
 
-    private readonly bool meteorsOnly;
+    private bool meteorsOnly => settingsWindow.Overrides.Practice == DsrP2Practice.Meteors;
 
-    internal DsrP2ThordanScenario(bool meteorsOnly) => this.meteorsOnly = meteorsOnly;
-
-    public DsrP2ThordanScenario() : this(false) { }
-
-    public string Name => meteorsOnly ? "Meteors" : "Thordan";
+    public string Name => "Thordan";
     public IPhase Phase => DsrZone.Thordan;
     public float BgmSecondsAtStart => meteorsOnly ? MeteorsStart : 0f;
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new DsrP2ThordanAi()];
+
+    public IReadOnlyList<ScenarioSection> Sections { get; } =
+    [
+        new("Whole phase", "Thordan's arrival, Strength and Sanctity of the Ward, Ultimate End and Broad Swing."),
+        new("Meteors", "Sanctity of the Ward's second half: the knights reappearing, the meteors and the last towers."),
+    ];
+
+    public int SelectedSection
+    {
+        get => (int)settingsWindow.Overrides.Practice;
+        set => settingsWindow.Overrides.Practice = (DsrP2Practice)value;
+    }
 
     private readonly DsrP2ThordanSettingsWindow settingsWindow = new();
     public object SettingsOverrides => settingsWindow.Overrides;

@@ -3,9 +3,12 @@ using AsuMech.Core.Game.Party;
 
 namespace AsuMech.Scenarios.Dsr.P2Thordan;
 
+public enum DsrP2Practice { WholePhase, Meteors }
+
 // Pins the random rolls; null keeps the roll. Bearings are compass degrees (0 = north).
 public sealed class DsrP2ThordanStateOverrides
 {
+    public DsrP2Practice Practice { get; set; }
     public float? ThordanBearing { get; set; }
     public float? SafeLineBearing { get; set; }
     public float? GuerriqueBearing { get; set; }

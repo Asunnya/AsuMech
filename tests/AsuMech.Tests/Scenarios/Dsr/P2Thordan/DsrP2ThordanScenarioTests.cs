@@ -22,6 +22,21 @@ public class DsrP2ThordanScenarioTests
     }
 
     [Test]
+    public void TheMeteorsTabPlaysOnlyTheMeteorsAndTheBotsClearThem([Values(1, 2, 3)] int seed)
+    {
+        float? firstTick = null;
+        var run = ScenarioRun.Execute(typeof(DsrP2ThordanScenario), 0, seed, new ScenarioRunOptions
+        {
+            PlayerRole = CasterDps,
+            Overrides = o => ((DsrP2ThordanStateOverrides)o).Practice = DsrP2Practice.Meteors,
+            Probe = p => firstTick ??= p.Game.World.Events.Elapsed,
+        });
+        Assert.That(run.Passed, run.ToString);
+        Assert.That(firstTick, Is.GreaterThanOrEqualTo(119.5f));
+        Assert.That(run.Elapsed, Is.LessThan(160f));
+    }
+
+    [Test]
     public void StandingStillInTheStackDiesToMercyConcealed()
         => Negative<DsrP2ThordanScenario>(MeleeDpsA)
             .TeleportAt(13f, to: new Vector2(0f, 6f))

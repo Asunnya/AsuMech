@@ -28,7 +28,7 @@ Raidplans:
     https://raidplan.io/plan/NDX-6bF2djrDMB-v
   Sanctity of the Ward pt. 1 - DRK-relative dodges
     https://raidplan.io/plan/2CYKJu6IHzBdolZu
-@scenarios: DsrP2ThordanScenario, DsrP2MeteorsScenario
+@scenarios: DsrP2ThordanScenario
   Sanctity of the Ward pt. 2 - Meteors
     https://raidplan.io/plan/Src8CpFxCAUUuZEM
 

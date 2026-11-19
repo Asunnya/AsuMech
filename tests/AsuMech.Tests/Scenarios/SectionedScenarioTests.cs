@@ -7,9 +7,9 @@ public class SectionedScenarioTests
     private static IEnumerable<ISectionedScenario> Sectioned() => ScenarioCatalog.Create().Scenarios.OfType<ISectionedScenario>();
 
     [Test]
-    public void TeaP3TeaP4TopP6AndUcobP2AreSectioned()
+    public void TheMultiPartPhasesAreSectioned()
         => Assert.That(Sectioned().Select(s => s.GetType().Name), Is.EquivalentTo(new[]
-            { "TeaP3AlexanderPrimeScenario", "TeaP4PerfectAlexanderScenario", "TopP6AlphaOmegaScenario", "UcobP2NaelScenario" }));
+            { "TeaP3AlexanderPrimeScenario", "TeaP4PerfectAlexanderScenario", "TopP6AlphaOmegaScenario", "UcobP2NaelScenario", "DsrP2ThordanScenario" }));
 
     [TestCaseSource(nameof(Sectioned))]
     public void APickedSectionIsThePracticeTheRunReads(ISectionedScenario scenario)

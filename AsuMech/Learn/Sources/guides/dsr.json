@@ -81,8 +81,7 @@
           "kind": "raidplan.io",
           "section": "P2: King Thordan",
           "scenarios": [
-            "DsrP2ThordanScenario",
-            "DsrP2MeteorsScenario"
+            "DsrP2ThordanScenario"
           ]
         }
       ],
@@ -90,8 +89,7 @@
         {
           "text": "Meteor role always takes the outer towers.",
           "scenarios": [
-            "DsrP2ThordanScenario",
-            "DsrP2MeteorsScenario"
+            "DsrP2ThordanScenario"
           ]
         }
       ]
@@ -388,23 +386,6 @@
           "label": "NAUR - Sanctity of the Ward pt. 1 - DRK-relative dodges",
           "url": "https://raidplan.io/plan/2CYKJu6IHzBdolZu"
         },
-        {
-          "label": "NAUR - Sanctity of the Ward pt. 2 - Meteors",
-          "url": "https://raidplan.io/plan/Src8CpFxCAUUuZEM"
-        }
-      ],
-      "rules": [
-        "Meteor role always takes the outer towers."
-      ]
-    },
-    "DsrP2MeteorsScenario": {
-      "plans": [
-        {
-          "url": "https://raidplan.io/plan/Src8CpFxCAUUuZEM",
-          "credits": "NAUR (Sanctity of the Ward pt. 2 - Meteors)"
-        }
-      ],
-      "sources": [
         {
           "label": "NAUR - Sanctity of the Ward pt. 2 - Meteors",
           "url": "https://raidplan.io/plan/Src8CpFxCAUUuZEM"

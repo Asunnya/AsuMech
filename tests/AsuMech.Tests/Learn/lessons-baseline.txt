@@ -1,6 +1,5 @@
 # scenario<TAB>strat of every embedded lesson; LessonQualityTests fails when one disappears. Refresh with: status --write-baseline
 DsrP1KnightsScenario	Toolbox (PF)
-DsrP2MeteorsScenario	NAUR (PF)
 DsrP2ThordanScenario	NAUR (PF)
 DsrP3NidhoggScenario	NAUR (PF)
 DsrP4EyesScenario	NA PF (snake swaps)

@@ -199,7 +199,6 @@ public sealed class ScenarioCatalog
         new UcobP5GoldenBahamutScenario(),
         new DsrP1KnightsScenario(),
         new DsrP2ThordanScenario(),
-        new DsrP2MeteorsScenario(),
         new DsrP3NidhoggScenario(),
         new DsrP4EyesScenario(),
         new DsrP5WrathScenario(),
