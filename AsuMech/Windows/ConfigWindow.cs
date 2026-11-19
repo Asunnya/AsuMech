@@ -93,6 +93,15 @@ public class ConfigWindow : Window, IDisposable
             configuration.Save();
         }
 
+        var leaveOnReadyCheck = configuration.LeaveSimOnReadyCheck;
+        if (Pills.Checkbox("Leave the sim when a ready check comes in", ref leaveOnReadyCheck))
+        {
+            configuration.LeaveSimOnReadyCheck = leaveOnReadyCheck;
+            configuration.Save();
+        }
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("The game can't show a ready check while you're in the sim. With this on, the run ends\nas soon as one comes in, so it opens and you can answer it. Off, you get a chat alert.");
+
         var chambers = configuration.AllowFcChambers;
         if (Pills.Checkbox("Allow starting from FC private chambers (experimental)", ref chambers))
         {

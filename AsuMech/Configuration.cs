@@ -15,6 +15,8 @@ public class Configuration : IPluginConfiguration
 
     
     public bool OpenSimMenuOnInn { get; set; } = true;
+    // A ready check that reaches the party during a run ends the run, so it can be answered in time.
+    public bool LeaveSimOnReadyCheck { get; set; } = false;
     // Experimental: start stays from the FC private chambers too (LaunchRoom).
     public bool AllowFcChambers { get; set; } = false;
 

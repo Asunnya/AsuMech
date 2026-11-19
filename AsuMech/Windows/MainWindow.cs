@@ -851,7 +851,10 @@ public unsafe class MainWindow : Window, IDisposable, IPanelHost
     internal static void DrawPartyAlerts()
     {
         if (PartyReadyCheck() is { } readyCheck)
+        {
             DrawAlert($"Ready check from {readyCheck.From}: {Math.Ceiling(readyCheck.Left.TotalSeconds):F0}s left. Leave the sim to answer it.");
+            if (ImGui.Button("Leave and answer##ready-check")) Plugin.Game.Leave();
+        }
         if (PartyRecruitmentEnded()) DrawAlert("Party Finder recruitment has ended");
     }
 

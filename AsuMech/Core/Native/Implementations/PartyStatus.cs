@@ -1166,6 +1166,8 @@ internal sealed class PartyStatusTracker(
         lock (sync)
         {
             var openCheck = readyCheck is { } check && check.LeftAt(now) > TimeSpan.Zero ? check : null;
+            if (readyCheck is { } expired && openCheck == null)
+                AsuMech.Core.DiagnosticLog.Info($"[PartyWatch] The ready check from {expired.From} ran out {-expired.LeftAt(now).TotalSeconds:F1}s before the lift; the game had ended it.");
             var taken = new ServerPartyState(steps.ToArray(), openCheck, held.OrderBy(h => h.Key).ToArray());
             readyCheck = null;
             readyCheckEnds = false;
@@ -1281,6 +1283,7 @@ internal sealed class PartyStatusTracker(
     private void StartReadyCheck(string from, HeldPacket start, ulong starter, bool crossWorld, DateTime at)
     {
         readyCheck = new HeldReadyCheck(at, from, [start], starter, crossWorld);
+        AsuMech.Core.DiagnosticLog.Info($"[PartyWatch] {from} started a{(crossWorld ? " cross-world" : "")} ready check during the run; {HeldReadyCheck.Window.TotalSeconds:F0}s to answer.");
         readyCheckEnds = false;
         steps.RemoveAll(step => step is LiftStep.ReadyCheckStarted);
         steps.Add(new LiftStep.ReadyCheckStarted());
