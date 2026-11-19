@@ -9,7 +9,6 @@ public sealed class UcobP2NaelSettingsWindow
 {
     private static readonly PartyRole[] Everyone = Enum.GetValues<PartyRole>();
     private static readonly PartyRole[] NotMainTank = Everyone.Where(r => r != PartyRole.MainTank).ToArray();
-    private static readonly string[] PushLabels = ["Push (clear)", "No push (divebombs)"];
 
     public UcobP2NaelStateOverrides Overrides { get; } = new();
 
@@ -26,11 +25,6 @@ public sealed class UcobP2NaelSettingsWindow
         }
 
         if (!SettingsGrid.Begin("##ucobp2")) return;
-        SettingsGrid.Row("Nael push:");
-        var push = (int)Overrides.Push;
-        SettingsGrid.ItemWidth(220);
-        ImGui.Combo("##ucobp2push", ref push, PushLabels, PushLabels.Length);
-        Overrides.Push = (NaelPush)push;
         for (var i = 0; i < Overrides.Quotes.Length; i++)
         {
             SettingsGrid.Row($"Quote {i + 1}:");

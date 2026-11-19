@@ -19,7 +19,7 @@ namespace AsuMech.Scenarios.Ucob.P2Nael;
 // Nael deus Darnus from Heavensfall to the Ravensbeak that ends the dragons' elements. Pushed, she
 // leaves with her dragons, as a clear does; not pushed, the divebombs follow. Her HP is not
 // simulated. The main tank holds her throughout.
-public sealed class UcobP2NaelScenario : IScenario
+public sealed class UcobP2NaelScenario : ISectionedScenario
 {
     public string Name => "Nael deus Darnus";
     public IPhase Phase => UcobZone.P2;
@@ -29,6 +29,18 @@ public sealed class UcobP2NaelScenario : IScenario
     private readonly UcobP2NaelSettingsWindow settingsWindow = new();
     public void DrawSettings() => settingsWindow.Draw();
     public object SettingsOverrides => settingsWindow.Overrides;
+
+    public IReadOnlyList<ScenarioSection> Sections { get; } =
+    [
+        new("Push (clear)", "Heavensfall to Ravensbeak; the party kills Nael's phase and she leaves."),
+        new("No push (divebombs)", "Heavensfall to Ravensbeak, then the three divebombs and the Fleeting light quote."),
+    ];
+
+    public int SelectedSection
+    {
+        get => (int)settingsWindow.Overrides.Push;
+        set => settingsWindow.Overrides.Push = (NaelPush)value;
+    }
 
     public const float Heavensfall = 8.41f;
     // The centre sword's steps down through the opener, each an (old, new) timeline pair.
