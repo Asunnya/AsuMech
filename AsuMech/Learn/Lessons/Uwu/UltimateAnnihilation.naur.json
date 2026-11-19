@@ -16,7 +16,7 @@
       "key": {
         "cls": "UltimateAnnihilationAi",
         "time": 4,
-        "line": 64
+        "line": 65
       },
       "title": "West stack",
       "rule": "Everyone stacks west of centre.",
@@ -28,7 +28,7 @@
       "key": {
         "cls": "UltimateAnnihilationAi",
         "time": 15,
-        "line": 65
+        "line": 66
       },
       "title": "East of the stack",
       "rule": "Step east, out of the Weight puddles, as one group.",
@@ -40,7 +40,7 @@
       "key": {
         "cls": "UltimateAnnihilationAi",
         "time": 17.6,
-        "line": 66
+        "line": 67
       },
       "title": "Back west, inside the Eye",
       "rule": "Back to the west stack, inside the Eye of the Storm's safe ring.",
@@ -52,7 +52,7 @@
       "key": {
         "cls": "UltimateAnnihilationAi",
         "time": 20.6,
-        "line": 67
+        "line": 68
       },
       "title": "Clear of the first Mesohigh",
       "rule": "Spread by group: tanks at the orb, healers west, melee and caster south-west, physical ranged south, so the tether has room.",
@@ -81,7 +81,7 @@
       "key": {
         "cls": "UltimateAnnihilationAi",
         "time": 23,
-        "line": 69
+        "line": 70
       },
       "title": "First Mesohigh taker east",
       "rule": "The first tether taker runs east to stretch the Mesohigh.",
@@ -93,7 +93,7 @@
       "key": {
         "cls": "UltimateAnnihilationAi",
         "time": 24.5,
-        "line": 72
+        "line": 73
       },
       "title": "Searing Wind holder north",
       "rule": "With Searing Wind, go to the north edge, slightly west, away from everyone.",
@@ -117,7 +117,7 @@
       "key": {
         "cls": "UltimateAnnihilationAi",
         "time": 25.65,
-        "line": 74
+        "line": 75
       },
       "title": "Ahead of Feather Rain",
       "rule": "Move ahead of the feathers: party to the north edge, tanks east of centre, ranged to the north-east corner.",
@@ -140,7 +140,7 @@
       "key": {
         "cls": "UltimateAnnihilationAi",
         "time": 26,
-        "line": 76
+        "line": 77
       },
       "title": "Tanks out of the puddles",
       "rule": "Tanks step out of the feather puddles.",
@@ -152,7 +152,7 @@
       "key": {
         "cls": "UltimateAnnihilationAi",
         "time": 27.3,
-        "line": 77
+        "line": 78
       },
       "title": "Group north, tanks on the orb",
       "rule": "Party at the north edge; tanks on the orb; Searing Wind holder stays apart.",
@@ -175,7 +175,7 @@
       "key": {
         "cls": "UltimateAnnihilationAi",
         "time": 28.8,
-        "line": 78
+        "line": 79
       },
       "title": "Tanks to the north edge",
       "rule": "Tanks join the north edge, main tank west of the off tank.",
@@ -187,7 +187,7 @@
       "key": {
         "cls": "UltimateAnnihilationAi",
         "time": 29.2,
-        "line": 79
+        "line": 80
       },
       "title": "First taker to the north edge",
       "rule": "The first Mesohigh taker rejoins the north edge.",
@@ -199,7 +199,7 @@
       "key": {
         "cls": "UltimateAnnihilationAi",
         "time": 31.8,
-        "line": 80
+        "line": 81
       },
       "title": "Out of the lines",
       "rule": "Party north-west, between the Landslide and the dash line; tanks on each side.",
@@ -219,7 +219,7 @@
       "key": {
         "cls": "UltimateAnnihilationAi",
         "time": 32.2,
-        "line": 81
+        "line": 82
       },
       "title": "Searing Wind holder south-east",
       "rule": "With Searing Wind, go south-east, away from the party.",
@@ -231,7 +231,7 @@
       "key": {
         "cls": "UltimateAnnihilationAi",
         "time": 35.3,
-        "line": 82
+        "line": 83
       },
       "title": "North-west stack",
       "rule": "Stack north-west; the off tank takes the orb; the Searing Wind holder stays apart.",
@@ -248,7 +248,7 @@
       "key": {
         "cls": "UltimateAnnihilationAi",
         "time": 40.3,
-        "line": 83
+        "line": 84
       },
       "title": "Main tank steps in",
       "rule": "Main tank moves to the north-west, just off the stack.",
@@ -260,7 +260,7 @@
       "key": {
         "cls": "UltimateAnnihilationAi",
         "time": 43.02,
-        "line": 84
+        "line": 85
       },
       "title": "Ahead of the second Feather Rain",
       "rule": "Move ahead of the feathers: party west of centre, main tank north, off tank east.",
@@ -280,7 +280,7 @@
       "key": {
         "cls": "UltimateAnnihilationAi",
         "time": 43.4,
-        "line": 86
+        "line": 87
       },
       "title": "Out of the puddles",
       "rule": "Step out of the feather puddles, staying grouped.",
@@ -292,7 +292,7 @@
       "key": {
         "cls": "UltimateAnnihilationAi",
         "time": 46,
-        "line": 87
+        "line": 88
       },
       "title": "North-west stack again",
       "rule": "Stack north-west; main tank north of centre, off tank east.",
@@ -312,7 +312,7 @@
       "key": {
         "cls": "UltimateAnnihilationAi",
         "time": 54.6,
-        "line": 88
+        "line": 89
       },
       "title": "Searing Wind holder rejoins",
       "rule": "Rejoin the north-west stack once Searing Wind is gone.",
@@ -324,7 +324,7 @@
       "key": {
         "cls": "UltimateAnnihilationAi",
         "time": 66.4,
-        "line": 90
+        "line": 91
       },
       "title": "Out of the Radiant Plumes",
       "rule": "Party to the north-west corner; main tank north; off tank north-east.",
@@ -344,7 +344,7 @@
       "key": {
         "cls": "UltimateAnnihilationAi",
         "time": 69.4,
-        "line": 91
+        "line": 92
       },
       "title": "West of the Diffractive Laser",
       "rule": "Party west of the laser line; main tank north of centre; off tank east.",

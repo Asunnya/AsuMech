@@ -166,7 +166,7 @@
       "key": {
         "cls": "FruP4CrystallizeTimeAi",
         "time": 30.566372,
-        "line": 197
+        "line": 198
       },
       "title": "After your debuff resolves",
       "cue": "Longing of the Lost hits you",
@@ -273,7 +273,7 @@
         "cls": "FruP4CrystallizeTimeAi",
         "from": 37.81626,
         "to": 39.099575,
-        "line": 206
+        "line": 207
       },
       "title": "After your debuff resolves",
       "cue": "Tidal Light cast starts",

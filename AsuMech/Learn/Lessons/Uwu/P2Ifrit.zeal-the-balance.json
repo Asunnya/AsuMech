@@ -16,7 +16,7 @@
       "key": {
         "cls": "UwuP2IfritAi",
         "time": 0.5,
-        "line": 37
+        "line": 38
       },
       "title": "Opener",
       "rule": "Loose spread around the centre marker while Ifrit lands.",
@@ -27,7 +27,7 @@
       "key": {
         "cls": "UwuP2IfritAi",
         "time": 5.3,
-        "line": 38
+        "line": 39
       },
       "title": "Run to the opener safe spot",
       "rule": "Ifrit dashes across the arena along his facing. Find the Radiant Plume on the edge beside his dash line and run to the wall on the opposite side of it, out of the dash lane. Two rows: four at the wall, four a step inside.",
@@ -39,7 +39,7 @@
       "key": {
         "cls": "UwuP2IfritAi",
         "time": 10.3,
-        "line": 39
+        "line": 40
       },
       "title": "Ifrit south, party north",
       "rule": "Group just north of the centre, between the centre marker and A, melee a step closer. He stays centred so the Radiant Plume knockback has nothing to push you into.",
@@ -56,7 +56,7 @@
       "key": {
         "cls": "UwuP2IfritAi",
         "time": 40.9,
-        "line": 41
+        "line": 44
       },
       "title": "Nails: party by the centre, Ifrit between the close pair",
       "rule": "Two nails stand close together, two stand alone. The party gathers at the centre marker, shifted a little toward the lone nails, and spreads loosely.",
@@ -73,7 +73,7 @@
       "key": {
         "cls": "UwuP2IfritAi",
         "time": 48.3,
-        "line": 42
+        "line": 45
       },
       "title": "Baiters to the wall",
       "rule": "Physical ranged goes to the wall just clockwise of the lone nail across from the close pair; caster goes to the wall just counterclockwise of the other lone nail. Everyone else stays with Ifrit.",
@@ -93,7 +93,7 @@
       "key": {
         "cls": "UwuP2IfritAi",
         "time": 48.5,
-        "line": 43
+        "line": 46
       },
       "title": "Searing Wind: leave the party",
       "rule": "You explode around yourself every few seconds. Run to the wall directly opposite the close pair of nails and stay there until the debuff is gone.",
@@ -105,7 +105,7 @@
       "key": {
         "cls": "UwuP2IfritAi",
         "time": 51.2,
-        "line": 44
+        "line": 47
       },
       "title": "Bait Eruption 1",
       "rule": "Baiters: step along the wall toward the close pair, a third of a quarter turn, so the puddle drops behind you.",
@@ -125,7 +125,7 @@
       "key": {
         "cls": "UwuP2IfritAi",
         "time": 53.2,
-        "line": 45
+        "line": 48
       },
       "title": "Bait Eruption 2",
       "rule": "Baiters: another third of a quarter turn along the wall, toward the close pair.",
@@ -136,7 +136,7 @@
       "key": {
         "cls": "UwuP2IfritAi",
         "time": 55.2,
-        "line": 46
+        "line": 49
       },
       "title": "Bait Eruption 3",
       "rule": "Baiters: one more step along the wall; you end up a quarter turn from where you started.",
@@ -147,7 +147,7 @@
       "key": {
         "cls": "UwuP2IfritAi",
         "time": 58.3,
-        "line": 47
+        "line": 50
       },
       "title": "Baiters return",
       "rule": "Baiters walk back to the party at the centre marker.",
@@ -159,7 +159,7 @@
       "key": {
         "cls": "UwuP2IfritAi",
         "time": 67,
-        "line": 48
+        "line": 51
       },
       "title": "Searing Wind holder returns",
       "rule": "Rejoin the party at the centre marker.",
@@ -171,7 +171,7 @@
       "key": {
         "cls": "UwuP2IfritAi",
         "time": 72,
-        "line": 50
+        "line": 53
       },
       "title": "Centre for Hellfire",
       "rule": "Loose spread around the centre marker; Hellfire is a raidwide, nothing to dodge.",
@@ -183,7 +183,7 @@
       "key": {
         "cls": "UwuP2IfritAi",
         "time": 79.6,
-        "line": 51
+        "line": 54
       },
       "title": "Corner of the close pair",
       "rule": "Party gathers at the wall in the corner between the two close nails' old spots, loosely spread. Ifrit lands there and stays tanked at the wall.",
@@ -200,7 +200,7 @@
       "key": {
         "cls": "UwuP2IfritAi",
         "time": 82,
-        "line": 52
+        "line": 55
       },
       "title": "Baiters to the far wall",
       "rule": "Physical ranged and caster run to the wall a little past the opposite side of the party's corner, side by side.",
@@ -220,7 +220,7 @@
       "key": {
         "cls": "UwuP2IfritAi",
         "time": 84.8,
-        "line": 53
+        "line": 56
       },
       "title": "Second Searing Wind: leave",
       "rule": "You have Searing Wind. Go to the wall a quarter turn counterclockwise from the party's corner and stay away from everyone.",
@@ -232,7 +232,7 @@
       "key": {
         "cls": "UwuP2IfritAi",
         "time": 89.9,
-        "line": 54
+        "line": 57
       },
       "title": "Bait Eruption 1",
       "rule": "Baiters: a third of a quarter turn along the wall, counterclockwise, away from the corner side you came from.",
@@ -244,7 +244,7 @@
       "key": {
         "cls": "UwuP2IfritAi",
         "time": 91.9,
-        "line": 55
+        "line": 58
       },
       "title": "Bait Eruption 2",
       "rule": "Baiters: same step again, counterclockwise along the wall.",
@@ -255,7 +255,7 @@
       "key": {
         "cls": "UwuP2IfritAi",
         "time": 93.9,
-        "line": 56
+        "line": 59
       },
       "title": "Bait Eruption 3",
       "rule": "Baiters: last step; you are now a quarter turn from the opposite point.",
@@ -266,7 +266,7 @@
       "key": {
         "cls": "UwuP2IfritAi",
         "time": 95.9,
-        "line": 57
+        "line": 60
       },
       "title": "Baiters back to the corner",
       "rule": "Baiters rejoin the party in the corner.",
@@ -278,7 +278,7 @@
       "key": {
         "cls": "UwuP2IfritAi",
         "time": 104.85,
-        "line": 58
+        "line": 61
       },
       "title": "Third Searing Wind: leave",
       "rule": "You have Searing Wind now. Go to the wall a quarter turn clockwise from the party's corner.",
@@ -290,7 +290,7 @@
       "key": {
         "cls": "UwuP2IfritAi",
         "time": 117.7,
-        "line": 59
+        "line": 62
       },
       "title": "Second holder rejoins",
       "rule": "Back to the party in the corner.",
@@ -302,7 +302,7 @@
       "key": {
         "cls": "UwuP2IfritAi",
         "time": 119.5,
-        "line": 60
+        "line": 63
       },
       "title": "Third holder moves across",
       "rule": "Keep Searing Wind away: slide along the wall to the point directly opposite the corner, where Ifrit's clones won't line up on you.",
@@ -315,7 +315,7 @@
         "cls": "UwuP2IfritAi",
         "from": 123,
         "to": 133.2001,
-        "line": 65
+        "line": 68
       },
       "title": "Dodge the four Crimson Cyclones",
       "rule": "Four clones dash across the arena, one after another, in the order the nails died. The awakened one also leaves a cross behind. Stand off every dash line that hasn't fired yet and keep moving to the next safe strip as each lane clears.",
@@ -327,7 +327,7 @@
       "key": {
         "cls": "UwuP2IfritAi",
         "time": 134.9,
-        "line": 68
+        "line": 71
       },
       "title": "Ifrit west, party east of him",
       "rule": "Party groups a few steps south-west of the centre, loosely spread. Ifrit is tanked at the west wall facing away.",
@@ -344,7 +344,7 @@
       "key": {
         "cls": "UwuP2IfritAi",
         "time": 149.5,
-        "line": 69
+        "line": 72
       },
       "title": "Bait Eruption 1",
       "rule": "Baiters go to the south-east wall.",
@@ -364,7 +364,7 @@
       "key": {
         "cls": "UwuP2IfritAi",
         "time": 152.3,
-        "line": 70
+        "line": 73
       },
       "title": "Bait Eruption 2",
       "rule": "Baiters: a third of a quarter turn counterclockwise along the wall, toward east.",
@@ -375,7 +375,7 @@
       "key": {
         "cls": "UwuP2IfritAi",
         "time": 154.3,
-        "line": 71
+        "line": 74
       },
       "title": "Bait Eruption 3",
       "rule": "Baiters: east wall.",
@@ -386,7 +386,7 @@
       "key": {
         "cls": "UwuP2IfritAi",
         "time": 156.3,
-        "line": 72
+        "line": 75
       },
       "title": "Bait Eruption 4",
       "rule": "Baiters: north-east wall.",
@@ -397,7 +397,7 @@
       "key": {
         "cls": "UwuP2IfritAi",
         "time": 158.3,
-        "line": 73
+        "line": 76
       },
       "title": "Baiters return",
       "rule": "Baiters rejoin the party south-west of the centre.",
