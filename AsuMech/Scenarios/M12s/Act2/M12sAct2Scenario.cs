@@ -50,8 +50,7 @@ public sealed class M12sAct2Scenario : IScenario
     public const float SplattershedCastAt = 68.52f;
     public const float SplattershedHitsAt = 74.0f;
     public const float EndsAt = 76f;
-    // UNVERIFIED: the length at which a chain snaps.
-    public const float ChainSnapsAt = 14f;
+    public const float ChainSnapsAt = 20f;
 
     public static readonly Vector3 BossHome = new(0f, 0f, -15f);
 

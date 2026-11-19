@@ -28,6 +28,7 @@ public sealed class M12sFinaleScenario : IScenario
     public const float SobatMarkedAt = 11.06f;
     public const float SobatCastAt = 11.15f;
     public const float FirstKickAt = 16.71f;
+    public const float SecondKickLandsAt = 21.45f;
     public const float FinisherAt = 23.75f;
     public const float ReplicationCastAt = 32.58f;
     public static readonly float[] ClonesShowAt = [40.74f, 54.21f];

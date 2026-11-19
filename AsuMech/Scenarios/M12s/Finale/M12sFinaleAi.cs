@@ -16,12 +16,15 @@ public sealed class M12sFinaleAi : IScenarioAi<M12sFinaleState>
     private const float PartyBehind = 6f;
     private const float FinisherX = 8f;
     private const float FinisherZ = -4f;
+    private const float WaitX = 3f;
+    private const float WaitZ = 2f;
 
     public void Run(M12sFinaleState state, SimWorld world)
     {
         var ai = new AiManager(world);
         ai.Move(0.5f, () => ByRole(TankInFrontPartyBehind), jitter: 0f);
-        ai.Move(FirstKickAt + 0.3f, () => ByRole(TanksSpreadOutOfTheSecondKick), jitter: 0f, sprint: true);
+        ai.Move(FirstKickAt + 0.3f, () => ByRole(TanksWaitSouthOfTheSecondKick), jitter: 0f, sprint: true);
+        ai.Move(SecondKickLandsAt + 0.1f, () => ByRole(TanksSpreadForTheFinisher), jitter: 0f, sprint: true);
         ai.Move(FinisherAt + 1f, () => ByRole(TankInFrontPartyBehind), jitter: 0f);
     }
 
@@ -34,7 +37,14 @@ public sealed class M12sFinaleAi : IScenarioAi<M12sFinaleState>
     private static Vector2? TankInFrontPartyBehind(PartyRole role)
         => role == PartyRole.MainTank ? new Vector2(0f, -TankSpot) : new Vector2(0f, PartyBehind) + Offset(role);
 
-    private static Vector2? TanksSpreadOutOfTheSecondKick(PartyRole role) => role switch
+    private static Vector2? TanksWaitSouthOfTheSecondKick(PartyRole role) => role switch
+    {
+        PartyRole.MainTank => new Vector2(-WaitX, WaitZ),
+        PartyRole.OffTank => new Vector2(WaitX, WaitZ),
+        _ => new Vector2(0f, PartyBehind + 1f) + Offset(role),
+    };
+
+    private static Vector2? TanksSpreadForTheFinisher(PartyRole role) => role switch
     {
         PartyRole.MainTank => new Vector2(-FinisherX, FinisherZ),
         PartyRole.OffTank => new Vector2(FinisherX, FinisherZ),

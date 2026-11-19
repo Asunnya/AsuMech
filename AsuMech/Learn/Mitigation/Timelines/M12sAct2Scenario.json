@@ -95,15 +95,8 @@
     {
       "actionId": 46260,
       "name": "Dramatic Lysis",
-      "start": 33.75,
-      "resolve": 33.75,
-      "occurrence": 1
-    },
-    {
-      "actionId": 46259,
-      "name": "Roiling Mass",
-      "start": 34.866,
-      "resolve": 37.566,
+      "start": 34.516,
+      "resolve": 34.516,
       "occurrence": 1
     },
     {
@@ -111,6 +104,13 @@
       "name": "Roiling Mass",
       "start": 35.483,
       "resolve": 38.183002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 46259,
+      "name": "Roiling Mass",
+      "start": 35.633,
+      "resolve": 38.333,
       "occurrence": 2
     },
     {
@@ -137,22 +137,22 @@
     {
       "actionId": 46260,
       "name": "Dramatic Lysis",
-      "start": 38.75,
-      "resolve": 38.75,
+      "start": 39.516,
+      "resolve": 39.516,
       "occurrence": 2
-    },
-    {
-      "actionId": 46259,
-      "name": "Roiling Mass",
-      "start": 39.866,
-      "resolve": 42.566,
-      "occurrence": 3
     },
     {
       "actionId": 46263,
       "name": "Roiling Mass",
       "start": 40.433,
       "resolve": 43.133,
+      "occurrence": 3
+    },
+    {
+      "actionId": 46259,
+      "name": "Roiling Mass",
+      "start": 40.633,
+      "resolve": 43.333,
       "occurrence": 4
     },
     {
@@ -179,22 +179,22 @@
     {
       "actionId": 46260,
       "name": "Dramatic Lysis",
-      "start": 43.733,
-      "resolve": 43.733,
+      "start": 44.499,
+      "resolve": 44.499,
       "occurrence": 3
-    },
-    {
-      "actionId": 46259,
-      "name": "Roiling Mass",
-      "start": 44.849,
-      "resolve": 47.549,
-      "occurrence": 5
     },
     {
       "actionId": 46263,
       "name": "Roiling Mass",
       "start": 45.483,
       "resolve": 48.183002,
+      "occurrence": 5
+    },
+    {
+      "actionId": 46259,
+      "name": "Roiling Mass",
+      "start": 45.616,
+      "resolve": 48.316,
       "occurrence": 6
     },
     {
@@ -221,22 +221,22 @@
     {
       "actionId": 46260,
       "name": "Dramatic Lysis",
-      "start": 48.733,
-      "resolve": 48.733,
+      "start": 49.499,
+      "resolve": 49.499,
       "occurrence": 4
-    },
-    {
-      "actionId": 46259,
-      "name": "Roiling Mass",
-      "start": 49.849,
-      "resolve": 52.549,
-      "occurrence": 7
     },
     {
       "actionId": 46263,
       "name": "Roiling Mass",
       "start": 50.466,
       "resolve": 53.166,
+      "occurrence": 7
+    },
+    {
+      "actionId": 46259,
+      "name": "Roiling Mass",
+      "start": 50.616,
+      "resolve": 53.316,
       "occurrence": 8
     },
     {

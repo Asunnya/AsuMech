@@ -11,7 +11,6 @@ namespace AsuMech.Scenarios.M12s;
 
 public static class M12sActions
 {
-    public const float DoubleSobatSecondHalfAngle = MathF.PI / 4f;
     public const float DoubleSobatHalfAngle = MathF.PI / 2f;
     public const float WindPush = 25f;
     public const float HotBloodedSeconds = 5f;
@@ -141,11 +140,11 @@ public static class M12sActions
         DeathExplanation = "the tank busters go to the tanks' spot, away from the party",
     };
 
-    // UNVERIFIED: the minimum; everyone but the tanks takes it.
+    // Everyone but the tanks takes it.
     public static readonly EnemyAction Act1FourthWallFusion = new(ActionId.Act1FourthWallFusion)
     {
         Cast = new() { AnimationLock = 0.6f, FaceTarget = false },
-        Effects = [Damage(VulnToMagic, split: Stack(4)), ApplyStatus(StatusId.MagicVulnerabilityUp, MagicVulnSeconds)],
+        Effects = [Damage(VulnToMagic, split: Stack(6)), ApplyStatus(StatusId.MagicVulnerabilityUp, MagicVulnSeconds)],
         Timing = new() { DamageDelay = 0.4f },
         DeathExplanation = "the party stacks on the healer while the tanks take the busters apart",
     };
@@ -462,11 +461,10 @@ public static class M12sActions
         DeathExplanation = "take a defamation far from everyone",
     };
 
-    // UNVERIFIED: the minimum.
     public static readonly EnemyAction HeavySlam = new(ActionId.HeavySlam)
     {
         Cast = new() { AnimationLock = 4.1f, FaceTarget = false },
-        Effects = [Damage(VulnToMagic, split: Stack(2)), MagicVuln(4.96f)],
+        Effects = [Damage(VulnToMagic, split: Stack(3)), MagicVuln(4.96f)],
         Timing = new() { DamageDelay = 0.3f },
         DeathExplanation = "the light party shares the stack",
     };
@@ -747,7 +745,7 @@ public static class M12sActions
     public static readonly EnemyAction DoubleSobatSecond = new(ActionId.DoubleSobatSecond)
     {
         Cast = new() { AnimationLock = 0.6f, FaceTarget = false, CastSecondsOverride = 4.3f },
-        Area = new() { Size = DoubleSobatSecondHalfAngle },
+        Area = new() { Size = HalfRoom },
         Effects = [Damage(Lethal)],
         Timing = new() { DamageDelay = 0.4f },
         DeathExplanation = "the second kick follows the first: step out of it",
