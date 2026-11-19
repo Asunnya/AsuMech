@@ -34,6 +34,8 @@
     <Reference Include="Lumina.Excel" HintPath="$(DalamudLibPath)Lumina.Excel.dll" Private="true" />
     <Reference Include="Serilog" HintPath="$(DalamudLibPath)Serilog.dll" Private="true" />
     <Reference Include="Microsoft.Extensions.ObjectPool" HintPath="$(DalamudLibPath)Microsoft.Extensions.ObjectPool.dll" Private="true" />
+    <!-- Not used by the plugin: the firewall rules read the plugin's IL with it. -->
+    <Reference Include="Mono.Cecil" HintPath="$(DalamudLibPath)Mono.Cecil.dll" Private="true" />
   </ItemGroup>
 
   <Import Project="Datamining.targets" />
