@@ -111,10 +111,11 @@ public sealed unsafe partial class ZoneControl : IZoneControl
     // Enter moved Dalamud's territory to the sim zone; Revert moves it back.
     private bool territoryMirrored;
 
+    // During a stay Dalamud may read the sim zone (ClientTerritory): the room is the one the guard armed in.
     public static bool IsInInn()
     {
-        var row = Plugin.DataManager.GetExcelSheet<TerritoryType>()
-            ?.GetRowOrDefault(Plugin.ClientState.TerritoryType);
+        var territory = Current is { guardArmed: true } stay ? stay.innClientTerritory : Plugin.ClientState.TerritoryType;
+        var row = Plugin.DataManager.GetExcelSheet<TerritoryType>()?.GetRowOrDefault(territory);
         return row?.TerritoryIntendedUse.RowId == InnIntendedUse;
     }
 
