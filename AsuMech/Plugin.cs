@@ -155,6 +155,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
             windowSystem.AddWindow(AsuMainWindow);
             windowSystem.AddWindow(MainWindow.ScenarioPanel);
             windowSystem.AddWindow(MainWindow.PartyPanel);
+            windowSystem.AddWindow(MainWindow.PartyStrip);
             FailureBanner = new FailureBanner();
             windowSystem.AddWindow(FailureBanner);
             // Before the guidance overlay, so the step's spot draws over the hazards.
@@ -232,6 +233,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
             ResolvedStringPointers.Initialize();
             // After the pointers: it hooks the handlers they resolve.
             Recorder = new PullRecorder();
+            ZoneControl.Current?.WatchParty();
 
             Log.Information($"===A cool log message from {PluginInterface.Manifest.Name}===");
             // The diagnostic log's own header is written before any hook exists, so it alone

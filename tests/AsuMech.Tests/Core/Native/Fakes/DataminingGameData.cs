@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Globalization;
 using System.Text;
 using AsuMech.Core.Native.Interfaces;
+using Dalamud.Game.ClientState.Conditions;
 
 namespace AsuMech.Tests;
 
@@ -23,6 +24,14 @@ internal sealed class DataminingGameData(FakeRsvFunctions rsv) : IGameData
     private static readonly Lazy<Sheet> TerritoryTypes = Load("TerritoryType");
     private static readonly Lazy<Sheet> ContentFinderConditions = Load("ContentFinderCondition");
     private static readonly Lazy<Sheet> Weathers = Load("Weather");
+    private static readonly Lazy<Sheet> Conditions = Load("Condition");
+
+    // PlayerStateFlags' bits, in order: the networked Condition rows.
+    public static ConditionFlag[] NetworkedConditions()
+        => Conditions.Value.Ids.Where(id => Conditions.Value.Row(id) is { } row && row.Bool("IsNetworked"))
+            .Order()
+            .Select(id => (ConditionFlag)id)
+            .ToArray();
 
     public ActionRow? Action(uint actionId)
     {
