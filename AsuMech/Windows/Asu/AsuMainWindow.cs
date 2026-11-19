@@ -128,6 +128,7 @@ public sealed partial class AsuMainWindow : Window, IDisposable, IPanelHost
         if (minimized)
         {
             DrawMinimized(game);
+            MainWindow.DrawPartyAlerts();
             return;
         }
 
@@ -135,10 +136,12 @@ public sealed partial class AsuMainWindow : Window, IDisposable, IPanelHost
         if (ShowRunStrip)
         {
             DrawRunStrip(game, inSession);
+            DrawPartyChanges();
             return;
         }
 
         DrawTitleRow(game);
+        DrawPartyChanges();
         if (inSession)
         {
             multiplayerUi.DrawSessionStrip(plugin.PartyPanel);
