@@ -77,11 +77,9 @@ public sealed class UcobP2NaelState
 
     public NaelPush Push { get; }
     public NaelQuote DivebombQuote { get; }
-    // Never the main tank, who holds Nael for her dive.
     public IReadOnlyList<PartyRole> DivebombTargets { get; }
     // Slots each divebomb sends, from north clockwise: the first two, the third, the last two.
     public IReadOnlyList<IReadOnlyList<int>> DiveDragons { get; }
-    // UNVERIFIED: the spread and the stack spare the main tank, who takes the dive.
     public IReadOnlyList<PartyRole> DivebombSpreads { get; }
     public PartyRole DivebombStackTarget { get; }
 
@@ -93,10 +91,8 @@ public sealed class UcobP2NaelState
         MeteorOrder = overrides.MeteorOrder ?? rng.Shuffle(roles).ToList();
         IceOrder = overrides.IceOrder ?? rng.Shuffle(roles).ToList();
         FireTargets = overrides.FireTargets ?? RollFire(rng, overrides.FirePicks);
-        ThunderTargets = overrides.ThunderTargets
-            ?? ThunderCounts.Select((count, i) => Roll(rng, count, overrides.ThunderIncludes[i])).ToList();
-        DoomTargets = overrides.DoomTargets
-            ?? DoomCounts.Select((count, i) => Roll(rng, count, overrides.DoomIncludes[i])).ToList();
+        ThunderTargets = overrides.ThunderTargets ?? RollDistinct(rng, ThunderCounts, overrides.ThunderIncludes);
+        DoomTargets = overrides.DoomTargets ?? RollDistinct(rng, DoomCounts, overrides.DoomIncludes);
         WingsTargets = overrides.WingsTargets
             ?? WingsCounts.Select((count, set) =>
             {
@@ -115,19 +111,16 @@ public sealed class UcobP2NaelState
         DivebombTargets = RollDivebombs(rng, overrides.DivebombPicks);
         var clockwise = DragonSlots.Order().ToList();
         DiveDragons = [clockwise.Take(2).ToList(), clockwise.Skip(2).Take(1).ToList(), clockwise.Skip(3).ToList()];
-        var notMainTank = roles.Where(r => r != PartyRole.MainTank).ToArray();
-        var rolledSpreads = rng.Shuffle(notMainTank).Take(DivebombSpreadCount).ToList();
+        var rolledSpreads = rng.Shuffle(roles).Take(DivebombSpreadCount).ToList();
         DivebombSpreads = overrides.DivebombSpreads ?? rolledSpreads;
-        var rolledStack = rng.NextObj(notMainTank);
+        var rolledStack = rng.NextObj(roles);
         DivebombStackTarget = overrides.DivebombStackTarget ?? rolledStack;
     }
 
     private static IReadOnlyList<PartyRole> RollDivebombs(Rng rng, PartyRole?[] picks)
     {
-        var kept = picks.Select(p => p is { } role && role != PartyRole.MainTank ? p : null).ToArray();
-        for (var i = 0; i < kept.Length; i++)
-            if (kept[i] is { } role && Array.IndexOf(kept, role) < i) kept[i] = null;
-        var pool = rng.Shuffle(Enum.GetValues<PartyRole>().Where(r => r != PartyRole.MainTank)).Where(r => !kept.Contains(r)).ToList();
+        var kept = picks.Select((p, i) => p is { } role && Array.IndexOf(picks, role) == i ? p : null).ToArray();
+        var pool = rng.Shuffle(Enum.GetValues<PartyRole>()).Where(r => !kept.Contains(r)).ToList();
         var next = 0;
         return kept.Select(p => p ?? pool[next++]).ToList();
     }
@@ -145,11 +138,17 @@ public sealed class UcobP2NaelState
         return fire;
     }
 
-    private static IReadOnlyList<PartyRole> Roll(Rng rng, int count, PartyRole? include)
+    // The sets share out the whole party; a role picked for two sets keeps the first.
+    private static IReadOnlyList<IReadOnlyList<PartyRole>> RollDistinct(Rng rng, int[] counts, PartyRole?[] includes)
     {
-        var pool = rng.Shuffle(Enum.GetValues<PartyRole>()).Where(r => r != include).ToList();
-        if (include is { } role) pool.Insert(0, role);
-        return pool.Take(count).ToList();
+        var kept = includes.Select((p, i) => p is { } role && Array.IndexOf(includes, role) == i ? p : null).ToArray();
+        var pool = new Queue<PartyRole>(rng.Shuffle(Enum.GetValues<PartyRole>()).Where(r => !kept.Contains(r)));
+        return counts.Select((count, set) =>
+        {
+            var picked = kept[set] is { } role ? new List<PartyRole> { role } : [];
+            while (picked.Count < count) picked.Add(pool.Dequeue());
+            return (IReadOnlyList<PartyRole>)picked;
+        }).ToList();
     }
 
     public static Vector2 DragonPosition(int slot)

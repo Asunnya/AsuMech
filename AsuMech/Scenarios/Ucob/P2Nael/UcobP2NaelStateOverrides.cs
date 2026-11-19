@@ -20,13 +20,12 @@ public sealed class UcobP2NaelStateOverrides
 
     public NaelPush Push { get; set; } = NaelPush.Push;
     public int? DivebombQuote { get; set; }
-    // A main tank pick is dropped: the main tank never takes a divebomb.
     public PartyRole?[] DivebombPicks { get; } = new PartyRole?[UcobP2NaelState.Divebombs];
 
     // Index into that quote's two choices.
     public int?[] Quotes { get; } = new int?[UcobP2NaelState.QuoteChoices.Length];
     public PartyRole?[] FirePicks { get; } = new PartyRole?[UcobP2NaelState.FireTethers];
-    // A role that must be among that set's targets.
+    // A role that must be among that set's targets; nobody is in two sets.
     public PartyRole?[] ThunderIncludes { get; } = new PartyRole?[UcobP2NaelState.ThunderCounts.Length];
     public PartyRole?[] DoomIncludes { get; } = new PartyRole?[UcobP2NaelState.DoomCounts.Length];
 }

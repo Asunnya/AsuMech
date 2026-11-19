@@ -158,7 +158,7 @@ public class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
         ai.Move(Scenario.DivebombLocks[1] + After, () => Send(Bait(1), Vector2.Zero), jitter: 0f, sprint: true);
         ai.Move(Scenario.DivebombLocks[1] + RegroupBeforeTheQuote, OutForTheFirstQuoteMove, jitter: 0f, sprint: true);
         ai.Move(Scenario.DivebombLocks[1] + Scenario.CauterizeCastSeconds + After, InForTheSecondQuoteMove, jitter: 0f, sprint: true);
-        ai.Move(Scenario.DivebombQuoteMoves[1] + After, () => AiMove.Create(Cluster(Vector2.Zero, everyone)).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(Scenario.DivebombQuoteSecondMove(state.DivebombQuote) + After, () => AiMove.Create(Cluster(Vector2.Zero, everyone)).NaturalOrder(), jitter: 0f, sprint: true);
     }
 
     private PartyRole Bait(int dive) => state.DivebombTargets[dive];

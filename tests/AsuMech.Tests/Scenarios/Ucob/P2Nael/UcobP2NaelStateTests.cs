@@ -43,12 +43,28 @@ public class UcobP2NaelStateTests
     }
 
     [Test]
-    public void DoomsAndThundersMarkDistinctPlayers([Range(0, 49)] int seed)
+    public void DoomsAndThundersEachShareOutTheWholeParty([Range(0, 49)] int seed)
     {
         var state = new UcobP2NaelState(new Rng(seed));
         Assert.That(state.DoomTargets.Select(t => t.Count), Is.EqualTo(UcobP2NaelState.DoomCounts));
         Assert.That(state.ThunderTargets.Select(t => t.Count), Is.EqualTo(UcobP2NaelState.ThunderCounts));
-        foreach (var set in state.DoomTargets.Concat(state.ThunderTargets)) Assert.That(set, Is.Unique);
+        Assert.That(state.DoomTargets.SelectMany(t => t), Is.EquivalentTo(Everyone));
+        Assert.That(state.ThunderTargets.SelectMany(t => t), Is.EquivalentTo(Everyone));
+    }
+
+    [Test]
+    public void ARolePickedForTwoThundersTakesOnlyTheFirst()
+    {
+        var overrides = new UcobP2NaelStateOverrides();
+        overrides.ThunderIncludes[0] = PartyRole.OffTank;
+        overrides.ThunderIncludes[2] = PartyRole.OffTank;
+        overrides.DoomIncludes[1] = PartyRole.CasterDps;
+        overrides.DoomIncludes[2] = PartyRole.CasterDps;
+        var state = new UcobP2NaelState(new Rng(4), overrides);
+        Assert.That(state.ThunderTargets[0], Does.Contain(PartyRole.OffTank));
+        Assert.That(state.DoomTargets[1], Does.Contain(PartyRole.CasterDps));
+        Assert.That(state.ThunderTargets.SelectMany(t => t), Is.EquivalentTo(Everyone));
+        Assert.That(state.DoomTargets.SelectMany(t => t), Is.EquivalentTo(Everyone));
     }
 
     [Test]
@@ -84,8 +100,6 @@ public class UcobP2NaelStateTests
         Assert.That(slots.All(s => s is >= 0 and < 8));
     }
 
-    private static readonly PartyRole[] NotMainTank = Everyone.Where(r => r != PartyRole.MainTank).ToArray();
-
     [Test]
     public void NaelIsPushedUnlessToldOtherwise()
     {
@@ -95,30 +109,29 @@ public class UcobP2NaelStateTests
     }
 
     [Test]
-    public void ThreeDistinctPlayersButNeverTheMainTankTakeTheDivebombs([Range(0, 99)] int seed)
+    public void ThreeDistinctPlayersTakeTheDivebombs([Range(0, 99)] int seed)
     {
         var state = new UcobP2NaelState(new Rng(seed));
         Assert.That(state.DivebombTargets, Has.Count.EqualTo(UcobP2NaelState.Divebombs).And.Unique);
-        Assert.That(state.DivebombTargets, Does.Not.Contain(PartyRole.MainTank));
     }
 
     [Test]
-    public void APickedDivebombIsKeptAndTheOthersRollAroundIt([Range(0, 2)] int dive, [ValueSource(nameof(NotMainTank))] PartyRole role)
+    public void TheMainTankCanTakeADivebombASpreadOrTheStack()
+    {
+        var states = Enumerable.Range(0, 200).Select(i => new UcobP2NaelState(new Rng(i * 104729 + 17))).ToList();
+        Assert.That(states.Any(s => s.DivebombTargets.Contains(PartyRole.MainTank)));
+        Assert.That(states.Any(s => s.DivebombSpreads.Contains(PartyRole.MainTank)));
+        Assert.That(states.Any(s => s.DivebombStackTarget == PartyRole.MainTank));
+    }
+
+    [Test]
+    public void APickedDivebombIsKeptAndTheOthersRollAroundIt([Range(0, 2)] int dive, [ValueSource(nameof(Everyone))] PartyRole role)
     {
         var overrides = new UcobP2NaelStateOverrides { Push = NaelPush.NoPush };
         overrides.DivebombPicks[dive] = role;
         var state = new UcobP2NaelState(new Rng(dive * 8 + (int)role), overrides);
         Assert.That(state.DivebombTargets[dive], Is.EqualTo(role));
-        Assert.That(state.DivebombTargets, Is.Unique.And.Not.Contain(PartyRole.MainTank));
-    }
-
-    [Test]
-    public void TheMainTankIsNeverPickedForADivebomb([Range(0, 2)] int dive)
-    {
-        var overrides = new UcobP2NaelStateOverrides { Push = NaelPush.NoPush };
-        overrides.DivebombPicks[dive] = PartyRole.MainTank;
-        var state = new UcobP2NaelState(new Rng(5), overrides);
-        Assert.That(state.DivebombTargets, Does.Not.Contain(PartyRole.MainTank));
+        Assert.That(state.DivebombTargets, Is.Unique);
     }
 
     [Test]
@@ -151,11 +164,9 @@ public class UcobP2NaelStateTests
     }
 
     [Test]
-    public void FourDistinctSpreadsAndTheStackSpareTheMainTank([Range(0, 49)] int seed)
+    public void FourDistinctPlayersTakeTheDivebombSpreads([Range(0, 49)] int seed)
     {
         var state = new UcobP2NaelState(new Rng(seed));
         Assert.That(state.DivebombSpreads, Has.Count.EqualTo(UcobP2NaelState.DivebombSpreadCount).And.Unique);
-        Assert.That(state.DivebombSpreads, Does.Not.Contain(PartyRole.MainTank));
-        Assert.That(state.DivebombStackTarget, Is.Not.EqualTo(PartyRole.MainTank));
     }
 }
