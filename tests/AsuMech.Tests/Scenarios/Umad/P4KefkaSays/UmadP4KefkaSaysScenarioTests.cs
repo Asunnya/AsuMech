@@ -16,7 +16,7 @@ namespace AsuMech.Tests;
 //
 //   15.72 30.64 45.78 115.33  Mystery cones and lines; 79.15 lines only, 97.11 cones only.
 //   62.90  Edge of Death down x=0. Beyond Death on MT RH M1 R, east at (7.6,1) under the Black
-//          Antilight; Allagan Field on OT SH M2 C, west at (-8,0) under the White. 66.34 an
+//          Antilight; Allagan Field on OT SH M2 C, west at (-8,0) under the White. 65.67 an
 //          uncleansed Beyond Death kills.
 //   71.28  C's Acceleration Bomb (lying); 71.36 MT's (real).
 //   71.38  Wave 1 (true): Death Wave on SH stacked N (0,-12) with MT OT, Death Bolt on RH alone

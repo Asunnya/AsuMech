@@ -118,7 +118,8 @@ public sealed class UmadP4KefkaSaysScenario : IMultiplayerReplayable
         world.Events.Add(40.99f, () => party.ForEachActive(c => c.AddStatus(state.ChaosMysteries[1].Cast.Status, state.ChaosMysteries[1].Cast.DurationSecond)));
         
         ushort[] debuffsw3 = [StatusId.BeyondDeath, StatusId.AllaganField];
-        world.Events.Add(51.67f, () => state.Wave3.ForEach((i, c) => c.AddStatus(debuffsw3[i%2], 15f)));
+        float[] durationw3 = [14f, 15f];
+        world.Events.Add(51.67f, () => state.Wave3.ForEach((i, c) => c.AddStatus(debuffsw3[i%2], durationw3[i%2])));
         world.Events.Add(51.67f, () => state.Wave3.ForEach((i, c) => c.AddStatus(state.Wounds[i]? StatusId.WhiteWound : StatusId.BlackWound)));
         world.Events.Add(66.64f, () => party.ForEachActive(c => c.RemoveStatus(StatusId.WhiteWound)));
         world.Events.Add(66.64f, () => party.ForEachActive(c => c.RemoveStatus(StatusId.BlackWound)));
