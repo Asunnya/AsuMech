@@ -13,6 +13,11 @@ internal sealed class SupportWindow : Window
     // The Ko-fi card hides while this is empty.
     public const string KoFi = "https://ko-fi.com/asunnya";
     public const string PixKey = "1286e0e5-ab51-4a73-9b3a-ec20e94b5da9";
+    // The key's static BR Code. Its name field reads ASUMECH: the payer's bank shows the name the
+    // key is registered to, never this one, so the code itself names nobody.
+    public const string PixCode = "00020126580014br.gov.bcb.pix01361286e0e5-ab51-4a73-9b3a-ec20e94b5da95204000053039865802BR5907ASUMECH6009SAO PAULO62070503***6304014C";
+    private const string PixQrResource = "AsuMech.Windows.Asu.Images.pix-qr.png";
+    private const float QrSizePx = 168f;
 
     private const float CardWidthPx = 340f;
     private const float CardPaddingPx = 12f;
@@ -71,7 +76,15 @@ internal sealed class SupportWindow : Window
     private void DrawPix(float width)
     {
         ImGui.TextUnformatted("Pix");
-        using (AsuTheme.PushTextColor(AsuTheme.Muted)) ImGui.TextUnformatted("Brasil · chave aleatória");
+        using (AsuTheme.PushTextColor(AsuTheme.Muted)) ImGui.TextUnformatted("Brasil · escaneie ou copie a chave");
+
+        var texture = Plugin.TextureProvider.GetFromManifestResource(typeof(SupportWindow).Assembly, PixQrResource);
+        if (texture.TryGetWrap(out var wrap, out _))
+        {
+            var size = QrSizePx * AsuTheme.Scale;
+            ImGui.SetCursorPosX(ImGui.GetCursorPosX() + (width - size) / 2f);
+            ImGui.Image(wrap.Handle, new Vector2(size, size));
+        }
 
         var copyLabel = Copied ? "Copiado!" : "Copiar";
         var copyWidth = ImGui.CalcTextSize("Copiado!").X + ImGui.GetStyle().FramePadding.X * 4f;

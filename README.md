@@ -242,7 +242,7 @@ All using default NA pf strats unless noted otherwise:
 ## Support
 
 AsuMech is free. If it helps you, you can support it on [Ko-fi](https://ko-fi.com/asunnya) or with Pix (key
-`1286e0e5-ab51-4a73-9b3a-ec20e94b5da9`). The ♥ button in the plugin's window has both.
+`1286e0e5-ab51-4a73-9b3a-ec20e94b5da9`). The ♥ button in the plugin's window has both, with a Pix QR code.
 
 #  Acknowledgments
 
