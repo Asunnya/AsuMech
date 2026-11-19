@@ -61,7 +61,7 @@ public sealed class FruP4DarklitDragonsongScenario : IScenario
         world.Events.Add(1.5f, () => usurper?.ActorControl.Transform(UsurperDragonBNpcState));
         world.Events.Add(1.5f, () => usurper?.AddStatusParam(TransfigurationStatus, UsurperDragonTransformation));
         world.Events.Add(1.5f, () => usurper?.SetModelState(4));
-        world.Events.Add(1.8f, SpawnGreatWyrm);
+        world.Events.Add(1.9f, SpawnGreatWyrm);
         world.Events.Add(2.4f, () => wyrm?.SetTarget(world.Party.Get(PartyRole.OffTank), follow: false));
         world.Events.Add(6.6f, AkhRhai);
         world.Events.Add(6.6f, DrachenArmor);
@@ -120,6 +120,9 @@ public sealed class FruP4DarklitDragonsongScenario : IScenario
         world.Events.Add(52.9f, () => oracle?.Cast(ActionId.AkhMornOracle, animationLock: 4.1f));
         for (var hit = 0; hit < 4; hit++)
             world.Events.Add(57.75f + 1.05f * hit, AkhMorn);
+        world.Events.Add(61.05f, () => usurper?.Cast(ActionId.MornAfahUsurper, animationLock: 6.1f));
+        world.Events.Add(61.05f, () => oracle?.Cast(ActionId.MornAfahOracle, animationLock: 6.1f));
+        world.Events.Add(68f, MornAfah);
     }
 
     // TODO: the Fragment's HP bar empties when it's hit; a spawned enemy's HP can't be set.
@@ -176,12 +179,13 @@ public sealed class FruP4DarklitDragonsongScenario : IScenario
         Statuses: [new(StatusId.Levitation, 200)],
         ModelState: modelState));
 
+    // On the Usurper, as retail spawns it.
     private void SpawnGreatWyrm() => wyrm = world.SpawnEnemy(new EnemySpawnConfig(
         BNpcBaseId: BNpcBaseId.GreatWyrm,
         NameId: BNpcNameId.GreatWyrm,
         Level: Level,
         EnemyList: EnemyListMode.Never,
-        Placement: new Placement(Vector3.Zero, MathF.PI)));
+        Placement: new Placement(Vector3.Zero, 1.99f)));
 
 
     private void BattleTalk(SimEnemy? speaker, uint line, uint nameId)
@@ -334,6 +338,12 @@ public sealed class FruP4DarklitDragonsongScenario : IScenario
     {
         if (world.Party.Get(role) is not { } tank || !tank.IsAlive()) return;
         caster?.CastFromHelper(action, tank, at: new Placement(tank.Position, 0f));
+    }
+
+    private void MornAfah()
+    {
+        if (world.Party.Get(PartyRole.MainTank) is { } mainTank && mainTank.IsAlive())
+            usurper?.CastFromHelper(Actions.MornAfah, mainTank, at: mainTank.Placement());
     }
 
     public void OnActionResolved(ActionResolved resolved)

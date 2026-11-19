@@ -397,6 +397,13 @@ public static class FruActions
         Timing = new() { DamageDelay = 0.63f },
     };
 
+    public static readonly EnemyAction MornAfah = new(ActionId.MornAfah)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [Damage(split: Stack(8))],
+        Timing = new() { DamageDelay = 0.63f },
+    };
+
     public static readonly EnemyAction CrystallizeTimeUsurper = new(ActionId.CrystallizeTimeUsurper)
     {
         Cast = new() { AnimationLock = 3.1f },

@@ -280,6 +280,27 @@
       "start": 60.916,
       "resolve": 60.916,
       "occurrence": 10
+    },
+    {
+      "actionId": 40249,
+      "name": "Morn Afah",
+      "start": 61.066,
+      "resolve": 66.766,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40304,
+      "name": "Morn Afah",
+      "start": 61.066,
+      "resolve": 66.766,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40250,
+      "name": "Morn Afah",
+      "start": 68,
+      "resolve": 68,
+      "occurrence": 3
     }
   ],
   "names": [
@@ -294,6 +315,7 @@
     "Hallowed Wings",
     "Somber Dance",
     "Dark Water III",
-    "Akh Morn"
+    "Akh Morn",
+    "Morn Afah"
   ]
 }

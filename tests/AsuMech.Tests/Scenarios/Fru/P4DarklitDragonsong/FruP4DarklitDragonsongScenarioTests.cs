@@ -19,6 +19,7 @@ namespace AsuMech.Tests;
 //   43.82 Somber Dance on the farthest from the Oracle at (-4.4,2.3): MT at (18.1,0); the Oracle lands at (13.6,0.4).
 //   47.02 Somber Dance on the nearest: MT at (15.7,0.5).
 //   57.77 Akh Morn: MT alone at (-9.1,0) takes the Usurper's, everyone else the Oracle's at the centre.
+//   68.0  Morn Afah on MT, everyone stacked at the centre.
 public class FruP4DarklitDragonsongScenarioTests
 {
     private static NegativeRun<FruP4DarklitDragonsongScenario> Darklit(PartyRole player, Action<FruP4DarklitDragonsongStateOverrides>? tweak = null)
@@ -111,4 +112,10 @@ public class FruP4DarklitDragonsongScenarioTests
         => Darklit(MeleeDpsA)
             .TeleportAt(57.6f, to: new(-9.08f, 0.03f))
             .ShouldKill(ActionId.AkhMornUsurperHit, MeleeDpsA);
+
+    [Test]
+    public void LeavingMornAfahStackKillsTheRest()
+        => Darklit(MeleeDpsA)
+            .TeleportAt(67.5f, to: new(10, 10))
+            .ShouldKill(ActionId.MornAfah, AllBut(MeleeDpsA));
 }

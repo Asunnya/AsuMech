@@ -291,6 +291,9 @@ public static class FruConstants
         public const uint AkhMornUsurperHit = 40248;
         public const uint AkhMornOracle = 40302;
         public const uint AkhMornOracleHit = 40303;
+        public const uint MornAfahUsurper = 40249;
+        public const uint MornAfahOracle = 40304;
+        public const uint MornAfah = 40250;
 
         // -- P5 --
         public const uint PandoraAttack = 40114;
