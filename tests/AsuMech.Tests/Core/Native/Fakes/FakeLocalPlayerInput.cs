@@ -5,7 +5,7 @@ using FFXIVClientStructs.FFXIV.Client.Game;
 
 namespace AsuMech.Tests;
 
-// Nobody at the keyboard, unless a test holds a movement key.
+// Nobody at the keyboard, unless a test holds a movement key, jumps or presses an action.
 internal sealed class FakeLocalPlayerInput : ILocalPlayerInput
 {
     public (ulong TargetId, System.Numerics.Vector3? Location) LastLimitBreakAim { get; set; }
@@ -13,7 +13,7 @@ internal sealed class FakeLocalPlayerInput : ILocalPlayerInput
     public event Action<ActionType, uint, ulong>? ActionExecuted { add { } remove { } }
 
     public bool MovementInputActive { get; set; }
-    public bool IsJumping => false;
+    public bool IsJumping { get; set; }
     public bool IsAutoAttacking => false;
     // A test's press: the player's next frame sees it once.
     private bool pressed;
@@ -35,6 +35,36 @@ internal sealed class FakeLocalPlayerInput : ILocalPlayerInput
     {
         SteerDirection = direction is { } d && d.LengthSquared() > 0f ? System.Numerics.Vector2.Normalize(d) : null;
         SteerSpeed = speed;
+    }
+
+    // A jump as the client flies one: JumpHeight up at its top, JumpSeconds in the air. The client's
+    // own update takes the press, so the plugin first sees a jump already under way, and its
+    // landing already on the ground.
+    public const float JumpSeconds = 0.8f;
+    public const float JumpHeight = 1.8f;
+    private bool jumpPressed;
+    private float? takeOff;
+    private float airborne;
+
+    public void Jump() => jumpPressed = !IsJumping;
+
+    // FakeGame's part of the frame, after the plugin's update.
+    public void Fly(FakeCharacter player, float deltaSeconds)
+    {
+        if (jumpPressed)
+        {
+            jumpPressed = false;
+            IsJumping = true;
+            takeOff = player.Position.Y;
+            airborne = 0f;
+        }
+        if (takeOff is not { } ground) return;
+        airborne = MathF.Min(airborne + deltaSeconds, JumpSeconds);
+        var s = airborne / JumpSeconds;
+        player.Position = player.Position with { Y = ground + JumpHeight * 4f * s * (1f - s) };
+        if (airborne < JumpSeconds) return;
+        IsJumping = false;
+        takeOff = null;
     }
 
     public Func<uint, uint?>? AdjustActionId { get; set; }

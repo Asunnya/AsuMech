@@ -82,6 +82,7 @@ internal sealed class FakeGame
         Framework.RunPending();
         update(deltaSeconds);
         WalkSteeredPlayer(deltaSeconds);
+        PlayerInput.Fly(BattleCharas.Player, deltaSeconds);
         BattleCharas.Tick(deltaSeconds);
     }
 
