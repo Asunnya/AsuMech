@@ -65,16 +65,27 @@ public class UmadP2ForsakenScenarioTests
             .TeleportAt(tower - 0.04f, to: new(0, 0))
             .ShouldKill(ActionId.TheRiverOfLight, PerRole.All);
 
-    // The other tower still resolves, and its Spellwave lands before the River of Light.
+    // Both towers' soakers still fire their lockons, the lone one included, and the Spellwaves
+    // land before the River of Light.
     [TestCase(32.67f, MainTank, new[] { MainTank, MeleeDpsB })]
-    [TestCase(53.72f, OffTank, new[] { MeleeDpsA, CasterDps })]
-    [TestCase(74.77f, OffTank, new[] { MeleeDpsA, CasterDps })]
-    [TestCase(95.82f, MainTank, new[] { MeleeDpsB, PhysRangedDps })]
+    [TestCase(53.72f, OffTank, new[] { MainTank, OffTank, MeleeDpsA, MeleeDpsB, CasterDps })]
+    [TestCase(74.77f, OffTank, new[] { MainTank, OffTank, MeleeDpsA, MeleeDpsB, CasterDps })]
+    [TestCase(95.82f, MainTank, new[] { MainTank, OffTank, MeleeDpsA, MeleeDpsB, PhysRangedDps })]
     public void UnderfilledTowerWipesAfterTheOtherTowersSpells(float tower, PartyRole soaker, PartyRole[] spellwaveVictims)
         => Forsaken(soaker)
             .TeleportAt(tower - 0.04f, to: new(0, 0))
             .ShouldKill(ActionId.Spellwave, spellwaveVictims)
             .ShouldKill(ActionId.TheRiverOfLight, AllBut(spellwaveVictims));
+
+    // SH steps into MT and R's tower as a third soaker; its chariot and the cones it draws land
+    // first, then the overfilled tower punishes whoever is left.
+    [Test]
+    public void OverfilledTowerWipes()
+        => Forsaken(ShieldHealer)
+            .TeleportAt(22.4f, to: new(7.2f, -8.2f))
+            .ShouldKill(ActionId.Spellscatter, ShieldHealer, PhysRangedDps, MainTank)
+            .ShouldKill(ActionId.Spellwave, MeleeDpsB, CasterDps, RegenHealer, MeleeDpsA)
+            .ShouldKill(ActionId.TheRiverOfLight, OffTank);
 
     [Test]
     public void EmptyTowerWipes()

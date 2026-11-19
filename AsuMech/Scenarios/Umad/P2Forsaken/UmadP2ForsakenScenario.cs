@@ -138,7 +138,7 @@ public sealed class UmadP2ForsakenScenario : IMultiplayerReplayable
 
     public void OnActionResolved(ActionResolved resolved)
     {
-        Towers.ResolveTower(world, resolved, ActionId.ThePathOfLight, UmadActions.TheRiverOfLight, minSoakers: 2);
+        Towers.ResolveTower(world, resolved, ActionId.ThePathOfLight, UmadActions.TheRiverOfLight, minSoakers: 2, maxSoakers: 2);
         ResolveSoakers(resolved);
     }
 
@@ -200,10 +200,10 @@ public sealed class UmadP2ForsakenScenario : IMultiplayerReplayable
     // The round whose towers resolve next: each tower's soakers take its lockons from the state.
     private int towerRound;
 
-    // UNVERIFIED: a tower resolves whatever its pair does; no pull fails one tower alone.
+    // Each tower resolves on its own; a failed one still hands its lockons to up to two of its soakers.
     private void ResolveSoakers(ActionResolved resolved)
     {
-        if (resolved.Action.ActionId != ActionId.ThePathOfLight || resolved.Hits.Count != 2) return;
+        if (resolved.Action.ActionId != ActionId.ThePathOfLight || resolved.Hits.Count == 0) return;
         var tower = Vector3.DistanceSquared(resolved.Origin.Position, TowerSpot(towerRound, 0).Position) < 1f ? 0 : 1;
         for (var i = 0; i < resolved.Hits.Count; i++) ResolveTower(resolved.Hits[i]);
         var lockons = state.TowerLockons[towerRound * 2 + tower];
