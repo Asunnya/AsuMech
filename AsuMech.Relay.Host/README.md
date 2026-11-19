@@ -322,10 +322,10 @@ see [Security notes](#security-notes) for the full reasoning.
 ## Logging
 
 On by default — everything the console prints (session lifecycle, rejections, alerts,
-summaries) also lands in a compressed log directory, plus much finer detail that would
-otherwise drown out the console (every individual rejected attempt, and every message
-broadcast — size, type, sender, how many peers it reached). Message *contents* are
-never logged, only that metadata; see [Security notes](#security-notes).
+summaries) also lands in a compressed log directory, plus finer detail that would
+otherwise drown out the console (every individual rejected attempt, and each player's
+message and byte totals and peak rates, every minute). Message *contents* are never
+logged, only that metadata; see [Security notes](#security-notes).
 
 Logs live in `logs/` next to the executable by default (`--log-dir` to change it,
 `--no-file-log` to disable file logging entirely and keep console-only output). Each
@@ -543,8 +543,8 @@ the step that expands them to `.csv` and `.log` where `replay-diff` reads.
   service](#running-it-as-a-public-service)) — no in-process code can substitute for
   that.
 - **Logging**: connection open/close, peer counts, connecting IPs, every rejection
-  reason, and every message's shape (size/type/sender/how many peers it reached) are
-  logged — compressed and capped on disk by default; see [Logging](#logging). Message
+  reason, and each player's message and byte totals and peak rates are logged —
+  compressed and capped on disk by default; see [Logging](#logging). Message
   *contents* are never logged, only that metadata. A `--admin-token`-gated
   `/admin/stats` endpoint and the [admin dashboard](#admin-dashboard) expose live
   counters without needing to read logs at all.

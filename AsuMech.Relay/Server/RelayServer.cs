@@ -701,13 +701,7 @@ public sealed class RelayServer : IAsyncDisposable
                     Moderate(sessionCode, peer, messageBytes);
                     continue;
                 }
-                var reachedPeers = await BroadcastAsync(sessionCode, peer, messageBytes, result.MessageType);
-                // Detail-only -- this is the highest-volume event the relay sees, and echoing it
-                // live would drown out everything else. Never the message body itself, only
-                // shape/size/routing, matching the relay's "we don't log what you said" stance
-                // (see README's Security notes).
-                log.Detail($"[{sessionCode}] broadcast from #{peer.Id} {peer.Ip} type={result.MessageType} bytes={messageBytes.Length} " +
-                           $"fragments={fragmentCount} rate={recentMessageTimes.Count}/s,{recentByteSum}B/s -> {reachedPeers} peer(s)");
+                await BroadcastAsync(sessionCode, peer, messageBytes, result.MessageType);
             }
         }
         catch (WebSocketException)
@@ -1353,11 +1347,9 @@ public sealed class RelayServer : IAsyncDisposable
 
     // ---- Fan-out -----------------------------------------------------------------------------
 
-    // Returns how many peers it actually reached -- the caller logs that alongside the message
-    // shape (see the Detail call in RunPeerAsync) without needing its own session lookup.
-    private async Task<int> BroadcastAsync(string sessionCode, PeerConn sender, byte[] bytes, WebSocketMessageType type)
+    private async Task BroadcastAsync(string sessionCode, PeerConn sender, byte[] bytes, WebSocketMessageType type)
     {
-        if (rooms.Route(sessionCode, sender) is not (var isFromHost, var targets)) return 0;
+        if (rooms.Route(sessionCode, sender) is not (var isFromHost, var targets)) return;
 
         // Prefix identifying the ORIGINAL sender (see RelayWire.Envelope): host flag, the
         // relay-assigned connection id, the authenticated identity, and whether the body is
@@ -1376,7 +1368,6 @@ public sealed class RelayServer : IAsyncDisposable
         using var cts = new CancellationTokenSource(SendTimeout);
         // Parallel, not sequential -- one slow peer must not delay delivery to everyone else.
         await Task.WhenAll(targets.Select(target => SendOneAsync(target, tagged, WebSocketMessageType.Binary, cts.Token)));
-        return targets.Count;
     }
 
     // A timed-out send is treated as fatal for that connection (aborted, not skipped): a
