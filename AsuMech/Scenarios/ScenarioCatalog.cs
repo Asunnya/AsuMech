@@ -49,6 +49,7 @@ using AsuMech.Scenarios.Fru.P1UtopianSky;
 using AsuMech.Scenarios.Fru.P2DiamondDust;
 using AsuMech.Scenarios.Fru.P2LightRampant;
 using AsuMech.Scenarios.Fru.P2MirrorMirror;
+using AsuMech.Scenarios.Fru.P2QuadrupleSlap;
 using AsuMech.Scenarios.Fru.P3Apocalypse;
 using AsuMech.Scenarios.Fru.P3UltimateRelativity;
 using AsuMech.Scenarios.Fru.P4CrystallizeTime;
@@ -168,6 +169,7 @@ public sealed class ScenarioCatalog
         new FruP1UtopianSkyScenario(),
         new FruP1TurnOfTheHeavensScenario(),
         new FruP1FallOfFaithScenario(),
+        new FruP2QuadrupleSlapScenario(),
         new FruP2DiamondDustScenario(),
         new FruP2MirrorMirrorScenario(),
         new FruP2LightRampantScenario(),

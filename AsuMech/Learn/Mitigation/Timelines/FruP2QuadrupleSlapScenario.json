@@ -1,0 +1,22 @@
+{
+  "scenario": "FruP2QuadrupleSlapScenario",
+  "casts": [
+    {
+      "actionId": 40191,
+      "name": "Quadruple Slap",
+      "start": 10.35,
+      "resolve": 15.05,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40192,
+      "name": "Quadruple Slap",
+      "start": 16.983,
+      "resolve": 19.183,
+      "occurrence": 2
+    }
+  ],
+  "names": [
+    "Quadruple Slap"
+  ]
+}

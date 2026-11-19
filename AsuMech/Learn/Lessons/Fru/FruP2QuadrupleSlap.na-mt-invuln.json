@@ -1,0 +1,34 @@
+{
+  "scenario": "FruP2QuadrupleSlapScenario",
+  "strat": "NA · MT invuln",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "FruP2QuadrupleSlapAi",
+        "time": 0.5,
+        "line": 24
+      },
+      "title": "Pick up the Usurper, party around her",
+      "cue": "Usurper of Frost appears in the centre",
+      "rule": "Healers and ranged stand behind her to the south.",
+      "roles": {
+        "MainTank": {
+          "rule": "Tank her 4m north of the centre. Invuln just before the first Quadruple Slap so it covers the second too."
+        },
+        "OffTank": {
+          "rule": "Stand beside the main tank. Provoke once the second slap lands: the main tank carries its vulnerability."
+        },
+        "MeleeDpsA": {
+          "rule": "West flank, 3m from her."
+        },
+        "MeleeDpsB": {
+          "rule": "East flank, 3m from her."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    }
+  ],
+  "draft": true
+}

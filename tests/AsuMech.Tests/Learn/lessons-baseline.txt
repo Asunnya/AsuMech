@@ -15,6 +15,7 @@ FruP1UtopianSkyScenario	NA · LesBin
 FruP2DiamondDustScenario	NA · Partner Swap
 FruP2LightRampantScenario	NA · Conga
 FruP2MirrorMirrorScenario	NA · LesBin
+FruP2QuadrupleSlapScenario	NA · MT invuln
 FruP3ApocalypseScenario	NA priority / static spreads / OT bait
 FruP3UltimateRelativityScenario	NA
 FruP4CrystallizeTimeScenario	NA priority / 7-1 Akh Morn (MT solo)

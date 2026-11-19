@@ -119,6 +119,7 @@ All using default NA pf strats unless noted otherwise:
     - P1 Utopian Sky
     - P1 Turn of the Heavens
     - P1 Fall of Faith
+    - P2 Quadruple Slap
     - P2 Diamond Dust 
     - P2 Mirror, Mirror
     - P2 Light Rampant

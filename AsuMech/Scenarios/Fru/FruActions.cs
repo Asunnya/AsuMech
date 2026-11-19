@@ -223,6 +223,27 @@ public static class FruActions
     public static readonly EnemyAction UnmitigatedExplosionFire = UnmitigatedExplosion(ActionId.UnmitigatedExplosionFire);
     public static readonly EnemyAction UnmitigatedExplosionLightning = UnmitigatedExplosion(ActionId.UnmitigatedExplosionLightning);
 
+    // -- P2 Quadruple Slap --
+
+    // Each hit lands for about 2.3x a tank's HP after stance, twice that on the slap's own vuln.
+    private static readonly Severity QuadrupleSlapHit = TankBuster.MinMit(1f - 1f / 2.3f);
+
+    public static readonly EnemyAction QuadrupleSlap = new(ActionId.QuadrupleSlap)
+    {
+        Effects =
+        [
+            Damage(QuadrupleSlapHit),
+            ApplyStatus(StatusId.QuadrupleSlapVulnerability, 15f, delayToEffectResult: true),
+        ],
+        Timing = new() { DamageDelay = 1.06f },
+    };
+
+    public static readonly EnemyAction QuadrupleSlapSecond = new(ActionId.QuadrupleSlapSecond)
+    {
+        Effects = [Damage(VulnerableTo(StatusId.QuadrupleSlapVulnerability, 1f - 1f / 4.6f), QuadrupleSlapHit)],
+        Timing = new() { DamageDelay = 1.06f },
+    };
+
     // -- P2 Diamond Dust --
 
     public static readonly EnemyAction DiamondDust = new(ActionId.DiamondDust)
