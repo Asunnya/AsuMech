@@ -630,7 +630,7 @@ public sealed class TeaP1LivingLiquidAi : IScenarioAi<TeaP1LivingLiquidState>
             {
                 if (!carried) world.Events.Add(SecondsBetweenLooks, Look);
                 else if (now >= LineUpAt) ai.Move(0f, () => AiMove.Single(taker, LineUpSpot(taker)));
-                else ai.Move(MathF.Max(backFrom - now, 0f), () => AiMove.Single(taker, backSpot()));
+                else ai.Move(MathF.Max(backFrom - now, 0f), () => AiMove.Single(taker, backSpot()), at: backFrom);
                 return;
             }
             carried = true;

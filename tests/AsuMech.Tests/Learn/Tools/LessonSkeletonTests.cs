@@ -46,6 +46,63 @@ public class LessonSkeletonTests
         Assert.That(orphans.Select(o => o.Title), Is.EqualTo(new[] { "gone" }));
     }
 
+    // Dump's calls: line 10 holds 0.5f, 11 holds 11.2f, 12 computes its times.
+    private static string? Source(string cls, int line) => line switch
+    {
+        10 => "ai.Move(0.5f, StackUp);",
+        11 => "ai.Move(11.2f, DragGarudaWestPartyBehind);",
+        12 => "ai.Order(member, spot, at);",
+        _ => "        }",
+    };
+
+    [Test]
+    public void RekeyFollowsACallThatMovedLinesAtTheSameTime()
+    {
+        var lesson = new Lesson("S", "A", [], [
+            new LessonStep(new LessonStepKey("Ai", Time: 11.2f, Line: 8), Title: "moved", Rule: "r"),
+            new LessonStep(new LessonStepKey("Ai", Time: 11.2f, Line: 10), Title: "onto another call", Rule: "r"),
+            new LessonStep(new LessonStepKey("Ai", From: 119.7f, To: 120.3f, Line: 9), Title: "computed, moved", Rule: "r"),
+            new LessonStep(new LessonStepKey("Ai", Time: 0.5f, Line: 10), Title: "same", Rule: "r"),
+            new LessonStep(new LessonStepKey("Ai", Time: 0.5f), Title: "no line", Rule: "r"),
+        ]);
+        var (rekeyed, orphans) = LessonSkeleton.Rekey(lesson, Dump, Source);
+        Assert.That(rekeyed.Steps.Select(s => s.Key), Is.EqualTo(new[]
+        {
+            new LessonStepKey("Ai", Time: 11.2f, Line: 11),
+            new LessonStepKey("Ai", Time: 11.2f, Line: 11),
+            new LessonStepKey("Ai", From: 119.7f, To: 120.3f, Line: 12),
+            new LessonStepKey("Ai", Time: 0.5f, Line: 10),
+            new LessonStepKey("Ai", Time: 0.5f),
+        }));
+        Assert.That(orphans, Is.Empty);
+    }
+
+    // A computed time this seed put on another line keeps its own while that line still records, or
+    // still reads as a call (another branch's, which this seed's roll did not take).
+    [TestCase(12)]
+    [TestCase(14)]
+    public void RekeyKeepsAComputedLineThatIsStillACall(int line)
+    {
+        var dump = new OrderDump("S", "A", 0, [Order(26.2f, 12), Order(32.4f, 12), Order(28.2f, 13)]);
+        var lesson = new Lesson("S", "A", [], [new LessonStep(new LessonStepKey("Ai", From: 26.6f, To: 28.2f, Line: line), Rule: "r")]);
+        Assert.That(LessonSkeleton.Rekey(lesson, dump, (cls, at) => at == 14 ? "Go(cast + 1f, role, spot);" : Source(cls, at)).Lesson.Steps[0].Key.Line, Is.EqualTo(line));
+    }
+
+    [Test]
+    public void RekeyPicksTheNearestLineHoldingTheLiteralWhenTwoCallsShareTheTime()
+    {
+        var dump = new OrderDump("S", "A", 0, [Order(5f, 20), Order(5f, 40)]);
+        var lesson = new Lesson("S", "A", [], [new LessonStep(new LessonStepKey("Ai", Time: 5f, Line: 37), Rule: "r")]);
+        Assert.That(LessonSkeleton.Rekey(lesson, dump, (_, line) => line is 20 or 40 ? "ai.Move(5f, Spot);" : "").Lesson.Steps[0].Key.Line, Is.EqualTo(40));
+    }
+
+    [Test]
+    public void RekeyLeavesLinesAloneWithoutTheSource()
+    {
+        var lesson = new Lesson("S", "A", [], [new LessonStep(new LessonStepKey("Ai", Time: 11.2f, Line: 8), Rule: "r")]);
+        Assert.That(LessonSkeleton.Rekey(lesson, Dump).Lesson.Steps[0].Key.Line, Is.EqualTo(8));
+    }
+
     [Test]
     public void CoverageReportsBothDirections()
     {

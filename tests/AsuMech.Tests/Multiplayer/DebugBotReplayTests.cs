@@ -6,8 +6,6 @@ using AsuMech.Scenarios;
 using AsuMech.Scenarios.Fru.P2DiamondDust;
 using AsuMech.Scenarios.Fru.P3Apocalypse;
 using AsuMech.Scenarios.Fru.P4DarklitDragonsong;
-using AsuMech.Scenarios.Tea.I1LimitCut;
-using AsuMech.Scenarios.Tea.P1LivingLiquid;
 
 namespace AsuMech.Tests;
 
@@ -60,8 +58,6 @@ public partial class DebugBotReplayTests
     // Strats that still read what a peer is shown a round trip late.
     private static readonly Dictionary<Type, string> PlaysOnWhatALongLineShowsLate = new()
     {
-        [typeof(TeaP1LivingLiquidScenario)] = "a peer logs its opening moves 0.3 s before the host's Ai does (cause not looked into yet)",
-        [typeof(TeaI1LimitCutScenario)] = "the even numbers go behind Cruise Chaser as each client sees it",
         [typeof(FruP3ApocalypseScenario)] = "the knockback stack reads where the Oracle stands at 45.15 s, before a peer is shown her Darkest Dance landing",
         [typeof(FruP4DarklitDragonsongScenario)] = "the Somber Dance tank goes just past the Oracle as its client shows her at 45 s, before her jump lands there",
         [typeof(FruP2DiamondDustScenario)] = "a peer's bots slide on the host's Push a round trip late and leave the arena; the fix (sliding off input on Thin Ice) is UNVERIFIED in game",

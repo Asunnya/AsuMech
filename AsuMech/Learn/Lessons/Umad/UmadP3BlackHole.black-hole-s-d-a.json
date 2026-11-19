@@ -57,7 +57,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 25,
-        "line": 55
+        "line": 57
       },
       "title": "Stack centre",
       "cue": "Shockwave hits you",
@@ -328,7 +328,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 84.5,
-        "line": 91
+        "line": 94
       },
       "title": "Swap second thunder tanks",
       "cue": "Thunder III hits you",
@@ -518,7 +518,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 121.3,
-        "line": 120
+        "line": 122
       },
       "title": "After Slap Happy resolves",
       "cue": "Slap Happy resolves",
@@ -530,7 +530,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 124,
-        "line": 121
+        "line": 123
       },
       "title": "Stack centre",
       "cue": "Shocking Impact hits you",
@@ -630,7 +630,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 134.5,
-        "line": 131
+        "line": 133
       },
       "title": "After a tether lands on you",
       "tolerance": 2.5,
@@ -640,7 +640,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 135,
-        "line": 132
+        "line": 134
       },
       "title": "After a tether lands on you",
       "tolerance": 2.5,
@@ -650,7 +650,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 139,
-        "line": 133
+        "line": 135
       },
       "title": "Preposition for stomp",
       "cue": "Nothingness hits you",
@@ -662,7 +662,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 147,
-        "line": 134
+        "line": 136
       },
       "title": "Stomp blizzard corners",
       "cue": "Earth Resistance Down II on you",
@@ -674,7 +674,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 149.8,
-        "line": 135
+        "line": 137
       },
       "title": "Stomp stack and towers",
       "cue": "Blizzard III cast starts",
@@ -686,7 +686,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 152.4,
-        "line": 136
+        "line": 138
       },
       "title": "Stomp swap west",
       "cue": "Knock Down hits you",
@@ -698,7 +698,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 153.7,
-        "line": 137
+        "line": 139
       },
       "title": "Stomp swap east",
       "cue": "Stomp-a-Mole resolves",

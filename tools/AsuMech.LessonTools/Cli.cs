@@ -155,7 +155,7 @@ internal static class Cli
         var path = Need(opts, "lesson");
         var lesson = LessonLoader.Parse(File.ReadAllText(path));
         var dump = OrderDump.Parse(File.ReadAllText(Need(opts, "dump")));
-        var (rekeyed, orphans) = LessonSkeleton.Rekey(lesson, dump);
+        var (rekeyed, orphans) = LessonSkeleton.Rekey(lesson, dump, StratSource());
         File.WriteAllText(opts.TryGetValue("out", out var o) && o.Length > 0 ? o : path, LessonSkeleton.ToJson(rekeyed));
         foreach (var step in orphans) Console.WriteLine($"orphan: {step.Title} ({step.Key.Time ?? step.Key.From})");
         return orphans.Count == 0 ? 0 : 3;
@@ -356,6 +356,20 @@ internal static class Cli
         return 0;
     }
 
+    // A strat class's source line, read from AsuMech/Scenarios/**/<Class>.cs.
+    private static Func<string, int, string?> StratSource()
+    {
+        var files = Directory.EnumerateFiles(Path.Combine(RepoRoot(), "AsuMech", "Scenarios"), "*.cs", SearchOption.AllDirectories)
+            .GroupBy(Path.GetFileNameWithoutExtension).ToDictionary(g => g.Key!, g => g.First());
+        var lines = new Dictionary<string, string[]>();
+        return (cls, line) =>
+        {
+            if (!files.TryGetValue(cls, out var file)) return null;
+            if (!lines.TryGetValue(file, out var text)) lines[file] = text = File.ReadAllLines(file);
+            return line >= 1 && line <= text.Length ? text[line - 1] : null;
+        };
+    }
+
     private static string RepoRoot()
     {
         var dir = new DirectoryInfo(AppContext.BaseDirectory);
@@ -372,6 +386,7 @@ internal static class Cli
         var files = Directory.EnumerateFiles(lessonsDir, "*.json", SearchOption.AllDirectories).Where(f => !f.EndsWith(Glossary.FileName, StringComparison.OrdinalIgnoreCase)).ToList();
         var orphans = 0;
         var changed = 0;
+        var source = StratSource();
         foreach (var file in files)
         {
             var lesson = LessonLoader.Parse(File.ReadAllText(file));
@@ -379,7 +394,7 @@ internal static class Cli
             var strat = scenario?.AiStrats.ToList().FindIndex(a => a.Name == lesson.Strat) ?? -1;
             if (scenario is null || strat < 0) { Console.WriteLine($"{Path.GetFileName(file)}: no scenario/strat {lesson.Scenario} / {lesson.Strat}"); orphans++; continue; }
             var dump = OrderRecorder.Record(lesson.Scenario, strat, [lesson.Toolbox?.ExampleSeed ?? 1], TextWriter.Null);
-            var (rekeyed, lost) = LessonSkeleton.Rekey(lesson, dump);
+            var (rekeyed, lost) = LessonSkeleton.Rekey(lesson, dump, source);
             var moved = rekeyed.Steps.Zip(lesson.Steps).Count(p => p.First.Key != p.Second.Key);
             if (lost.Count > 0 || moved > 0) Console.WriteLine($"{Path.GetRelativePath(lessonsDir, file)}: {moved} key(s) moved, {lost.Count} orphan(s){(lost.Count > 0 ? ": " + string.Join(", ", lost.Select(o => o.Title ?? MasteryStore.StepId(o.Key))) : "")}");
             orphans += lost.Count;
