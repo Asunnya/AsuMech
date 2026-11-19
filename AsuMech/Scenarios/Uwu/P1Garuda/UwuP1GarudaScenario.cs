@@ -105,8 +105,8 @@ public sealed class UwuP1GarudaScenario : IScenario
         world.Events.Add(13.44f, () => CastGreatWhirlwind(GreatWhirlwindSpot.Boss));
         world.Events.Add(16.43f, () => ResolveGreatWhirlwind(GreatWhirlwindSpot.Boss));
 
+        world.Events.Add(18.50f, () => SpawnPlumes(state.SatinPlumesFirst, withSpiny: true));
         world.Events.Add(19.59f, () => CastGreatWhirlwind(GreatWhirlwindSpot.Boss));
-        world.Events.Add(20.33f, () => SpawnPlumes(state.SatinPlumesFirst, withSpiny: true));
         world.Events.Add(20.52f, FixateSpinyOnOffTank);
         world.Events.Add(20.61f, () => CastSelf(garuda, ActionId.Slipstream, 2.2f));
         world.Events.Add(22.57f, () => ResolveGreatWhirlwind(GreatWhirlwindSpot.Boss));
