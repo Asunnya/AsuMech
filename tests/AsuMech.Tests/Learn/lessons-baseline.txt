@@ -8,6 +8,9 @@ DsrP5WrathScenario	NA PF
 DsrP6CauterizeScenario	NA PF (Light vs Dark)
 DsrP6DoubleDragonsScenario	NA PF (Light vs Dark)
 DsrP7DragonKingScenario	Static south exaflare, 3/3/2 then 6/1/1
+FruP1FallOfFaithScenario	NA · LesBin
+FruP1TurnOfTheHeavensScenario	NA · LesBin
+FruP1UtopianSkyScenario	NA · LesBin
 FruP2DiamondDustScenario	NA · Partner Swap
 FruP2LightRampantScenario	NA · Conga
 FruP3ApocalypseScenario	NA priority / static spreads / OT bait
