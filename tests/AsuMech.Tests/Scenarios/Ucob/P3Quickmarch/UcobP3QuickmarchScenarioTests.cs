@@ -1,4 +1,6 @@
+using System.Linq;
 using System.Numerics;
+using AsuMech.Core.SimObjects;
 using AsuMech.Core.Game.Party;
 using AsuMech.Scenarios;
 using AsuMech.Scenarios.Ucob.P3Quickmarch;
@@ -62,6 +64,35 @@ public class UcobP3QuickmarchScenarioTests
         => FromTheNorth(PhysRangedDps, o => o.EarthShakerDps = CasterDps)
             .TeleportAt(28.6f, to: new Vector2(-3.5f, -1.5f))
             .ShouldKill(ActionId.TempestWingBlast, PhysRangedDps);
+
+    [Test]
+    public void EachTankHostsATempestWingTetherTowardBahamut()
+    {
+        string? failure = null;
+        FromTheNorth(OffTank)
+            .At(27f, p =>
+            {
+                var holders = p.World.Children.OfType<SimTether>()
+                    .Where(t => t.IsActive && t.TetherId == TetherId.TempestWing)
+                    .Select(t => t.A).ToList();
+                var tanks = new[] { p.Member(MainTank), p.Member(OffTank) };
+                if (holders.Count != 2 || !tanks.All(holders.Contains)) failure = $"{holders.Count} tether(s), not on both tanks";
+            })
+            .ShouldKillNoOneElse();
+        Assert.That(failure, Is.Null);
+    }
+
+    [Test]
+    public void AnOffTankWhoStaysAwayLeavesItsTetherOnSomeoneElse()
+        => FromTheNorth(OffTank, o => o.EarthShakerDps = CasterDps)
+            .TeleportAt(21.5f, to: new Vector2(10f, -10f))
+            .ShouldKillSomeone(ActionId.TempestWing);
+
+    [Test]
+    public void ADpsWhoWalksUpToBahamutTakesATetherAndDies()
+        => FromTheNorth(PhysRangedDps, o => o.EarthShakerDps = CasterDps)
+            .TeleportAt(26.5f, to: new Vector2(0f, -1.5f))
+            .ShouldKill(ActionId.TempestWing, PhysRangedDps);
 
     [Test]
     public void StandingInFrontOfBahamutForFlareBreathKills()
