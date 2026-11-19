@@ -203,7 +203,7 @@ public class FruP5ParadiseRegainedScenario : IMultiplayerReplayable
     public object? StartReplay(MpMessage message, int aiIndex, PartyRole myRole, SimWorld replayWorld)
     {
         if (message is not FruP5ParadiseRegainedAiReplayStateMessage msg || aiIndex < 0 || aiIndex >= AiStrats.Count) return null;
-        var shadowState = FruP5ParadiseRegainedState.FromNetworkReplay(msg.Rotation, msg.DarkFirst);
+        var shadowState = FruP5ParadiseRegainedState.FromNetworkReplay(msg.Rotation, msg.DarkFirst, firstLinesAt);
         if (shadowState == null) return null;
         ((IScenarioAi<FruP5ParadiseRegainedState>)AiStrats[aiIndex]).Run(shadowState, replayWorld);
         return shadowState;

@@ -12,7 +12,7 @@
       "key": {
         "cls": "FruP4CrystallizeTimeAi",
         "time": 15.5,
-        "line": 62
+        "line": 60
       },
       "title": "Crystallize Time route",
       "cue": "Spell-in-Waiting: Return on you",
@@ -35,7 +35,7 @@
       "key": {
         "cls": "FruP4CrystallizeTimeAi",
         "time": 23.3,
-        "line": 63
+        "line": 61
       },
       "title": "Crystallize Time route",
       "cue": "Maelstrom resolves",
@@ -67,7 +67,7 @@
       "key": {
         "cls": "FruP4CrystallizeTimeAi",
         "time": 26,
-        "line": 65
+        "line": 63
       },
       "title": "Crystallize Time route",
       "cue": "Dark Blizzard III hits you",
@@ -96,7 +96,7 @@
       "key": {
         "cls": "FruP4CrystallizeTimeAi",
         "time": 26.7,
-        "line": 66
+        "line": 64
       },
       "title": "Crystallize Time route",
       "cue": "Dark Aero III resolves",
@@ -122,7 +122,7 @@
       "key": {
         "cls": "FruP4CrystallizeTimeAi",
         "time": 28.5,
-        "line": 67
+        "line": 65
       },
       "title": "Crystallize Time route",
       "cue": "Dark Aero III hits you",
@@ -154,7 +154,7 @@
       "key": {
         "cls": "FruP4CrystallizeTimeAi",
         "time": 29.8,
-        "line": 68
+        "line": 66
       },
       "title": "Crystallize Time route",
       "cue": "Tidal Light cast starts",
@@ -166,7 +166,7 @@
       "key": {
         "cls": "FruP4CrystallizeTimeAi",
         "time": 30.566372,
-        "line": 198
+        "line": 197
       },
       "title": "After your debuff resolves",
       "cue": "Longing of the Lost hits you",
@@ -178,7 +178,7 @@
       "key": {
         "cls": "FruP4CrystallizeTimeAi",
         "time": 31.5,
-        "line": 69
+        "line": 67
       },
       "title": "Crystallize Time route",
       "tolerance": 1.5,
@@ -188,7 +188,7 @@
       "key": {
         "cls": "FruP4CrystallizeTimeAi",
         "time": 33.6,
-        "line": 70
+        "line": 68
       },
       "title": "Crystallize Time route",
       "cue": "Maelstrom resolves",
@@ -220,7 +220,7 @@
       "key": {
         "cls": "FruP4CrystallizeTimeAi",
         "time": 34.6,
-        "line": 71
+        "line": 69
       },
       "title": "Crystallize Time route",
       "cue": "Tidal Light resolves",
@@ -252,7 +252,7 @@
       "key": {
         "cls": "FruP4CrystallizeTimeAi",
         "time": 36.5,
-        "line": 72
+        "line": 70
       },
       "title": "Crystallize Time route",
       "cue": "Tidal Light resolves",
@@ -273,7 +273,7 @@
         "cls": "FruP4CrystallizeTimeAi",
         "from": 37.81626,
         "to": 39.099575,
-        "line": 207
+        "line": 206
       },
       "title": "After your debuff resolves",
       "cue": "Tidal Light cast starts",
@@ -290,7 +290,7 @@
       "key": {
         "cls": "FruP4CrystallizeTimeAi",
         "time": 38.9,
-        "line": 79
+        "line": 77
       },
       "title": "Crystallize Time route",
       "cue": "Tidal Light cast starts",
@@ -313,7 +313,7 @@
       "key": {
         "cls": "FruP4CrystallizeTimeAi",
         "time": 41.1,
-        "line": 86
+        "line": 84
       },
       "title": "Group up",
       "cue": "Tidal Light resolves",
@@ -333,7 +333,7 @@
       "key": {
         "cls": "FruP4CrystallizeTimeAi",
         "time": 61.7,
-        "line": 88
+        "line": 86
       },
       "title": "Group up",
       "cue": "Hallowed Wings resolves",
@@ -350,7 +350,7 @@
       "key": {
         "cls": "FruP4CrystallizeTimeAi",
         "time": 72.4,
-        "line": 89
+        "line": 87
       },
       "title": "Stack for Morn Afah",
       "cue": "Morn Afah cast starts",

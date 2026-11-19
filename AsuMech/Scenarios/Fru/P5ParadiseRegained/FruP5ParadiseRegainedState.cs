@@ -34,14 +34,16 @@ public sealed class FruP5ParadiseRegainedState
     }
 
     // A peer's shadow of the host's roll (see IMultiplayerReplayable): only what the Ai reads.
-    private FruP5ParadiseRegainedState(int rotation, bool darkFirst)
+    private FruP5ParadiseRegainedState(int rotation, bool darkFirst, float firstLinesAt)
     {
+        this.firstLinesAt = firstLinesAt;
         Rotation = rotation;
         DarkFirst = darkFirst;
     }
 
-    public static FruP5ParadiseRegainedState? FromNetworkReplay(int rotation, bool darkFirst)
-        => rotation is >= 0 and < 3 ? new(rotation, darkFirst) : null;
+    // The pass's own timing comes from the peer's scenario, which is the host's.
+    public static FruP5ParadiseRegainedState? FromNetworkReplay(int rotation, bool darkFirst, float firstLinesAt)
+        => rotation is >= 0 and < 3 ? new(rotation, darkFirst, firstLinesAt) : null;
 
     public bool IsDark(int wing) => wing == 0 ? DarkFirst : !DarkFirst;
 

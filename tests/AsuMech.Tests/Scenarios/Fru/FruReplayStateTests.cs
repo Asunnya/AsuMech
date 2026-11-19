@@ -34,7 +34,7 @@ public class FruReplayStateTests
                 true, CrystallizeCorner.SE)?.Debuff(PartyRole.MainTank), Is.EqualTo(CrystallizeDebuff.BlueWater));
             Assert.That(FruP4DarklitDragonsongState.FromNetworkReplay(Roles, 1, 2, true, PartyRole.OffTank)?.SomberTank, Is.EqualTo(PartyRole.OffTank));
             Assert.That(FruP5FulgentBladeState.FromNetworkReplay(3, 1, true), Is.Not.Null);
-            Assert.That(FruP5ParadiseRegainedState.FromNetworkReplay(2, true), Is.Not.Null);
+            Assert.That(FruP5ParadiseRegainedState.FromNetworkReplay(2, true, 37.06f), Is.Not.Null);
         });
     }
 
@@ -57,7 +57,7 @@ public class FruReplayStateTests
                 true, CrystallizeCorner.SE), Is.Null, "three red aeros");
             Assert.That(FruP4DarklitDragonsongState.FromNetworkReplay(Roles, 1, 2, true, PartyRole.CasterDps), Is.Null, "a dps baiting Somber Dance");
             Assert.That(FruP5FulgentBladeState.FromNetworkReplay(4, 1, true), Is.Null, "a fifth pocket");
-            Assert.That(FruP5ParadiseRegainedState.FromNetworkReplay(3, true), Is.Null, "a fourth rotation");
+            Assert.That(FruP5ParadiseRegainedState.FromNetworkReplay(3, true, 37.06f), Is.Null, "a fourth rotation");
         });
     }
 }
