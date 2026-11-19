@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using AsuMech.Core.Game.Party;
 using Dalamud.Bindings.ImGui;
 
@@ -10,6 +11,8 @@ public sealed class UmadP1OpeningSettingsWindow
 
     private static readonly string[] RoleLabels =
         ["Random", "Main tank", "Off tank", "Regen healer", "Shield healer", "Melee A", "Melee B", "Phys ranged", "Caster"];
+
+    private static readonly PartyRole[] StackRoles = [.. UmadP1OpeningState.Healers, .. UmadP1OpeningState.Dps];
 
     public void Draw()
     {
@@ -26,7 +29,7 @@ public sealed class UmadP1OpeningSettingsWindow
         Choice("Knockback tethers:", "##tethered", Overrides.TetheredAreDps, ["Random", "Supports", "DPS"], v => Overrides.TetheredAreDps = v);
         Choice("Fire:", "##fire", Overrides.FireIsStack, ["Random", "Spread", "Stack"], v => Overrides.FireIsStack = v);
         Choice("Fire orb:", "##firelie", Overrides.FireIsLie, ["Random", "True", "? (lie)"], v => Overrides.FireIsLie = v);
-        RoleChoice("Stack marker on:", "##firestack", Overrides.FireStackOn, v => Overrides.FireStackOn = v);
+        RoleChoice("Stack marker on:", "##firestack", Overrides.FireStackOn, v => Overrides.FireStackOn = v, StackRoles);
         Choice("First ice orb:", "##ice1", Overrides.FirstIceIsLie, ["Random", "True", "? (lie)"], v => Overrides.FirstIceIsLie = v);
         RoleChoice("Wave Cannon on:", "##laser", Overrides.LaserOn, v => Overrides.LaserOn = v);
         RoleChoice("First Double-trouble Trap on:", "##confetti1", Overrides.FirstConfettiOn, v => Overrides.FirstConfettiOn = v);
@@ -52,12 +55,14 @@ public sealed class UmadP1OpeningSettingsWindow
             set(index switch { 1 => false, 2 => true, _ => null });
     }
 
-    private static void RoleChoice(string label, string id, PartyRole? current, Action<PartyRole?> set)
+    private static void RoleChoice(string label, string id, PartyRole? current, Action<PartyRole?> set, PartyRole[]? roles = null)
     {
+        roles ??= Enum.GetValues<PartyRole>();
+        var labels = roles.Select(r => RoleLabels[(int)r + 1]).Prepend(RoleLabels[0]).ToArray();
         SettingsGrid.Row(label);
-        var index = current is { } role ? (int)role + 1 : 0;
+        var index = current is { } role ? Array.IndexOf(roles, role) + 1 : 0;
         SettingsGrid.ItemWidth(140);
-        if (ImGui.Combo(id, ref index, RoleLabels, RoleLabels.Length))
-            set(index == 0 ? null : (PartyRole)(index - 1));
+        if (ImGui.Combo(id, ref index, labels, labels.Length))
+            set(index == 0 ? null : roles[index - 1]);
     }
 }

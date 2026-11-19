@@ -31,11 +31,11 @@ public class UmadP1OpeningStateTests
     }
 
     [Test]
-    public void TheFireStacksGoOnOneSupportAndOneDps()
+    public void TheFireStacksGoOnOneHealerAndOneDps()
     {
         foreach (var state in Seeds())
         {
-            Assert.That(state.FireStackSupport.IsDps(), Is.False);
+            Assert.That(state.FireStackSupport, Is.AnyOf(PartyRole.RegenHealer, PartyRole.ShieldHealer));
             Assert.That(state.FireStackDps.IsDps(), Is.True);
             Assert.That(state.FireShowsStackIcon, Is.EqualTo(state.FireIsStack != state.FireIsLie));
         }
@@ -48,7 +48,7 @@ public class UmadP1OpeningStateTests
             foreach (var state in Seeds(new UmadP1OpeningStateOverrides { LaserOn = role, FireStackOn = role, FirstConfettiOn = role, SecondConfettiOn = role }))
             {
                 Assert.That(state.IsLasered(role));
-                Assert.That(role == state.FireStackSupport || role == state.FireStackDps);
+                Assert.That(role == state.FireStackSupport || role == state.FireStackDps, Is.EqualTo(!role.IsTank()));
                 Assert.That(role == state.Confetti[0].Support || role == state.Confetti[0].Dps);
                 Assert.That(role == state.Confetti[1].Support || role == state.Confetti[1].Dps);
             }
