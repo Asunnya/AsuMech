@@ -82,6 +82,7 @@ public class FruP1FallOfFaithStateTests
     {
         var overrides = new FruP1FallOfFaithStateOverrides();
         overrides.Tether.Mine = slot;
+        overrides.Tether[player] = slot;
         var state = new FruP1FallOfFaithState(new Rng(seed), player, overrides);
         Assert.That(state.Tethered.Distinct().Count(), Is.EqualTo(4));
         Assert.That(state.FaithIndex(player), Is.EqualTo((int)slot - 1));

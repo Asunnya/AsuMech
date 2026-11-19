@@ -79,6 +79,7 @@ public class FruP1TurnOfTheHeavensStateTests
     {
         var overrides = new FruP1TurnOfTheHeavensStateOverrides();
         overrides.BoundOfFaith.Mine = duty;
+        overrides.BoundOfFaith[player] = duty;
         var state = new FruP1TurnOfTheHeavensState(new Rng(seed), player, overrides);
         Assert.That(state.Tethered.Distinct().Count(), Is.EqualTo(2));
         Assert.That(state.IsTethered(player), Is.EqualTo(duty == BoundOfFaithDuty.Tethered));
