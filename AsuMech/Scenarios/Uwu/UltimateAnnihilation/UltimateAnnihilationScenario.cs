@@ -32,7 +32,7 @@ public sealed class UltimateAnnihilationScenario : IScenario
     private const float OrbFadeOut = 0.9f;
     // UNVERIFIED: what an orb nobody pops does; treated as a wipe.
     private const float OrbUnpoppedWipeAfter = 6f;
-    private const float TankPurgeDamage = 0.56f;
+    private const float TankPurgeDamage = 0.8f;
     private const int FlamingCrushMinStack = 5;
     private const float AetheroplasmDamage = 0.16f;
     private const float MesohighDamage = 0.16f;
