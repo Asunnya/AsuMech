@@ -6,7 +6,7 @@
         "Description": "Asunnya's fork of AnoMech: spawns fake party members and bosses client-side so you can practice raid mechanics without a full party. Everything from AnoMech, plus Savage (M9S to M11S), DSR, UCOB and UWU, and a Learn mode that guides you through each strat. Questions, strats and bug reports: https://discord.gg/y6kTkdaXjz",
         "Changelog": "0.6.1.1: M12S, the whole fight from the opener to the finale (Toxic Friends and DN strats), with Learn lessons; FRU P1 Fatebreaker (Utopian Sky, Turn of the Heavens, Fall of Faith), P2 Mirror, Mirror and the Ice Veil intermission, with lessons, and the Oracle's jumps, Darklit, Crystallize Time, Ultimate Relativity and Paradise Regained follow real pulls; UCoB: Tuufless (Elemental) strats for every phase, the P3 Seventh Umbral Era opener, P2 Nael picks Push or No push from tabs, and Twintania and Nael follow real pulls (a missed tank swap kills, every player gets thunder and doom marks, Dalamud Dive goes to the off tank); UMAD: P1 Opening, P2 Trines and P3 Decisive Battle, and fixes to Forsaken towers, Limit Cut, Black Hole, Kefka Says and the fire stack; UWU: Landslide, Vulcan Burst and Searing Wind hit and knock back as in the fight; DSR P2 Meteors is a tab of Thordan, so Run to end plays it once; Splatoon layouts and scripts for the fight work inside a run (Settings); runs can start from your FC private chambers (Settings, off by default); the firewall refuses a run until its opcodes for the current patch are published and closing the game mid-run keeps the filter up; recordings name the plugin version they came from; a ♥ Support button (Ko-fi, Pix).",
         "InternalName": "AsuMech",
-        "AssemblyVersion": "0.6.1.0",
+        "AssemblyVersion": "0.6.1.1",
         "RepoUrl": "https://github.com/Asunnya/AsuMech",
         "ApplicableVersion": "any",
         "Tags": [
@@ -18,11 +18,11 @@
         ],
         "DalamudApiLevel": 15,
         "IconUrl": "https://raw.githubusercontent.com/Asunnya/AsuMech/asunnya-release/images/icon6464.png",
-        "DownloadLinkInstall": "https://github.com/Asunnya/AsuMech/releases/download/v0.6.1.0/latest.zip",
-        "DownloadLinkTesting": "https://github.com/Asunnya/AsuMech/releases/download/v0.6.1.0/latest.zip",
-        "DownloadLinkUpdate": "https://github.com/Asunnya/AsuMech/releases/download/v0.6.1.0/latest.zip",
+        "DownloadLinkInstall": "https://github.com/Asunnya/AsuMech/releases/download/v0.6.1.1/latest.zip",
+        "DownloadLinkTesting": "https://github.com/Asunnya/AsuMech/releases/download/v0.6.1.1/latest.zip",
+        "DownloadLinkUpdate": "https://github.com/Asunnya/AsuMech/releases/download/v0.6.1.1/latest.zip",
         "IsHide": false,
         "IsTestingExclusive": false,
-        "LastUpdate": "1794684180"
+        "LastUpdate": "1795111325"
     }
 ]
