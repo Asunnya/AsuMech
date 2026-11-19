@@ -202,7 +202,8 @@ public sealed partial class MultiplayerManager
         peerEnteredInstance = true;
         lastSelfPose = null;
         DiagnosticLog.Info("[Multiplayer] Peer is in the zone with the party seated -- telling the host.");
-        foreach (var packet in earlyPackets) replay?.Apply(packet);
+        if (InFirewalledStay())
+            foreach (var packet in earlyPackets) replay?.Apply(packet);
         earlyPackets.Clear();
         _ = Send(new EnteredMessage(MyPeerId));
     }
@@ -243,6 +244,10 @@ public sealed partial class MultiplayerManager
         TryStartDebugBotReplay();
     }
 
+    // The host's packets drive this client's natives: only while the sim zone is up behind the
+    // firewall, never in the inn the stay left from or the second before its lift.
+    private static bool InFirewalledStay() => Plugin.Game.World.Map.IsInInstance && Natives.Zone.IsActive;
+
     private void OnGamePacketsReceived(GamePacketsMessage msg)
     {
         if (IsHost || !running || replay is null) return;
@@ -252,7 +257,7 @@ public sealed partial class MultiplayerManager
             if (earlyPackets.Count + packets.Count <= NetGuard.MaxQueuedMessages) earlyPackets.AddRange(packets);
             return;
         }
-        if (!Plugin.Game.World.Map.IsInInstance) return;
+        if (!InFirewalledStay()) return;
         foreach (var packet in packets) replay.Apply(packet);
     }
 
