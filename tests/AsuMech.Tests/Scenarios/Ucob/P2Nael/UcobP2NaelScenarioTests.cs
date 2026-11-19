@@ -326,7 +326,7 @@ public class UcobP2NaelScenarioTests
     public void StandingInADragonsPathKills()
         => Negative<UcobP2NaelScenario>(CasterDps)
             .Overrides<UcobP2NaelStateOverrides>(NorthLayout)
-            .TeleportAt(149.5f, to: new Vector2(2.6f, -22.5f))
+            .TeleportAt(149.8f, to: new Vector2(2.6f, -22.5f))
             .ShouldKill(ActionId.CauterizeFirehorn, CasterDps);
 
     [Test]
@@ -337,14 +337,14 @@ public class UcobP2NaelScenarioTests
                 NorthLayout(o);
                 o.DivebombStackTarget = MeleeDpsA;
             })
-            .FreezeAt(154.9f)
+            .FreezeAt(155.15f)
             .ShouldKill(ActionId.CauterizeTailOfDarkness, RegenHealer);
 
     [Test]
     public void StandingStillWhereAHypernovaLandsKills()
         => Negative<UcobP2NaelScenario>(MeleeDpsA)
             .Overrides<UcobP2NaelStateOverrides>(NorthLayout)
-            .FreezeAt(142.5f)
+            .FreezeAt(142.9f)
             .ShouldKill(ActionId.Hypernova, MeleeDpsA);
 
     [Test]
@@ -375,26 +375,26 @@ public class UcobP2NaelScenarioTests
     }
 
     [Test]
-    public void TheMainTankCanBaitADivebomb([Range(0, 2)] int dive, [Values(0, 1)] int quote)
+    public void EitherTankCanBaitADivebomb([Values(MainTank, OffTank)] PartyRole tank, [Range(0, 2)] int dive, [Values(0, 1)] int quote)
         => Negative<UcobP2NaelScenario>(PhysRangedDps)
             .Overrides<UcobP2NaelStateOverrides>(o =>
             {
                 o.Push = NaelPush.NoPush;
-                o.DivebombPicks[dive] = MainTank;
+                o.DivebombPicks[dive] = tank;
                 o.DivebombQuote = quote;
             })
-            .Seed(dive * 2 + quote)
+            .Seed(dive * 2 + quote + (int)tank * 6)
             .ShouldKillNoOneElse();
 
     [Test]
-    public void StandingNearTheTankForNaelsDiveKills()
-        => Negative<UcobP2NaelScenario>(MainTank)
+    public void StandingNearTheOffTankForNaelsDiveKills()
+        => Negative<UcobP2NaelScenario>(OffTank)
             .Overrides<UcobP2NaelStateOverrides>(o =>
             {
                 NorthLayout(o);
                 o.DivebombQuote = 1;
             })
-            .TeleportAt(153.7f, to: Vector2.Zero)
+            .TeleportAt(154.1f, to: Vector2.Zero)
             .ShouldKill(ActionId.DalamudDive, AllBut(MainTank, OffTank, RegenHealer));
 
     // Heavensfall's knockback rides in its ActionEffect: the player's own client only slides from that entry.

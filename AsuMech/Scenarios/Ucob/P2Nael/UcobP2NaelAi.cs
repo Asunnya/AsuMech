@@ -158,8 +158,12 @@ public class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
         ai.Move(Scenario.DivebombLocks[1] + After, () => Send(Bait(1), Vector2.Zero), jitter: 0f, sprint: true);
         ai.Move(Scenario.DivebombLocks[1] + RegroupBeforeTheQuote, OutForTheFirstQuoteMove, jitter: 0f, sprint: true);
         ai.Move(Scenario.DivebombLocks[1] + Scenario.CauterizeCastSeconds + After, InForTheSecondQuoteMove, jitter: 0f, sprint: true);
-        ai.Move(Scenario.DivebombQuoteSecondMove(state.DivebombQuote) + After, () => AiMove.Create(Cluster(Vector2.Zero, everyone)).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(Scenario.DivebombQuoteSecondMove(state.DivebombQuote) + After, () => AiMove.Create(Cluster(Vector2.Zero, everyone.Where(r => r != OffTank))).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(OffTankWalksBackOnceTheLastDragonHasDived, () => AiMove.Create(Cluster(Vector2.Zero, everyone)).NaturalOrder(), jitter: 0f, sprint: true);
     }
+
+    private float OffTankWalksBackOnceTheLastDragonHasDived
+        => MathF.Max(Scenario.DivebombQuoteSecondMove(state.DivebombQuote), Scenario.DivebombLocks[^1] + Scenario.CauterizeCastSeconds) + After;
 
     private PartyRole Bait(int dive) => state.DivebombTargets[dive];
 
@@ -259,8 +263,8 @@ public class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
     private ISwapStep OutForTheFirstQuoteMove()
     {
         var (spread, tank) = SpreadAndTankDiveBearings();
-        var spots = Cluster(Vector2.Zero, Enum.GetValues<PartyRole>().Where(r => r != MainTank));
-        spots[(int)MainTank] = Compass(tank) * TankDiveRadius;
+        var spots = Cluster(Vector2.Zero, Enum.GetValues<PartyRole>().Where(r => r != OffTank));
+        spots[(int)OffTank] = Compass(tank) * TankDiveRadius;
         if (state.DivebombQuote.First == NaelMove.MeteorStream)
             for (var i = 0; i < state.DivebombSpreads.Count; i++)
                 spots[(int)state.DivebombSpreads[i]] = Compass(spread + 90f * i) * SpreadOutRadius;
@@ -273,7 +277,7 @@ public class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
         var stackOnTheLastBait = state.DivebombQuote.Second == NaelMove.ThermionicBeam && state.DivebombStackTarget == Bait(2);
         var meet = stackOnTheLastBait ? Vector2.Normalize(baitSpots[2]) * MeetTheLastBaitRadius : Vector2.Zero;
         var spots = Cluster(meet, Enum.GetValues<PartyRole>());
-        if (state.DivebombQuote.Second == NaelMove.DalamudDive) spots[(int)MainTank] = null;
+        if (state.DivebombQuote.Second == NaelMove.DalamudDive) spots[(int)OffTank] = Compass(SpreadAndTankDiveBearings().Tank) * TankDiveRadius;
         return AiMove.Create(spots).NaturalOrder();
     }
 
@@ -281,6 +285,7 @@ public class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
     {
         var puddles = new[] { stagingSpots[0], baitSpots[0], stagingSpots[1], sideSteps[1] };
         var secondLines = LinesOf(state.DiveDragons[1], baitSpots[1]);
+        var thirdLines = LinesOf(state.DiveDragons[2], baitSpots[2]);
         var best = (Score: float.MinValue, Spread: 0f, Tank: 0f);
         foreach (var spread in new[] { 0f, 45f, 22.5f, 67.5f })
             for (var k = 0; k < 4; k++)
@@ -292,6 +297,7 @@ public class UcobP2NaelAi : IScenarioAi<UcobP2NaelState>
                 {
                     AwayFromPuddles(puddles, Vector2.Zero, tankSpot),
                     OutsideLines(secondLines, tankSpot, tankSpot),
+                    OutsideLines(thirdLines, tankSpot, tankSpot),
                     Walk(baitSpots[2], Vector2.Zero).Min(at => Vector2.Distance(at, tankSpot)) - State.DalamudDiveRadius,
                     spreads.Min(at => MathF.Min(AwayFromPuddles(puddles, Vector2.Zero, at), OutsideLines(secondLines, at, at))),
                 }.Min();
