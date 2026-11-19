@@ -388,7 +388,7 @@ public sealed class FruP4CrystallizeTimeScenario : IScenario
         if (oracle is not { } boss || world.Party.Get(state.SpiritTakerTarget) is not { } target || !target.IsAlive()) return;
         TurnToward(boss, target.Position);
         boss.Cast(Actions.SpiritTaker, target);
-        var landing = target.Position;
+        var landing = OracleJump.Landing(boss.Position, target.Position);
         world.Events.Add(0.7f, () => boss.SetPosition(landing));
     }
 

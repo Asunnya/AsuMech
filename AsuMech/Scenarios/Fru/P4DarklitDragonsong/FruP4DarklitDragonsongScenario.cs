@@ -29,8 +29,6 @@ public sealed class FruP4DarklitDragonsongScenario : IScenario
     private static readonly Vector3 FragmentPosition = new(0, 0, -16);
     // Curse chains stretched shorter than this snap. UNVERIFIED: retail's limit lies between 9.4 and 9.8.
     private const float CurseMinLength = 9.5f;
-    // The Oracle's jumps land this short of their target, and don't move her when it's closer.
-    private const float JumpLandingShort = 7.5f;
     // It takes every one of these and breaks on any other hit.
     private static readonly uint[] FragmentSurvives = [ActionId.DarklitDragonsong, ActionId.HallowedWingsLeft, ActionId.HallowedWingsRight];
 
@@ -306,8 +304,7 @@ public sealed class FruP4DarklitDragonsongScenario : IScenario
     private void JumpTowards(Vector3 position, float delay)
     {
         if (oracle is not { } boss) return;
-        var offset = position - boss.Position;
-        var landing = offset.Length() <= JumpLandingShort ? boss.Position : position - Vector3.Normalize(offset) * JumpLandingShort;
+        var landing = OracleJump.Landing(boss.Position, position);
         world.Events.Add(delay, () => boss.SetPosition(landing));
     }
 
