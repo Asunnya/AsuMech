@@ -131,6 +131,9 @@ All using default NA pf strats unless noted otherwise:
     - P4 Crystallize Time 
     - P5 Fulgent Blade
     - P5 Paradise Regained 
+    - P5 Pandora's Box (tank LB3)
+    - P5 Fulgent Blade II, Paradise Regained II, Fulgent Blade III
+    - P5 Paradise Lost (enrage)
 - The Omega Protocol (Ultimate)
     - P1 Program Loop _by [Evernow](https://github.com/Evernow)_
     - P2 Party Synergy

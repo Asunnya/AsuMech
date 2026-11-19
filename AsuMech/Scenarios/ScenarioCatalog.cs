@@ -54,6 +54,8 @@ using AsuMech.Scenarios.Fru.P3UltimateRelativity;
 using AsuMech.Scenarios.Fru.P4CrystallizeTime;
 using AsuMech.Scenarios.Fru.P4DarklitDragonsong;
 using AsuMech.Scenarios.Fru.P5FulgentBlade;
+using AsuMech.Scenarios.Fru.P5PandorasBox;
+using AsuMech.Scenarios.Fru.P5ParadiseLost;
 using AsuMech.Scenarios.Fru.P5ParadiseRegained;
 using AsuMech.Scenarios.Top.P1ProgramLoop;
 using AsuMech.Scenarios.Top.P2PartySynergy;
@@ -178,6 +180,11 @@ public sealed class ScenarioCatalog
         new FruP4CrystallizeTimeScenario(),
         new FruP5FulgentBladeScenario(),
         new FruP5ParadiseRegainedScenario(),
+        new FruP5PandorasBoxScenario(),
+        new FruP5FulgentBlade2Scenario(),
+        new FruP5ParadiseRegained2Scenario(),
+        new FruP5FulgentBlade3Scenario(),
+        new FruP5ParadiseLostScenario(),
         new TopP1ProgramLoopScenario(),
         new TopP2PartySynergyScenario(),
         new TopP3IntermissionScenario(),
