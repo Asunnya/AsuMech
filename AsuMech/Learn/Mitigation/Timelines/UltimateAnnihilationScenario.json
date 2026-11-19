@@ -156,18 +156,18 @@
       "occurrence": 3
     },
     {
-      "actionId": 11137,
-      "name": "Aetheroplasm",
-      "start": 38.683,
-      "resolve": 38.683,
-      "occurrence": 4
-    },
-    {
       "actionId": 11143,
       "name": "Tank Purge",
       "start": 38.716,
       "resolve": 42.416,
       "occurrence": 1
+    },
+    {
+      "actionId": 11137,
+      "name": "Aetheroplasm",
+      "start": 38.966,
+      "resolve": 38.966,
+      "occurrence": 4
     },
     {
       "actionId": 11081,

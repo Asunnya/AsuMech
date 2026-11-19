@@ -167,8 +167,8 @@ public sealed class UltimateAnnihilationScenario : IScenario
         world.Events.Add(35.37f, SearingWindPulse);
         world.Events.Add(36.57f, () => titan?.PlayActionTimeline(ActionTimelineId.WarpStart));
         world.Events.Add(37.47f, ResolveEyeOfTheStorm);
-        world.Events.Add(38.67f, SpawnOrb);
         world.Events.Add(38.71f, () => CastSelf(ultima, ActionId.TankPurge, 3.7f));
+        world.Events.Add(38.95f, SpawnOrb);
         world.Events.Add(39.92f, ResolveMesohigh);
         world.Events.Add(40.94f, SuperCyclone);
         world.Events.Add(41.39f, SearingWindPulse);
