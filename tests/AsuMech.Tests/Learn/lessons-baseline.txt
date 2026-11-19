@@ -21,6 +21,7 @@ FruP3UltimateRelativityScenario	NA
 FruP4CrystallizeTimeScenario	NA priority / 7-1 Akh Morn (MT solo)
 FruP4DarklitDragonsongScenario	NA
 FruP4DarklitDragonsongScenario	NA · you take Somber Dance
+FruP4MaterializationScenario	NA
 FruP5FulgentBladeScenario	Standard
 FruP5ParadiseRegainedScenario	H first / M1-R1 NW / M2-R2 NE; lines T-M-R-H
 M10sAlleyOopTwoScenario	Hector (Toxic)

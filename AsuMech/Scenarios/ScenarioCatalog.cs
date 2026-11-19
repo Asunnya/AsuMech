@@ -54,6 +54,7 @@ using AsuMech.Scenarios.Fru.P3Apocalypse;
 using AsuMech.Scenarios.Fru.P3UltimateRelativity;
 using AsuMech.Scenarios.Fru.P4CrystallizeTime;
 using AsuMech.Scenarios.Fru.P4DarklitDragonsong;
+using AsuMech.Scenarios.Fru.P4Materialization;
 using AsuMech.Scenarios.Fru.P5FulgentBlade;
 using AsuMech.Scenarios.Fru.P5ParadiseRegained;
 using AsuMech.Scenarios.Top.P1ProgramLoop;
@@ -176,6 +177,7 @@ public sealed class ScenarioCatalog
         new FruIceVeilScenario(),
         new FruP3UltimateRelativityScenario(),
         new FruP3ApocalypseScenario(),
+        new FruP4MaterializationScenario(),
         new FruP4DarklitDragonsongScenario(),
         new FruP4CrystallizeTimeScenario(),
         new FruP5FulgentBladeScenario(),

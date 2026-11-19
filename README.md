@@ -126,6 +126,7 @@ All using default NA pf strats unless noted otherwise:
     - Intermission Ice Veil
     - P3 Ultimate Relativity
     - P3 Apocalypse 
+    - P4 Materialization
     - P4 Darklit Dragonsong
       - NA
       - NA, you take Somber Dance
