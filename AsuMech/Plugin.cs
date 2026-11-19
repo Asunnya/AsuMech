@@ -82,6 +82,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
     private Windows.Learn.HazardOverlay HazardOverlay { get; init; }
     private Windows.Learn.ToolboxViewer ToolboxViewer { get; init; }
     private Windows.Learn.PictureViewer PictureViewer { get; init; }
+    internal static SupportWindow Support { get; private set; } = null!;
     private Windows.Learn.MitOverlay MitOverlay { get; init; }
     private Windows.Learn.TimelinePanel TimelinePanel { get; init; }
     private Windows.Learn.BotInspector BotInspector { get; init; }
@@ -168,6 +169,8 @@ public sealed class Plugin : IAsyncDalamudPlugin
             windowSystem.AddWindow(ToolboxViewer);
             PictureViewer = new Windows.Learn.PictureViewer();
             windowSystem.AddWindow(PictureViewer);
+            Support = new SupportWindow();
+            windowSystem.AddWindow(Support);
             MitTraining = new Windows.Learn.MitTraining(Game);
             Windows.Learn.MitTraining.Install(MitTraining);
             MitOverlay = new Windows.Learn.MitOverlay();

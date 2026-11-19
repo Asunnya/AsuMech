@@ -83,6 +83,9 @@ public class ConfigWindow : Window, IDisposable
 
     private void DrawContent()
     {
+        if (ImGui.Button("Support AsuMech (Ko-fi, Pix)")) Plugin.Support.Toggle();
+        ImGui.Spacing();
+
         var onInn = configuration.OpenSimMenuOnInn;
         if (Pills.Checkbox("Open Sim Menu when entering Inn", ref onInn))
         {

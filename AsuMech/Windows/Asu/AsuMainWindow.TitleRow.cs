@@ -47,6 +47,9 @@ public sealed partial class AsuMainWindow
         if (ImGuiComponents.IconButton("discord", FontAwesomeIcon.Users)) Util.OpenLink(FeedbackLinks.Discord);
         if (ImGui.IsItemHovered()) ImGui.SetTooltip("AsuMech Discord");
         ImGui.SameLine();
+        if (ImGuiComponents.IconButton("support", FontAwesomeIcon.Heart)) Plugin.Support.Toggle();
+        if (ImGui.IsItemHovered()) ImGui.SetTooltip("Support AsuMech (Ko-fi, Pix)");
+        ImGui.SameLine();
         DrawFeedbackButton();
         ImGui.SameLine();
         if (ImGuiComponents.IconButton("settings", FontAwesomeIcon.Cog)) plugin.ToggleConfigUi();
