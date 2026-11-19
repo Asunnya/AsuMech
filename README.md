@@ -83,6 +83,7 @@ As this feature is still in beta, some edge cases and less common interactions m
 ## Currently implemented 
 All using default NA pf strats unless noted otherwise:
 - Dancing Mad (Ultimate)
+    - P1 Opening _merry-go-round_
     - P1 Tele-trouncing _by [Evernow](https://github.com/Evernow)_
     - P2 Forsaken
       - NA
@@ -95,6 +96,8 @@ All using default NA pf strats unless noted otherwise:
         - [\[Old\] zP6 South adjust](https://raidplan.io/plan/rtc1FcuZFMuyBzP6)
       - JP _by [altair9x](https://github.com/altair9x)_
         - [Yan](https://yan-flash.com/ultimate/yosei-ranbu#ult-phase-2)
+    - P2 Trines _[party first CW, tanks near and far](https://raidplan.io/plan/apkh6ytq72w8pt3v)_
+    - P3 Decisive Battle _tank LB3 BoA_
     - P3 Limit Cut _by [Evernow](https://github.com/Evernow)_
     - P3 Black Hole _old bh (single tethers, n/s stomps)_
       - D>S>A

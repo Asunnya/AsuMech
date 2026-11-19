@@ -80,9 +80,12 @@ using AsuMech.Scenarios.Ucob.P5Exaflares;
 using AsuMech.Scenarios.Ucob.P5GoldenBahamut;
 using AsuMech.Scenarios.Ucob.P5PhoenixTransition;
 using AsuMech.Scenarios.Umad;
+using AsuMech.Scenarios.Umad.P1Opening;
 using AsuMech.Scenarios.Umad.P1TeleTrouncing;
 using AsuMech.Scenarios.Umad.P2Forsaken;
+using AsuMech.Scenarios.Umad.P2Trines;
 using AsuMech.Scenarios.Umad.P3BlackHole;
+using AsuMech.Scenarios.Umad.P3DecisiveBattle;
 using AsuMech.Scenarios.Umad.P3LimitCut;
 using AsuMech.Scenarios.Umad.P4KefkaSays;
 using AsuMech.Scenarios.Umad.P5Celestriad;
@@ -144,8 +147,11 @@ public sealed class ScenarioCatalog
 
     public static ScenarioCatalog Create() => new(
     [
+        new UmadP1OpeningScenario(),
         new UmadP1TeleTrouncingScenario(),
         new UmadP2ForsakenScenario(),
+        new UmadP2TrinesScenario(),
+        new UmadP3DecisiveBattleScenario(),
         new UmadP3LimitCutScenario(),
         new UmadP3BlackHoleScenario(),
         new UmadP4KefkaSaysScenario(),

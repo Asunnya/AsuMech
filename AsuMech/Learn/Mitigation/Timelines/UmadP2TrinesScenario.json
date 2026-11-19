@@ -1,0 +1,74 @@
+{
+  "scenario": "UmadP2TrinesScenario",
+  "casts": [
+    {
+      "actionId": 47839,
+      "name": "Trine",
+      "start": 1.967,
+      "resolve": 4.667,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47821,
+      "name": "Wings of Destruction",
+      "start": 8.133,
+      "resolve": 11.833,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47840,
+      "name": "Trine",
+      "start": 17.85,
+      "resolve": 17.85,
+      "occurrence": 2
+    },
+    {
+      "actionId": 50311,
+      "name": "Wings of Destruction",
+      "start": 18.3,
+      "resolve": 22,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47840,
+      "name": "Trine",
+      "start": 19.883,
+      "resolve": 19.883,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47840,
+      "name": "Trine",
+      "start": 21.9,
+      "resolve": 21.9,
+      "occurrence": 4
+    },
+    {
+      "actionId": 47823,
+      "name": "Wings of Destruction",
+      "start": 22.35,
+      "resolve": 22.35,
+      "occurrence": 3
+    },
+    {
+      "actionId": 49740,
+      "name": "Ultimate Embrace",
+      "start": 24.383,
+      "resolve": 29.083,
+      "occurrence": 1
+    },
+    {
+      "actionId": 50167,
+      "name": "Aero III Assault",
+      "start": 35.883,
+      "resolve": 38.583,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Trine",
+    "Wings of Destruction",
+    "Ultimate Embrace",
+    "Aero III Assault"
+  ]
+}

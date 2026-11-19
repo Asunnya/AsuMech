@@ -600,6 +600,179 @@ public static class UmadActions
         Timing = new() { DamageDelay = 0.64f },
     };
 
+    // -- P1 Opening --
+
+    // Both hits land on the tank holding the boss; the cone's width is UNVERIFIED.
+    public static readonly EnemyAction RevoltingRuinIII = new(UmadConstants.ActionId.RevoltingRuinIII)
+    {
+        Cast = new() { AnimationLock = 3.1f },
+        Effects = [Damage(MagicVulns, TankBuster)],
+        Timing = new() { DamageDelay = 0.53f },
+    };
+
+    public static readonly EnemyAction RevoltingRuinIIISecond = new(UmadConstants.ActionId.RevoltingRuinIII_Second)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [Damage(MagicVulns, TankBuster)],
+        Timing = new() { DamageDelay = 0.6f },
+    };
+
+    public static readonly EnemyAction Hyperdrive = new(UmadConstants.ActionId.Hyperdrive)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [Damage(MagicVulns, TankBuster.MinMit(1f))],
+        Timing = new() { DamageDelay = 0.6f },
+        DeathExplanation = "Hyperdrive needs an invuln",
+    };
+
+    public static readonly EnemyAction LightOfJudgmentP1 = new(UmadConstants.ActionId.LightOfJudgment_P1)
+    {
+        Cast = new() { AnimationLock = 3.1f },
+        Effects = [Damage(MagicVulns)],
+        Timing = new() { DamageDelay = 1.1f },
+    };
+
+    public static readonly EnemyAction PulseWave = new(UmadConstants.ActionId.PulseWave)
+    {
+        Cast = new() { AnimationLock = 1.1f, FaceTarget = false },
+        Effects = [Damage(Harmless), Knockback(UmadConstants.KnockbackId.PulseWave, knockbackDelay: 0.6f)],
+        Timing = new() { DamageDelay = 0.6f },
+    };
+
+    public static readonly EnemyAction WaveCannon = new(UmadConstants.ActionId.WaveCannon)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [Damage(MagicVulns), ApplyStatus(UmadConstants.StatusId.MagicVulnerabilityUp, 3.94f)],
+        Timing = new() { DamageDelay = 0.6f },
+    };
+
+    public static readonly EnemyAction Explosion = new(UmadConstants.ActionId.Explosion)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [Damage(MagicVulns)],
+        Timing = new() { DamageDelay = 0.6f },
+    };
+
+    public static readonly EnemyAction UnmitigatedExplosion = new(UmadConstants.ActionId.UnmitigatedExplosion)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [Damage(Lethal)],
+        Timing = new() { DamageDelay = 0.6f },
+        DeathExplanation = "a tower nobody took",
+    };
+
+    // Four of these overlap on one quad stack, which takes them as two-player stacks.
+    public static readonly EnemyAction Gravitas = new(UmadConstants.ActionId.Gravitas)
+    {
+        Cast = new() { AnimationLock = 1.1f, FaceTarget = false },
+        Effects = [Damage(split: Stack(2))],
+        Timing = new() { DamageDelay = 0.6f },
+    };
+
+    public static readonly EnemyAction Vitrophyre = new(UmadConstants.ActionId.Vitrophyre)
+    {
+        Cast = new() { AnimationLock = 1.1f, FaceTarget = false },
+        Effects = [Damage()],
+        Timing = new() { DamageDelay = 0.6f },
+    };
+
+    public static readonly EnemyAction GravityIII = new(UmadConstants.ActionId.GravityIII)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [Damage(split: Stack(2))],
+        Timing = new() { DamageDelay = 0.6f },
+    };
+
+    // UNVERIFIED: what retail does to a gravity puddle set off by a rock or never popped.
+    public static readonly EnemyAction GravitationalExplosion = new(UmadConstants.ActionId.GravitationalExplosion)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [Damage(Lethal)],
+        Timing = new() { DamageDelay = 0.6f },
+        DeathExplanation = "a gravity puddle went off wrong",
+    };
+
+    public static readonly EnemyAction IntemperateWill = HalfRoomWill(UmadConstants.ActionId.IntemperateWill);
+    public static readonly EnemyAction GravitationalWave = HalfRoomWill(UmadConstants.ActionId.GravitationalWave);
+
+    private static EnemyAction HalfRoomWill(uint actionId) => new(actionId)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Area = new() { Size = MathF.PI / 2 },
+        Effects = [Damage(MagicVulns, Lethal)],
+        Timing = new() { DamageDelay = 0.6f },
+    };
+
+    // -- P2 Trines --
+
+    public static readonly EnemyAction TrineExplosion = new(UmadConstants.ActionId.TrineExplosion)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [Damage(MagicVulns)],
+        Timing = new() { DamageDelay = 0.6f },
+    };
+
+    public static readonly EnemyAction WingsOfDestructionWest = HalfRoomWings(UmadConstants.ActionId.WingsOfDestruction_West);
+    public static readonly EnemyAction WingsOfDestructionEast = HalfRoomWings(UmadConstants.ActionId.WingsOfDestruction_East);
+
+    private static EnemyAction HalfRoomWings(uint actionId) => new(actionId)
+    {
+        Cast = new() { AnimationLock = 3.1f },
+        Effects = [Damage(MagicVulns, Lethal)],
+        Timing = new() { DamageDelay = 0.6f },
+    };
+
+    public static readonly EnemyAction WingsOfDestructionBuster = new(UmadConstants.ActionId.WingsOfDestruction_Buster)
+    {
+        Cast = new() { AnimationLock = 1.1f, FaceTarget = false },
+        Effects = [Damage(MagicVulns, TankBuster), LongMagicVulnerabilityUp],
+        Timing = new() { DamageDelay = 0.6f },
+    };
+
+    public static readonly EnemyAction UltimateEmbrace = new(UmadConstants.ActionId.UltimateEmbrace)
+    {
+        Cast = new() { AnimationLock = 3.1f },
+        Effects = [Damage(TankBuster, split: Stack(2, understacked: TankBuster.MinMit(1f)))],
+        Timing = new() { DamageDelay = 0.6f },
+    };
+
+    public static readonly EnemyAction AeroIIIAssault = new(UmadConstants.ActionId.AeroIIIAssault)
+    {
+        Cast = new() { AnimationLock = 3.1f },
+        Effects = [Damage(Harmless), Knockback(UmadConstants.KnockbackId.AeroIIIAssault)],
+        Timing = new() { DamageDelay = 0.6f },
+    };
+
+    // -- P3 Decisive Battle --
+
+    public static readonly EnemyAction BowelsOfAgony = new(UmadConstants.ActionId.BowelsOfAgony)
+    {
+        Cast = new() { AnimationLock = 3.1f },
+        Effects = [Damage(MagicVulns)],
+        Timing = new() { DamageDelay = 0.6f },
+    };
+
+    public static readonly EnemyAction ThunderIIIPbaoe = new(UmadConstants.ActionId.ThunderIII_Pbaoe)
+    {
+        Cast = new() { AnimationLock = 4.1f },
+        Effects = [Damage(MagicVulns, Lethal)],
+        Timing = new() { DamageDelay = 0.6f },
+    };
+
+    public static readonly EnemyAction StrayFlamesEntropy = ElementBurst(UmadConstants.ActionId.StrayFlames_Entropy, donut: false);
+    public static readonly EnemyAction StraySprayDynamicFluid = ElementBurst(UmadConstants.ActionId.StraySpray_DynamicFluid, donut: true);
+    public static readonly EnemyAction InfernoFireCrystal = ElementBurst(UmadConstants.ActionId.Inferno_FireCrystal, donut: true);
+    public static readonly EnemyAction TsunamiWaterCrystal = ElementBurst(UmadConstants.ActionId.Tsunami_WaterCrystal, donut: false);
+
+    // The donuts' safe inner radius is UNVERIFIED.
+    private static EnemyAction ElementBurst(uint actionId, bool donut) => new(actionId)
+    {
+        Cast = new() { AnimationLock = 1.1f, FaceTarget = false },
+        Area = donut ? new() { Size = 6f } : new(),
+        Effects = [Damage(MagicVulns), LongMagicVulnerabilityUp],
+        Timing = new() { DamageDelay = 0.6f },
+    };
+
     private sealed class ConsumeWindEffect : IEnemyActionEffect
     {
         public void Apply(EnemyActionContext ctx, IReadOnlyList<SimCharacter> hits)

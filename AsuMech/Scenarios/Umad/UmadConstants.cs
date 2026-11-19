@@ -106,6 +106,15 @@ public static class UmadConstants
 
         // The InstanceContentDirector these props bind to; their EObj rows are Invisibility=7.
         public const uint PropEventId = 0x800375D2U;
+
+        // The P2 trines: 2015154 has its lone circle east of its centre, 2015155 west.
+        public const uint TrineLoneEast = 2015154;
+        public const uint TrineLoneWest = 2015155;
+        public const uint GravityPuddle = 2015266;
+        public const uint FireCrystal  = 2015290;
+        public const uint WaterCrystal = 2015291;
+        public const uint FireCrystalArg2  = 0x00410003U;
+        public const uint WaterCrystalArg2 = 0x00420003U;
     }
 
     public static class EObjState
@@ -264,6 +273,36 @@ public static class UmadConstants
         public const uint Earthquake                   = 0xC571U; // single-target, cast 5.0s
         public const uint Earthquake_Visual              = 0xC572U; // circle r=100, cast 5.0s
         public const uint ThrummingThunderIII_Cast     = 0xC5DEU; // single-target, cast 5.0s; P3 cast variant, base = 0xBA9F
+        public const uint DoubleTroubleTrap_Cast       = 0xBAA6U; // single-target, cast 3.0s
+        public const uint WaveCannon                   = 0xBAA8U; // rect 100x6 (len x width), instant
+        public const uint PulseWave                    = 0xBAA9U; // single-target, instant; knockback 72
+        public const uint Explosion                    = 0xBAAAU; // circle r=4, cast 3.0s
+        public const uint UnmitigatedExplosion         = 0xBAABU; // circle r=100, instant
+        public const uint Gravitas                     = 0xBAACU; // circle r=5, instant
+        public const uint GravitationalExplosion       = 0xBAADU; // circle r=100, instant
+        public const uint GravityIII                   = 0xBAAFU; // circle r=5, instant
+        public const uint Vitrophyre                   = 0xBAB0U; // circle r=5, instant
+        public const uint GravitationalWave            = 0xBAB1U; // cone r=100, instant
+        public const uint IntemperateWill              = 0xBAB2U; // cone r=100, instant
+        public const uint WingsOfDestruction_West      = 0xBACDU; // rect 80x40 (len x width), cast 4.0s
+        public const uint WingsOfDestruction_East      = 0xBACEU; // rect 80x40 (len x width), cast 4.0s
+        public const uint WingsOfDestruction_Buster    = 0xBACFU; // circle r=7, instant
+        public const uint Trine                        = 0xBADFU; // single-target, cast 3.0s
+        public const uint TrineExplosion               = 0xBAE0U; // circle r=6, instant
+        public const uint DefinitionOfInsanity         = 0xBAE2U; // single-target, cast 4.0s
+        public const uint BowelsOfAgony                = 0xBAF2U; // circle r=100, cast 5.0s
+        public const uint StrayFlames_Entropy          = 0xBAF3U; // circle r=5, instant
+        public const uint Inferno_FireCrystal          = 0xBAF4U; // donut r=10, instant
+        public const uint Tsunami_WaterCrystal         = 0xBAF5U; // circle r=5, instant
+        public const uint StraySpray_DynamicFluid      = 0xBAF6U; // donut r=10, instant
+        public const uint ThunderIII_Pbaoe             = 0xBB12U; // circle r=11 + hitbox, cast 7.0s
+        public const uint Hyperdrive                   = 0xC24BU; // circle r=5, instant
+        public const uint Trance                       = 0xC2D6U; // single-target, cast 3.9s
+        public const uint AeroIIIAssault               = 0xC3F7U; // circle r=40, cast 3.0s; knockback 112
+        public const uint RevoltingRuinIII             = 0xC403U; // cone r=100, cast 5.0s
+        public const uint WingsOfDestruction_NearFar   = 0xC487U; // single-target, cast 4.0s
+        public const uint RevoltingRuinIII_Second      = 0xC4E1U; // cone r=100, instant
+        public const uint LightOfJudgment_P1           = 0xC622U; // circle r=100, cast 5.0s
     }
 
     public static class StatusId
@@ -325,6 +364,9 @@ public static class UmadConstants
         public const ushort AccelerationBomb          = (ushort)0x15AA;
         public const ushort Entropy                   = (ushort)0x15AB;
         public const ushort DynamicFluid              = (ushort)0x15AC;
+        public const ushort DownForTheCount           = (ushort)0x306;
+        public const ushort EntropyP3                 = (ushort)0x640;
+        public const ushort DynamicFluidP3            = (ushort)0x641;
     }
 
     public static class TimelineId
@@ -341,11 +383,14 @@ public static class UmadConstants
     {
         public const ushort GravenImage  = (ushort)0x2D;
         public const ushort GrabbyTether = (ushort)0x54;
+        public const ushort ExdeathThunder = (ushort)0x40;
     }
 
     public static class KnockbackId
     {
         public const uint DoubleTroubleTrapStack = 240;
+        public const uint PulseWave = 72;
+        public const uint AeroIIIAssault = 112;
     }
 
     public static class LockonId
@@ -364,6 +409,8 @@ public static class UmadConstants
         public const uint ForsakenStack   = 715;
         public const uint ForsakenChariot = 716;
         public const uint ForsakenCone    = 717;
+        public const uint RevoltingRuin   = 218;
+        public const uint UltimateEmbrace = 259;
     }
 
     public static class Geometry
