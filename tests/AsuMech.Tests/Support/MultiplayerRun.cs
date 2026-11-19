@@ -162,10 +162,13 @@ internal sealed class MultiplayerRun
     public double HostClockAtEnd { get; private set; }
     public IReadOnlyList<double> PeerClocksAtEnd { get; private set; } = [];
 
-    // Every client has taken everything the others numbered for it.
+    // Every client still in the session has taken everything the others numbered for it.
     private bool StreamsSettled()
-        => Peers.All(p => Taken(p, Host).Count == Host.StreamSent.Count(m => m.Message.Seq > Baseline(p))
+        => Peers.Where(StillSeated).All(p => Taken(p, Host).Count == Host.StreamSent.Count(m => m.Message.Seq > Baseline(p))
                           && Taken(Host, p).Count == p.StreamSent.Count);
+
+    private bool StillSeated(TestClient peer)
+        => peer.Multiplayer.InSession && Host.Multiplayer.InSession && Host.Multiplayer.Session.Names.ContainsKey(peer.PeerId);
 
     public static List<MpMessage> Taken(TestClient to, TestClient from)
         => to.StreamTaken.Where(t => t.From == from.PeerId).Select(t => t.Message).ToList();
