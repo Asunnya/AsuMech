@@ -5,6 +5,7 @@ using System.Numerics;
 using AsuMech.Core.Game.Ai;
 using AsuMech.Core.Game.Party;
 using AsuMech.Core.SimObjects;
+using AsuMech.Core.UserActions;
 
 namespace AsuMech.Scenarios.Uwu.UltimateAnnihilation;
 
@@ -89,6 +90,8 @@ public class UltimateAnnihilationAi : IScenarioAi<UltimateAnnihilationState>
         if (!state.UltimaAboveHalf) return;
         ai.Move(66.4f, () => Plan(Group(OutOfTheRadiantPlumes, new(0f, -16f), new(10.5f, -10.5f))));
         ai.Move(69.4f, () => Plan(Group(WestOfTheDiffractiveLaser, new(0.5f, -8.3f), new(6.5f, -4.5f))));
+        foreach (var role in PerRole.All)
+            ai.UseAction(74.8f, role, KnockbackImmunity.ActionId);
     }
 
     private IAiMove AheadOfFeatherRain(float now, float landsAt, Vector2?[] spots)

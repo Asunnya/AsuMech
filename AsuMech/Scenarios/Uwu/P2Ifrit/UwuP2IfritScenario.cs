@@ -14,7 +14,6 @@ using static AsuMech.Scenarios.Uwu.P2Ifrit.UwuP2IfritState;
 
 namespace AsuMech.Scenarios.Uwu.P2Ifrit;
 
-// Vulcan Burst's knockback is left out (shielded).
 public sealed class UwuP2IfritScenario : IScenario
 {
     public string Name => "Ifrit";
@@ -338,6 +337,7 @@ public sealed class UwuP2IfritScenario : IScenario
         PlayEffect(ifrit, ActionId.VulcanBurst, 1.1f);
         foreach (var member in party.ActiveMembers().ToList())
             damage.ApplyDamage(member, VulcanBurstDamage, ActionId.VulcanBurst, "Raidwide", false);
+        if (ifrit != null) VulcanBurstKnockback(party, ifrit.Position);
     }
 
     private void Incinerate()

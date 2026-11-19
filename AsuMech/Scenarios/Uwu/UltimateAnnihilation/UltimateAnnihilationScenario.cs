@@ -38,7 +38,6 @@ public sealed class UltimateAnnihilationScenario : IScenario
     private const float MesohighDamage = 0.16f;
     private const float SuperCycloneDamage = 0.03f;
     private const float InfernoHowlDamage = 0.1f;
-    // UNVERIFIED: everyone was shielded or anti-knockback, so how far it throws was never seen.
     private const float VulcanBurstDamage = 0.15f;
 
     private const int WeightOfTheLandFirstDummies = 0;
@@ -204,6 +203,7 @@ public sealed class UltimateAnnihilationScenario : IScenario
         world.Events.Add(71.67f, DiffractiveLaser);
         world.Events.Add(74.83f, CastEyeOfTheStorm);
         world.Events.Add(75.76f, () => Raidwide(ultima, ActionId.VulcanBurstUltima, VulcanBurstDamage, 1.1f));
+        world.Events.Add(75.76f, () => { if (ultima != null) VulcanBurstKnockback(party, ultima.Position); });
         world.Events.Add(77.81f, ResolveEyeOfTheStorm);
         world.Events.Add(80.22f, () => CastSelf(ultima, ActionId.UltimateSuppression, 2.7f));
         world.Events.Add(83.19f, () => PlayEffect(ultima, ActionId.UltimateSuppression, 4.5f));

@@ -5,6 +5,7 @@ using System.Numerics;
 using AsuMech.Core.Game.Ai;
 using AsuMech.Core.Game.Party;
 using AsuMech.Core.SimObjects;
+using AsuMech.Core.UserActions;
 
 namespace AsuMech.Scenarios.Uwu.P2Ifrit;
 
@@ -37,6 +38,8 @@ public sealed class UwuP2IfritAi : IScenarioAi<UwuP2IfritState>
         ai.Move(0.5f, () => AiMove.Create(SpreadAround(Vector2.Zero, 1.2f)).NaturalOrder());
         ai.Move(5.3f, RunToOpenerSafeSpot);
         ai.Move(10.3f, TankIfritSouthPartyNorth);
+        foreach (var role in PerRole.All)
+            ai.UseAction(22.5f, role, KnockbackImmunity.ActionId);
 
         ai.Move(40.9f, SurroundNailsWithIfritPulledBetweenTheClosePair);
         ai.Move(48.3f, () => BaitersSplitTo(RimReference(60f), RimReference(160f)));

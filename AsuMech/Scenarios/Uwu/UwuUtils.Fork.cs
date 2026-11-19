@@ -5,6 +5,7 @@ using System.Numerics;
 using AsuMech.Core;
 using AsuMech.Core.Game;
 using AsuMech.Core.SimObjects;
+using AsuMech.Core.UserActions;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using AsuMech.Scenarios.Legacy;
@@ -67,6 +68,14 @@ public partial class UwuUtils
     {
         foreach (var hit in snapshot.Where(h => !h.HasStatus(StatusId.Fetters)).ToList())
             damage.ApplyDamage(hit, 1f, actionId, context, lethal: true);
+    }
+
+    // Vulcan Burst's push away from its caster, for everyone no knockback immunity covers.
+    public static void VulcanBurstKnockback(SimParty party, Vector3 source)
+    {
+        if (!KnockbackLookup.TryGet(KnockbackId.VulcanBurst, out var distance, out var speed)) return;
+        foreach (var member in party.ActiveMembers().Where(m => !KnockbackImmunity.Has(m)).ToList())
+            member.Knockback(source, distance, speed);
     }
 
     // Lethal around its holder, sparing the holder; whoever outlives it is thrown clear.

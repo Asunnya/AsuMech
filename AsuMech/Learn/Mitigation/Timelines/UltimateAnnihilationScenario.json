@@ -254,6 +254,20 @@
       "occurrence": 1
     },
     {
+      "actionId": 7548,
+      "name": "Arm\u0027s Length",
+      "start": 74.801,
+      "resolve": 74.801,
+      "occurrence": 1
+    },
+    {
+      "actionId": 7559,
+      "name": "Surecast",
+      "start": 74.801,
+      "resolve": 74.801,
+      "occurrence": 1
+    },
+    {
       "actionId": 11090,
       "name": "Eye of the Storm",
       "start": 74.835,
@@ -292,6 +306,8 @@
     "Homing Lasers",
     "Radiant Plume",
     "Diffractive Laser",
+    "Arm\u0027s Length",
+    "Surecast",
     "Vulcan Burst",
     "Ultimate Suppression"
   ]
