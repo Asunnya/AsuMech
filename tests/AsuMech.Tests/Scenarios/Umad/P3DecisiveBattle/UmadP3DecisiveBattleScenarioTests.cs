@@ -1,4 +1,5 @@
 using System.Numerics;
+using AsuMech.Core.Game;
 using AsuMech.Scenarios.Umad.P3DecisiveBattle;
 using static AsuMech.Core.Game.Party.PartyRole;
 using static AsuMech.Tests.NegativeRun;
@@ -41,4 +42,28 @@ public class UmadP3DecisiveBattleScenarioTests
             .WithMitigationChecks()
             .TeleportAt(Scenario.BusterAt[0] - 1f, to: new Vector2(-1f, 1.6f))
             .ShouldKill(ActionId.ThunderIII_Resolve, OffTank);
+
+    [Test]
+    public void StraySprayDonutIsSafeOnlyWithinFourYalms()
+    {
+        AoeQuery? donut = null;
+        void Capture(AoeQuery q)
+        {
+            if (q.ActionId == ActionId.StraySpray_DynamicFluid) donut ??= q;
+        }
+        AoeQuery.Evaluated += Capture;
+        try
+        {
+            var run = ScenarioRun.Execute(typeof(Scenario), 0, 1);
+            Assert.That(run.Passed, run.ToString());
+            Assert.That(donut, Is.Not.Null);
+            var centre = donut!.Value.Source.Position;
+            Assert.That(donut.Value.SignedDistance(centre + new Vector3(3.5f, 0f, 0f)), Is.GreaterThan(0f), "inside the safe hole");
+            Assert.That(donut.Value.SignedDistance(centre + new Vector3(5f, 0f, 0f)), Is.LessThan(0f), "5y out");
+        }
+        finally
+        {
+            AoeQuery.Evaluated -= Capture;
+        }
+    }
 }
