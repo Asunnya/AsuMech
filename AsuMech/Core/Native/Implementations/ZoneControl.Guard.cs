@@ -72,6 +72,8 @@ public sealed unsafe partial class ZoneControl
     public static void NoteTerritoryChanged(uint territory)
     {
         lastTerritoryChangeAt = Stopwatch.GetTimestamp();
+        // A real zone-in sets the house up again; the sim's own loads arrive while the guard is armed.
+        if (Current is not { guardArmed: true }) housingNotRestored = false;
         if (zoneChangePressedAt != null)
             DiagnosticLog.Info($"[ZoneGuard] Zone changed to {territory} -- the pending {Natives.Data.ActionName(zoneChangeActionId)} resolved.");
         zoneChangePressedAt = null;
@@ -262,6 +264,9 @@ public sealed unsafe partial class ZoneControl
         // actions would end only on the client.
         if (c[ConditionFlag.Emoting] || c[ConditionFlag.InThatPosition]) return "seated, dozing or in an emote";
         if (c[ConditionFlag.UsingFashionAccessory]) return "a fashion accessory is out";
+        // Furnishing or the housing menus: the server holds the room in an edit the stay would cut off.
+        if (c[ConditionFlag.UsingHousingFunctions]) return "a housing menu or furnishing is open";
+        if (housingNotRestored) return "the FC chambers did not come back after the last run; walk out and back in first";
         if (ThresholdUp()) return "Reaper's Threshold is up (the Hell's Ingress/Egress portal); start once it has ended";
         // Nothing the character did during the hold reached the server.
         if (Current is { sendHoldActive: true }) return Settling("the debug send hold", out settling);
@@ -442,8 +447,33 @@ public sealed unsafe partial class ZoneControl
     }
 
     // sessionSave was filled from the live player one statement earlier in Enter.
+    // The house and room the chambers belong to, which the server set on the real zone-in; the
+    // client-side reload on Leave is UNVERIFIED to bring them back.
+    private readonly record struct HousingSpot(ulong HouseId, short Room);
+    private HousingSpot? armedHousing;
+    private static bool housingNotRestored;
+
+    private static HousingSpot? ReadHousing()
+    {
+        var housing = HousingManager.Instance();
+        if (housing == null || !housing->IsInside()) return null;
+        return new HousingSpot(housing->GetCurrentIndoorHouseId().Id, housing->GetCurrentRoom());
+    }
+
+    private void CheckHousingCameBack()
+    {
+        if (armedHousing is not { } armed) return;
+        armedHousing = null;
+        var now = ReadHousing();
+        if (now == armed) return;
+        housingNotRestored = true;
+        DiagnosticLog.Warn($"[ZoneGuard] The FC chambers did not come back after the reload (armed in {armed}, now {(now is { } n ? n.ToString() : "not inside a house")}); the next start waits for a real zone-in.");
+        Plugin.ChatGui.PrintError("[AsuMech] The FC chambers did not reload fully. Walk out and back in before the next run.");
+    }
+
     private void CaptureInnState()
     {
+        armedHousing = LaunchRoom.FcPrivateChambers.Contains(Plugin.ClientState.TerritoryType) ? ReadHousing() : null;
         innClientTerritory = Plugin.ClientState.TerritoryType;
         lastNativeTerritory = NativeTerritory();
         armedPosition = sessionSave.Position;
@@ -673,6 +703,7 @@ public sealed unsafe partial class ZoneControl
         ReleasePlayerConditions();
         var counters = RestoreClientCounters(armedCounters);
         if (!DisableFirewall()) Die($"a filter would not come down after the lift was verified ({when})");
+        CheckHousingCameBack();
         DiagnosticLog.Info($"[ZoneGuard] Firewall lifted {when}: territory {innClientTerritory} (GameMain {NativeTerritory()}), player {here} vs inn {Describe(armedPosition, armedRotation)}, {counters}, held {heldInbound} inbound / {heldOutbound.Values.Sum()} outbound.");
         if (partyResyncDue)
         {
