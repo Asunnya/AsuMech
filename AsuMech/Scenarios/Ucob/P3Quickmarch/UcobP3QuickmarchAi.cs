@@ -123,12 +123,13 @@ public sealed class UcobP3QuickmarchAi(bool tuufless = false) : IScenarioAi<Ucob
         _ => DpsStackSouth,
     };
 
-    private static Vector2 ClearOfTheTempestWingSpot(PartyRole role) => role switch
+    private Vector2 ClearOfTheTempestWingSpot(PartyRole role) => role switch
     {
         MainTank => MainTankInFrontOfRegenHealer,
         OffTank => OffTankInFrontOfShieldHealer,
         RegenHealer => RegenHealerClearOfTheTempestWing,
         ShieldHealer => ShieldHealerClearOfTheTempestWing,
+        _ when role == state.EarthShakerDps => DpsEarthShakerNorth,
         _ => DpsStackSouth,
     };
 
