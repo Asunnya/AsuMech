@@ -46,6 +46,7 @@ public class M12sIdyllicDreamScenarioTests
     [Test]
     public void DoomWithNoEsunaKills()
         => Negative<Scenario>(MeleeDpsB)
+            .Seed(1)
             .At(142f, p => p.Member(MeleeDpsB)!.AddStatus(StatusId.Doom, 8f))
             .ShouldKill(ActionId.LindwurmsDarkII, MeleeDpsB);
 
