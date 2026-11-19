@@ -10,6 +10,8 @@ namespace AsuMech.Scenarios.Fru;
 public sealed class FruZone : IZone
 {
     public static readonly FruZone Instance = new();
+    // UNVERIFIED: no replay sends Fatebreaker's track, so the zone's own BGM is left playing.
+    public static readonly Phase P1 = new(Instance, "P1", WeatherId.Fatebreaker, 0);
     public static readonly Phase P2 = new(Instance, "P2", WeatherId.Usurper, BgmId.Usurper,
         arenaMapEffectOverrides: new Dictionary<byte, ushort> { [MapEffect.P2Platform] = 0x1 });
     public static readonly Phase P3 = new(Instance, "P3", WeatherId.Oracle, BgmId.Oracle,

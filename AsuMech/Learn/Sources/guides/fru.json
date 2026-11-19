@@ -42,14 +42,22 @@
           "url": "https://tinyurl.com/lesbin-p1",
           "kind": "shortlink",
           "section": "P1: Fatebreaker",
-          "scenarios": []
+          "scenarios": [
+            "FruP1UtopianSkyScenario",
+            "FruP1TurnOfTheHeavensScenario",
+            "FruP1FallOfFaithScenario"
+          ]
         },
         {
           "label": "Entire phase - Role + Fixed Tether OR Role ONLY Utopia, Conga FoF",
           "url": "https://docs.google.com/presentation/d/1Pm3BkfrJqjcm7688RrNDdh4oYuYS_VmHr6ALqjbZInE/edit#slide=id.g319371557f7_0_162",
           "kind": "slides",
           "section": "P1: Fatebreaker",
-          "scenarios": []
+          "scenarios": [
+            "FruP1UtopianSkyScenario",
+            "FruP1TurnOfTheHeavensScenario",
+            "FruP1FallOfFaithScenario"
+          ]
         }
       ],
       "rules": []
@@ -303,6 +311,36 @@
   ],
   "waymarks": [],
   "scenarios": {
+    "FruP1UtopianSkyScenario": {
+      "plans": [],
+      "sources": [
+        {
+          "label": "NAUR LesBin - Entire phase - Role + Fixed Tether OR Role ONLY Utopia, Conga FoF",
+          "url": "https://docs.google.com/presentation/d/1Pm3BkfrJqjcm7688RrNDdh4oYuYS_VmHr6ALqjbZInE/edit#slide=id.g319371557f7_0_162"
+        }
+      ],
+      "rules": []
+    },
+    "FruP1TurnOfTheHeavensScenario": {
+      "plans": [],
+      "sources": [
+        {
+          "label": "NAUR LesBin - Entire phase - Role + Fixed Tether OR Role ONLY Utopia, Conga FoF",
+          "url": "https://docs.google.com/presentation/d/1Pm3BkfrJqjcm7688RrNDdh4oYuYS_VmHr6ALqjbZInE/edit#slide=id.g319371557f7_0_162"
+        }
+      ],
+      "rules": []
+    },
+    "FruP1FallOfFaithScenario": {
+      "plans": [],
+      "sources": [
+        {
+          "label": "NAUR LesBin - Entire phase - Role + Fixed Tether OR Role ONLY Utopia, Conga FoF",
+          "url": "https://docs.google.com/presentation/d/1Pm3BkfrJqjcm7688RrNDdh4oYuYS_VmHr6ALqjbZInE/edit#slide=id.g319371557f7_0_162"
+        }
+      ],
+      "rules": []
+    },
     "FruP2DiamondDustScenario": {
       "plans": [],
       "sources": [
