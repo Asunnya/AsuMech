@@ -18,7 +18,7 @@ public sealed class DalamudServices
         Install(nameof(Plugin.ToastGui), DispatchProxy.Create<IToastGui, NullService>());
     }
 
-    internal static void Install(string property, object service)
+    internal static void Install(string property, object? service)
         => typeof(Plugin).GetProperty(property, BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, service);
 
     public class NullService : DispatchProxy

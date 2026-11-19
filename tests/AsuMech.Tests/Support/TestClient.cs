@@ -10,9 +10,10 @@ using Dalamud.Plugin.Services;
 namespace AsuMech.Tests;
 
 // One player's game client: its own fake game, Game and MultiplayerManager. Natives and Plugin's
-// services are process-wide, so a client points them at its own for each call into it. Its
-// timeline is stamped with the relay's clock, which every client shares: a client's own run clock
-// only starts with its run, after it has already shown the host's first packets.
+// services are process-wide, so a client points them at its own for each call into it, and puts
+// Plugin's back after so its session never outlives the test. Its timeline is stamped with the
+// relay's clock, which every client shares: a client's own run clock only starts with its run,
+// after it has already shown the host's first packets.
 internal sealed class TestClient
 {
     private static readonly IObjectTable NoObjects = DispatchProxy.Create<IObjectTable, DalamudServices.NullService>();
@@ -51,6 +52,7 @@ internal sealed class TestClient
         Fake.BattleCharas.Player.ClassJob = PartyPresets.Standard[(int)seat].ClassJob;
         Game? game = null;
         Log = TraceLog.Create(() => game?.Events.Elapsed ?? 0f);
+        var outside = Outside();
         Fake.Activate();
         InstallServices();
         Game = game = new Game();
@@ -60,14 +62,14 @@ internal sealed class TestClient
         Multiplayer.StreamTaken += (from, message) => StreamTaken.Add((relay.Now, from, message));
         Fake.Timeline.Clock = () => (float)relay.Now;
         InstallServices();
-        Deactivate();
+        Deactivate(outside);
     }
 
     public void Do(Action action)
     {
-        Activate();
+        var outside = Activate();
         try { action(); }
-        finally { Deactivate(); }
+        finally { Deactivate(outside); }
     }
 
     // A frame in Plugin.OnFrameworkUpdate's order.
@@ -111,12 +113,22 @@ internal sealed class TestClient
         if (history.Count == 0 || history[^1].Name != name) history.Add((history.Count == 0 ? double.NegativeInfinity : at, name));
     }
 
-    private void Activate()
+    private static readonly string[] Services =
+    [
+        nameof(Plugin.Framework), nameof(Plugin.Log), nameof(Plugin.Config), nameof(Plugin.ObjectTable), nameof(Plugin.Game), nameof(Plugin.Multiplayer),
+    ];
+
+    private static object?[] Outside()
+        => Services.Select(name => typeof(Plugin).GetProperty(name, BindingFlags.NonPublic | BindingFlags.Static)!.GetValue(null)).ToArray();
+
+    private object?[] Activate()
     {
+        var outside = Outside();
         natives.Restore();
         DalamudServices.Install(nameof(Plugin.Framework), Fake.Framework);
         InstallServices();
         DebugBotControl.Enabled = botControl;
+        return outside;
     }
 
     private void InstallServices()
@@ -128,9 +140,10 @@ internal sealed class TestClient
         if (Multiplayer != null) DalamudServices.Install(nameof(Plugin.Multiplayer), Multiplayer);
     }
 
-    private void Deactivate()
+    private void Deactivate(object?[] outside)
     {
         natives.Capture();
         botControl = DebugBotControl.Enabled;
+        for (var i = 0; i < Services.Length; i++) DalamudServices.Install(Services[i], outside[i]);
     }
 }
