@@ -12,7 +12,7 @@
       "key": {
         "cls": "M12sFinaleAi",
         "time": 0.5,
-        "line": 23
+        "line": 25
       },
       "title": "Tank north, party south",
       "cue": "Lindwurm appears",
@@ -29,17 +29,37 @@
       "key": {
         "cls": "M12sFinaleAi",
         "time": 17.009998,
-        "line": 24
+        "line": 26
       },
-      "title": "Tanks spread out of the second kick",
+      "title": "Tanks wait south of the second kick",
       "cue": "The first Double Sobat kick lands",
-      "rule": "Stay stacked behind the boss on waymark 3. The second kick hits north again and Esoteric Finisher drops a circle on each tank.",
+      "rule": "Stay stacked behind the boss on waymark 3. The second kick hits the whole north half again.",
       "roles": {
         "MainTank": {
-          "rule": "Sprint north-west, out of the narrow second kick that follows the first, and take your Esoteric Finisher circle there."
+          "rule": "Sprint south-west, just past the centre line, out of the second kick that follows the first."
         },
         "OffTank": {
-          "rule": "Go north-east, away from the party and the main tank, and take your Esoteric Finisher circle there."
+          "rule": "Wait just south-east of the centre, out of the second kick."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "M12sFinaleAi",
+        "time": 21.55,
+        "line": 27
+      },
+      "title": "Tanks take the Finisher north",
+      "cue": "The first Double Sobat kick lands",
+      "rule": "Stay stacked behind the boss on waymark 3: Esoteric Finisher drops a circle on each tank.",
+      "roles": {
+        "MainTank": {
+          "rule": "As soon as the second kick lands, sprint north-west and take your Finisher circle away from the party."
+        },
+        "OffTank": {
+          "rule": "As soon as the second kick lands, sprint north-east and take your Finisher circle away from the party."
         }
       },
       "tolerance": 2.0,
@@ -49,7 +69,7 @@
       "key": {
         "cls": "M12sFinaleAi",
         "time": 24.75,
-        "line": 25
+        "line": 28
       },
       "title": "Back to tank north, party south",
       "cue": "Esoteric Finisher lands",

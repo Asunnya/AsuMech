@@ -11,7 +11,6 @@ namespace AsuMech.Scenarios.M12s;
 
 public static class M12sActions
 {
-    public const float DoubleSobatSecondHalfAngle = MathF.PI / 4f;
     public const float DoubleSobatHalfAngle = MathF.PI / 2f;
     public const float WindPush = 25f;
     public const float HotBloodedSeconds = 5f;
@@ -746,7 +745,7 @@ public static class M12sActions
     public static readonly EnemyAction DoubleSobatSecond = new(ActionId.DoubleSobatSecond)
     {
         Cast = new() { AnimationLock = 0.6f, FaceTarget = false, CastSecondsOverride = 4.3f },
-        Area = new() { Size = DoubleSobatSecondHalfAngle },
+        Area = new() { Size = HalfRoom },
         Effects = [Damage(Lethal)],
         Timing = new() { DamageDelay = 0.4f },
         DeathExplanation = "the second kick follows the first: step out of it",
