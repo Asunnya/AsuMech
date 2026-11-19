@@ -3,7 +3,6 @@ using System.Numerics;
 using System.Text.RegularExpressions;
 using AsuMech.Core.Game.Party;
 using AsuMech.Scenarios;
-using AsuMech.Scenarios.Tea.P1LivingLiquid;
 
 namespace AsuMech.Tests;
 
@@ -42,18 +41,7 @@ public partial class DebugBotReplayTests
     [TestCaseSource(nameof(FirstStrats))]
     public void EveryBotPeerWalksWhereTheHostsAiSendsItsSeatAfterAReset(Type scenarioType) => Verify(scenarioType, 0, runs: 2);
 
-    // Strats that still read what a peer is shown a round trip late.
-    private static readonly Dictionary<Type, string> PlaysOnWhatALongLineShowsLate = new()
-    {
-        [typeof(TeaP1LivingLiquidScenario)] = "a peer logs its opening moves 0.3 s before the host's Ai does (cause not looked into yet)",
-    };
-
-    private static IEnumerable<TestCaseData> FirstStratsOverALongLine() =>
-        from data in FirstStrats()
-        let type = (Type)data.Arguments[0]!
-        select PlaysOnWhatALongLineShowsLate.TryGetValue(type, out var why) ? data.Ignore(why) : data;
-
-    [TestCaseSource(nameof(FirstStratsOverALongLine))]
+    [TestCaseSource(nameof(FirstStrats))]
     public void EveryBotPeerWalksWhereTheHostsAiSendsItsSeatOverALongLine(Type scenarioType) => Verify(scenarioType, 0, runs: 1, LongLine);
 
     private static void Verify(Type scenarioType, int strat, int runs, ConnectionProfile? peerLink = null)
