@@ -156,18 +156,18 @@
       "occurrence": 3
     },
     {
-      "actionId": 11137,
-      "name": "Aetheroplasm",
-      "start": 38.683,
-      "resolve": 38.683,
-      "occurrence": 4
-    },
-    {
       "actionId": 11143,
       "name": "Tank Purge",
       "start": 38.716,
       "resolve": 42.416,
       "occurrence": 1
+    },
+    {
+      "actionId": 11137,
+      "name": "Aetheroplasm",
+      "start": 38.966,
+      "resolve": 38.966,
+      "occurrence": 4
     },
     {
       "actionId": 11081,
@@ -254,6 +254,20 @@
       "occurrence": 1
     },
     {
+      "actionId": 7548,
+      "name": "Arm\u0027s Length",
+      "start": 74.801,
+      "resolve": 74.801,
+      "occurrence": 1
+    },
+    {
+      "actionId": 7559,
+      "name": "Surecast",
+      "start": 74.801,
+      "resolve": 74.801,
+      "occurrence": 1
+    },
+    {
       "actionId": 11090,
       "name": "Eye of the Storm",
       "start": 74.835,
@@ -292,6 +306,8 @@
     "Homing Lasers",
     "Radiant Plume",
     "Diffractive Laser",
+    "Arm\u0027s Length",
+    "Surecast",
     "Vulcan Burst",
     "Ultimate Suppression"
   ]

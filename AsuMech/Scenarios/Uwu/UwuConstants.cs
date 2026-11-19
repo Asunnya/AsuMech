@@ -225,6 +225,9 @@ public class UwuConstants
 
     public class KnockbackId
     {
+        public const uint SearingWind = 1;
+        public const uint VulcanBurst = 67;
+        public const uint Landslide = 111;
         public const uint SuperCyclone = 123;
     }
 

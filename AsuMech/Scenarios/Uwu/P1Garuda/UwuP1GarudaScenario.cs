@@ -29,10 +29,11 @@ public sealed class UwuP1GarudaScenario : IScenario
     private const float MistralSongLength = 40f;
     private static readonly MistralSongDamage GarudaSongDamage = new(Intercept: 0.59f, Behind: 0.60f);
     private static readonly MistralSongDamage SistersSongDamage = new(Intercept: 0.48f, Behind: 0.28f);
-    private const float MistralShriekDamage = 0.4f;
-    private const float AerialBlastDamage = 0.5f;
-    private const float FrictionDamage = 0.15f;
+    private const float MistralShriekDamage = 0.55f;
+    private const float AerialBlastDamage = 0.7f;
+    private const float FrictionDamage = 0.4f;
     private const float SuperCycloneDamage = 0.1f;
+    private const float SuperCycloneAwakenDamage = 0.45f;
     private const float SlipstreamHalfAngle = MathF.PI / 4f;
     private const float FrictionRadius = 5f;
     private const float EyeOfTheStormInner = 12f;
@@ -105,8 +106,8 @@ public sealed class UwuP1GarudaScenario : IScenario
         world.Events.Add(13.44f, () => CastGreatWhirlwind(GreatWhirlwindSpot.Boss));
         world.Events.Add(16.43f, () => ResolveGreatWhirlwind(GreatWhirlwindSpot.Boss));
 
+        world.Events.Add(18.50f, () => SpawnPlumes(state.SatinPlumesFirst, withSpiny: true));
         world.Events.Add(19.59f, () => CastGreatWhirlwind(GreatWhirlwindSpot.Boss));
-        world.Events.Add(20.33f, () => SpawnPlumes(state.SatinPlumesFirst, withSpiny: true));
         world.Events.Add(20.52f, FixateSpinyOnOffTank);
         world.Events.Add(20.61f, () => CastSelf(garuda, ActionId.Slipstream, 2.2f));
         world.Events.Add(22.57f, () => ResolveGreatWhirlwind(GreatWhirlwindSpot.Boss));
@@ -430,7 +431,7 @@ public sealed class UwuP1GarudaScenario : IScenario
         var awakening = stacks == MaxThermalLow - 1;
         PlayEffect(caster, awakening ? ActionId.SuperCycloneAwaken : ActionId.SuperCyclone, 1.1f);
         foreach (var hit in party.Find.InsideCircle(member.Position, 50f).ToList())
-            damage.ApplyDamage(hit, SuperCycloneDamage, ActionId.SuperCyclone, "Super Cyclone", false);
+            damage.ApplyDamage(hit, awakening ? SuperCycloneAwakenDamage : SuperCycloneDamage, ActionId.SuperCyclone, "Super Cyclone", false);
         if (!awakening) return;
         aetherialCharges++;
         garuda?.AddStatus(StatusId.AetheriallyCharged, 0f, 1);

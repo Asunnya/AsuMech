@@ -29,6 +29,25 @@ public class UltimateAnnihilationScenarioTests
             .TeleportAt(70.5f, to: new Vector2(0.5f, -10f))
             .ShouldKill(ActionId.DiffractiveLaser, RegenHealer);
 
+    [Test]
+    public void StandingBesideTheSearingWindHealerDiesToTheFirstPulse()
+    {
+        var run = ScenarioRun.Execute(typeof(UltimateAnnihilationScenario), 0, 1234, new ScenarioRunOptions
+        {
+            PlayerRole = MeleeDpsA,
+            StopAt = 31f,
+            WriteArtifactsOnFailure = false,
+            Takeovers = [new Takeover(29f, null)],
+            Probe = probe =>
+            {
+                if (!probe.Crossed(29.1f)) return;
+                var holder = probe.World.Party.ActiveMembers().First(m => m.HasStatus(StatusId.SearingWind));
+                probe.Member(MeleeDpsA)!.SetPosition(holder.Position + new Vector3(2f, 0f, 0f));
+            },
+        });
+        Assert.That(run.Deaths.Select(d => (d.Role, d.ActionId)), Is.EqualTo(new[] { (MeleeDpsA, ActionId.SearingWind) }));
+    }
+
     [TestCase(true, 60f, 70f)]
     [TestCase(false, 80f, 90f)]
     public void SuppressionComesSoonerWhenUltimaIsPushedBelowHalf(bool pushed, float endsAfter, float endsBefore)

@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using AsuMech.Core;
 using AsuMech.Core.Game;
 using AsuMech.Core.SimObjects;
+using AsuMech.Core.UserActions;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using AsuMech.Scenarios.Legacy;
@@ -66,6 +68,23 @@ public partial class UwuUtils
     {
         foreach (var hit in snapshot.Where(h => !h.HasStatus(StatusId.Fetters)).ToList())
             damage.ApplyDamage(hit, 1f, actionId, context, lethal: true);
+    }
+
+    // Vulcan Burst's push away from its caster, for everyone no knockback immunity covers.
+    public static void VulcanBurstKnockback(SimParty party, Vector3 source)
+    {
+        if (!KnockbackLookup.TryGet(KnockbackId.VulcanBurst, out var distance, out var speed)) return;
+        foreach (var member in party.ActiveMembers().Where(m => !KnockbackImmunity.Has(m)).ToList())
+            member.Knockback(source, distance, speed);
+    }
+
+    // Lethal around its holder, sparing the holder; whoever outlives it is thrown clear.
+    public static void SearingWind(DamageSolver damage, SimCharacter holder)
+    {
+        var hits = damage.Resolve(holder, ActionId.SearingWind, [DamageType.Lethal], [], excludeTargets: [holder]);
+        if (!KnockbackLookup.TryGet(KnockbackId.SearingWind, out var distance, out var speed)) return;
+        foreach (var hit in hits.Where(h => h.IsAlive()))
+            hit.Knockback(holder.Position, distance, speed);
     }
 
     public void ResolveSnapshot(IReadOnlyList<SimCharacter> snapshot, uint actionId)
@@ -328,11 +347,9 @@ public partial class UwuUtils
 
             Cast(getDummy, castOffset, castInfo, effectOffset, actionEffectInfo, dynamicInfo, 0.73f, snapshot =>
             {
+                if (!KnockbackLookup.TryGet(KnockbackId.Landslide, out var distance, out var speed)) return;
                 foreach (var character in snapshot)
-                {
-                    // TODO: "30" and "50" are from Titan EX, but doubled. Need to find the proper UWU values.
-                    character.Knockback(getEnemy()!.Position, 30, 50);
-                }
+                    character.Knockback(getEnemy()!.Position, distance, speed);
             });
         }
     }

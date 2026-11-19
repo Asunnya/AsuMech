@@ -5,6 +5,7 @@ using System.Numerics;
 using AsuMech.Core.Game.Ai;
 using AsuMech.Core.Game.Party;
 using AsuMech.Core.SimObjects;
+using AsuMech.Core.UserActions;
 
 namespace AsuMech.Scenarios.Uwu.UltimateAnnihilation;
 
@@ -78,7 +79,7 @@ public class UltimateAnnihilationAi : IScenarioAi<UltimateAnnihilationState>
         ai.Move(28.8f, () => Plan(Group(null, new(-1.5f, -15.5f), new(1f, -16.5f))));
         ai.Move(29.2f, () => Plan(Only(state.FirstMesohighTaker, NorthEdge)));
         ai.Move(31.8f, () => Plan(SearingWindHoldsStill(Group(NorthWestOutOfLines, new(-8.5f, -10f), new(7.5f, -11f)))));
-        ai.Move(32.2f, () => Plan(Only(state.SearingWindTarget, new(9f, 11f))));
+        ai.Move(32.2f, () => Plan(Only(state.SearingWindTarget, SouthBetweenTitansLinesTowardIfrit)));
         ai.Move(35.3f, () => Plan(Group(NorthWestStack, NorthWestStack, OffTankOrb, searingWind: new(0f, 10.5f))));
         ai.Move(40.3f, () => Plan(Only(PartyRole.MainTank, new(-2.5f, -6f))));
         ai.Move(43.02f, () => AheadOfFeatherRain(43.02f, 44.22f,
@@ -89,6 +90,8 @@ public class UltimateAnnihilationAi : IScenarioAi<UltimateAnnihilationState>
         if (!state.UltimaAboveHalf) return;
         ai.Move(66.4f, () => Plan(Group(OutOfTheRadiantPlumes, new(0f, -16f), new(10.5f, -10.5f))));
         ai.Move(69.4f, () => Plan(Group(WestOfTheDiffractiveLaser, new(0.5f, -8.3f), new(6.5f, -4.5f))));
+        foreach (var role in PerRole.All)
+            ai.UseAction(74.8f, role, KnockbackImmunity.ActionId);
     }
 
     private IAiMove AheadOfFeatherRain(float now, float landsAt, Vector2?[] spots)
@@ -256,6 +259,8 @@ public class UltimateAnnihilationAi : IScenarioAi<UltimateAnnihilationState>
             if (spots[slot] is { } spot) planned[slot] = spot;
         return AiMove.Create(spots).NaturalOrder();
     }
+
+    private Vector2 SouthBetweenTitansLinesTowardIfrit => new(state.IfritSouthWest ? -7.5f : 7.5f, 15f);
 
     private PartyRole OtherHealer =>
         state.SearingWindTarget == PartyRole.RegenHealer ? PartyRole.ShieldHealer : PartyRole.RegenHealer;

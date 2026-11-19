@@ -13,8 +13,7 @@ public static class UwuActions
     private static readonly AreaSpec SparesGaoled = new() { AdjustTargets = (_, hits) =>
         hits.Where(h => !h.HasStatus(StatusId.Fetters)).ToList() };
 
-    // TODO: find proper delay and knockbackId; a push until the row is known
-    private static readonly IEnemyActionEffect LandslideKnockback = Push(distance: 30, speed: 50, pushDelay: 0.7f);
+    private static readonly IEnemyActionEffect LandslideKnockback = Knockback(KnockbackId.Landslide, knockbackDelay: 0.7f);
 
     // -- Shared --
     public static readonly EnemyAction FeatherRain = new(ActionId.FeatherRain)

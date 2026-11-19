@@ -255,8 +255,7 @@ public class UltimatePredationScenario : IMultiplayerReplayable
 
         world.Events.Add(55.09f, () =>
         {
-            var bait = state.UltimaLandslideBait is { } role ? party.Get(role) : party.GetRandom(world.Rng);
-            ultima?.Face(bait);
+            ultima?.Face(mt);
             ultima?.Cast(ActionId.LandslideUltima, animationLock: 2.1f);
         });
 

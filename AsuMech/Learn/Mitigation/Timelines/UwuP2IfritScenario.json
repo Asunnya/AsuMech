@@ -23,6 +23,20 @@
       "occurrence": 1
     },
     {
+      "actionId": 7548,
+      "name": "Arm\u0027s Length",
+      "start": 22.516,
+      "resolve": 22.516,
+      "occurrence": 1
+    },
+    {
+      "actionId": 7559,
+      "name": "Surecast",
+      "start": 22.516,
+      "resolve": 22.516,
+      "occurrence": 1
+    },
+    {
       "actionId": 11095,
       "name": "Vulcan Burst",
       "start": 23.566,
@@ -370,6 +384,8 @@
     "Crimson Cyclone",
     "Radiant Plume",
     "Hellfire",
+    "Arm\u0027s Length",
+    "Surecast",
     "Vulcan Burst",
     "Incinerate",
     "Inferno Howl",
