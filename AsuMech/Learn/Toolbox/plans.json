@@ -608,5 +608,12 @@
       "url": "https://raidplan.io/plan/Y4WRFLhdHSQ7oLN_",
       "credits": "NAUR (Raidplan: Golden Bahamut)"
     }
+  ],
+  "UmadP2TrinesScenario": [
+    {
+      "url": "https://raidplan.io/plan/apkh6ytq72w8pt3v",
+      "credits": "NAUR Kefkabin (Strat: Trines (party N CW, tanks NW CCW) (Raidplan))",
+      "strat": "Party first CW, tanks near and far"
+    }
   ]
 }

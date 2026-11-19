@@ -17,7 +17,7 @@ Each phase lists the other names PF may use for the same strat.
 ------------------------------------------------------------------------
 Phase 1
 ------------------------------------------------------------------------
-@scenarios: UmadP1TeleTrouncingScenario
+@scenarios: UmadP1OpeningScenario, UmadP1TeleTrouncingScenario
 Strat: Merry-Go-Round
   Slides: https://docs.google.com/presentation/d/1-E2rEKa586KKiVNvtt3EAMQY2YAEVBRGcMX0WzORIq8/edit?usp=sharing
   PF names: Kefkabin, Merry-Go-Round, Fae Doc
@@ -31,14 +31,15 @@ Strat: AAABBBBA (3-4-1 melee flex)
   Raidplan: https://raidplan.io/plan/UATE__aDcw1-bgVv
   PF names: Kefkabin, AAABBBBA, Kroxy-Rinon, 341, Melee Flex
 
-@scenarios: -
+@scenarios: UmadP2TrinesScenario
+@strat: Party first CW, tanks near and far
 Strat: Trines (party N CW, tanks NW CCW)
   Raidplan: https://raidplan.io/plan/apkh6ytq72w8pt3v
 
 ------------------------------------------------------------------------
 Phase 3
 ------------------------------------------------------------------------
-@scenarios: UmadP3LimitCutScenario, UmadP3BlackHoleScenario
+@scenarios: UmadP3DecisiveBattleScenario, UmadP3LimitCutScenario, UmadP3BlackHoleScenario
 Strat: Tank LB3 BoA + Kefka-relative Blackholes
   Slides: https://docs.google.com/presentation/d/1w05ez7GscxTflgaMgVET42gjGryI2QSPR0zqRWXdWgI/edit?usp=sharing
   PF names: Kefkabin, Tank LB3 BoA, Old BH (Old Blackholes),

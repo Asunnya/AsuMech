@@ -29,6 +29,7 @@
           "kind": "slides",
           "section": "Phase 1",
           "scenarios": [
+            "UmadP1OpeningScenario",
             "UmadP1TeleTrouncingScenario"
           ]
         }
@@ -53,8 +54,10 @@
           "url": "https://raidplan.io/plan/apkh6ytq72w8pt3v",
           "kind": "raidplan.io",
           "section": "Phase 2",
-          "scenarios": [],
-          "strat": "Kroxy-Rinon 341 (melee flex)"
+          "scenarios": [
+            "UmadP2TrinesScenario"
+          ],
+          "strat": "Party first CW, tanks near and far"
         }
       ],
       "rules": []
@@ -68,6 +71,7 @@
           "kind": "slides",
           "section": "Phase 3",
           "scenarios": [
+            "UmadP3DecisiveBattleScenario",
             "UmadP3LimitCutScenario",
             "UmadP3BlackHoleScenario"
           ]
@@ -260,6 +264,16 @@
     }
   ],
   "scenarios": {
+    "UmadP1OpeningScenario": {
+      "plans": [],
+      "sources": [
+        {
+          "label": "NAUR Kefkabin - Strat: Merry-Go-Round (Slides)",
+          "url": "https://docs.google.com/presentation/d/1-E2rEKa586KKiVNvtt3EAMQY2YAEVBRGcMX0WzORIq8/edit?usp=sharing"
+        }
+      ],
+      "rules": []
+    },
     "UmadP1TeleTrouncingScenario": {
       "plans": [
         {
@@ -296,6 +310,33 @@
         {
           "label": "NAUR Kefkabin - Forsaken mini guide",
           "url": "https://www.youtube.com/watch?v=iBMu1q1dZcA"
+        }
+      ],
+      "rules": []
+    },
+    "UmadP2TrinesScenario": {
+      "plans": [
+        {
+          "url": "https://raidplan.io/plan/apkh6ytq72w8pt3v",
+          "credits": "NAUR Kefkabin (Strat: Trines (party N CW, tanks NW CCW) (Raidplan))",
+          "strat": "Party first CW, tanks near and far"
+        }
+      ],
+      "sources": [
+        {
+          "label": "NAUR Kefkabin - Strat: Trines (party N CW, tanks NW CCW) (Raidplan)",
+          "url": "https://raidplan.io/plan/apkh6ytq72w8pt3v",
+          "strat": "Party first CW, tanks near and far"
+        }
+      ],
+      "rules": []
+    },
+    "UmadP3DecisiveBattleScenario": {
+      "plans": [],
+      "sources": [
+        {
+          "label": "NAUR Kefkabin - Strat: Tank LB3 BoA + Kefka-relative Blackholes (Slides)",
+          "url": "https://docs.google.com/presentation/d/1w05ez7GscxTflgaMgVET42gjGryI2QSPR0zqRWXdWgI/edit?usp=sharing"
         }
       ],
       "rules": []

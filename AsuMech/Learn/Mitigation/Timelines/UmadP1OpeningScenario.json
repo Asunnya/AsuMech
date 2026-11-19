@@ -1,0 +1,304 @@
+{
+  "scenario": "UmadP1OpeningScenario",
+  "casts": [
+    {
+      "actionId": 50179,
+      "name": "Revolting Ruin III",
+      "start": 2.15,
+      "resolve": 6.85,
+      "occurrence": 1
+    },
+    {
+      "actionId": 50401,
+      "name": "Revolting Ruin III",
+      "start": 10.35,
+      "resolve": 10.35,
+      "occurrence": 2
+    },
+    {
+      "actionId": 50173,
+      "name": "",
+      "start": 16.533,
+      "resolve": 16.533,
+      "occurrence": 1
+    },
+    {
+      "actionId": 48370,
+      "name": "Graven Image",
+      "start": 18.15,
+      "resolve": 20.85,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47764,
+      "name": "Mystery Magic",
+      "start": 24.316,
+      "resolve": 29.015999,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47774,
+      "name": "Blizzard III Blowout",
+      "start": 24.316,
+      "resolve": 29.015999,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47771,
+      "name": "Blizzard III Blowout",
+      "start": 24.316,
+      "resolve": 29.015999,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47785,
+      "name": "Pulse Wave",
+      "start": 26.966,
+      "resolve": 26.966,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47779,
+      "name": "Flagrant Fire III",
+      "start": 30.1,
+      "resolve": 30.1,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47782,
+      "name": "Double-trouble Trap",
+      "start": 33.483,
+      "resolve": 36.183002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47784,
+      "name": "Wave Cannon",
+      "start": 34.333,
+      "resolve": 34.333,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47786,
+      "name": "Explosion",
+      "start": 35,
+      "resolve": 37.7,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47764,
+      "name": "Mystery Magic",
+      "start": 40.583,
+      "resolve": 45.283,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47771,
+      "name": "Blizzard III Blowout",
+      "start": 40.583,
+      "resolve": 45.283,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47774,
+      "name": "Blizzard III Blowout",
+      "start": 40.583,
+      "resolve": 45.283,
+      "occurrence": 4
+    },
+    {
+      "actionId": 47775,
+      "name": "Thrumming Thunder III",
+      "start": 40.583,
+      "resolve": 45.283,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47783,
+      "name": "Double-trouble Trap",
+      "start": 41.6,
+      "resolve": 41.6,
+      "occurrence": 2
+    },
+    {
+      "actionId": 50722,
+      "name": "Light of Judgment",
+      "start": 49.666,
+      "resolve": 54.366,
+      "occurrence": 1
+    },
+    {
+      "actionId": 49739,
+      "name": "Hyperdrive",
+      "start": 57.816,
+      "resolve": 57.816,
+      "occurrence": 1
+    },
+    {
+      "actionId": 49739,
+      "name": "Hyperdrive",
+      "start": 59.916,
+      "resolve": 59.916,
+      "occurrence": 2
+    },
+    {
+      "actionId": 49739,
+      "name": "Hyperdrive",
+      "start": 62.016,
+      "resolve": 62.016,
+      "occurrence": 3
+    },
+    {
+      "actionId": 50173,
+      "name": "",
+      "start": 67.8,
+      "resolve": 67.8,
+      "occurrence": 2
+    },
+    {
+      "actionId": 48370,
+      "name": "Graven Image",
+      "start": 69.234,
+      "resolve": 71.934,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47765,
+      "name": "Blizzard III Blowout",
+      "start": 74.385,
+      "resolve": 79.085,
+      "occurrence": 5
+    },
+    {
+      "actionId": 47771,
+      "name": "Blizzard III Blowout",
+      "start": 74.385,
+      "resolve": 79.085,
+      "occurrence": 6
+    },
+    {
+      "actionId": 47774,
+      "name": "Blizzard III Blowout",
+      "start": 74.385,
+      "resolve": 79.085,
+      "occurrence": 7
+    },
+    {
+      "actionId": 47788,
+      "name": "Gravitas",
+      "start": 79.469,
+      "resolve": 79.469,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47792,
+      "name": "Vitrophyre",
+      "start": 83.503,
+      "resolve": 83.503,
+      "occurrence": 1
+    },
+    {
+      "actionId": 50179,
+      "name": "Revolting Ruin III",
+      "start": 84.254,
+      "resolve": 88.953995,
+      "occurrence": 3
+    },
+    {
+      "actionId": 50401,
+      "name": "Revolting Ruin III",
+      "start": 92.439,
+      "resolve": 92.439,
+      "occurrence": 4
+    },
+    {
+      "actionId": 47793,
+      "name": "Gravitational Wave",
+      "start": 93.305,
+      "resolve": 93.305,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47788,
+      "name": "Gravitas",
+      "start": 97.923,
+      "resolve": 97.923,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47792,
+      "name": "Vitrophyre",
+      "start": 101.941,
+      "resolve": 101.941,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47793,
+      "name": "Gravitational Wave",
+      "start": 106.442,
+      "resolve": 106.442,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47783,
+      "name": "Double-trouble Trap",
+      "start": 110.226,
+      "resolve": 110.226,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47791,
+      "name": "Gravity III",
+      "start": 112.643,
+      "resolve": 112.643,
+      "occurrence": 1
+    },
+    {
+      "actionId": 50722,
+      "name": "Light of Judgment",
+      "start": 119.461,
+      "resolve": 124.160995,
+      "occurrence": 2
+    },
+    {
+      "actionId": 49739,
+      "name": "Hyperdrive",
+      "start": 127.613,
+      "resolve": 127.613,
+      "occurrence": 4
+    },
+    {
+      "actionId": 49739,
+      "name": "Hyperdrive",
+      "start": 129.712,
+      "resolve": 129.712,
+      "occurrence": 5
+    },
+    {
+      "actionId": 49739,
+      "name": "Hyperdrive",
+      "start": 131.812,
+      "resolve": 131.812,
+      "occurrence": 6
+    }
+  ],
+  "names": [
+    "Revolting Ruin III",
+    "",
+    "Graven Image",
+    "Mystery Magic",
+    "Blizzard III Blowout",
+    "Pulse Wave",
+    "Flagrant Fire III",
+    "Double-trouble Trap",
+    "Wave Cannon",
+    "Explosion",
+    "Thrumming Thunder III",
+    "Light of Judgment",
+    "Hyperdrive",
+    "Gravitas",
+    "Vitrophyre",
+    "Gravitational Wave",
+    "Gravity III"
+  ]
+}

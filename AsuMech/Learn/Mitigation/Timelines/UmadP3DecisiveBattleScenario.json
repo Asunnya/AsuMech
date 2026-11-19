@@ -1,0 +1,145 @@
+{
+  "scenario": "UmadP3DecisiveBattleScenario",
+  "casts": [
+    {
+      "actionId": 47842,
+      "name": "Definition of Insanity",
+      "start": 2.517,
+      "resolve": 6.217,
+      "occurrence": 1
+    },
+    {
+      "actionId": 49890,
+      "name": "the Decisive Battle",
+      "start": 9.65,
+      "resolve": 12.349999,
+      "occurrence": 1
+    },
+    {
+      "actionId": 49891,
+      "name": "the Decisive Battle",
+      "start": 9.7,
+      "resolve": 12.4,
+      "occurrence": 2
+    },
+    {
+      "actionId": 50516,
+      "name": "",
+      "start": 13.933,
+      "resolve": 16.633,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47858,
+      "name": "Bowels of Agony",
+      "start": 27.133,
+      "resolve": 31.833,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47890,
+      "name": "Thunder III",
+      "start": 44.316,
+      "resolve": 51.016003,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47859,
+      "name": "Stray Flames",
+      "start": 51.183,
+      "resolve": 51.183,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47860,
+      "name": "Inferno",
+      "start": 52.216,
+      "resolve": 52.216,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47881,
+      "name": "Thunder III",
+      "start": 55.416,
+      "resolve": 60.116,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47884,
+      "name": "Thunder III",
+      "start": 60.466,
+      "resolve": 60.466,
+      "occurrence": 3
+    },
+    {
+      "actionId": 47884,
+      "name": "Thunder III",
+      "start": 63.499,
+      "resolve": 63.499,
+      "occurrence": 4
+    },
+    {
+      "actionId": 50517,
+      "name": "",
+      "start": 66.166,
+      "resolve": 66.166,
+      "occurrence": 2
+    },
+    {
+      "actionId": 49878,
+      "name": "Trance",
+      "start": 68.25,
+      "resolve": 71.85,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47869,
+      "name": "Longitudinal Implosion",
+      "start": 68.3,
+      "resolve": 73,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47871,
+      "name": "Shockwave",
+      "start": 74.001,
+      "resolve": 74.001,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47871,
+      "name": "Shockwave",
+      "start": 76.018,
+      "resolve": 76.018,
+      "occurrence": 2
+    },
+    {
+      "actionId": 47862,
+      "name": "Stray Spray",
+      "start": 78.202,
+      "resolve": 78.202,
+      "occurrence": 1
+    },
+    {
+      "actionId": 47861,
+      "name": "Tsunami",
+      "start": 79.219,
+      "resolve": 79.219,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Definition of Insanity",
+    "the Decisive Battle",
+    "",
+    "Bowels of Agony",
+    "Thunder III",
+    "Stray Flames",
+    "Inferno",
+    "Trance",
+    "Longitudinal Implosion",
+    "Shockwave",
+    "Stray Spray",
+    "Tsunami"
+  ]
+}
