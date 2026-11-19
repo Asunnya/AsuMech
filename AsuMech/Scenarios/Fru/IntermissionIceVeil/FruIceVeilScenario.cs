@@ -20,6 +20,12 @@ public sealed class FruIceVeilScenario : IScenario
     public IReadOnlyList<IScenarioAi> AiStrats => [new FruIceVeilAi()];
 
     private const float RayTetherSeconds = 5.16f;
+    private const float PuddleShowsAfterRay = 0.53f;
+    // UNVERIFIED: when it starts to hurt, and that it bleeds like P2's light puddles.
+    private const float PuddleArmsAfterShowing = 1.5f;
+    private const float PuddleFadesAfterShowing = 8.85f;
+    private const float PuddleLastsAfterShowing = 12.07f;
+    private const float PuddleRadius = 4f;
 
     private SimWorld world = null!;
     private FruIceVeilState state = null!;
@@ -28,6 +34,7 @@ public sealed class FruIceVeilScenario : IScenario
     private readonly SimEnemy?[] darks = new SimEnemy?[4];
     private readonly Dictionary<SimEnemy, SimTether> veilTethers = [];
     private readonly SimCharacter?[] rayTargets = new SimCharacter?[4];
+    private readonly FruPuddles puddles = new(EObjId.HiemalRayPuddle, PuddleRadius);
 
     public void Run(SimWorld worldParam, int? selectedAi)
     {
@@ -37,6 +44,7 @@ public sealed class FruIceVeilScenario : IScenario
         Array.Clear(darks);
         veilTethers.Clear();
         Array.Clear(rayTargets);
+        puddles.Clear();
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<FruIceVeilState>)AiStrats[idx]).Run(state, world);
 
@@ -59,7 +67,15 @@ public sealed class FruIceVeilScenario : IScenario
         foreach (var at in BlizzardAt) world.Events.Add(at, SinboundBlizzard);
         foreach (var at in StormAt) world.Events.Add(at, HiemalStorm);
         world.Events.Add(LightTethersAt, TetherLightsToNearest);
-        foreach (var at in HiemalRayAt) world.Events.Add(at, HiemalRay);
+        for (var wave = 0; wave < HiemalRayAt.Length; wave++)
+        {
+            var w = wave;
+            var showsAt = HiemalRayAt[w] + PuddleShowsAfterRay;
+            world.Events.Add(HiemalRayAt[w], () => HiemalRay(w));
+            world.Events.Add(showsAt, () => puddles.Show(world, w));
+            world.Events.Add(showsAt + PuddleFadesAfterShowing, () => puddles.Fade(w));
+            world.Events.Add(showsAt + PuddleLastsAfterShowing, () => puddles.Remove(w));
+        }
         for (var light = 0; light < 4; light++)
         {
             var l = light;
@@ -159,11 +175,14 @@ public sealed class FruIceVeilScenario : IScenario
         }
     }
 
-    private void HiemalRay()
+    private void HiemalRay(int wave)
     {
         for (var i = 0; i < 4; i++)
             if (lights[i] is { } light && light.IsAlive() && rayTargets[i] is { } target && target.IsAlive())
+            {
                 light.CastFromHelper(Actions.HiemalRay, target, at: new Placement(light.Position, 0f));
+                puddles.Drop(wave, target, HiemalRayAt[wave] + PuddleShowsAfterRay + PuddleArmsAfterShowing);
+            }
     }
 
     private void LightFalls(int i)
@@ -221,6 +240,7 @@ public sealed class FruIceVeilScenario : IScenario
 
     public void Tick(float delta, float elapsed)
     {
+        puddles.BleedWhoeverStandsIn(world, elapsed, "stood in a Hiemal Ray puddle (move off it after each ray)");
         for (var i = 0; i < 4; i++)
             if (lights[i] is { } light && light.IsAlive() && !light.HasStatus(StatusId.VulnerabilityDown))
                 light.SetHpFraction(Remaining(elapsed, CrystalsTetheredAt, state.LightFallsAt(i)));

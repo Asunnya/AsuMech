@@ -30,7 +30,7 @@ public sealed class FruP2DiamondDustScenario : IScenario
     private SimWorld world = null!;
     private FruP2DiamondDustState state = null!;
     private SimEnemy? usurper, mirror;
-    private readonly FruHolyPuddles puddles = new();
+    private readonly FruPuddles puddles = new(EObjId.HolyPuddle, 6f);
 
     public void Run(SimWorld worldParam, int? selectedAi)
     {
@@ -76,7 +76,7 @@ public sealed class FruP2DiamondDustScenario : IScenario
         {
             var w = wave;
             var showsAt = HolyAt(w) + PuddleShowsAfterHoly;
-            world.Events.Add(HolyAt(w) - FruHolyPuddles.SnapshotBeforeHit, SnapshotHolyTargets);
+            world.Events.Add(HolyAt(w) - FruPuddles.SnapshotBeforeHit, SnapshotHolyTargets);
             world.Events.Add(HolyAt(w), () => SinboundHoly(w));
             world.Events.Add(showsAt, () => puddles.Show(world, w));
             world.Events.Add(PuddleFadesAt(w), () => puddles.Fade(w));

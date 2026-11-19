@@ -556,6 +556,7 @@ public static class FruConstants
     {
         // ExportedSG 38437: sgvf_n4gw_b3555.sgb.
         public const uint HolyPuddle = 0x1EBC4F;
+        public const uint HiemalRayPuddle = 0x1EA1CB;
         // ExportedSG 38841: sgvf_w_btl_b3566.sgb.
         public const uint DragonPuddle = 0x1EBD41;
         public const uint ApocalypseLight = 0x1EB0FF;

@@ -45,7 +45,7 @@ public sealed class FruP2LightRampantAi : IScenarioAi<FruP2LightRampantState>
         ai.Move(37.15f, () => ByRole(ClockSpot), arrivalTime: 45.9f);
     }
 
-    private static float HammerSnapshotAt(int wave) => HammerAt(wave) - FruHolyPuddles.SnapshotBeforeHit;
+    private static float HammerSnapshotAt(int wave) => HammerAt(wave) - FruPuddles.SnapshotBeforeHit;
 
     private int Stacks(PartyRole role) => world.Party.Get(role)?.FindStatus(StatusId.Lightsteeped)?.Stacks ?? 0;
 

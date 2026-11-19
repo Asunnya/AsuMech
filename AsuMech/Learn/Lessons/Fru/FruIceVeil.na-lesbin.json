@@ -87,12 +87,12 @@
       "key": {
         "cls": "FruIceVeilAi",
         "from": 45.17,
-        "to": 61.809998,
+        "to": 55.21,
         "line": 33
       },
       "title": "Sidestep the Hiemal Storms",
       "cue": "Hiemal Storm cast starts",
-      "rule": "Each Hiemal Storm drops on the player nearest your Crystal of Light, which is you: as it starts, cross 8m along the wall to the other side of your crystal, first counter-clockwise, then back, until your crystal is destroyed. You also take your crystal's Hiemal Ray tether.",
+      "rule": "Each Hiemal Storm drops on the player nearest your Crystal of Light, which is you: as it starts, cross 8m along the wall to the other side of your crystal, first counter-clockwise, then back. You also take your crystal's Hiemal Ray tether: the first ray lands where the fourth storm sends you from, the second where it sends you to.",
       "roles": {
         "MainTank": {
           "rule": "Alternate west and east of the north crystal."
@@ -113,13 +113,64 @@
     {
       "key": {
         "cls": "FruIceVeilAi",
-        "from": 58.85,
-        "to": 63.67,
-        "line": 39
+        "time": 57.86,
+        "line": 36
       },
-      "title": "Your crystal is down: move in",
-      "cue": "Your Crystal of Light is destroyed",
-      "rule": "Once your Crystal of Light falls, walk in to 7m on your cardinal, toward the Ice Veil.",
+      "title": "Walk in from the ray puddles",
+      "cue": "Second Hiemal Ray lands",
+      "rule": "Every Hiemal Ray leaves an ice puddle under you that hurts a moment later. Right after the second ray, leave the wall and walk in to 7m on your cardinal, toward the Ice Veil: the third ray and the next storm drop on your way in, behind you.",
+      "roles": {
+        "MainTank": {
+          "rule": "Just inside waymark A, north."
+        },
+        "MeleeDpsA": {
+          "rule": "Just inside waymark B, east."
+        },
+        "OffTank": {
+          "rule": "Just inside waymark C, south."
+        },
+        "MeleeDpsB": {
+          "rule": "Just inside waymark D, west."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruIceVeilAi",
+        "time": 61.81,
+        "line": 37
+      },
+      "title": "Last storm: step through the centre",
+      "cue": "Hiemal Storm cast starts while your Crystal of Light still stands",
+      "rule": "If your Crystal of Light is still up for the last Hiemal Storm, it drops on you at 7m: step across to 1m past the centre until it goes off.",
+      "roles": {
+        "MainTank": {
+          "rule": "1m past the centre, south of it."
+        },
+        "MeleeDpsA": {
+          "rule": "1m past the centre, west of it."
+        },
+        "OffTank": {
+          "rule": "1m past the centre, north of it."
+        },
+        "MeleeDpsB": {
+          "rule": "1m past the centre, east of it."
+        }
+      },
+      "tolerance": 2.0,
+      "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruIceVeilAi",
+        "time": 65.06,
+        "line": 38
+      },
+      "title": "Back to the Ice Veil",
+      "cue": "Last Hiemal Storm goes off",
+      "rule": "Stand at 7m on your cardinal, toward the Ice Veil, until it falls.",
       "roles": {
         "MainTank": {
           "rule": "Just inside waymark A, north."
