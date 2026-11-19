@@ -55,7 +55,7 @@ public sealed class UcobP2NaelScenario : ISectionedScenario
     public const float DalamudDive = 19.95f;
     public static readonly float[] ClawStarts = [22.10f, 58.68f, 94.96f];
     private const float ClawInterval = 0.805f;
-    public const float DragonsArrive = 28.04f;
+    public const float DragonsArrive = 28.33f;
     private const float BahamutsFavor = 28.18f;
     public static readonly float[] ThunderMarks = [38.18f, 63.33f, 82.48f, 109.62f];
     public const float ThunderstruckAfterMark = 1.03f;
@@ -79,12 +79,14 @@ public sealed class UcobP2NaelScenario : ISectionedScenario
     private const float CleanseGoneAfterTaken = 3.1f;
     public static readonly float[] Deathstorms = [48.19f, 77.34f, 113.47f];
     public const float DoomAfterDeathstorm = 1.03f;
-    public const float RavensbeakCast = 130.36f;
+    public const float RavensbeakCast = 130.45f;
     private const float RavensbeakCastSeconds = 3.7f;
-    public const float NaelUntargetable = 136.41f;
-    public const float LeaveAnimations = 136.50f;
-    public const float DragonsLeave = 138.59f;
-    public const float End = 139f;
+    // It lands a moment after its cast bar fills.
+    public const float RavensbeakLands = 3.99f;
+    public const float NaelUntargetable = 136.79f;
+    public const float LeaveAnimations = 136.88f;
+    public const float DragonsLeave = 138.97f;
+    public const float End = 139.38f;
 
     public const float CauterizeCastSeconds = 4f;
     public const float HypernovaPuddleAppears = 1.08f;
@@ -94,18 +96,20 @@ public sealed class UcobP2NaelScenario : ISectionedScenario
 
     // The fourth quote and the first marker come 5.2s after Ravensbeak lands; a dragon locks its line as
     // it starts its cast.
-    public const float DivebombQuoteAt = 139.26f;
-    public static readonly float[] DivebombMarkers = [139.26f, 143.26f, 147.26f];
-    public static readonly float[] DivebombLocks = [146.66f, 150.66f, 154.66f];
-    public static readonly float[] Hypernovas = [144.46f, 146.06f, 147.66f, 149.26f];
+    public const float DivebombQuoteAt = 139.61f;
+    public static readonly float[] DivebombMarkers = [139.61f, 143.62f, 147.63f];
+    public static readonly float[] Hypernovas = [144.90f, 146.46f, 148.13f, 149.69f];
+    public static readonly float[] DivebombLocks = [146.90f, 150.95f, 154.90f];
     // UNVERIFIED: when she leaves for the dive.
-    public const float NaelLeavesForTheDive = 151f;
-    private const float NaelGone = 153f;
-    public static readonly float[] DivebombQuoteMoves = [153.96f, 156.26f];
-    public const float DivebombClaw = 161.46f;
+    public const float NaelLeavesForTheDive = 151.35f;
+    private const float NaelGone = 153.35f;
+    public const float DivebombQuoteFirstMove = 154.38f;
+    // Meteor Stream's dive follows it later than Dalamud Dive's beam follows the dive.
+    public static float DivebombQuoteSecondMove(NaelQuote quote) => DivebombQuoteFirstMove + (quote.First == NaelMove.MeteorStream ? 3.15f : 2.3f);
+    public const float DivebombClaw = 161.76f;
     // The fifth and sixth quotes that come before it are left out.
-    public const float FinalRavensbeakCast = 165.5f;
-    public const float DivebombsEnd = 171f;
+    public const float FinalRavensbeakCast = 165.85f;
+    public const float DivebombsEnd = 171.35f;
 
     // Checked just before the status itself runs out and is gone.
     private const float DoomCheckLead = 0.05f;
@@ -163,10 +167,10 @@ public sealed class UcobP2NaelScenario : ISectionedScenario
             var targets = state.MeteorOrder.Skip(4 * i).Take(4).ToList();
             world.Events.Add(MeteorStreams[i], () => MeteorStream(targets));
         }
-        world.Events.Add(DalamudDive, DalamudDiveHit);
+        world.Events.Add(DalamudDive, () => DalamudDiveHit(party.Get(PartyRole.MainTank)));
         foreach (var start in ClawStarts)
             for (var hit = 0; hit < 5; hit++)
-                world.Events.Add(start + hit * ClawInterval, BahamutsClaw);
+                world.Events.Add(start + hit * ClawInterval, () => BahamutsClaw(PartyRole.MainTank));
         world.Events.Add(DragonsArrive, SpawnDragons);
         world.Events.Add(BahamutsFavor, () => CastSelf(nael, ActionId.BahamutsFavor, 2.7f));
 
@@ -221,7 +225,7 @@ public sealed class UcobP2NaelScenario : ISectionedScenario
         }
 
         world.Events.Add(RavensbeakCast, CastRavensbeak);
-        world.Events.Add(RavensbeakCast + RavensbeakCastSeconds, Ravensbeak);
+        world.Events.Add(RavensbeakCast + RavensbeakLands, Ravensbeak);
         if (state.Push == NaelPush.NoPush)
         {
             ScheduleDivebombs();
@@ -245,8 +249,11 @@ public sealed class UcobP2NaelScenario : ISectionedScenario
             world.Events.Add(DivebombLocks[i], () => aims = LockCauterize(slots, target));
             world.Events.Add(DivebombLocks[i] + CauterizeCastSeconds, () => Cauterize(aims));
         }
-        foreach (var at in Hypernovas)
-            world.Events.Add(at, Hypernova);
+        for (var i = 0; i < Hypernovas.Length; i++)
+        {
+            var target = state.DivebombTargets[i / 2];
+            world.Events.Add(Hypernovas[i], () => Hypernova(target));
+        }
         world.Events.Add(NaelLeavesForTheDive, () =>
         {
             nael?.SetTargetable(false);
@@ -254,12 +261,12 @@ public sealed class UcobP2NaelScenario : ISectionedScenario
         });
         world.Events.Add(NaelGone, () => nael?.SetVisible(false));
         var quote = state.DivebombQuote;
-        world.Events.Add(DivebombQuoteMoves[0], () => DivebombQuoteMove(quote.First));
-        world.Events.Add(DivebombQuoteMoves[1], () => DivebombQuoteMove(quote.Second));
+        world.Events.Add(DivebombQuoteFirstMove, () => DivebombQuoteMove(quote.First));
+        world.Events.Add(DivebombQuoteSecondMove(quote), () => DivebombQuoteMove(quote.Second));
         for (var hit = 0; hit < 5; hit++)
-            world.Events.Add(DivebombClaw + hit * ClawInterval, BahamutsClaw);
+            world.Events.Add(DivebombClaw + hit * ClawInterval, () => BahamutsClaw(PartyRole.OffTank));
         world.Events.Add(FinalRavensbeakCast, CastRavensbeak);
-        world.Events.Add(FinalRavensbeakCast + RavensbeakCastSeconds, Ravensbeak);
+        world.Events.Add(FinalRavensbeakCast + RavensbeakLands, Ravensbeak);
         world.Events.Add(DivebombsEnd, DespawnAll);
     }
 
@@ -318,9 +325,9 @@ public sealed class UcobP2NaelScenario : ISectionedScenario
         }
     }
 
-    private void DalamudDiveHit()
+    private void DalamudDiveHit(SimCharacter? tank)
     {
-        if (nael is not { } boss || party.Get(PartyRole.MainTank) is not { } tank) return;
+        if (nael is not { } boss || tank == null) return;
         boss.SetPosition(new Placement(tank.Position, boss.Rotation));
         boss.SetVisible(true);
         boss.SetTargetable(true);
@@ -332,9 +339,9 @@ public sealed class UcobP2NaelScenario : ISectionedScenario
         }
     }
 
-    private void BahamutsClaw()
+    private void BahamutsClaw(PartyRole role)
     {
-        if (party.Get(PartyRole.MainTank) is not { } tank || !tank.IsAlive()) return;
+        if (party.Get(role) is not { } tank || !tank.IsAlive()) return;
         PlayEffect(nael, ActionId.BahamutsClaw, 0.6f, target: tank.GameObjectId, hits: [tank]);
         damage.ApplyDamage(tank, 0.08f, ActionId.BahamutsClaw, "Bahamut's Claw", lethal: false);
     }
@@ -379,7 +386,7 @@ public sealed class UcobP2NaelScenario : ISectionedScenario
             world.Events.Add(ThunderstruckAfterMark, () => { if (member.IsAlive()) member.AddStatus(StatusId.Thunderstruck, ThunderstruckSeconds); });
     }
 
-    // UNVERIFIED: the holders' splashes spare each other; everyone else in one dies.
+    // Anyone in another holder's splash dies, holders included.
     private void ThunderstruckSplash(IReadOnlyList<PartyRole> targets)
     {
         var holders = targets.Select(r => party.Get(r)).Where(m => m != null && m.IsAlive()).Select(m => m!).ToList();
@@ -388,7 +395,7 @@ public sealed class UcobP2NaelScenario : ISectionedScenario
             holder.RemoveStatus(StatusId.Thunderstruck);
             PlayFromHelper(ActionId.ChainLightningSplash, holder.Position, holder);
             damage.ApplyDamage(holder, 0.3f, ActionId.ChainLightningSplash, "Thunderstruck", lethal: false);
-            foreach (var hit in AliveMembers().Where(m => !holders.Contains(m) && Vector2.Distance(Flat(m.Position), Flat(holder.Position)) <= State.ThunderstruckRadius).ToList())
+            foreach (var hit in AliveMembers().Where(m => !ReferenceEquals(m, holder) && Vector2.Distance(Flat(m.Position), Flat(holder.Position)) <= State.ThunderstruckRadius).ToList())
                 hit.Die(ActionId.ChainLightningSplash, "caught in a Thunderstruck splash (Thunderstruck players move away from everyone)");
         }
     }
@@ -538,6 +545,7 @@ public sealed class UcobP2NaelScenario : ISectionedScenario
         if (party.Get(PartyRole.MainTank) is not { } tank || !tank.IsAlive()) return;
         PlayEffect(nael, ActionId.Ravensbeak, 1.1f, target: tank.GameObjectId, hits: [tank]);
         damage.ApplyDamage(tank, 0.5f, ActionId.Ravensbeak, "Ravensbeak", lethal: false);
+        tank.AddStatus(StatusId.PiercingResistanceDownII, UcobNaelAttacks.PiercingResistanceDownSeconds);
     }
 
     private static readonly uint[] CauterizeIds =
@@ -546,8 +554,7 @@ public sealed class UcobP2NaelScenario : ISectionedScenario
         ActionId.CauterizeTailOfDarkness, ActionId.CauterizeFangOfLight,
     ];
 
-    // UNVERIFIED: each dragon locks its line on the marked player as the marker goes, then dives
-    // along it and is gone.
+    // Each dragon locks its line on the marked player as its cast starts, then dives along it and is gone.
     private List<(int Slot, Vector2 From, Vector2 Along)> LockCauterize(IReadOnlyList<int> slots, PartyRole role)
     {
         var target = party.Get(role) is { } chosen && chosen.IsAlive() ? chosen : AliveMembers().FirstOrDefault();
@@ -597,10 +604,10 @@ public sealed class UcobP2NaelScenario : ISectionedScenario
         return ahead >= 0f && ahead <= State.CauterizeLength && aside <= State.CauterizeHalfWidth;
     }
 
-    // Each lands on whoever stands farthest from the centre.
-    private void Hypernova()
+    // Two land on each of the first two divebomb targets in turn.
+    private void Hypernova(PartyRole role)
     {
-        if (AliveMembers().OrderByDescending(m => Flat(m.Position).Length()).FirstOrDefault() is not { } target) return;
+        if (party.Get(role) is not { } target || !target.IsAlive()) return;
         var at = Flat(target.Position);
         PlayEffect(nael, ActionId.Hypernova, 1.1f, at: ToWorld(at));
         foreach (var hit in AliveMembers().Where(m => Vector2.Distance(Flat(m.Position), at) <= State.HypernovaRadius).ToList())
@@ -614,7 +621,6 @@ public sealed class UcobP2NaelScenario : ISectionedScenario
         });
     }
 
-    // UNVERIFIED: standing in a puddle once it has formed is lethal.
     private void BurnInHypernovaPuddles(float now)
     {
         hypernovaPuddles.RemoveAll(p => now >= p.Until);
@@ -631,13 +637,19 @@ public sealed class UcobP2NaelScenario : ISectionedScenario
                 MeteorStream(state.DivebombSpreads);
                 break;
             case NaelMove.DalamudDive:
-                DalamudDiveHit();
+                DalamudDiveHit(DivebombDiveTarget());
                 break;
             case NaelMove.ThermionicBeam:
                 ThermionicBeam(state.DivebombStackTarget);
                 break;
         }
     }
+
+    // UNVERIFIED: the next on her enmity, never the Ravensbeak tank: a group's off tank, whom she then keeps.
+    private SimCharacter? DivebombDiveTarget()
+        => party.Get(PartyRole.OffTank) is { } offTank && offTank.IsAlive()
+            ? offTank
+            : AliveMembers().Where(m => m is not ISimPartyMember { Role: PartyRole.MainTank }).MinBy(m => nael is { } boss ? Vector3.DistanceSquared(m.Position, boss.Position) : 0f);
 
     private IEnumerable<SimEnemy> Dragons() => new[] { firehorn, iceclaw, thunderwing, tail, fang }.OfType<SimEnemy>();
 

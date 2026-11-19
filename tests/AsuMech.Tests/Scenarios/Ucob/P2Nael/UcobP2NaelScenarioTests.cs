@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Numerics;
 using AsuMech.Core.Game.Party;
 using AsuMech.Core.Native.Interfaces;
@@ -39,6 +40,23 @@ public class UcobP2NaelScenarioTests
             Assert.That(targetableAfter, Is.False);
             Assert.That(dragonsAfter, Is.EqualTo(0));
         });
+    }
+
+    [Test]
+    public void RavensbeakLeavesTheTankWithPiercingResistanceDown()
+    {
+        bool? vulnerable = null;
+        var run = ScenarioRun.Execute(typeof(UcobP2NaelScenario), 0, 1, new ScenarioRunOptions
+        {
+            StopAt = UcobP2NaelScenario.NaelUntargetable,
+            Probe = p =>
+            {
+                if (p.Crossed(UcobP2NaelScenario.NaelUntargetable - 1f))
+                    vulnerable = p.World.Party.Get(MainTank)?.HasStatus(StatusId.PiercingResistanceDownII);
+            },
+        });
+        Assert.That(run.Passed, run.ToString);
+        Assert.That(vulnerable, Is.True);
     }
 
     // Each dragon's attack lands on the players it targets, so the client plays their hits.
@@ -131,7 +149,9 @@ public class UcobP2NaelScenarioTests
             {
                 if (casts[k].Set != casts[k - 1].Set) continue;
                 var turn = float.Ieee754Remainder(bearings[k] - bearings[k - 1], 360f);
-                Assert.That(turn, Is.EqualTo(90f).Within(25f), $"puddle {k}");
+                // The last dance starts on the step nearest the fourth fire's stack, which can sit between two.
+                var slack = casts[k].Set == 2 && k == casts.FindIndex(c => c.Set == 2) + 1 ? 45f : 25f;
+                Assert.That(turn, Is.EqualTo(90f).Within(slack), $"puddle {k}");
             }
         });
     }
@@ -190,6 +210,15 @@ public class UcobP2NaelScenarioTests
             .Overrides<UcobP2NaelStateOverrides>(o => o.ThunderTargets = [[MeleeDpsA, MeleeDpsB], [MeleeDpsA, MeleeDpsB], [RegenHealer, ShieldHealer], [RegenHealer, ShieldHealer]])
             .TeleportAt(44f, to: new Vector2(-5.2f, 9f))
             .ShouldKill(ActionId.ChainLightningSplash, CasterDps);
+
+    [Test]
+    public void TwoThunderstruckPlayersTogetherKillEachOther()
+        => Negative<UcobP2NaelScenario>(CasterDps)
+            .Overrides<UcobP2NaelStateOverrides>(o => o.ThunderTargets = [[MeleeDpsA, CasterDps], [MeleeDpsB, PhysRangedDps], [RegenHealer, ShieldHealer], [MainTank, OffTank]])
+            .TeleportAt(44f, to: new Vector2(-14f, 0f))
+            .MoveBotAt(44f, MeleeDpsA, new Vector2(-16f, 0f))
+            .Seed(2)
+            .ShouldKill(ActionId.ChainLightningSplash, CasterDps, MeleeDpsA);
 
     [Test]
     public void StayingAwayForLunarDynamoKills()
@@ -269,7 +298,7 @@ public class UcobP2NaelScenarioTests
             {
                 SimEnemy? Nael() => p.World.Children.OfType<SimEnemy>().FirstOrDefault(e => e.IsActive && e.BNpcBaseId == BNpcBaseId.NaelDeusDarnus);
                 if (p.Crossed(UcobP2NaelScenario.NaelLeavesForTheDive + 1f)) naelTargetableAfterLeaving = Nael()?.Targetable;
-                if (p.Crossed(UcobP2NaelScenario.DivebombQuoteMoves[1] + 0.5f)) naelTargetableAfterDive = Nael()?.Targetable;
+                if (p.Crossed(UcobP2NaelScenario.DivebombQuoteSecondMove(UcobP2NaelState.DivebombQuoteChoices[0]) + 0.5f)) naelTargetableAfterDive = Nael()?.Targetable;
                 if (p.Crossed(UcobP2NaelScenario.DivebombLocks[^1] + UcobP2NaelScenario.CauterizeCastSeconds + 3.5f))
                     dragonsAfter = p.World.Children.OfType<SimEnemy>().Count(e => e.IsActive && dragonIds.Contains(e.BNpcBaseId));
             },
@@ -297,7 +326,7 @@ public class UcobP2NaelScenarioTests
     public void StandingInADragonsPathKills()
         => Negative<UcobP2NaelScenario>(CasterDps)
             .Overrides<UcobP2NaelStateOverrides>(NorthLayout)
-            .TeleportAt(149.5f, to: new Vector2(2.6f, -22.5f))
+            .TeleportAt(149.8f, to: new Vector2(2.6f, -22.5f))
             .ShouldKill(ActionId.CauterizeFirehorn, CasterDps);
 
     [Test]
@@ -308,25 +337,64 @@ public class UcobP2NaelScenarioTests
                 NorthLayout(o);
                 o.DivebombStackTarget = MeleeDpsA;
             })
-            .FreezeAt(154.9f)
+            .FreezeAt(155.15f)
             .ShouldKill(ActionId.CauterizeTailOfDarkness, RegenHealer);
 
     [Test]
     public void StandingStillWhereAHypernovaLandsKills()
         => Negative<UcobP2NaelScenario>(MeleeDpsA)
             .Overrides<UcobP2NaelStateOverrides>(NorthLayout)
-            .FreezeAt(142.5f)
+            .FreezeAt(142.9f)
             .ShouldKill(ActionId.Hypernova, MeleeDpsA);
 
     [Test]
-    public void StandingNearTheTankForNaelsDiveKills()
-        => Negative<UcobP2NaelScenario>(MainTank)
+    public void EachHypernovaLandsOnTheFirstTwoDivebombTargetsInTurn()
+    {
+        var marked = new Vector2?[UcobP2NaelScenario.Hypernovas.Length];
+        var puddles = new List<Vector2>();
+        var run = ScenarioRun.Execute(typeof(UcobP2NaelScenario), 0, 4, new ScenarioRunOptions
+        {
+            Overrides = o => NorthLayout((UcobP2NaelStateOverrides)o),
+            Probe = p =>
+            {
+                for (var i = 0; i < marked.Length; i++)
+                {
+                    if (p.Crossed(UcobP2NaelScenario.Hypernovas[i]) && p.World.Party.Get(i < 2 ? MeleeDpsA : MeleeDpsB) is { } bait)
+                        marked[i] = new Vector2(bait.Position.X, bait.Position.Z);
+                    if (p.Crossed(UcobP2NaelScenario.Hypernovas[i] + UcobP2NaelScenario.HypernovaPuddleAppears + 0.05f))
+                        puddles.Add(p.World.Children.OfType<SimEventObject>()
+                            .Where(e => e.EObjRowId == EObjId.HypernovaPuddle)
+                            .Select(e => new Vector2(e.Position.X, e.Position.Z)).Last());
+                }
+            },
+        });
+        Assert.That(run.Passed, run.ToString);
+        Assert.That(puddles, Has.Count.EqualTo(marked.Length));
+        for (var i = 0; i < marked.Length; i++)
+            Assert.That(Vector2.Distance(puddles[i], marked[i]!.Value), Is.LessThan(1f), $"Hypernova {i + 1}");
+    }
+
+    [Test]
+    public void EitherTankCanBaitADivebomb([Values(MainTank, OffTank)] PartyRole tank, [Range(0, 2)] int dive, [Values(0, 1)] int quote)
+        => Negative<UcobP2NaelScenario>(PhysRangedDps)
+            .Overrides<UcobP2NaelStateOverrides>(o =>
+            {
+                o.Push = NaelPush.NoPush;
+                o.DivebombPicks[dive] = tank;
+                o.DivebombQuote = quote;
+            })
+            .Seed(dive * 2 + quote + (int)tank * 6)
+            .ShouldKillNoOneElse();
+
+    [Test]
+    public void StandingNearTheOffTankForNaelsDiveKills()
+        => Negative<UcobP2NaelScenario>(OffTank)
             .Overrides<UcobP2NaelStateOverrides>(o =>
             {
                 NorthLayout(o);
                 o.DivebombQuote = 1;
             })
-            .TeleportAt(153.7f, to: Vector2.Zero)
+            .TeleportAt(154.1f, to: Vector2.Zero)
             .ShouldKill(ActionId.DalamudDive, AllBut(MainTank, OffTank, RegenHealer));
 
     // Heavensfall's knockback rides in its ActionEffect: the player's own client only slides from that entry.

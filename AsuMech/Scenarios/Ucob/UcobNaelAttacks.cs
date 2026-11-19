@@ -20,7 +20,7 @@ public static class UcobNaelAttacks
     public const int ClawHits = 5;
     public const float ClawInterval = 0.805f;
     public const float RavensbeakCastSeconds = 3.7f;
-    private const float PiercingResistanceDownSeconds = 45f;
+    public const float PiercingResistanceDownSeconds = 45f;
 
     // `target` is the player a Thermionic Beam or a Raven Dive lands on.
     public static void Move(SimParty party, DamageSolver damage, SimEnemy? nael, NaelMove move, SimCharacter? target)

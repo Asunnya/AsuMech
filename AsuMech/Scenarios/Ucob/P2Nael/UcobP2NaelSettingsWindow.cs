@@ -8,7 +8,6 @@ namespace AsuMech.Scenarios.Ucob.P2Nael;
 public sealed class UcobP2NaelSettingsWindow
 {
     private static readonly PartyRole[] Everyone = Enum.GetValues<PartyRole>();
-    private static readonly PartyRole[] NotMainTank = Everyone.Where(r => r != PartyRole.MainTank).ToArray();
 
     public UcobP2NaelStateOverrides Overrides { get; } = new();
 
@@ -60,7 +59,7 @@ public sealed class UcobP2NaelSettingsWindow
             for (var i = 0; i < Overrides.DivebombPicks.Length; i++)
             {
                 SettingsGrid.Row($"Divebomb {i + 1} on:");
-                Overrides.DivebombPicks[i] = RoleCombo($"##ucobp2dive{i}", Overrides.DivebombPicks[i], NotMainTank);
+                Overrides.DivebombPicks[i] = RoleCombo($"##ucobp2dive{i}", Overrides.DivebombPicks[i]);
             }
         }
         SettingsGrid.End();

@@ -34,7 +34,11 @@ public class UcobP1TwintaniaAiTests
     [Test]
     public void TuuflessHatchTargetsResolveInTheNeurolinksOnMarkersOneAndTwo()
         => Negative<Scenario>(MainTank, Tuufless)
-            .Overrides<UcobP1TwintaniaStateOverrides>(o => o.HatchTargets = [[MeleeDpsA], [MeleeDpsB], [MeleeDpsA, CasterDps], [MeleeDpsB, CasterDps], [MeleeDpsA, CasterDps]])
+            .Overrides<UcobP1TwintaniaStateOverrides>(o =>
+            {
+                o.HatchTargets = [[MeleeDpsA], [MeleeDpsB], [MeleeDpsA, CasterDps], [MeleeDpsB, CasterDps], [MeleeDpsA, CasterDps]];
+                o.LiquidHellTarget = RegenHealer;
+            })
             .At(46.5f, p =>
             {
                 Assert.That(Vector2.Distance(At(p, MeleeDpsA), ElementalMarker(WaymarkSlot.One)), Is.LessThan(1.5f));

@@ -195,6 +195,7 @@ public class UcobConstants
     public class ActionId
     {
         public const uint AutoAttack = 9936;
+        public const uint TwintaniaAttack = 0x26A7;
         public const uint Plummet = 0x26A8;
         public const uint DeathSentence = 0x26A9;
         public const uint Twister = 0x26AA;
