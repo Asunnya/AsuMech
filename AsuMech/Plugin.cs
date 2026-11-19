@@ -191,7 +191,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
             windowSystem.AddWindow(DamageDebugWindow);
 #endif
 
-            if (Config.OpenSimMenuOnInn && ZoneControl.IsInInn())
+            if (Config.OpenSimMenuOnInn && ZoneControl.IsInLaunchRoom())
                 MainUi.IsOpen = true;
 
             CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
@@ -398,7 +398,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
     {
         ZoneControl.NoteTerritoryChanged(territory);
         var row = DataManager.GetExcelSheet<TerritoryType>()?.GetRowOrDefault(territory);
-        var isInn = row?.TerritoryIntendedUse.RowId == 2; // TerritoryIntendedUse.Inn
+        var isInn = ZoneControl.IsLaunchRoom(territory);
         if (!isInn)
         {
             var name = row?.PlaceName.ValueNullable?.Name.ExtractText() ?? string.Empty;

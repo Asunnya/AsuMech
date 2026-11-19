@@ -206,7 +206,7 @@ internal sealed class PeerNatives
     {
         private IZoneControl Real => natives.RealZone;
 
-        public bool IsInInn() => Real.IsInInn();
+        public bool IsInLaunchRoom() => Real.IsInLaunchRoom();
         public string? StartBlockedReason(out string? settling) => Real.StartBlockedReason(out settling);
         public void EndSpeedBuffs() => Real.EndSpeedBuffs();
         public bool IsActive => Real.IsActive;

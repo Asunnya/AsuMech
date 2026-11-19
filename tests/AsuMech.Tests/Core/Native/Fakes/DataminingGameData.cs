@@ -46,6 +46,9 @@ internal sealed class DataminingGameData(FakeRsvFunctions rsv) : IGameData
             row.UInt("Recast100ms") / 10f);
     }
 
+    public static (string Name, uint IntendedUse)? TerritoryTypeRaw(uint territoryId)
+        => TerritoryTypes.Value.Row(territoryId) is { } row ? (row.Text("Name"), row.UInt("TerritoryIntendedUse")) : null;
+
     // Every action a player presses outside PvP.
     public static IEnumerable<uint> PlayerActionIds()
         => Actions.Value.Ids.Where(id => Actions.Value.Row(id) is { } row && row.Bool("IsPlayerAction") && !row.Bool("IsPvP"));

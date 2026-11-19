@@ -39,9 +39,6 @@ public sealed unsafe partial class ZoneControl : IZoneControl
         public float Rotation { get; set; }
     }
 
-    // TerritoryIntendedUse.Inn = 2 (from ECommons TerritoryIntendedUseEnum)
-    private const uint InnIntendedUse = 2;
-
     // ── Native delegates ──────────────────────────────────────────────────────
 
     private delegate byte SendPacketDelegate(nint a1, nint a2, nint a3, byte a4);
@@ -109,12 +106,16 @@ public sealed unsafe partial class ZoneControl : IZoneControl
 
     // ── Public API ────────────────────────────────────────────────────────────
 
-    public static bool IsInInn()
+    public static bool IsInLaunchRoom() => IsLaunchRoom(Plugin.ClientState.TerritoryType);
+
+    public static bool IsLaunchRoom(uint territory)
     {
-        var row = Plugin.DataManager.GetExcelSheet<TerritoryType>()
-            ?.GetRowOrDefault(Plugin.ClientState.TerritoryType);
-        return row?.TerritoryIntendedUse.RowId == InnIntendedUse;
+        var row = Plugin.DataManager.GetExcelSheet<TerritoryType>()?.GetRowOrDefault(territory);
+        return LaunchRoom.Allows(territory, row?.TerritoryIntendedUse.RowId ?? 0, Plugin.Config.AllowFcChambers);
     }
+
+    public static string LaunchRoomDescription
+        => Plugin.Config.AllowFcChambers ? LaunchRoom.DescriptionWithChambers : LaunchRoom.Description;
 
     // Any state in which the local player can't freely act, or the server is about to act on
     // (a cast, a queue, a pending world visit): a start there lands while the firewall hides
@@ -829,7 +830,7 @@ public sealed unsafe partial class ZoneControl : IZoneControl
         return true;
     }
 
-    bool IZoneControl.IsInInn() => IsInInn();
+    bool IZoneControl.IsInLaunchRoom() => IsInLaunchRoom();
     string? IZoneControl.StartBlockedReason(out string? settling) => StartBlockedReason(out settling);
     void IZoneControl.Revert() => Revert();
     void IZoneControl.EndSpeedBuffs() => EndSpeedBuffs();
