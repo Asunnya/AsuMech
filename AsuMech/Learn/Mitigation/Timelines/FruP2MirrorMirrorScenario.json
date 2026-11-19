@@ -1,0 +1,84 @@
+{
+  "scenario": "FruP2MirrorMirrorScenario",
+  "casts": [
+    {
+      "actionId": 40210,
+      "name": "Hallowed Ray",
+      "start": 2.233,
+      "resolve": 6.9329996,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40211,
+      "name": "Hallowed Ray",
+      "start": 7.35,
+      "resolve": 7.35,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40179,
+      "name": "Mirror, Mirror",
+      "start": 13.867,
+      "resolve": 16.567,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40203,
+      "name": "Scythe Kick",
+      "start": 25.033,
+      "resolve": 30.733002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40204,
+      "name": "Reflected Scythe Kick",
+      "start": 30.716,
+      "resolve": 30.716,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40205,
+      "name": "Reflected Scythe Kick",
+      "start": 31.016,
+      "resolve": 40.716,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40206,
+      "name": "the House of Light",
+      "start": 31.383,
+      "resolve": 31.383,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40206,
+      "name": "the House of Light",
+      "start": 41.433,
+      "resolve": 41.433,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40221,
+      "name": "Banish III",
+      "start": 42.066,
+      "resolve": 46.766003,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40223,
+      "name": "Banish III Divided",
+      "start": 46.849,
+      "resolve": 46.849,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Hallowed Ray",
+    "Mirror, Mirror",
+    "Scythe Kick",
+    "Reflected Scythe Kick",
+    "the House of Light",
+    "Banish III",
+    "Banish III Divided"
+  ]
+}

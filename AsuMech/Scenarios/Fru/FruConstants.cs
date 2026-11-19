@@ -42,6 +42,7 @@ public static class FruConstants
         public const ushort Oracle = 20105;
         public const ushort OracleAndUsurper = 20137;
         public const ushort Pandora = 20099;
+        public const ushort Intermission = 20136;
     }
 
     // ContentDirectorManagedSG 181. Packet flags: low16 = state, high16 = timeline mask.
@@ -62,6 +63,17 @@ public static class FruConstants
         public const byte DiamondDust = 0;
         public const uint DiamondDustStart = 0x00020001;
         public const uint DiamondDustEnd = 0x00080004;
+
+        // One slot per octant clockwise from north, from FirstMirror.
+        public const byte FirstMirror = 1;
+        public const uint MirrorRed = 0x02000100;
+        public const uint MirrorBlue = 0x00020001;
+        public const uint MirrorRedKicking = 0x08000001;
+        public const uint MirrorHide = 0x00080004;
+
+        // UNVERIFIED what it draws: switched as the Usurper is encased for the Ice Veil.
+        public const byte IceVeilArena = 24;
+        public const uint IceVeilArenaShow = 0x00020001;
 
         // Clockwise from north. UNVERIFIED which slot is which tower: retail switches them in this
         // order, each beside its helper's move onto a tower.
@@ -114,6 +126,10 @@ public static class FruConstants
         public const uint FragmentOfFate = 17841;
         public const uint VisionOfRyne = 17844;
         public const uint VisionOfGaia = 17845;
+        public const uint CrystalOfLight = 17827;
+        public const uint CrystalOfDarkness = 17828;
+        public const uint IceVeil = 17829;
+        public const uint GaiaIntermission = 17830;
     }
 
     // Retail's spawn-packet parts for FRU's human and demihuman models.
@@ -143,6 +159,10 @@ public static class FruConstants
         public const uint FrozenMirror = 13554;
         public const uint FragmentOfFate = 13559;
         public const uint Pandora = 13561;
+        public const uint CrystalOfLight = 13555;
+        public const uint CrystalOfDarkness = 13556;
+        public const uint IceVeil = 9358;
+        public const uint GaiaIntermission = 9326;
     }
 
     public static class ModelCharaId
@@ -227,6 +247,26 @@ public static class FruConstants
         public const uint BanishSpread = 40223;
         public const uint HouseOfLightCast = 40189;
         public const uint HouseOfLight = 40188;
+
+        // -- P2 Quadruple Slap, Mirror, Mirror --
+        public const uint QuadrupleSlap = 40191;
+        public const uint QuadrupleSlapSecond = 40192;
+        public const uint HallowedRayCast = 40210;
+        public const uint HallowedRay = 40211;
+        public const uint MirrorMirror = 40179;
+        public const uint ReflectedScytheKick = 40204;
+        public const uint ReflectedScytheKickCast = 40205;
+
+        // -- Intermission --
+        public const uint AbsoluteZero = 40224;
+        public const uint AbsoluteZeroHit = 40333;
+        public const uint SwellingFrost = 40225;
+        public const uint HiemalStorm = 40256;
+        public const uint HiemalRay = 40257;
+        public const uint SinboundBlizzardCast = 40258;
+        public const uint SinboundBlizzard = 40262;
+        public const uint EndlessIceAge = 40259;
+        public const uint Icecrusher = 40121;
 
         // -- P3 --
         public const uint UltimateRelativity = 40266;
@@ -362,6 +402,10 @@ public static class FruConstants
         public const ushort PhysicalVulnerabilityUp = 2940;
         public const ushort LightResistanceDown = 4164;
         public const ushort DarkResistanceDown = 3323;
+        public const ushort DeepFreeze = 1150;
+        public const ushort VulnerabilityDown = 2198;
+        public const ushort Invincibility = 775;
+        public const ushort QuadrupleSlapVulnerability = 4162;
     }
 
     // Thin Ice's param is the slide distance in tenths of a yalm, not a stack count.
@@ -377,6 +421,10 @@ public static class FruConstants
         public const ushort Quicken = 134;
         public const ushort WingsDark = 1;
         public const ushort WingsLight = 2;
+        public const ushort CrystalToVeil = 8;
+        public const ushort GaiaToVeil = 112;
+        public const ushort CrystalOfLightToPlayer = 84;
+        public const ushort DarknessChannel = 37;
     }
 
     public static class LockonId
@@ -386,6 +434,8 @@ public static class FruConstants
         public const uint WaterCountdown = 184;      // m0581trg_dice0h
         public const uint FrigidStone = 345;         // tag_ae5m_8s_0v
         public const uint LuminousHammer = 375;      // target_ae_s7k1
+        public const uint HallowedRay = 525;
+        public const uint QuadrupleSlap = 218;
     }
 
     public static class VfxId

@@ -208,6 +208,68 @@ public static class FruActions
         Timing = new() { DamageDelay = 0.64f },
     };
 
+    // -- P2 Mirror, Mirror --
+
+    // UNVERIFIED how few it takes to kill: retail's whole party shares it.
+    public static readonly EnemyAction HallowedRay = new(ActionId.HallowedRay)
+    {
+        Cast = new() { AnimationLock = 1.1f, FaceTarget = false },
+        Effects = [Damage(split: Stack(5))],
+        Timing = new() { DamageDelay = 0.6f },
+    };
+
+    public static readonly EnemyAction ReflectedScytheKick = ScytheKick with { ActionId = ActionId.ReflectedScytheKick };
+
+    public static readonly EnemyAction ReflectedScytheKickCast = ScytheKick with { ActionId = ActionId.ReflectedScytheKickCast };
+
+    // -- Intermission --
+
+    public static readonly EnemyAction AbsoluteZero = new(ActionId.AbsoluteZeroHit)
+    {
+        Cast = new() { AnimationLock = 2.1f },
+        Effects = [Damage()],
+        Timing = new() { DamageDelay = 0.62f },
+    };
+
+    public static readonly EnemyAction SwellingFrost = new(ActionId.SwellingFrost)
+    {
+        Cast = new() { AnimationLock = 2.1f },
+        Effects = [Damage(Harmless), Push(10f, 10f), ApplyStatus(StatusId.DeepFreeze, 15.9f, delayToEffectResult: true)],
+        Timing = new() { DamageDelay = 0.52f },
+    };
+
+    // UNVERIFIED that it kills: no pull has anyone standing in it.
+    public static readonly EnemyAction HiemalStorm = new(ActionId.HiemalStorm)
+    {
+        Cast = new() { AnimationLock = 1.1f, FaceTarget = false },
+        Effects = [Damage(Lethal)],
+        Timing = new() { DamageDelay = 0.3f },
+        DeathExplanation = "stood in Hiemal Storm",
+    };
+
+    public static readonly EnemyAction HiemalRay = new(ActionId.HiemalRay)
+    {
+        Cast = new() { AnimationLock = 1.1f, FaceTarget = false },
+        Effects = [Damage(VulnToMagic), ApplyStatus(StatusId.MagicVulnerabilityUp, 0.96f)],
+        Timing = new() { DamageDelay = 0.6f },
+    };
+
+    // Hurts no player: it only leaves Vulnerability Down on the crystals it reaches.
+    public static readonly EnemyAction SinboundBlizzard = new(ActionId.SinboundBlizzard)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Area = new() { Size = MathF.PI / 18f },
+        Timing = new() { DamageDelay = 0.3f },
+    };
+
+    public static readonly EnemyAction EndlessIceAge = new(ActionId.EndlessIceAge)
+    {
+        Cast = new() { AnimationLock = 2.1f },
+        Effects = [Damage(Lethal)],
+        Timing = new() { DamageDelay = 0.6f },
+        DeathExplanation = "the Ice Veil was not broken in time",
+    };
+
     // -- P3 --
 
     public static readonly EnemyAction UltimateRelativity = new(ActionId.UltimateRelativity)

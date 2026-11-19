@@ -108,6 +108,7 @@ All using default NA pf strats unless noted otherwise:
     - P5 Forsaken Null _no ai or damage_
 - Futures Rewritten (Ultimate) _by [grayparser](https://github.com/grayparser)_
     - P2 Diamond Dust 
+    - P2 Mirror, Mirror
     - P2 Light Rampant
     - P3 Ultimate Relativity
     - P3 Apocalypse 
