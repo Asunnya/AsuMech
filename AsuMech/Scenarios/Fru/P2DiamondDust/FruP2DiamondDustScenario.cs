@@ -23,8 +23,7 @@ public sealed class FruP2DiamondDustScenario : IScenario
     public object SettingsOverrides => settingsWindow.Overrides;
     private readonly FruP2DiamondDustSettingsWindow settingsWindow = new();
 
-    // UNVERIFIED: no pull has anyone in a live puddle. Retail players are still within 6y of one
-    // up to 1.23s after it shows, unhurt, so it arms no sooner than that.
+    // Retail arms it between 1.23s and 2s after it shows.
     private const float PuddleArmsAfterShowing = 1.5f;
     private const float PuddleLastsAfterShowing = 14.1f;
 

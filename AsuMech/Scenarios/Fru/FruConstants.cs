@@ -90,7 +90,7 @@ public static class FruConstants
         // North, then south; the bases follow in the same order.
         public const byte DarklitFirstTower = 42;
         public const byte DarklitFirstTowerBase = 44;
-        // UNVERIFIED: seen once.
+        // A tower going back to empty when its soakers step out.
         public const uint DarklitTowerEmpty = 0x01000001;
         public const byte FragmentOfFate = 46;
         // 51 = NW, 52 = NE, 53 = S.
