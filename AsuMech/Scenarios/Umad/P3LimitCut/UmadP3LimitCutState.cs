@@ -20,8 +20,8 @@ public sealed class UmadP3LimitCutScenarioObjects
 
 // Per-run randomization: any start spot, either direction, the charges walking the circle the
 // other way from the same start, the numbers a plain permutation, the wind crystal (and so the
-// boss spot) any intercardinal. Headwind/Tailwind splits 4/4, 5/3, 3/5 or 2/6 rather than a coin per player, which
-// would reach 6/2 far too often.
+// boss spot) any intercardinal. Headwind/Tailwind splits 4/4, 3/5, 5/3 or 6/2 rather than a coin
+// per player, which would reach the lopsided splits far too often.
 public sealed class UmadP3LimitCutState
 {
     private readonly Rng rng = Rng.Detached;
@@ -103,13 +103,7 @@ public sealed class UmadP3LimitCutState
     // forcing can pull away from (four Headwinds forced leaves nothing to balance).
     private Dictionary<PartyRole, Wind> BuildWinds(PartyRole localPlayerRole, UmadP3LimitCutStateOverrides overrides)
     {
-        var headwindTarget = rng.NextInt(100) switch
-        {
-            < 39 => 4,
-            < 71 => 5,
-            < 96 => 3,
-            _ => 2,
-        };
+        var headwindTarget = RollHeadwindCount(rng);
         var winds = new Dictionary<PartyRole, Wind>();
         foreach (var (role, wind) in overrides.Wind.Resolve(localPlayerRole)) winds[role] = wind;
         var forcedHeadwinds = winds.Count(kv => kv.Value == Wind.Headwind);
@@ -119,6 +113,14 @@ public sealed class UmadP3LimitCutState
             winds[remaining[i]] = i < stillHeadwind ? Wind.Headwind : Wind.Tailwind;
         return winds;
     }
+
+    public static int RollHeadwindCount(Rng rng) => rng.NextInt(100) switch
+    {
+        < 39 => 4,
+        < 71 => 3,
+        < 96 => 5,
+        _ => 6,
+    };
 
     // A peer's shadow of the host's roll: nothing rolled.
     private UmadP3LimitCutState(int startSpot, bool clockwise, IReadOnlyList<PartyRole> numbers, IReadOnlyDictionary<PartyRole, Wind> winds, int bossSpot, PartyRole baitRole, ThunderIIIAssignment thunderPlan)

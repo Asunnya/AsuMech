@@ -119,7 +119,7 @@ public static class UmadActions
         Cast = new() { AnimationLock = 1.1f },
         Effects = [Damage(MagicVulns, Lethal)],
         Timing = new() { DamageDelay = 0.63f },
-        DeathExplanation = "a tower taken by fewer than two",
+        DeathExplanation = "a tower not taken by exactly two",
     };
 
     public static readonly EnemyAction ThePathOfLight = new(UmadConstants.ActionId.ThePathOfLight)

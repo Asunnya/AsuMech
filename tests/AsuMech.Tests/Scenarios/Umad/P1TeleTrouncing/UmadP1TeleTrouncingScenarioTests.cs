@@ -45,7 +45,7 @@ public class UmadP1TeleTrouncingScenarioTests
         o.GazeInverted = false;
         o.FireIsStack = false;
         o.FireIsLie = false;
-        o.FireStackSupport = MainTank;
+        o.FireStackSupport = RegenHealer;
         o.FireStackDps = MeleeDpsA;
         o.ThunderIsLie = false;
         o.ThunderOrientationFlipped = false;

@@ -44,7 +44,7 @@ public sealed class UmadP1TeleTrouncingState
     public bool FireIsLie { get; }
     // What the stack/spread headmarker actually shows.
     public bool FireShowsStackIcon => FireIsStack ^ FireIsLie;
-    // The 2 stack targets when FireIsStack (one support, one DPS; no real data on who).
+    // The 2 stack targets when FireIsStack: one healer, one DPS, never a tank.
     public PartyRole FireStackSupport { get; }
     public PartyRole FireStackDps { get; }
 
@@ -114,7 +114,7 @@ public sealed class UmadP1TeleTrouncingState
         GazeInverted = overrides.GazeInverted ?? rng.NextBool();
         FireIsStack = overrides.FireIsStack ?? rng.NextBool();
         FireIsLie = overrides.FireIsLie ?? rng.NextBool();
-        FireStackSupport = overrides.FireStackSupport ?? rng.NextSupportRole();
+        FireStackSupport = overrides.FireStackSupport ?? rng.NextHealerRole();
         FireStackDps = overrides.FireStackDps ?? rng.NextDpsRole();
         ThunderRealOffset = overrides.ThunderRealOffset ?? rng.NextInt(2);
         ThunderOrientationFlipped = overrides.ThunderOrientationFlipped ?? rng.NextBool();
