@@ -86,6 +86,7 @@ public sealed class FruP4CrystallizeTimeAi : IScenarioAi<FruP4CrystallizeTimeSta
         world.Events.Add(41.1f, () => MoveEveryBot(RewindSpot, at: 41.1f, arriveBy: 42.5f));
         world.Events.Add(45.9f, spreadSpots.Clear);
         world.Events.Add(61.7f, () => MoveEveryBot(AkhMornSpot, at: 61.7f, arriveBy: 68.9f));
+        world.Events.Add(72.4f, () => MoveEveryBot(MornAfahSpot, at: 72.4f, arriveBy: 78.5f));
     }
 
     public void Tick(FruP4CrystallizeTimeState stateParam, SimWorld worldParam, float delta)
@@ -233,6 +234,8 @@ public sealed class FruP4CrystallizeTimeAi : IScenarioAi<FruP4CrystallizeTimeSta
         var east = (state.East ? 1 : -1) * (leadEast ? front : back);
         return new Vector3(east * ReferenceScale, 0, -north * ReferenceScale);
     }
+
+    private static Vector3 MornAfahSpot(PartyRole role) => Vector3.Zero;
 
     private static Vector3 AkhMornSpot(PartyRole role) => role == PartyRole.MainTank ? new Vector3(-9.3f, 0, 0) : Vector3.Zero;
 

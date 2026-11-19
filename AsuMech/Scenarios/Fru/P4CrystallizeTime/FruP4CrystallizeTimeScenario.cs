@@ -97,7 +97,7 @@ public sealed class FruP4CrystallizeTimeScenario : IScenario
         world.Events.Add(19.9f, () => SetHourglassScenery(MapEffect.RelativityHourglassDraining, state.HourglassPair(0)));
         world.Events.Add(20.7f, () => speedTethers.ForEach(t => t.Despawn()));
         world.Events.Add(20.8f, SpeedUpAndSlowDownHourglasses);
-        world.Events.Add(21.5f, () => Maelstrom(0));
+        world.Events.Add(21.65f, () => Maelstrom(0));
         world.Events.Add(21.9f, () => SetHourglassScenery(MapEffect.RelativityHourglassDraining, state.HourglassPair(1)));
         world.Events.Add(23.8f, () => SetHourglassScenery(MapEffect.RelativityHourglassDraining, state.HourglassPair(2)));
         world.Events.Add(23.8f, () => oracle?.PlayActionTimeline(TimelineId.OracleHide));
@@ -105,7 +105,7 @@ public sealed class FruP4CrystallizeTimeScenario : IScenario
         world.Events.Add(25.8f, () => usurper?.SetPosition(Vector3.Zero));
         world.Events.Add(25.8f, () => usurper?.PlayActionTimeline(ActionTimelineId.WarpEnd));
         world.Events.Add(25.9f, Fireworks);
-        world.Events.Add(27f, () => Maelstrom(1));
+        world.Events.Add(27.05f, () => Maelstrom(1));
         world.Events.Add(28f, () => TurnToward(usurper, state.WaveOrigin(false, 0)));
         world.Events.Add(28f, () => usurper?.Cast(ActionId.Unnamed, animationLock: 1.1f));
         world.Events.Add(28.7f, () => MoveFacingTravel(usurper, state.WaveOrigin(false, 0)));
@@ -114,7 +114,7 @@ public sealed class FruP4CrystallizeTimeScenario : IScenario
         world.Events.Add(29.2f, () => usurper?.SetRotation(WaveRotation(second: false)));
         world.Events.Add(29.2f, () => world.PlaceGroundVfx(VfxId.TidalLightOrigin, state.WaveOrigin(false, 0)));
         world.Events.Add(29.3f, () => TidalLight(second: false));
-        world.Events.Add(31.95f, () => Maelstrom(2));
+        world.Events.Add(32.13f, () => Maelstrom(2));
         world.Events.Add(34.4f, () => TurnToward(usurper, state.WaveOrigin(true, 0)));
         world.Events.Add(34.4f, () => usurper?.Cast(ActionId.Unnamed, animationLock: 1.1f));
         world.Events.Add(34.8f, () => usurper?.AddStatus(StatusId.UsurperReturn, 51.8f - 34.8f, sourceObject: WaveReturnSource(second: true)));
@@ -161,6 +161,10 @@ public sealed class FruP4CrystallizeTimeScenario : IScenario
         world.Events.Add(64f, () => oracle?.Cast(ActionId.AkhMornOracle, animationLock: 4.1f));
         for (var hit = 0; hit < 4; hit++)
             world.Events.Add(69f + 1.05f * hit, AkhMorn);
+        world.Events.Add(71.15f, EdgeOfOblivion);
+        world.Events.Add(72.3f, () => usurper?.Cast(ActionId.MornAfahUsurper, animationLock: 6.1f));
+        world.Events.Add(72.3f, () => oracle?.Cast(ActionId.MornAfahOracle, animationLock: 6.1f));
+        world.Events.Add(79.25f, MornAfah);
     }
 
     // TODO: the Fragment's HP bar empties when it's hit; a spawned enemy's HP can't be set.
@@ -405,6 +409,12 @@ public sealed class FruP4CrystallizeTimeScenario : IScenario
             usurper?.CastFromHelper(Actions.AkhMornUsurperHit, mainTank, at: mainTank.Placement());
         if (world.Party.Get(PartyRole.OffTank) is { } offTank && offTank.IsAlive())
             oracle?.CastFromHelper(Actions.AkhMornOracleHit, offTank, at: offTank.Placement());
+    }
+
+    private void MornAfah()
+    {
+        if (world.Party.Get(PartyRole.MainTank) is { } mainTank && mainTank.IsAlive())
+            usurper?.CastFromHelper(Actions.MornAfah, mainTank, at: mainTank.Placement());
     }
 
     private void SpawnDragons()

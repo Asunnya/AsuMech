@@ -46,8 +46,8 @@
     {
       "actionId": 40299,
       "name": "Maelstrom",
-      "start": 21.517,
-      "resolve": 22.717001,
+      "start": 21.667,
+      "resolve": 22.867,
       "occurrence": 1
     },
     {
@@ -88,8 +88,8 @@
     {
       "actionId": 40299,
       "name": "Maelstrom",
-      "start": 27.016,
-      "resolve": 28.216002,
+      "start": 27.066,
+      "resolve": 28.266,
       "occurrence": 2
     },
     {
@@ -137,8 +137,8 @@
     {
       "actionId": 40299,
       "name": "Maelstrom",
-      "start": 31.966,
-      "resolve": 33.166,
+      "start": 32.133,
+      "resolve": 33.333,
       "occurrence": 3
     },
     {
@@ -331,6 +331,13 @@
       "occurrence": 8
     },
     {
+      "actionId": 40174,
+      "name": "Edge of Oblivion",
+      "start": 71.151,
+      "resolve": 75.851,
+      "occurrence": 2
+    },
+    {
       "actionId": 40248,
       "name": "Akh Morn",
       "start": 72.151,
@@ -343,6 +350,27 @@
       "start": 72.151,
       "resolve": 72.151,
       "occurrence": 10
+    },
+    {
+      "actionId": 40249,
+      "name": "Morn Afah",
+      "start": 72.301,
+      "resolve": 78.001,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40304,
+      "name": "Morn Afah",
+      "start": 72.301,
+      "resolve": 78.001,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40250,
+      "name": "Morn Afah",
+      "start": 79.252,
+      "resolve": 79.252,
+      "occurrence": 3
     }
   ],
   "names": [
@@ -363,6 +391,7 @@
     "Quietus",
     "Spirit Taker",
     "Hallowed Wings",
-    "Akh Morn"
+    "Akh Morn",
+    "Morn Afah"
   ]
 }
