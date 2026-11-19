@@ -30,7 +30,6 @@ public sealed class UwuP3TitanScenario : IScenario
     private readonly UwuP3TitanSettingsWindow settingsWindow = new();
 
     private const float LandslideLength = 40f;
-    private const float LandslideKnockback = 15f;
     private const float UpheavalKnockback = 24f;
     private const float FreefireRadius = 6f;
     // Gaols chain along spots 6.7-7y apart; a player's gaol may land this far off its spot.
@@ -717,10 +716,11 @@ public sealed class UwuP3TitanScenario : IScenario
             foreach (var member in party.Find.InsideRect(new Placement(titan.Position, rotation), LandslideHalfWidth, LandslideLength))
                 if (!IsJailed(member)) hit.Add(member);
         }
+        KnockbackLookup.TryGet(KnockbackId.Landslide, out var distance, out var speed);
         foreach (var member in hit)
         {
             damage.ApplyDamage(member, LandslideDamage, ActionId.LandslideLine, "Landslide", false);
-            member.Knockback(titan.Position, LandslideKnockback, 20f);
+            if (speed > 0f) member.Knockback(titan.Position, distance, speed);
         }
         foreach (var caster in landslideCasters) world.Events.Add(HelperLifetime, () => DespawnHelper(caster.Caster));
         landslideCasters.Clear();

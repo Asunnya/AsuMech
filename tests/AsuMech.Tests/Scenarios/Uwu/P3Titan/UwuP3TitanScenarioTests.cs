@@ -78,4 +78,31 @@ public class UwuP3TitanScenarioTests
         });
         Assert.That(run.Deaths.Select(d => (d.Role, d.Cause)), Does.Contain((MeleeDpsB, "Died to Sludge (stayed in a broken gaol's puddle)")));
     }
+
+    [Test]
+    public void LandslideThrowsWhoeverItHitsFiftyYalms()
+    {
+        Vector3 hitFrom = default, titanAt = default, after = default;
+        ScenarioRun.Execute(typeof(UwuP3TitanScenario), 0, 1234, new ScenarioRunOptions
+        {
+            PlayerRole = RegenHealer,
+            StopAt = 53f,
+            WriteArtifactsOnFailure = false,
+            Takeovers = [new Takeover(49f, null)],
+            Probe = probe =>
+            {
+                var player = probe.Member(RegenHealer)!;
+                if (probe.Crossed(50.3f))
+                {
+                    var line = probe.World.Children.OfType<SimEnemy>().First(e => e.IsCasting && e.CastActionId == ActionId.LandslideLine);
+                    titanAt = line.Position;
+                    hitFrom = line.Position + 3f * new Vector3(MathF.Sin(line.Rotation), 0f, MathF.Cos(line.Rotation));
+                    player.SetPosition(hitFrom);
+                }
+                if (probe.Crossed(52.5f)) after = player.Position;
+            },
+        });
+        Assert.That(Vector3.Distance(after, hitFrom), Is.EqualTo(50f).Within(1f));
+        Assert.That(Vector3.Distance(after, titanAt), Is.GreaterThan(Vector3.Distance(hitFrom, titanAt)));
+    }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using AsuMech.Core;
 using AsuMech.Core.Game;
 using AsuMech.Core.SimObjects;
 using FFXIVClientStructs.FFXIV.Client.Game;
@@ -328,11 +329,9 @@ public partial class UwuUtils
 
             Cast(getDummy, castOffset, castInfo, effectOffset, actionEffectInfo, dynamicInfo, 0.73f, snapshot =>
             {
+                if (!KnockbackLookup.TryGet(KnockbackId.Landslide, out var distance, out var speed)) return;
                 foreach (var character in snapshot)
-                {
-                    // TODO: "30" and "50" are from Titan EX, but doubled. Need to find the proper UWU values.
-                    character.Knockback(getEnemy()!.Position, 30, 50);
-                }
+                    character.Knockback(getEnemy()!.Position, distance, speed);
             });
         }
     }
