@@ -15,10 +15,10 @@ public sealed class UmadZone : IZone
 
     // 77 is the zone-in weather between pulls; a pull switches to 78.
     public static readonly Phase P1 = new(Instance, "P1", 78, 20291,
-        arenaMapEffectOverrides: new Dictionary<byte, ushort> { [0x00] = 0x10 });
+        arenaMapEffectOverrides: new Dictionary<byte, ushort> { [0x00] = 0x10 }, envScene: 4);
     public static readonly Phase P2 = new(Instance, "P2", 79, 20292,
-        arenaMapEffectOverrides: new Dictionary<byte, ushort> { [0x00] = 0x40 });
-    public static readonly Phase P3 = new(Instance, "P3", 174, 20293, arenaMapEffectOverrides: P3ArenaMapEffectOverrides);
+        arenaMapEffectOverrides: new Dictionary<byte, ushort> { [0x00] = 0x40 }, envScene: 7);
+    public static readonly Phase P3 = new(Instance, "P3", 174, 20293, arenaMapEffectOverrides: P3ArenaMapEffectOverrides, envScene: 8);
     public static readonly Phase P4 = new(Instance, "P4", 174, 20293, arenaMapEffectOverrides: P3ArenaMapEffectOverrides);
     public static readonly Phase P5 = new(Instance, "P5", 175, 20294,
         init: world =>

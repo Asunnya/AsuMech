@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using AsuMech.Core.Native.Implementations.Interop;
 using AsuMech.Core.Native.Implementations.Pointers;
@@ -108,6 +107,9 @@ public sealed unsafe partial class ZoneControl : IZoneControl
     }
 
     // ── Public API ────────────────────────────────────────────────────────────
+
+    // Enter moved Dalamud's territory to the sim zone; Revert moves it back.
+    private bool territoryMirrored;
 
     public static bool IsInInn()
     {
@@ -231,6 +233,12 @@ public sealed unsafe partial class ZoneControl : IZoneControl
         }
         IsActive = true;
         ArmGuard(territoryId);
+        // After ArmGuard, which records Dalamud's reading as the inn to come back to.
+        if (Plugin.Config.MirrorPullState)
+        {
+            territoryMirrored = ClientTerritory.TrySet(territoryId);
+            AsuMech.Core.DiagnosticLog.Info($"[ZoneControl] Dalamud's territory {(territoryMirrored ? "now reads" : "could not be moved to")} {territoryId}.");
+        }
         Plugin.Log.Information($"[ZoneControl] Entered territory {territoryId}.");
         return true;
     }
@@ -429,6 +437,14 @@ public sealed unsafe partial class ZoneControl : IZoneControl
         envSimulatorSnapshot = null;
         pendingWeather = null;
         RestoreOriginalWeather();
+
+        // The lift requires Dalamud to read the inn again.
+        if (territoryMirrored)
+        {
+            territoryMirrored = false;
+            if (!ClientTerritory.TrySet(innClientTerritory))
+                AsuMech.Core.DiagnosticLog.Warn($"[ZoneControl] Dalamud's territory could not be moved back to the inn ({innClientTerritory}).");
+        }
 
         innReloadedAt = Stopwatch.GetTimestamp();
         // The reload can throw; the firewall and the Occupied flag must be released regardless,
@@ -675,10 +691,7 @@ public sealed unsafe partial class ZoneControl : IZoneControl
         Plugin.Log.Information("[ZoneControl] Step 5: SetupTerritoryType");
         eventFramework->SetTerritoryTypeId((ushort)territory);
 
-        Plugin.Log.Information("[ZoneControl] Step 6: SyncClientState");
-        SyncClientStateTerritoryType((ushort)territory);
-
-        Plugin.Log.Information("[ZoneControl] Step 7: SetPosition");
+        Plugin.Log.Information("[ZoneControl] Step 6: SetPosition");
         SetLocalPlayerPosition(playerPos, rotation);
 
         Plugin.Log.Information("[ZoneControl] LoadZone complete");
@@ -726,30 +739,6 @@ public sealed unsafe partial class ZoneControl : IZoneControl
         }
 
         return rowRef.Value;
-    }
-
-    private static void SyncClientStateTerritoryType(ushort territory)
-    {
-        try
-        {
-            var type = Plugin.ClientState.GetType();
-            var prop = type.GetProperty("TerritoryType",
-                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-            if (prop?.CanWrite == true)
-            {
-                prop.SetValue(Plugin.ClientState, territory);
-                return;
-            }
-            var field = type.GetField("territoryType",
-                BindingFlags.NonPublic | BindingFlags.Instance)
-                ?? type.GetField("TerritoryType",
-                BindingFlags.NonPublic | BindingFlags.Instance);
-            field?.SetValue(Plugin.ClientState, territory);
-        }
-        catch (Exception e)
-        {
-            Plugin.Log.Warning($"[ZoneControl] Could not sync ClientState.TerritoryType: {e.Message}");
-        }
     }
 
     // ── Packet firewall detours (mirrored from Hyperborea Memory.cs) ──────────

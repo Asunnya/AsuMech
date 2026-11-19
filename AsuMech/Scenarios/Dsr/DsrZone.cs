@@ -24,11 +24,11 @@ public sealed class DsrZone : IZone
 
     public static readonly DsrZone Instance = new();
     public static readonly Phase Knights = new(Instance, "P1", FairSkies, BgmId);
-    public static readonly Phase Thordan = new(Instance, "P2", Oppression, ThordanBgm);
-    public static readonly Phase Nidhogg = new(Instance, "P3", Clouds, NidhoggBgm);
+    public static readonly Phase Thordan = new(Instance, "P2", Oppression, ThordanBgm, envScene: 4);
+    public static readonly Phase Nidhogg = new(Instance, "P3", Clouds, NidhoggBgm, envScene: 6);
     // UNVERIFIED: the eyes' weather; P3's is kept.
     public static readonly Phase Eyes = new(Instance, "P4", Clouds, EyesBgm);
-    public static readonly Phase DarkThordan = new(Instance, "P5", DarkThordanWeather, DarkThordanBgm);
+    public static readonly Phase DarkThordan = new(Instance, "P5", DarkThordanWeather, DarkThordanBgm, envScene: 5);
     public static readonly Phase DoubleDragons = new(Instance, "P6", Clouds, DoubleDragonsBgm);
     public static readonly Phase DragonKing = new(Instance, "P7", DragonKingWeather, DragonKingBgm);
 

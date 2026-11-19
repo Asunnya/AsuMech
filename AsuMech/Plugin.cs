@@ -53,6 +53,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
 
     internal static Configuration Config { get; private set; } = null!;
     internal static Game Game { get; private set; } = null!;
+    internal static Integrations.PullStateMirror PullState { get; private set; } = null!;
     internal static PracticeLoop Practice { get; private set; } = null!;
     internal static DrillTracker Drill { get; private set; } = null!;
     internal static Learn.MasteryStore Mastery { get; private set; } = null!;
@@ -114,6 +115,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
             GameNatives.Install();
             opcodeUpdater = new OpcodeUpdater();
             Game = new Game();
+            PullState = new Integrations.PullStateMirror();
             Windows.Asu.RunJournal.Install(Game);
             Drill = new DrillTracker(Config.BestStreaks, Config.Save);
             Mastery = new Learn.MasteryStore(Config.Mastery, Config.Save);
@@ -334,6 +336,8 @@ public sealed class Plugin : IAsyncDalamudPlugin
         Recorder?.Dispose();
         Multiplayer?.Dispose();
         Game?.Dispose();
+        // After Game, whose teardown can still end a run; before Natives, whose revert lifts the firewall.
+        PullState?.Dispose();
         Natives.Dispose();
         opcodeUpdater?.Dispose();
         LogManager?.Dispose();
@@ -376,6 +380,8 @@ public sealed class Plugin : IAsyncDalamudPlugin
         catch (Exception e) { DiagnosticLog.Warn($"[Plugin] Runs.Tick threw: {e}"); }
         try { Game.Tick(fw->FrameDeltaTime); }
         catch (Exception e) { DiagnosticLog.Warn($"[Plugin] Game.Tick threw: {e}"); }
+        try { PullState.Tick(Game); }
+        catch (Exception e) { DiagnosticLog.Warn($"[Plugin] PullState.Tick threw: {e}"); }
 #if DEBUG
         try { DamageDebugWindow.Instance?.Tick(fw->FrameDeltaTime); }
         catch (Exception e) { DiagnosticLog.Warn($"[Plugin] DamageDebugWindow.Tick threw: {e}"); }
@@ -397,6 +403,8 @@ public sealed class Plugin : IAsyncDalamudPlugin
     private void OnTerritoryChanged(uint territory)
     {
         ZoneControl.NoteTerritoryChanged(territory);
+        // The sim moving Dalamud's reading, not a real zone-in.
+        if (ClientTerritory.Moving) return;
         var row = DataManager.GetExcelSheet<TerritoryType>()?.GetRowOrDefault(territory);
         var isInn = row?.TerritoryIntendedUse.RowId == 2; // TerritoryIntendedUse.Inn
         if (!isInn)

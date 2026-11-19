@@ -90,6 +90,19 @@ public class ConfigWindow : Window, IDisposable
             configuration.Save();
         }
 
+        var mirror = configuration.MirrorPullState;
+        if (Pills.Checkbox("Splatoon / other plugins see the fight", ref mirror))
+        {
+            configuration.MirrorPullState = mirror;
+            configuration.Save();
+        }
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("During a run, report the fight's zone, combat, duty and phase scene to other plugins,\n"
+                             + "so Splatoon layouts and scripts for the fight load and reset between pulls.\n"
+                             + "Takes effect from the next zone-in.");
+        ImGui.SameLine();
+        if (SplatoonLoaded()) ImGui.TextDisabled("(Splatoon loaded)");
+
         var newLayout = configuration.UseNewLayout;
         if (Pills.Checkbox("Use the new main window (preview)", ref newLayout))
             plugin.SetNewLayout(newLayout);
@@ -541,5 +554,12 @@ public class ConfigWindow : Window, IDisposable
             }
         ImGui.SameLine();
         if (ImGui.SmallButton("Cancel##clear-recordings-cancel")) confirmClearRecordings = false;
+    }
+
+    private static bool SplatoonLoaded()
+    {
+        foreach (var p in Plugin.PluginInterface.InstalledPlugins)
+            if (p.InternalName == "Splatoon" && p.IsLoaded) return true;
+        return false;
     }
 }
