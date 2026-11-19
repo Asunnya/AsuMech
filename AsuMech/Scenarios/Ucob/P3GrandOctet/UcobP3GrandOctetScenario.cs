@@ -17,7 +17,13 @@ public sealed class UcobP3GrandOctetScenario : IScenario
     public string Name => "Grand Octet";
     public IPhase Phase => UcobZone.P3;
 
-    public IReadOnlyList<IScenarioAi> AiStrats => [new UcobP3GrandOctetAi(tankLimitBreak: true), new UcobP3GrandOctetAi(tankLimitBreak: false)];
+    public IReadOnlyList<IScenarioAi> AiStrats =>
+    [
+        new UcobP3GrandOctetAi(tankLimitBreak: true),
+        new UcobP3GrandOctetAi(tankLimitBreak: false),
+        new UcobP3GrandOctetTuuflessAi(tankLimitBreak: true),
+        new UcobP3GrandOctetTuuflessAi(tankLimitBreak: false),
+    ];
 
     private readonly UcobP3GrandOctetSettingsWindow settingsWindow = new();
     public void DrawSettings() => settingsWindow.Draw();
@@ -79,7 +85,7 @@ public sealed class UcobP3GrandOctetScenario : IScenario
             ((IScenarioAi<State>)AiStrats[idx]).Run(state, world);
 
         world.Events.Add(0f, () => world.EnforceArenaBoundary(Geometry.P1ArenaRadius, "Fell into the death wall"));
-        world.Events.Add(0f, () => world.PlaceWaymarks(AetherWaymarks));
+        world.Events.Add(0f, () => world.PlaceWaymarks(UcobMarkers.Of(AiStrats, selectedAi).Waymarks));
         world.Events.Add(0f, () => party.LimitBreak.Set(LimitBreakBars));
         world.Events.Add(0f, () =>
         {

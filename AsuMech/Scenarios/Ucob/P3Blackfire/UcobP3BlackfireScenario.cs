@@ -18,7 +18,7 @@ public sealed class UcobP3BlackfireScenario : IScenario
     public string Name => "Blackfire Trio";
     public IPhase Phase => UcobZone.P3;
 
-    public IReadOnlyList<IScenarioAi> AiStrats => [new UcobP3BlackfireAi()];
+    public IReadOnlyList<IScenarioAi> AiStrats => [new UcobP3BlackfireAi(), new UcobP3BlackfireAi(tuufless: true)];
 
     private readonly UcobP3BlackfireSettingsWindow settingsWindow = new();
     public void DrawSettings() => settingsWindow.Draw();
@@ -89,7 +89,7 @@ public sealed class UcobP3BlackfireScenario : IScenario
             ((IScenarioAi<State>)AiStrats[idx]).Run(state, world);
 
         world.Events.Add(0f, () => world.EnforceArenaBoundary(Geometry.P1ArenaRadius, "Fell into the death wall"));
-        world.Events.Add(0f, () => world.PlaceWaymarks(AetherWaymarks));
+        world.Events.Add(0f, () => world.PlaceWaymarks(UcobMarkers.Of(AiStrats, selectedAi).Waymarks));
         world.Events.Add(0f, SpawnDragons);
         world.Events.Add(0.5f, TankBahamut);
 

@@ -21,7 +21,7 @@ public sealed class UcobP5GoldenBahamutScenario : IScenario
     public string Name => "Golden Bahamut";
     public IPhase Phase => UcobZone.P5;
 
-    public IReadOnlyList<IScenarioAi> AiStrats => [new UcobP5GoldenBahamutAi()];
+    public IReadOnlyList<IScenarioAi> AiStrats => [new UcobP5GoldenBahamutAi(), new UcobP5GoldenBahamutTuuflessAi()];
 
     private readonly UcobP5GoldenBahamutSettingsWindow settingsWindow = new();
     public void DrawSettings() => settingsWindow.Draw();
@@ -59,7 +59,7 @@ public sealed class UcobP5GoldenBahamutScenario : IScenario
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<State>)AiStrats[idx]).Run(state, world);
 
-        world.Events.Add(StartsAt, () => world.PlaceWaymarks(AetherWaymarks));
+        world.Events.Add(StartsAt, () => world.PlaceWaymarks(UcobMarkers.Of(AiStrats, selectedAi).Waymarks));
         world.Events.Add(StartsAt, () => bahamut = P5PhoenixTransition.UcobP5PhoenixTransitionScenario.SpawnBahamut(world, Vector3.Zero));
         world.Events.Add(LohsDaih, () => bahamut?.AddStatusParam(StatusId.LohsDaih, LohsDaihTransformation));
         world.Events.Add(InnerRage, () => world.Announce("Bahamut Prime unleashes his inner rage!"));

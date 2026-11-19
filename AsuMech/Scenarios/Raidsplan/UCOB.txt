@@ -118,3 +118,255 @@ Waymarks (WaymarkPresetPlugin JSON)
   "Three": { "X": 8.0, "Y": 0.0, "Z": 5.0, "ID": 6, "Active": true },
   "Four": { "X": 0.0, "Y": 0.0, "Z": 0.0, "ID": 7, "Active": true }
 }
+
+========================================================================
+Tuufless's FFXIV Notes - UCoB (Elemental)
+Elemental DC party finder strats
+========================================================================
+@scenarios: UcobP1TwintaniaScenario, UcobP2NaelScenario, UcobP3QuickmarchScenario, UcobP3BlackfireScenario, UcobP3FellruinScenario, UcobP3HeavensfallScenario, UcobP3TenstrikeScenario, UcobP3GrandOctetScenario, UcobP4AddsScenario, UcobP5GoldenBahamutScenario
+@strat: Tuufless (Elemental)
+@layout: Elemental
+@plans: -
+Guide: Tuufless's FFXIV Notes - UCoB (Elemental), overview and cheat sheet
+  https://ffxiv.tuufless.com/elemental/ucob/
+
+  PF largely follows Clees' UCoB guide, with these differences:
+  - Neurolinks are placed in an inverted triangle.
+  - Blackfire Trio towers are flipped for tanks and healers (healers take
+    the tower closer to the Megaflare stack).
+  - Heavensfall Trio spread positions are different (both tanks always go
+    towards Nael, both ranged always opposite Nael).
+  - Tenstrike Trio is done with one safe spot (the south marker) instead
+    of two.
+
+  Roles: H1 regen healer, H2 shield healer, D1/D2 melee, D3 physical
+  ranged, D4 caster.
+
+------------------------------------------------------------------------
+Tuufless P1: Twintania
+------------------------------------------------------------------------
+@scenarios: UcobP1TwintaniaScenario
+@strat: Tuufless (Elemental)
+@layout: Elemental
+@plans: -
+Guide: Tuufless - Twintania
+  https://ffxiv.tuufless.com/elemental/ucob/01_twintania/
+
+  - Neurolinks on markers 1, 2 and 3 (inverted triangle: 1 NW, 2 NE,
+    3 S). Twintania starts on the NW marker, then each push takes her
+    clockwise to the next marker.
+  - Twintania faces away from the party; everyone but the tanks keeps a
+    clear path to her rear.
+  - 1st phase Fireball: 5-man stack behind Twintania. MT, ST and D3 stay
+    out (D4 joins unless D3 is the target). Shields and mitigation, no
+    Reprisal/Feint/Addle (the point is to build LB).
+  - Liquid Hell: D3 baits; if D3 has Hatch, H2 or D4 baits that set.
+    Everyone else stays near Twintania.
+  - Generate: keep clear of the line between Twintania and the
+    Neurolink. Hatch targets wait beside (not in) their Neurolink, bait
+    Twister outside, then step in.
+  - Two Hatches: the two targets take separate Neurolinks; everyone stays
+    outside the triangle of Twintania and the two Neurolinks.
+  - Last phase Fireball: full party stack behind Twintania; the Liquid
+    Hell target keeps its puddles off the stack.
+  - Transition: stack on the south marker (tanks may go north). Spread
+    between the Heavensfall cones, then rotate away from south for the
+    second set. ST invulns Dalamud Dive.
+
+------------------------------------------------------------------------
+Tuufless P2: Nael deus Darnus
+------------------------------------------------------------------------
+@scenarios: UcobP2NaelScenario
+@strat: Tuufless (Elemental)
+@layout: Elemental
+@plans: -
+Guide: Tuufless - Nael deus Darnus
+  https://ffxiv.tuufless.com/elemental/ucob/02_nael/
+
+  - MT centres Nael facing north.
+  - 1st Thunder priority (first line), left to right:
+      MT ST H1 H2 D1 D2 D3 D4
+    The two Thunder targets separate from the party, still inside the
+    Lunar Dynamo safe zone.
+  - Fire: In > Out > In (except the 2nd fire) > In. The 2nd fire takes it
+    solo away from the party; anyone still Icebitten joins it.
+  - Thunder: away from the party and from each other.
+  - Third line spread (Raven's Dive):
+        MT  ST
+          ▲
+        D1  D2
+    Ranged spread out appropriately.
+  - Third line: after the 4th fire, players without Thunder dodge the
+    Wings toward Nael; Thunder players go far from Nael.
+  - Cauterize (fourth line): bait the dives away from the centre; spread
+    near the first dive's spot for Meteor Stream, stack in the middle for
+    the second part; avoid the ST.
+  - Seventh Umbral Era: stack on the south Neurolink (marker 3), tank LB.
+
+------------------------------------------------------------------------
+Tuufless P3: Bahamut Prime
+------------------------------------------------------------------------
+@scenarios: UcobP3QuickmarchScenario
+@strat: Tuufless (Elemental)
+@layout: Elemental
+@plans: -
+Guide: Tuufless - Bahamut Prime
+  https://ffxiv.tuufless.com/elemental/ucob/03_bahamut/
+Quickmarch Trio
+  - The three dragons are north. MT group west, ST group east, from the
+    dragons down: tank > healer > melee > ranged.
+          MT▼ST                    (DPS)
+        H1     H2   ->   (H1)MT★ST(H2)
+        D1     D2                   ◎
+          D3 D4                 DPS stack
+  - After Megaflare Dive, move along the edge to dodge Twisters.
+  - Megaflare markers (three DPS) stack south; the rest go north. Tanks
+    take the Tempest Wing tethers and stand in front of the healers for
+    Earth Shakers.
+@scenarios: UcobP3BlackfireScenario
+@strat: Tuufless (Elemental)
+@layout: Elemental
+@plans: -
+Blackfire Trio
+  - Stack on marker 4, stagger-step toward Nael baiting Liquid Hell; bait
+    Bahamut's dive through the centre.
+  - At the edge, tanks and healers turn left, DPS turn right.
+  - Megaflare marks stack between the two towers opposite Nael; the
+    others stand beside their tower, then step in on the second
+    Hypernova. With Nael as north:
+        MT   ▼   D1
+        ST       D2
+        H1(stack) D3
+        H2       D4
+    Tank: NW tower. Healer: SW tower. DPS: NE (D1 D2 D3 D4 in that
+    priority) or SE tower.
+  - Gather behind Bahamut in the centre for Gigaflare.
+@scenarios: UcobP3FellruinScenario
+@strat: Tuufless (Elemental)
+@layout: Elemental
+@plans: -
+Fellruin Trio
+  - Stack or spread around Nael by her line; tanks nearest the centre.
+          T  H2  T
+        D1   H1   D2
+          D3   D4
+  - Tanks take the Tempest Wing tethers. Neurolinks: MT toward Bahamut,
+    ST toward Twintania, H1 (and the party) the remaining one. Spread
+    around the Neurolink for Meteor Stream.
+@scenarios: UcobP3HeavensfallScenario
+@strat: Tuufless (Elemental)
+@layout: Elemental
+@plans: -
+Heavensfall Trio
+  - Spread: MT and ST toward Nael, H1/D1 left of the bosses, H2/D2 right,
+    D3/D4 opposite Nael.
+        MT ST
+      H1     H2
+      D1     D2
+        D3 D4
+  - Dodge along the edge like Quickmarch.
+  - Towers, from Nael: CCW (excluding Nael) MT H1 D1 D3; CW (including
+    Nael) ST H2 D2 D4. A tower on Nael is the ST's. Stand about as far in
+    as the Neurolinks.
+  - Spiral in, keep the Hypernovas off the centre, stack in the middle for
+    Twintania's Fireball.
+@scenarios: UcobP3TenstrikeScenario
+@strat: Tuufless (Elemental)
+@layout: Elemental
+@plans: -
+Tenstrike Trio
+  - Lineup west to east: D3 H1 D1 MT ST D2 H2 D4.
+  - 1st hatches: the targeted players, left to right, take NW, S and NE.
+  - 2nd hatches: the first three non-targeted players, left to right;
+    they wait beside the Neurolink and step in as the first ones run
+    straight out to the edge.
+  - Earth Shakers: the marked four spread along the north; the other four
+    wait in a square on the south Neurolink (marker 3), then the groups
+    swap.
+@scenarios: UcobP3GrandOctetScenario
+@strat: Tuufless (Elemental)
+@layout: Elemental
+@plans: -
+Grand Octet
+  - Bahamut on a cardinal: run anti-clockwise; on an intercardinal: run
+    clockwise. Start opposite Bahamut (one spot over if Nael is there).
+  - The player without a dive goes to Twintania's left (ccw) and dodges to
+    her other side when marked.
+  - With tank LB3: four players take the towers, ignore Megaflare.
+  - Without tank LB3: Megaflare players stack on Twintania's right,
+    non-Megaflare players take towers.
+        (Divebomb) ▼ (Megaflare)
+
+------------------------------------------------------------------------
+Tuufless P4: Adds
+------------------------------------------------------------------------
+@scenarios: UcobP4AddsScenario
+@strat: Tuufless (Elemental)
+@layout: Elemental
+@plans: -
+Guide: Tuufless - Twintania + Nael deus Darnus
+  https://ffxiv.tuufless.com/elemental/ucob/04_adds/
+
+  - MT takes Twintania, ST takes Nael; Twintania stays near the two front
+    Neurolinks. After the tank swap the tanks swap, not the bosses
+    (Twintania stays west, Nael east).
+  - Liquid Hell: D3 baits.
+  - Hatches: D1 top-left Neurolink, D2 top-right, D3 bottom, D4 flex in
+    the centre. The untargeted DPS goes to the edge; if D4 has Hatch, D4
+    takes that player's Neurolink.
+        D1    D2
+           D3
+  - Front Neurolinks: Hatch first, then out for Twister. Back Neurolink:
+    bait Twister outside, then Hatch.
+  - Nael lines and the last Twister: spread like the Raven's Dive spread.
+          MT ST
+        D1     D2
+        H1     H2
+          D3 D4
+
+------------------------------------------------------------------------
+Tuufless P5: Golden Bahamut
+------------------------------------------------------------------------
+@scenarios: UcobP5GoldenBahamutScenario
+@strat: Tuufless (Elemental)
+@layout: Elemental
+@plans: -
+Guide: Tuufless - Golden Bahamut
+  https://ffxiv.tuufless.com/elemental/ucob/05_golden_bahamut/
+
+  - Morn Afah mitigation (H2 shields and 30s every time):
+      1. MT 90s, ST Reprisal, D1, D4
+      2. ST 90s, MT Reprisal, D3
+      3. MT 90s, ST Reprisal, D1, D4
+      4. MT Reprisal, ST 90s, D2
+      5. MT 90s, ST Reprisal, D3, D4
+  - Akh Morn: party at the edge, tanks toward the centre.
+      1. MT + ST share, at the south Neurolink (marker 3)
+      2. MT invuln
+      3. ST invuln
+      4. MT + ST share
+
+------------------------------------------------------------------------
+Tuufless waymarks (WaymarkPresetPlugin JSON)
+------------------------------------------------------------------------
+@scenarios: -
+  Twintania: 1/2/3 neurolinks, 3 stack for the transition to Nael.
+  Nael: 3 stack for the transition to Bahamut, 4 Thermionic Beam and
+  fire tethers.
+  Bahamut Prime: ABCD Earth Shakers in Tenstrike; 1/2/3 boss spawns in
+  Fellruin and the knockback boundary in Heavensfall; 3 the Tenstrike safe
+  spot; 4 the Blackfire start stack, the Heavensfall end stack, and the
+  cardinal/intercardinal check in Grand Octet.
+  Golden Bahamut: 3 the tanks' stack for the first Akh Morn.
+{
+  "Name":"UCoB",
+  "MapID":280,
+  "A":{"X":-11.472,"Y":0.0,"Z":-16.383,"ID":0,"Active":true},
+  "B":{"X":11.47153,"Y":0.0,"Z":-16.383,"ID":1,"Active":true},
+  "C":{"X":19.31852,"Y":0.0,"Z":5.176381,"ID":2,"Active":true},
+  "D":{"X":-19.319,"Y":0.0,"Z":5.176,"ID":3,"Active":true},
+  "One":{"X":-7.57,"Y":0.0,"Z":-4.38,"ID":4,"Active":true},
+  "Two":{"X":7.57,"Y":0.0,"Z":-4.38,"ID":5,"Active":true},
+  "Three":{"X":0.0,"Y":0.0,"Z":8.75,"ID":6,"Active":true},
+  "Four":{"X":0.0,"Y":0.0,"Z":0.0,"ID":7,"Active":true}
+}

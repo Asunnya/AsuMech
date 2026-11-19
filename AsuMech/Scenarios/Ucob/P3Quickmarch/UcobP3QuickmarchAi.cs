@@ -10,9 +10,11 @@ using State = AsuMech.Scenarios.Ucob.P3Quickmarch.UcobP3QuickmarchState;
 
 namespace AsuMech.Scenarios.Ucob.P3Quickmarch;
 
-public sealed class UcobP3QuickmarchAi : IScenarioAi<UcobP3QuickmarchState>
+public sealed class UcobP3QuickmarchAi(bool tuufless = false) : IScenarioAi<UcobP3QuickmarchState>, IUcobStrat
 {
-    public string Name => "Uptime: light parties beside the dives, healers and a DPS bait Earth Shakers";
+    public string Name => tuufless ? "Tuufless (Elemental)" : "Uptime: light parties beside the dives, healers and a DPS bait Earth Shakers";
+
+    public UcobMarkers Markers => tuufless ? UcobMarkers.Elemental : UcobMarkers.Aether;
 
     private static readonly PartyRole[] Roles = Enum.GetValues<PartyRole>();
 
@@ -48,6 +50,14 @@ public sealed class UcobP3QuickmarchAi : IScenarioAi<UcobP3QuickmarchState>
     private static readonly Vector2 ShieldHealerEarthShaker = Polar(45f, 14f);
     private static readonly Vector2 DpsEarthShaker = Polar(135f, 14f);
     private static readonly Vector2 DpsStack = Polar(-135f, 8f);
+    private static readonly Vector2 MainTankInFrontOfRegenHealer = Polar(-90f, 7f);
+    private static readonly Vector2 OffTankInFrontOfShieldHealer = Polar(90f, 7f);
+    private static readonly Vector2 RegenHealerEarthShakerWest = Polar(-90f, 15f);
+    private static readonly Vector2 ShieldHealerEarthShakerEast = Polar(90f, 15f);
+    private static readonly Vector2 DpsEarthShakerNorth = Polar(0f, 14f);
+    private static readonly Vector2 DpsStackSouth = Polar(180f, 8f);
+    private static readonly Vector2 RegenHealerClearOfTheTempestWing = Polar(-125f, 14f);
+    private static readonly Vector2 ShieldHealerClearOfTheTempestWing = Polar(125f, 14f);
     private static readonly Vector2 MainTankFacingFlareBreath = new(0f, 4.5f);
     private static readonly Vector2 OffTankBehindBahamut = new(2.5f, -3f);
     private static readonly Vector2 PartyBehindBahamut = new(0f, -5f);
@@ -57,6 +67,7 @@ public sealed class UcobP3QuickmarchAi : IScenarioAi<UcobP3QuickmarchState>
     private const float RunInsideThePuddles = 19.85f;
     private const float TakeEarthShakersAndStack = 22.1f;
     private const float GatherBehindForFlareBreath = 29.6f;
+    private const float LeaveTheEarthShakerSpots = 27f;
 
     private State state = null!;
     private SimWorld world = null!;
@@ -68,10 +79,18 @@ public sealed class UcobP3QuickmarchAi : IScenarioAi<UcobP3QuickmarchState>
         var ai = new AiManager(world);
 
         ai.Move(0.3f, () => Absolute(OpeningSpots), jitter: 0f);
-        ai.Move(MoveBesideTheDives, () => FromTheDives(r => BesideTheDives[r]), jitter: 0f, sprint: true);
-        ai.Move(StepOffTheTwisters, () => FromTheDives(r => Polar(SpreadBearings[r], SpreadRadius)), jitter: 0f, sprint: true);
-        ai.Move(RunInsideThePuddles, () => FromTheDives(r => Polar(InsideThePuddlesBearings[r], InsideThePuddlesRadius)), jitter: 0f, sprint: true);
-        ai.Move(TakeEarthShakersAndStack, () => FromTheDives(EarthShakerAndStackSpot), jitter: 0f, sprint: true);
+        ai.Move(MoveBesideTheDives, () => FromTheDives(r => BesideTheDives[EdgeSlot(r)]), jitter: 0f, sprint: true);
+        ai.Move(StepOffTheTwisters, () => FromTheDives(r => Polar(SpreadBearings[EdgeSlot(r)], SpreadRadius)), jitter: 0f, sprint: true);
+        ai.Move(RunInsideThePuddles, () => FromTheDives(r => Polar(InsideThePuddlesBearings[EdgeSlot(r)], InsideThePuddlesRadius)), jitter: 0f, sprint: true);
+        if (tuufless)
+        {
+            ai.Move(TakeEarthShakersAndStack, () => FromTheDives(TanksInFrontOfHealersDpsStackSouthSpot), jitter: 0f, sprint: true);
+            ai.Move(LeaveTheEarthShakerSpots, () => FromTheDives(ClearOfTheTempestWingSpot), jitter: 0f, sprint: true);
+        }
+        else
+        {
+            ai.Move(TakeEarthShakersAndStack, () => FromTheDives(EarthShakerAndStackSpot), jitter: 0f, sprint: true);
+        }
         ai.Move(GatherBehindForFlareBreath, () => FromTheDives(FlareBreathSpot), jitter: 0f, sprint: true);
     }
 
@@ -83,6 +102,34 @@ public sealed class UcobP3QuickmarchAi : IScenarioAi<UcobP3QuickmarchState>
         ShieldHealer => ShieldHealerEarthShaker,
         _ when role == state.EarthShakerDps => DpsEarthShaker,
         _ => DpsStack,
+    };
+
+    private PartyRole EdgeSlot(PartyRole role) => !tuufless ? role : role switch
+    {
+        MeleeDpsA => PhysRangedDps,
+        PhysRangedDps => MeleeDpsA,
+        MeleeDpsB => CasterDps,
+        CasterDps => MeleeDpsB,
+        _ => role,
+    };
+
+    private Vector2 TanksInFrontOfHealersDpsStackSouthSpot(PartyRole role) => role switch
+    {
+        MainTank => MainTankInFrontOfRegenHealer,
+        OffTank => OffTankInFrontOfShieldHealer,
+        RegenHealer => RegenHealerEarthShakerWest,
+        ShieldHealer => ShieldHealerEarthShakerEast,
+        _ when role == state.EarthShakerDps => DpsEarthShakerNorth,
+        _ => DpsStackSouth,
+    };
+
+    private static Vector2 ClearOfTheTempestWingSpot(PartyRole role) => role switch
+    {
+        MainTank => MainTankInFrontOfRegenHealer,
+        OffTank => OffTankInFrontOfShieldHealer,
+        RegenHealer => RegenHealerClearOfTheTempestWing,
+        ShieldHealer => ShieldHealerClearOfTheTempestWing,
+        _ => DpsStackSouth,
     };
 
     private static Vector2 FlareBreathSpot(PartyRole role) => role switch
