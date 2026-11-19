@@ -19,7 +19,6 @@ public class UltimatePredationState
     public Vector3[] BoulderPositions { get; } = [];
     public PartyRole InfernalFettersDps { get; }
     // Null rolls at the bait's own time.
-    public PartyRole? UltimaLandslideBait { get; }
     public PartyRole? TitanLandslideBait { get; }
     public IReadOnlyList<PartyRole>? FeatherRainTargets { get; }
 
@@ -52,7 +51,6 @@ public class UltimatePredationState
         BoulderPositions = [.. boulders.Skip(boulderStart), .. boulders.Take(boulderStart)];
 
         InfernalFettersDps = overrides.InfernalFettersDps ?? Rng.NextDpsRole();
-        UltimaLandslideBait = overrides.UltimaLandslideBait;
         TitanLandslideBait = overrides.TitanLandslideBait;
         FeatherRainTargets = overrides.FeatherRainTargets;
 

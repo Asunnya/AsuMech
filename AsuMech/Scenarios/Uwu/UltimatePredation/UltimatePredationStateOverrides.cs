@@ -25,7 +25,6 @@ public class UltimatePredationStateOverrides
     // Every Feather Rain drops on these, instead of five random members each time.
     internal IReadOnlyList<PartyRole>? FeatherRainTargets { get; set; }
 
-    internal PartyRole? UltimaLandslideBait { get; set; }
     internal PartyRole? TitanLandslideBait { get; set; }
     internal PartyRole? InfernalFettersDps { get; set; }
 }

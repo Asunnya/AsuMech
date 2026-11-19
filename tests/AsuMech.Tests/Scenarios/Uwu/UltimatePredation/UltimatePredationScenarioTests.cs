@@ -10,7 +10,7 @@ using static AsuMech.Tests.NegativeRun;
 namespace AsuMech.Tests;
 
 // Every roll is pinned: Garuda NW (-3,-3), Ultima SW (-12,12), Ifrit NE (13.7,-13.7), Titan E offset
-// to (17,-3), bombs in Geometry order, Feather Rain on MT OT M1 R C, both Landslides baited by MT,
+// to (17,-3), bombs in Geometry order, Feather Rain on MT OT M1 R C, Titan's Landslide baited by MT,
 // Infernal Fetters on M1. The only safe cardinal is S, so the AI's spots below are its own.
 //
 //   20.12  Titan's Landslides snapshot, knockback only, landing at 21.15.
@@ -49,7 +49,6 @@ public class UltimatePredationScenarioTests
         o.TitanOffsetRight = true;
         o.BoulderStart = 0;
         o.FeatherRainTargets = FeatherRainTargets;
-        o.UltimaLandslideBait = MainTank;
         o.TitanLandslideBait = MainTank;
         o.InfernalFettersDps = MeleeDpsA;
     }
@@ -226,5 +225,31 @@ public class UltimatePredationScenarioTests
             Assert.That(replayed.ResolvedSafeFirstSet, Is.EqualTo(host.ResolvedSafeFirstSet));
             Assert.That(replayed.ResolvedSafeSecondSet, Is.EqualTo(host.ResolvedSafeSecondSet));
         });
+    }
+
+    [Test]
+    public void UltimasLandslideRunsAlongItsFacingTowardTheMainTank()
+    {
+        var lines = new System.Collections.Generic.List<float>();
+        var towardTheTank = 0f;
+        ScenarioRun.Execute(typeof(UltimatePredationScenario), 0, 1234, new ScenarioRunOptions
+        {
+            PlayerRole = MainTank,
+            StopAt = 56f,
+            WriteArtifactsOnFailure = false,
+            Takeovers = [new Takeover(54f, new Vector2(14f, 4f))],
+            Probe = probe =>
+            {
+                if (!probe.Crossed(55.3f)) return;
+                var enemies = probe.World.Children.OfType<AsuMech.Core.SimObjects.SimEnemy>().ToList();
+                var ultima = enemies.First(e => e.SpawnConfig.BNpcBaseId == BNpcBaseId.UltimaWeapon);
+                var tank = probe.Member(MainTank)!.Position - ultima.Position;
+                towardTheTank = MathF.Atan2(tank.X, tank.Z);
+                lines.AddRange(enemies.Where(e => e.IsCasting && e.CastActionId == ActionId.LandslideLineUltima).Select(e => e.Rotation));
+            },
+        });
+
+        Assert.That(lines, Has.Count.EqualTo(3));
+        Assert.That(lines.Any(r => MathF.Abs(float.Ieee754Remainder(r - towardTheTank, MathF.Tau)) < 0.05f));
     }
 }
