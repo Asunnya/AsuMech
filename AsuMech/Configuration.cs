@@ -17,6 +17,10 @@ public class Configuration : IPluginConfiguration
     public bool OpenSimMenuOnInn { get; set; } = true;
     // Experimental: start stays from the FC private chambers too (LaunchRoom).
     public bool AllowFcChambers { get; set; } = false;
+
+    // During a stay, show other plugins (Splatoon, BossMod) the fight's zone, combat, duty and
+    // scene (PullStateMirror, ClientTerritory).
+    public bool MirrorPullState { get; set; } = true;
     public bool OpenSimMenuOnSupportedInstanceSolo { get; set; } = false;
     public bool EnableEventLogging { get; set; } = false;
     // PullRecorder: a real savage, ultimate or extreme pull, written as a SimTimeline CSV. Zoning

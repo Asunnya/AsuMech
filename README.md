@@ -48,6 +48,12 @@ While simulating:
 **Interface**
 - One window: search and browse fights by expansion and category, with your recent fights at hand.
 
+**Other plugins**
+- Splatoon layouts and scripts for the fight work inside a run: during a stay AsuMech reports the fight's zone,
+  combat (dropped for a moment on a restart, so scripts reset), duty, and the phase scene the scripts check (TOP P1/P5/P6,
+  DSR P2/P3/P5, FRU P1, Dancing Mad P1–P3). The doppels are in the party list, so priority lists with *Fill automatically*
+  resolve them. Toggle it in the settings.
+
 **Feedback from inside the game**
 - Report a problem during a run (a solo run pauses while you write); the run's details go with it.
 - Scenario and strat requests without a GitHub account, and a link to the Discord.
