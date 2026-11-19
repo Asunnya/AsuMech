@@ -307,7 +307,7 @@ public static class FruActions
     public static readonly EnemyAction DarkestDance = new(ActionId.DarkestDance)
     {
         Cast = new() { AnimationLock = 2.8f },
-        Effects = [Damage(TankBuster), ApplyStatus(StatusId.PhysicalVulnerabilityUp, 3.78f, delayToEffectResult: true)],
+        Effects = [Damage(TankBuster), ApplyStatus(StatusId.PhysicalVulnerabilityUp, 3.98f, delayToEffectResult: true)],
         Timing = new() { DamageDelay = 1.15f },
     };
 
