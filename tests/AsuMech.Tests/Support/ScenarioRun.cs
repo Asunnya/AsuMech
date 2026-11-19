@@ -30,6 +30,9 @@ internal sealed record ScenarioRunOptions
     // Every scenario a Run to end started, in order.
     public Action<IScenario>? Started { get; init; }
 
+    // The fake game as the run ended, before it's torn down.
+    public Action<FakeGame>? Finished { get; init; }
+
     // Writes the artifact folder even for a passing run.
     public bool AlwaysWriteArtifacts { get; init; }
 
@@ -182,6 +185,7 @@ internal sealed record ScenarioRun(
         }
 
         var endTime = game.World.Events.Elapsed;
+        options.Finished?.Invoke(fake);
         if (options.TimelinePath is { } timelinePath)
             fake.Timeline.Write(timelinePath);
         string? artifacts = null;

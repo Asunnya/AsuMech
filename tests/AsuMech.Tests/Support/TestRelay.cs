@@ -6,11 +6,13 @@ namespace AsuMech.Tests;
 
 // What a client's link can suffer: it drops, with all it carries, and reconnecting fails for
 // Outage seconds; or its uploads (downloads) vanish for Dead seconds first, as a link does before
-// anyone notices it's gone.
+// anyone notices it's gone; or its uploads hold for Stall seconds and then go on in order, as
+// after a lost packet.
 internal abstract record LinkFault(double Outage);
 internal sealed record LinkDrops(double Outage) : LinkFault(Outage);
 internal sealed record UploadsDie(double Dead, double Outage) : LinkFault(Outage);
 internal sealed record DownloadsDie(double Dead, double Outage) : LinkFault(Outage);
+internal sealed record UploadsStall(double Stall) : LinkFault(0);
 
 // A message a client handed its link, From being the n-th client to connect. Resent: a numbered
 // message that was on the wire before.
@@ -62,6 +64,7 @@ internal sealed class TestRelay(int seed, Func<int, ConnectionProfile> linkFor)
         public double DownUntil = double.NegativeInfinity;
         public double UploadsDeadUntil = double.NegativeInfinity;
         public double DownloadsDeadUntil = double.NegativeInfinity;
+        public double UploadsStalledUntil = double.NegativeInfinity;
     }
 
     public double Now { get; private set; }
@@ -94,6 +97,10 @@ internal sealed class TestRelay(int seed, Func<int, ConnectionProfile> linkFor)
     // The client's link drops right after it sends the first message `match` takes, which goes
     // with it.
     public void DropAfterSending(int client, Func<Carried, bool> match, LinkFault fault) => afterSending.Add((client, match, fault));
+
+    // The client's uploads stall right after it sends the first message `match` takes, which
+    // waits with them.
+    public void StallAfterSending(int client, Func<Carried, bool> match, double seconds) => afterSending.Add((client, match, new UploadsStall(seconds)));
 
     // The client's link drops right as the first message `match` takes reaches it, which is lost.
     public void DropBeforeReceiving(int client, Func<Carried, bool> match, LinkFault fault) => beforeReceiving.Add((client, match, fault));
@@ -145,6 +152,9 @@ internal sealed class TestRelay(int seed, Func<int, ConnectionProfile> linkFor)
             case DownloadsDie dies:
                 link.DownloadsDeadUntil = Now + dies.Dead;
                 scheduled.Add((Now + dies.Dead, identities.IndexOf(identity), new LinkDrops(dies.Outage)));
+                return;
+            case UploadsStall stall:
+                link.UploadsStalledUntil = Now + stall.Stall;
                 return;
         }
         var live = connections.FirstOrDefault(c => c.Identity == identity && c.Joined);
@@ -334,7 +344,7 @@ internal sealed class TestRelay(int seed, Func<int, ConnectionProfile> linkFor)
                 uploadShare = 1 - link.UploadSwing + swing.NextDouble() * 2 * link.UploadSwing;
                 nextSwing = now + link.UploadSwingEvery;
             }
-            if (uploadStalls.Within(now) == null)
+            if (uploadStalls.Within(now) == null && now >= relay.LinkOf(Identity).UploadsStalledUntil)
             {
                 uploadCredit += Math.Min(link.UploadRate * uploadShare * Step, int.MaxValue);
                 while (sendBuffer.Count > 0 && uploadCredit >= 1)
