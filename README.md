@@ -110,6 +110,7 @@ All using default NA pf strats unless noted otherwise:
     - P2 Diamond Dust 
     - P2 Mirror, Mirror
     - P2 Light Rampant
+    - Intermission Ice Veil
     - P3 Ultimate Relativity
     - P3 Apocalypse 
     - P4 Darklit Dragonsong

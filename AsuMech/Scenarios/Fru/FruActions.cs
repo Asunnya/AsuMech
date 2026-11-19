@@ -254,11 +254,12 @@ public static class FruActions
         Timing = new() { DamageDelay = 0.6f },
     };
 
-    // Hurts no player: it only leaves Vulnerability Down on the crystals it reaches.
+    // Hurts no player. A Crystal of Light it reaches can no longer be destroyed.
     public static readonly EnemyAction SinboundBlizzard = new(ActionId.SinboundBlizzard)
     {
         Cast = new() { AnimationLock = 1.1f },
         Area = new() { Size = MathF.PI / 18f },
+        Effects = [OnNpcs(BNpcBaseId.CrystalOfLight, ApplyStatus(StatusId.VulnerabilityDown, 9999f))],
         Timing = new() { DamageDelay = 0.3f },
     };
 

@@ -1,0 +1,154 @@
+{
+  "scenario": "FruIceVeilScenario",
+  "casts": [
+    {
+      "actionId": 40224,
+      "name": "Absolute Zero",
+      "start": 2.017,
+      "resolve": 11.717,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40333,
+      "name": "Absolute Zero",
+      "start": 12.667,
+      "resolve": 12.667,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40225,
+      "name": "Swelling Frost",
+      "start": 14.917,
+      "resolve": 14.917,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40259,
+      "name": "Endless Ice Age",
+      "start": 38.8,
+      "resolve": 78.5,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40262,
+      "name": "Sinbound Blizzard III",
+      "start": 43.933,
+      "resolve": 46.933,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40256,
+      "name": "Hiemal Storm",
+      "start": 44.833,
+      "resolve": 47.833,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40256,
+      "name": "Hiemal Storm",
+      "start": 48.283,
+      "resolve": 51.283,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40262,
+      "name": "Sinbound Blizzard III",
+      "start": 49.333,
+      "resolve": 52.333,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40256,
+      "name": "Hiemal Storm",
+      "start": 51.566,
+      "resolve": 54.566,
+      "occurrence": 3
+    },
+    {
+      "actionId": 40257,
+      "name": "Hiemal Ray",
+      "start": 54.666,
+      "resolve": 54.666,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40262,
+      "name": "Sinbound Blizzard III",
+      "start": 54.716,
+      "resolve": 57.716,
+      "occurrence": 3
+    },
+    {
+      "actionId": 40256,
+      "name": "Hiemal Storm",
+      "start": 54.866,
+      "resolve": 57.866,
+      "occurrence": 4
+    },
+    {
+      "actionId": 40257,
+      "name": "Hiemal Ray",
+      "start": 56.583,
+      "resolve": 56.583,
+      "occurrence": 2
+    },
+    {
+      "actionId": 40256,
+      "name": "Hiemal Storm",
+      "start": 58.166,
+      "resolve": 61.166,
+      "occurrence": 5
+    },
+    {
+      "actionId": 40257,
+      "name": "Hiemal Ray",
+      "start": 58.683,
+      "resolve": 58.683,
+      "occurrence": 3
+    },
+    {
+      "actionId": 40262,
+      "name": "Sinbound Blizzard III",
+      "start": 60.133,
+      "resolve": 63.133,
+      "occurrence": 4
+    },
+    {
+      "actionId": 40256,
+      "name": "Hiemal Storm",
+      "start": 61.466,
+      "resolve": 64.466,
+      "occurrence": 6
+    },
+    {
+      "actionId": 40262,
+      "name": "Sinbound Blizzard III",
+      "start": 65.416,
+      "resolve": 68.416,
+      "occurrence": 5
+    },
+    {
+      "actionId": 40262,
+      "name": "Sinbound Blizzard III",
+      "start": 70.734,
+      "resolve": 73.734,
+      "occurrence": 6
+    },
+    {
+      "actionId": 40121,
+      "name": "Icecrusher",
+      "start": 74.601,
+      "resolve": 74.601,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Absolute Zero",
+    "Swelling Frost",
+    "Endless Ice Age",
+    "Sinbound Blizzard III",
+    "Hiemal Storm",
+    "Hiemal Ray",
+    "Icecrusher"
+  ]
+}
