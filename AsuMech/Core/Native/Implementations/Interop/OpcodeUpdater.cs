@@ -1,65 +1,70 @@
 using System;
-using System.Linq;
 using System.Net.Http;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using ThreadingTask = System.Threading.Tasks.Task;
 
 namespace AsuMech.Core.Native.Implementations.Interop;
 
-// Downloads per-version ZoneDown opcode allowlist from Hyperborea's GitHub so the
-// packet firewall stays current after game patches. Runs asynchronously on first
-// plugin load when the stored game version doesn't match the running binary.
+// Downloads the per-version firewall opcodes from Hyperborea's GitHub so the packet firewall
+// stays current after game patches. Runs asynchronously on plugin load when the stored list is
+// not this binary's; until it lands, StartBlockedReason refuses a stay.
 internal sealed unsafe class OpcodeUpdater : IDisposable
 {
-    private static string CurrentVersion =>
+    internal static string CurrentVersion =>
         $"{Framework.Instance()->GameVersionString}_{typeof(OpcodeUpdater).Assembly.GetName().Version}";
+
+    internal static bool Downloading { get; private set; }
 
     private volatile bool disposed;
 
     internal OpcodeUpdater()
     {
-        if (CurrentVersion == Plugin.Config.ZoneFirewallGameVersion)
+        if (CurrentVersion == Plugin.Config.ZoneFirewallGameVersion && Plugin.Config.ZoneUpOpcode != 0)
         {
             Plugin.Log.Information("[OpcodeUpdater] Opcodes are current.");
             return;
         }
         Plugin.Log.Information("[OpcodeUpdater] Game version changed — fetching new opcodes.");
         var version = new string(Framework.Instance()->GameVersionString);
-        ThreadingTask.Run(() => DownloadOpcodes(version));
+        var current = CurrentVersion;
+        Downloading = true;
+        ThreadingTask.Run(() => DownloadOpcodes(version, current));
     }
 
-    private void DownloadOpcodes(string gameVersion)
+    private void DownloadOpcodes(string gameVersion, string current)
     {
-        if (disposed) return;
-        using var client = new HttpClient();
+        var handedOff = false;
         try
         {
-            var url = $"https://github.com/kawaii/Hyperborea/raw/main/opcodes/{gameVersion}.txt";
-            var lines = client.GetStringAsync(url).Result
-                .ReplaceLineEndings()
-                .Split(Environment.NewLine);
             if (disposed) return;
-            foreach (var line in lines)
+            using var client = new HttpClient { Timeout = TimeSpan.FromSeconds(20) };
+            var url = $"https://github.com/kawaii/Hyperborea/raw/main/opcodes/{gameVersion}.txt";
+            var text = client.GetStringAsync(url).Result;
+            if (disposed) return;
+            if (FirewallOpcodes.Parse(text, out var problem) is not { } opcodes)
             {
-                if (!line.StartsWith("ZoneDown=")) continue;
-                var opcodes = line["ZoneDown=".Length..].Split(",")
-                    .Select(uint.Parse)
-                    .ToArray();
-                if (!opcodes.Any(o => o != 0)) throw new Exception("Parsed empty opcode list.");
-                Plugin.Framework.Run(() =>
-                {
-                    Plugin.Config.ZoneDownOpcodes = opcodes;
-                    Plugin.Config.ZoneFirewallGameVersion = CurrentVersion;
-                    Plugin.Config.Save();
-                    Plugin.Log.Information($"[OpcodeUpdater] ZoneDown opcodes updated: {string.Join(", ", opcodes)}");
-                });
+                Plugin.Log.Warning($"[OpcodeUpdater] Refused the opcode file for {gameVersion}: {problem}.");
                 return;
             }
-            Plugin.Log.Warning("[OpcodeUpdater] ZoneDown= line not found in opcode file.");
+            Plugin.Framework.Run(() =>
+            {
+                Plugin.Config.ZoneUpOpcode = opcodes.ZoneUp;
+                Plugin.Config.ZoneDownOpcodes = opcodes.ZoneDown;
+                Plugin.Config.ZoneFirewallGameVersion = current;
+                Plugin.Config.Save();
+                Downloading = false;
+                Plugin.Log.Information($"[OpcodeUpdater] Opcodes updated: ZoneUp {opcodes.ZoneUp}, ZoneDown {string.Join(", ", opcodes.ZoneDown)}");
+            });
+            handedOff = true;
         }
         catch (Exception e)
         {
             Plugin.Log.Warning($"[OpcodeUpdater] Failed to fetch opcodes: {e.Message}");
+        }
+        finally
+        {
+            // A handed-off update clears it on the framework thread, once the list is stored.
+            if (!handedOff) Downloading = false;
         }
     }
 

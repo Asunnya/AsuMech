@@ -172,6 +172,7 @@ public class Configuration : IPluginConfiguration
     public bool EnableTankMitigation { get; set; } = true;
 
     // Firewall opcode config — updated automatically by OpcodeUpdater on game version change.
+    public ushort ZoneUpOpcode { get; set; }
     public uint[] ZoneDownOpcodes { get; set; } = [];
     public string ZoneFirewallGameVersion { get; set; } = "";
 
