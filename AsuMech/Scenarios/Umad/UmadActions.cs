@@ -764,11 +764,10 @@ public static class UmadActions
     public static readonly EnemyAction InfernoFireCrystal = ElementBurst(UmadConstants.ActionId.Inferno_FireCrystal, donut: true);
     public static readonly EnemyAction TsunamiWaterCrystal = ElementBurst(UmadConstants.ActionId.Tsunami_WaterCrystal, donut: false);
 
-    // The donuts' safe inner radius is UNVERIFIED.
     private static EnemyAction ElementBurst(uint actionId, bool donut) => new(actionId)
     {
         Cast = new() { AnimationLock = 1.1f, FaceTarget = false },
-        Area = donut ? new() { Size = 6f } : new(),
+        Area = donut ? new() { Size = 4f } : new(),
         Effects = [Damage(MagicVulns), LongMagicVulnerabilityUp],
         Timing = new() { DamageDelay = 0.6f },
     };

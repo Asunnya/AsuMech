@@ -13,6 +13,7 @@ public sealed record IceSet(bool RealNwSe, bool IsLie)
 public sealed class UmadP1OpeningState
 {
     public static readonly PartyRole[] Supports = [PartyRole.MainTank, PartyRole.OffTank, PartyRole.RegenHealer, PartyRole.ShieldHealer];
+    public static readonly PartyRole[] Healers = [PartyRole.RegenHealer, PartyRole.ShieldHealer];
     public static readonly PartyRole[] Dps = [PartyRole.MeleeDpsA, PartyRole.MeleeDpsB, PartyRole.PhysRangedDps, PartyRole.CasterDps];
 
     public const int GravenRounds = 2;
@@ -54,7 +55,7 @@ public sealed class UmadP1OpeningState
         TetheredAreDps = Roll(rng, overrides.TetheredAreDps);
         FireIsStack = Roll(rng, overrides.FireIsStack);
         FireIsLie = Roll(rng, overrides.FireIsLie);
-        FireStackSupport = Pick(rng, Supports, overrides.FireStackOn);
+        FireStackSupport = Pick(rng, Healers, overrides.FireStackOn);
         FireStackDps = Pick(rng, Dps, overrides.FireStackOn);
         FirstIce = new IceSet(rng.NextBool(), Roll(rng, overrides.FirstIceIsLie));
         SecondIce = new IceSet(rng.NextBool(), Roll(rng, overrides.SecondIceIsLie));

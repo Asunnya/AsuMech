@@ -10,7 +10,7 @@ namespace AsuMech.Tests;
 // Pinned: Hallowed Ray on MT, the blue mirror W at (-20,0), the reds N and E, Banish as pairs on
 // the supports.
 //
-//    7.35 Hallowed Ray from (0,0) at the stack on MT.
+//    7.75 Hallowed Ray from (0,0) at the stack on MT.
 //   25.02 Scythe Kick from (7.5,0); tanks and melee around her, the rest around the blue mirror.
 //   31.37 House of Light from the blue mirror, 31.45 from the Usurper, each at its four nearest.
 //   41.42 the reds' House of Light: the healers and ranged at N, tanks and melee at E.
@@ -33,6 +33,12 @@ public class FruP2MirrorMirrorScenarioTests
     public void RayTargetLeavingTheStackDies()
         => MirrorMirror(MainTank)
             .TeleportAt(7.1f, to: new(10, 0))
+            .ShouldKill(ActionId.HallowedRay, MainTank);
+
+    [Test]
+    public void HallowedRayLandsWellAfterSevenSeconds()
+        => MirrorMirror(MainTank)
+            .TeleportAt(7.6f, to: new(10, 0))
             .ShouldKill(ActionId.HallowedRay, MainTank);
 
     [Test]

@@ -54,7 +54,7 @@ public sealed class UmadP3BlackHoleState
         ThunderSet1 = overrides.ThunderSet1;
         ThunderSet2 = overrides.ThunderSet2;
 
-        StackTargets = new RoleList(party, overrides.StackTargets ?? NextStackTargets());
+        StackTargets = new RoleList(party, overrides.StackTargets ?? NextStackTargets(rng));
         EdictTargets = new RoleList(party, [overrides.EdictTarget ?? rng.NextRole(), rng.NextRole()]);
         ImplosionAttack = overrides.ImplosionAttack ?? rng.NextObj(ActionId.LatitudinalImplosion, ActionId.LongitudinalImplosion);
         SlapAttacks = Enumerable.Range(0, 3).Select(i => overrides.SlapAttacks[i] ?? NextSlap()).ToList();
@@ -69,14 +69,12 @@ public sealed class UmadP3BlackHoleState
         MiniBlackHoleChirality = overrides.MiniBlackHoleChirality ?? rng.NextSign();
     }
 
-    // The first Knock Down marks a DPS, the second a support. The spare draw keeps the later rolls
-    // of seeds that lessons and timelines are pinned to.
-    private PartyRole[] NextStackTargets()
+    // One Knock Down marks a support and the other a DPS, either one first.
+    internal static PartyRole[] NextStackTargets(Rng rng)
     {
         var support = rng.NextSupportRole();
         var dps = rng.NextDpsRole();
-        rng.NextInt(2);
-        return [dps, support];
+        return rng.NextInt(2) == 0 ? [support, dps] : [dps, support];
     }
 
     // Network replay: only the fields UmadP3BlackHoleAi reads; the rest are placeholders the

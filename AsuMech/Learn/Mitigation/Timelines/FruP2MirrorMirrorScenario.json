@@ -11,8 +11,8 @@
     {
       "actionId": 40211,
       "name": "Hallowed Ray",
-      "start": 7.35,
-      "resolve": 7.35,
+      "start": 7.75,
+      "resolve": 7.75,
       "occurrence": 2
     },
     {
@@ -30,17 +30,17 @@
       "occurrence": 1
     },
     {
-      "actionId": 40204,
-      "name": "Reflected Scythe Kick",
-      "start": 30.716,
-      "resolve": 30.716,
-      "occurrence": 1
-    },
-    {
       "actionId": 40205,
       "name": "Reflected Scythe Kick",
       "start": 31.016,
       "resolve": 40.716,
+      "occurrence": 1
+    },
+    {
+      "actionId": 40204,
+      "name": "Reflected Scythe Kick",
+      "start": 31.066,
+      "resolve": 31.066,
       "occurrence": 2
     },
     {
