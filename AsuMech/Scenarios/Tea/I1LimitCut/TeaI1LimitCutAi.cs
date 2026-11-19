@@ -20,7 +20,7 @@ public sealed class TeaI1LimitCutAi : IScenarioAi<TeaI1LimitCutState>
 
     private static readonly float[] KnockbackImmunityAt = [9.64f, 11.14f, 14.31f, 15.80f, 18.95f, 20.42f, 23.58f, 25.05f];
     private static readonly float[] FaceAt = [11.40f, 13.10f, 15.00f, 18.10f, 20.65f, 22.60f, 25.10f, 27.20f];
-    private static readonly float[] BehindCruiseChaserAt = [11.67f, 16.41f, 21.05f, 25.75f];
+    private static readonly float[] BehindCruiseChaserAt = [11.80f, 16.41f, 21.05f, 25.75f];
     private static readonly float[] HitAt = [12.64f, 14.14f, 17.31f, 18.80f, 21.95f, 23.42f, 26.58f, 28.05f];
     private static readonly (float From, float To)[] SprintWindows = [(7.7f, 17.7f), default, default, default, (14.4f, 24.4f), default, (20.4f, 30.4f), default];
 

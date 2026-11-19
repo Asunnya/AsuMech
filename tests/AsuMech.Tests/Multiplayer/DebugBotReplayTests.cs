@@ -3,7 +3,6 @@ using System.Numerics;
 using System.Text.RegularExpressions;
 using AsuMech.Core.Game.Party;
 using AsuMech.Scenarios;
-using AsuMech.Scenarios.Tea.I1LimitCut;
 using AsuMech.Scenarios.Tea.P1LivingLiquid;
 
 namespace AsuMech.Tests;
@@ -47,7 +46,6 @@ public partial class DebugBotReplayTests
     private static readonly Dictionary<Type, string> PlaysOnWhatALongLineShowsLate = new()
     {
         [typeof(TeaP1LivingLiquidScenario)] = "a peer logs its opening moves 0.3 s before the host's Ai does (cause not looked into yet)",
-        [typeof(TeaI1LimitCutScenario)] = "the even numbers go behind Cruise Chaser as each client sees it",
     };
 
     private static IEnumerable<TestCaseData> FirstStratsOverALongLine() =>
