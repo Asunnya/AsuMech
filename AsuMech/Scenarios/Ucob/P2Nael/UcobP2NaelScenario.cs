@@ -80,7 +80,6 @@ public sealed class UcobP2NaelScenario : ISectionedScenario
     public static readonly float[] Deathstorms = [48.19f, 77.34f, 113.47f];
     public const float DoomAfterDeathstorm = 1.03f;
     public const float RavensbeakCast = 130.45f;
-    private const float RavensbeakCastSeconds = 3.7f;
     // It lands a moment after its cast bar fills.
     public const float RavensbeakLands = 3.99f;
     public const float NaelUntargetable = 136.79f;
@@ -224,8 +223,8 @@ public sealed class UcobP2NaelScenario : ISectionedScenario
             world.Events.Add(Deathstorms[set] + DoomAfterDeathstorm, () => Doom(dooms, seconds));
         }
 
-        world.Events.Add(RavensbeakCast, CastRavensbeak);
-        world.Events.Add(RavensbeakCast + RavensbeakLands, Ravensbeak);
+        world.Events.Add(RavensbeakCast, () => UcobNaelAttacks.CastRavensbeak(nael, party.Get(PartyRole.MainTank)));
+        world.Events.Add(RavensbeakCast + RavensbeakLands, () => UcobNaelAttacks.Ravensbeak(damage, nael, party.Get(PartyRole.MainTank)));
         if (state.Push == NaelPush.NoPush)
         {
             ScheduleDivebombs();
@@ -265,14 +264,14 @@ public sealed class UcobP2NaelScenario : ISectionedScenario
         world.Events.Add(DivebombQuoteSecondMove(quote), () => DivebombQuoteMove(quote.Second));
         for (var hit = 0; hit < 5; hit++)
             world.Events.Add(DivebombClaw + hit * ClawInterval, () => BahamutsClaw(PartyRole.OffTank));
-        world.Events.Add(FinalRavensbeakCast, CastRavensbeak);
-        world.Events.Add(FinalRavensbeakCast + RavensbeakLands, Ravensbeak);
+        world.Events.Add(FinalRavensbeakCast, () => UcobNaelAttacks.CastRavensbeak(nael, party.Get(PartyRole.OffTank)));
+        world.Events.Add(FinalRavensbeakCast + RavensbeakLands, () => UcobNaelAttacks.Ravensbeak(damage, nael, party.Get(PartyRole.OffTank)));
         world.Events.Add(DivebombsEnd, DespawnAll);
     }
 
     public void Tick(float delta, float elapsed)
     {
-        if (nael is { IsCasting: false, IsMoving: false } boss && party.Get(PartyRole.MainTank) is { } tank && tank.IsAlive())
+        if (nael is { IsCasting: false, IsMoving: false } boss && party.Get(TankNaelHolds(world.Events.Elapsed)) is { } tank && tank.IsAlive())
             boss.Face(tank);
         CleanseDooms(world.Events.Elapsed);
         BurnInHypernovaPuddles(world.Events.Elapsed);
@@ -534,19 +533,8 @@ public sealed class UcobP2NaelScenario : ISectionedScenario
         }
     }
 
-    private void CastRavensbeak()
-    {
-        if (party.Get(PartyRole.MainTank) is not { } tank) return;
-        nael?.NativeCast(ActionId.Ravensbeak, ActionType.Action, 0f, RavensbeakCastSeconds, false, targetId: tank.GameObjectId);
-    }
-
-    private void Ravensbeak()
-    {
-        if (party.Get(PartyRole.MainTank) is not { } tank || !tank.IsAlive()) return;
-        PlayEffect(nael, ActionId.Ravensbeak, 1.1f, target: tank.GameObjectId, hits: [tank]);
-        damage.ApplyDamage(tank, 0.5f, ActionId.Ravensbeak, "Ravensbeak", lethal: false);
-        tank.AddStatus(StatusId.PiercingResistanceDownII, UcobNaelAttacks.PiercingResistanceDownSeconds);
-    }
+    private PartyRole TankNaelHolds(float elapsed)
+        => state.Push == NaelPush.NoPush && elapsed >= NaelGone ? PartyRole.OffTank : PartyRole.MainTank;
 
     private static readonly uint[] CauterizeIds =
     [

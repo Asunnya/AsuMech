@@ -312,6 +312,31 @@ public class UcobP2NaelScenarioTests
         });
     }
 
+    [Test]
+    public void WithoutThePushTheLastRavensbeakLandsOnTheOffTankNaelKept()
+    {
+        bool? offTankVulnerable = null;
+        var run = ScenarioRun.Execute(typeof(UcobP2NaelScenario), 0, 3, new ScenarioRunOptions
+        {
+            Overrides = o => ((UcobP2NaelStateOverrides)o).Push = NaelPush.NoPush,
+            Probe = p =>
+            {
+                if (p.Crossed(UcobP2NaelScenario.FinalRavensbeakCast + UcobP2NaelScenario.RavensbeakLands + 0.2f))
+                    offTankVulnerable = p.World.Party.Get(OffTank)?.HasStatus(StatusId.PiercingResistanceDownII);
+            },
+        });
+        Assert.That(run.Passed, run.ToString);
+        Assert.That(offTankVulnerable, Is.True);
+    }
+
+    [Test]
+    public void TheLastRavensbeakOnAVulnerableOffTankKills()
+        => Negative<UcobP2NaelScenario>(OffTank)
+            .Overrides<UcobP2NaelStateOverrides>(o => o.Push = NaelPush.NoPush)
+            .At(UcobP2NaelScenario.FinalRavensbeakCast, p => p.World.Party.Get(OffTank)?.AddStatus(StatusId.PiercingResistanceDownII, 10f))
+            .ShouldKill(ActionId.Ravensbeak, OffTank)
+            .ShouldKillNoOneElse();
+
     // Dragons north, north-east, south, west and north-west: the first bait stands north-north-east.
     private static void NorthLayout(UcobP2NaelStateOverrides o)
     {
