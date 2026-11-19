@@ -1,6 +1,7 @@
 using System.IO.Compression;
 using System.Net;
 using System.Net.Http;
+using System.Net.Security;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -91,6 +92,25 @@ internal static class Program
             }
         }
 
+        var certbotDomain = NullIfEmpty(GetArg(args, "--tls-certbot"));
+        var certificateFile = NullIfEmpty(GetArg(args, "--tls-cert"));
+        var keyFile = NullIfEmpty(GetArg(args, "--tls-key"));
+        var checkTls = args.Contains("--check-tls");
+        if (certbotDomain != null || certificateFile != null || keyFile != null || checkTls)
+        {
+            if (LoadTls(certbotDomain, certificateFile, keyFile) is not { } certificate)
+            {
+                Environment.ExitCode = 1;
+                return;
+            }
+            if (checkTls)
+            {
+                Environment.ExitCode = await CheckTlsAsync(certificate, options.Port) ? 0 : 1;
+                return;
+            }
+            options.Tls = certificate;
+        }
+
         if (options.Validate() is { } invalid)
         {
             Console.Error.WriteLine(invalid);
@@ -118,8 +138,18 @@ internal static class Program
         catch (SocketException e)
         {
             RelayLog.Warn($"Failed to bind {bind}:{options.Port}: {e.Message}");
-            RelayLog.Warn("Another process may already own the port -- check `netstat -ano | findstr " + options.Port + "` " +
-                          "(Windows) or `ss -ltnp` (Linux).");
+            if (options.Tls != null && e.SocketErrorCode == SocketError.AccessDenied && options.Port < 1024 && !OperatingSystem.IsWindows())
+                RelayLog.Warn("Ports below 1024 need privileges. As the README's systemd service, add `AmbientCapabilities=CAP_NET_BIND_SERVICE` " +
+                              "under [Service], then `sudo systemctl daemon-reload && sudo systemctl restart asumech-relay`" +
+                              (Environment.ProcessPath is { } program && !Path.GetFileNameWithoutExtension(program).Equals("dotnet", StringComparison.OrdinalIgnoreCase)
+                                  ? $". Run by hand, give the program the capability once: `sudo setcap 'cap_net_bind_service=+ep' {program}` (again after each update)."
+                                  : "."));
+            else if (options.Tls != null && e.SocketErrorCode == SocketError.AddressAlreadyInUse && options.Port == 443)
+                RelayLog.Warn("Another program already serves port 443, likely Caddy or nginx from a reverse-proxy setup. With the relay serving TLS " +
+                              "itself, stop it: `sudo systemctl disable --now caddy` (or nginx). `ss -ltnp` shows which program it is.");
+            else
+                RelayLog.Warn("Another process may already own the port -- check `netstat -ano | findstr " + options.Port + "` " +
+                              "(Windows) or `ss -ltnp` (Linux).");
             return;
         }
 
@@ -131,7 +161,96 @@ internal static class Program
         }
         using var onInterrupt = PosixSignalRegistration.Create(PosixSignal.SIGINT, RequestStop);
         using var onTerminate = PosixSignalRegistration.Create(PosixSignal.SIGTERM, RequestStop);
+        // Only with the relay's own TLS: without it, SIGHUP keeps its default of ending the
+        // process. Windows has no SIGHUP of its own: it would be the console window closing.
+        using var onHangUp = options.Tls != null && !OperatingSystem.IsWindows()
+            ? PosixSignalRegistration.Create(PosixSignal.SIGHUP, context =>
+            {
+                context.Cancel = true;
+                server.ReloadCertificate();
+            })
+            : null;
         await stopRequested.Task;
+    }
+
+    // Null after saying why it can't, in words the hoster can act on.
+    private static RelayCertificate? LoadTls(string? certbotDomain, string? certificateFile, string? keyFile)
+    {
+        if (certbotDomain != null && (certificateFile != null || keyFile != null))
+        {
+            Console.Error.WriteLine("TLS: use either --tls-certbot <domain>, or --tls-cert with --tls-key, not both.");
+            return null;
+        }
+        if (certbotDomain == null && (certificateFile == null || keyFile == null))
+        {
+            Console.Error.WriteLine("TLS needs the certificate and its private key: --tls-certbot <domain> for certbot's files of that domain, " +
+                                    "or --tls-cert <fullchain.pem> --tls-key <privkey.pem>.");
+            return null;
+        }
+        if (!RelayOpenSsl.Available)
+        {
+            Console.Error.WriteLine("TLS needs OpenSSL, which isn't installed on this machine. Install it -- `sudo apt install libssl3` on Debian " +
+                                    "or Ubuntu, `sudo dnf install openssl-libs` on Fedora or RHEL -- then start the relay again.");
+            return null;
+        }
+        try
+        {
+            return certbotDomain != null ? RelayCertificate.LoadCertbot(certbotDomain) : RelayCertificate.Load(certificateFile!, keyFile!);
+        }
+        catch (RelayCertificateException e)
+        {
+            Console.Error.WriteLine($"TLS: {e.Message}");
+            return null;
+        }
+    }
+
+    // --check-tls: what the relay would serve, and whether a TLS handshake with it works.
+    private static async Task<bool> CheckTlsAsync(RelayCertificate certificate, int port)
+    {
+        var now = DateTime.UtcNow;
+        var ready = true;
+        void Note(string label, string text) => Console.WriteLine($"  {label,-12} {text}");
+        void Problem(string text) => Console.WriteLine($"  ! {text}");
+
+        Console.WriteLine("TLS check");
+        Note("Certificate", $"{string.Join(", ", certificate.Names)}, from {certificate.Issuer}");
+        Note("Valid", $"{certificate.NotBeforeUtc:yyyy-MM-dd} to {certificate.NotAfterUtc:yyyy-MM-dd} UTC ({(certificate.NotAfterUtc - now).TotalDays:F0} days left)");
+        Note("Files", $"{certificate.CertificateFile} ({certificate.ChainLength} certificate{(certificate.ChainLength == 1 ? "" : "s")}), {certificate.KeyFile}");
+        Note("Renewal", certificate.CertbotRenewalFile is { } renewal
+            ? $"certbot ({renewal}); the relay serves a renewal within a minute"
+            : "not certbot's files: make sure something renews them before they expire");
+        Note("TLS library", RelayOpenSsl.Describe() ?? (OperatingSystem.IsWindows() ? "Windows (SChannel)" : "the system's"));
+        try
+        {
+            using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+            var (protocol, cipher, errors) = await certificate.HandshakeAsync(timeout.Token);
+            Note("Handshake", $"works, {protocol} with {cipher}");
+            var refused = certificate.IsSelfSigned
+                ? "The certificate is self-signed, which players' clients refuse: use it only for testing."
+                : (errors & SslPolicyErrors.RemoteCertificateChainErrors) != 0
+                    ? "This machine doesn't trust the certificate's chain, and players' clients won't either: point --tls-cert at " +
+                      "fullchain.pem (not cert.pem), and check that the `ca-certificates` package is installed."
+                    : null;
+            if (refused != null)
+            {
+                Problem(refused);
+                ready = false;
+            }
+        }
+        catch (Exception e)
+        {
+            Problem($"A TLS handshake with it fails: {e.GetBaseException().Message}");
+            ready = false;
+        }
+        if (certificate.ExpiryWarning(now) is { } warning)
+        {
+            Problem(warning);
+            ready &= now < certificate.NotAfterUtc;
+        }
+        Console.WriteLine(ready
+            ? $"Ready: start the relay with the same flags (without --check-tls), and point the plugin at wss://{certificate.Names[0]}{(port == 443 ? "" : $":{port}")}."
+            : "Not ready: fix the above, then run --check-tls again.");
+        return ready;
     }
 
     private static bool TryParseBind(string value, out IPAddress address)
@@ -424,7 +543,7 @@ internal static class AdminConsole
                           $"relayFull {s.Rejections.RelayFull}   sessionFull {s.Rejections.SessionFull}   notFound {s.Rejections.SessionNotFound}");
         Console.WriteLine($"  badToken {s.Rejections.BadToken}   handshake {s.Rejections.HandshakeTimeout}   tooLarge {s.Rejections.MessageTooLarge}   " +
                           $"msgTimeout {s.Rejections.MessageTimeout}   msgRate {s.Rejections.MessageRate}   byteRate {s.Rejections.ByteRate}");
-        Console.WriteLine($"  unencrypted {s.Rejections.Unencrypted}   fragments {s.Rejections.TooManyFragments}   banned {s.Rejections.Banned}   paused {s.Rejections.Paused}   protocol {s.Rejections.BadProtocol}");
+        Console.WriteLine($"  unencrypted {s.Rejections.Unencrypted}   fragments {s.Rejections.TooManyFragments}   banned {s.Rejections.Banned}   paused {s.Rejections.Paused}   protocol {s.Rejections.BadProtocol}   tls {s.Rejections.TlsHandshake}");
         Console.WriteLine($"  last ~2s: {s.RecentRejections}{(s.RecentRejections >= 50 ? "   [ELEVATED -- possible abuse]" : "")}");
         Console.WriteLine();
         Console.WriteLine($"Memory {s.MemoryBytes / 1024 / 1024:N0} MB   GC {s.Gen0Collections}/{s.Gen1Collections}/{s.Gen2Collections}");
