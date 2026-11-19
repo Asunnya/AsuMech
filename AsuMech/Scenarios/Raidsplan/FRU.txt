@@ -72,7 +72,7 @@ Crystallize Time - Early Pop
 ------------------------------------------------------------------------
 P5: Pandora
 ------------------------------------------------------------------------
-@scenarios: FruP5FulgentBladeScenario, FruP5ParadiseRegainedScenario
+@scenarios: FruP5FulgentBladeScenario, FruP5ParadiseRegainedScenario, FruP5FulgentBlade2Scenario, FruP5ParadiseRegained2Scenario, FruP5FulgentBlade3Scenario
 UltiProject: full FRU Phase 5 guide
   https://slides.com/ultiproject/frup5/scroll
 Advanced Exalines theory

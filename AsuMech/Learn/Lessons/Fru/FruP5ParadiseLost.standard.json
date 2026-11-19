@@ -1,0 +1,30 @@
+{
+  "scenario": "FruP5ParadiseLostScenario",
+  "strat": "Standard",
+  "sources": [
+    {
+      "label": "NAUR LesBin - UltiProject: full FRU Phase 5 guide",
+      "url": "https://slides.com/ultiproject/frup5/scroll"
+    }
+  ],
+  "steps": [
+    {
+      "key": {
+        "cls": "FruP5ParadiseLostAi",
+        "time": 2,
+        "line": 17
+      },
+      "title": "Burn her down before Paradise Lost",
+      "cue": "Paradise Lost cast starts",
+      "rule": "Pandora has to fall before the cast ends. Everyone stays in uptime behind her, within 4m, south of the centre.",
+      "tolerance": 2.0,
+      "skip": false,
+      "roles": {
+        "MainTank": {
+          "rule": "Keep Pandora facing north, 4m north of the centre."
+        }
+      }
+    }
+  ],
+  "draft": true
+}

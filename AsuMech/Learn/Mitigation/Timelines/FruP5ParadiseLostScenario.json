@@ -1,0 +1,15 @@
+{
+  "scenario": "FruP5ParadiseLostScenario",
+  "casts": [
+    {
+      "actionId": 40327,
+      "name": "Paradise Lost",
+      "start": 1.517,
+      "resolve": 13.217,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Paradise Lost"
+  ]
+}

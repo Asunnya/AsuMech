@@ -1,0 +1,23 @@
+{
+  "scenario": "FruP5PandorasBoxScenario",
+  "casts": [
+    {
+      "actionId": 40326,
+      "name": "Pandora\u0027s Box",
+      "start": 1.517,
+      "resolve": 13.217,
+      "occurrence": 1
+    },
+    {
+      "actionId": 4240,
+      "name": "Land Waker",
+      "start": 7.767,
+      "resolve": 7.767,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Pandora\u0027s Box",
+    "Land Waker"
+  ]
+}
