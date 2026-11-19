@@ -57,6 +57,25 @@ public sealed class FruP4CrystallizeTimeState
         SpiritTakerTarget = overrides.SpiritTakerTarget ?? rng.NextRole();
     }
 
+    // A peer's shadow of the host's roll (see IMultiplayerReplayable): only what the Ai reads. The
+    // puddles follow as the host's heads drop them.
+    private FruP4CrystallizeTimeState(IReadOnlyList<CrystallizeDebuff> debuffs, bool slowNorthwest, CrystallizeCorner corner)
+    {
+        foreach (var role in Enum.GetValues<PartyRole>()) this.debuffs[role] = debuffs[(int)role];
+        SlowNorthwest = slowNorthwest;
+        Corner = corner;
+        Quietus = [];
+    }
+
+    private static readonly CrystallizeDebuff[] Dealt =
+    [
+        CrystallizeDebuff.RedAero, CrystallizeDebuff.RedAero, CrystallizeDebuff.RedIce, CrystallizeDebuff.RedIce,
+        CrystallizeDebuff.BlueEruption, CrystallizeDebuff.BlueIce, CrystallizeDebuff.BlueDarkness, CrystallizeDebuff.BlueWater,
+    ];
+
+    public static FruP4CrystallizeTimeState? FromNetworkReplay(IReadOnlyList<CrystallizeDebuff>? debuffs, bool slowNorthwest, CrystallizeCorner corner)
+        => debuffs != null && debuffs.Order().SequenceEqual(Dealt) && Enum.IsDefined(corner) ? new(debuffs, slowNorthwest, corner) : null;
+
     public CrystallizeDebuff Debuff(PartyRole role) => debuffs[role];
     public IEnumerable<PartyRole> Holders(CrystallizeDebuff debuff) => debuffs.Where(d => d.Value == debuff).Select(d => d.Key);
     public static bool IsRed(CrystallizeDebuff debuff) => debuff is CrystallizeDebuff.RedAero or CrystallizeDebuff.RedIce;

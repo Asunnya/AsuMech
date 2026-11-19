@@ -158,6 +158,8 @@ public sealed partial class MultiplayerManager
             replay = new PacketReplay(peerNatives, Plugin.Game.World, myRole);
             replay.Copied += (local, host) => ActorReplayed?.Invoke(local, host);
         }
+        // Only a debug bot's strat reads them; a player's own client is left as before.
+        replay.MirrorStatuses = debugBotControlled && scenario is IMultiplayerReplayable { MirrorsHostStatuses: true };
         earlyPackets.Clear();
         reportedAttacks.Clear();
         peerEnteredInstance = false;
@@ -306,7 +308,7 @@ public sealed partial class MultiplayerManager
     {
         if (!PeerInRun) return;
         if (!NetGuard.TryPosition(msg.X, msg.Y, msg.Z, out var destination)) return;
-        OwnMember(msg.Role, "Carry")?.CarryTo(destination);
+        OwnMember(msg.Role, "Carry")?.CarryTo(destination, msg.Timeline);
     }
 
     private void OnPushReceived(PushMessage msg)

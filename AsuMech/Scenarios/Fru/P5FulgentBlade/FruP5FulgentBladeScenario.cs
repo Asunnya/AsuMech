@@ -6,6 +6,7 @@ using AsuMech.Core.Game;
 using AsuMech.Core.Game.Ai;
 using AsuMech.Core.Game.Party;
 using AsuMech.Core.SimObjects;
+using AsuMech.Multiplayer;
 using static AsuMech.Scenarios.Fru.FruConstants;
 using static AsuMech.Scenarios.Fru.P5FulgentBlade.FruP5FulgentBladeState;
 using Actions = AsuMech.Scenarios.Fru.FruActions;
@@ -15,11 +16,12 @@ namespace AsuMech.Scenarios.Fru.P5FulgentBlade;
 // Pandora's exalines: three groups of two seams, each seam splitting into a light and a dark strip
 // telegraphed by its first cast's omen and then rolling on as instant hits.
 // Akh Morn closes it on one member of each light party.
-public sealed class FruP5FulgentBladeScenario : IScenario
+public sealed class FruP5FulgentBladeScenario : IMultiplayerReplayable
 {
     public string Name => "Fulgent Blade";
     public IPhase Phase => FruZone.P5;
     public bool SupportsSolo => true;
+    public bool SupportsMultiplayer => true;
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new FruP5FulgentBladeAi()];
 
@@ -187,5 +189,17 @@ public sealed class FruP5FulgentBladeScenario : IScenario
     {
         if (akhMornLeftTarget is { } left) pandora?.CastFromHelper(Actions.AkhMornPandoraLeft, left);
         if (akhMornRightTarget is { } right) pandora?.CastFromHelper(Actions.AkhMornPandoraRight, right);
+    }
+
+    public MpMessage? BuildReplayStateMessage()
+        => state is { } s ? new FruP5FulgentBladeAiReplayStateMessage(s.PositionIndex, s.RotationIndex, s.Mirrored) : null;
+
+    public object? StartReplay(MpMessage message, int aiIndex, PartyRole myRole, SimWorld replayWorld)
+    {
+        if (message is not FruP5FulgentBladeAiReplayStateMessage msg || aiIndex < 0 || aiIndex >= AiStrats.Count) return null;
+        var shadowState = FruP5FulgentBladeState.FromNetworkReplay(msg.PositionIndex, msg.RotationIndex, msg.Mirrored);
+        if (shadowState == null) return null;
+        ((IScenarioAi<FruP5FulgentBladeState>)AiStrats[aiIndex]).Run(shadowState, replayWorld);
+        return shadowState;
     }
 }

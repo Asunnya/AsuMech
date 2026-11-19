@@ -7,16 +7,20 @@ using AsuMech.Core.Game;
 using AsuMech.Core.Game.Ai;
 using AsuMech.Core.Game.Party;
 using AsuMech.Core.SimObjects;
+using AsuMech.Multiplayer;
 using static AsuMech.Scenarios.Fru.FruConstants;
 using static AsuMech.Scenarios.Fru.P3UltimateRelativity.FruP3UltimateRelativityState;
 using Actions = AsuMech.Scenarios.Fru.FruActions;
 
 namespace AsuMech.Scenarios.Fru.P3UltimateRelativity;
 
-public sealed class FruP3UltimateRelativityScenario : IScenario
+public sealed class FruP3UltimateRelativityScenario : IMultiplayerReplayable
 {
     public string Name => "Ultimate Relativity";
     public IPhase Phase => FruZone.P3;
+    public bool SupportsMultiplayer => true;
+    // The Stun holds everyone.
+    public bool MirrorsHostStatuses => true;
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new FruP3UltimateRelativityAi()];
 
@@ -250,5 +254,19 @@ public sealed class FruP3UltimateRelativityScenario : IScenario
     private void ShellCrusher()
     {
         if (world.Party.Get(state.ShellCrusherTarget) is { } target && target.IsAlive()) oracle?.Cast(Actions.ShellCrusher, target);
+    }
+
+    public MpMessage? BuildReplayStateMessage()
+        => state is { } s
+            ? new FruP3UltimateRelativityAiReplayStateMessage(Enum.GetValues<PartyRole>().Select(s.Debuff).ToArray(), s.DpsIce, s.North, s.ClockwiseMask)
+            : null;
+
+    public object? StartReplay(MpMessage message, int aiIndex, PartyRole myRole, SimWorld replayWorld)
+    {
+        if (message is not FruP3UltimateRelativityAiReplayStateMessage msg || aiIndex < 0 || aiIndex >= AiStrats.Count) return null;
+        var shadowState = FruP3UltimateRelativityState.FromNetworkReplay(msg.Debuffs, msg.DpsIce, msg.North, msg.ClockwiseMask);
+        if (shadowState == null) return null;
+        ((IScenarioAi<FruP3UltimateRelativityState>)AiStrats[aiIndex]).Run(shadowState, replayWorld);
+        return shadowState;
     }
 }

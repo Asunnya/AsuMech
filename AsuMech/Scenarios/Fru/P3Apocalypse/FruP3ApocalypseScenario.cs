@@ -6,16 +6,18 @@ using AsuMech.Core.Game;
 using AsuMech.Core.Game.Ai;
 using AsuMech.Core.Game.Party;
 using AsuMech.Core.SimObjects;
+using AsuMech.Multiplayer;
 using static AsuMech.Scenarios.Fru.FruConstants;
 using static AsuMech.Scenarios.Fru.P3Apocalypse.FruP3ApocalypseState;
 using Actions = AsuMech.Scenarios.Fru.FruActions;
 
 namespace AsuMech.Scenarios.Fru.P3Apocalypse;
 
-public sealed class FruP3ApocalypseScenario : IScenario
+public sealed class FruP3ApocalypseScenario : IMultiplayerReplayable
 {
     public string Name => "Apocalypse";
     public IPhase Phase => FruZone.P3;
+    public bool SupportsMultiplayer => true;
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new FruP3ApocalypseAi()];
 
@@ -213,5 +215,17 @@ public sealed class FruP3ApocalypseScenario : IScenario
         boss.Cast(Actions.DarkestDance, target);
         var offset = target.Position - boss.Position;
         danceLanding = offset.LengthSquared() > 0.0001f ? boss.Position + Vector3.Normalize(offset) * DanceLandingDistance : boss.Position;
+    }
+
+    public MpMessage? BuildReplayStateMessage()
+        => state is { } s ? new FruP3ApocalypseAiReplayStateMessage(s.WaterDurations.ToArray(), s.Rotation, s.Clockwise) : null;
+
+    public object? StartReplay(MpMessage message, int aiIndex, PartyRole myRole, SimWorld replayWorld)
+    {
+        if (message is not FruP3ApocalypseAiReplayStateMessage msg || aiIndex < 0 || aiIndex >= AiStrats.Count) return null;
+        var shadowState = FruP3ApocalypseState.FromNetworkReplay(msg.WaterDurations, msg.Rotation, msg.Clockwise);
+        if (shadowState == null) return null;
+        ((IScenarioAi<FruP3ApocalypseState>)AiStrats[aiIndex]).Run(shadowState, replayWorld);
+        return shadowState;
     }
 }
