@@ -41,6 +41,7 @@ public sealed class FruP4DarklitDragonsongAi(bool playerBaitsSomberDance) : ISce
         ai.Move(42.4f, () => ByRole(role => role == somberTank ? null : DanceParty(role)), arrivalTime: 43.8f);
         ai.Move(45f, () => ByRole(role => role == somberTank ? JustPastOracleFromCenter() : null), jitter: 0f, arrivalTime: 47f);
         ai.Move(50.15f, () => ByRole(AkhMorn), arrivalTime: 57.7f);
+        ai.Move(61.1f, () => ByRole(MornAfahStack), arrivalTime: 66f);
     }
 
     private PartyRole[] SwapFreeWaterToItsGroup()
@@ -127,6 +128,8 @@ public sealed class FruP4DarklitDragonsongAi(bool playerBaitsSomberDance) : ISce
     private Vector3? DanceParty(PartyRole role) => FromSim(North(role) ? 15 : -15, 0) + Middle(role)!.Value * 0.3f;
 
     private static Vector3? AkhMorn(PartyRole role) => role == PartyRole.MainTank ? new Vector3(-9.3f, 0, 0) : Vector3.Zero;
+
+    private static Vector3? MornAfahStack(PartyRole role) => FromSim(0, 0) + Middle(role)!.Value * 0.3f;
 
     private static IAiMove ByRole(Func<PartyRole, Vector3?> at)
         => AiMove.Create(Enum.GetValues<PartyRole>().Select(role => at(role) is { } p ? new Vector2(p.X, p.Z) : (Vector2?)null).ToArray()).NaturalOrder();

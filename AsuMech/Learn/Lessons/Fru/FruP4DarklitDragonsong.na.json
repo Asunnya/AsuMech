@@ -266,6 +266,18 @@
       },
       "tolerance": 2,
       "skip": false
+    },
+    {
+      "key": {
+        "cls": "FruP4DarklitDragonsongAi",
+        "time": 61.1,
+        "line": 44
+      },
+      "title": "Stack for Morn Afah",
+      "cue": "Morn Afah cast starts",
+      "rule": "Stack with the main tank at the centre.",
+      "tolerance": 2,
+      "skip": false
     }
   ],
   "toolbox": {

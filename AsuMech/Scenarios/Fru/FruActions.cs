@@ -307,7 +307,7 @@ public static class FruActions
     public static readonly EnemyAction DarkestDance = new(ActionId.DarkestDance)
     {
         Cast = new() { AnimationLock = 2.8f },
-        Effects = [Damage(TankBuster), ApplyStatus(StatusId.PhysicalVulnerabilityUp, 3.78f, delayToEffectResult: true)],
+        Effects = [Damage(TankBuster), ApplyStatus(StatusId.PhysicalVulnerabilityUp, 3.98f, delayToEffectResult: true)],
         Timing = new() { DamageDelay = 1.15f },
     };
 
@@ -394,6 +394,13 @@ public static class FruActions
             Damage(VulnerableTo(StatusId.LightsDesign), split: Stack(4, understacked: TankBuster)),
             ApplyStatus(StatusId.DarknessDesign, 3.96f, delayToEffectResult: true)
         ],
+        Timing = new() { DamageDelay = 0.63f },
+    };
+
+    public static readonly EnemyAction MornAfah = new(ActionId.MornAfah)
+    {
+        Cast = new() { AnimationLock = 1.1f },
+        Effects = [Damage(split: Stack(8))],
         Timing = new() { DamageDelay = 0.63f },
     };
 

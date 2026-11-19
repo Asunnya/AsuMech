@@ -83,7 +83,7 @@
     {
       "key": {
         "cls": "FruP5ParadiseRegainedAi",
-        "time": 16.5,
+        "time": 16.75,
         "line": 23
       },
       "title": "After Wings Dark and Light hits you",
@@ -169,8 +169,8 @@
     {
       "key": {
         "cls": "FruP5ParadiseRegainedAi",
-        "from": 38.100002,
-        "to": 51.9,
+        "from": 38.26,
+        "to": 52.3,
         "line": 30
       },
       "title": "After Light Resistance Down II on you",
@@ -182,8 +182,8 @@
     {
       "key": {
         "cls": "FruP5ParadiseRegainedAi",
-        "from": 40.1,
-        "to": 49.3,
+        "from": 40.34,
+        "to": 49.7,
         "line": 29
       },
       "title": "After Light Resistance Down II on you",

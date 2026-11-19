@@ -11,10 +11,10 @@ namespace AsuMech.Scenarios.Fru.P5ParadiseRegained;
 public sealed class FruP5ParadiseRegainedState
 {
     public const float TowerRadius = 3f;
-    public static float TowerShowAt(int tower) => 6f + 3.5f * tower;
-    public static float TowerHitAt(int tower) => 15.7f + 3.5f * tower;
+    public static float TowerShowAt(int tower) => 6.35f + 3.52f * tower;
+    public static float TowerHitAt(int tower) => 15.7f + 3.56f * tower;
 
-    public static float LinesAt(int round) => 36.9f + 4.6f * round;
+    public static float LinesAt(int round) => 37.06f + 4.68f * round;
     public static float PathsCastAt(int round) => LinesAt(round) + 2.05f;
     public static float EchoAt(int round) => LinesAt(round) + 2.6f;
 

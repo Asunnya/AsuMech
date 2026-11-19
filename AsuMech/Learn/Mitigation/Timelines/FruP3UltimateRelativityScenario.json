@@ -343,6 +343,13 @@
       "start": 59.649,
       "resolve": 59.649,
       "occurrence": 33
+    },
+    {
+      "actionId": 40282,
+      "name": "Shockwave Pulsar",
+      "start": 62.216,
+      "resolve": 66.916,
+      "occurrence": 1
     }
   ],
   "names": [
@@ -357,6 +364,7 @@
     "Dark Eruption",
     "Shadoweye",
     "Dark Water III",
-    "Shell Crusher"
+    "Shell Crusher",
+    "Shockwave Pulsar"
   ]
 }

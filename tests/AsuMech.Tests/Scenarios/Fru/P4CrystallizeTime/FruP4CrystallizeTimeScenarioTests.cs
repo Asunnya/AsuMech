@@ -24,6 +24,7 @@ namespace AsuMech.Tests;
 //   53.93 Hallowed Wings from (20,0) facing west: OT first, then C M2 SH; the party lands at x -10..-13.5.
 //   58.53 Hallowed Wings from (0,-20) facing south: MT (-12.3,-9.6) first, then RH M1 R at z -8.6.
 //   69.0  Akh Morn: MT alone at (-9.3,0.1).
+//   79.25 Morn Afah on MT, everyone stacked at the centre.
 public class FruP4CrystallizeTimeScenarioTests
 {
     private static NegativeRun<FruP4CrystallizeTimeScenario> Crystallize(PartyRole player)
@@ -157,4 +158,10 @@ public class FruP4CrystallizeTimeScenarioTests
         => Crystallize(RegenHealer)
             .TeleportAt(25.7f, to: new(0, -13))
             .ShouldFail();
+
+    [Test]
+    public void LeavingMornAfahStackKillsTheRest()
+        => Crystallize(MeleeDpsA)
+            .TeleportAt(78.8f, to: new(10, 10))
+            .ShouldKill(ActionId.MornAfah, AllBut(MeleeDpsA));
 }

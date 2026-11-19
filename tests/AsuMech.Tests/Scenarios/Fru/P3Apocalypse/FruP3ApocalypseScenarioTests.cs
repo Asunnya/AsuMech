@@ -15,8 +15,8 @@ namespace AsuMech.Tests;
 //         every 2s (E/W at 37.32).
 //   36.02 Dark Eruption (6y) on everyone: MT (-6.9,-6.7), OT (-9.5,0.1), M1 (6.9,7), M2 (9.6,0.3).
 //   41.82 Dark Water: RH MT SH OT at (-2.8,-3.1), the DPS at (2.8,2.9).
-//   44.02 Darkest Dance on the farthest from the Oracle at (0,0): OT at (-17.7,0).
-//   46.82 its knockback from the Oracle at (-11.1,0); the party at (-9.3,±1).
+//   44.02 Darkest Dance on the farthest from the Oracle at (0,0): OT at (-17.7,0); she lands 12y out at (-12,0).
+//   46.82 its knockback from the Oracle at (-12,0); the party at (-9.3,±1).
 //   50.82 Dark Water: OT RH SH MT at (-5.5,5.5), the DPS at (-5.5,-5.5).
 public class FruP3ApocalypseScenarioTests
 {
@@ -76,4 +76,12 @@ public class FruP3ApocalypseScenarioTests
         => Apocalypse(MeleeDpsB)
             .TeleportAt(24.6f, to: new(6.5f, 6))
             .ShouldKill(TheEnvironment, MeleeDpsB);
+
+    // OT west of the landing spot is pushed into the wall; a landing nearer OT would push them east.
+    [Test]
+    public void DarkestDanceLandsTwelveOutTowardsItsTarget()
+        => Apocalypse(OffTank)
+            .TeleportAt(43.8f, to: new(-19, 0))
+            .TeleportAt(46.4f, to: new(-12.4f, 0))
+            .ShouldKill(TheEnvironment, OffTank);
 }

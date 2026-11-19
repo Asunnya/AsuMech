@@ -69,6 +69,9 @@ public sealed class FruP3UltimateRelativityScenario : IScenario
         world.Events.Add(FinalAt, ResolveReturnDebuffs);
         world.Events.Add(55.7f, () => oracle?.Cast(ActionId.ShellCrusherCast, animationLock: 0.2f));
         world.Events.Add(59.2f, ShellCrusher);
+        world.Events.Add(62.1f, () => oracle?.VoiceLine(VoiceLineId.ShockwavePulsar));
+        world.Events.Add(62.2f, () => oracle?.Cast(Actions.ShockwavePulsar));
+        world.Events.Add(62.35f, RemoveHourglasses);
     }
 
     private void StopTime()
@@ -125,6 +128,12 @@ public sealed class FruP3UltimateRelativityScenario : IScenario
                 LayoutId: LayoutId.RelativityHourglass));
         }
         SetHourglasses(MapEffect.RelativityHourglassShow, _ => true);
+    }
+
+    private void RemoveHourglasses()
+    {
+        foreach (var hourglass in hourglasses) hourglass?.Despawn();
+        Array.Clear(hourglasses);
     }
 
     private void SetHourglasses(uint effect, Func<int, bool> clocks)

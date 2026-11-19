@@ -16,9 +16,10 @@ namespace AsuMech.Tests;
 //         The Fragment of Fate stands at (0,-16).
 //   35.5  RH (-7.3,-8), C (7.2,8.3), MT (7.1,-8), R (-7.3,8).
 //   40.03 Hallowed Wings over the east half; 40.17 Dark Water: RH M1 MT OT at (-6.6,-7.5), SH R M2 C at (-6.8,7.2).
-//   43.82 Somber Dance on the farthest from the Oracle at (-1.6,4): MT at (18.4,-0.1); the Oracle lands at (11.1,1.4).
-//   47.02 Somber Dance on the nearest: MT at (13.1,1.6).
+//   43.82 Somber Dance on the farthest from the Oracle at (-4.4,2.3): MT at (18.1,0); the Oracle lands at (13.6,0.4).
+//   47.02 Somber Dance on the nearest: MT at (15.7,0.5).
 //   57.77 Akh Morn: MT alone at (-9.1,0) takes the Usurper's, everyone else the Oracle's at the centre.
+//   68.0  Morn Afah on MT, everyone stacked at the centre.
 public class FruP4DarklitDragonsongScenarioTests
 {
     private static NegativeRun<FruP4DarklitDragonsongScenario> Darklit(PartyRole player, Action<FruP4DarklitDragonsongStateOverrides>? tweak = null)
@@ -102,7 +103,7 @@ public class FruP4DarklitDragonsongScenarioTests
     [Test]
     public void NonTankNearestTakesSomberDance()
         => Darklit(MeleeDpsA)
-            .TeleportAt(46.9f, to: new(11.1f, 1.4f))
+            .TeleportAt(46.9f, to: new(12.6f, 0.4f))
             .ShouldKill(ActionId.SomberDanceNear, MeleeDpsA);
 
     // Two in MT's stack is still under four, so it lands as a tank buster on each.
@@ -111,4 +112,10 @@ public class FruP4DarklitDragonsongScenarioTests
         => Darklit(MeleeDpsA)
             .TeleportAt(57.6f, to: new(-9.08f, 0.03f))
             .ShouldKill(ActionId.AkhMornUsurperHit, MeleeDpsA);
+
+    [Test]
+    public void LeavingMornAfahStackKillsTheRest()
+        => Darklit(MeleeDpsA)
+            .TeleportAt(67.5f, to: new(10, 10))
+            .ShouldKill(ActionId.MornAfah, AllBut(MeleeDpsA));
 }

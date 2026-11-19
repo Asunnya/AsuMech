@@ -23,8 +23,9 @@ public sealed class FruP3ApocalypseScenario : IScenario
     public object SettingsOverrides => settingsWindow.Overrides;
     private readonly FruP3ApocalypseSettingsWindow settingsWindow = new();
 
-    // Darkest Dance lands this short of its target.
-    private const float DanceLandingShort = 6.3f;
+    // Darkest Dance lands this far out towards its target, however far the target stands; UNVERIFIED
+    // for a target nearer than that.
+    private const float DanceLandingDistance = 12f;
 
     private SimWorld world = null!;
     private FruP3ApocalypseState state = null!;
@@ -211,8 +212,6 @@ public sealed class FruP3ApocalypseScenario : IScenario
         if (target is null) return;
         boss.Cast(Actions.DarkestDance, target);
         var offset = target.Position - boss.Position;
-        danceLanding = offset.Length() > DanceLandingShort
-            ? boss.Position + Vector3.Normalize(offset) * (offset.Length() - DanceLandingShort)
-            : boss.Position;
+        danceLanding = offset.LengthSquared() > 0.0001f ? boss.Position + Vector3.Normalize(offset) * DanceLandingDistance : boss.Position;
     }
 }
