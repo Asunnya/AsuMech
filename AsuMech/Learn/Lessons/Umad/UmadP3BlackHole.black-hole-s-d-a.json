@@ -69,7 +69,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 26.2,
-        "line": 605
+        "line": 617
       },
       "title": "Take the tether",
       "cue": "A tether lands on another player",
@@ -82,7 +82,7 @@
         "cls": "UmadP3BlackHoleAi",
         "from": 26.6,
         "to": 28.2,
-        "line": 605
+        "line": 617
       },
       "title": "Take the tether again",
       "rule": "Someone walked through the beam and took it: walk back into the line between the black hole and its holder.",
@@ -93,7 +93,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 28.2,
-        "line": 637
+        "line": 649
       },
       "title": "Pull the hole",
       "rule": "Walk the tether to the cardinal clockwise of the black hole, a step further out, so the hole follows you away from the centre.",
@@ -104,7 +104,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 32.4,
-        "line": 605
+        "line": 617
       },
       "title": "Take the tether",
       "cue": "A tether lands on another player",
@@ -116,7 +116,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 34.4,
-        "line": 637
+        "line": 649
       },
       "title": "Pull the hole",
       "rule": "Walk the tether to the cardinal clockwise of the black hole, a step further out, so the hole follows you away from the centre.",
@@ -128,7 +128,7 @@
         "cls": "UmadP3BlackHoleAi",
         "from": 39.5,
         "to": 43.19,
-        "line": 274
+        "line": 286
       },
       "title": "Keep clear of Exdeath",
       "rule": "Stay at least 10m from Exdeath while the tanks take Thunder III; step straight away from him if he closes in.",
@@ -140,7 +140,7 @@
         "cls": "UmadP3BlackHoleAi",
         "from": 39.5,
         "to": 43.19,
-        "line": 252
+        "line": 264
       },
       "title": "Keep clear of Exdeath",
       "rule": "Second tank: wait 10m to the side of the first, out of Thunder III, until the swap.",
@@ -152,7 +152,7 @@
         "cls": "UmadP3BlackHoleAi",
         "from": 43.5,
         "to": 46.2,
-        "line": 274
+        "line": 286
       },
       "title": "Keep clear of Exdeath",
       "rule": "Stay at least 10m from Exdeath while the tanks take Thunder III; step straight away from him if he closes in.",
@@ -164,7 +164,7 @@
         "cls": "UmadP3BlackHoleAi",
         "from": 43.5,
         "to": 46.2,
-        "line": 252
+        "line": 264
       },
       "title": "Keep clear of Exdeath",
       "rule": "Second tank: wait 10m to the side of the first, out of Thunder III, until the swap.",
@@ -175,7 +175,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 46.5,
-        "line": 74
+        "line": 75
       },
       "title": "Dodge edict",
       "cue": "Thunder III hits you",
@@ -187,7 +187,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 50.6,
-        "line": 77
+        "line": 78
       },
       "title": "After Lightning Resistance Down II on you",
       "cue": "Lightning Resistance Down II on you",
@@ -199,7 +199,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 56,
-        "line": 78
+        "line": 79
       },
       "title": "Stack centre",
       "cue": "Shockwave hits you",
@@ -211,7 +211,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 58.1,
-        "line": 605
+        "line": 617
       },
       "title": "Take the tether",
       "cue": "A tether lands on another player",
@@ -223,7 +223,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 60.1,
-        "line": 637
+        "line": 649
       },
       "title": "Pull the hole",
       "rule": "Walk the tether to the cardinal clockwise of the black hole, a step further out, so the hole follows you away from the centre.",
@@ -234,7 +234,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 64,
-        "line": 605
+        "line": 617
       },
       "title": "Take the tether",
       "cue": "A tether lands on another player",
@@ -246,7 +246,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 66,
-        "line": 483
+        "line": 495
       },
       "title": "Back to the centre",
       "rule": "Back to the centre once the hole is parked.",
@@ -257,7 +257,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 69,
-        "line": 605
+        "line": 617
       },
       "title": "Take the tether",
       "cue": "A tether lands on another player",
@@ -269,7 +269,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 71,
-        "line": 483
+        "line": 495
       },
       "title": "Back to the centre",
       "rule": "Back to the centre once the hole is parked.",
@@ -280,7 +280,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 73.1,
-        "line": 89
+        "line": 90
       },
       "title": "Dodge edict and look upon",
       "cue": "Earth Resistance Down II on you",
@@ -292,7 +292,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 80,
-        "line": 90
+        "line": 91
       },
       "title": "Stack centre",
       "cue": "Earth Resistance Down II on you",
@@ -305,7 +305,7 @@
         "cls": "UmadP3BlackHoleAi",
         "from": 80.5,
         "to": 84.5,
-        "line": 274
+        "line": 286
       },
       "title": "Keep clear of Exdeath",
       "rule": "Stay at least 10m from Exdeath while the tanks take Thunder III; step straight away from him if he closes in.",
@@ -317,7 +317,7 @@
         "cls": "UmadP3BlackHoleAi",
         "from": 80.5,
         "to": 84.5,
-        "line": 252
+        "line": 264
       },
       "title": "Keep clear of Exdeath",
       "rule": "Second tank: wait 10m to the side of the first, out of Thunder III, until the swap.",
@@ -328,7 +328,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 84.5,
-        "line": 90
+        "line": 91
       },
       "title": "Swap second thunder tanks",
       "cue": "Thunder III hits you",
@@ -346,7 +346,7 @@
         "cls": "UmadP3BlackHoleAi",
         "from": 84.9,
         "to": 87.5,
-        "line": 274
+        "line": 286
       },
       "title": "Keep clear of Exdeath",
       "rule": "Stay at least 10m from Exdeath while the tanks take Thunder III; step straight away from him if he closes in.",
@@ -358,7 +358,7 @@
         "cls": "UmadP3BlackHoleAi",
         "from": 84.9,
         "to": 87.5,
-        "line": 252
+        "line": 264
       },
       "title": "Keep clear of Exdeath",
       "rule": "Second tank: wait 10m to the side of the first, out of Thunder III, until the swap.",
@@ -369,7 +369,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 88,
-        "line": 98
+        "line": 100
       },
       "title": "Stack centre",
       "cue": "Thunder III hits you",
@@ -381,7 +381,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 92.3,
-        "line": 605
+        "line": 617
       },
       "title": "Take the tether",
       "cue": "A tether lands on another player",
@@ -393,7 +393,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 94.3,
-        "line": 637
+        "line": 649
       },
       "title": "Pull the hole",
       "rule": "Walk the tether to the cardinal clockwise of the black hole, a step further out, so the hole follows you away from the centre.",
@@ -404,7 +404,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 98,
-        "line": 605
+        "line": 617
       },
       "title": "Take the tether",
       "cue": "A tether lands on another player",
@@ -416,7 +416,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 100,
-        "line": 483
+        "line": 495
       },
       "title": "Back to the centre",
       "rule": "Back to the centre once the hole is parked.",
@@ -427,7 +427,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 103,
-        "line": 605
+        "line": 617
       },
       "title": "Take the tether",
       "cue": "A tether lands on another player",
@@ -439,7 +439,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 105,
-        "line": 483
+        "line": 495
       },
       "title": "Back to the centre",
       "rule": "Back to the centre once the hole is parked.",
@@ -450,7 +450,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 109.5,
-        "line": 483
+        "line": 495
       },
       "title": "Back to the centre",
       "rule": "Back to the centre once the hole is parked.",
@@ -461,7 +461,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 110,
-        "line": 476
+        "line": 488
       },
       "title": "MT: anchor Chaos for Implosion",
       "rule": "Park 5m from the centre, 45° clockwise of Kefka's facing, so Chaos is dragged there before Implosion locks its cone.",
@@ -472,7 +472,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 110.5,
-        "line": 483
+        "line": 495
       },
       "title": "Back to the centre",
       "rule": "Back to the centre once the hole is parked.",
@@ -483,7 +483,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 111.5,
-        "line": 483
+        "line": 495
       },
       "title": "Back to the centre",
       "rule": "Back to the centre once the hole is parked.",
@@ -494,7 +494,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 117,
-        "line": 118
+        "line": 120
       },
       "title": "After Slap Happy cast starts",
       "cue": "Slap Happy cast starts",
@@ -506,7 +506,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 119.2,
-        "line": 119
+        "line": 121
       },
       "title": "After Shockwave resolves",
       "cue": "Shockwave resolves",
@@ -518,7 +518,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 121.3,
-        "line": 118
+        "line": 120
       },
       "title": "After Slap Happy resolves",
       "cue": "Slap Happy resolves",
@@ -530,7 +530,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 124,
-        "line": 119
+        "line": 121
       },
       "title": "Stack centre",
       "cue": "Shocking Impact hits you",
@@ -542,7 +542,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 125.9,
-        "line": 605
+        "line": 617
       },
       "title": "Take the tether",
       "cue": "A tether lands on another player",
@@ -554,7 +554,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 127.9,
-        "line": 637
+        "line": 649
       },
       "title": "Pull the hole",
       "rule": "Walk the tether to the cardinal clockwise of the black hole, a step further out, so the hole follows you away from the centre.",
@@ -565,7 +565,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 130.8,
-        "line": 605
+        "line": 617
       },
       "title": "Take the tether",
       "cue": "A tether lands on another player",
@@ -577,7 +577,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 130.8,
-        "line": 483
+        "line": 495
       },
       "title": "Back to the centre",
       "rule": "Back to the centre once the hole is parked.",
@@ -589,7 +589,7 @@
         "cls": "UmadP3BlackHoleAi",
         "from": 131.2,
         "to": 134,
-        "line": 605
+        "line": 617
       },
       "title": "Take the tether again",
       "rule": "Someone walked through the beam and took it: walk back into the line between the black hole and its holder.",
@@ -600,7 +600,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 134,
-        "line": 128
+        "line": 130
       },
       "title": "After a tether lands on you",
       "cue": "A tether lands on you",
@@ -620,7 +620,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 134,
-        "line": 129
+        "line": 131
       },
       "title": "After a tether lands on you",
       "tolerance": 2.5,
@@ -630,7 +630,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 134.5,
-        "line": 129
+        "line": 131
       },
       "title": "After a tether lands on you",
       "tolerance": 2.5,
@@ -640,7 +640,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 135,
-        "line": 130
+        "line": 132
       },
       "title": "After a tether lands on you",
       "tolerance": 2.5,
@@ -650,7 +650,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 139,
-        "line": 131
+        "line": 133
       },
       "title": "Preposition for stomp",
       "cue": "Nothingness hits you",
@@ -662,7 +662,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 147,
-        "line": 132
+        "line": 134
       },
       "title": "Stomp blizzard corners",
       "cue": "Earth Resistance Down II on you",
@@ -674,7 +674,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 149.8,
-        "line": 133
+        "line": 135
       },
       "title": "Stomp stack and towers",
       "cue": "Blizzard III cast starts",
@@ -686,7 +686,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 152.4,
-        "line": 134
+        "line": 136
       },
       "title": "Stomp swap west",
       "cue": "Knock Down hits you",
@@ -698,7 +698,7 @@
       "key": {
         "cls": "UmadP3BlackHoleAi",
         "time": 153.7,
-        "line": 135
+        "line": 137
       },
       "title": "Stomp swap east",
       "cue": "Stomp-a-Mole resolves",
