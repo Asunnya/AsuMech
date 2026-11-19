@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using AsuMech.Core.Game.Trace;
 using AsuMech.Core.Native.Implementations.Pointers;
+using PluginBuildInfo = AsuMech.Multiplayer.PluginBuildInfo;
 using AsuMech.Core.Native.Interfaces;
 using Dalamud.Game.ClientState.Objects.Types;
 using System.Threading.Tasks;
@@ -307,7 +308,7 @@ internal sealed unsafe partial class PullRecorder : IDisposable
         var place = Plugin.DataManager.GetExcelSheet<LuminaTerritoryType>()?.GetRowOrDefault(territory)?.PlaceName.ValueNullable?.Name.ExtractText() ?? "";
         var player = Plugin.ObjectTable.LocalPlayer;
         timeline.Add("recording", player?.EntityId ?? 0, player is null ? "" : PlayerLabel(player.EntityId), territory.ToString(), place,
-            detail: $"started={DateTime.Now:O} game={new string(FFXIVClientStructs.FFXIV.Client.System.Framework.Framework.Instance()->GameVersionString)} missing_hooks={string.Join("/", missingHooks)}");
+            detail: $"started={DateTime.Now:O} plugin={PluginBuildInfo.Version} build={PluginBuildInfo.ShortChecksum} game={new string(FFXIVClientStructs.FFXIV.Client.System.Framework.Framework.Instance()->GameVersionString)} missing_hooks={string.Join("/", missingHooks)}");
         OpenNetworkLog(territory, place, Path);
         foreach (var hook in hooks) hook.Enable();
         DiagnosticLog.Info($"[PullRecorder] recording {place} ({territory}) to {Path}");
