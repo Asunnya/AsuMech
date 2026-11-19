@@ -119,12 +119,14 @@ All using default NA pf strats unless noted otherwise:
     - P1 Utopian Sky
     - P1 Turn of the Heavens
     - P1 Fall of Faith
+    - P2 Quadruple Slap
     - P2 Diamond Dust 
     - P2 Mirror, Mirror
     - P2 Light Rampant
     - Intermission Ice Veil
     - P3 Ultimate Relativity
     - P3 Apocalypse 
+    - P4 Materialization
     - P4 Darklit Dragonsong
       - NA
       - NA, you take Somber Dance

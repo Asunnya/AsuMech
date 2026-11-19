@@ -1,0 +1,15 @@
+{
+  "scenario": "FruP4MaterializationScenario",
+  "casts": [
+    {
+      "actionId": 40246,
+      "name": "Materialization",
+      "start": 9.85,
+      "resolve": 12.55,
+      "occurrence": 1
+    }
+  ],
+  "names": [
+    "Materialization"
+  ]
+}

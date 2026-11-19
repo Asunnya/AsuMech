@@ -108,6 +108,7 @@ public static class FruConstants
         // A tower going back to empty when its soakers step out.
         public const uint DarklitTowerEmpty = 0x01000001;
         public const byte FragmentOfFate = 46;
+        public const uint FragmentOfFateShow = 0x00020001;
         // 51 = NW, 52 = NE, 53 = S.
         public const byte ParadiseFirstTower = 51;
         public const byte ParadiseFirstTowerBase = 48;
@@ -367,6 +368,7 @@ public static class FruConstants
         public const uint DarkestDanceKnockback = 40183;
 
         // -- P4 --
+        public const uint Materialization = 40246;
         public const uint AkhRhaiCast = 40237;
         public const uint AkhRhai = 40238;
         public const uint DarklitDragonsong = 40239;
@@ -576,5 +578,6 @@ public static class FruConstants
         // Played by the Visions as Darklit Dragonsong goes off; what they show is UNVERIFIED.
         public const ushort GaiaDarklit = 3207;
         public const ushort RyneDarklit = 11415;
+        public const ushort VisionAppear = 7750;
     }
 }

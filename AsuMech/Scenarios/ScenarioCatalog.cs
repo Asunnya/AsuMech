@@ -49,10 +49,12 @@ using AsuMech.Scenarios.Fru.P1UtopianSky;
 using AsuMech.Scenarios.Fru.P2DiamondDust;
 using AsuMech.Scenarios.Fru.P2LightRampant;
 using AsuMech.Scenarios.Fru.P2MirrorMirror;
+using AsuMech.Scenarios.Fru.P2QuadrupleSlap;
 using AsuMech.Scenarios.Fru.P3Apocalypse;
 using AsuMech.Scenarios.Fru.P3UltimateRelativity;
 using AsuMech.Scenarios.Fru.P4CrystallizeTime;
 using AsuMech.Scenarios.Fru.P4DarklitDragonsong;
+using AsuMech.Scenarios.Fru.P4Materialization;
 using AsuMech.Scenarios.Fru.P5FulgentBlade;
 using AsuMech.Scenarios.Fru.P5ParadiseRegained;
 using AsuMech.Scenarios.Top.P1ProgramLoop;
@@ -168,12 +170,14 @@ public sealed class ScenarioCatalog
         new FruP1UtopianSkyScenario(),
         new FruP1TurnOfTheHeavensScenario(),
         new FruP1FallOfFaithScenario(),
+        new FruP2QuadrupleSlapScenario(),
         new FruP2DiamondDustScenario(),
         new FruP2MirrorMirrorScenario(),
         new FruP2LightRampantScenario(),
         new FruIceVeilScenario(),
         new FruP3UltimateRelativityScenario(),
         new FruP3ApocalypseScenario(),
+        new FruP4MaterializationScenario(),
         new FruP4DarklitDragonsongScenario(),
         new FruP4CrystallizeTimeScenario(),
         new FruP5FulgentBladeScenario(),

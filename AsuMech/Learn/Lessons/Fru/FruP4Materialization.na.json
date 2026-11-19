@@ -1,0 +1,40 @@
+{
+  "scenario": "FruP4MaterializationScenario",
+  "strat": "NA",
+  "sources": [],
+  "steps": [
+    {
+      "key": {
+        "cls": "FruP4MaterializationAi",
+        "time": 0.5,
+        "line": 19
+      },
+      "title": "Gather on the Usurper in the south",
+      "cue": "Usurper of Frost reappears south of the centre",
+      "rule": "Melee take her east and west flanks.",
+      "roles": {
+        "MainTank": {
+          "rule": "Tank her from the north side, 4m in front of her."
+        },
+        "OffTank": {
+          "rule": "Stand beside the main tank."
+        },
+        "RegenHealer": {
+          "rule": "Wait north-west of her, 4m south-west of the centre."
+        },
+        "ShieldHealer": {
+          "rule": "Wait north-east of her, 4m south-east of the centre."
+        },
+        "PhysRangedDps": {
+          "rule": "Wait north-west of her, near waymark 4."
+        },
+        "CasterDps": {
+          "rule": "Wait north-east of her, near waymark 3."
+        }
+      },
+      "tolerance": 2.5,
+      "skip": false
+    }
+  ],
+  "draft": true
+}
