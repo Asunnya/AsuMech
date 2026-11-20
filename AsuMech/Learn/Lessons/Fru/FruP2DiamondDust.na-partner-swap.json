@@ -14,9 +14,9 @@
         "time": 15.3,
         "line": 36
       },
-      "title": "After a marker lands on another player",
-      "cue": "A marker lands on another player",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SupportsMarked).",
+      "title": "Partner swap: take your bait spoke",
+      "cue": "Axe or Scythe Kick cast, Frigid Stone markers on four players",
+      "rule": "Your spoke: MT north, OT east, H2 south, H1 west, R2 north-east, M2 south-east, M1 south-west, R1 north-west. Marked players go on the other kind of spoke than the first ice circles (circles on cardinals: marked on intercards), unmarked on the same kind. If your spoke is the wrong kind, swap with your partner: supports one spoke counter-clockwise, DPS one spoke clockwise. Axe Kick: get out past it, marked at the wall, unmarked just inside it. Scythe Kick: stay in, unmarked hugging the centre to bait the cones, marked 3m out.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -26,23 +26,9 @@
         "time": 20.7,
         "line": 37
       },
-      "title": "After Icicle Impact cast starts",
-      "cue": "Icicle Impact cast starts",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SupportsMarked).",
-      "roles": {
-        "MeleeDpsA": {
-          "rule": "Go to 4m west of the centre."
-        },
-        "MeleeDpsB": {
-          "rule": "Go to 4m south of the centre."
-        },
-        "PhysRangedDps": {
-          "rule": "Go to 4m north of the centre."
-        },
-        "CasterDps": {
-          "rule": "Go to 4m east of the centre."
-        }
-      },
+      "title": "Drop the Frigid Stones",
+      "cue": "The second ice circles appear",
+      "rule": "Stay on your spoke. Marked: drop your stone where the strat puts it, at the wall after Axe Kick or 8m out after Scythe Kick, then come back in. Unmarked: after Axe Kick walk in to 4m as soon as the kick ends; after Scythe Kick stay at the centre.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -52,24 +38,10 @@
         "time": 23.35,
         "line": 38
       },
-      "title": "After Frigid Stone resolves",
-      "cue": "Frigid Stone resolves",
-      "rule": "Depends on FirstIcicle: 0 → N 3m; 3 → N 3m; 1 → SW 3m.",
-      "roles": {
-        "OffTank": {
-          "rule": "Depends on FirstIcicle: 0 → S 3m; 3 → S 3m; 1 → NE 3m."
-        },
-        "ShieldHealer": {
-          "rule": "Depends on FirstIcicle: 0 → S 3m; 3 → S 3m; 1 → NE 3m."
-        },
-        "MeleeDpsB": {
-          "rule": "Depends on FirstIcicle: 0 → S 3m; 3 → S 3m; 1 → NE 3m."
-        },
-        "CasterDps": {
-          "rule": "Depends on FirstIcicle: 0 → S 3m; 3 → S 3m; 1 → NE 3m."
-        }
-      },
-      "tolerance": 2,
+      "title": "Line up for the knockback",
+      "cue": "The Frigid Stones go off",
+      "rule": "Heavenly Strike throws everyone out from the centre to where the first ice circles fell. Light party 1 (MT, H1, M1, R1) takes the west end of that axis (north if it runs north-south), light party 2 the other end: stand 3m from the centre on your end, nudged clear of the needle lines. If the light clone sits on one of those ends, both groups aim a bit clockwise.",
+      "tolerance": 2.5,
       "skip": false
     },
     {
@@ -78,24 +50,10 @@
         "time": 29.05,
         "line": 39
       },
-      "title": "After Icicle Impact resolves",
-      "cue": "Icicle Impact resolves",
-      "rule": "Depends on FirstIcicle: 0 → N wall; 3 → NW wall; 1 → SW wall.",
-      "roles": {
-        "OffTank": {
-          "rule": "Depends on FirstIcicle: 0 → S wall; 3 → SE wall; 1 → NE wall."
-        },
-        "ShieldHealer": {
-          "rule": "Depends on FirstIcicle: 0 → S wall; 3 → SE wall; 1 → NE wall."
-        },
-        "MeleeDpsB": {
-          "rule": "Depends on FirstIcicle: 0 → S wall; 3 → SE wall; 1 → NE wall."
-        },
-        "CasterDps": {
-          "rule": "Depends on FirstIcicle: 0 → S wall; 3 → SE wall; 1 → NE wall."
-        }
-      },
-      "tolerance": 2,
+      "title": "Land clear of the needles",
+      "cue": "Heavenly Strike knocks you back",
+      "rule": "Ride the knockback to the wall at your end, then slide along it just enough to be clear of the Frigid Needle circles and lines.",
+      "tolerance": 2.5,
       "skip": false
     },
     {
@@ -104,24 +62,10 @@
         "time": 30.1,
         "line": 40
       },
-      "title": "After Icicle Impact resolves",
-      "cue": "Icicle Impact resolves",
-      "rule": "Depends on FirstIcicle: 0 → N wall; 3 → NW wall; 1 → SW wall.",
-      "roles": {
-        "OffTank": {
-          "rule": "Depends on FirstIcicle: 0 → S wall; 3 → SE wall; 1 → NE wall."
-        },
-        "ShieldHealer": {
-          "rule": "Depends on FirstIcicle: 0 → S wall; 3 → SE wall; 1 → NE wall."
-        },
-        "MeleeDpsB": {
-          "rule": "Depends on FirstIcicle: 0 → S wall; 3 → SE wall; 1 → NE wall."
-        },
-        "CasterDps": {
-          "rule": "Depends on FirstIcicle: 0 → S wall; 3 → SE wall; 1 → NE wall."
-        }
-      },
-      "tolerance": 2,
+      "title": "Stack on your healer",
+      "cue": "Frigid Needles go off",
+      "rule": "Settle on your group's spot at the wall, a little clockwise if the clone sits on your end, and stack on your healer for the first Sinbound Holy.",
+      "tolerance": 2.5,
       "skip": false
     },
     {
@@ -131,23 +75,9 @@
         "to": 36.4,
         "line": 45
       },
-      "title": "After Sinbound Holy hits you",
-      "cue": "Sinbound Holy hits you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: MirrorOctant).",
-      "roles": {
-        "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: FirstIcicle)."
-        },
-        "ShieldHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: FirstIcicle)."
-        },
-        "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: FirstIcicle)."
-        },
-        "CasterDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: FirstIcicle)."
-        }
-      },
+      "title": "Rotate away from the light clone",
+      "cue": "Sinbound Holy hits your group",
+      "rule": "After each Sinbound Holy, move with your group half a spoke along the wall, away from the light clone inside the arena, so the next stack lands out of the puddle the last one left. If the clone sat on your landing end, both groups go clockwise.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -157,9 +87,9 @@
         "time": 37.966667,
         "line": 47
       },
-      "title": "After Sinbound Holy hits you",
-      "cue": "Sinbound Holy hits you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: MirrorOctant).",
+      "title": "Stop, then look away",
+      "cue": "Fourth Sinbound Holy hits",
+      "rule": "After the last stack you are a quarter turn from where you landed (a bit more in the cursed pattern). Stop 17m out and turn your back to the Usurper outside the arena before her gaze. Then the floor freezes: on Twin Stillness slide behind the ice clone at once and back in front when the first hit goes off; on Twin Silence stay in front, then slide behind her.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -169,10 +99,11 @@
         "time": 52.75,
         "line": 53
       },
-      "title": "Move at 52.8s",
-      "rule": "Go to 4m south of the centre.",
+      "title": "Regroup for Hallowed Ray",
+      "rule": "Gather 4m south of the centre for the Hallowed Ray line stack.",
       "tolerance": 1.5,
-      "skip": false
+      "skip": false,
+      "cue": "The ice floor melts"
     }
   ],
   "toolbox": {

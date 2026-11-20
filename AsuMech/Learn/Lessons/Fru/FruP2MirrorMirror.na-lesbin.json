@@ -1,10 +1,14 @@
 {
   "scenario": "FruP2MirrorMirrorScenario",
-  "strat": "NA · LesBin",
+  "strat": "NA \u00B7 LesBin",
   "sources": [
     {
       "label": "NAUR LesBin P2",
       "url": "https://tinyurl.com/lesbin-p2"
+    },
+    {
+      "label": "Materia Raiding Mirror, Mirror raidplan (red mirror page matches; its kick sides and Banish layout differ)",
+      "url": "https://raidplan.io/plan/gFwpXMjpVgxgcnpi"
     }
   ],
   "steps": [
@@ -17,7 +21,7 @@
       "title": "Stack for Hallowed Ray",
       "cue": "Hallowed Ray cast starts, marker on a player",
       "rule": "Stack 4m north of the centre for the Hallowed Ray line stack. If the marker is on you, hold still: the party comes to you.",
-      "tolerance": 2.0,
+      "tolerance": 2,
       "skip": false
     },
     {
@@ -65,7 +69,7 @@
           "rule": "Just inside the blue mirror, a little to its left as you face the centre, between H2 and the line to the centre."
         }
       },
-      "tolerance": 2.0,
+      "tolerance": 2,
       "skip": false
     },
     {
@@ -77,34 +81,34 @@
       "title": "Red mirror baits",
       "cue": "The House of Light from the boss and blue mirror resolves",
       "rule": "Split to the two red mirrors and hug the one you take for its Scythe Kick and House of Light. Healers and ranged take the red mirror nearer the blue one (if both are equally near, the one clockwise of blue); tanks and melee take the other.",
-      "tolerance": 2.5,
-      "skip": false,
       "roles": {
         "MainTank": {
-          "rule": "At the melee group's red mirror, straight in from it toward the centre."
+          "rule": "At the melee group\u0027s red mirror, straight in from it toward the centre."
         },
         "OffTank": {
-          "rule": "At the melee group's red mirror, turned well toward the other red mirror."
+          "rule": "At the melee group\u0027s red mirror, turned well toward the other red mirror."
         },
         "MeleeDpsA": {
-          "rule": "At the melee group's red mirror, angled away from the other red mirror."
+          "rule": "At the melee group\u0027s red mirror, angled away from the other red mirror."
         },
         "MeleeDpsB": {
-          "rule": "At the melee group's red mirror, turned well away from the other red mirror."
+          "rule": "At the melee group\u0027s red mirror, turned well away from the other red mirror."
         },
         "RegenHealer": {
-          "rule": "At the ranged group's red mirror, straight in from it toward the centre."
+          "rule": "At the ranged group\u0027s red mirror, straight in from it toward the centre."
         },
         "ShieldHealer": {
-          "rule": "At the ranged group's red mirror, turned well toward the other red mirror."
+          "rule": "At the ranged group\u0027s red mirror, turned well toward the other red mirror."
         },
         "PhysRangedDps": {
-          "rule": "At the ranged group's red mirror, angled away from the other red mirror."
+          "rule": "At the ranged group\u0027s red mirror, angled away from the other red mirror."
         },
         "CasterDps": {
-          "rule": "At the ranged group's red mirror, turned well away from the other red mirror."
+          "rule": "At the ranged group\u0027s red mirror, turned well away from the other red mirror."
         }
-      }
+      },
+      "tolerance": 2.5,
+      "skip": false
     },
     {
       "key": {
@@ -141,9 +145,31 @@
           "rule": "North-east, by waymark 2."
         }
       },
-      "tolerance": 2.0,
+      "tolerance": 2,
       "skip": false
     }
   ],
+  "toolbox": {
+    "planId": "gFwpXMjpVgxgcnpi",
+    "roleMap": {
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "MeleeDpsA": "dps1",
+      "MeleeDpsB": "dps2",
+      "PhysRangedDps": "dps3",
+      "CasterDps": "dps4"
+    },
+    "steps": {
+      "FruP2MirrorMirrorAi@32.3": 4
+    },
+    "exampleSeed": 1,
+    "example": {
+      "BlueOctant": "4",
+      "FirstRedOctant": "1"
+    },
+    "residual": 14.014419
+  },
   "draft": true
 }

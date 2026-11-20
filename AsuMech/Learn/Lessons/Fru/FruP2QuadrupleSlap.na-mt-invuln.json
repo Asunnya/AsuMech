@@ -1,7 +1,16 @@
 {
   "scenario": "FruP2QuadrupleSlapScenario",
   "strat": "NA · MT invuln",
-  "sources": [],
+  "sources": [
+    {
+      "label": "NAUR FRU guide (P2 intro: Quadruple Slap)",
+      "url": "https://naurffxiv.com/ultimate/fru/guide"
+    },
+    {
+      "label": "NAUR LesBin P2",
+      "url": "https://tinyurl.com/lesbin-p2"
+    }
+  ],
   "steps": [
     {
       "key": {
@@ -11,13 +20,13 @@
       },
       "title": "Pick up the Usurper, party around her",
       "cue": "Usurper of Frost appears in the centre",
-      "rule": "Healers and ranged stand behind her to the south.",
+      "rule": "Quadruple Slap is a two-hit buster on the main tank that leaves a vulnerability. Melee take her flanks; healers and ranged stand behind her, about 8m south of the centre.",
       "roles": {
         "MainTank": {
-          "rule": "Tank her 4m north of the centre. Invuln just before the first Quadruple Slap so it covers the second too."
+          "rule": "Tank her 4m north of the centre, facing her away from the party. Invuln as the first slap's cast finishes so it covers both hits."
         },
         "OffTank": {
-          "rule": "Stand beside the main tank. Provoke once the second slap lands: the main tank carries its vulnerability."
+          "rule": "Stand next to the main tank. Provoke right after the second slap lands, so the next auto doesn't hit the main tank through the vulnerability."
         },
         "MeleeDpsA": {
           "rule": "West flank, 3m from her."

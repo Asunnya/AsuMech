@@ -1,0 +1,78 @@
+{
+  "fields": {
+    "CyclonicFire": "Cyclonic Break's element",
+    "UtopianFire": "Utopian Sky's element",
+    "SafeAxis": "the safe Utopian Sky axis",
+    "ActiveImages": "the images raising their gunblades",
+    "FireOnTanks": "the Sinbound Fire targets",
+    "FireTargets": "the Sinbound Fire targets",
+    "HeavensFire": "Turn of the Heavens' element",
+    "FlameWest": "the flame halos' side",
+    "SmallHalosWest": "the safe half",
+    "Tethered": "the tethered players",
+    "FaithFire": "the Fall of Faith tether colours",
+    "TowersWest": "the towers' side",
+    "TowersFire": "Burnt Strike's element",
+    "TowerSoakers": "the tower sizes",
+    "TowerSide": "the towers' side",
+    "FirstIcicle": "the first ice circles' axis",
+    "SupportsMarked": "the Frigid Stone markers",
+    "Axe": "the kick",
+    "MirrorOctant": "the light clone's spoke",
+    "MirrorPosition": "the light clone's spoke",
+    "Stillness": "the ice clone's cast",
+    "GazeOctant": "the gaze's side",
+    "GazePosition": "the gaze's side",
+    "BlueOctant": "the blue mirror",
+    "FirstRedOctant": "the red mirrors",
+    "RedOctants": "the red mirrors",
+    "RayTarget": "the Hallowed Ray target",
+    "Pairs": "Banish III",
+    "SupportPairs": "the Banish III pairs' order",
+    "InitiallySteeped": "the players starting with Lightsteeped",
+    "WeightSlot": "the Powerful Light pair",
+    "Weights": "the Powerful Light pair",
+    "NorthOrbsFirst": "the first orb set",
+    "Chained": "the tethered players",
+    "HammerBaiters": "the puddle baiters"
+  },
+  "values": {
+    "*": {
+      "0": "north", "45": "north-east", "90": "east", "135": "south-east",
+      "180": "south", "225": "south-west", "270": "west", "315": "north-west",
+      "MainTank": "MT", "OffTank": "OT", "RegenHealer": "H1", "ShieldHealer": "H2",
+      "MeleeDpsA": "M1", "MeleeDpsB": "M2", "PhysRangedDps": "R1", "CasterDps": "R2"
+    },
+    "CyclonicFire": { "true": "fire", "false": "lightning" },
+    "UtopianFire": { "true": "fire (stack)", "false": "lightning (spread)" },
+    "SafeAxis": { "0": "north-south", "1": "north-east to south-west", "2": "east-west", "3": "north-west to south-east" },
+    "FireOnTanks": { "true": "on the tanks", "false": "on the healers" },
+    "HeavensFire": { "true": "fire", "false": "lightning" },
+    "FlameWest": { "true": "west", "false": "east" },
+    "SmallHalosWest": { "true": "west", "false": "east" },
+    "TowersWest": { "true": "west", "false": "east" },
+    "TowersFire": { "true": "fire (knockback)", "false": "lightning (line)" },
+    "FirstIcicle": { "0": "north-south", "1": "north-east to south-west", "2": "east-west", "3": "south-east to north-west" },
+    "SupportsMarked": { "true": "on the supports", "false": "on the DPS" },
+    "Axe": { "true": "Axe Kick (out)", "false": "Scythe Kick (in)" },
+    "MirrorOctant": {
+      "0": "north", "1": "north-east", "2": "east", "3": "south-east",
+      "4": "south", "5": "south-west", "6": "west", "7": "north-west"
+    },
+    "GazeOctant": {
+      "0": "north", "1": "north-east", "2": "east", "3": "south-east",
+      "4": "south", "5": "south-west", "6": "west", "7": "north-west"
+    },
+    "Stillness": { "true": "Twin Stillness (behind first)", "false": "Twin Silence (front first)" },
+    "BlueOctant": {
+      "0": "north", "1": "north-east", "2": "east", "3": "south-east",
+      "4": "south", "5": "south-west", "6": "west", "7": "north-west"
+    },
+    "FirstRedOctant": {
+      "0": "north", "1": "north-east", "2": "east", "3": "south-east",
+      "4": "south", "5": "south-west", "6": "west", "7": "north-west"
+    },
+    "Pairs": { "true": "one orb (pairs)", "false": "four orbs (spread)" },
+    "NorthOrbsFirst": { "true": "north orbs first", "false": "south orbs first" }
+  }
+}
