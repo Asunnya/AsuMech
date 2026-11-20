@@ -14,20 +14,9 @@
         "time": 15.5,
         "line": 60
       },
-      "title": "Crystallize Time route",
-      "cue": "Spell-in-Waiting: Return on you",
-      "rule": "Your spot follows your Crystallize Time debuff (and, for the pairs, NA priority west/east) and this run's slow Maelstrom side; follow the marker.",
-      "roles": {
-        "MainTank": {
-          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: SlowNorthwest)."
-        },
-        "ShieldHealer": {
-          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: SlowNorthwest)."
-        },
-        "CasterDps": {
-          "rule": "Depends on SlowNorthwest and Quietus has OffTank: false & no → SE wall; true & yes → SE wall; false & yes → near B (E 13m); true & no → SE wall."
-        }
-      },
+      "title": "Go to your Crystallize Time spot",
+      "cue": "Gaia casts Speed: yellow tethers north-south, purple on one diagonal",
+      "rule": "Red Aero: south-west or south-east wall. Red Ice: west or east, 12 m out, to catch a dragon head. Blue Eruption: the north purple corner. Other blues: the south purple corner. A red pair splits by H2 > H1 > OT > MT > M1 > M2 > R1 > R2, the first taking west.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -37,29 +26,9 @@
         "time": 23.3,
         "line": 61
       },
-      "title": "Crystallize Time route",
-      "cue": "Maelstrom resolves",
-      "rule": "Go to the south-east wall.",
-      "roles": {
-        "OffTank": {
-          "rule": "When Quietus leaves out MT, go to the south-west wall; when Quietus includes MT, go to the south-east wall."
-        },
-        "RegenHealer": {
-          "rule": "When Quietus leaves out R2, go to the south-west wall; when Quietus includes R2, go to the south-east wall."
-        },
-        "ShieldHealer": {
-          "rule": "Depends on SlowNorthwest and Quietus has MainTank: false & no → SW wall; true & no → SE wall; true & yes → SW wall."
-        },
-        "PhysRangedDps": {
-          "rule": "Depends on SlowNorthwest and East: false & false → SW wall; true & true → SE wall; false & true → SE wall; true & false → SE wall."
-        },
-        "MainTank": {
-          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: SlowNorthwest)."
-        },
-        "MeleeDpsB": {
-          "rule": "When Quietus leaves out R1 and SpiritTakerTarget includes M2, go to the south-east wall; when Quietus leaves out R1 and SpiritTakerTarget leaves out M2, go to the south-west wall; when Quietus includes R1 and SpiritTakerTarget leaves out M2, go to the south-east wall."
-        }
-      },
+      "title": "Line up for the Aero knockback",
+      "cue": "The first hourglasses explode",
+      "rule": "The south blue group slides along the wall toward due south so the Aero on its side stands just behind it and knocks it north; both Aeros shift toward due south as well. Red Ice and the Eruption hold.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -69,26 +38,9 @@
         "time": 26,
         "line": 63
       },
-      "title": "Crystallize Time route",
-      "cue": "Dark Blizzard III hits you",
-      "rule": "Go to the east wall.",
-      "roles": {
-        "MeleeDpsA": {
-          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: DragonPuddles)."
-        },
-        "MeleeDpsB": {
-          "rule": "When Quietus leaves out OT, go to the east wall; when Quietus includes OT, go to the west wall."
-        },
-        "RegenHealer": {
-          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: Quietus has PhysRangedDps)."
-        },
-        "OffTank": {
-          "rule": "Go to the west wall."
-        },
-        "ShieldHealer": {
-          "rule": "Go to the west wall."
-        }
-      },
+      "title": "Red Ice: dodge out to the wall",
+      "cue": "Your dragon head pops on you",
+      "rule": "Red Ice: once your dragon head has hit you, step out to the wall on your side, slightly north, clear of the puddle it drops.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -98,23 +50,9 @@
         "time": 26.7,
         "line": 64
       },
-      "title": "Crystallize Time route",
-      "cue": "Dark Aero III resolves",
-      "rule": "Your spot follows your Crystallize Time debuff (and, for the pairs, NA priority west/east) and this run's slow Maelstrom side; follow the marker.",
-      "roles": {
-        "RegenHealer": {
-          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: SlowNorthwest)."
-        },
-        "ShieldHealer": {
-          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: SlowNorthwest)."
-        },
-        "MeleeDpsA": {
-          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: SlowNorthwest)."
-        },
-        "CasterDps": {
-          "rule": "Depends on SlowNorthwest and Quietus has OffTank: false & no → S wall; true & yes → NW wall; false & yes → NE wall; true & no → NW wall."
-        }
-      },
+      "title": "Land in the north purple corner",
+      "cue": "Dark Aero III knocks the group north",
+      "rule": "The knocked-back blues land in the north purple corner with the Eruption; the red Ice on that side joins them, the other red Ice waits at its wall slightly south. Aeros stay near the south wall.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -124,29 +62,9 @@
         "time": 28.5,
         "line": 65
       },
-      "title": "Crystallize Time route",
-      "cue": "Dark Aero III hits you",
-      "rule": "Your spot follows your Crystallize Time debuff (and, for the pairs, NA priority west/east) and this run's slow Maelstrom side; follow the marker.",
-      "roles": {
-        "PhysRangedDps": {
-          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: SpiritTakerTarget)."
-        },
-        "CasterDps": {
-          "rule": "Stand near waymark 3, 12m south-east of the centre."
-        },
-        "OffTank": {
-          "rule": "When Quietus leaves out H1 and Quietus leaves out MT, stand near waymark 4, 12m south-west of the centre; when Quietus includes H1 and Quietus leaves out MT, go to the north-west wall; when Quietus leaves out H1 and Quietus includes MT, stand near waymark 3, 12m south-east of the centre."
-        },
-        "MeleeDpsB": {
-          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: SpiritTakerTarget)."
-        },
-        "ShieldHealer": {
-          "rule": "Stand near waymark 4, 12m south-west of the centre."
-        },
-        "RegenHealer": {
-          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: SlowNorthwest)."
-        }
-      },
+      "title": "Aeros into the south circle",
+      "cue": "The second hourglasses explode",
+      "rule": "Both Aeros step in to the south circle to meet their dragon heads; the red Ice on the south-purple side moves up to the north corner on its side.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -156,9 +74,9 @@
         "time": 29.8,
         "line": 66
       },
-      "title": "Crystallize Time route",
-      "cue": "Tidal Light cast starts",
-      "rule": "Go to the north wall.",
+      "title": "Gather north for the exalines",
+      "cue": "Tidal Light cast starts: Shiva moves east or west",
+      "rule": "After Unholy Darkness, everyone but the Aeros gathers at the north edge beside the crystal (never let a stack clip it); the two blues whose cleanse is on the side away from Shiva stand a bit toward that side.",
       "tolerance": 2,
       "skip": false
     },
@@ -168,9 +86,9 @@
         "time": 30.566372,
         "line": 197
       },
-      "title": "After your debuff resolves",
-      "cue": "Longing of the Lost hits you",
-      "rule": "Go to the south wall.",
+      "title": "Aero: back to the south circle",
+      "cue": "Your dragon head pops on you",
+      "rule": "Aero: as soon as your dragon head pops on you, run back to the south circle.",
       "tolerance": 1.5,
       "skip": false
     },
@@ -180,7 +98,7 @@
         "time": 31.5,
         "line": 67
       },
-      "title": "Crystallize Time route",
+      "title": "Aeros hold south",
       "tolerance": 1.5,
       "skip": true
     },
@@ -190,29 +108,9 @@
         "time": 33.6,
         "line": 68
       },
-      "title": "Crystallize Time route",
-      "cue": "Maelstrom resolves",
-      "rule": "Your spot follows your Crystallize Time debuff (and, for the pairs, NA priority west/east) and this run's slow Maelstrom side; follow the marker.",
-      "roles": {
-        "OffTank": {
-          "rule": "Stand near waymark B, 13m east of the centre."
-        },
-        "RegenHealer": {
-          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show."
-        },
-        "MainTank": {
-          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: Quietus has PhysRangedDps)."
-        },
-        "MeleeDpsB": {
-          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: Quietus has MeleeDpsB)."
-        },
-        "ShieldHealer": {
-          "rule": "Go to 13m west of the centre."
-        },
-        "MeleeDpsA": {
-          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: SlowNorthwest)."
-        }
-      },
+      "title": "First cleanse on the far side",
+      "cue": "The last hourglasses explode",
+      "rule": "The far-side cleanses start: with Shiva east, the Eruption cleanses in the west puddle and the blue Ice heads toward waymark 4; with Shiva west, Unholy cleanses in the east puddle and Water heads toward waymark 3. Everyone else holds.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -222,29 +120,9 @@
         "time": 34.6,
         "line": 69
       },
-      "title": "Crystallize Time route",
-      "cue": "Tidal Light resolves",
-      "rule": "Your spot follows your Crystallize Time debuff (and, for the pairs, NA priority west/east) and this run's slow Maelstrom side; follow the marker.",
-      "roles": {
-        "MainTank": {
-          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: Corner)."
-        },
-        "ShieldHealer": {
-          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: SpiritTakerTarget)."
-        },
-        "MeleeDpsA": {
-          "rule": "Depends on Quietus has PhysRangedDps and East: yes & false → at D; no & false → at D; no & true → at B; yes & true → near 3 (SE 13m)."
-        },
-        "PhysRangedDps": {
-          "rule": "Depends on Quietus has MainTank and East: no & false → at D; yes & true → near 3 (SE 13m); no & true → at B; yes & false → near 4 (SW 13m)."
-        },
-        "CasterDps": {
-          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: East)."
-        },
-        "RegenHealer": {
-          "rule": "Depends on Quietus has ShieldHealer and East: yes & false → at D; no & true → near B (E 13m); yes & true → near 3 (SE 13m); no & false → at D."
-        }
-      },
+      "title": "Reds behind the first wave, near cleanses",
+      "cue": "The first exaline passes",
+      "rule": "Reds gather about 8 m out on Shiva's side, behind the first wave. The blues whose cleanse is on Shiva's side grab their puddles there (Unholy and Water when she is east, Eruption and Ice when she is west).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -254,17 +132,9 @@
         "time": 36.5,
         "line": 70
       },
-      "title": "Crystallize Time route",
-      "cue": "Tidal Light resolves",
-      "rule": "Your spot follows your Crystallize Time debuff (and, for the pairs, NA priority west/east) and this run's slow Maelstrom side; follow the marker.",
-      "roles": {
-        "OffTank": {
-          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: Corner)."
-        },
-        "ShieldHealer": {
-          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: Corner)."
-        }
-      },
+      "title": "Toward the exaline corner",
+      "cue": "The second Tidal Light cast starts",
+      "rule": "The next waves come from north or south: reds move about 10 m out toward the corner both wave sets start from; the last blue keeps chasing its puddle along behind the waves.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -275,15 +145,10 @@
         "to": 39.099575,
         "line": 206
       },
-      "title": "After your debuff resolves",
-      "cue": "Tidal Light cast starts",
-      "rule": "Stand near waymark 1, 11m north-west of the centre.",
-      "roles": {
-        "RegenHealer": {
-          "rule": "Stand near waymark 4, 11m south-west of the centre."
-        }
-      },
-      "tolerance": 2,
+      "title": "Cleansed: wait for the waves",
+      "cue": "Your Wyrmfang is cleansed",
+      "rule": "Once your puddle cleanses you, move to your waiting spot on the way to the exaline corner, dodging into the waves behind them.",
+      "tolerance": 2.0,
       "skip": false
     },
     {
@@ -292,20 +157,9 @@
         "time": 38.9,
         "line": 77
       },
-      "title": "Crystallize Time route",
-      "cue": "Tidal Light cast starts",
-      "rule": "Your spot follows your Crystallize Time debuff (and, for the pairs, NA priority west/east) and this run's slow Maelstrom side; follow the marker.",
-      "roles": {
-        "OffTank": {
-          "rule": "Depends on Corner: NW → NW 14m; NE → NE 14m; SE → SE 14m; SW → SW 14m."
-        },
-        "RegenHealer": {
-          "rule": "Read the strat's FollowRoute: the spot follows a rule the rolls alone don't show (closest roll: SpiritTakerTarget)."
-        },
-        "ShieldHealer": {
-          "rule": "Depends on Corner: NE → NE 14m; SE → SE 14m; SW → SW 14m; NW → NW 14m."
-        }
-      },
+      "title": "Gather in the exaline corner",
+      "cue": "The second exalines start moving",
+      "rule": "Everyone heads into the corner both exaline sets started from, about 14 m out; a blue still cleansing joins after its puddle.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -315,18 +169,10 @@
         "time": 41.1,
         "line": 84
       },
-      "title": "Group up",
-      "cue": "Tidal Light resolves",
-      "rule": "Your spot follows your Crystallize Time debuff (and, for the pairs, NA priority west/east) and this run's slow Maelstrom side; follow the marker.",
-      "roles": {
-        "MainTank": {
-          "rule": "Depends on Corner: NW → near 1 (NW 12m); NE → near 2 (NE 12m); SE → near 3 (SE 12m); SW → near 4 (SW 12m)."
-        },
-        "OffTank": {
-          "rule": "Depends on Corner: NW → near 1 (NW 12m); NE → near 2 (NE 12m); SE → near 3 (SE 12m); SW → near 4 (SW 12m)."
-        }
-      },
-      "tolerance": 2,
+      "title": "Place Return at the corner waymark",
+      "cue": "The last exaline passes",
+      "rule": "Split into light parties on the corner waymark: group 1 (MT, H1, M1, R1) on the left and group 2 on the right as you face the wall, tanks a few steps further out than their group. Hold still while Return saves your spot.",
+      "tolerance": 2.0,
       "skip": false
     },
     {
@@ -335,12 +181,12 @@
         "time": 61.7,
         "line": 86
       },
-      "title": "Group up",
+      "title": "Akh Morn: MT solo, party stacks",
       "cue": "Hallowed Wings resolves",
-      "rule": "Stand at the centre.",
+      "rule": "7-1 Akh Morn: everyone stacks in the middle while the MT takes his share alone about 9 m west.",
       "roles": {
         "MainTank": {
-          "rule": "Stand on waymark D."
+          "rule": "Take Akh Morn alone about 9 m west of the middle, away from the party stack."
         }
       },
       "tolerance": 2,
@@ -354,29 +200,10 @@
       },
       "title": "Stack for Morn Afah",
       "cue": "Morn Afah cast starts",
-      "rule": "Stack with the main tank at the centre.",
+      "rule": "Everyone, MT included, stacks in the middle for Morn Afah.",
       "tolerance": 2,
       "skip": false
     }
   ],
-  "toolbox": {
-    "planId": "GIXItxnLI2MJma73",
-    "roleMap": {
-      "CasterDps": "dps4",
-      "RegenHealer": "healer1",
-      "MeleeDpsB": "dps2",
-      "ShieldHealer": "healer2",
-      "MeleeDpsA": "dps1",
-      "PhysRangedDps": "dps3",
-      "MainTank": "tank1",
-      "OffTank": "tank2"
-    },
-    "steps": {
-      "FruP4CrystallizeTimeAi@26": 1,
-      "FruP4CrystallizeTimeAi@37.82-39.1": 15
-    },
-    "exampleSeed": 1,
-    "residual": 2.6134186
-  },
   "draft": true
 }

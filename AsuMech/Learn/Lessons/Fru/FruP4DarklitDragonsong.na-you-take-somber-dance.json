@@ -5,6 +5,10 @@
     {
       "label": "NAUR LesBin - Darklit Dragonsong - Role Quadrant, Healer Plant NW",
       "url": "https://docs.google.com/presentation/d/1kFM5ggrIj86Mc2EcYS5RfFgF_pawSRk7-vryQmQb2Is/edit?usp=sharing"
+    },
+    {
+      "label": "Materia Raiding - Darklit Dragonsong raidplan (materiaraiding.pages.dev/ultimate/fru)",
+      "url": "https://raidplan.io/plan/pcrbL0iqrAYMKFV3"
     }
   ],
   "steps": [
@@ -14,10 +18,10 @@
         "time": 2,
         "line": 32
       },
-      "title": "After Great wyrm appears",
-      "cue": "great wyrm appears",
-      "rule": "Stand at the centre.",
-      "tolerance": 1.5,
+      "title": "Stack in the middle",
+      "cue": "The Usurper turns into her dragon form",
+      "rule": "Gather in the middle so every Akh Rhai puddle lands on the same spot.",
+      "tolerance": 2.0,
       "skip": false
     },
     {
@@ -26,29 +30,9 @@
         "time": 6.65,
         "line": 33
       },
-      "title": "After Akh Rhai cast starts",
-      "cue": "Akh Rhai cast starts",
-      "rule": "Stand near waymark 2, 8m north-east of the centre.",
-      "roles": {
-        "RegenHealer": {
-          "rule": "Stand near waymark 1, 8m north-west of the centre."
-        },
-        "ShieldHealer": {
-          "rule": "Stand near waymark 1, 8m north-west of the centre."
-        },
-        "MeleeDpsA": {
-          "rule": "Stand near waymark 3, 8m south-east of the centre."
-        },
-        "MeleeDpsB": {
-          "rule": "Stand near waymark 3, 8m south-east of the centre."
-        },
-        "PhysRangedDps": {
-          "rule": "Stand near waymark 4, 8m south-west of the centre."
-        },
-        "CasterDps": {
-          "rule": "Stand near waymark 4, 8m south-west of the centre."
-        }
-      },
+      "title": "Dodge Akh Rhai into your role quadrant",
+      "cue": "Akh Rhai puddles appear under the party",
+      "rule": "Leave the middle as the puddles drop and wait about 8 m out in your role's quadrant: healers north-west, tanks north-east, melee south-east, ranged south-west.",
       "tolerance": 2,
       "skip": false
     },
@@ -58,26 +42,9 @@
         "time": 14.5,
         "line": 34
       },
-      "title": "After Akh Rhai resolves",
-      "cue": "Akh Rhai resolves",
-      "rule": "Stand near waymark C, 11m south of the centre.",
-      "roles": {
-        "MainTank": {
-          "rule": "Go to 3m north-east of the centre."
-        },
-        "OffTank": {
-          "rule": "Go to 5m east of the centre."
-        },
-        "RegenHealer": {
-          "rule": "Go to 5m west of the centre."
-        },
-        "ShieldHealer": {
-          "rule": "Go to 3m north-west of the centre."
-        },
-        "PhysRangedDps": {
-          "rule": "Stand near waymark 4, 10m south-west of the centre."
-        }
-      },
+      "title": "Line up for Darklit Dragonsong",
+      "cue": "The Akh Rhai puddles finish",
+      "rule": "Form the two lineup arcs: supports just north of the middle (H1, H2, MT, OT from west to east), DPS about 10 m south (R1, R2, M1, M2 from west to east).",
       "tolerance": 2,
       "skip": false
     },
@@ -87,26 +54,9 @@
         "time": 24.2,
         "line": 35
       },
-      "title": "After Lightsteeped on you",
-      "cue": "Lightsteeped on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TetherWater).",
-      "roles": {
-        "MainTank": {
-          "rule": "Depends on FreeWaterIndex and TetherWater has MainTank: 3 & no → near C (S 8m); 1 & no → NE 7m; 3 & yes → near A (N 8m)."
-        },
-        "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: FreeWaterIndex)."
-        },
-        "RegenHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Waters has CasterDps)."
-        },
-        "ShieldHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Waters has CasterDps)."
-        },
-        "MeleeDpsA": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EastWing)."
-        }
-      },
+      "title": "Chains make the bowtie",
+      "cue": "Refulgent Chain links four players",
+      "rule": "Chained: healer north-west, tank north-east, the west DPS south-west and the east DPS south-east, about 8 m out; if the chains make a box the tank swaps with the east DPS, if an hourglass with the west DPS. Free: healer west and tank east just north of the middle, DPS south-west and south-east (ranged west, melee east; R2 or M1 takes west when the roles match).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -116,26 +66,9 @@
         "time": 28.2,
         "line": 36
       },
-      "title": "After Lightsteeped on you",
-      "cue": "Lightsteeped on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TetherWater).",
-      "roles": {
-        "MainTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Waters)."
-        },
-        "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: FreeWaterIndex)."
-        },
-        "RegenHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Waters has CasterDps)."
-        },
-        "ShieldHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Waters has CasterDps)."
-        },
-        "MeleeDpsA": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EastWing)."
-        }
-      },
+      "title": "One Dark Water north, one south",
+      "cue": "The Path of Light cast starts",
+      "rule": "If both Dark Waters sit on the same half, the free player with water swaps straight across with the free player on the other half. Chained players then hold their corner to soak a tower; free players stay close to the boss for the cones.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -145,23 +78,9 @@
         "time": 33.1,
         "line": 37
       },
-      "title": "After Lightsteeped on you",
-      "cue": "Lightsteeped on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TetherWater).",
-      "roles": {
-        "MainTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Waters)."
-        },
-        "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: FreeWaterIndex)."
-        },
-        "RegenHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Waters has CasterDps)."
-        },
-        "ShieldHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Waters has CasterDps)."
-        }
-      },
+      "title": "Spread for Spirit Taker",
+      "cue": "The Path of Light resolves",
+      "rule": "Chained players move out to their intercardinal; free supports go out on their side (the west one to the wall, the east one halfway); free DPS stay in, the east one under the boss. Keep clear of the crystal north.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -171,29 +90,9 @@
         "time": 35.65,
         "line": 38
       },
-      "title": "After Lightsteeped on you",
-      "cue": "Lightsteeped on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Waters).",
-      "roles": {
-        "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EastWing)."
-        },
-        "RegenHealer": {
-          "rule": "Depends on EastWing: false → at 2; true → at 1."
-        },
-        "ShieldHealer": {
-          "rule": "Depends on EastWing: false → at 2; true → at 1."
-        },
-        "MeleeDpsA": {
-          "rule": "Depends on EastWing: false → at 3; true → at 4."
-        },
-        "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EastWing)."
-        },
-        "CasterDps": {
-          "rule": "Depends on EastWing and Waters has ShieldHealer: false & no → at 3; true & no → at 4; false & yes → at 2."
-        }
-      },
+      "title": "Stack for Dark Water away from the wing",
+      "cue": "Hallowed Wings cast starts: one wing glows",
+      "rule": "The glowing wing's half of the arena gets hit: go to the other half and stack on its intercardinal waymarks, north half with the north water and south half with the south water. Don't let the north stack touch the crystal.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -203,14 +102,9 @@
         "time": 40.6,
         "line": 40
       },
-      "title": "After Hallowed Wings resolves",
+      "title": "Bait Somber Dance far",
       "cue": "Hallowed Wings resolves",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SpiritTakerTarget has MainTank).",
-      "roles": {
-        "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SpiritTakerTarget has OffTank)."
-        }
-      },
+      "rule": "You bait Somber Dance: run to the wall east or west, whichever is farther from Gaia, to take the first, farthest slam.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -220,23 +114,9 @@
         "time": 42.4,
         "line": 41
       },
-      "title": "After Hallowed Wings resolves",
-      "cue": "Hallowed Wings resolves",
-      "rule": "Stand near waymark A, 6m north of the centre.",
-      "roles": {
-        "MeleeDpsA": {
-          "rule": "Stand near waymark C, 6m south of the centre."
-        },
-        "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: TetherWater has MeleeDpsB)."
-        },
-        "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EastWing)."
-        },
-        "CasterDps": {
-          "rule": "When Waters leaves out H2, stand near waymark C, 6m south of the centre; when Waters includes H2, stand near waymark A, 6m north of the centre."
-        }
-      },
+      "title": "Group up north and south",
+      "cue": "The Dark Water stacks resolve",
+      "rule": "Everyone else regroups in two stacks about 6 m north and south of the middle, keeping their half, well away from the baiting tank.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -246,15 +126,10 @@
         "time": 45,
         "line": 42
       },
-      "title": "After Somber Dance hits you",
-      "cue": "Somber Dance hits you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SpiritTakerTarget has MainTank).",
-      "roles": {
-        "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SpiritTakerTarget has OffTank)."
-        }
-      },
-      "tolerance": 2.5,
+      "title": "Take the close hit too",
+      "cue": "Somber Dance's first slam hits",
+      "rule": "Right after the far slam, run back to Gaia and stand just past her on the outside to take the close slam as well (plan an invuln).",
+      "tolerance": 2.0,
       "skip": false
     },
     {
@@ -263,12 +138,12 @@
         "time": 50.15,
         "line": 43
       },
-      "title": "After Edge of Oblivion cast starts",
-      "cue": "Edge of Oblivion cast starts",
-      "rule": "Stand at the centre.",
+      "title": "Akh Morn: MT solo, party stacks",
+      "cue": "Somber Dance resolves",
+      "rule": "7-1 Akh Morn: everyone stacks in the middle while the MT takes his share alone about 9 m west.",
       "roles": {
         "MainTank": {
-          "rule": "Stand on waymark D."
+          "rule": "Take Akh Morn alone about 9 m west of the middle, away from the party stack."
         }
       },
       "tolerance": 2,
@@ -282,7 +157,7 @@
       },
       "title": "Stack for Morn Afah",
       "cue": "Morn Afah cast starts",
-      "rule": "Stack with the main tank at the centre.",
+      "rule": "Everyone, MT included, stacks in the middle for Morn Afah.",
       "tolerance": 2,
       "skip": false
     }
@@ -290,20 +165,21 @@
   "toolbox": {
     "planId": "pcrbL0iqrAYMKFV3",
     "roleMap": {
-      "MeleeDpsB": "dps1",
-      "MeleeDpsA": "dps3",
-      "CasterDps": "dps4",
-      "PhysRangedDps": "dps2",
-      "ShieldHealer": "healer2",
+      "MainTank": "tank1",
+      "OffTank": "tank2",
       "RegenHealer": "healer1",
-      "OffTank": "tank1",
-      "MainTank": "tank2"
+      "ShieldHealer": "healer2",
+      "MeleeDpsA": "dps1",
+      "MeleeDpsB": "dps2",
+      "PhysRangedDps": "dps3",
+      "CasterDps": "dps4"
     },
     "steps": {
-      "FruP4DarklitDragonsongAi@2": 14
+      "FruP4DarklitDragonsongAi@6.65": 1,
+      "FruP4DarklitDragonsongAi@61.1": 14
     },
     "exampleSeed": 1,
-    "residual": 1.0
+    "residual": 1.1910473
   },
   "draft": true
 }

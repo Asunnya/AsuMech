@@ -1,7 +1,12 @@
 {
   "scenario": "FruP4MaterializationScenario",
   "strat": "NA",
-  "sources": [],
+  "sources": [
+    {
+      "label": "NAUR LesBin - Darklit Dragonsong (P4 start, Materialization)",
+      "url": "https://docs.google.com/presentation/d/1kFM5ggrIj86Mc2EcYS5RfFgF_pawSRk7-vryQmQb2Is/edit?usp=sharing"
+    }
+  ],
   "steps": [
     {
       "key": {
@@ -10,26 +15,14 @@
         "line": 19
       },
       "title": "Gather on the Usurper in the south",
-      "cue": "Usurper of Frost reappears south of the centre",
-      "rule": "Melee take her east and west flanks.",
+      "cue": "The Usurper of Frost reappears south of the middle",
+      "rule": "Run to the Usurper as she comes back: MT tanks her from the north side with OT beside him, melee on her east and west flanks, healers and ranged spread between her and the middle.",
       "roles": {
         "MainTank": {
-          "rule": "Tank her from the north side, 4m in front of her."
+          "rule": "Pick her up from the north side, about 4 m in front of her, so she faces the middle."
         },
         "OffTank": {
-          "rule": "Stand beside the main tank."
-        },
-        "RegenHealer": {
-          "rule": "Wait north-west of her, 4m south-west of the centre."
-        },
-        "ShieldHealer": {
-          "rule": "Wait north-east of her, 4m south-east of the centre."
-        },
-        "PhysRangedDps": {
-          "rule": "Wait north-west of her, near waymark 4."
-        },
-        "CasterDps": {
-          "rule": "Wait north-east of her, near waymark 3."
+          "rule": "Stand next to the MT on her north side."
         }
       },
       "tolerance": 2.5,

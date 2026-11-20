@@ -1,0 +1,44 @@
+{
+  "fields": {
+    "DpsIce": "the Dark Blizzard holder's role",
+    "North": "the relative north",
+    "ClockwiseMask": "the hourglass spin directions",
+    "ShellCrusherTarget": "the Shell Crusher target",
+    "IceHolder": "the Dark Blizzard holder",
+    "Rotation": "the first lit spoke",
+    "Clockwise": "the lights' turning direction",
+    "WaterDurations": "the Dark Water timers",
+    "SpiritTakerTarget": "the Spirit Taker target",
+    "LineupOrder": "the Darklit lineup",
+    "TetherWaterIndex": "the chained Dark Water's lineup slot",
+    "FreeWaterIndex": "the free Dark Water's lineup slot",
+    "EastWing": "the Hallowed Wings side",
+    "SomberTank": "the Somber Dance tank",
+    "TetherWater": "the chained Dark Water",
+    "FreeWater": "the free Dark Water",
+    "Waters": "the Dark Water targets",
+    "SlowNorthwest": "the slowed hourglass diagonal",
+    "Corner": "the exaline corner",
+    "East": "the first exaline side",
+    "Quietus": "the Quietus targets",
+    "DragonPuddles": "the dragon-head puddles"
+  },
+  "values": {
+    "*": {
+      "MainTank": "MT", "OffTank": "OT", "RegenHealer": "H1", "ShieldHealer": "H2",
+      "MeleeDpsA": "M1", "MeleeDpsB": "M2", "PhysRangedDps": "R1", "CasterDps": "R2"
+    },
+    "DpsIce": { "true": "a DPS", "false": "a support" },
+    "North": {
+      "0": "north", "1": "north-east", "2": "east", "3": "south-east",
+      "4": "south", "5": "south-west", "6": "west", "7": "north-west",
+      "true": "north", "false": "south"
+    },
+    "Rotation": { "0": "north-south", "1": "north-east/south-west", "2": "east-west", "3": "south-east/north-west" },
+    "Clockwise": { "true": "clockwise", "false": "counter-clockwise" },
+    "EastWing": { "true": "east", "false": "west" },
+    "SlowNorthwest": { "true": "north-west/south-east", "false": "north-east/south-west" },
+    "Corner": { "NW": "north-west", "NE": "north-east", "SE": "south-east", "SW": "south-west" },
+    "East": { "true": "east", "false": "west" }
+  }
+}
