@@ -140,7 +140,8 @@ public sealed class UcobP1TwintaniaScenario : IScenario
         }
         foreach (var at in AutoAttacks()) world.Events.Add(at, AutoAttack);
         foreach (var at in NeurolinkDrops) world.Events.Add(at, DropNeurolink);
-        world.Events.Add(ToFirstWestCamp, () => twintania?.MoveTo(ToWorld(markers.Place(FirstWestCamp)), 4.3f));
+        var straightToTheSecondMarker = selectedAi is { } strat && strat < AiStrats.Count && AiStrats[strat] is UcobP1TwintaniaAi { DragsStraightToTheSecondMarker: true };
+        world.Events.Add(ToFirstWestCamp, () => twintania?.MoveTo(ToWorld(markers.Place(straightToTheSecondMarker ? SecondWestCamp : FirstWestCamp)), straightToTheSecondMarker ? 7.5f : 4.3f));
         world.Events.Add(ToSecondWestCamp, () => twintania?.MoveTo(ToWorld(markers.Place(SecondWestCamp)), 7f));
         world.Events.Add(ToEastCamp, () => twintania?.MoveTo(ToWorld(markers.Place(EastCamp)), 6.6f));
 

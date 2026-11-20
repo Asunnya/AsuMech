@@ -14,18 +14,20 @@ namespace AsuMech.Scenarios.Ucob.P1Twintania;
 
 public sealed class UcobP1TwintaniaAi : IScenarioAi<UcobP1TwintaniaState>, IUcobStrat
 {
-    public static UcobP1TwintaniaAi NeurolinksAt123 => new("Neurolinks at 1, 2 and 3, ranged baits Liquid Hell", UcobMarkers.Aether, [PhysRangedDps, CasterDps, MeleeDpsB], []);
-    public static UcobP1TwintaniaAi Tuufless => new("Tuufless (Elemental)", UcobMarkers.Elemental, [PhysRangedDps, ShieldHealer], [PhysRangedDps, CasterDps]);
+    public static UcobP1TwintaniaAi NeurolinksAt123 => new("Neurolinks at 1, 2 and 3, ranged baits Liquid Hell", UcobMarkers.Aether, [PhysRangedDps, CasterDps, MeleeDpsB], [], dragsStraightToTheSecondMarker: false);
+    public static UcobP1TwintaniaAi Tuufless => new("Tuufless (Elemental)", UcobMarkers.Elemental, [PhysRangedDps, ShieldHealer], [PhysRangedDps, CasterDps], dragsStraightToTheSecondMarker: true);
 
     public string Name { get; }
     public UcobMarkers Markers { get; }
+    public bool DragsStraightToTheSecondMarker { get; }
     private readonly PartyRole[] baitOrder;
     private readonly PartyRole[] firstFireballSitOutOrder;
 
-    private UcobP1TwintaniaAi(string name, UcobMarkers markers, PartyRole[] baitOrder, PartyRole[] firstFireballSitOutOrder)
+    private UcobP1TwintaniaAi(string name, UcobMarkers markers, PartyRole[] baitOrder, PartyRole[] firstFireballSitOutOrder, bool dragsStraightToTheSecondMarker)
     {
         Name = name;
         Markers = markers;
+        DragsStraightToTheSecondMarker = dragsStraightToTheSecondMarker;
         this.baitOrder = baitOrder;
         this.firstFireballSitOutOrder = firstFireballSitOutOrder;
     }
@@ -67,6 +69,8 @@ public sealed class UcobP1TwintaniaAi : IScenarioAi<UcobP1TwintaniaState>, IUcob
     private State state = null!;
     private SimWorld world = null!;
 
+    private Camp FirstPushCamp => DragsStraightToTheSecondMarker ? SecondWest : FirstWest;
+
     public void Run(UcobP1TwintaniaState stateParam, SimWorld worldParam)
     {
         state = stateParam;
@@ -80,12 +84,12 @@ public sealed class UcobP1TwintaniaAi : IScenarioAi<UcobP1TwintaniaState>, IUcob
         ai.Move(Scenario.TwisterSnapshots[0] + StepOff, () => OnMarkers(StackForTheFirstFireballDodgingTwisters(Scenario.TwisterSnapshots[0] + StepOff)).NaturalOrder(), jitter: 0f, sprint: true);
         ai.Move(Scenario.AggroSwaps[0] - 0.4f, () => OnMarkers(CampSpots(North, Scenario.AggroSwaps[0])).NaturalOrder(), jitter: 0f);
 
-        ai.Move(Scenario.ToFirstWestCamp, () => OnMarkers(CampSpotsWithBaiter(FirstWest, Scenario.ToFirstWestCamp, 0)).NaturalOrder(), jitter: 0f, sprint: true);
+        ai.Move(Scenario.ToFirstWestCamp, () => OnMarkers(CampSpotsWithBaiter(FirstPushCamp, Scenario.ToFirstWestCamp, 0)).NaturalOrder(), jitter: 0f, sprint: true);
         FollowBaitPath(ai, 0);
         GoIntoNeurolinks(ai, 0, Scenario.GenerateCasts[0]);
         ai.Move(BaitStarts[1], () => OnMarkers(Only(Baiter(1), BaitPaths[1][0])).NaturalOrder(), jitter: 0f, sprint: true);
         FollowBaitPath(ai, 1);
-        ai.Move(HatchResolvesBy(0) + LeaveNeurolinkAfterHatch, () => OnMarkers(Cluster(FirstWest.Stack, state.HatchTargets[0].Where(r => r != Baiter(1)))).NaturalOrder(), jitter: 0f);
+        ai.Move(HatchResolvesBy(0) + LeaveNeurolinkAfterHatch, () => OnMarkers(Cluster(FirstPushCamp.Stack, state.HatchTargets[0].Where(r => r != Baiter(1)))).NaturalOrder(), jitter: 0f);
 
         ai.Move(Scenario.ToSecondWestCamp, () => OnMarkers(CampSpots(SecondWest, Scenario.ToSecondWestCamp)).NaturalOrder(), jitter: 0f, sprint: true);
         ai.Move(Scenario.AggroSwaps[1] - 1f, () => OnMarkers(Tanking(SecondWest, Scenario.AggroSwaps[1])).NaturalOrder(), jitter: 0f);

@@ -133,4 +133,15 @@ public class UcobP1TwintaniaScenarioTests
             })
             .At(65f, p => Assert.That(p.Member(OffTank)!.HasStatus(StatusId.SlashingResistanceDownII)))
             .ShouldKillNoOneElse();
+
+    [Test]
+    public void TuuflessDragsHerStraightFromTheFirstMarkerToTheSecond()
+        => Negative<UcobP1TwintaniaScenario>(MeleeDpsA, 1)
+            .At(40f, p =>
+            {
+                var twintania = p.World.Children.OfType<AsuMech.Core.SimObjects.SimEnemy>().First(e => e.BNpcBaseId == BNpcBaseId.Twintania);
+                var two = ElementalWaymarks.First(w => w.Slot == AsuMech.Core.Game.WaymarkSlot.Two).Offset;
+                Assert.That(Vector2.Distance(new(twintania.Position.X, twintania.Position.Z), new(two.X, two.Z)), Is.LessThan(2f));
+            })
+            .ShouldKillNoOneElse();
 }
