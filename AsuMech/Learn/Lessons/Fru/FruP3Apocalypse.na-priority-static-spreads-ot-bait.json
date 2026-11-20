@@ -14,26 +14,9 @@
         "time": 2.2,
         "line": 29
       },
-      "title": "After Spell-in-Waiting Refrain cast starts",
+      "title": "Line up for Dark Water",
       "cue": "Spell-in-Waiting Refrain cast starts",
-      "rule": "Stand near waymark D, 7m west of the centre.",
-      "roles": {
-        "OffTank": {
-          "rule": "Go to 4m south-west of the centre."
-        },
-        "MeleeDpsA": {
-          "rule": "Go to 4m south-east of the centre."
-        },
-        "MeleeDpsB": {
-          "rule": "Go to 4m north-east of the centre."
-        },
-        "PhysRangedDps": {
-          "rule": "Stand near waymark B, 7m east of the centre."
-        },
-        "CasterDps": {
-          "rule": "Stand near waymark B, 7m east of the centre."
-        }
-      },
+      "rule": "Supports west, DPS east, two rows each: tanks and melee about 4 m from the centre, healers and ranged further out; MT, H1, M2 and R2 on the north row, OT, H2, M1 and R1 on the south row.",
       "tolerance": 2,
       "skip": false
     },
@@ -43,23 +26,9 @@
         "time": 16.9,
         "line": 30
       },
-      "title": "After Apocalypse cast starts",
-      "cue": "Apocalypse cast starts",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SpiritTakerTarget).",
-      "roles": {
-        "ShieldHealer": {
-          "rule": "Stand near waymark D, 7m west of the centre."
-        },
-        "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: WaterDurations has 3)."
-        },
-        "PhysRangedDps": {
-          "rule": "Stand near waymark B, 7m east of the centre."
-        },
-        "CasterDps": {
-          "rule": "Stand near waymark B, 7m east of the centre."
-        }
-      },
+      "title": "Swap for matching Dark Water timers",
+      "cue": "Dark Water timers appear",
+      "rule": "Compare timers inside your group (no water counts as a timer too). If two supports share one, the first of them in MT > OT > H1 > H2 order trades spots with the first DPS (M1 > M2 > R1 > R2) of the DPS pair that also match; with two pairs each, the shorter timers swap together.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -69,23 +38,9 @@
         "time": 20.2,
         "line": 31
       },
-      "title": "After Apocalypse resolves",
+      "title": "Stack for the first Dark Water",
       "cue": "Apocalypse resolves",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SpiritTakerTarget).",
-      "roles": {
-        "ShieldHealer": {
-          "rule": "Go to 5m west of the centre."
-        },
-        "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: WaterDurations has 3)."
-        },
-        "PhysRangedDps": {
-          "rule": "Go to 5m east of the centre."
-        },
-        "CasterDps": {
-          "rule": "Go to 5m east of the centre."
-        }
-      },
+      "rule": "Each group stacks about 5 m from the centre, supports west and DPS east, counting any swap, to split the two short Dark Waters.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -95,23 +50,9 @@
         "time": 22.85,
         "line": 32
       },
-      "title": "After Dark Water III resolves",
-      "cue": "Dark Water III resolves",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SpiritTakerTarget).",
-      "roles": {
-        "ShieldHealer": {
-          "rule": "Stand near waymark D, 12m west of the centre."
-        },
-        "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: WaterDurations has 3)."
-        },
-        "PhysRangedDps": {
-          "rule": "Stand near waymark B, 12m east of the centre."
-        },
-        "CasterDps": {
-          "rule": "Stand near waymark B, 12m east of the centre."
-        }
-      },
+      "title": "Spread for Spirit Taker",
+      "cue": "Spirit Taker cast starts",
+      "rule": "Spread out from your lineup spot (still swapped): tanks and melee about 5 m from the centre, healers and ranged out to 12 m.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -121,29 +62,9 @@
         "time": 24.85,
         "line": 33
       },
-      "title": "After Spirit Taker resolves",
+      "title": "Swapped players go home",
       "cue": "Spirit Taker resolves",
-      "rule": "Stand near waymark D, 12m west of the centre.",
-      "roles": {
-        "MainTank": {
-          "rule": "Go to 5m north-west of the centre."
-        },
-        "OffTank": {
-          "rule": "Go to 5m south-west of the centre."
-        },
-        "MeleeDpsA": {
-          "rule": "Go to 5m south-east of the centre."
-        },
-        "MeleeDpsB": {
-          "rule": "Go to 5m north-east of the centre."
-        },
-        "PhysRangedDps": {
-          "rule": "Stand near waymark B, 12m east of the centre."
-        },
-        "CasterDps": {
-          "rule": "Stand near waymark B, 12m east of the centre."
-        }
-      },
+      "rule": "Anyone who swapped goes back to their own side and spot; keep the spread.",
       "tolerance": 2,
       "skip": false
     },
@@ -153,9 +74,9 @@
         "time": 28,
         "line": 34
       },
-      "title": "After Spirit Taker cast starts",
-      "cue": "Spirit Taker cast starts",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Rotation).",
+      "title": "Static spreads for Dark Eruption",
+      "cue": "The Apocalypse lights start turning",
+      "rule": "Read the first lit spoke and which way the lights turn, then spread on the line they reach fourth: supports on its west end (north end if it runs north-south), DPS on the other. Healers and ranged at the wall, tanks and melee halfway, the second of them one spoke back toward the first lights.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -165,23 +86,9 @@
         "time": 36.05,
         "line": 35
       },
-      "title": "After Dark Eruption hits you",
+      "title": "Collapse onto the line",
       "cue": "Dark Eruption hits you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Rotation).",
-      "roles": {
-        "MainTank": {
-          "rule": "Go to 4m north-west of the centre."
-        },
-        "OffTank": {
-          "rule": "Go to 4m north-west of the centre."
-        },
-        "MeleeDpsA": {
-          "rule": "Go to 4m south-east of the centre."
-        },
-        "MeleeDpsB": {
-          "rule": "Go to 4m south-east of the centre."
-        }
-      },
+      "rule": "Right after the eruptions, tanks and melee step in to 4 m on the same line; healers and ranged stay out at the wall on it.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -191,23 +98,9 @@
         "time": 37,
         "line": 36
       },
-      "title": "After Dark Eruption hits you",
-      "cue": "Dark Eruption hits you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SpiritTakerTarget).",
-      "roles": {
-        "ShieldHealer": {
-          "rule": "Go to 4m north-west of the centre."
-        },
-        "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: WaterDurations has 3)."
-        },
-        "PhysRangedDps": {
-          "rule": "Go to 4m south-east of the centre."
-        },
-        "CasterDps": {
-          "rule": "Go to 4m south-east of the centre."
-        }
-      },
+      "title": "Stack for the second Dark Water",
+      "cue": "Dark Eruption resolves",
+      "rule": "Both groups stack 4 m from the centre on that line, supports on the west end and DPS on the other, counting any swap.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -217,9 +110,9 @@
         "time": 41.7,
         "line": 37
       },
-      "title": "After Apocalypse resolves",
-      "cue": "Apocalypse resolves",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Rotation).",
+      "title": "OT baits Darkest Dance",
+      "cue": "Darkest Dance cast starts",
+      "rule": "OT: head out on the line one spoke back from the stack line, on your group's end, ready to be the farthest player.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -229,10 +122,10 @@
         "time": 42,
         "line": 39
       },
-      "title": "After Dark Water III resolves",
-      "cue": "Dark Water III resolves",
-      "rule": "Stand at the centre.",
-      "tolerance": 1.5,
+      "title": "Everyone else to the middle",
+      "cue": "The second Dark Water resolves",
+      "rule": "Everyone but the OT gathers in the middle so the OT is clearly the farthest.",
+      "tolerance": 2.0,
       "skip": false
     },
     {
@@ -241,9 +134,11 @@
         "time": 42,
         "line": 38
       },
-      "title": "After Dark Water III resolves",
+      "title": "OT out to the wall",
       "tolerance": 2.5,
-      "skip": true
+      "skip": true,
+      "cue": "The second Dark Water resolves",
+      "rule": "OT: keep going to the wall on that line so Darkest Dance jumps to you."
     },
     {
       "key": {
@@ -251,9 +146,9 @@
         "time": 45.15,
         "line": 40
       },
-      "title": "After Darkest Dance hits you",
-      "cue": "Darkest Dance hits you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Rotation).",
+      "title": "Stack against Gaia",
+      "cue": "Darkest Dance hits the OT",
+      "rule": "Gaia lands next to the OT: everyone runs to her and stacks tight on her centre side, supports and DPS slightly apart.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -263,17 +158,9 @@
         "time": 48.4,
         "line": 41
       },
-      "title": "After Darkest Dance resolves",
-      "cue": "Darkest Dance resolves",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Rotation).",
-      "roles": {
-        "MainTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: SpiritTakerTarget)."
-        },
-        "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: Clockwise)."
-        }
-      },
+      "title": "Split for the last Dark Water",
+      "cue": "Darkest Dance knockback cast starts",
+      "rule": "Spread into your two groups either side of Gaia, about 4 m apart on her centre side, ready for the knockback and the last Dark Water stacks.",
       "tolerance": 2.5,
       "skip": false
     }
@@ -289,11 +176,19 @@
       "CasterDps": "dps4"
     },
     "steps": {
-      "FruP3ApocalypseAi@16.9": 0,
-      "FruP3ApocalypseAi@42": 11
+      "FruP3ApocalypseAi@2.2": 0,
+      "FruP3ApocalypseAi@20.2": 4,
+      "FruP3ApocalypseAi@28": 8,
+      "FruP3ApocalypseAi@37": 11,
+      "FruP3ApocalypseAi@42": 13
     },
-    "exampleSeed": 8,
-    "residual": 1.9
+    "exampleSeed": 1,
+    "example": {
+      "Rotation": "1",
+      "Clockwise": "true",
+      "WaterDurations": "[1,3,1,2,3,2,0,0]"
+    },
+    "residual": 2.2579553
   },
   "draft": true
 }

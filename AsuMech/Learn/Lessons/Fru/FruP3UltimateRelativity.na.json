@@ -14,9 +14,9 @@
         "time": 1,
         "line": 27
       },
-      "title": "After Ultimate Relativity cast starts",
+      "title": "Stack in the middle",
       "cue": "Ultimate Relativity cast starts",
-      "rule": "Stand at the centre.",
+      "rule": "Wait together in the middle under Gaia; the debuffs land as the cast ends.",
       "tolerance": 1.5,
       "skip": false
     },
@@ -26,26 +26,9 @@
         "time": 19.2,
         "line": 28
       },
-      "title": "After Spell-in-Waiting: Return on you",
-      "cue": "Spell-in-Waiting: Return on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShellCrusherTarget).",
-      "roles": {
-        "OffTank": {
-          "rule": "If you are in IceHolder: Stand on waymark 3; otherwise: Stand at the centre."
-        },
-        "ShieldHealer": {
-          "rule": "When ShellCrusherTarget leaves out H2 and IceHolder leaves out H2, stand at the centre; when ShellCrusherTarget includes H2 and IceHolder includes H2, stand on waymark 3; when ShellCrusherTarget includes H2 and IceHolder leaves out H2, stand near waymark 1, 14m north-west of the centre."
-        },
-        "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: IceHolder)."
-        },
-        "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: IceHolder)."
-        },
-        "CasterDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: North)."
-        }
-      },
+      "title": "10s fires spread out",
+      "cue": "Gaia casts Speed: yellow and purple tethers on the hourglasses",
+      "rule": "North is relative: the plain hourglass between the two yellow-tethered ones, with the purple ones east and west. With a 10s Dark Fire, run out past your hourglass (support north, DPS south-west and south-east, R2 > R1 > M1 > M2 taking south-west); everyone else, Dark Blizzard included, stays stacked in the middle for Unholy Darkness.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -55,17 +38,9 @@
         "time": 23.9,
         "line": 29
       },
-      "title": "After Sinbound Meltdown cast starts",
-      "cue": "Sinbound Meltdown cast starts",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: IceHolder).",
-      "roles": {
-        "RegenHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShellCrusherTarget)."
-        },
-        "ShieldHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShellCrusherTarget)."
-        }
-      },
+      "title": "30s fires bait, eruptions drop Return",
+      "cue": "The yellow-tethered hourglasses start Sinbound Meltdown",
+      "rule": "30s fires (and a DPS with Dark Blizzard) bait the first lasers: stand right beside your hourglass, on the side it doesn't spin toward; supports take north-west and north-east (H2 > H1 > MT > OT on north-west), the DPS south. Dark Eruption players (10s fires, support ice, 20s support) drop their Return out toward their own spot, just inside the hourglass; Dark Water and the rest stay in the middle.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -76,29 +51,9 @@
         "to": 49.1,
         "line": 43
       },
-      "title": "After Return on you",
-      "cue": "Return on you",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: DpsIce).",
-      "roles": {
-        "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat."
-        },
-        "ShieldHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShellCrusherTarget)."
-        },
-        "MeleeDpsA": {
-          "rule": "Depends on DpsIce: true → centre; false → at 4."
-        },
-        "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: IceHolder)."
-        },
-        "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShellCrusherTarget)."
-        },
-        "CasterDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: IceHolder)."
-        }
-      },
+      "title": "Next wave: fires out, baiters in",
+      "cue": "The previous lasers finish sweeping",
+      "rule": "Each wave repeats the pattern: the next fires walk out toward their spot, the next laser baiters go to their hourglass (10s fires and a support ice for the second wave, 20s fires for the third) and everyone else holds the middle. 30s fires drop their Return in the middle, where Shadoweye needs it.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -109,7 +64,7 @@
         "to": 49.1,
         "line": 42
       },
-      "title": "After Fire Resistance Down II on you",
+      "title": "Back to the middle after your laser",
       "tolerance": 1.5,
       "skip": true
     },
@@ -119,23 +74,9 @@
         "time": 30.6,
         "line": 31
       },
-      "title": "After Sinbound Meltdown resolves",
-      "cue": "Sinbound Meltdown resolves",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShellCrusherTarget).",
-      "roles": {
-        "RegenHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: IceHolder)."
-        },
-        "MeleeDpsA": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: IceHolder)."
-        },
-        "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: IceHolder)."
-        },
-        "CasterDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: IceHolder)."
-        }
-      },
+      "title": "20s fires spread out",
+      "cue": "The first lasers go off",
+      "rule": "With a 20s Dark Fire, go all the way out on your side: support west, DPS east. Everyone else stacks in the middle for Unholy Darkness, where the Dark Blizzard donut goes off too.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -145,23 +86,9 @@
         "time": 34,
         "line": 32
       },
-      "title": "After Sinbound Meltdown cast starts",
-      "cue": "Sinbound Meltdown cast starts",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: IceHolder).",
-      "roles": {
-        "OffTank": {
-          "rule": "If you are in IceHolder: Stand on waymark 3; otherwise: Stand at the centre."
-        },
-        "RegenHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShellCrusherTarget)."
-        },
-        "ShieldHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShellCrusherTarget)."
-        },
-        "MeleeDpsA": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShellCrusherTarget)."
-        }
-      },
+      "title": "10s fires bait the second lasers",
+      "cue": "The plain hourglasses start Sinbound Meltdown",
+      "rule": "10s fires and a support with Dark Blizzard go to their hourglass for the second lasers, stepping off to the side it doesn't spin toward; the 20s fires come back in and everyone else waits in the middle.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -171,23 +98,9 @@
         "time": 45,
         "line": 34
       },
-      "title": "After Sinbound Meltdown cast starts",
-      "cue": "Sinbound Meltdown cast starts",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: ShellCrusherTarget).",
-      "roles": {
-        "RegenHealer": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: IceHolder)."
-        },
-        "MeleeDpsA": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: IceHolder)."
-        },
-        "MeleeDpsB": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: IceHolder)."
-        },
-        "CasterDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: IceHolder)."
-        }
-      },
+      "title": "20s fires bait the last lasers",
+      "cue": "The purple-tethered hourglasses start Sinbound Meltdown",
+      "rule": "The 20s fires take the purple hourglasses' lasers (support west, DPS east); everyone else waits in the middle. Before the stun, everyone turns to face out toward their own hourglass so Shadoweye looks away from the group.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -197,30 +110,12 @@
         "time": 55.899998,
         "line": 37
       },
-      "title": "After Stun on you",
-      "cue": "Stun on you",
-      "rule": "Stand at the centre.",
+      "title": "Stack for Shell Crusher",
+      "cue": "The stun wears off",
+      "rule": "After the rewind, everyone stacks in the middle for Shell Crusher.",
       "tolerance": 1.5,
       "skip": false
     }
   ],
-  "toolbox": {
-    "planId": "oYnDQe4ZbVaoxA5r",
-    "roleMap": {
-      "PhysRangedDps": "dps4",
-      "MainTank": "tank1",
-      "OffTank": "tank2",
-      "RegenHealer": "healer1",
-      "ShieldHealer": "healer2",
-      "MeleeDpsB": "dps1",
-      "MeleeDpsA": "dps2",
-      "CasterDps": "dps3"
-    },
-    "steps": {
-      "FruP3UltimateRelativityAi@55.9": 14
-    },
-    "exampleSeed": 7,
-    "residual": 3.1
-  },
   "draft": true
 }
