@@ -14,27 +14,10 @@
         "time": 3,
         "line": 27
       },
-      "title": "After Light Rampant cast starts",
+      "title": "Arc up: supports north, DPS south",
       "cue": "Light Rampant cast starts",
-      "rule": "Go to 6m north of the centre.",
-      "roles": {
-        "RegenHealer": {
-          "rule": "Stand near waymark 1, 7m north-west of the centre."
-        },
-        "MeleeDpsA": {
-          "rule": "Go to 6m south of the centre."
-        },
-        "MeleeDpsB": {
-          "rule": "Stand near waymark 3, 7m south-east of the centre."
-        },
-        "PhysRangedDps": {
-          "rule": "Stand near waymark 4, 7m south-west of the centre."
-        },
-        "CasterDps": {
-          "rule": "Go to 6m south of the centre."
-        }
-      },
-      "tolerance": 2,
+      "rule": "Line up in an arc just inside the inner circle. Supports north, west to east H1, H2, MT, OT; DPS south, west to east R1, R2, M1, M2.",
+      "tolerance": 2.0,
       "skip": false
     },
     {
@@ -43,23 +26,9 @@
         "time": 9.75,
         "line": 28
       },
-      "title": "After a marker lands on you",
-      "cue": "A marker lands on you",
-      "rule": "Go to the west wall.",
-      "roles": {
-        "MeleeDpsA": {
-          "rule": "Depends on Pairs: true → E wall; false → W wall."
-        },
-        "OffTank": {
-          "rule": "Go to the east wall."
-        },
-        "MainTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: InitiallySteeped has MeleeDpsA)."
-        },
-        "MeleeDpsB": {
-          "rule": "Go to the east wall."
-        }
-      },
+      "title": "Puddle players to the east and west walls",
+      "cue": "Purple AoE marker on you",
+      "rule": "If you have the purple puddle marker, go to the wall. Of the two puddle players, the one earlier in R1, H1, R2, H2, M1, MT, M2, OT takes the west wall, the other the east wall.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -69,36 +38,10 @@
         "time": 10.75,
         "line": 29
       },
-      "title": "After a tether lands on you",
-      "cue": "A tether lands on you",
-      "rule": "Each role has its own spot.",
-      "roles": {
-        "MainTank": {
-          "rule": "Go to 7m north-east of the centre."
-        },
-        "OffTank": {
-          "rule": "If you are in Weights: Go to 7m south-east of the centre; otherwise: Go to 7m north-east of the centre."
-        },
-        "RegenHealer": {
-          "rule": "Depends on NorthOrbsFirst and Weights has MeleeDpsB: false & yes → NW 7m; true & no → NW 7m; false & no → near A (N 7m)."
-        },
-        "ShieldHealer": {
-          "rule": "When InitiallySteeped includes H1 and Weights leaves out MT, stand near waymark A, 7m north of the centre; when InitiallySteeped leaves out H1 and Weights leaves out MT, go to 7m north-east of the centre; when InitiallySteeped leaves out H1 and Weights includes MT, stand near waymark A, 7m north of the centre."
-        },
-        "MeleeDpsB": {
-          "rule": "When Weights includes OT, stand near waymark C, 7m south of the centre; when Weights leaves out OT, go to 7m south-east of the centre."
-        },
-        "CasterDps": {
-          "rule": "Depends on InitiallySteeped has CasterDps and Pairs: no & true → SW 7m; no & false → near C (S 7m); yes & true → near C (S 7m)."
-        },
-        "MeleeDpsA": {
-          "rule": "When Chained leaves out OT, stand near waymark C, 7m south of the centre; when Chained includes OT, go to 7m south-east of the centre."
-        },
-        "PhysRangedDps": {
-          "rule": "When InitiallySteeped includes H1 and Weights leaves out OT, go to 7m south-west of the centre; when InitiallySteeped leaves out H1 and Weights leaves out OT, go to 7m north-west of the centre; when InitiallySteeped leaves out H1 and Weights includes OT, go to 7m south-west of the centre."
-        }
-      },
-      "tolerance": 2,
+      "title": "Tethers: make the hexagon",
+      "cue": "Chain tethers appear on the other six",
+      "rule": "The six tethered players stand 7m out in a hexagon: three north (north-west, north, north-east) and three south (south-west, south, south-east), keeping the arc order and closing the gaps the puddle players left. If one side still has four, the extra one moves clockwise to the other side: OT drops to the south-east spot, or R1 climbs to the north-west spot.",
+      "tolerance": 2.5,
       "skip": false
     },
     {
@@ -107,36 +50,10 @@
         "time": 12.3,
         "line": 30
       },
-      "title": "After a tether lands on you",
-      "cue": "A tether lands on you",
-      "rule": "Each role has its own spot.",
-      "roles": {
-        "MainTank": {
-          "rule": "Go to the north-west wall."
-        },
-        "OffTank": {
-          "rule": "If you are in Weights: Go to the south-east wall; otherwise: Go to the north-west wall."
-        },
-        "RegenHealer": {
-          "rule": "Depends on NorthOrbsFirst and Weights has MeleeDpsB: false & yes → NE wall; true & no → NE wall; false & no → S wall."
-        },
-        "ShieldHealer": {
-          "rule": "When InitiallySteeped includes H1 and Weights leaves out MT, go to the south wall; when InitiallySteeped leaves out H1 and Weights leaves out MT, go to the north-west wall; when InitiallySteeped leaves out H1 and Weights includes MT, go to the south wall."
-        },
-        "MeleeDpsB": {
-          "rule": "When Weights includes OT, go to the north wall; when Weights leaves out OT, go to the south-east wall."
-        },
-        "CasterDps": {
-          "rule": "Depends on InitiallySteeped has CasterDps and Pairs: no & true → SW wall; no & false → N wall; yes & true → N wall."
-        },
-        "MeleeDpsA": {
-          "rule": "When Chained leaves out OT, go to the north wall; when Chained includes OT, go to the south-east wall."
-        },
-        "PhysRangedDps": {
-          "rule": "When InitiallySteeped includes H1 and Weights leaves out OT, go to the south-west wall; when InitiallySteeped leaves out H1 and Weights leaves out OT, go to the north-east wall; when InitiallySteeped leaves out H1 and Weights includes OT, go to the south-west wall."
-        }
-      },
-      "tolerance": 2,
+      "title": "Cross into the towers",
+      "cue": "Hexagon formed, towers appear at the wall",
+      "rule": "Make the star: north and south swap, north-east and north-west swap, south-east and south-west keep their side. Run out and stand in the tower on your new spoke.",
+      "tolerance": 1.5,
       "skip": false
     },
     {
@@ -146,23 +63,9 @@
         "to": 20.289999,
         "line": 34
       },
-      "title": "After a marker lands on you",
-      "cue": "A marker lands on you",
-      "rule": "Stand near waymark D, 13m west of the centre.",
-      "roles": {
-        "MeleeDpsA": {
-          "rule": "Depends on Pairs: true → near B (E 13m); false → near D (W 13m)."
-        },
-        "OffTank": {
-          "rule": "Stand near waymark B, 13m east of the centre."
-        },
-        "MainTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: InitiallySteeped has MeleeDpsA)."
-        },
-        "MeleeDpsB": {
-          "rule": "Stand near waymark B, 13m east of the centre."
-        }
-      },
+      "title": "Drop the puddles in an L",
+      "cue": "Luminous Hammer puddles start dropping on you",
+      "rule": "Drop your five puddles while walking an L: in from your wall toward the centre, then turn to the cardinal clockwise of you (the west player turns north, the east player south).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -172,36 +75,10 @@
         "time": 19.1,
         "line": 39
       },
-      "title": "After Lightsteeped on you",
-      "cue": "Lightsteeped on you",
-      "rule": "Each role has its own spot.",
-      "roles": {
-        "MainTank": {
-          "rule": "Go to the north wall."
-        },
-        "OffTank": {
-          "rule": "If you are in Weights: Go to the south wall; otherwise: Go to the north wall."
-        },
-        "RegenHealer": {
-          "rule": "Depends on NorthOrbsFirst and Weights has MeleeDpsB: false & yes → N wall; true & no → N wall; false & no → S wall."
-        },
-        "ShieldHealer": {
-          "rule": "When InitiallySteeped includes H1 and Weights leaves out MT, go to the south wall; when InitiallySteeped leaves out H1 and Weights leaves out MT, go to the north wall; when InitiallySteeped leaves out H1 and Weights includes MT, go to the south wall."
-        },
-        "MeleeDpsB": {
-          "rule": "When Weights includes OT, go to the north wall; when Weights leaves out OT, go to the south wall."
-        },
-        "CasterDps": {
-          "rule": "Depends on InitiallySteeped has CasterDps and Pairs: no & true → S wall; no & false → N wall; yes & true → N wall."
-        },
-        "MeleeDpsA": {
-          "rule": "When Chained leaves out OT, go to the north wall; when Chained includes OT, go to the south wall."
-        },
-        "PhysRangedDps": {
-          "rule": "When InitiallySteeped includes H1 and Weights leaves out OT, go to the south wall; when InitiallySteeped leaves out H1 and Weights leaves out OT, go to the north wall; when InitiallySteeped leaves out H1 and Weights includes OT, go to the south wall."
-        }
-      },
-      "tolerance": 2,
+      "title": "Towers done: meet your group",
+      "cue": "Towers go off",
+      "rule": "Split four and four: the three who took north towers go to the north wall, the three in south towers to the south wall. The west puddle player joins north, the east one south.",
+      "tolerance": 2.5,
       "skip": false
     },
     {
@@ -210,23 +87,9 @@
         "time": 21.869999,
         "line": 37
       },
-      "title": "After Luminous Hammer hits you",
-      "cue": "Luminous Hammer hits you",
-      "rule": "Go to the north wall.",
-      "roles": {
-        "MeleeDpsA": {
-          "rule": "Depends on Pairs: true → S wall; false → N wall."
-        },
-        "OffTank": {
-          "rule": "Go to the south wall."
-        },
-        "MainTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: InitiallySteeped has MeleeDpsA)."
-        },
-        "MeleeDpsB": {
-          "rule": "Go to the south wall."
-        }
-      },
+      "title": "Puddles done: join your group",
+      "cue": "Your last puddle drops",
+      "rule": "Walk to your group at the wall, a little clockwise of its cardinal: just east of north, or just west of south.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -236,36 +99,10 @@
         "time": 23.3,
         "line": 40
       },
-      "title": "After Lightsteeped on you",
-      "cue": "Lightsteeped on you",
-      "rule": "Each role has its own spot.",
-      "roles": {
-        "MainTank": {
-          "rule": "Go to the north wall."
-        },
-        "OffTank": {
-          "rule": "If you are in Weights: Go to the south wall; otherwise: Go to the north wall."
-        },
-        "RegenHealer": {
-          "rule": "Depends on NorthOrbsFirst and Weights has MeleeDpsB: false & yes → N wall; true & no → N wall; false & no → S wall."
-        },
-        "ShieldHealer": {
-          "rule": "When InitiallySteeped includes H1 and Weights leaves out MT, go to the south wall; when InitiallySteeped leaves out H1 and Weights leaves out MT, go to the north wall; when InitiallySteeped leaves out H1 and Weights includes MT, go to the south wall."
-        },
-        "MeleeDpsB": {
-          "rule": "When Weights includes OT, go to the north wall; when Weights leaves out OT, go to the south wall."
-        },
-        "CasterDps": {
-          "rule": "Depends on InitiallySteeped has CasterDps and Pairs: no & true → S wall; no & false → N wall; yes & true → N wall."
-        },
-        "MeleeDpsA": {
-          "rule": "When Chained leaves out OT, go to the north wall; when Chained includes OT, go to the south wall."
-        },
-        "PhysRangedDps": {
-          "rule": "When InitiallySteeped includes H1 and Weights leaves out OT, go to the south wall; when InitiallySteeped leaves out H1 and Weights leaves out OT, go to the north wall; when InitiallySteeped leaves out H1 and Weights includes OT, go to the south wall."
-        }
-      },
-      "tolerance": 2,
+      "title": "Step clockwise for the orbs",
+      "cue": "Lightsteeped stacks tick up",
+      "rule": "Stay with your group and slide a step clockwise along the wall, just east of north or just west of south.",
+      "tolerance": 2.5,
       "skip": false
     },
     {
@@ -274,35 +111,9 @@
         "time": 25.05,
         "line": 41
       },
-      "title": "After Lightsteeped on you",
-      "cue": "Lightsteeped on you",
-      "rule": "Each role has its own spot.",
-      "roles": {
-        "MainTank": {
-          "rule": "Depends on InitiallySteeped has MeleeDpsA and NorthOrbsFirst: yes & false → N wall; yes & true → NE wall; no & false → N wall; no & true → S wall."
-        },
-        "OffTank": {
-          "rule": "Depends on NorthOrbsFirst and Chained has MainTank: false & yes → SW wall; true & yes → S wall; true & no → NE wall; false & no → SW wall."
-        },
-        "RegenHealer": {
-          "rule": "Depends on NorthOrbsFirst and Weights has MeleeDpsB: false & yes → N wall; true & no → NE wall; false & no → SW wall."
-        },
-        "ShieldHealer": {
-          "rule": "Depends on NorthOrbsFirst and Weights has MeleeDpsB: false & yes → SW wall; true & no → S wall; false & no → N wall."
-        },
-        "MeleeDpsA": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: WeightSlot)."
-        },
-        "MeleeDpsB": {
-          "rule": "Depends on NorthOrbsFirst and Chained has PhysRangedDps: false & no → N wall; true & yes → S wall; false & yes → SW wall."
-        },
-        "PhysRangedDps": {
-          "rule": "Depends on InitiallySteeped has OffTank and NorthOrbsFirst: yes & false → N wall; no & true → S wall; no & false → SW wall; yes & true → S wall."
-        },
-        "CasterDps": {
-          "rule": "Depends on InitiallySteeped has OffTank and NorthOrbsFirst: yes & false → SW wall; no & true → NE wall; no & false → N wall; yes & true → NE wall."
-        }
-      },
+      "title": "Dodge the first orbs",
+      "cue": "The first set of orbs explodes",
+      "rule": "If the orb on your cardinal is in the first set, your group moves fast, about three wall notches clockwise of the cardinal. If it isn't, your group holds about two notches clockwise.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -312,35 +123,9 @@
         "time": 27.2,
         "line": 42
       },
-      "title": "After Lightsteeped on you",
-      "cue": "Lightsteeped on you",
-      "rule": "Each role has its own spot.",
-      "roles": {
-        "MainTank": {
-          "rule": "Depends on InitiallySteeped has MeleeDpsA and NorthOrbsFirst: yes & false → NE wall; yes & true → N wall; no & false → NE wall; no & true → SW wall."
-        },
-        "OffTank": {
-          "rule": "Depends on NorthOrbsFirst and Chained has MainTank: false & yes → S wall; true & yes → SW wall; true & no → N wall; false & no → S wall."
-        },
-        "RegenHealer": {
-          "rule": "Depends on NorthOrbsFirst and Weights has MeleeDpsB: false & yes → NE wall; true & no → N wall; false & no → S wall."
-        },
-        "ShieldHealer": {
-          "rule": "Depends on NorthOrbsFirst and Weights has MeleeDpsB: false & yes → S wall; true & no → SW wall; false & no → NE wall."
-        },
-        "MeleeDpsA": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: WeightSlot)."
-        },
-        "MeleeDpsB": {
-          "rule": "Depends on NorthOrbsFirst and Chained has PhysRangedDps: false & no → NE wall; true & yes → SW wall; false & yes → S wall."
-        },
-        "PhysRangedDps": {
-          "rule": "Depends on InitiallySteeped has OffTank and NorthOrbsFirst: yes & false → NE wall; no & true → SW wall; no & false → S wall; yes & true → SW wall."
-        },
-        "CasterDps": {
-          "rule": "Depends on InitiallySteeped has OffTank and NorthOrbsFirst: yes & false → S wall; no & true → N wall; no & false → NE wall; yes & true → N wall."
-        }
-      },
+      "title": "Dodge the second orbs",
+      "cue": "The first orbs go off",
+      "rule": "Swap paces: the group whose orb went first steps back into where it exploded (about two notches clockwise), the other group moves on to three notches clockwise before its own orb goes off.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -350,35 +135,9 @@
         "time": 30.15,
         "line": 43
       },
-      "title": "After Lightsteeped on you",
-      "cue": "Lightsteeped on you",
-      "rule": "Each role has its own spot.",
-      "roles": {
-        "MainTank": {
-          "rule": "Depends on InitiallySteeped has MainTank and NorthOrbsFirst: no & false → centre; no & true → centre; yes & false → NE 6m; yes & true → near A (N 7m)."
-        },
-        "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: InitiallySteeped has OffTank)."
-        },
-        "RegenHealer": {
-          "rule": "When InitiallySteeped includes H1 and Weights includes M2, go to 6m north-east of the centre; when InitiallySteeped includes H1 and Weights leaves out M2, stand near waymark A, 7m north of the centre; when InitiallySteeped leaves out H1 and Weights leaves out M2, stand at the centre."
-        },
-        "ShieldHealer": {
-          "rule": "When InitiallySteeped leaves out H2 and Chained includes H2, stand at the centre; when InitiallySteeped includes H2 and Chained leaves out H2, go to 6m north-east of the centre; when InitiallySteeped includes H2 and Chained includes H2, go to 6m south-west of the centre."
-        },
-        "MeleeDpsA": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: WeightSlot)."
-        },
-        "MeleeDpsB": {
-          "rule": "When InitiallySteeped leaves out MT and Weights includes M2, go to 6m north-east of the centre; when InitiallySteeped leaves out MT and Weights leaves out M2, go to 6m south-west of the centre; when InitiallySteeped includes MT and Weights leaves out M2, stand at the centre; when InitiallySteeped includes MT and Weights includes M2, stand near waymark C, 7m south of the centre."
-        },
-        "PhysRangedDps": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: InitiallySteeped has PhysRangedDps)."
-        },
-        "CasterDps": {
-          "rule": "If you are in InitiallySteeped: Stand near waymark A, 7m north of the centre; otherwise: Stand at the centre."
-        }
-      },
+      "title": "Two stacks: soak the centre tower",
+      "cue": "The second orbs go off",
+      "rule": "Check your Lightsteeped. With two stacks, go into the centre tower. Everyone else waits about 6m out: the group whose orb went first on its cardinal, the other group a little clockwise of its own.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -388,36 +147,10 @@
         "time": 33.85,
         "line": 44
       },
-      "title": "After Bright Hunger resolves",
-      "cue": "Bright Hunger resolves",
-      "rule": "Each role has its own spot.",
-      "roles": {
-        "MainTank": {
-          "rule": "Depends on Pairs: true → near 1 (NW 7m); false → near A (N 8m)."
-        },
-        "OffTank": {
-          "rule": "Depends on Pairs: true → near 2 (NE 7m); false → near B (E 8m)."
-        },
-        "RegenHealer": {
-          "rule": "Depends on Pairs: true → near 4 (SW 7m); false → near D (W 8m)."
-        },
-        "ShieldHealer": {
-          "rule": "Depends on Pairs: true → near 3 (SE 7m); false → near C (S 8m)."
-        },
-        "MeleeDpsA": {
-          "rule": "Stand near waymark 4, 7m south-west of the centre."
-        },
-        "MeleeDpsB": {
-          "rule": "Stand near waymark 3, 7m south-east of the centre."
-        },
-        "PhysRangedDps": {
-          "rule": "Stand near waymark 1, 7m north-west of the centre."
-        },
-        "CasterDps": {
-          "rule": "Stand near waymark 2, 7m north-east of the centre."
-        }
-      },
-      "tolerance": 2,
+      "title": "Banish spreads or pairs",
+      "cue": "Banish III cast starts",
+      "rule": "Four orbs: spread to your clock spot about 8m out, MT north, OT east, H2 south, H1 west, R1 north-west, R2 north-east, M2 south-east, M1 south-west. One orb: DPS keep their intercard and each support joins one: MT with R1, OT with R2, H1 with M1, H2 with M2.",
+      "tolerance": 2.5,
       "skip": false
     },
     {
@@ -426,36 +159,10 @@
         "time": 37.15,
         "line": 45
       },
-      "title": "After Banish III resolves",
-      "cue": "Banish III resolves",
-      "rule": "Each role has its own spot.",
-      "roles": {
-        "MainTank": {
-          "rule": "Stand near waymark A, 8m north of the centre."
-        },
-        "OffTank": {
-          "rule": "Stand near waymark B, 8m east of the centre."
-        },
-        "RegenHealer": {
-          "rule": "Stand near waymark D, 8m west of the centre."
-        },
-        "ShieldHealer": {
-          "rule": "Stand near waymark C, 8m south of the centre."
-        },
-        "MeleeDpsA": {
-          "rule": "Stand near waymark 4, 7m south-west of the centre."
-        },
-        "MeleeDpsB": {
-          "rule": "Stand near waymark 3, 7m south-east of the centre."
-        },
-        "PhysRangedDps": {
-          "rule": "Stand near waymark 1, 7m north-west of the centre."
-        },
-        "CasterDps": {
-          "rule": "Stand near waymark 2, 7m north-east of the centre."
-        }
-      },
-      "tolerance": 2,
+      "title": "Clock spots for the proteans",
+      "cue": "Banish III goes off",
+      "rule": "Everyone back to their own clock spot, about 8m out, for the eight protean cones.",
+      "tolerance": 2.5,
       "skip": false
     }
   ],
