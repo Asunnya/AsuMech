@@ -14,16 +14,16 @@
         "time": 2,
         "line": 17
       },
-      "title": "Burn her down before Paradise Lost",
+      "title": "Burn Pandora before Paradise Lost",
       "cue": "Paradise Lost cast starts",
-      "rule": "Pandora has to fall before the cast ends. Everyone stays in uptime behind her, within 4m, south of the centre.",
-      "tolerance": 2.0,
-      "skip": false,
+      "rule": "The enrage: nothing to dodge, she has to die before the cast ends. Everyone stays in melee range around her south side and pushes damage.",
       "roles": {
         "MainTank": {
-          "rule": "Keep Pandora facing north, 4m north of the centre."
+          "rule": "Hold Pandora at the centre from 4m north."
         }
-      }
+      },
+      "tolerance": 2.0,
+      "skip": false
     }
   ],
   "draft": true

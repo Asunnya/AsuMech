@@ -22,10 +22,10 @@
         "time": 2,
         "line": 21
       },
-      "title": "Stack under the first tower",
-      "cue": "Paradise Regained cast starts",
-      "rule": "Everyone stacks under the first tower as it appears.",
-      "tolerance": 2.0,
+      "title": "Stack in the first tower",
+      "cue": "the first tower appears",
+      "rule": "Three towers appear one at a time on the south, north-west and north-east spots. Treat the first one as south: the whole party stacks inside it.",
+      "tolerance": 2,
       "skip": false
     },
     {
@@ -34,19 +34,19 @@
         "time": 10,
         "line": 22
       },
-      "title": "Healers take the first tower, tanks bait the first wing",
+      "title": "Healers soak, tanks take the first wing",
       "cue": "Wings Dark and Light cast starts",
-      "rule": "Healers soak the first tower. M1 and R wait just west of it, M2 and C just east of it.",
-      "tolerance": 2.0,
-      "skip": false,
+      "rule": "H1 and H2 stay in the first tower. M1 and R1 wait just outside it on its clockwise side, M2 and R2 on its counter-clockwise side, each pair next to the tower it takes next.",
       "roles": {
         "MainTank": {
-          "rule": "Take the first wing cleave from the tower spot on the side of the wing that glows first."
+          "rule": "Take the first cleave on an empty tower spot so it sweeps the far third, away from the party: the M1/R1 tower when her right wing glows dark first, the M2/R2 tower when her left wing glows light first."
         },
         "OffTank": {
-          "rule": "Bait the first wing buster: hug Pandora when it is dark (nearest), run as far as you can when it is light (farthest)."
+          "rule": "Bait the first tether. Dark hits the nearest player: hug Pandora on the first tower's side. Light hits the farthest: run out past the first tower on the M2/R2 side."
         }
-      }
+      },
+      "tolerance": 2,
+      "skip": false
     },
     {
       "key": {
@@ -54,19 +54,19 @@
         "time": 16.75,
         "line": 23
       },
-      "title": "Tanks swap, melee and ranged take the next towers",
+      "title": "Tanks swap, DPS take their towers",
       "cue": "the first wing hits",
-      "rule": "M1 and R soak the west tower, M2 and C the east one, whichever comes first; healers wait north of Pandora.",
-      "tolerance": 2.0,
-      "skip": false,
+      "rule": "M1 and R1 move into the next tower clockwise, M2 and R2 into the next one counter-clockwise; they go off in the order they lit up. H1 and H2 wait on the far side of Pandora, opposite the first tower.",
       "roles": {
         "MainTank": {
-          "rule": "Bait the second wing buster: tight on Pandora for dark, far north for light."
+          "rule": "Bait the second tether, the other colour: for dark hug Pandora on the side away from the first tower, for light run far out opposite the first tower."
         },
         "OffTank": {
-          "rule": "Take the second wing cleave from the tower spot on that wing's side."
+          "rule": "Provoke and take the second cleave next to the old first tower spot, so it sweeps the empty first third: on the M1/R1 side when dark went first, on the M2/R2 side when light went first."
         }
-      }
+      },
+      "tolerance": 2,
+      "skip": false
     },
     {
       "key": {
@@ -74,19 +74,19 @@
         "time": 23.09,
         "line": 24
       },
-      "title": "Line up for Polarizing Strikes",
+      "title": "Set up for Polarizing Strikes",
       "cue": "the last tower goes off",
-      "rule": "Polarizing Strikes: each round a light and a dark line stack go to the closest player on each side of Pandora. West group MT, RH, M1, R; east group OT, SH, M2, C. Stand 6m out on your group's south diagonal.",
-      "tolerance": 2.0,
-      "skip": false,
+      "rule": "West group (MT, H1, M1, R1) goes 6m out south-west of Pandora, east group (OT, H2, M2, R2) 6m out south-east.",
       "roles": {
         "MainTank": {
-          "rule": "Pick Pandora up just north of her and face her north before her cast locks her facing."
+          "rule": "Stand just north of Pandora so she faces north before Polarizing Strikes locks her facing."
         },
         "OffTank": {
-          "rule": "Stand with MT just north of Pandora, then take your group's first line."
+          "rule": "Wait with the MT just north of Pandora, then bait your group's first line."
         }
-      }
+      },
+      "tolerance": 2,
+      "skip": false
     },
     {
       "key": {
@@ -94,10 +94,10 @@
         "time": 27.59,
         "line": 25
       },
-      "title": "First line baits step up",
+      "title": "Tanks bait the first lines",
       "cue": "Polarizing Strikes cast starts",
-      "rule": "Polarizing Strikes: each round a light and a dark line stack go to the closest player on each side of Pandora. West group MT, RH, M1, R; east group OT, SH, M2, C. Tanks bait the first round 4m out on their group's diagonal; the rest stand 6m out right behind them.",
-      "tolerance": 2.0,
+      "rule": "Each round a light line hits the closest player on Pandora's left (west) and a dark line the closest on her right (east), and each is a stack. Tanks bait first: MT 4m out south-west, OT 4m out south-east, each group 6m out right behind its tank.",
+      "tolerance": 2,
       "skip": false
     },
     {
@@ -107,9 +107,9 @@
         "to": 46.829998,
         "line": 30
       },
-      "title": "Next baits step up",
-      "cue": "the line hits and Light/Dark Resistance Down lands on its front bait",
-      "rule": "Rounds go tanks, then melee, then ranged, then healers: the next pair steps to 4m on its diagonal, everyone else 6m behind.",
+      "title": "Dodge the echo",
+      "cue": "the lines hit",
+      "rule": "Each line explodes again where it went 2s later. Right after the hit everyone slips into the gap straight south, between the two lines; the pair that just baited moves to the other group's half of the gap and the next pair moves to the front.",
       "tolerance": 1.5,
       "skip": false
     },
@@ -120,12 +120,42 @@
         "to": 44.229996,
         "line": 29
       },
-      "title": "Cross after each hit",
-      "cue": "the lines hit",
-      "rule": "Everyone who has taken a line crosses to the other group's diagonal, so the next colour they take is the other one; the next baits move up close to Pandora.",
-      "tolerance": 2.0,
+      "title": "Next pair baits",
+      "cue": "the echo goes off",
+      "rule": "Back out to the diagonals: the next pair in the order tanks, melee, ranged, healers steps to 4m with the rest 6m behind. Anyone who has already taken a line now stands on the other diagonal, so their next hit is the other colour.",
+      "tolerance": 2,
       "skip": false
     }
   ],
+  "toolbox": {
+    "planId": "Bf91HcD3ckk_S-Lw",
+    "roleMap": {
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "MeleeDpsA": "dps1",
+      "MeleeDpsB": "dps2",
+      "PhysRangedDps": "dps3",
+      "CasterDps": "dps4"
+    },
+    "steps": {
+      "FruP5ParadiseRegainedAi@2": 1,
+      "FruP5ParadiseRegainedAi@10": 2,
+      "FruP5ParadiseRegainedAi@16.75": 3,
+      "FruP5ParadiseRegainedAi@10|DarkFirst=false": 5,
+      "FruP5ParadiseRegainedAi@16.75|DarkFirst=false": 6
+    },
+    "exampleSeed": 1,
+    "example": {
+      "Rotation": "0",
+      "DarkFirst": "true"
+    },
+    "residual": 4.160074,
+    "pages": [
+      0,
+      4
+    ]
+  },
   "draft": true
 }

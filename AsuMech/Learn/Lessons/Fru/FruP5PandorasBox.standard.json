@@ -14,16 +14,16 @@
         "time": 2,
         "line": 23
       },
-      "title": "Stack behind the main tank for the tank LB3",
+      "title": "Stack behind the tank for the LB3",
       "cue": "Pandora's Box cast starts",
-      "rule": "Stack right behind the main tank, south of Pandora, inside the tank LB3's reach. The assigned tank presses LB3 around Pandora's second line, late enough that its 8s lasts to the end of the cast; anyone it doesn't cover dies.",
-      "tolerance": 2.0,
-      "skip": false,
+      "rule": "A tank LB3 check: the hit kills anyone the LB3 doesn't cover. Everyone stacks just south of Pandora right behind the MT, and the tank on LB3 presses it about halfway through the cast so it's still up when the cast ends.",
       "roles": {
         "MainTank": {
-          "rule": "Hold Pandora 4m south of the centre, the party stacked right behind you."
+          "rule": "Hold Pandora at the centre from 4m south, with the party stacked right behind you."
         }
-      }
+      },
+      "tolerance": 2.0,
+      "skip": false
     }
   ],
   "draft": true

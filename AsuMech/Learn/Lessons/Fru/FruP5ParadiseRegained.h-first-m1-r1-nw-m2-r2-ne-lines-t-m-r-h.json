@@ -22,29 +22,9 @@
         "time": 2,
         "line": 21
       },
-      "title": "After Paradise Regained cast starts",
-      "cue": "Paradise Regained cast starts",
-      "rule": "Depends on Rotation: 0 → near C (S 7m); 2 → NE 7m; 1 → near 1 (NW 7m).",
-      "roles": {
-        "MainTank": {
-          "rule": "Depends on Rotation: 0 → near C (S 7m); 2 → E 7m; 1 → near 1 (NW 7m)."
-        },
-        "ShieldHealer": {
-          "rule": "Depends on Rotation: 0 → near C (S 7m); 2 → near 2 (NE 7m); 1 → near 1 (NW 7m)."
-        },
-        "MeleeDpsA": {
-          "rule": "Depends on Rotation: 0 → near C (S 7m); 2 → near 2 (NE 7m); 1 → near 1 (NW 7m)."
-        },
-        "MeleeDpsB": {
-          "rule": "Depends on Rotation: 0 → near C (S 7m); 2 → near 2 (NE 7m); 1 → NW 7m."
-        },
-        "PhysRangedDps": {
-          "rule": "Depends on Rotation: 0 → near C (S 7m); 2 → near 2 (NE 7m); 1 → NW 7m."
-        },
-        "CasterDps": {
-          "rule": "Depends on Rotation: 0 → near C (S 7m); 2 → near 2 (NE 7m); 1 → W 7m."
-        }
-      },
+      "title": "Stack in the first tower",
+      "cue": "the first tower appears",
+      "rule": "Three towers appear one at a time on the south, north-west and north-east spots. Treat the first one as south: the whole party stacks inside it.",
       "tolerance": 2,
       "skip": false
     },
@@ -54,30 +34,18 @@
         "time": 10,
         "line": 22
       },
-      "title": "After Wings Dark and Light cast starts",
+      "title": "Healers soak, tanks take the first wing",
       "cue": "Wings Dark and Light cast starts",
-      "rule": "Depends on Rotation: 0 → near C (S 10m); 2 → at B; 1 → at 1.",
+      "rule": "H1 and H2 stay in the first tower. M1 and R1 wait just outside it on its clockwise side, M2 and R2 on its counter-clockwise side, each pair next to the tower it takes next.",
       "roles": {
         "MainTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat."
+          "rule": "Take the first cleave on an empty tower spot so it sweeps the far third, away from the party: the M1/R1 tower when her right wing glows dark first, the M2/R2 tower when her left wing glows light first."
         },
         "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EastSecond)."
-        },
-        "RegenHealer": {
-          "rule": "Depends on Rotation: 0 → near C (S 7m); 2 → NE 7m; 1 → near 1 (NW 7m)."
-        },
-        "ShieldHealer": {
-          "rule": "Depends on Rotation: 0 → near C (S 7m); 2 → near 2 (NE 7m); 1 → NW 7m."
-        },
-        "MeleeDpsB": {
-          "rule": "Depends on Rotation: 0 → near C (S 10m); 2 → at 2; 1 → at D."
-        },
-        "CasterDps": {
-          "rule": "Depends on Rotation: 0 → near C (S 10m); 2 → at 2; 1 → at D."
+          "rule": "Bait the first tether. Dark hits the nearest player: hug Pandora on the first tower's side. Light hits the farthest: run out past the first tower on the M2/R2 side."
         }
       },
-      "tolerance": 2.5,
+      "tolerance": 2,
       "skip": false
     },
     {
@@ -86,30 +54,18 @@
         "time": 16.75,
         "line": 23
       },
-      "title": "After Wings Dark and Light hits you",
-      "cue": "Wings Dark and Light hits you",
-      "rule": "Depends on Rotation: 0 → near A (N 8m); 2 → near 4 (SW 8m); 1 → near 3 (SE 8m).",
+      "title": "Tanks swap, DPS take their towers",
+      "cue": "the first wing hits",
+      "rule": "M1 and R1 move into the next tower clockwise, M2 and R2 into the next one counter-clockwise; they go off in the order they lit up. H1 and H2 wait on the far side of Pandora, opposite the first tower.",
       "roles": {
         "MainTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: EastSecond)."
+          "rule": "Bait the second tether, the other colour: for dark hug Pandora on the side away from the first tower, for light run far out opposite the first tower."
         },
         "OffTank": {
-          "rule": "The spot follows a rule the rolls alone don't show; read the strat."
-        },
-        "MeleeDpsA": {
-          "rule": "Depends on Rotation: 0 → near 1 (NW 7m); 2 → near C (S 7m); 1 → E 7m."
-        },
-        "MeleeDpsB": {
-          "rule": "Depends on Rotation: 0 → near 2 (NE 7m); 2 → W 7m; 1 → near C (S 7m)."
-        },
-        "PhysRangedDps": {
-          "rule": "Depends on Rotation: 0 → near 1 (NW 7m); 2 → near C (S 7m); 1 → near B (E 7m)."
-        },
-        "CasterDps": {
-          "rule": "Depends on Rotation: 0 → near 2 (NE 7m); 2 → near D (W 7m); 1 → near C (S 7m)."
+          "rule": "Provoke and take the second cleave next to the old first tower spot, so it sweeps the empty first third: on the M1/R1 side when dark went first, on the M2/R2 side when light went first."
         }
       },
-      "tolerance": 2.5,
+      "tolerance": 2,
       "skip": false
     },
     {
@@ -118,24 +74,15 @@
         "time": 25.5,
         "line": 24
       },
-      "title": "After Explosion resolves",
-      "cue": "Explosion resolves",
-      "rule": "Stand on waymark 4.",
+      "title": "Set up for Polarizing Strikes",
+      "cue": "the last tower goes off",
+      "rule": "West group (MT, H1, M1, R1) goes 6m out south-west of Pandora, east group (OT, H2, M2, R2) 6m out south-east.",
       "roles": {
         "MainTank": {
-          "rule": "Go to 4m north of the centre."
+          "rule": "Stand just north of Pandora so she faces north before Polarizing Strikes locks her facing."
         },
         "OffTank": {
-          "rule": "Go to 4m north of the centre."
-        },
-        "ShieldHealer": {
-          "rule": "Stand on waymark 3."
-        },
-        "MeleeDpsB": {
-          "rule": "Stand on waymark 3."
-        },
-        "CasterDps": {
-          "rule": "Stand on waymark 3."
+          "rule": "Wait with the MT just north of Pandora, then bait your group's first line."
         }
       },
       "tolerance": 2,
@@ -147,35 +94,22 @@
         "time": 30,
         "line": 25
       },
-      "title": "Move at 30s",
-      "rule": "Stand on waymark 4.",
-      "roles": {
-        "OffTank": {
-          "rule": "Go to 6m south-east of the centre."
-        },
-        "ShieldHealer": {
-          "rule": "Stand on waymark 3."
-        },
-        "MeleeDpsB": {
-          "rule": "Stand on waymark 3."
-        },
-        "CasterDps": {
-          "rule": "Stand on waymark 3."
-        }
-      },
+      "title": "Tanks bait the first lines",
+      "cue": "Pandora faces north",
+      "rule": "Each round a light line hits the closest player on Pandora's left (west) and a dark line the closest on her right (east), and each is a stack. Tanks bait first: MT 4m out south-west, OT 4m out south-east, each group 6m out right behind its tank.",
       "tolerance": 2,
       "skip": false
     },
     {
       "key": {
         "cls": "FruP5ParadiseRegainedAi",
-        "from": 38.26,
+        "from": 38.260002,
         "to": 52.3,
         "line": 30
       },
-      "title": "After Light Resistance Down II on you",
-      "cue": "Light Resistance Down II on you",
-      "rule": "Stand near waymark C, 9m south of the centre.",
+      "title": "Dodge the echo",
+      "cue": "the lines hit",
+      "rule": "Each line explodes again where it went 2s later. Right after the hit everyone slips into the gap straight south, between the two lines; the pair that just baited moves to the other group's half of the gap and the next pair moves to the front.",
       "tolerance": 1.5,
       "skip": false
     },
@@ -183,26 +117,12 @@
       "key": {
         "cls": "FruP5ParadiseRegainedAi",
         "from": 40.34,
-        "to": 49.7,
+        "to": 49.699997,
         "line": 29
       },
-      "title": "After Light Resistance Down II on you",
-      "cue": "Light Resistance Down II on you",
-      "rule": "Stand on waymark 3.",
-      "roles": {
-        "OffTank": {
-          "rule": "Stand on waymark 4."
-        },
-        "RegenHealer": {
-          "rule": "Stand on waymark 4."
-        },
-        "MeleeDpsA": {
-          "rule": "Go to 6m south-west of the centre."
-        },
-        "PhysRangedDps": {
-          "rule": "Stand on waymark 4."
-        }
-      },
+      "title": "Next pair baits",
+      "cue": "the echo goes off",
+      "rule": "Back out to the diagonals: the next pair in the order tanks, melee, ranged, healers steps to 4m with the rest 6m behind. Anyone who has already taken a line now stands on the other diagonal, so their next hit is the other colour.",
       "tolerance": 2,
       "skip": false
     }
@@ -210,20 +130,32 @@
   "toolbox": {
     "planId": "Bf91HcD3ckk_S-Lw",
     "roleMap": {
-      "MeleeDpsB": "dps4",
-      "OffTank": "tank1",
-      "MainTank": "tank2",
-      "ShieldHealer": "healer1",
-      "RegenHealer": "healer2",
-      "PhysRangedDps": "dps1",
-      "MeleeDpsA": "dps2",
-      "CasterDps": "dps3"
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "MeleeDpsA": "dps1",
+      "MeleeDpsB": "dps2",
+      "PhysRangedDps": "dps3",
+      "CasterDps": "dps4"
     },
     "steps": {
-      "FruP5ParadiseRegainedAi@2": 1
+      "FruP5ParadiseRegainedAi@2": 1,
+      "FruP5ParadiseRegainedAi@10": 2,
+      "FruP5ParadiseRegainedAi@16.75": 3,
+      "FruP5ParadiseRegainedAi@10|DarkFirst=false": 5,
+      "FruP5ParadiseRegainedAi@16.75|DarkFirst=false": 6
     },
     "exampleSeed": 1,
-    "residual": 5.9
+    "example": {
+      "Rotation": "0",
+      "DarkFirst": "true"
+    },
+    "residual": 4.160074,
+    "pages": [
+      0,
+      4
+    ]
   },
   "draft": true
 }

@@ -22,10 +22,10 @@
         "time": 13.2,
         "line": 23
       },
-      "title": "Gather in the open pocket",
-      "cue": "the exaline seams light up",
-      "rule": "All eight meet in the pocket the six seams leave open: 7m off the centre on a cardinal, inside the corner where the three crossing pairs meet.",
-      "tolerance": 2.0,
+      "title": "Stack in the diamond",
+      "cue": "the first Path of Light and Path of Darkness casts start",
+      "rule": "The six seams leave one small diamond open, about 7m from the centre on a cardinal, boxed in by the three spots where a cardinal seam crosses a diagonal one. The whole party stacks inside it.",
+      "tolerance": 2,
       "skip": false
     },
     {
@@ -34,9 +34,9 @@
         "time": 17.2,
         "line": 24
       },
-      "title": "Dodge into the first corner",
-      "cue": "the Path of Light and Path of Darkness casts start",
-      "rule": "Step into the corner of the pocket the first pair of seams leaves safe, right inside their crossing, and wait for the first strips to fire.",
+      "title": "Step away from the first seams",
+      "cue": "the second Path of Light and Path of Darkness casts start",
+      "rule": "Shuffle a step across the diamond, away from the first pair of seams, before they explode and start rolling outwards.",
       "tolerance": 1.5,
       "skip": false
     },
@@ -47,9 +47,9 @@
         "to": 29.85,
         "line": 28
       },
-      "title": "Follow the strips through the pocket",
-      "cue": "a strip goes off",
-      "rule": "Each strip rolls on 5m every two seconds: after every wave, step into the space it just cleared, keeping inside the pocket, until the last pair has passed.",
+      "title": "Weave behind each wave",
+      "cue": "a wave of strips explodes",
+      "rule": "Every 2s each strip rolls 5m further. Right after each explosion, step into the ground it just left, staying inside the diamond, until the last wave has passed.",
       "tolerance": 1.5,
       "skip": false
     },
@@ -61,10 +61,40 @@
       },
       "title": "Light parties for Akh Morn",
       "cue": "Akh Morn cast starts",
-      "rule": "Split into the two light parties either side of Pandora, about 6m out from the pocket: MT, RH, M1 and R a little clockwise of it, OT, SH, M2 and C a little counter-clockwise. Each side's stack lands on one of its four.",
+      "rule": "Split into the two light parties an eighth of a turn either side of the diamond, 7m from the centre: MT, H1, M1 and R1 on the clockwise side, OT, H2, M2 and R2 on the counter-clockwise side. Each side takes one stack.",
       "tolerance": 1.5,
       "skip": false
     }
   ],
+  "toolbox": {
+    "planId": "xE5dM62WDf6sYUYf",
+    "roleMap": {
+      "MainTank": "tank1",
+      "OffTank": "tank2",
+      "RegenHealer": "healer1",
+      "ShieldHealer": "healer2",
+      "MeleeDpsA": "dps1",
+      "MeleeDpsB": "dps2",
+      "PhysRangedDps": "dps3",
+      "CasterDps": "dps4"
+    },
+    "steps": {
+      "FruP5FulgentBladeAi@13.2": 0,
+      "FruP5FulgentBladeAi@17.2": 1,
+      "FruP5FulgentBladeAi@21.65-29.85": 2,
+      "FruP5FulgentBladeAi@31.9": 10
+    },
+    "exampleSeed": 2,
+    "residual": 0.90478355,
+    "pages": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ]
+  },
   "draft": true
 }

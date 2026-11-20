@@ -22,9 +22,9 @@
         "time": 13.2,
         "line": 23
       },
-      "title": "After the Path of Darkness cast starts",
-      "cue": "the Path of Darkness cast starts",
-      "rule": "Go to Origin.",
+      "title": "Stack in the diamond",
+      "cue": "the first Path of Light and Path of Darkness casts start",
+      "rule": "The six seams leave one small diamond open, about 7m from the centre on a cardinal, boxed in by the three spots where a cardinal seam crosses a diagonal one. The whole party stacks inside it.",
       "tolerance": 2,
       "skip": false
     },
@@ -34,10 +34,10 @@
         "time": 17.2,
         "line": 24
       },
-      "title": "After the Path of Darkness cast starts",
-      "cue": "the Path of Darkness cast starts",
-      "rule": "Go to Origin.",
-      "tolerance": 2,
+      "title": "Step away from the first seams",
+      "cue": "the second Path of Light and Path of Darkness casts start",
+      "rule": "Shuffle a step across the diamond, away from the first pair of seams, before they explode and start rolling outwards.",
+      "tolerance": 1.5,
       "skip": false
     },
     {
@@ -47,10 +47,10 @@
         "to": 29.85,
         "line": 28
       },
-      "title": "After the Path of Darkness resolves",
-      "cue": "the Path of Darkness resolves",
-      "rule": "Go to Origin.",
-      "tolerance": 2,
+      "title": "Weave behind each wave",
+      "cue": "a wave of strips explodes",
+      "rule": "Every 2s each strip rolls 5m further. Right after each explosion, step into the ground it just left, staying inside the diamond, until the last wave has passed.",
+      "tolerance": 1.5,
       "skip": false
     },
     {
@@ -59,38 +59,24 @@
         "time": 31.9,
         "line": 30
       },
-      "title": "After the Path of Darkness resolves",
-      "cue": "the Path of Darkness resolves",
-      "rule": "Go an eighth turn clockwise of Origin, 7m out.",
-      "roles": {
-        "OffTank": {
-          "rule": "Go an eighth turn counterclockwise of Origin, 7m out."
-        },
-        "ShieldHealer": {
-          "rule": "Go an eighth turn counterclockwise of Origin, 7m out."
-        },
-        "MeleeDpsB": {
-          "rule": "Go an eighth turn counterclockwise of Origin, 7m out."
-        },
-        "CasterDps": {
-          "rule": "Go an eighth turn counterclockwise of Origin, 7m out."
-        }
-      },
-      "tolerance": 2,
+      "title": "Light parties for Akh Morn",
+      "cue": "Akh Morn cast starts",
+      "rule": "Split into the two light parties an eighth of a turn either side of the diamond, 7m from the centre: MT, H1, M1 and R1 on the clockwise side, OT, H2, M2 and R2 on the counter-clockwise side. Each side takes one stack.",
+      "tolerance": 1.5,
       "skip": false
     }
   ],
   "toolbox": {
     "planId": "xE5dM62WDf6sYUYf",
     "roleMap": {
-      "CasterDps": "dps4",
       "MainTank": "tank1",
       "OffTank": "tank2",
       "RegenHealer": "healer1",
       "ShieldHealer": "healer2",
       "MeleeDpsA": "dps1",
       "MeleeDpsB": "dps2",
-      "PhysRangedDps": "dps3"
+      "PhysRangedDps": "dps3",
+      "CasterDps": "dps4"
     },
     "steps": {
       "FruP5FulgentBladeAi@13.2": 0,
@@ -99,7 +85,7 @@
       "FruP5FulgentBladeAi@31.9": 10
     },
     "exampleSeed": 2,
-    "residual": 3.6,
+    "residual": 0.90478355,
     "pages": [
       3,
       4,

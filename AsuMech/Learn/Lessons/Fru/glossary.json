@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "PositionIndex": "the diamond's cardinal",
+    "RotationIndex": "the seams' turn",
+    "Mirrored": "the mirrored seams",
+    "Pocket": "the diamond",
+    "Origin": "the diamond",
+    "AkhMornLeftPick": "the left Akh Morn target",
+    "AkhMornRightPick": "the right Akh Morn target",
+    "Rotation": "the first tower's spot",
+    "EastSecond": "the second tower's side",
+    "DarkFirst": "the wing that glows first",
+    "PolarizingStrikesAt": "the Polarizing Strikes timing",
+    "LimitBreakTank": "the tank on LB3",
+    "PlayOutEnrage": "the enrage playing out"
+  },
+  "values": {
+    "Rotation": { "0": "south", "1": "north-west", "2": "north-east" },
+    "EastSecond": { "true": "the M2/R2 tower second", "false": "the M1/R1 tower second" },
+    "DarkFirst": { "true": "dark (right wing) first", "false": "light (left wing) first" },
+    "Mirrored": { "true": "mirrored", "false": "not mirrored" },
+    "PlayOutEnrage": { "true": "the enrage goes off", "false": "Pandora falls first" },
+    "*": {
+      "MainTank": "MT", "OffTank": "OT", "RegenHealer": "H1", "ShieldHealer": "H2",
+      "MeleeDpsA": "M1", "MeleeDpsB": "M2", "PhysRangedDps": "R1", "CasterDps": "R2"
+    }
+  }
+}
