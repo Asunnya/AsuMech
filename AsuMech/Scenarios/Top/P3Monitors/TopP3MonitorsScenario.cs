@@ -21,6 +21,8 @@ public sealed class TopP3MonitorsScenario : IMultiplayerReplayable
     public string Name => "Monitors";
     public IPhase Phase => TopZone.P3;
     public float BgmSecondsAtStart => 139.2f;
+    // Straight on from Hello World, Oversampled Wave Cannon starts 11.5 s after Critical Error lands.
+    private const float DelayWhenContinued = 0.47f;
     public void DrawSettings() => settingsWindow.Draw();
     public bool HasPerPlayerSettings => true;
     public void DrawPerPlayerSettings() => settingsWindow.DrawPerPlayer();
@@ -78,6 +80,7 @@ public sealed class TopP3MonitorsScenario : IMultiplayerReplayable
         world.Events.Add(32.75f, () => omega?.LegacyCast(ActionId.P3End, castSeconds: 0f, target: omega, animationLock: 7.1f));
         world.Events.Add(33.55f, () => omega?.SetModelState(0x04));
         world.Events.Add(34.67f, () => world.Map.AddEffect(0x00020001, 0x14));
+        if (world.Continued) world.Events.Delay(DelayWhenContinued);
     }
 
     private void AutoAttack() => TopBoss.FinalOmegaAutoAttack(world, omega, state.Rng);

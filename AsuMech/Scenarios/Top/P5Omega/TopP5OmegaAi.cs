@@ -21,6 +21,12 @@ public class TopP5OmegaAi : IScenarioAi<TopP5OmegaState>
         state = s;
         helloWorld1 = solveHelloWorld1(world.Party);
         var ai = new AiManager(world);
+        if (world.Continued) TopSolarRayAi.TankTheSolarRaysAwayFromTheParty(ai, world, TopP5OmegaScenario.SolarRayCastAt);
+        world.Events.FromRunStart(() => PlanTheTrio(ai));
+    }
+
+    private AiManager PlanTheTrio(AiManager ai)
+    {
         ai.Move(0f, InitialPositions);
         ai.Move(20f, Dodge(0), arrivalTime: 24f);
         ai.Move(24f, Dodge(1), arrivalTime: 28f);
@@ -34,6 +40,7 @@ public class TopP5OmegaAi : IScenarioAi<TopP5OmegaState>
         ai.Move(48f, GatherMiddle, jitter: 0f);
         ai.Move(53f, HelloWorld2Pos, arrivalTime: 57f);
         ai.Move(62f, InitialPositions);
+        return ai;
     }
 
 

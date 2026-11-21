@@ -20,6 +20,8 @@ public sealed class TopP5OmegaScenario : IMultiplayerReplayable
 {
     public string Name => "Omega";
     public IPhase Phase => TopZone.P5;
+    // UNVERIFIED: never observed; Delta's offset carried on by the usual gaps between the trios.
+    public float BgmSecondsAtStart => 190.54f;
     public bool SupportsSolo => true;
     public bool SupportsMultiplayer => true;
 
@@ -50,10 +52,9 @@ public sealed class TopP5OmegaScenario : IMultiplayerReplayable
         LastState = state;
         helloWorld2Broadcast = false;
         helloWorldFailures = new HelloWorldFailures(world, () => omegaM);
+        omegaM = null;
+        finalOmega = null;
         var solo = selectedAi is null;
-        if (selectedAi is { } idx && idx < AiStrats.Count)
-            ((IScenarioAi<TopP5OmegaState>)AiStrats[idx]).Run(state, world);
-
 
         Run_Omega_M_4000A63C();
         Run_Omega_F_4000A72A();
@@ -64,7 +65,21 @@ public sealed class TopP5OmegaScenario : IMultiplayerReplayable
         if(!solo) Run_Omega_4000A409_1();
         Run_InstanceEvents();
         if (!solo) Run_OtherDebuffs();
+        if (world.Continued)
+        {
+            world.Events.Delay(SolarRayLeadIn);
+            world.Events.Add(0f, SpawnOmegaM);
+            world.Events.Add(0f, TakeOmegaFsForm);
+            new TopSolarRay(world, () => omegaM).Schedule(SolarRayCastAt, Actions.SolarRay, Actions.SolarRayFollowUp);
+        }
+        if (selectedAi is { } idx && idx < AiStrats.Count)
+            ((IScenarioAi<TopP5OmegaState>)AiStrats[idx]).Run(state, world);
     }
+
+    // Straight on from Sigma, Omega-F's Solar Ray pair comes first: it starts about 6.7 s after
+    // Sigma's last jump and its second hit lands 8.5 s before Omega's raidwide.
+    public const float SolarRayCastAt = -15.52f;
+    private const float SolarRayLeadIn = 18.12f;
 
     private void Run_InstanceEvents()
     {
@@ -145,15 +160,20 @@ public sealed class TopP5OmegaScenario : IMultiplayerReplayable
     {
     }
 
+    private void SpawnOmegaM() => omegaM ??= world.SpawnEnemy(new EnemySpawnConfig(InitialModeAttributeFlags: 0x32, BNpcBaseId: BNpcBaseId.OmegaMDynamis, NameId: BNpcNameId.OmegaMDynamis, Level: 90, Targetable: true, EnemyList: EnemyListMode.Always, Visibility: SpawnVisibility.Visible, LayoutId: BNpcLayoutId.OmegaMDynamis, Placement: new Placement(new Vector3(-000f, -0.000f, 0.000f), MathF.PI)));
+
+    private void TakeOmegaFsForm()
+    {
+        if (omegaM is null || omegaM.HelperName == BNpcNameId.OmegaFDynamis) return;
+        omegaM.AddStatusParam(StatusId.OmegaF, 492);
+        omegaM.HelperName = BNpcNameId.OmegaFDynamis;
+        omegaM.SetModelState(0xB);
+    }
+
     private void Run_Omega_M_4000A63C()
     {
-        world.Events.Add(0, () => omegaM = world.SpawnEnemy(new EnemySpawnConfig(InitialModeAttributeFlags: 0x32, BNpcBaseId: BNpcBaseId.OmegaMDynamis, NameId: BNpcNameId.OmegaMDynamis, Level: 90, Targetable: true, EnemyList: EnemyListMode.Always, Visibility: SpawnVisibility.Visible, LayoutId: BNpcLayoutId.OmegaMDynamis, Placement: new Placement(new Vector3(-000f, -0.000f, 0.000f), MathF.PI))));
-        world.Events.Add(0.5f, () =>
-        {
-            omegaM?.AddStatusParam(StatusId.OmegaF, 492);
-            if (omegaM is not null) omegaM.HelperName = BNpcNameId.OmegaFDynamis;
-            omegaM?.SetModelState(0xB);
-        });
+        world.Events.Add(0, SpawnOmegaM);
+        world.Events.Add(0.5f, TakeOmegaFsForm);
         world.Events.Add(1.15f, () => omegaM?.Cast(Actions.RunMiOmegaVersion));
         var target = party.Get(PartyRole.MainTank) ?? party.Get(party.PlayerRole);
         world.Events.Add(6f, () => omegaM?.Follow(target));

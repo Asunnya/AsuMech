@@ -271,7 +271,21 @@ public static class TopActions
         ],
     };
 
-    // -- Solar Ray, Omega-F's tank buster after Omega --
+    // -- Solar Ray, Omega-M's tank buster before Sigma --
+    public static readonly EnemyAction SolarRayM = new(ActionId.SolarRay)
+    {
+        Cast = new() { CastSecondsOverride = 4.7f, AnimationLock = 3.1f },
+        Timing = new() { DamageDelay = 0.30f },
+        Effects = [Damage(MagicVulns, TankBuster), ApplyStatus(StatusId.MagicVulnerabilityUp, 4f)],
+    };
+
+    public static readonly EnemyAction SolarRayMFollowUp = new(ActionId.SolarRay_7B01)
+    {
+        Cast = new() { AnimationLock = 3.1f },
+        Effects = [Damage(MagicVulns, TankBuster)],
+    };
+
+    // -- Solar Ray, Omega-F's tank buster before Omega --
     public static readonly EnemyAction SolarRay = new(ActionId.SolarRay_81AD)
     {
         Cast = new() { CastSecondsOverride = 4.7f, AnimationLock = 3.1f },
