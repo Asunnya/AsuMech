@@ -6,7 +6,7 @@
         "Description": "Asunnya's fork of AnoMech: spawns fake party members and bosses client-side so you can practice raid mechanics without a full party. Everything from AnoMech, plus Savage (M9S to M11S), DSR, UCOB and UWU, and a Learn mode that guides you through each strat. Questions, strats and bug reports: https://discord.gg/y6kTkdaXjz",
         "Changelog": "0.6.1.2: the firewall no longer blocks runs after a game patch Hyperborea has not published opcodes for yet: it uses the newest published list, or the one you already had, as long as the game's heartbeat opcode still matches; FRU: P2 opens with Quadruple Slap (needs an invuln or heavy mitigation, a Provoke between the hits moves the second), P4 opens with Materialization, Hiemal Ray leaves ice puddles, Fulgent Blade and Paradise Regained repeat after Pandora's Box, Pandora's Box kills whoever a tank LB3 doesn't cover, Paradise Lost closes P5 and Run to end plays P5 to the enrage, Mirror, Mirror's timings follow real pulls, and FRU P2 to P5 play in multiplayer; FRU Learn: every lesson explains its rule in player words, with toolbox pictures for Apocalypse, Darklit, Fulgent Blade, Paradise Regained and Mirror, Mirror; UCoB: with Tuufless the first push drags Twintania straight to the second marker, and without the push Nael's last Ravensbeak goes to the off tank; UMAD: Chaos falls and Exdeath casts his enrage Meteor at the end of Black Hole, plus fixes to Stray Spray and Inferno, the Flagrant Fire stack, Knock Down and the Thunder III tanks; M12S: fixes to the Finale's Double Sobat, Heavy Slam, Fourth Wall Fusion and the Act 2 chains; TEA: fixes to Living Liquid's dolls and Limit Cut; party: a ready check during a run is announced with a sound and can be answered from the AsuMech window, and party changes made during a run reach the game when it ends.",
         "InternalName": "AsuMech",
-        "AssemblyVersion": "0.6.1.1",
+        "AssemblyVersion": "0.6.1.2",
         "RepoUrl": "https://github.com/Asunnya/AsuMech",
         "ApplicableVersion": "any",
         "Tags": [
@@ -18,11 +18,11 @@
         ],
         "DalamudApiLevel": 15,
         "IconUrl": "https://raw.githubusercontent.com/Asunnya/AsuMech/asunnya-release/images/icon6464.png",
-        "DownloadLinkInstall": "https://github.com/Asunnya/AsuMech/releases/download/v0.6.1.1/latest.zip",
-        "DownloadLinkTesting": "https://github.com/Asunnya/AsuMech/releases/download/v0.6.1.1/latest.zip",
-        "DownloadLinkUpdate": "https://github.com/Asunnya/AsuMech/releases/download/v0.6.1.1/latest.zip",
+        "DownloadLinkInstall": "https://github.com/Asunnya/AsuMech/releases/download/v0.6.1.2/latest.zip",
+        "DownloadLinkTesting": "https://github.com/Asunnya/AsuMech/releases/download/v0.6.1.2/latest.zip",
+        "DownloadLinkUpdate": "https://github.com/Asunnya/AsuMech/releases/download/v0.6.1.2/latest.zip",
         "IsHide": false,
         "IsTestingExclusive": false,
-        "LastUpdate": "1795111325"
+        "LastUpdate": "1795225372"
     }
 ]
