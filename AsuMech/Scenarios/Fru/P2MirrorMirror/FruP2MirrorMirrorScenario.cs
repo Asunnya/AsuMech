@@ -24,10 +24,17 @@ public sealed class FruP2MirrorMirrorScenario : IScenario
     private readonly FruP2MirrorMirrorSettingsWindow settingsWindow = new();
 
     private const int ProteanBaits = 4;
+    private const float MusicAtStart = 76.2f;
+    // Hallowed Ray follows Diamond Dust's end straight on; carrying on, this much of the lead-in is skipped.
+    private const float HandoffLag = 1.5f;
 
     private SimWorld world = null!;
     private FruP2MirrorMirrorState state = null!;
     private SimEnemy? usurper;
+    private float skipped;
+
+    // A skipped lead-in skips into the track too.
+    public float BgmSecondsAtStart => MusicAtStart + skipped;
 
     public void Run(SimWorld worldParam, int? selectedAi)
     {
@@ -37,8 +44,11 @@ public sealed class FruP2MirrorMirrorScenario : IScenario
             ((IScenarioAi<FruP2MirrorMirrorState>)AiStrats[idx]).Run(state, world);
 
         world.Events.Add(0f, SpawnActors);
-        world.Events.Add(0.6f, () => usurper?.SetModelState(4));
-        world.Events.Add(0.6f, () => usurper?.AddStatusParam(TransfigurationStatus, UsurperLightTransformation));
+        if (!world.Continued)
+        {
+            world.Events.Add(0.6f, () => usurper?.SetModelState(4));
+            world.Events.Add(0.6f, () => usurper?.AddStatusParam(TransfigurationStatus, UsurperLightTransformation));
+        }
         world.Events.Add(2.23f, MarkRayTarget);
         world.Events.Add(2.23f, () => usurper?.Cast(ActionId.HallowedRayCast, animationLock: 1.1f));
         world.Events.Add(7.75f, HallowedRay);
@@ -57,6 +67,8 @@ public sealed class FruP2MirrorMirrorScenario : IScenario
         world.Events.Add(42.05f, () => usurper?.VoiceLine(VoiceLineId.Banish));
         world.Events.Add(43.1f, () => { foreach (var red in state.RedOctants) world.Map.AddEffect(MapEffect.MirrorHide, MirrorSlot(red)); });
         world.Events.Add(46.84f, Banish);
+        skipped = world.Continued ? HandoffLag : 0f;
+        world.Events.Advance(skipped);
     }
 
     private void SpawnActors()
@@ -69,7 +81,10 @@ public sealed class FruP2MirrorMirrorScenario : IScenario
             Placement: new Placement(Vector3.Zero, MathF.PI),
             ModelCharaId: ModelCharaId.UsurperLight,
             InitialModeAttributeFlags: 0xFC,
-            LayoutId: LayoutId.UsurperP2));
+            LayoutId: LayoutId.UsurperP2,
+            // Carrying on, she is already in the light form Diamond Dust left her in.
+            Statuses: world.Continued ? [new SpawnStatus(TransfigurationStatus, UsurperLightTransformation)] : null,
+            ModelState: world.Continued ? (byte)4 : (byte)0));
     }
 
     private static Vector3 Mirror(int octant) => FruP2MirrorMirrorState.Point(octant, FruP2MirrorMirrorState.MirrorRadius);
