@@ -22,7 +22,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
     public IReadOnlyList<IScenarioAi> AiStrats => [new UltimateSuppressionAi()];
     public void DrawSettings() => settingsWindow.Draw();
     public object SettingsOverrides => settingsWindow.Overrides;
-    public float BgmSecondsAtStart => TrackAtZero + startsAt;
+    public float BgmSecondsAtStart => TrackAtZero + (world is { Continued: true } ? ContinuedFrom : 0f);
 
     private const float TrackAtZero = 204.1f;
     // Annihilation ends on this part's Suppression cast, and the part carrying on starts a second
@@ -68,7 +68,8 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
             utils.UpdateArena(1);
             utils.UpdateArena(2);
         });
-        world.Events.Add(24.70f, () => utils.UpdateArena(4));
+        // On scenario time: a continued part has moved the clock to where it starts.
+        world.Events.FromRunStart(() => { world.Events.Add(24.70f, () => utils.UpdateArena(4)); return 0; });
     }
 
     public void Run(SimWorld world, int? selectedAi)

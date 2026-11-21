@@ -133,15 +133,19 @@ public sealed partial class AsuMainWindow
     {
         if (Selected is not { } scenario) return;
         var parts = Catalog.PartsOf(scenario);
-        if (parts.Count < 2) return;
-        lastPart[parts[0]] = scenario;
         var practice = Plugin.Practice;
+        if (parts.Count < 2)
+        {
+            practice.WholePhase = false;
+            return;
+        }
+        lastPart[parts[0]] = scenario;
         var items = new List<TabRowItem> { new(WholePhaseLabel, Tooltip: inSession ? "Disabled in a multiplayer session." : $"Start plays all of {scenario.Phase.Name}, each part going straight on to the next. A death ends the run.") };
         items.AddRange(parts.Select(s => new TabRowItem(s.Name,
             Tooltip: Pickable(s, out var why) ? BestStreakText(s).TrimStart(' ', '·') is { Length: > 0 } best ? best : null : why)));
         var selected = practice.WholePhase ? 0 : parts.ToList().IndexOf(scenario) + 1;
-        ImGui.BeginDisabled(RunState.IsGuest || practice.RunToEnd);
-        var clicked = OverflowTabRow.Draw("parts", items, practice.RunToEnd ? -1 : selected);
+        ImGui.BeginDisabled(RunState.IsGuest);
+        var clicked = OverflowTabRow.Draw("parts", items, selected);
         ImGui.EndDisabled();
         if (clicked < 0 || clicked == selected) return;
         if (clicked == 0)

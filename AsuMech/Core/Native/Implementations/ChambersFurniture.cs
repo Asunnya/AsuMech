@@ -14,9 +14,12 @@ internal static unsafe class ChambersFurniture
     public static void Hide()
     {
         var before = Hidden.Count;
-        foreach (var obj in Objects())
+        var array = ObjectArray();
+        if (array == null) return;
+        foreach (var ptr in array->Objects)
         {
-            if (!Hidden.Add((nint)obj)) continue;
+            var obj = ptr.Value;
+            if (obj == null || !Hidden.Add((nint)obj)) continue;
             SetShown(obj, false);
         }
         if (Hidden.Count != before) DiagnosticLog.Info($"[ChambersFurniture] Hid {Hidden.Count - before} housing objects ({Hidden.Count} in all).");
@@ -25,10 +28,12 @@ internal static unsafe class ChambersFurniture
     public static void Show()
     {
         if (Hidden.Count == 0) return;
-        // Only objects still in the list: the rest were freed and must not be touched.
         var shown = 0;
-        foreach (var obj in Objects())
-            if (Hidden.Contains((nint)obj)) { SetShown(obj, true); shown++; }
+        var array = ObjectArray();
+        // Only objects still in the list: the rest were freed and must not be touched.
+        if (array != null)
+            foreach (var ptr in array->Objects)
+                if (ptr.Value != null && Hidden.Contains((nint)ptr.Value)) { SetShown(ptr.Value, true); shown++; }
         DiagnosticLog.Info($"[ChambersFurniture] Showed {shown} of {Hidden.Count} hidden housing objects again.");
         Hidden.Clear();
     }
@@ -47,21 +52,10 @@ internal static unsafe class ChambersFurniture
         }
     }
 
-    private static List<nint> RawObjects()
+    private static HousingObjectManager.HousingObjectArray* ObjectArray()
     {
-        var found = new List<nint>();
         var housing = HousingManager.Instance();
-        if (housing == null || housing->IndoorTerritory == null) return found;
-        foreach (var ptr in housing->IndoorTerritory->FurnitureManager.ObjectManager.ObjectArray.Objects)
-            if (ptr.Value != null) found.Add((nint)ptr.Value);
-        return found;
-    }
-
-    private static GameObject*[] Objects()
-    {
-        var raw = RawObjects();
-        var objects = new GameObject*[raw.Count];
-        for (var i = 0; i < raw.Count; i++) objects[i] = (GameObject*)raw[i];
-        return objects;
+        if (housing == null || housing->IndoorTerritory == null) return null;
+        return &housing->IndoorTerritory->FurnitureManager.ObjectManager.ObjectArray;
     }
 }

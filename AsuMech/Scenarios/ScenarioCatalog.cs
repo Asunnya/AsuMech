@@ -158,7 +158,7 @@ public sealed class ScenarioCatalog
         var groups = new List<List<IScenario>>();
         foreach (var scenario in fight)
         {
-            if (zone.Category == "Ultimate" && groups.Count > 0 && groups[^1][0].Phase.Name is { Length: > 0 } name && scenario.Phase.Name == name)
+            if (zone.Category == IZone.Ultimate && groups.Count > 0 && groups[^1][0].Phase.Name is { Length: > 0 } name && scenario.Phase.Name == name)
                 groups[^1].Add(scenario);
             else
                 groups.Add([scenario]);

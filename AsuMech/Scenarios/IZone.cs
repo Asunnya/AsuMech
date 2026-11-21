@@ -16,7 +16,8 @@ public interface IZone
 
     // Menu grouping: the tab the zone sits under, then the expansion heading inside it
     // (null = no heading).
-    string Category => "Ultimate";
+    const string Ultimate = "Ultimate";
+    string Category => Ultimate;
     string? Expansion => null;
 
     // The fight's tab label ("UWU", "M9S").

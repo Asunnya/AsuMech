@@ -11,7 +11,7 @@ internal sealed record FightGroup(string Label, IReadOnlyList<IZone> Fights);
 // The fight tabs in scope, grouped and ordered for the new main window.
 internal static partial class CatalogView
 {
-    public const string Ultimate = "Ultimate";
+    public const string Ultimate = IZone.Ultimate;
     public const string Savage = "Savage";
 
     public static readonly IReadOnlyList<string> ExpansionOrder = ["Dawntrail", "Endwalker", "Shadowbringers", "Stormblood"];

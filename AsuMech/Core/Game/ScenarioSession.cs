@@ -168,8 +168,8 @@ public sealed class ScenarioSession
                 zone.Run(world);
                 phase.Run(world);
                 Scenario.Run(world, run.SelectedAi);
-                // A delayed timeline: Tick's clock reads scenario time like the events do.
-                elapsed = MathF.Min(0f, world.Events.Elapsed);
+                // Tick's clock reads scenario time like the events do, after a Delay, Advance or KeepWindow.
+                elapsed = world.Events.Elapsed;
             }
             catch (Exception e)
             {
@@ -179,8 +179,7 @@ public sealed class ScenarioSession
             if (Plugin.Config.EnableMechanicResultMarks) markHelper = world.SpawnEnemy(MarkHelper);
         }
         // Both host and peer: RunInstanceEvents carries no RNG/AI/damage-check dependency.
-        // On scenario time, like the timeline Run scheduled, even after a Delay or Advance.
-        world.Events.FromRunStart(() => { Scenario.RunInstanceEvents(world); return 0; });
+        Scenario.RunInstanceEvents(world);
         instance.PlacePlayer();
         Natives.UserActions.OnScenarioStart();
         StartMusic();
