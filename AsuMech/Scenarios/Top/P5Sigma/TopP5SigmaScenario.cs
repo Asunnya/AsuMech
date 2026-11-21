@@ -48,8 +48,8 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
         state = new TopP5SigmaState(world.Rng, party, settingsWindow.Overrides);
         LastState = state;
         helloWorldFailures = new HelloWorldFailures(world, () => omegaM);
-        if (selectedAi is { } idx && idx < AiStrats.Count)
-            ((IScenarioAi<TopP5SigmaState>)AiStrats[idx]).Run(state, world);
+        omegaM = null;
+        beetle = null;
 
         Run_Omega_M_4000A63C();
         Run_Omega_4000A68F();
@@ -65,7 +65,20 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
         Run_PlayerTethers();
         Run_OtherDebuffs();
         Run_PlayerLockons();
+        if (world.Continued)
+        {
+            world.Events.Delay(SolarRayLeadIn);
+            world.Events.Add(0f, SpawnOmegaM);
+            new TopSolarRay(world, () => omegaM).Schedule(SolarRayCastAt, Actions.SolarRayM, Actions.SolarRayMFollowUp);
+        }
+        if (selectedAi is { } idx && idx < AiStrats.Count)
+            ((IScenarioAi<TopP5SigmaState>)AiStrats[idx]).Run(state, world);
     }
+
+    // Straight on from Delta, Omega-M's Solar Ray pair comes first: it starts about 11.5 s after
+    // Delta's last jump and its second hit lands 8.4 s before Sigma's raidwide.
+    public const float SolarRayCastAt = -12.82f;
+    private const float SolarRayLeadIn = 12.92f;
     
     public void OnActionResolved(ActionResolved resolved) => helloWorldFailures.OnActionResolved(resolved);
     public void OnStatusLost(StatusLost lost) => helloWorldFailures.OnStatusLost(lost);
@@ -107,9 +120,11 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
     }
 
 
+    private void SpawnOmegaM() => omegaM ??= world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.OmegaMDynamis, NameId: BNpcNameId.OmegaMDynamis, Level: 90, Targetable: true, EnemyList: EnemyListMode.Always, Visibility: SpawnVisibility.Visible, LayoutId: BNpcLayoutId.OmegaMDynamis, Placement: new Placement(new Vector3(0.000f, 0.000f, 5.000f), MathF.PI), InitialModeAttributeFlags: 0x32));
+
     private void Run_Omega_M_4000A63C()
     {
-        world.Events.Add(0f, () => omegaM = world.SpawnEnemy(new EnemySpawnConfig(BNpcBaseId: BNpcBaseId.OmegaMDynamis, NameId: BNpcNameId.OmegaMDynamis, Level: 90, Targetable: true, EnemyList: EnemyListMode.Always, Visibility: SpawnVisibility.Visible, LayoutId: BNpcLayoutId.OmegaMDynamis, Placement: new Placement(new Vector3(0.000f, 0.000f, 5.000f), MathF.PI), InitialModeAttributeFlags: 0x32)));
+        world.Events.Add(0f, SpawnOmegaM);
         world.Events.Add(0.1f, () => omegaM?.AddStatus(StatusId.OmegaM));
         world.Events.Add(0.1f, () => omegaM?.SetTarget(party.Get(PartyRole.MainTank), follow: false));
         world.Events.Add(2.46f, () => omegaM?.Cast(ActionId.Teleport7b42, Vector3.Zero, animationLock: 1.1f));

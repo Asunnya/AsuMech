@@ -27,6 +27,12 @@ public class TopP5SigmaAi : IScenarioAi<TopP5SigmaState>
 
         markingsOrder = BuildMarkingsOrder(world.Party);
 
+        if (world.Continued) TopSolarRayAi.TankTheSolarRaysAwayFromTheParty(ai, world, TopP5SigmaScenario.SolarRayCastAt);
+        world.Events.FromRunStart(() => PlanTheTrio(ai));
+    }
+
+    private AiManager PlanTheTrio(AiManager ai)
+    {
         ai.Move(0.5f, InitialPositions);
         ai.Move(14.1f, Lineup);
         ai.Move(20f, WaveCannonSpread, arrivalTime: 29f);
@@ -39,6 +45,7 @@ public class TopP5SigmaAi : IScenarioAi<TopP5SigmaState>
         ai.Move(58f, AdjustForLegs, arrivalTime: 60.5f);
         ai.Move(62f, HelloWorldPositions, arrivalTime: 67f);
         ai.Move(73f, InitialPositions);
+        return ai;
     }
 
     protected virtual RoleList BuildMarkingsOrder(SimParty party)
