@@ -8,6 +8,7 @@ using Dalamud.Interface.Windowing;
 using AsuMech.Core.Native.Interfaces;
 using AsuMech.Windows.Asu;
 using AsuMech.Core.Native.Implementations;
+using AsuMech.Core.Native.Implementations.Interop;
 
 namespace AsuMech.Windows;
 
@@ -238,6 +239,9 @@ public class ConfigWindow : Window, IDisposable
         DrawPullRecorder();
 
         ImGui.Separator();
+        DrawFirewallOpcodes();
+
+        ImGui.Separator();
         DrawMultiplayerServer();
 
 #if DEBUG
@@ -326,6 +330,25 @@ public class ConfigWindow : Window, IDisposable
 
     // Zoning into a savage, ultimate or extreme asks in chat; the recorder itself never starts
     // while a scenario is loaded.
+    private void DrawFirewallOpcodes()
+    {
+        var stored = configuration.ZoneFirewallGameVersion;
+        var status = OpcodeUpdater.Downloading ? "Fetching the firewall opcodes..."
+            : configuration.ZoneUpOpcode == 0 || stored != OpcodeUpdater.CurrentVersion ? "No firewall opcodes for this patch: runs can't start."
+            : configuration.ZoneFirewallOpcodesFrom is { Length: > 0 } from ? $"Firewall opcodes: patch {from}'s (this patch has none published yet)."
+            : "Firewall opcodes: this patch's.";
+        ImGui.TextWrapped(status);
+        if (ZoneControl.OpcodeRefusal is { } refusal && !OpcodeUpdater.Downloading)
+            ImGui.TextWrapped($"Runs can't start: {refusal}.");
+        if (OpcodeUpdater.LastFailure is { } failed && !OpcodeUpdater.Downloading)
+            ImGui.TextWrapped($"Last try: {failed}.");
+        ImGui.BeginDisabled(OpcodeUpdater.Downloading || OpcodeUpdater.Instance == null);
+        if (ImGui.Button("Refresh opcodes")) OpcodeUpdater.Instance?.Refresh();
+        ImGui.EndDisabled();
+        if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
+            ImGui.SetTooltip("Fetches the firewall's opcodes from Hyperborea's list again, e.g. once it publishes this patch's.");
+    }
+
     private void DrawPullRecorder()
     {
         var ask = configuration.AskToRecordPulls;

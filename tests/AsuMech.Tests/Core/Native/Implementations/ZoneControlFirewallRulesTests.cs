@@ -187,12 +187,13 @@ public class ZoneControlFirewallRulesTests
     {
         const string updater = "AsuMech.Core.Native.Implementations.Interop.OpcodeUpdater::DownloadOpcodes";
         const string keeper = "AsuMech.Core.Native.Implementations.Interop.OpcodeUpdater::KeepStoredOpcodes";
+        const string forgetter = "AsuMech.Core.Native.Implementations.Interop.OpcodeUpdater::ForgetStoredOpcodes";
         AssertNone(new[]
         {
-            CallersMustBeIn("AsuMech.Configuration::set_ZoneDownOpcodes", true, updater),
-            CallersMustBeIn("AsuMech.Configuration::set_ZoneUpOpcode", true, updater),
-            CallersMustBeIn("AsuMech.Configuration::set_ZoneFirewallGameVersion", true, updater, keeper),
-            CallersMustBeIn("AsuMech.Configuration::set_ZoneFirewallOpcodesFrom", true, updater, keeper),
+            CallersMustBeIn("AsuMech.Configuration::set_ZoneDownOpcodes", true, updater, forgetter),
+            CallersMustBeIn("AsuMech.Configuration::set_ZoneUpOpcode", true, updater, forgetter),
+            CallersMustBeIn("AsuMech.Configuration::set_ZoneFirewallGameVersion", true, updater, keeper, forgetter),
+            CallersMustBeIn("AsuMech.Configuration::set_ZoneFirewallOpcodesFrom", true, updater, keeper, forgetter),
             CallersMustBeIn("AsuMech.Configuration::set_SafeMode", false, "AsuMech.Windows.ConfigWindow::DrawContent"),
         }.SelectMany(x => x));
     }

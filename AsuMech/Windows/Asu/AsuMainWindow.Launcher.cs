@@ -2,6 +2,7 @@ using System.Linq;
 using System.Numerics;
 using AsuMech.Core.Game;
 using AsuMech.Core.Native.Implementations;
+using AsuMech.Core.Native.Implementations.Interop;
 using AsuMech.Scenarios;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility;
@@ -105,6 +106,13 @@ public sealed partial class AsuMainWindow
         var selection = Picker.Selection;
         var refusal = plugin.Runs.StartRefusal(selection, solo);
         var restart = game.ActiveScenario is { } active && active == Selected;
+        if (refusal != null && ZoneControl.OpcodeRefusal != null && OpcodeUpdater.Instance is { } opcodes)
+        {
+            if (ImGui.Button(OpcodeUpdater.Downloading ? "Fetching...###start" : "↻ Opcodes###start", size)) opcodes.Refresh();
+            if (ImGui.IsItemHovered())
+                ImGui.SetTooltip($"{refusal}\nClick to fetch the firewall opcodes again." + (OpcodeUpdater.LastFailure is { } failed ? $"\nLast try: {failed}." : ""));
+            return;
+        }
         var label = plugin.Runs.StartWaitingOn != null ? "Waiting..." : restart ? "↻ Restart" : mode == Mode.Learn ? "▶ Try it" : "▶ Start";
         ImGui.BeginDisabled(refusal != null);
         bool clicked;

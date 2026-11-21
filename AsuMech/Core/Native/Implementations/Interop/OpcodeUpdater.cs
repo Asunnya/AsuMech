@@ -19,19 +19,33 @@ internal sealed unsafe class OpcodeUpdater : IDisposable
 
     internal static bool Downloading { get; private set; }
 
+    // Why the last fetch left the stored list as it was, for the Settings line; null after a good one.
+    internal static string? LastFailure { get; private set; }
+
+    internal static OpcodeUpdater? Instance { get; private set; }
+
     private volatile bool disposed;
 
     internal OpcodeUpdater()
     {
+        Instance = this;
         if (CurrentVersion == Plugin.Config.ZoneFirewallGameVersion && Plugin.Config.ZoneUpOpcode != 0 && Plugin.Config.ZoneFirewallOpcodesFrom.Length == 0)
         {
             Plugin.Log.Information("[OpcodeUpdater] Opcodes are current.");
             return;
         }
         Plugin.Log.Information("[OpcodeUpdater] Game version changed — fetching new opcodes.");
+        Refresh();
+    }
+
+    // Framework thread.
+    internal void Refresh()
+    {
+        if (Downloading || disposed) return;
         var version = new string(Framework.Instance()->GameVersionString);
         var current = CurrentVersion;
         Downloading = true;
+        LastFailure = null;
         ThreadingTask.Run(() => DownloadOpcodes(version, current));
     }
 
@@ -53,6 +67,7 @@ internal sealed unsafe class OpcodeUpdater : IDisposable
                 if (from == null)
                 {
                     Plugin.Log.Warning($"[OpcodeUpdater] Hyperborea has no opcode file for {gameVersion} nor any earlier one.");
+                    LastFailure = "Hyperborea has no opcode file for this patch nor any earlier one";
                     handedOff = KeepStoredOpcodes(current);
                     return;
                 }
@@ -61,6 +76,7 @@ internal sealed unsafe class OpcodeUpdater : IDisposable
                 if (disposed) return;
                 if (text == null)
                 {
+                    LastFailure = $"Hyperborea's file for {from} could not be read";
                     handedOff = KeepStoredOpcodes(current);
                     return;
                 }
@@ -69,8 +85,9 @@ internal sealed unsafe class OpcodeUpdater : IDisposable
             if (FirewallOpcodes.Parse(text, out var problem) is not { } opcodes)
             {
                 Plugin.Log.Warning($"[OpcodeUpdater] Refused the opcode file for {from}: {problem}.");
+                LastFailure = $"Hyperborea's file for {from} was refused: {problem}";
                 // A refused list for this very patch says the stored one is wrong too: runs stay blocked.
-                if (from != gameVersion) handedOff = KeepStoredOpcodes(current);
+                handedOff = from == gameVersion ? ForgetStoredOpcodes() : KeepStoredOpcodes(current);
                 return;
             }
             var fallback = from == gameVersion ? "" : from;
@@ -81,6 +98,7 @@ internal sealed unsafe class OpcodeUpdater : IDisposable
                 Plugin.Config.ZoneFirewallGameVersion = current;
                 Plugin.Config.ZoneFirewallOpcodesFrom = fallback;
                 Plugin.Config.Save();
+                LastFailure = null;
                 Downloading = false;
                 Plugin.Log.Information($"[OpcodeUpdater] Opcodes updated: ZoneUp {opcodes.ZoneUp}, ZoneDown {string.Join(", ", opcodes.ZoneDown)}");
             });
@@ -89,6 +107,7 @@ internal sealed unsafe class OpcodeUpdater : IDisposable
         catch (Exception e)
         {
             Plugin.Log.Warning($"[OpcodeUpdater] Failed to fetch opcodes: {e.Message}");
+            LastFailure = $"the download failed ({e.InnerException?.Message ?? e.Message})";
             if (!disposed && !handedOff) handedOff = KeepStoredOpcodes(current);
         }
         finally
@@ -116,6 +135,23 @@ internal sealed unsafe class OpcodeUpdater : IDisposable
         return true;
     }
 
+    private bool ForgetStoredOpcodes()
+    {
+        Plugin.Framework.Run(() =>
+        {
+            if (!disposed)
+            {
+                Plugin.Config.ZoneUpOpcode = 0;
+                Plugin.Config.ZoneDownOpcodes = [];
+                Plugin.Config.ZoneFirewallGameVersion = "";
+                Plugin.Config.ZoneFirewallOpcodesFrom = "";
+                Plugin.Config.Save();
+            }
+            Downloading = false;
+        });
+        return true;
+    }
+
     // Null when the file is not published.
     private static string? FetchFile(HttpClient client, string version)
     {
@@ -133,5 +169,9 @@ internal sealed unsafe class OpcodeUpdater : IDisposable
         return FirewallOpcodes.LatestPublishedFor(names, gameVersion);
     }
 
-    public void Dispose() => disposed = true;
+    public void Dispose()
+    {
+        disposed = true;
+        if (Instance == this) Instance = null;
+    }
 }
