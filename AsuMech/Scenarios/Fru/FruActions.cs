@@ -601,6 +601,13 @@ public static class FruActions
         Timing = new() { DamageDelay = 0.82f },
     };
 
+    // UNVERIFIED: the cone's width and the damage delay.
+    public static readonly EnemyAction BlackHalo = new(ActionId.BlackHalo)
+    {
+        Area = new() { Size = MathF.PI / 4f },
+        Effects = [Damage(TankBuster, split: Stack(2))],
+    };
+
     public static readonly EnemyAction ShockwavePulsar = new(ActionId.ShockwavePulsar)
     {
         Cast = new() { AnimationLock = 3.1f },

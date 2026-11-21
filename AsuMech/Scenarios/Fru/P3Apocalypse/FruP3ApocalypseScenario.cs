@@ -28,6 +28,7 @@ public sealed class FruP3ApocalypseScenario : IMultiplayerReplayable
     // Darkest Dance lands this far out towards its target, however far the target stands; UNVERIFIED
     // for a target nearer than that.
     private const float DanceLandingDistance = 12f;
+    private const float BlackHaloLeadIn = 11.7f;
 
     private SimWorld world = null!;
     private FruP3ApocalypseState state = null!;
@@ -51,10 +52,7 @@ public sealed class FruP3ApocalypseScenario : IMultiplayerReplayable
     {
         world = worldParam;
         state = new FruP3ApocalypseState(world.Rng, settingsWindow.Overrides);
-        if (selectedAi is { } idx && idx < AiStrats.Count)
-            ((IScenarioAi<FruP3ApocalypseState>)AiStrats[idx]).Run(state, world);
 
-        world.Events.Add(0f, SpawnActors);
         world.Events.Add(1f, () => oracle?.SetTarget(world.Party.Get(PartyRole.MainTank), follow: false));
         world.Events.Add(2.1f, () => oracle?.VoiceLine(VoiceLineId.SpellInWaitingRefrain));
         world.Events.Add(2.1f, () => oracle?.Cast(ActionId.SpellInWaitingRefrain, animationLock: 3.1f));
@@ -99,6 +97,21 @@ public sealed class FruP3ApocalypseScenario : IMultiplayerReplayable
         world.Events.Add(WaterAt(3), () => DarkWater(3));
         world.Events.Add(51.1f, () => oracle?.VoiceLine(VoiceLineId.ShockwavePulsar));
         world.Events.Add(51.2f, () => oracle?.Cast(Actions.ShockwavePulsar));
+        if (world.Continued) BlackHaloFirst();
+        // Added last, so a delayed part still brings the Oracle back at once.
+        world.Events.Add(0f, SpawnActors);
+        // After the delay, so the strat can bait Black Halo; it times the rest from the run start.
+        if (selectedAi is { } idx && idx < AiStrats.Count)
+            ((IScenarioAi<FruP3ApocalypseState>)AiStrats[idx]).Run(state, world);
+    }
+
+    // Straight after Ultimate Relativity, retail fits a shared tankbuster in before Spell-in-Waiting
+    // Refrain. Times here count from the part's start, before the timeline above.
+    private void BlackHaloFirst()
+    {
+        world.Events.Delay(BlackHaloLeadIn);
+        world.Events.Add(0.5f, () => oracle?.SetTarget(world.Party.Get(PartyRole.MainTank), follow: false));
+        world.Events.Add(1.4f, () => oracle?.Cast(Actions.BlackHalo, world.Party.Get(PartyRole.MainTank)));
     }
 
     private void SpawnActors()

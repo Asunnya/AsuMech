@@ -26,6 +26,12 @@ public sealed class FruP3ApocalypseAi : IScenarioAi<FruP3ApocalypseState>
         world = worldParam;
         AdjustWaterGroups();
         var ai = new AiManager(world);
+        if (world.Continued) ai.Move(0f, () => ByRole(BlackHaloSpot), arrivalTime: 5f);
+        world.Events.FromRunStart(() => { FollowApocalypse(ai); return ai; });
+    }
+
+    private void FollowApocalypse(AiManager ai)
+    {
         ai.Move(2.2f, () => ByRole(role => Setup(role, adjusted: false)), arrivalTime: 12.3f);
         ai.Move(16.9f, () => ByRole(role => Setup(role)), arrivalTime: 20.2f);
         ai.Move(20.2f, () => ByRole(FirstStack), arrivalTime: WaterAt(1));
@@ -75,6 +81,9 @@ public sealed class FruP3ApocalypseAi : IScenarioAi<FruP3ApocalypseState>
         var z = (support ? -1 : 1) * (spread ? (local < 2 ? 9 : 27) : (local < 2 ? 8 : 16));
         return Reference(x, z);
     }
+
+    private static Vector3? BlackHaloSpot(PartyRole role)
+        => role is PartyRole.MainTank or PartyRole.OffTank ? new Vector3(0, 0, -4) : new Vector3(0, 0, 5);
 
     private Vector3? FirstStack(PartyRole role) => Reference(0, SupportGroup(role) ? -12 : 12);
 
