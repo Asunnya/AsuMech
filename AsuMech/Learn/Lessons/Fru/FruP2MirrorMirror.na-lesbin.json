@@ -83,28 +83,28 @@
       "rule": "Split to the two red mirrors and hug the one you take for its Scythe Kick and House of Light. Healers and ranged take the red mirror nearer the blue one (if both are equally near, the one clockwise of blue); tanks and melee take the other.",
       "roles": {
         "MainTank": {
-          "rule": "At the melee group\u0027s red mirror, straight in from it toward the centre."
+          "rule": "At the melee group\u0027s red mirror, leftmost as you face out (T1 M1 M2 T2 left to right), turned well left."
         },
         "OffTank": {
-          "rule": "At the melee group\u0027s red mirror, turned well toward the other red mirror."
+          "rule": "At the melee group\u0027s red mirror, rightmost as you face out, turned well right."
         },
         "MeleeDpsA": {
-          "rule": "At the melee group\u0027s red mirror, angled away from the other red mirror."
+          "rule": "At the melee group\u0027s red mirror, between MT and M2: straight in to the centre when the other red mirror is on your left facing out, else angled a little left."
         },
         "MeleeDpsB": {
-          "rule": "At the melee group\u0027s red mirror, turned well away from the other red mirror."
+          "rule": "At the melee group\u0027s red mirror, between M1 and OT: straight in to the centre when the other red mirror is on your right facing out, else angled a little right."
         },
         "RegenHealer": {
-          "rule": "At the ranged group\u0027s red mirror, straight in from it toward the centre."
+          "rule": "At the ranged group\u0027s red mirror, leftmost as you face out (H1 R1 R2 H2 left to right), turned well left."
         },
         "ShieldHealer": {
-          "rule": "At the ranged group\u0027s red mirror, turned well toward the other red mirror."
+          "rule": "At the ranged group\u0027s red mirror, rightmost as you face out, turned well right."
         },
         "PhysRangedDps": {
-          "rule": "At the ranged group\u0027s red mirror, angled away from the other red mirror."
+          "rule": "At the ranged group\u0027s red mirror, between H1 and R2: straight in to the centre when the other red mirror is on your left facing out, else angled a little left."
         },
         "CasterDps": {
-          "rule": "At the ranged group\u0027s red mirror, turned well away from the other red mirror."
+          "rule": "At the ranged group\u0027s red mirror, between R1 and H2: straight in to the centre when the other red mirror is on your right facing out, else angled a little right."
         }
       },
       "tolerance": 2.5,

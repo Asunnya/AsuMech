@@ -68,12 +68,12 @@ public sealed class FruP2MirrorMirrorAi : IScenarioAi<FruP2MirrorMirrorState>
         var other = state.RedOctants.First(r => r != mine);
         var red = Point(mine, MirrorRadius);
         var inward = -Vector3.Normalize(red);
-        var towardOther = Vector3.Dot(Point(other, MirrorRadius) - red, Right(inward)) > 0 ? 1 : -1;
-        var slot = BaitsWithBoss(role)
-            ? role switch { PartyRole.MainTank => 0, PartyRole.OffTank => 1, PartyRole.MeleeDpsA => 2, _ => 3 }
-            : role switch { PartyRole.RegenHealer => 0, PartyRole.ShieldHealer => 1, PartyRole.PhysRangedDps => 2, _ => 3 };
-        float[] awayFromOtherRedsCleave = [5, 75, -40, -75];
-        return Around(red, inward, towardOther * awayFromOtherRedsCleave[slot]);
+        var otherOnTheLeftFacingOut = Vector3.Dot(Point(other, MirrorRadius) - red, Right(inward)) > 0;
+        var leftToRightFacingOut = BaitsWithBoss(role)
+            ? role switch { PartyRole.MainTank => 0, PartyRole.MeleeDpsA => 1, PartyRole.MeleeDpsB => 2, _ => 3 }
+            : role switch { PartyRole.RegenHealer => 0, PartyRole.PhysRangedDps => 1, PartyRole.CasterDps => 2, _ => 3 };
+        float[] middlePairShiftedAwayFromOtherRed = otherOnTheLeftFacingOut ? [75, 0, -40, -75] : [75, 40, 0, -75];
+        return Around(red, inward, middlePairShiftedAwayFromOtherRed[leftToRightFacingOut]);
     }
 
     private static Vector3 Right(Vector3 facing) => new(-facing.Z, 0, facing.X);

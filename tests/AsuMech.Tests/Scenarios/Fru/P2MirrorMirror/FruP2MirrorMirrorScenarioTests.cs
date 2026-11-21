@@ -14,7 +14,8 @@ namespace AsuMech.Tests;
 //   25.02 Scythe Kick from (7.5,0); tanks and melee around her (MT at (9.3,-1.26)), the rest around
 //         the blue mirror.
 //   31.37 House of Light from the blue mirror, 31.45 from the Usurper, each at its four nearest.
-//   41.42 the reds' House of Light: the healers and ranged at N, tanks and melee at E.
+//   41.42 the reds' House of Light: the healers and ranged at N, tanks and melee at E, each lined up
+//         left to right facing out (H1 R1 R2 H2 at N, R1 at (-1.41,-18.31); T1 M1 M2 T2 at E).
 //   46.84 Banish pairs: MT+R (-5.1,-5.1), OT+C (5.1,-5.1), RH+M1 (-5.1,5.1), SH+M2 (5.1,5.1).
 public class FruP2MirrorMirrorScenarioTests
 {
@@ -59,6 +60,12 @@ public class FruP2MirrorMirrorScenarioTests
         => MirrorMirror(MeleeDpsA)
             .TeleportAt(31.2f, to: new(9.302f, -1.262f))
             .ShouldKill(ActionId.HouseOfLightDiamondDust, MainTank, MeleeDpsA);
+
+    [Test]
+    public void TwoBaitsOnOneSpotAtARedMirrorDie()
+        => MirrorMirror(CasterDps)
+            .TeleportAt(40.9f, to: new(-1.414f, -18.315f))
+            .ShouldKill(ActionId.HouseOfLightDiamondDust, PhysRangedDps, CasterDps);
 
     [Test]
     public void BanishPairLeftAloneDies()
