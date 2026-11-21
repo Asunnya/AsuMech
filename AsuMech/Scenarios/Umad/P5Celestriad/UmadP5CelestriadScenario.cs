@@ -44,6 +44,8 @@ public sealed class UmadP5CelestriadScenario : IMultiplayerReplayable
     private SimWorld world = null!;
     private SimParty party = null!;
     private SimEnemy? kefka;
+    // The rest of the real gap after the previous part; retail fills it with Maddening Orchestra, not modeled.
+    private const float ContinuedWait = 17.72f;
     // Aligned with state.AllTowers: active-tower selections use those indices.
     private readonly List<SimEventObject?> towers = [];
 
@@ -58,7 +60,6 @@ public sealed class UmadP5CelestriadScenario : IMultiplayerReplayable
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<UmadP5CelestriadState>)AiStrats[idx]).Run(state, world);
 
-        world.Events.Add(0f, SpawnKefka);
         world.Events.Add(1.0f, () => kefka?.Cast(ActionId.Celestriad, animationLock: 3.1f));
         world.Events.Add(6.1f, ApplyDebuffs);
         world.Events.Add(6.22f, SpawnAllTowers);
@@ -76,6 +77,9 @@ public sealed class UmadP5CelestriadScenario : IMultiplayerReplayable
         world.Events.Add(27.10f, () => ResolveTowers(2));
         world.Events.Add(27.39f, () => ResolveChoice(2));
         world.Events.Add(29.44f, DespawnAll);
+        if (world.Continued) world.Events.Delay(ContinuedWait);
+        // After the delay, so Kefka stands through the wait.
+        world.Events.Add(0f, SpawnKefka);
     }
 
     // UNVERIFIED delay: no pull leaves a Celestriad tower unsoaked.
