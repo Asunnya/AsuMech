@@ -31,6 +31,8 @@ public sealed class FruP4CrystallizeTimeScenario : IMultiplayerReplayable
     public object SettingsOverrides => settingsWindow.Overrides;
     private readonly FruP4CrystallizeTimeSettingsWindow settingsWindow = new();
 
+    // Carried on from Darklit Dragonsong, the bosses wait this much longer before casting, as in retail.
+    private const float CarriedOnDelay = 1.95f;
     private const float PuddleLifetime = 17.8f;
     private const float PuddleGrace = 1f;
     private const float PuddleRadius = 1f;
@@ -79,7 +81,6 @@ public sealed class FruP4CrystallizeTimeScenario : IMultiplayerReplayable
         ai = selectedAi is { } idx && idx < AiStrats.Count ? (IScenarioAi<FruP4CrystallizeTimeState>)AiStrats[idx] : null;
         ai?.Run(state, world);
 
-        world.Events.Add(0f, SpawnActors);
         world.Events.Add(0.9f, () => world.Map.SetWeather(WeatherId.TimeStop, 0f));
         world.Events.Add(0.9f, () => world.Map.AddEffect(MapEffect.FreezeFloor, MapEffect.OracleStage));
         world.Events.Add(0.9f, () => OracleBattleTalk(0xE));
@@ -172,6 +173,9 @@ public sealed class FruP4CrystallizeTimeScenario : IMultiplayerReplayable
         world.Events.Add(72.3f, () => usurper?.Cast(ActionId.MornAfahUsurper, animationLock: 6.1f));
         world.Events.Add(72.3f, () => oracle?.Cast(ActionId.MornAfahOracle, animationLock: 6.1f));
         world.Events.Add(79.25f, MornAfah);
+        if (world.Continued) world.Events.Delay(CarriedOnDelay);
+        // Added last, so a delayed part still brings the bosses back at once.
+        world.Events.Add(0f, SpawnActors);
     }
 
     // TODO: the Fragment's HP bar empties when it's hit; a spawned enemy's HP can't be set.
