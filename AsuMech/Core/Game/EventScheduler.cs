@@ -28,6 +28,10 @@ public sealed class EventScheduler
     // Moves the clock without firing; whatever falls due fires on the next Tick.
     public void Advance(float seconds) => elapsed += MathF.Max(0f, seconds);
 
+    // Moves the clock back, so the whole timeline starts later and its times still read as
+    // scenario times: a part carrying on from the previous one waits out the real gap.
+    public void Delay(float seconds) => elapsed -= MathF.Max(0f, seconds);
+
     // Add offsets inside `schedule` count from t=0, not now: an Ai started late still means its
     // times as run times. Entries already past fire on the next Tick.
     public T FromRunStart<T>(Func<T> schedule)
