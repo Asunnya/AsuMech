@@ -168,6 +168,8 @@ public sealed class ScenarioSession
                 zone.Run(world);
                 phase.Run(world);
                 Scenario.Run(world, run.SelectedAi);
+                // A delayed timeline: Tick's clock reads scenario time like the events do.
+                elapsed = MathF.Min(0f, world.Events.Elapsed);
             }
             catch (Exception e)
             {

@@ -38,8 +38,12 @@ public sealed class AiManager
     public void Move(float time, Func<IAiMove> positions, float jitter = DefaultJitter, float? arrivalTime = null, bool sprint = false, float? at = null,
         [CallerFilePath] string file = "", [CallerLineNumber] int line = 0)
     {
+        var due = world.Events.Elapsed + MathF.Max(0f, time);
         world.Events.Add(time, () =>
         {
+            // Fired late when the clock was moved past it (a skipped lead-in): what's left is
+            // measured from now.
+            var late = MathF.Max(0f, world.Events.Elapsed - due);
             var move = positions();
             for (int i = 0; i < 8; i++)
             {
@@ -53,7 +57,7 @@ public sealed class AiManager
                 var role = partyMember?.Role.ToString() ?? $"slot{i}";
                 var dist = Vector2.Distance(new Vector2(member.Position.X, member.Position.Z), new Vector2(target.X, target.Z));
                 var (sprinting, delay) = arrivalTime is { } arrival
-                    ? PlanArrival(dist, arrival - time - MoveDeadlineSafetyMargin)
+                    ? PlanArrival(dist, arrival - time - late - MoveDeadlineSafetyMargin)
                     : (sprint, 0f);
                 var speed = sprinting ? SprintSpeed : RunSpeed;
                 if (partyMember is { } seat)
