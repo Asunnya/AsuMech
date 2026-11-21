@@ -19,6 +19,8 @@ public sealed class UcobP5ExaflaresScenario : IMultiplayerReplayable
     public string Name => "Exaflares";
     public IPhase Phase => UcobZone.P5;
     public bool SupportsSolo => true;
+    // A drill of one exaflare set, not a step of the fight.
+    public bool InWholeRun => false;
     public bool SupportsMultiplayer => true;
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new UcobP5ExaflaresAi()];
