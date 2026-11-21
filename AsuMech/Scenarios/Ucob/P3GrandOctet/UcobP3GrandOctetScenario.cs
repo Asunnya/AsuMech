@@ -34,6 +34,8 @@ public sealed class UcobP3GrandOctetScenario : IScenario
     private static readonly uint[] DragonBaseIds = [BNpcBaseId.Firehorn, BNpcBaseId.Iceclaw, BNpcBaseId.Thunderwing, BNpcBaseId.TailOfDarkness, BNpcBaseId.FangOfLight];
     private static readonly uint[] DragonNameIds = [BNpcNameId.Firehorn, BNpcNameId.Iceclaw, BNpcNameId.Thunderwing, BNpcNameId.TailOfDarkness, BNpcNameId.FangOfLight];
 
+    public float BgmSecondsAtStart => 288.80f;
+
     public static readonly UcobBetweenTrios BetweenTrios = new(9.97f, PartyRole.OffTank,
         (-6.28f, UcobActions.Flatten), (0.86f, UcobActions.FlareBreath));
 

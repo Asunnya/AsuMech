@@ -26,6 +26,8 @@ public sealed class UcobP3TenstrikeScenario : IScenario
     public static readonly Vector2 NaelSpot = new(-4.97f, 4.57f);
     public static readonly Vector2 TwintaniaSpot = new(5.52f, 6.0f);
 
+    public float BgmSecondsAtStart => 231.83f;
+
     public static readonly UcobBetweenTrios BetweenTrios = new(10.45f, PartyRole.OffTank,
         (-7.33f, UcobActions.FlareBreath), (-5.24f, UcobActions.FlareBreath), (-3.15f, UcobActions.FlareBreath));
 

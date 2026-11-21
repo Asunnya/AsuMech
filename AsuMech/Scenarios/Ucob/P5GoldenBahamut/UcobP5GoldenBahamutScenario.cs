@@ -33,6 +33,8 @@ public sealed class UcobP5GoldenBahamutScenario : IScenario
     public const float Targetable = 34.92f;
     // The Phoenix transition before this is its own scenario.
     public const float StartsAt = 26.3f;
+    // UNVERIFIED: the P5 track starts with the Phoenix transition.
+    public float BgmSecondsAtStart => StartsAt;
     public static readonly float[] MornAfahCasts = [35.14f, 90.47f, 123.91f, 173.76f, 224.64f];
     public static readonly float[] AkhMornCasts = [43.43f, 75.03f, 138.04f, 187.89f];
     public static readonly int[] AkhMornFollowUps = [2, 3, 4, 5];

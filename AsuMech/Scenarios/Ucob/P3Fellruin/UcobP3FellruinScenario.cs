@@ -25,6 +25,8 @@ public sealed class UcobP3FellruinScenario : IScenario
     public void DrawSettings() => settingsWindow.Draw();
     public object SettingsOverrides => settingsWindow.Overrides;
 
+    public float BgmSecondsAtStart => 119.33f;
+
     public static readonly UcobBetweenTrios BetweenTrios = new(15.6f, PartyRole.MainTank,
         (-9.33f, Actions.FlareBreath), (-7.24f, Actions.FlareBreath), (-5.14f, Actions.FlareBreath));
 

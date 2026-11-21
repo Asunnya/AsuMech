@@ -24,6 +24,8 @@ public sealed class UcobP3BlackfireScenario : IScenario
     public void DrawSettings() => settingsWindow.Draw();
     public object SettingsOverrides => settingsWindow.Overrides;
 
+    public float BgmSecondsAtStart => 68.70f;
+
     public static readonly UcobBetweenTrios BetweenTrios = new(5.0f, PartyRole.MainTank, (-4.68f, Actions.Flatten));
 
     public const float TrioCast = 3.47f;

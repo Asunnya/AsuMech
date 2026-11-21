@@ -26,6 +26,8 @@ public sealed class UcobP3HeavensfallScenario : IScenario
     public void DrawSettings() => settingsWindow.Draw();
     public object SettingsOverrides => settingsWindow.Overrides;
 
+    public float BgmSecondsAtStart => 171.63f;
+
     // The Flare Breath just before the trio is left out: it lands as the party stacks under Bahamut.
     public static readonly UcobBetweenTrios BetweenTrios = new(3.28f, PartyRole.OffTank);
 
