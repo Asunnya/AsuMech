@@ -36,6 +36,7 @@ public sealed class FruP1TurnOfTheHeavensScenario : IScenario
     private static readonly Vector3[] FaithSpots = [new(-14.14f, 0, 14.14f), new(14.14f, 0, 14.14f)];
     private static readonly int[] WestHalfOctants = [0, 7, 6, 5];
     private const float HaloRadius = 15f;
+    private const float CyclonicBreakAt = 3f;
     private const float TethersAt = 18.89f;
     private const float FettersAt = 29.6f;
 
@@ -54,10 +55,11 @@ public sealed class FruP1TurnOfTheHeavensScenario : IScenario
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<FruP1TurnOfTheHeavensState>)AiStrats[idx]).Run(state, world);
 
-        world.Events.Add(0f, () => world.Map.SetWeather(WeatherId.Fog, 0f));
+        // Carrying on, Utopian Sky already brought the fog in and lifts it itself.
+        if (!world.Continued) world.Events.Add(0f, () => world.Map.SetWeather(WeatherId.Fog, 0f));
         world.Events.Add(0f, () => cyclonicImage = SpawnImage(CyclonicSpot));
-        world.Events.Add(3f, () => cyclonicImage?.Cast(state.CyclonicFire ? ActionId.CyclonicBreakImageFire : ActionId.CyclonicBreakImageLightning, animationLock: 1.1f));
-        world.Events.Add(5.8f, () => world.Map.SetWeather(WeatherId.Fatebreaker, 3f));
+        world.Events.Add(CyclonicBreakAt, () => cyclonicImage?.Cast(state.CyclonicFire ? ActionId.CyclonicBreakImageFire : ActionId.CyclonicBreakImageLightning, animationLock: 1.1f));
+        if (!world.Continued) world.Events.Add(5.8f, () => world.Map.SetWeather(WeatherId.Fatebreaker, 3f));
         world.Events.Add(10f, () => heavensImage = SpawnImage(HeavensSpot));
         world.Events.Add(10f, () => westImage = SpawnImage(WestStrikeSpot));
         world.Events.Add(10.6f, () => { if (cyclonicImage is { } image) FruCyclonicBreak.Bait(world, image, state.CyclonicFire); });
@@ -80,6 +82,8 @@ public sealed class FruP1TurnOfTheHeavensScenario : IScenario
         world.Events.Add(33.5f, FadeImages);
         world.Events.Add(34.5f, SpawnFatebreaker);
         world.Events.Add(35.57f, () => fatebreaker?.Cast(Actions.BurnishedGlory));
+        // Retail casts the image's Cyclonic Break before Utopian Sky resolves, which a part can't overlap.
+        if (world.Continued) world.Events.Advance(CyclonicBreakAt);
     }
 
     private SimEnemy? SpawnImage(Placement placement) => world.SpawnEnemy(new EnemySpawnConfig(
