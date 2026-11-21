@@ -35,7 +35,7 @@ public class FightChainTests
             Assert.That(p.Continued, Is.EqualTo(played.Count > 1));
             Assert.That(p.SelectedAi, Is.Not.Null);
         }
-        Assert.That(played, Is.EqualTo(fight.Where(s => s.AiStrats.Count > 0).ToList()));
+        Assert.That(played, Is.EqualTo(fight.Where(s => s.AiStrats.Count > 0 && s.InWholeRun).ToList()));
     }
 
     [Test]
@@ -47,7 +47,7 @@ public class FightChainTests
             var played = new List<IScenario>();
             for (var p = FightChain.First(Catalog, Params(fight[0], null)); p is not null; p = FightChain.Next(Catalog, p))
                 played.Add(p.Scenario);
-            Assert.That(played, Is.EqualTo(fight.Where(s => s.SupportsSolo).ToList()), zone.Name);
+            Assert.That(played, Is.EqualTo(fight.Where(s => s.SupportsSolo && s.InWholeRun).ToList()), zone.Name);
         }
     }
 
@@ -94,11 +94,11 @@ public class FightChainTests
             Started = s => started.Add(s.Name),
         });
         Assert.That(run.Passed, run.ToString());
-        Assert.That(started, Is.EqualTo(parts.Where(s => s.AiStrats.Count > 0).Select(s => s.Name).ToList()));
+        Assert.That(started, Is.EqualTo(parts.Where(s => s.AiStrats.Count > 0 && s.InWholeRun).Select(s => s.Name).ToList()));
     }
 
     private static IEnumerable<IScenario> SplitPhases()
-        => Catalog.Zones.SelectMany(Catalog.PhaseGroupsOf).Where(g => g.Count > 1).Select(g => g.Last(s => s.AiStrats.Count > 0));
+        => Catalog.Zones.SelectMany(Catalog.PhaseGroupsOf).Where(g => g.Count > 1).Select(g => g.Last(s => s.AiStrats.Count > 0 && s.InWholeRun));
 
     [TestCaseSource(nameof(Fights))]
     public void AWholeFightClearsAsOneRun(IZone zone)
@@ -112,7 +112,7 @@ public class FightChainTests
             Started = s => started.Add(s.Name),
         });
         Assert.That(run.Passed, run.ToString());
-        Assert.That(started, Is.EqualTo(fight.Where(s => s.AiStrats.Count > 0).Select(s => s.Name).ToList()));
+        Assert.That(started, Is.EqualTo(fight.Where(s => s.AiStrats.Count > 0 && s.InWholeRun).Select(s => s.Name).ToList()));
     }
 
     [Test]

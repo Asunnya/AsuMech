@@ -16,6 +16,9 @@ public interface IScenario : IWorldEventListener
 
     bool SupportsSolo => false;
 
+    // False for a part another part already plays in full, so Whole phase and Run to end skip it.
+    bool InWholeRun => true;
+
     // Core replication works for any scenario; this also needs the debug-bot AI replay plumbing
     // (IMultiplayerReplayable).
     bool SupportsMultiplayer => false;

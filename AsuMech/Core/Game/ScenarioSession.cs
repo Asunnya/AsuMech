@@ -179,7 +179,8 @@ public sealed class ScenarioSession
             if (Plugin.Config.EnableMechanicResultMarks) markHelper = world.SpawnEnemy(MarkHelper);
         }
         // Both host and peer: RunInstanceEvents carries no RNG/AI/damage-check dependency.
-        Scenario.RunInstanceEvents(world);
+        // On scenario time, like the timeline Run scheduled, even after a Delay or Advance.
+        world.Events.FromRunStart(() => { Scenario.RunInstanceEvents(world); return 0; });
         instance.PlacePlayer();
         Natives.UserActions.OnScenarioStart();
         StartMusic();
