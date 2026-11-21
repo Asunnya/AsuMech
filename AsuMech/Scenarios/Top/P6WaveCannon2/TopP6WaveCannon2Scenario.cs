@@ -18,6 +18,8 @@ public sealed class TopP6WaveCannon2Scenario : IMultiplayerReplayable
     public string Name => "Exasquares/WC2";
     public IPhase Phase => TopZone.P6;
     public bool SupportsSolo => true;
+    // Alpha Omega played whole already runs Cosmo Arrow 2 and Wave Cannon 2.
+    public bool InWholeRun => false;
     public bool SupportsMultiplayer => true;
 
     public void DrawSettings() => settingsWindow.Draw();
