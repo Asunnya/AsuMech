@@ -46,6 +46,7 @@ public static class FightChain
         var played = Strat(p);
         foreach (var scenario in scenarios)
         {
+            if (!scenario.InWholeRun) continue;
             if (played is null)
             {
                 if (p.SelectedAi is null && scenario.SupportsSolo)
