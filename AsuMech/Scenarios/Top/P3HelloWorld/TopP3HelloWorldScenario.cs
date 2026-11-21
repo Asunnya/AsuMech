@@ -22,7 +22,7 @@ public sealed class TopP3HelloWorldScenario : IMultiplayerReplayable
     private readonly HashSet<SimTether> resolvedTethers = [];
     public string Name => "Hello World";
     public IPhase Phase => TopZone.P3;
-    public float BgmSecondsAtStart => 21.29f;
+    public float BgmSecondsAtStart => 21.29f + skippedLeadIn;
     public void DrawSettings() => settingsWindow.Draw();
     public bool HasPerPlayerSettings => true;
     public void DrawPerPlayerSettings() => settingsWindow.DrawPerPlayer();
@@ -78,6 +78,11 @@ public sealed class TopP3HelloWorldScenario : IMultiplayerReplayable
     private List<SimCharacter> defamationHolders = [];
     private int resolvedPatch = -1;
     private bool wiped;
+
+    // Straight on from the intermission, Omega is already up and the party already on its clock
+    // spots: Hello World starts about 7.7 s after the last Colossal Blow.
+    private const float LeadInSkippedWhenContinued = 2.4f;
+    private float skippedLeadIn;
 
     private const float LoopStarts = 11.00f;
     private const float LoopEnds = 108.45f;
@@ -163,6 +168,8 @@ public sealed class TopP3HelloWorldScenario : IMultiplayerReplayable
         world.Events.Add(116.43f, ResolveCriticalError);
         foreach (var t in AutoAttacks)
             world.Events.Add(t, AutoAttack);
+        skippedLeadIn = world.Continued ? LeadInSkippedWhenContinued : 0f;
+        world.Events.Advance(skippedLeadIn);
     }
 
     // Omega's auto-attacks on its main target between its own casts.
