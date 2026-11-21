@@ -183,6 +183,8 @@ public class Configuration : IPluginConfiguration
     public ushort ZoneUpOpcode { get; set; }
     public uint[] ZoneDownOpcodes { get; set; } = [];
     public string ZoneFirewallGameVersion { get; set; } = "";
+    // The published file the opcodes came from when this patch had none of its own yet; empty when it had.
+    public string ZoneFirewallOpcodesFrom { get; set; } = "";
 
     // The party-status packets' opcodes for PartyOpcodesGameVersion, as ServerPartyWatch last saw
     // the client's own handlers receive them.

@@ -186,11 +186,13 @@ public class ZoneControlFirewallRulesTests
     public void TheFilterConfiguration_IsOnlyWrittenByItsOwners()
     {
         const string updater = "AsuMech.Core.Native.Implementations.Interop.OpcodeUpdater::DownloadOpcodes";
+        const string keeper = "AsuMech.Core.Native.Implementations.Interop.OpcodeUpdater::KeepStoredOpcodes";
         AssertNone(new[]
         {
             CallersMustBeIn("AsuMech.Configuration::set_ZoneDownOpcodes", true, updater),
             CallersMustBeIn("AsuMech.Configuration::set_ZoneUpOpcode", true, updater),
-            CallersMustBeIn("AsuMech.Configuration::set_ZoneFirewallGameVersion", true, updater),
+            CallersMustBeIn("AsuMech.Configuration::set_ZoneFirewallGameVersion", true, updater, keeper),
+            CallersMustBeIn("AsuMech.Configuration::set_ZoneFirewallOpcodesFrom", true, updater, keeper),
             CallersMustBeIn("AsuMech.Configuration::set_SafeMode", false, "AsuMech.Windows.ConfigWindow::DrawContent"),
         }.SelectMany(x => x));
     }
