@@ -10,12 +10,18 @@ public static class FightChain
 {
     // The run that opens the fight `p` is in; null when none of its scenarios can be played this way.
     public static RunScenarioParams? First(ScenarioCatalog catalog, RunScenarioParams p)
-        => FirstPlayable(catalog.FightOf(p.Scenario.Phase.Zone), p, continued: false);
+        => First(catalog.FightOf(p.Scenario.Phase.Zone), p);
 
     // The run that follows `p` in its fight; null once the fight is over.
     public static RunScenarioParams? Next(ScenarioCatalog catalog, RunScenarioParams p)
+        => Next(catalog.FightOf(p.Scenario.Phase.Zone), p);
+
+    // The same over any stretch of the fight, such as one phase's parts.
+    public static RunScenarioParams? First(IReadOnlyList<IScenario> chain, RunScenarioParams p)
+        => FirstPlayable(chain, p, continued: false);
+
+    public static RunScenarioParams? Next(IReadOnlyList<IScenario> fight, RunScenarioParams p)
     {
-        var fight = catalog.FightOf(p.Scenario.Phase.Zone);
         var index = IndexOf(fight, p.Scenario);
         return index < 0 ? null : FirstPlayable(fight.Skip(index + 1), p, continued: true);
     }

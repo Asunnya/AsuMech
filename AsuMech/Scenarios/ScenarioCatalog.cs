@@ -119,6 +119,7 @@ public sealed class ScenarioCatalog
     public IReadOnlyList<IZone> Zones { get; }
     private readonly Dictionary<IZone, IReadOnlyList<IPhase>> phasesByZone;
     private readonly Dictionary<IPhase, IReadOnlyList<IScenario>> scenariosByPhase;
+    private readonly Dictionary<IZone, IReadOnlyList<IReadOnlyList<IScenario>>> partsByZone = new();
 
     private ScenarioCatalog(IReadOnlyList<IScenario> scenarios)
     {
@@ -147,10 +148,32 @@ public sealed class ScenarioCatalog
         Zones = zones;
         phasesByZone = phases.ToDictionary(kv => kv.Key, IReadOnlyList<IPhase> (kv) => kv.Value);
         scenariosByPhase = byPhase.ToDictionary(kv => kv.Key, IReadOnlyList<IScenario> (kv) => kv.Value);
+        foreach (var zone in zones) partsByZone[zone] = GroupParts(zone, FightOf(zone));
+    }
+
+    // An ultimate's phase is picked first, then one of its parts; phases split across Phase
+    // objects (TOP's intermission, P6 continued) still share the name the fight gives them.
+    private static IReadOnlyList<IReadOnlyList<IScenario>> GroupParts(IZone zone, IReadOnlyList<IScenario> fight)
+    {
+        var groups = new List<List<IScenario>>();
+        foreach (var scenario in fight)
+        {
+            if (zone.Category == "Ultimate" && groups.Count > 0 && groups[^1][0].Phase.Name is { Length: > 0 } name && scenario.Phase.Name == name)
+                groups[^1].Add(scenario);
+            else
+                groups.Add([scenario]);
+        }
+        return groups.Select(IReadOnlyList<IScenario> (g) => g).ToList();
     }
 
     public IReadOnlyList<IPhase> PhasesOf(IZone zone) => phasesByZone[zone];
     public IReadOnlyList<IScenario> ScenariosOf(IPhase phase) => scenariosByPhase[phase];
+
+    // The fight as the menu offers it: one entry per phase, each holding its parts in fight order.
+    public IReadOnlyList<IReadOnlyList<IScenario>> PhaseGroupsOf(IZone zone) => partsByZone[zone];
+
+    public IReadOnlyList<IScenario> PartsOf(IScenario scenario)
+        => partsByZone[scenario.Phase.Zone].First(g => g.Contains(scenario));
 
     // The fight's scenarios in the order the fight plays them.
     public IReadOnlyList<IScenario> FightOf(IZone zone) => PhasesOf(zone).SelectMany(ScenariosOf).ToList();

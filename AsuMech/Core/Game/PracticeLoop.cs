@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using AsuMech.Core.Game.Party;
 using AsuMech.Scenarios;
 using Dalamud.Game.Text;
@@ -13,19 +14,32 @@ public sealed class PracticeLoop
     private IScenario? lastScenario;
     private bool autoRestart;
     private bool runToEnd;
+    private bool wholePhase;
 
     public bool AutoRestart
     {
         get => autoRestart;
-        set { autoRestart = value; if (value) runToEnd = false; }
+        set { autoRestart = value; if (value) { runToEnd = false; wholePhase = false; } }
     }
 
     // A Start plays the whole fight from its first scenario, each one going straight on to the next.
     public bool RunToEnd
     {
         get => runToEnd;
-        set { runToEnd = value; if (value) autoRestart = false; }
+        set { runToEnd = value; if (value) { autoRestart = false; wholePhase = false; } }
     }
+
+    // The same, over the parts of the picked scenario's phase.
+    public bool WholePhase
+    {
+        get => wholePhase;
+        set { wholePhase = value; if (value) { runToEnd = false; autoRestart = false; } }
+    }
+
+    public bool Chaining => runToEnd || wholePhase;
+
+    private IReadOnlyList<IScenario> Chain(IScenario scenario)
+        => wholePhase ? game.Catalog.PartsOf(scenario) : game.Catalog.FightOf(scenario.Phase.Zone);
     public int Streak { get; private set; }
 
     // Run to end is about to start the fight's next scenario, before it is set up.
@@ -46,7 +60,7 @@ public sealed class PracticeLoop
     // What a Start runs: with Run to end, the fight's first scenario instead of the picked one.
     public RunScenarioParams Starting(RunScenarioParams p)
     {
-        if (!RunToEnd || FightChain.First(game.Catalog, p) is not { } first) return p;
+        if (!Chaining || FightChain.First(Chain(p.Scenario), p) is not { } first) return p;
         Whole(first.Scenario);
         return first;
     }
@@ -69,16 +83,18 @@ public sealed class PracticeLoop
     private void OnRunFinished(bool clean)
     {
         if (clean && Counting) Streak++;
-        if (RunToEnd && lastRun is { } played)
+        if (Chaining && lastRun is { } played)
         {
-            if (FightChain.Next(game.Catalog, played) is { } next)
+            if (FightChain.Next(Chain(played.Scenario), played) is { } next)
             {
                 Whole(next.Scenario);
                 Advancing?.Invoke(next);
                 game.StartScenario(next);
             }
             else
-                Plugin.ChatGui.Print(new XivChatEntry { Type = XivChatType.SystemMessage, Message = $"[AsuMech] Run to end: {played.Scenario.Phase.Zone.Name} cleared." });
+                Plugin.ChatGui.Print(new XivChatEntry { Type = XivChatType.SystemMessage, Message = wholePhase
+                    ? $"[AsuMech] Whole phase: {played.Scenario.Phase.Zone.Name} {played.Scenario.Phase.Name} cleared."
+                    : $"[AsuMech] Run to end: {played.Scenario.Phase.Zone.Name} cleared." });
             return;
         }
         if (AutoRestart && lastRun is { } p)

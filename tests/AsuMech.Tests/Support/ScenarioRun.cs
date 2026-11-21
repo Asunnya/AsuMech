@@ -27,6 +27,9 @@ internal sealed record ScenarioRunOptions
     // once the last one clears.
     public bool RunToEnd { get; init; }
 
+    // The same over the parts of the scenario's phase, as the Whole phase tab does.
+    public bool WholePhase { get; init; }
+
     // Every scenario a Run to end started, in order.
     public Action<IScenario>? Started { get; init; }
 
@@ -146,9 +149,9 @@ internal sealed record ScenarioRun(
                 current = p;
                 options.Started?.Invoke(p.Scenario);
             };
-            if (options.RunToEnd)
+            if (options.RunToEnd || options.WholePhase)
             {
-                var practice = new PracticeLoop(game) { RunToEnd = true };
+                var practice = new PracticeLoop(game) { RunToEnd = options.RunToEnd, WholePhase = options.WholePhase };
                 start = practice.Starting(start);
             }
             game.StartScenario(start);
@@ -156,9 +159,10 @@ internal sealed record ScenarioRun(
             if (game.Status < SessionStatus.Running)
                 failure = "did not start";
 
-            var timeout = options.RunToEnd ? TimeoutSeconds * game.Catalog.FightOf(scenario.Phase.Zone).Count : TimeoutSeconds;
-            bool ChainGoesOn() => options.RunToEnd && game.Status == SessionStatus.Succeeded
-                && current is { } c && FightChain.Next(game.Catalog, c) is not null;
+            var chain = options.RunToEnd ? game.Catalog.FightOf(scenario.Phase.Zone) : options.WholePhase ? game.Catalog.PartsOf(scenario) : [scenario];
+            var timeout = TimeoutSeconds * chain.Count;
+            bool ChainGoesOn() => (options.RunToEnd || options.WholePhase) && game.Status == SessionStatus.Succeeded
+                && current is { } c && FightChain.Next(chain, c) is not null;
             while (failure is null && (ChainGoesOn() || game.Status is not (SessionStatus.Succeeded or SessionStatus.CompletedFailed or SessionStatus.Frozen)))
             {
                 if (elapsed >= timeout)

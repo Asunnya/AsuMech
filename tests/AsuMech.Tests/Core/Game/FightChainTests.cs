@@ -69,6 +69,37 @@ public class FightChainTests
         Assert.That(loop.AutoRestart, Is.False);
     }
 
+    [Test]
+    public void WholePhaseExcludesLoopAndRunToEnd()
+    {
+        var loop = new PracticeLoop(new AsuMech.Core.Game.Game()) { RunToEnd = true };
+        loop.WholePhase = true;
+        Assert.That(loop.RunToEnd, Is.False);
+        loop.AutoRestart = true;
+        Assert.That(loop.WholePhase, Is.False);
+        loop.WholePhase = true;
+        loop.RunToEnd = true;
+        Assert.That(loop.WholePhase, Is.False);
+    }
+
+    [TestCaseSource(nameof(SplitPhases))]
+    public void AWholePhasePlaysItsPartsAndStops(IScenario picked)
+    {
+        var parts = Catalog.PartsOf(picked);
+        var started = new List<string>();
+        var run = ScenarioRun.Execute(picked.GetType(), 0, 1, new ScenarioRunOptions
+        {
+            WholePhase = true,
+            PlayerRole = PartyRole.MainTank,
+            Started = s => started.Add(s.Name),
+        });
+        Assert.That(run.Passed, run.ToString());
+        Assert.That(started, Is.EqualTo(parts.Where(s => s.AiStrats.Count > 0).Select(s => s.Name).ToList()));
+    }
+
+    private static IEnumerable<IScenario> SplitPhases()
+        => Catalog.Zones.SelectMany(Catalog.PhaseGroupsOf).Where(g => g.Count > 1).Select(g => g.Last(s => s.AiStrats.Count > 0));
+
     [TestCaseSource(nameof(Fights))]
     public void AWholeFightClearsAsOneRun(IZone zone)
     {

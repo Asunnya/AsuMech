@@ -10,6 +10,8 @@ public sealed partial class AsuMainWindow
 {
     private const float UnknownDurationSeconds = 60f;
     private float detailRightWidth;
+    private const string WholePhaseLabel = "Whole phase";
+    private readonly Dictionary<IScenario, IScenario> lastPart = new();
     private static readonly string[] TypeLabels = ["All", CatalogView.Ultimate, CatalogView.Savage];
     private static readonly Dictionary<string, string> GroupShortLabels = new()
     {
@@ -42,6 +44,7 @@ public sealed partial class AsuMainWindow
             Muted("Pick a fight.");
             return;
         }
+        DrawPartRow(inSession);
         DrawSectionRow();
         DrawDetailLine(inSession);
     }
@@ -110,13 +113,46 @@ public sealed partial class AsuMainWindow
 
     private void DrawScenarioRow(IZone zone)
     {
-        var scenarios = ScenariosOf(zone).ToList();
-        var items = scenarios.Select(s => new TabRowItem(s.DisplayName(),
-            Tooltip: Pickable(s, out var why) ? BestStreakText(s).TrimStart(' ', '·') is { Length: > 0 } best ? best : null : why)).ToList();
-        var selected = Selected == null ? -1 : scenarios.IndexOf(Selected);
+        var groups = Catalog.PhaseGroupsOf(zone);
+        var items = groups.Select(g => g.Count > 1
+            ? new TabRowItem(g[0].Phase.Name, Tooltip: string.Join(" · ", g.Select(s => s.Name)))
+            : new TabRowItem(g[0].DisplayName(),
+                Tooltip: Pickable(g[0], out var why) ? BestStreakText(g[0]).TrimStart(' ', '·') is { Length: > 0 } best ? best : null : why)).ToList();
+        var selected = -1;
+        for (var i = 0; i < groups.Count; i++)
+            if (Selected != null && groups[i].Contains(Selected)) selected = i;
         var clicked = OverflowTabRow.Draw("scenarios", items, selected);
-        if (clicked >= 0 && clicked != selected && Pickable(scenarios[clicked], out _))
-            Picker.Select(scenarios[clicked]);
+        if (clicked < 0 || clicked == selected) return;
+        var parts = groups[clicked];
+        var pick = lastPart.GetValueOrDefault(parts[0]) is { } last && Pickable(last, out _) ? last : parts.FirstOrDefault(s => Pickable(s, out _));
+        if (pick != null) Picker.Select(pick);
+    }
+
+    // A phase split into parts picks the part here, under the phase tabs.
+    private void DrawPartRow(bool inSession)
+    {
+        if (Selected is not { } scenario) return;
+        var parts = Catalog.PartsOf(scenario);
+        if (parts.Count < 2) return;
+        lastPart[parts[0]] = scenario;
+        var practice = Plugin.Practice;
+        var items = new List<TabRowItem> { new(WholePhaseLabel, Tooltip: inSession ? "Disabled in a multiplayer session." : $"Start plays all of {scenario.Phase.Name}, each part going straight on to the next. A death ends the run.") };
+        items.AddRange(parts.Select(s => new TabRowItem(s.Name,
+            Tooltip: Pickable(s, out var why) ? BestStreakText(s).TrimStart(' ', '·') is { Length: > 0 } best ? best : null : why)));
+        var selected = practice.WholePhase ? 0 : parts.ToList().IndexOf(scenario) + 1;
+        ImGui.BeginDisabled(RunState.IsGuest || practice.RunToEnd);
+        var clicked = OverflowTabRow.Draw("parts", items, practice.RunToEnd ? -1 : selected);
+        ImGui.EndDisabled();
+        if (clicked < 0 || clicked == selected) return;
+        if (clicked == 0)
+        {
+            if (inSession) return;
+            practice.WholePhase = true;
+            if (Pickable(parts[0], out _)) Picker.Select(parts[0]);
+            return;
+        }
+        practice.WholePhase = false;
+        if (Pickable(parts[clicked - 1], out _)) Picker.Select(parts[clicked - 1]);
     }
 
     private void DrawDetailLine(bool inSession)
@@ -131,12 +167,13 @@ public sealed partial class AsuMainWindow
         {
             practice.AutoRestart = false;
             practice.RunToEnd = false;
+            practice.WholePhase = false;
         }
         Flow.SameLineRight(detailRightWidth);
         ImGui.BeginGroup();
         ImGui.BeginDisabled(inSession);
         bool single, loop, toEnd;
-        using (!practice.AutoRestart && !practice.RunToEnd ? AsuTheme.PushAccentButton() : null)
+        using (!practice.AutoRestart && !practice.RunToEnd && !practice.WholePhase ? AsuTheme.PushAccentButton() : null)
             single = ImGui.SmallButton("Single");
         ImGui.SameLine(0f, 0f);
         using (practice.AutoRestart ? AsuTheme.PushAccentButton() : null)
@@ -157,6 +194,7 @@ public sealed partial class AsuMainWindow
         {
             practice.AutoRestart = false;
             practice.RunToEnd = false;
+            practice.WholePhase = false;
         }
         if (loop) practice.AutoRestart = true;
         if (toEnd) practice.RunToEnd = true;
