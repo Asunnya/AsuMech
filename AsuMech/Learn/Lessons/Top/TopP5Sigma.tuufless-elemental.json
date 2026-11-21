@@ -4,7 +4,7 @@
   "sources": [
     {
       "label": "NAUR - P5: Run: Dynamis - Sigma (Toolbox)",
-      "url": "https://ff14.toolboxgaming.space/?id=107380954136761&preview=1"
+      "url": "https://ff14.toolboxgaming.space/?id=107380954136761\u0026preview=1"
     },
     {
       "label": "NAUR - P5: Run: Dynamis - Sigma (Slides)",
@@ -16,7 +16,7 @@
       "key": {
         "cls": "TopP5SigmaAi",
         "time": 0.5,
-        "line": 30
+        "line": 36
       },
       "title": "Tanks north, party south",
       "cue": "Omega-M appears",
@@ -29,26 +29,26 @@
           "rule": "Wait 5 m north of the centre, a little east."
         }
       },
-      "tolerance": 2.0,
+      "tolerance": 2,
       "skip": false
     },
     {
       "key": {
         "cls": "TopP5SigmaTuuflessAi",
         "time": 14.1,
-        "line": 31
+        "line": 37
       },
       "title": "Line up by symbol between the arms",
       "cue": "Symbols and tethers land",
-      "rule": "Line up with your symbol partner on the side away from Omega-M, between the two arm units: left partner west, right partner east. Rows from Omega-M's side outward: third pair, first pair, fourth pair, second pair, 2 m apart.",
-      "tolerance": 2.0,
+      "rule": "Line up with your symbol partner on the side away from Omega-M, between the two arm units: left partner west, right partner east. Rows from Omega-M\u0027s side outward: third pair, first pair, fourth pair, second pair, 2 m apart.",
+      "tolerance": 2,
       "skip": false
     },
     {
       "key": {
         "cls": "TopP5SigmaAi",
         "time": 20,
-        "line": 32
+        "line": 38
       },
       "title": "Wave Cannon spread",
       "cue": "Wave Cannon markers land",
@@ -60,7 +60,7 @@
       "key": {
         "cls": "TopP5SigmaAi",
         "time": 32,
-        "line": 33
+        "line": 39
       },
       "title": "Collapse in for the knockback",
       "cue": "Looper on you",
@@ -72,7 +72,7 @@
       "key": {
         "cls": "TopP5SigmaAi",
         "time": 36,
-        "line": 34
+        "line": 40
       },
       "title": "Knockback spot",
       "cue": "Discharger cast starts",
@@ -84,7 +84,7 @@
       "key": {
         "cls": "TopP5SigmaAi",
         "time": 41.5,
-        "line": 35
+        "line": 41
       },
       "title": "Take your tower",
       "cue": "Discharger resolves",
@@ -96,7 +96,7 @@
       "key": {
         "cls": "TopP5SigmaAi",
         "time": 44,
-        "line": 37
+        "line": 43
       },
       "title": "Back to the stack",
       "cue": "Towers resolve",
@@ -109,14 +109,14 @@
           "rule": "Wait 5 m north of the centre, a little east."
         }
       },
-      "tolerance": 2.0,
+      "tolerance": 2,
       "skip": false
     },
     {
       "key": {
         "cls": "TopP5SigmaAi",
         "time": 50,
-        "line": 38
+        "line": 44
       },
       "title": "Split for Omega-F",
       "cue": "Rear Lasers unit appears",
@@ -128,7 +128,7 @@
       "key": {
         "cls": "TopP5SigmaAi",
         "time": 58,
-        "line": 39
+        "line": 45
       },
       "title": "Legs: go to the wall",
       "cue": "Omega-F shows legs",
@@ -140,7 +140,7 @@
       "key": {
         "cls": "TopP5SigmaAi",
         "time": 62,
-        "line": 40
+        "line": 46
       },
       "title": "Hello World spread by marker",
       "cue": "Head markers land",
@@ -152,7 +152,7 @@
       "key": {
         "cls": "TopP5SigmaAi",
         "time": 73,
-        "line": 41
+        "line": 47
       },
       "title": "Regroup",
       "cue": "Quickening Dynamis on you",
@@ -165,12 +165,12 @@
           "rule": "Wait 5 m north of the centre, a little east."
         }
       },
-      "tolerance": 2.0,
+      "tolerance": 2,
       "skip": false
     }
   ],
   "toolbox": {
-    "planId": "107380954136761+stgy-f3f6e30d+stgy-cd5e154e+stgy-74f579c7",
+    "planId": "107380954136761\u002Bstgy-f3f6e30d\u002Bstgy-cd5e154e\u002Bstgy-74f579c7",
     "roleMap": {
       "OffTank": "tank1",
       "MainTank": "tank2",

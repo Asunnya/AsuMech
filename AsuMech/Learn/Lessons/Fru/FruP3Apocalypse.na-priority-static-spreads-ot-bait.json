@@ -12,7 +12,7 @@
       "key": {
         "cls": "FruP3ApocalypseAi",
         "time": 2.2,
-        "line": 29
+        "line": 35
       },
       "title": "Line up for Dark Water",
       "cue": "Spell-in-Waiting Refrain cast starts",
@@ -24,11 +24,11 @@
       "key": {
         "cls": "FruP3ApocalypseAi",
         "time": 16.9,
-        "line": 30
+        "line": 36
       },
       "title": "Swap for matching Dark Water timers",
       "cue": "Dark Water timers appear",
-      "rule": "Compare timers inside your group (no water counts as a timer too). If two supports share one, the first of them in MT > OT > H1 > H2 order trades spots with the first DPS (M1 > M2 > R1 > R2) of the DPS pair that also match; with two pairs each, the shorter timers swap together.",
+      "rule": "Compare timers inside your group (no water counts as a timer too). If two supports share one, the first of them in MT \u003E OT \u003E H1 \u003E H2 order trades spots with the first DPS (M1 \u003E M2 \u003E R1 \u003E R2) of the DPS pair that also match; with two pairs each, the shorter timers swap together.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -36,7 +36,7 @@
       "key": {
         "cls": "FruP3ApocalypseAi",
         "time": 20.2,
-        "line": 31
+        "line": 37
       },
       "title": "Stack for the first Dark Water",
       "cue": "Apocalypse resolves",
@@ -48,7 +48,7 @@
       "key": {
         "cls": "FruP3ApocalypseAi",
         "time": 22.85,
-        "line": 32
+        "line": 38
       },
       "title": "Spread for Spirit Taker",
       "cue": "Spirit Taker cast starts",
@@ -60,7 +60,7 @@
       "key": {
         "cls": "FruP3ApocalypseAi",
         "time": 24.85,
-        "line": 33
+        "line": 39
       },
       "title": "Swapped players go home",
       "cue": "Spirit Taker resolves",
@@ -72,7 +72,7 @@
       "key": {
         "cls": "FruP3ApocalypseAi",
         "time": 28,
-        "line": 34
+        "line": 40
       },
       "title": "Static spreads for Dark Eruption",
       "cue": "The Apocalypse lights start turning",
@@ -84,7 +84,7 @@
       "key": {
         "cls": "FruP3ApocalypseAi",
         "time": 36.05,
-        "line": 35
+        "line": 41
       },
       "title": "Collapse onto the line",
       "cue": "Dark Eruption hits you",
@@ -96,7 +96,7 @@
       "key": {
         "cls": "FruP3ApocalypseAi",
         "time": 37,
-        "line": 36
+        "line": 42
       },
       "title": "Stack for the second Dark Water",
       "cue": "Dark Eruption resolves",
@@ -108,11 +108,11 @@
       "key": {
         "cls": "FruP3ApocalypseAi",
         "time": 41.7,
-        "line": 37
+        "line": 43
       },
       "title": "OT baits Darkest Dance",
       "cue": "Darkest Dance cast starts",
-      "rule": "OT: head out on the line one spoke back from the stack line, on your group's end, ready to be the farthest player.",
+      "rule": "OT: head out on the line one spoke back from the stack line, on your group\u0027s end, ready to be the farthest player.",
       "tolerance": 2.5,
       "skip": false
     },
@@ -120,31 +120,31 @@
       "key": {
         "cls": "FruP3ApocalypseAi",
         "time": 42,
-        "line": 39
+        "line": 44
       },
       "title": "Everyone else to the middle",
       "cue": "The second Dark Water resolves",
       "rule": "Everyone but the OT gathers in the middle so the OT is clearly the farthest.",
-      "tolerance": 2.0,
+      "tolerance": 2,
       "skip": false
     },
     {
       "key": {
         "cls": "FruP3ApocalypseAi",
         "time": 42,
-        "line": 38
+        "line": 44
       },
       "title": "OT out to the wall",
-      "tolerance": 2.5,
-      "skip": true,
       "cue": "The second Dark Water resolves",
-      "rule": "OT: keep going to the wall on that line so Darkest Dance jumps to you."
+      "rule": "OT: keep going to the wall on that line so Darkest Dance jumps to you.",
+      "tolerance": 2.5,
+      "skip": true
     },
     {
       "key": {
         "cls": "FruP3ApocalypseAi",
         "time": 45.15,
-        "line": 40
+        "line": 46
       },
       "title": "Stack against Gaia",
       "cue": "Darkest Dance hits the OT",
@@ -156,7 +156,7 @@
       "key": {
         "cls": "FruP3ApocalypseAi",
         "time": 48.4,
-        "line": 41
+        "line": 47
       },
       "title": "Split for the last Dark Water",
       "cue": "Darkest Dance knockback cast starts",

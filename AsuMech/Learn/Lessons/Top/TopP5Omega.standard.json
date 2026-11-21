@@ -16,11 +16,11 @@
       "key": {
         "cls": "TopP5OmegaAi",
         "time": 20,
-        "line": 25
+        "line": 31
       },
       "title": "After Diffuse Wave Cannon cast starts",
       "cue": "Diffuse Wave Cannon cast starts",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: OmegaAttacks).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: OmegaAttacks).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -28,11 +28,11 @@
       "key": {
         "cls": "TopP5OmegaAi",
         "time": 24,
-        "line": 26
+        "line": 32
       },
       "title": "After Diffuse Wave Cannon cast starts",
       "cue": "Diffuse Wave Cannon cast starts",
-      "rule": "The spot follows a rule the rolls alone don't show; read the strat (closest roll: AttackDirections).",
+      "rule": "The spot follows a rule the rolls alone don\u0027t show; read the strat (closest roll: AttackDirections).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -40,11 +40,11 @@
       "key": {
         "cls": "TopP5OmegaAi",
         "time": 32,
-        "line": 28
+        "line": 34
       },
       "title": "Hello world1 pos",
       "cue": "Oversampled Wave Cannon cast starts",
-      "rule": "Read the strat's HelloWorld1Pos: the spot follows a rule the rolls alone don't show (closest roll: AttackDirections).",
+      "rule": "Read the strat\u0027s HelloWorld1Pos: the spot follows a rule the rolls alone don\u0027t show (closest roll: AttackDirections).",
       "tolerance": 2.5,
       "skip": false
     },
@@ -52,7 +52,7 @@
       "key": {
         "cls": "TopP5OmegaAi",
         "time": 48,
-        "line": 34
+        "line": 40
       },
       "title": "Gather middle",
       "cue": "Blaster cast starts",
@@ -64,17 +64,17 @@
       "key": {
         "cls": "TopP5OmegaAi",
         "time": 53,
-        "line": 35
+        "line": 41
       },
       "title": "Hello world2 pos",
       "cue": "A tether lands on ",
-      "rule": "Read the strat's HelloWorld2Pos: the spot follows a rule the rolls alone don't show (closest roll: AttackDirections).",
+      "rule": "Read the strat\u0027s HelloWorld2Pos: the spot follows a rule the rolls alone don\u0027t show (closest roll: AttackDirections).",
       "roles": {
         "MainTank": {
-          "rule": "Read the strat's HelloWorld2Pos: the spot follows a rule the rolls alone don't show (closest roll: OmegaAttacks)."
+          "rule": "Read the strat\u0027s HelloWorld2Pos: the spot follows a rule the rolls alone don\u0027t show (closest roll: OmegaAttacks)."
         },
         "PhysRangedDps": {
-          "rule": "Read the strat's HelloWorld2Pos: the spot follows a rule the rolls alone don't show (closest roll: BettleSpawnDirection)."
+          "rule": "Read the strat\u0027s HelloWorld2Pos: the spot follows a rule the rolls alone don\u0027t show (closest roll: BettleSpawnDirection)."
         }
       },
       "tolerance": 2.5,
@@ -84,7 +84,7 @@
       "key": {
         "cls": "TopP5OmegaAi",
         "time": 62,
-        "line": 36
+        "line": 42
       },
       "title": "Initial positions",
       "cue": "Hello, Distant World hits you",
