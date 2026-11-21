@@ -63,4 +63,8 @@ public class FirewallOpcodesTests
     [Test]
     public void AGameOlderThanEveryFileHasNone()
         => Assert.That(FirewallOpcodes.LatestPublishedFor(Published, "2026.01.01.0000.0000"), Is.Null);
+
+    [Test]
+    public void TheGamesOwnFileIsNeverTheFallback()
+        => Assert.That(FirewallOpcodes.LatestPublishedFor(Published, "2026.11.03.0000.0000"), Is.EqualTo("2026.10.16.0000.0000"));
 }

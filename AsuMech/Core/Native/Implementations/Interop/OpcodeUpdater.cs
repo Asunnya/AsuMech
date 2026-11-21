@@ -41,7 +41,7 @@ internal sealed unsafe class OpcodeUpdater : IDisposable
         try
         {
             if (disposed) return;
-            using var client = new HttpClient { Timeout = TimeSpan.FromSeconds(20) };
+            using var client = new HttpClient { Timeout = TimeSpan.FromSeconds(10) };
             client.DefaultRequestHeaders.UserAgent.ParseAdd("AsuMech");
             var from = gameVersion;
             var text = FetchFile(client, gameVersion);
@@ -49,6 +49,7 @@ internal sealed unsafe class OpcodeUpdater : IDisposable
             {
                 if (disposed) return;
                 from = LatestPublishedFor(client, gameVersion);
+                if (disposed) return;
                 if (from == null)
                 {
                     Plugin.Log.Warning($"[OpcodeUpdater] Hyperborea has no opcode file for {gameVersion} nor any earlier one.");
@@ -57,6 +58,7 @@ internal sealed unsafe class OpcodeUpdater : IDisposable
                 }
                 Plugin.Log.Warning($"[OpcodeUpdater] Hyperborea has no opcode file for {gameVersion} yet; using the newest published one, {from}.");
                 text = FetchFile(client, from);
+                if (disposed) return;
                 if (text == null)
                 {
                     handedOff = KeepStoredOpcodes(current);
@@ -67,7 +69,8 @@ internal sealed unsafe class OpcodeUpdater : IDisposable
             if (FirewallOpcodes.Parse(text, out var problem) is not { } opcodes)
             {
                 Plugin.Log.Warning($"[OpcodeUpdater] Refused the opcode file for {from}: {problem}.");
-                handedOff = KeepStoredOpcodes(current);
+                // A refused list for this very patch says the stored one is wrong too: runs stay blocked.
+                if (from != gameVersion) handedOff = KeepStoredOpcodes(current);
                 return;
             }
             var fallback = from == gameVersion ? "" : from;
@@ -101,10 +104,10 @@ internal sealed unsafe class OpcodeUpdater : IDisposable
     {
         Plugin.Framework.Run(() =>
         {
-            if (Plugin.Config.ZoneUpOpcode != 0 && Plugin.Config.ZoneDownOpcodes.Length > 0 && Plugin.Config.ZoneFirewallGameVersion != current)
+            if (!disposed && Plugin.Config.ZoneUpOpcode != 0 && Plugin.Config.ZoneDownOpcodes.Length > 0 && Plugin.Config.ZoneFirewallGameVersion != current)
             {
                 Plugin.Log.Warning($"[OpcodeUpdater] Keeping the stored opcodes from {Plugin.Config.ZoneFirewallGameVersion}.");
-                Plugin.Config.ZoneFirewallOpcodesFrom = Plugin.Config.ZoneFirewallGameVersion is { Length: > 0 } v ? v : "stored";
+                Plugin.Config.ZoneFirewallOpcodesFrom = Plugin.Config.ZoneFirewallGameVersion.Split('_')[0] is { Length: > 0 } v ? v : "stored";
                 Plugin.Config.ZoneFirewallGameVersion = current;
                 Plugin.Config.Save();
             }

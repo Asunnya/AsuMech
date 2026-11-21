@@ -46,11 +46,11 @@ internal sealed record FirewallOpcodes(ushort ZoneUp, uint[] ZoneDown)
         return new FirewallOpcodes(heartbeat, allowed);
     }
 
-    // The newest published file at or before this game version: a patch the list has no file for yet
+    // The newest published file before this game version (its own just 404'd): a patch the list has no file for yet
     // most often kept the opcodes, and the heartbeat check still refuses a list the binary disagrees with.
     public static string? LatestPublishedFor(IEnumerable<string> fileNames, string gameVersion)
         => fileNames.Where(n => n.EndsWith(".txt", StringComparison.Ordinal)).Select(n => n[..^4])
-            .Where(v => string.CompareOrdinal(v, gameVersion) <= 0).OrderBy(v => v, StringComparer.Ordinal).LastOrDefault();
+            .Where(v => string.CompareOrdinal(v, gameVersion) < 0).OrderBy(v => v, StringComparer.Ordinal).LastOrDefault();
 
     private static FirewallOpcodes? Fail(string why, out string? problem)
     {
