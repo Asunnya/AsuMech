@@ -26,6 +26,11 @@ public sealed class UcobP3HeavensfallScenario : IScenario
     public void DrawSettings() => settingsWindow.Draw();
     public object SettingsOverrides => settingsWindow.Overrides;
 
+    public float BgmSecondsAtStart => 171.63f;
+
+    // The Flare Breath just before the trio is left out: it lands as the party stacks under Bahamut.
+    public static readonly UcobBetweenTrios BetweenTrios = new(3.28f, PartyRole.OffTank);
+
     public const float HeavensfallTrio = 4.00f;
     public const float NaelAndTwintaniaShow = 4.05f;
     private const float BahamutUntargetable = 10.01f;
@@ -82,6 +87,7 @@ public sealed class UcobP3HeavensfallScenario : IScenario
         state = new State(world.Rng, settingsWindow.Overrides);
         twisters.Clear();
         puddles.Clear();
+        bahamut = nael = twintania = null;
 
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<State>)AiStrats[idx]).Run(state, world);
@@ -139,6 +145,7 @@ public sealed class UcobP3HeavensfallScenario : IScenario
         world.Events.Add(TwintaniaLeaves, () => twintania?.PlayActionTimeline(TimelineId.TwintaniaTrioLeave));
         world.Events.Add(TwintaniaGone, () => twintania?.SetVisible(false));
         world.Events.Add(End, DespawnAll);
+        BetweenTrios.Play(world, SpawnBosses, () => bahamut);
     }
 
     public void Tick(float delta, float elapsed)
@@ -149,6 +156,7 @@ public sealed class UcobP3HeavensfallScenario : IScenario
 
     private void SpawnBosses()
     {
+        if (bahamut is not null) return;
         bahamut = Spawn(BNpcBaseId.BahamutPrime, BNpcNameId.BahamutPrime, Vector2.Zero, MathF.PI, true, EnemyListMode.Always, SpawnVisibility.Visible);
         bahamut?.PlayActionTimeline(TimelineId.BahamutPrimeLands);
         nael = Spawn(BNpcBaseId.NaelDeusDarnus, BNpcNameId.NaelDeusDarnus, NaelShowsAt, MathF.PI, false, EnemyListMode.Never, SpawnVisibility.HiddenUntilShown);

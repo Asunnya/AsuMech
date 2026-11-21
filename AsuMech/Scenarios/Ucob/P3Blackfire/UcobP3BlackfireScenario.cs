@@ -24,6 +24,10 @@ public sealed class UcobP3BlackfireScenario : IScenario
     public void DrawSettings() => settingsWindow.Draw();
     public object SettingsOverrides => settingsWindow.Overrides;
 
+    public float BgmSecondsAtStart => 68.70f;
+
+    public static readonly UcobBetweenTrios BetweenTrios = new(5.0f, PartyRole.MainTank, (-4.68f, Actions.Flatten));
+
     public const float TrioCast = 3.47f;
     private const float AddsAppear = 3.52f;
     private const float BahamutUntargetable = 9.49f;
@@ -84,6 +88,7 @@ public sealed class UcobP3BlackfireScenario : IScenario
         state = new State(world.Rng, settingsWindow.Overrides);
         ground = new BurningGround(StatusId.Burns, BurnToDeath, "stood in a Liquid Hell puddle (lead them away from the party)");
         puddles.Clear();
+        bahamut = nael = twintania = null;
 
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<State>)AiStrats[idx]).Run(state, world);
@@ -134,6 +139,7 @@ public sealed class UcobP3BlackfireScenario : IScenario
         world.Events.Add(NaelLeaves, () => nael?.PlayActionTimeline(TimelineId.NaelLeaves));
         world.Events.Add(NaelGone, () => nael?.FadeOut());
         world.Events.Add(End, DespawnAll);
+        BetweenTrios.Play(world, SpawnDragons, () => bahamut);
     }
 
     public void Tick(float delta, float elapsed) => ground.Tick(world.Party, delta, elapsed);
@@ -155,6 +161,7 @@ public sealed class UcobP3BlackfireScenario : IScenario
 
     private void SpawnDragons()
     {
+        if (bahamut is not null) return;
         bahamut = world.SpawnEnemy(new EnemySpawnConfig(
             BNpcBaseId: BNpcBaseId.BahamutPrime,
             NameId: BNpcNameId.BahamutPrime,

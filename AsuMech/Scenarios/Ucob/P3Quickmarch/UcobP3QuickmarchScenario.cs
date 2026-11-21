@@ -24,6 +24,12 @@ public sealed class UcobP3QuickmarchScenario : IScenario
     public void DrawSettings() => settingsWindow.Draw();
     public object SettingsOverrides => settingsWindow.Overrides;
 
+    // UNVERIFIED: the P3 track starts with Seventh Umbral Era's part.
+    public float BgmSecondsAtStart => 27.70f + (world is { Continued: true } ? ContinuedSkip : 0f);
+
+    // Straight on from Seventh Umbral Era the trio comes sooner after Flatten than this part's lead-in.
+    private const float ContinuedSkip = 2.02f;
+
     public const float TrioCast = 3.41f;
     private const float AddsAppear = 3.46f;
     public const float BahamutUntargetable = 9.42f;
@@ -136,11 +142,12 @@ public sealed class UcobP3QuickmarchScenario : IScenario
             if (world.Party.Get(PartyRole.MainTank) is { } tank && tank.IsAlive()) bahamut?.Cast(Actions.FlareBreath, tank);
         });
         world.Events.Add(End, DespawnAll);
+        if (world.Continued) world.Events.Advance(ContinuedSkip);
     }
 
     public void Tick(float delta, float elapsed)
     {
-        TriggerTwisters(elapsed);
+        TriggerTwisters(world.Events.Elapsed);
         tempestWing.Tick();
     }
 
