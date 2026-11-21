@@ -93,7 +93,7 @@ public sealed partial class AsuMainWindow
         var next = clicked ? idx + 1 : ImGui.IsItemClicked(ImGuiMouseButton.Right) ? idx - 1 + labels.Length : -1;
         if (next < 0) return;
         next %= labels.Length;
-        Picker.RoleOverride = next == 0 ? null : (PartyRole)(next - 1);
+        Picker.ChooseRole(next == 0 ? null : (PartyRole)(next - 1));
     }
 
     private void DrawFooter(Game game, bool inSession)

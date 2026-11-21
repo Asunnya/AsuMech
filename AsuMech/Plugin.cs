@@ -149,7 +149,7 @@ public sealed class Plugin : IAsyncDalamudPlugin
                 Config.LastSelectedScenario = scenario.FullName();
                 Config.RecentScenarios = ScenarioSearch.PushRecent(Config.RecentScenarios, scenario.FullName());
                 Config.Save();
-            });
+            }, Config.Picks, Config.Save);
             ConfigWindow = new ConfigWindow(this);
             MainWindow = new MainWindow(this);
             AsuMainWindow = new AsuMainWindow(this);

@@ -13,10 +13,19 @@ namespace AsuMech;
 public sealed class ScenarioPicker
 {
     private readonly Action<IScenario>? remember;
+    private readonly PickMemory picks;
+    private readonly Action? savePicks;
     private readonly Dictionary<IZone, int> waymarkMemory = new();
-    private readonly Dictionary<IScenario, string> stratGroupMemory = new();
+    private bool roleLocked;
+    private bool guest;
 
-    public ScenarioPicker(Action<IScenario>? remember = null) => this.remember = remember;
+    public ScenarioPicker(Action<IScenario>? remember = null, PickMemory? picks = null, Action? savePicks = null)
+    {
+        this.remember = remember;
+        this.picks = picks ?? new PickMemory();
+        this.savePicks = savePicks;
+        role = this.picks.Role;
+    }
 
     public IScenario? Scenario { get; private set; }
 
@@ -28,7 +37,9 @@ public sealed class ScenarioPicker
     public string? StratGroup { get; private set; }
 
     public int Waymark { get; private set; }
-    public PartyRole? RoleOverride { get; set; }
+    // Null in a session, where the party seat decides; the player's pick comes back after it.
+    public PartyRole? RoleOverride => roleLocked ? null : role;
+    private PartyRole? role;
     public bool Solo { get; set; }
 
     // Empty rolls a fresh seed each time; a number replays it every time.
@@ -46,12 +57,10 @@ public sealed class ScenarioPicker
 
         Scenario = scenario;
         Solo = false;
-        Strat = 0;
         Waymark = waymarkMemory.GetValueOrDefault(scenario.Phase.Zone);
         if (Waymark < 0 || Waymark >= scenario.Phase.Zone.WaymarkPresets.Count)
             Waymark = 0;
-        StratGroup = stratGroupMemory.GetValueOrDefault(scenario);
-        ReconcileStrat();
+        RecallStrat();
 
         if (persist) remember?.Invoke(scenario);
     }
@@ -75,28 +84,74 @@ public sealed class ScenarioPicker
     // region/strat runs; each is reset, not just disabled, so a stale pick can't apply.
     public void Reconcile(bool inSession, bool guest)
     {
-        if (inSession) RoleOverride = null;
+        roleLocked = inSession;
         if (guest)
         {
             Strat = 0;
             StratGroup = null;
         }
+        else if (this.guest) RecallStrat();
+        this.guest = guest;
         ReconcileStrat();
+    }
+
+    public void ChooseRole(PartyRole? chosen)
+    {
+        if (roleLocked || role == chosen) return;
+        role = chosen;
+        picks.Role = chosen;
+        savePicks?.Invoke();
     }
 
     public void SelectStrat(int index)
     {
         if (Scenario is null || index < 0 || index >= Scenario.AiStrats.Count) return;
         Strat = index;
-        if (Scenario.AiStrats[index].Group is { } group) SelectGroup(group);
+        StratGroup = Scenario.AiStrats[index].Group;
+        ReconcileStrat();
+        RememberStrat();
     }
 
     public void SelectGroup(string group)
     {
         if (Scenario is null) return;
         StratGroup = group;
-        stratGroupMemory[Scenario] = group;
         ReconcileStrat();
+        RememberStrat();
+    }
+
+    // This scenario's own last pick first, then the fight's last pick when this scenario has a
+    // strat of that name, else the first.
+    private void RecallStrat()
+    {
+        if (Scenario is not { } scenario) return;
+        Strat = 0;
+        StratGroup = null;
+        var pick = picks.Strats.GetValueOrDefault(scenario.FullName()) is { } own && IndexOf(scenario, own) >= 0 ? own
+            : picks.FightStrats.GetValueOrDefault(scenario.Phase.Zone.Name);
+        if (pick != null && IndexOf(scenario, pick) is var index and >= 0) Strat = index;
+        else if (pick?.Group is { } group && StratGroups(scenario).Contains(group)) StratGroup = group;
+        if (Strat >= 0 && Strat < scenario.AiStrats.Count && StratGroup == null) StratGroup = scenario.AiStrats[Strat].Group;
+        ReconcileStrat();
+    }
+
+    private static int IndexOf(IScenario scenario, StratPick pick)
+    {
+        var strats = scenario.AiStrats;
+        for (var i = 0; i < strats.Count; i++)
+            if (strats[i].Name == pick.Name && strats[i].Group == pick.Group) return i;
+        return -1;
+    }
+
+    private void RememberStrat()
+    {
+        if (Scenario is not { } scenario || guest) return;
+        StratPick? pick = HasStartableStrat && SelectedAi is { } ai ? new StratPick(ai.Group, ai.Name)
+            : StratGroup is { } group ? new StratPick(group, "") : null;
+        if (pick == null) return;
+        picks.Strats[scenario.FullName()] = pick;
+        if (pick.Name.Length > 0) picks.FightStrats[scenario.Phase.Zone.Name] = pick;
+        savePicks?.Invoke();
     }
 
     public void SelectWaymark(int index)

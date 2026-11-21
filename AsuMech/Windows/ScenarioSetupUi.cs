@@ -22,7 +22,7 @@ internal static class ScenarioSetupUi
         SettingsGrid.Row("Role:");
         ImGui.SetNextItemWidth(DropdownWidth * ImGuiHelpers.GlobalScale);
         if (ImGui.Combo("##role", ref idx, RoleLabels, RoleLabels.Length))
-            picker.RoleOverride = idx == 0 ? null : (PartyRole)(idx - 1);
+            picker.ChooseRole(idx == 0 ? null : (PartyRole)(idx - 1));
     }
 
     // Hidden unless the scenario offers a choice. Grouped scenarios get a region-button row above a

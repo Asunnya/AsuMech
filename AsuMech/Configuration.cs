@@ -111,6 +111,7 @@ public class Configuration : IPluginConfiguration
     // A folder of lesson JSON files that shadow the embedded ones and reload on change (authoring).
     public string LessonDevDir { get; set; } = "";
     public string LastSelectedScenario { get; set; } = "";
+    public PickMemory Picks { get; set; } = new();
 
     // The player's own multiplayer server (see AsuMech.Relay.Host/README.md), used instead of
     // DefaultRelay while UseCustomRelay is on. Kept while the default is picked, so switching

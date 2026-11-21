@@ -15,7 +15,7 @@ public class ScenarioPickerTests
     private static IScenario MultiWaymark => Catalog.Scenarios.First(s => s.Phase.Zone.WaymarkPresets.Count > 1);
 
     [Test]
-    public void SelectResetsStratAndSoloAndRemembers()
+    public void SelectResetsSoloKeepsTheStratAndRemembers()
     {
         var remembered = new List<IScenario>();
         var picker = new ScenarioPicker(remembered.Add);
@@ -23,7 +23,7 @@ public class ScenarioPickerTests
         picker.SelectStrat(1);
         picker.Solo = true;
         picker.Select(MultiStrat);
-        Assert.That(picker.Strat, Is.EqualTo(0));
+        Assert.That(picker.Strat, Is.EqualTo(1));
         Assert.That(picker.Solo, Is.False);
         Assert.That(remembered, Has.Count.EqualTo(2));
     }
@@ -78,14 +78,59 @@ public class ScenarioPickerTests
     }
 
     [Test]
-    public void SessionDropsTheRoleAndGuestDropsTheStrat()
+    public void SessionDropsTheRoleAndGuestDropsTheStratUntilItEnds()
     {
         var picker = new ScenarioPicker();
         picker.Select(MultiStrat);
-        picker.RoleOverride = PartyRole.MainTank;
+        picker.ChooseRole(PartyRole.MainTank);
         picker.SelectStrat(1);
         picker.Reconcile(inSession: true, guest: true);
         Assert.That(picker.RoleOverride, Is.Null);
+        Assert.That(picker.Strat, Is.EqualTo(0));
+        picker.Reconcile(inSession: false, guest: false);
+        Assert.That(picker.RoleOverride, Is.EqualTo(PartyRole.MainTank));
+        Assert.That(picker.Strat, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void TheRoleAndStratComeBackInTheNextSession()
+    {
+        var picks = new PickMemory();
+        var saves = 0;
+        var first = new ScenarioPicker(null, picks, () => saves++);
+        first.Select(MultiStrat);
+        first.SelectStrat(1);
+        first.ChooseRole(PartyRole.CasterDps);
+        Assert.That(saves, Is.EqualTo(2));
+
+        var next = new ScenarioPicker(null, picks);
+        next.Select(MultiStrat);
+        Assert.That(next.Strat, Is.EqualTo(1));
+        Assert.That(next.RoleOverride, Is.EqualTo(PartyRole.CasterDps));
+    }
+
+    [Test]
+    public void AScenarioNotOpenedYetTakesTheFightsLastStratByName()
+    {
+        var (picked, other, name) = Catalog.Scenarios
+            .Where(s => ScenarioPicker.StratGroups(s).Count == 0 && s.AiStrats.Count > 1)
+            .SelectMany(s => Catalog.Scenarios.Where(o => o != s && o.Phase.Zone == s.Phase.Zone && ScenarioPicker.StratGroups(o).Count == 0)
+                .SelectMany(o => o.AiStrats.Skip(1).Where(a => s.AiStrats.Skip(1).Any(b => b.Name == a.Name)).Select(a => (s, o, a.Name))))
+            .First();
+        var picker = new ScenarioPicker();
+        picker.Select(picked);
+        picker.SelectStrat(picked.AiStrats.ToList().FindIndex(a => a.Name == name));
+        picker.Select(other);
+        Assert.That(other.AiStrats[picker.Strat].Name, Is.EqualTo(name));
+    }
+
+    [Test]
+    public void AStratThatNoLongerExistsFallsBackToTheFirst()
+    {
+        var picks = new PickMemory();
+        picks.Strats[MultiStrat.FullName()] = new StratPick(null, "a strat that was removed");
+        var picker = new ScenarioPicker(null, picks);
+        picker.Select(MultiStrat);
         Assert.That(picker.Strat, Is.EqualTo(0));
     }
 
