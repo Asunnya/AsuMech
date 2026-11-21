@@ -26,6 +26,9 @@ public sealed class UcobP3TenstrikeScenario : IScenario
     public static readonly Vector2 NaelSpot = new(-4.97f, 4.57f);
     public static readonly Vector2 TwintaniaSpot = new(5.52f, 6.0f);
 
+    public static readonly UcobBetweenTrios BetweenTrios = new(10.45f, PartyRole.OffTank,
+        (-7.33f, UcobActions.FlareBreath), (-5.24f, UcobActions.FlareBreath), (-3.15f, UcobActions.FlareBreath));
+
     public const float TenstrikeCast = 5.00f;
     public const float TrioUntargetable = 11.02f;
     public const float TrioLeaves = 11.06f;
@@ -70,6 +73,7 @@ public sealed class UcobP3TenstrikeScenario : IScenario
         spawned.Clear();
         eobjs.Clear();
         puddles.Clear();
+        bahamut = nael = twintania = null;
 
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<State>)AiStrats[idx]).Run(state, world);
@@ -130,6 +134,7 @@ public sealed class UcobP3TenstrikeScenario : IScenario
 
         world.Events.Add(GigaflareCast, () => bahamut?.Cast(UcobActions.Gigaflare));
         world.Events.Add(End, DespawnAll);
+        BetweenTrios.Play(world, SpawnTrio, () => bahamut);
     }
 
     public void Tick(float delta, float elapsed)
@@ -140,6 +145,7 @@ public sealed class UcobP3TenstrikeScenario : IScenario
 
     private void SpawnTrio()
     {
+        if (bahamut is not null) return;
         bahamut = Spawn(BNpcBaseId.BahamutPrime, BNpcNameId.BahamutPrime, Vector2.Zero, MathF.PI, targetable: true);
         bahamut?.PlayActionTimeline(TimelineId.BahamutPrimeLands);
         nael = Spawn(BNpcBaseId.NaelDeusDarnus, BNpcNameId.NaelDeusDarnus, NaelSpot, MathF.PI, targetable: false);

@@ -34,6 +34,9 @@ public sealed class UcobP3GrandOctetScenario : IScenario
     private static readonly uint[] DragonBaseIds = [BNpcBaseId.Firehorn, BNpcBaseId.Iceclaw, BNpcBaseId.Thunderwing, BNpcBaseId.TailOfDarkness, BNpcBaseId.FangOfLight];
     private static readonly uint[] DragonNameIds = [BNpcNameId.Firehorn, BNpcNameId.Iceclaw, BNpcNameId.Thunderwing, BNpcNameId.TailOfDarkness, BNpcNameId.FangOfLight];
 
+    public static readonly UcobBetweenTrios BetweenTrios = new(9.97f, PartyRole.OffTank,
+        (-6.28f, UcobActions.Flatten), (0.86f, UcobActions.FlareBreath));
+
     public const float GrandOctetCast = 5.00f;
     public const float NaelAndTwintaniaAppear = 5.04f;
     public const float DragonsAppear = 5.07f;
@@ -80,6 +83,7 @@ public sealed class UcobP3GrandOctetScenario : IScenario
         twisters = new UcobTwisters(world);
         spawned.Clear();
         Array.Clear(dragons);
+        bahamut = nael = twintania = null;
 
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<State>)AiStrats[idx]).Run(state, world);
@@ -87,11 +91,7 @@ public sealed class UcobP3GrandOctetScenario : IScenario
         world.Events.Add(0f, () => world.EnforceArenaBoundary(Geometry.P1ArenaRadius, "Fell into the death wall"));
         world.Events.Add(0f, () => world.PlaceWaymarks(UcobMarkers.Of(AiStrats, selectedAi).Waymarks));
         world.Events.Add(0f, () => party.LimitBreak.Set(LimitBreakBars));
-        world.Events.Add(0f, () =>
-        {
-            bahamut = Spawn(BNpcBaseId.BahamutPrime, BNpcNameId.BahamutPrime, Vector2.Zero, MathF.PI, targetable: true);
-            bahamut?.PlayActionTimeline(TimelineId.BahamutPrimeLands);
-        });
+        world.Events.Add(0f, SpawnBahamut);
 
         world.Events.Add(GrandOctetCast, () => bahamut?.Cast(ActionId.GrandOctet, animationLock: 3.1f));
         world.Events.Add(NaelAndTwintaniaAppear, () =>
@@ -147,6 +147,14 @@ public sealed class UcobP3GrandOctetScenario : IScenario
         world.Events.Add(TwintaniaLeaves, () => twintania?.PlayActionTimeline(TimelineId.TwintaniaLeaves));
         world.Events.Add(TwintaniaLeaves + FadesAfterLeaving, () => twintania?.FadeOut());
         world.Events.Add(End, DespawnAll);
+        BetweenTrios.Play(world, SpawnBahamut, () => bahamut);
+    }
+
+    private void SpawnBahamut()
+    {
+        if (bahamut is not null) return;
+        bahamut = Spawn(BNpcBaseId.BahamutPrime, BNpcNameId.BahamutPrime, Vector2.Zero, MathF.PI, targetable: true);
+        bahamut?.PlayActionTimeline(TimelineId.BahamutPrimeLands);
     }
 
     public void Tick(float delta, float elapsed) => twisters.Tick();

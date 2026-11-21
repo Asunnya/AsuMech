@@ -25,6 +25,9 @@ public sealed class UcobP3FellruinScenario : IScenario
     public void DrawSettings() => settingsWindow.Draw();
     public object SettingsOverrides => settingsWindow.Overrides;
 
+    public static readonly UcobBetweenTrios BetweenTrios = new(15.6f, PartyRole.MainTank,
+        (-9.33f, Actions.FlareBreath), (-7.24f, Actions.FlareBreath), (-5.14f, Actions.FlareBreath));
+
     public const float FellruinTrio = 4.00f;
     private const float NaelAndTwintaniaShow = 4.05f;
     private const float BahamutUntargetable = 10.02f;
@@ -66,6 +69,7 @@ public sealed class UcobP3FellruinScenario : IScenario
         state = new State(world.Rng, settingsWindow.Overrides);
         neurolinks.Clear();
         tempestWing.Clear();
+        bahamut = nael = twintania = null;
 
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<State>)AiStrats[idx]).Run(state, world);
@@ -99,6 +103,7 @@ public sealed class UcobP3FellruinScenario : IScenario
         world.Events.Add(GeminiVanish, () => { foreach (var geminus in gemini) geminus.SetVisible(false); });
         world.Events.Add(Flatten, () => bahamut?.Cast(Actions.Flatten, party.Get(PartyRole.OffTank)));
         world.Events.Add(End, DespawnAll);
+        BetweenTrios.Play(world, SpawnBosses, () => bahamut);
     }
 
     public void Tick(float delta, float elapsed)
@@ -109,6 +114,7 @@ public sealed class UcobP3FellruinScenario : IScenario
 
     private void SpawnBosses()
     {
+        if (bahamut is not null) return;
         bahamut = Spawn(BNpcBaseId.BahamutPrime, BNpcNameId.BahamutPrime, Vector2.Zero, MathF.PI, true, EnemyListMode.Always, SpawnVisibility.Visible);
         bahamut?.PlayActionTimeline(TimelineId.BahamutPrimeLands);
         nael = Spawn(BNpcBaseId.NaelDeusDarnus, BNpcNameId.NaelDeusDarnus, NaelShowsAt, 0f, false, EnemyListMode.Never, SpawnVisibility.HiddenUntilShown);
