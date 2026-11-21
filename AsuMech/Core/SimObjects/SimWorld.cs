@@ -47,6 +47,10 @@ public sealed partial class SimWorld : ISimObject, IDisposable
     // The run's mechanic randomness; engine noise draws from a named Stream instead, so it
     // can't shift these rolls. Replaced per run by Game (see Reseed).
     public Rng Rng { get; private set; } = Rng.Detached;
+
+    // This run carries straight on from the previous part of a Whole phase or Run to end, so a
+    // scenario can drop the lead-in the real fight has no room for there.
+    public bool Continued { get; set; }
     private readonly Dictionary<string, Rng> streams = new();
 
     public void Reseed(int seed)

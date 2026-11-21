@@ -152,6 +152,7 @@ public sealed class ScenarioSession
         world.Reseed(seed);
         world.Failed += OnMechanicFailed;
         Plugin.Log.Info($"Game: {Scenario.Name} seed {seed}");
+        world.Continued = run.Continued;
         world.ApplyParty(roster, keepPlaces: run.Continued);
         instance.ApplyPhase(phase);
         Natives.Director.Commence();
