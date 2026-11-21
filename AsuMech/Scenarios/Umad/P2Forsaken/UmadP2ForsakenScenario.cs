@@ -32,6 +32,7 @@ namespace AsuMech.Scenarios.Umad.P2Forsaken;
 public sealed class UmadP2ForsakenScenario : IMultiplayerReplayable
 {
     public string Name => "Forsaken";
+    public float BgmSecondsAtStart => 26.0f;
     public IPhase Phase => UmadZone.P2;
     public bool SupportsMultiplayer => true;
 

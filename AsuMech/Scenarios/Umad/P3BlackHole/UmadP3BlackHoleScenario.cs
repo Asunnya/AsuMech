@@ -23,6 +23,7 @@ namespace AsuMech.Scenarios.Umad.P3BlackHole;
 public sealed class UmadP3BlackHoleScenario : IMultiplayerReplayable
 {
     public string Name => "Black Hole";
+    public float BgmSecondsAtStart => 163.55f;
     public IPhase Phase => UmadZone.P3;
     public bool SupportsMultiplayer => true;
 

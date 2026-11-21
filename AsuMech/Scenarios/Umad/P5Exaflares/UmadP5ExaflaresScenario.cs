@@ -21,6 +21,7 @@ namespace AsuMech.Scenarios.Umad.P5Exaflares;
 public sealed class UmadP5ExaflaresScenario : IMultiplayerReplayable
 {
     public string Name => "Exaflares";
+    public float BgmSecondsAtStart => 111.73f;
     public IPhase Phase => UmadZone.P5;
     public bool SupportsSolo => true;
     public bool SupportsMultiplayer => true;

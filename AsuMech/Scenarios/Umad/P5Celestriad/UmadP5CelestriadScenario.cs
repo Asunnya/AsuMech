@@ -24,6 +24,7 @@ namespace AsuMech.Scenarios.Umad.P5Celestriad;
 public sealed class UmadP5CelestriadScenario : IMultiplayerReplayable
 {
     public string Name => "Celestriad";
+    public float BgmSecondsAtStart => 68.69f;
     public IPhase Phase => UmadZone.P5;
     public bool SupportsSolo => false;
     public bool SupportsMultiplayer => true;
