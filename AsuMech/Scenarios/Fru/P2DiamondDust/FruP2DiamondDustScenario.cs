@@ -18,6 +18,7 @@ public sealed class FruP2DiamondDustScenario : IMultiplayerReplayable
     public string Name => "Diamond Dust";
     public IPhase Phase => FruZone.P2;
     public bool SupportsMultiplayer => true;
+    public float BgmSecondsAtStart => 23.9f;
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new FruP2DiamondDustAi()];
 

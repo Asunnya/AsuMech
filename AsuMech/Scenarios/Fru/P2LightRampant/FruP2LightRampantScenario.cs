@@ -20,6 +20,7 @@ public sealed class FruP2LightRampantScenario : IMultiplayerReplayable
     public string Name => "Light Rampant";
     public IPhase Phase => FruZone.P2;
     public bool SupportsMultiplayer => true;
+    public float BgmSecondsAtStart => 124.8f;
     // The strat reads each player's Lightsteeped stacks.
     public bool MirrorsHostStatuses => true;
 
