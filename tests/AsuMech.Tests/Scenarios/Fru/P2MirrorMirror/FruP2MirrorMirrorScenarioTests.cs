@@ -11,7 +11,8 @@ namespace AsuMech.Tests;
 // the supports.
 //
 //    7.75 Hallowed Ray from (0,0) at the stack on MT.
-//   25.02 Scythe Kick from (7.5,0); tanks and melee around her, the rest around the blue mirror.
+//   25.02 Scythe Kick from (7.5,0); tanks and melee around her (MT at (9.3,-1.26)), the rest around
+//         the blue mirror.
 //   31.37 House of Light from the blue mirror, 31.45 from the Usurper, each at its four nearest.
 //   41.42 the reds' House of Light: the healers and ranged at N, tanks and melee at E.
 //   46.84 Banish pairs: MT+R (-5.1,-5.1), OT+C (5.1,-5.1), RH+M1 (-5.1,5.1), SH+M2 (5.1,5.1).
@@ -56,7 +57,7 @@ public class FruP2MirrorMirrorScenarioTests
     [Test]
     public void TwoBaitsOnOneSpotAtTheUsurperDie()
         => MirrorMirror(MeleeDpsA)
-            .TeleportAt(31.2f, to: new(7.118f, 2.167f))
+            .TeleportAt(31.2f, to: new(9.302f, -1.262f))
             .ShouldKill(ActionId.HouseOfLightDiamondDust, MainTank, MeleeDpsA);
 
     [Test]

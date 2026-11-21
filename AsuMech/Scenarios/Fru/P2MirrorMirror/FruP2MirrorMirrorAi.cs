@@ -40,10 +40,10 @@ public sealed class FruP2MirrorMirrorAi : IScenarioAi<FruP2MirrorMirrorState>
     private Vector3? KickBait(PartyRole role) => BaitsWithBoss(role)
         ? Around(state.BossSpot, Vector3.Normalize(state.BossSpot), role switch
         {
-            PartyRole.MainTank => 100,
-            PartyRole.OffTank => -100,
-            PartyRole.MeleeDpsA => 35,
-            _ => -35,
+            PartyRole.MainTank => -35,
+            PartyRole.OffTank => 35,
+            PartyRole.MeleeDpsA => -100,
+            _ => 100,
         })
         : Around(state.Blue, -Vector3.Normalize(state.Blue), role switch
         {

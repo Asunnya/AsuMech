@@ -45,16 +45,16 @@
       "rule": "The Usurper walks to 7.5m opposite the blue mirror. Tanks and melee hug her, healers and ranged hug the blue mirror: Scythe Kick is a donut from both, so stay inside it, and your angle spreads the House of Light cones that follow.",
       "roles": {
         "MainTank": {
-          "rule": "Beside the boss, to her right as seen from the centre, slightly on the centre side."
+          "rule": "Behind the boss on the wall side, a little left as seen from the centre."
         },
         "OffTank": {
-          "rule": "Beside the boss, to her left as seen from the centre, slightly on the centre side."
+          "rule": "Behind the boss on the wall side, a little right as seen from the centre."
         },
         "MeleeDpsA": {
-          "rule": "Close behind the boss on the wall side, a little right as seen from the centre."
+          "rule": "Beside the boss, to her left as seen from the centre, slightly on the centre side."
         },
         "MeleeDpsB": {
-          "rule": "Close behind the boss on the wall side, a little left as seen from the centre."
+          "rule": "Beside the boss, to her right as seen from the centre, slightly on the centre side."
         },
         "RegenHealer": {
           "rule": "Just inside the blue mirror, well off to its right as you face the centre."
