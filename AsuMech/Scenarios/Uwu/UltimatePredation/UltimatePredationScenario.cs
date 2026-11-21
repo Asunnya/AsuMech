@@ -22,6 +22,7 @@ public class UltimatePredationScenario : IMultiplayerReplayable
     public IReadOnlyList<IScenarioAi> AiStrats => [new UltimatePredationAi()];
     public void DrawSettings() => settingsWindow.Draw();
     public object SettingsOverrides => settingsWindow.Overrides;
+    public float BgmSecondsAtStart => 67.9f;
 
     private readonly UltimatePredationSettingsWindow settingsWindow = new();
 

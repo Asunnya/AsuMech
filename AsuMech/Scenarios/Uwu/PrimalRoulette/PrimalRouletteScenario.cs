@@ -20,6 +20,12 @@ public sealed class PrimalRouletteScenario : IScenario
     public IReadOnlyList<IScenarioAi> AiStrats => [new PrimalRouletteAi()];
     public void DrawSettings() => settingsWindow.Draw();
     public object SettingsOverrides => settingsWindow.Overrides;
+    public float BgmSecondsAtStart => TrackAtZero + startsAt;
+
+    private const float TrackAtZero = 241.5f;
+    // Suppression has already cast this Tank Purge, and its razor plumes hold that part open until
+    // after Ultima is back at the centre, so the part carrying on starts as Ultima reappears there.
+    private const float ContinuedFrom = 10.65f;
 
     private const float TankPurgeDamage = 0.6f;
     private const float UltimaDamage = 0.66f;
@@ -70,6 +76,7 @@ public sealed class PrimalRouletteScenario : IScenario
     private UwuUtils utils = null!;
     private DamageSolver damage = null!;
     private PrimalRouletteState state = null!;
+    private float startsAt;
 
     private SimEnemy? ultima;
     private SimEnemy? garuda;
@@ -114,18 +121,19 @@ public sealed class PrimalRouletteScenario : IScenario
         wickedWheelSnapshot = [];
         wickedTornadoSnapshot = [];
 
-        if (selectedAi is { } idx && idx < AiStrats.Count)
-            ((IScenarioAi<PrimalRouletteState>)AiStrats[idx]).Run(state, world);
+        if (!world.Continued) RunAi(selectedAi);
 
-        world.Events.Add(0f, () => utils.SpawnArenaFloor());
-        world.Events.Add(0f, SpawnBosses);
+        startsAt = world.Continued ? ContinuedFrom : 0f;
+        world.Events.Add(startsAt, () => utils.SpawnArenaFloor());
+        world.Events.Add(startsAt, SpawnBosses);
+        if (world.Continued) world.Events.Add(startsAt, UltimaStaysWarpedOut);
 
         world.Events.Add(2.50f, () => CastSelf(ultima, ActionId.TankPurge, 3.7f));
         world.Events.Add(6.46f, () => Raidwide(ultima, ActionId.TankPurge, TankPurgeDamage, 2.1f));
         world.Events.Add(8.60f, () => ultima?.SetTargetable(false));
         world.Events.Add(8.60f, () => ultima?.PlayActionTimeline(ActionTimelineId.WarpStart));
         world.Events.Add(10.65f, () => ultima?.SetPosition(CentreFacingNorth));
-        world.Events.Add(10.74f, () => ultima?.PlayActionTimeline(ActionTimelineId.WarpEnd));
+        world.Events.Add(10.74f, () => { ultima?.SetVisible(true); ultima?.PlayActionTimeline(ActionTimelineId.WarpEnd); });
         world.Events.Add(12.88f, () => ultima?.SetTargetable(true));
         world.Events.Add(12.88f, () => CastSelf(ultima, ActionId.Ultima, 4.7f));
         world.Events.Add(17.87f, () => Raidwide(ultima, ActionId.Ultima, UltimaDamage, 2.1f));
@@ -154,6 +162,27 @@ public sealed class PrimalRouletteScenario : IScenario
         // The group always burned Ultima down from here; what it does if it lives was never seen.
         world.Events.Add(116.10f, () => PlayEffect(ultima, ActionId.UltimaAfterRoulette, 1.1f));
         world.Events.Add(122.00f, DespawnAll);
+        PickUpFromThePreviousPart(selectedAi);
+    }
+
+    private void UltimaStaysWarpedOut()
+    {
+        ultima?.SetTargetable(false);
+        ultima?.SetVisible(false);
+    }
+
+    private void RunAi(int? selectedAi)
+    {
+        if (selectedAi is { } idx && idx < AiStrats.Count)
+            ((IScenarioAi<PrimalRouletteState>)AiStrats[idx]).Run(state, world);
+    }
+
+    // The bots' steps before the cut still fire at once, so they stand where the strat has them.
+    private void PickUpFromThePreviousPart(int? selectedAi)
+    {
+        if (!world.Continued) return;
+        world.Events.KeepWindow(startsAt, float.MaxValue);
+        world.Events.FromRunStart(() => { RunAi(selectedAi); return true; });
     }
 
     public void Tick(float delta, float elapsed)
@@ -198,7 +227,7 @@ public sealed class PrimalRouletteScenario : IScenario
 
     private void SpawnBosses()
     {
-        ultima = SpawnEnemy(BNpcBaseId.UltimaWeapon, BNpcNameId.UltimaWeapon, UltimaAfterSuppression, true, true, EnemyListMode.Always, 0x11);
+        ultima = SpawnEnemy(BNpcBaseId.UltimaWeapon, BNpcNameId.UltimaWeapon, world.Continued ? CentreFacingNorth : UltimaAfterSuppression, true, true, EnemyListMode.Always, 0x11);
         garuda = SpawnHiddenPrimal(BNpcBaseId.Garuda, BNpcNameId.Garuda);
         ifrit = SpawnHiddenPrimal(BNpcBaseId.Ifrit, BNpcNameId.Ifrit);
         titan = SpawnHiddenPrimal(BNpcBaseId.Titan, BNpcNameId.Titan);

@@ -27,6 +27,13 @@ public sealed class DsrP5DeathScenario : IScenario
     private readonly DsrP5DeathSettingsWindow settingsWindow = new();
     public object SettingsOverrides => settingsWindow.Overrides;
     public void DrawSettings() => settingsWindow.Draw();
+    public float BgmSecondsAtStart => TrackAtZero + startsAt;
+
+    private const float TrackAtZero = 83.26f;
+    // Wrath clears everything away 1.22 s before this cast, and the part carrying on starts a second
+    // after that, so it opens just before the cast.
+    private const float ContinuedFrom = 2.78f;
+    private float startsAt;
 
     public const float Death = 3.0f;
     public const float DoomsMarked = Death + 11.72f;
@@ -110,14 +117,14 @@ public sealed class DsrP5DeathScenario : IScenario
         chainBurned.Clear();
         twistersArmed = false;
 
-        if (selectedAi is { } idx && idx < AiStrats.Count)
-            ((IScenarioAi<DsrP5DeathState>)AiStrats[idx]).Run(state, world);
+        if (!world.Continued) RunAi(selectedAi);
 
-        world.Events.Add(0f, () => world.EnforceArenaBoundary(Geometry.ThordanArenaRadius, "Touched the death wall"));
-        world.Events.Add(0f, () => world.PlaceWaymarks(NaurWaymarks));
-        world.Events.Add(0f, SpawnThordan);
-        world.Events.Add(0.20f, () => world.Map.DirectorUpdate(ArenaDirector.Layout, 0U, ArenaDirector.WrathLayout));
-        world.Events.Add(0.20f, () => world.Map.DirectorUpdate(ArenaDirector.MapChange, ArenaDirector.ThordanMap));
+        startsAt = world.Continued ? ContinuedFrom : 0f;
+        world.Events.Add(startsAt, () => world.EnforceArenaBoundary(Geometry.ThordanArenaRadius, "Touched the death wall"));
+        world.Events.Add(startsAt, () => world.PlaceWaymarks(NaurWaymarks));
+        world.Events.Add(startsAt, SpawnThordan);
+        world.Events.Add(startsAt + 0.20f, () => world.Map.DirectorUpdate(ArenaDirector.Layout, 0U, ArenaDirector.WrathLayout));
+        world.Events.Add(startsAt + 0.20f, () => world.Map.DirectorUpdate(ArenaDirector.MapChange, ArenaDirector.ThordanMap));
         world.Events.Add(Death, () => CastSelf(thordan, ActionId.DeathOfTheHeavens, 3.7f));
         world.Events.Add(Death + 3.96f, () => PlayEffect(thordan, ActionId.DeathOfTheHeavens, 1.1f));
         world.Events.Add(Death + 7.04f, ThordanLeapsOut);
@@ -162,6 +169,21 @@ public sealed class DsrP5DeathScenario : IScenario
         world.Events.Add(Death + 38.23f, HolyMeteor);
         world.Events.Add(Death + 44.00f, () => meteors.ForEach(m => m.FadeOut()));
         world.Events.Add(Death + 46.00f, DespawnAll);
+        PickUpFromThePreviousPart(selectedAi);
+    }
+
+    private void RunAi(int? selectedAi)
+    {
+        if (selectedAi is { } idx && idx < AiStrats.Count)
+            ((IScenarioAi<DsrP5DeathState>)AiStrats[idx]).Run(state, world);
+    }
+
+    // The bots' steps before the cut still fire at once, so they stand where the strat has them.
+    private void PickUpFromThePreviousPart(int? selectedAi)
+    {
+        if (!world.Continued) return;
+        world.Events.KeepWindow(startsAt, float.MaxValue);
+        world.Events.FromRunStart(() => { RunAi(selectedAi); return true; });
     }
 
     public void Tick(float delta, float elapsed)

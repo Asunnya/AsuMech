@@ -6,7 +6,6 @@ using AsuMech.Core.SimObjects;
 
 namespace AsuMech.Scenarios.Uwu;
 
-// Primal phases get a "P<n>" menu prefix; all share one BGM.
 public sealed class UwuZone : IZone
 {
     public static readonly UwuZone Instance = new();
@@ -17,7 +16,7 @@ public sealed class UwuZone : IZone
     public static readonly Phase Garuda = new(Instance, "P1", GalesWeather, 547);
     public static readonly Phase Ifrit = new(Instance, "P2", HeatWavesWeather, 547);
     public static readonly Phase Titan = new(Instance, "P3", EruptionsWeather, 547);
-    public static readonly Phase Ultima = new(Instance, "", 95, 547);
+    public static readonly Phase Ultima = new(Instance, "P4", 95, 547);
 
     public string Name => "The Weapon's Refrain";
 

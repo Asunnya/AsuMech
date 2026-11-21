@@ -22,6 +22,14 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
     public IReadOnlyList<IScenarioAi> AiStrats => [new UltimateSuppressionAi()];
     public void DrawSettings() => settingsWindow.Draw();
     public object SettingsOverrides => settingsWindow.Overrides;
+    public float BgmSecondsAtStart => TrackAtZero + startsAt;
+
+    private const float TrackAtZero = 204.1f;
+    // Annihilation ends on this part's Suppression cast, and the part carrying on starts a second
+    // after its effect, so it picks up there instead of casting Suppression again.
+    private const float ContinuedFrom = 6.47f;
+    private static readonly Placement UltimaAfterAnnihilation = new(new Vector3(0f, 0f, -2.8f), MathF.PI);
+    private float startsAt;
 
     private readonly UltimateSuppressionSettingsWindow settingsWindow = new();
 
@@ -75,9 +83,9 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
         razorPlumesFired.Clear();
         razorPlumesCircling = null;
         DespawnRazorPlumes();
+        startsAt = world.Continued ? ContinuedFrom : 0f;
 
-        if (selectedAi is { } idx && idx < AiStrats.Count)
-            ((IScenarioAi<UltimateSuppressionState>)AiStrats[idx]).Run(state, world);
+        if (!world.Continued) RunAi(selectedAi);
 
         Init();
         Arena();
@@ -85,10 +93,25 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
         Garuda();
         Ifrit();
         Titan();
+        PickUpFromThePreviousPart(selectedAi);
     }
 
     public void OnActionResolved(ActionResolved resolved) => LeaveWhirlwindBehindMistralSong(resolved);
     public void OnStatusLost(StatusLost lost) => SuperCyclone.FollowMesohigh(world, lost, garuda);
+
+    private void RunAi(int? selectedAi)
+    {
+        if (selectedAi is { } idx && idx < AiStrats.Count)
+            ((IScenarioAi<UltimateSuppressionState>)AiStrats[idx]).Run(state, world);
+    }
+
+    // The bots' steps before the cut still fire at once, so they stand where the strat has them.
+    private void PickUpFromThePreviousPart(int? selectedAi)
+    {
+        if (!world.Continued) return;
+        world.Events.KeepWindow(startsAt, float.MaxValue);
+        world.Events.FromRunStart(() => { RunAi(selectedAi); return true; });
+    }
 
     public void Tick(float delta, float elapsed)
     {
@@ -136,7 +159,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
 
     private void Init()
     {
-        world.Events.Add(0, () =>
+        world.Events.Add(startsAt, () =>
         {
             ultima = world.SpawnEnemy(
                 new EnemySpawnConfig(
@@ -147,7 +170,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
                     Targetable: true,
                     EnemyList: EnemyListMode.Always,
                     Visibility: SpawnVisibility.Visible,
-                    Placement: new Placement(
+                    Placement: world.Continued ? UltimaAfterAnnihilation : new Placement(
                         new Vector3(0, 0, -10),
                         0),
                     InitialModeAttributeFlags: 0x11)
@@ -243,7 +266,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
         });
 
         // Once the engine has created the actors; an ActorControl sent before that is dropped.
-        world.Events.Add(0.5f, () =>
+        world.Events.Add(startsAt + 0.5f, () =>
         {
             utils.Awaken(ultima, true);
             utils.Awaken(garuda, false);
@@ -254,7 +277,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
 
     private void Arena()
     {
-        world.Events.Add(0, () =>
+        world.Events.Add(startsAt, () =>
         {
             var config = new EventObjectSpawnConfig
             {

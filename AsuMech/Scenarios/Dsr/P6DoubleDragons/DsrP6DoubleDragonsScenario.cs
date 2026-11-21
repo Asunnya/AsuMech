@@ -26,7 +26,7 @@ public sealed class DsrP6DoubleDragonsScenario : IScenario
     internal DsrP6DoubleDragonsScenario(bool secondHalf) => this.secondHalf = secondHalf;
 
     public string Name => secondHalf ? "Hallowed Wings 2 to Cauterize" : "Wyrmsbreath to Wroth Flames";
-    public float BgmSecondsAtStart => secondHalf ? SecondHalfStart : 0f;
+    public float BgmSecondsAtStart => startsAt;
     public IPhase Phase => DsrZone.DoubleDragons;
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new DsrP6DoubleDragonsAi()];
@@ -55,6 +55,8 @@ public sealed class DsrP6DoubleDragonsScenario : IScenario
     public const float FlamesResolve = 93.27f;
     public const float FirstHalfEnd = 100.0f;
     public const float SecondHalfStart = 99.0f;
+    // The first half holds the run open until FirstHalfEnd, and the part carrying on starts a second later.
+    private const float ContinuedHalfStart = FirstHalfEnd + 1.0f;
     public const float SecondAkhAfahCast = 101.37f;
     public const float SecondAkhAfahLands = 109.56f;
     public const float SecondHallowedWingsCast = 114.05f;
@@ -135,6 +137,7 @@ public sealed class DsrP6DoubleDragonsScenario : IScenario
     private SimParty party = null!;
     private DamageSolver damage = null!;
     private DsrP6DoubleDragonsState state = null!;
+    private float startsAt;
 
     private SimEnemy? nidhogg;
     private SimEnemy? hraesvelgr;
@@ -282,7 +285,8 @@ public sealed class DsrP6DoubleDragonsScenario : IScenario
     // The Vow sits on the off tank as the second half opens; the main tank and the first holder are atoned.
     private void StartAtTheSecondAkhAfah()
     {
-        world.Events.KeepWindow(SecondHalfStart, SecondHalfEnd);
+        startsAt = world.Continued ? ContinuedHalfStart : SecondHalfStart;
+        world.Events.KeepWindow(startsAt, SecondHalfEnd);
         world.Events.Add(0f, () => world.EnforceArenaBoundary(new SquareArena(Geometry.ArenaHalfWidth), "Touched the arena wall"));
         world.Events.Add(0f, () => world.PlaceWaymarks(NaurWaymarks));
         world.Events.Add(0f, () => world.Map.DirectorUpdate(ArenaDirector.Layout, 1U, ArenaDirector.DoubleDragonsLayout));
@@ -295,11 +299,11 @@ public sealed class DsrP6DoubleDragonsScenario : IScenario
             hraesvelgr?.SetTargetable(true);
             if (party.Get(PartyRole.OffTank) is { } offTank)
             {
-                offTank.AddStatus(StatusId.MortalVow, VowPasses[2] - SecondHalfStart + 0.2f);
+                offTank.AddStatus(StatusId.MortalVow, VowPasses[2] - startsAt + 0.2f);
                 vowHolder = offTank;
             }
-            party.Get(PartyRole.MainTank)?.AddStatus(StatusId.MortalAtonement, VowPasses[1] + MortalAtonementSeconds - SecondHalfStart);
-            party.Get(state.VowTarget)?.AddStatus(StatusId.MortalAtonement, VowPasses[0] + MortalAtonementSeconds - SecondHalfStart);
+            party.Get(PartyRole.MainTank)?.AddStatus(StatusId.MortalAtonement, VowPasses[1] + MortalAtonementSeconds - startsAt);
+            party.Get(state.VowTarget)?.AddStatus(StatusId.MortalAtonement, VowPasses[0] + MortalAtonementSeconds - startsAt);
         });
     }
 

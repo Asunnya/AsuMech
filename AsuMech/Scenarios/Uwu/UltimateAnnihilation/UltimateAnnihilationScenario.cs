@@ -20,6 +20,12 @@ public sealed class UltimateAnnihilationScenario : IScenario
     public IReadOnlyList<IScenarioAi> AiStrats => [new UltimateAnnihilationAi()];
     public void DrawSettings() => settingsWindow.Draw();
     public object SettingsOverrides => settingsWindow.Overrides;
+    public float BgmSecondsAtStart => TrackAtZero + startsAt;
+
+    private const float TrackAtZero = 146.2f;
+    // Predation ends as Ultima warps out after its own Annihilation cast, and the part carrying on
+    // starts a second later, so it picks up there instead of casting Annihilation again.
+    private const float ContinuedFrom = 10.94f;
 
     private const int WeightOfTheLandPuddles = 4;
     private const float WeightOfTheLandRadius = 6f;
@@ -73,6 +79,7 @@ public sealed class UltimateAnnihilationScenario : IScenario
     private UwuUtils utils = null!;
     private DamageSolver damage = null!;
     private UltimateAnnihilationState state = null!;
+    private float startsAt;
 
     private SimEnemy? ultima;
     private SimEnemy? garuda;
@@ -113,12 +120,13 @@ public sealed class UltimateAnnihilationScenario : IScenario
         crimsonCycloneSnapshot = [];
         homingLasersSnapshot = [];
 
-        if (selectedAi is { } idx && idx < AiStrats.Count)
-            ((IScenarioAi<UltimateAnnihilationState>)AiStrats[idx]).Run(state, world);
+        if (!world.Continued) RunAi(selectedAi);
 
-        world.Events.Add(0f, () => utils.SpawnArenaFloor());
-        world.Events.Add(0f, SpawnBosses);
-        world.Events.Add(0f, GiveEveryoneThermalLow);
+        startsAt = world.Continued ? ContinuedFrom : 0f;
+        world.Events.Add(startsAt, () => utils.SpawnArenaFloor());
+        world.Events.Add(startsAt, SpawnBosses);
+        if (world.Continued) world.Events.Add(startsAt, UltimaStaysWarpedOut);
+        world.Events.Add(startsAt, GiveEveryoneThermalLow);
 
         world.Events.Add(2.50f, () => CastSelf(ultima, ActionId.UltimateAnnihilation, 2.7f));
         world.Events.Add(5.48f, () => PlayEffect(ultima, ActionId.UltimateAnnihilation, 4.5f));
@@ -193,6 +201,7 @@ public sealed class UltimateAnnihilationScenario : IScenario
         {
             world.Events.Add(60.30f, () => CastSelf(ultima, ActionId.UltimateSuppression, 2.7f));
             world.Events.Add(63.27f, () => PlayEffect(ultima, ActionId.UltimateSuppression, 4.5f));
+            PickUpFromThePreviousPart(selectedAi);
             return;
         }
         world.Events.Add(63.30f, CastEyeOfTheStorm);
@@ -207,6 +216,27 @@ public sealed class UltimateAnnihilationScenario : IScenario
         world.Events.Add(77.81f, ResolveEyeOfTheStorm);
         world.Events.Add(80.22f, () => CastSelf(ultima, ActionId.UltimateSuppression, 2.7f));
         world.Events.Add(83.19f, () => PlayEffect(ultima, ActionId.UltimateSuppression, 4.5f));
+        PickUpFromThePreviousPart(selectedAi);
+    }
+
+    private void RunAi(int? selectedAi)
+    {
+        if (selectedAi is { } idx && idx < AiStrats.Count)
+            ((IScenarioAi<UltimateAnnihilationState>)AiStrats[idx]).Run(state, world);
+    }
+
+    // The bots' steps before the cut still fire at once, so they stand where the strat has them.
+    private void PickUpFromThePreviousPart(int? selectedAi)
+    {
+        if (!world.Continued) return;
+        world.Events.KeepWindow(startsAt, float.MaxValue);
+        world.Events.FromRunStart(() => { RunAi(selectedAi); return true; });
+    }
+
+    private void UltimaStaysWarpedOut()
+    {
+        ultima?.SetTargetable(false);
+        ultima?.SetVisible(false);
     }
 
     public void Tick(float delta, float elapsed)
@@ -293,6 +323,7 @@ public sealed class UltimateAnnihilationScenario : IScenario
 
     private void WarpInBosses()
     {
+        ultima?.SetVisible(true);
         ultima?.PlayActionTimeline(ActionTimelineId.WarpEnd);
         foreach (var primal in new[] { garuda, ifrit, titan })
         {
