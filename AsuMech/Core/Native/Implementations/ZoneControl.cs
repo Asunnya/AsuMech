@@ -360,6 +360,7 @@ public sealed unsafe partial class ZoneControl : IZoneControl
     {
         if (!IsActive) return;
         SendPendingWeather();
+        if (armedHousing != null) ChambersFurniture.Hide();
 
         if (weatherDiagStartMs is not { } start) return;
         var elapsedMs = Environment.TickCount64 - start;
@@ -463,6 +464,7 @@ public sealed unsafe partial class ZoneControl : IZoneControl
         envSimulatorSnapshot = null;
         pendingWeather = null;
         RestoreOriginalWeather();
+        ChambersFurniture.Show();
 
         // The lift requires Dalamud to read the inn again.
         if (territoryMirrored)
