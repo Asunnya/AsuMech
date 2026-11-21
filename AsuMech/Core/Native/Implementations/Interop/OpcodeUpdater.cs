@@ -1,4 +1,5 @@
 using System;
+using AsuMech.Core.Native.Implementations;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -20,7 +21,8 @@ internal sealed unsafe class OpcodeUpdater : IDisposable
     internal static bool Downloading { get; private set; }
 
     // Why the last fetch left the stored list as it was, for the Settings line; null after a good one.
-    internal static string? LastFailure { get; private set; }
+    internal static string? LastFailure { get => lastFailure; private set => lastFailure = value; }
+    private static volatile string? lastFailure;
 
     internal static OpcodeUpdater? Instance { get; private set; }
 
@@ -41,7 +43,7 @@ internal sealed unsafe class OpcodeUpdater : IDisposable
     // Framework thread.
     internal void Refresh()
     {
-        if (Downloading || disposed) return;
+        if (Downloading || disposed || ZoneControl.StayUnderway) return;
         var version = new string(Framework.Instance()->GameVersionString);
         var current = CurrentVersion;
         Downloading = true;
@@ -87,7 +89,7 @@ internal sealed unsafe class OpcodeUpdater : IDisposable
                 Plugin.Log.Warning($"[OpcodeUpdater] Refused the opcode file for {from}: {problem}.");
                 LastFailure = $"Hyperborea's file for {from} was refused: {problem}";
                 // A refused list for this very patch says the stored one is wrong too: runs stay blocked.
-                handedOff = from == gameVersion ? ForgetStoredOpcodes() : KeepStoredOpcodes(current);
+                handedOff = from != gameVersion ? KeepStoredOpcodes(current) : ForgetStoredOpcodes(current);
                 return;
             }
             var fallback = from == gameVersion ? "" : from;
@@ -103,6 +105,12 @@ internal sealed unsafe class OpcodeUpdater : IDisposable
                 Plugin.Log.Information($"[OpcodeUpdater] Opcodes updated: ZoneUp {opcodes.ZoneUp}, ZoneDown {string.Join(", ", opcodes.ZoneDown)}");
             });
             handedOff = true;
+        }
+        catch (Exception e) when (e is JsonException or InvalidOperationException || e.InnerException is JsonException)
+        {
+            Plugin.Log.Warning($"[OpcodeUpdater] Could not read GitHub's opcode file list: {e.Message}");
+            LastFailure = "GitHub's list of opcode files could not be read (rate limited? try again in a while)";
+            if (!disposed && !handedOff) handedOff = KeepStoredOpcodes(current);
         }
         catch (Exception e)
         {
@@ -123,7 +131,7 @@ internal sealed unsafe class OpcodeUpdater : IDisposable
     {
         Plugin.Framework.Run(() =>
         {
-            if (!disposed && Plugin.Config.ZoneUpOpcode != 0 && Plugin.Config.ZoneDownOpcodes.Length > 0 && Plugin.Config.ZoneFirewallGameVersion != current)
+            if (!disposed && !ZoneControl.StayUnderway && Plugin.Config.ZoneUpOpcode != 0 && Plugin.Config.ZoneDownOpcodes.Length > 0 && Plugin.Config.ZoneFirewallGameVersion != current)
             {
                 Plugin.Log.Warning($"[OpcodeUpdater] Keeping the stored opcodes from {Plugin.Config.ZoneFirewallGameVersion}.");
                 Plugin.Config.ZoneFirewallOpcodesFrom = Plugin.Config.ZoneFirewallGameVersion.Split('_')[0] is { Length: > 0 } v ? v : "stored";
@@ -135,11 +143,12 @@ internal sealed unsafe class OpcodeUpdater : IDisposable
         return true;
     }
 
-    private bool ForgetStoredOpcodes()
+    private bool ForgetStoredOpcodes(string current)
     {
         Plugin.Framework.Run(() =>
         {
-            if (!disposed)
+            if (!disposed && !ZoneControl.StayUnderway
+                && FirewallOpcodes.RefusedOwnFileForgets(current, Plugin.Config.ZoneFirewallGameVersion, Plugin.Config.ZoneFirewallOpcodesFrom))
             {
                 Plugin.Config.ZoneUpOpcode = 0;
                 Plugin.Config.ZoneDownOpcodes = [];

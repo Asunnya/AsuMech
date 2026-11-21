@@ -106,7 +106,7 @@ public sealed partial class AsuMainWindow
         var selection = Picker.Selection;
         var refusal = plugin.Runs.StartRefusal(selection, solo);
         var restart = game.ActiveScenario is { } active && active == Selected;
-        if (refusal != null && ZoneControl.OpcodeRefusal != null && OpcodeUpdater.Instance is { } opcodes)
+        if (ZoneControl.OpcodeRefusal is { } opcodeRefusal && refusal == $"Cannot start: {opcodeRefusal}." && OpcodeUpdater.Instance is { } opcodes)
         {
             if (ImGui.Button(OpcodeUpdater.Downloading ? "Fetching...###start" : "↻ Opcodes###start", size)) opcodes.Refresh();
             if (ImGui.IsItemHovered())

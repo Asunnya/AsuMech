@@ -245,11 +245,14 @@ public sealed unsafe partial class ZoneControl
     // refuses it.
     public static string? StartBlockedReason() => StartBlockedReason(out _);
 
-    // `settling` names what the start is waiting on when that passes by itself within a few
-    // seconds, so a caller can retry instead of refusing.
     // Why the firewall's opcodes refuse a run, or null; a refresh of the list may clear it.
     public static string? OpcodeRefusal => Current?.OpcodeProblem();
 
+    // The filter reads the stored opcodes on every packet, so they may not change under a stay.
+    public static bool StayUnderway => Current is { IsActive: true } or { guardArmed: true };
+
+    // `settling` names what the start is waiting on when that passes by itself within a few
+    // seconds, so a caller can retry instead of refusing.
     public static string? StartBlockedReason(out string? settling)
     {
         settling = null;

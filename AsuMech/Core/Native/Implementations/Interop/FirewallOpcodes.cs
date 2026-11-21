@@ -52,6 +52,11 @@ internal sealed record FirewallOpcodes(ushort ZoneUp, uint[] ZoneDown)
         => fileNames.Where(n => n.EndsWith(".txt", StringComparison.Ordinal)).Select(n => n[..^4])
             .Where(v => string.CompareOrdinal(v, gameVersion) < 0).OrderBy(v => v, StringComparer.Ordinal).LastOrDefault();
 
+    // A refused file for the running patch drops the stored list only when that list was never this
+    // patch's own: one fetched for it before already passed the heartbeat check.
+    public static bool RefusedOwnFileForgets(string current, string stored, string storedFrom)
+        => stored != current || storedFrom.Length > 0;
+
     private static FirewallOpcodes? Fail(string why, out string? problem)
     {
         problem = why;

@@ -67,4 +67,14 @@ public class FirewallOpcodesTests
     [Test]
     public void TheGamesOwnFileIsNeverTheFallback()
         => Assert.That(FirewallOpcodes.LatestPublishedFor(Published, "2026.11.03.0000.0000"), Is.EqualTo("2026.10.16.0000.0000"));
+
+    [Test]
+    public void ARefusedOwnFileKeepsAListAlreadyFetchedForThisPatch()
+        => Assert.That(FirewallOpcodes.RefusedOwnFileForgets("v2_1", "v2_1", ""), Is.False);
+
+    [TestCase("v2_1", "2026.10.16.0000.0000")]
+    [TestCase("v1_1", "")]
+    [TestCase("", "")]
+    public void ARefusedOwnFileForgetsAFallbackOrStaleList(string stored, string from)
+        => Assert.That(FirewallOpcodes.RefusedOwnFileForgets("v2_1", stored, from), Is.True);
 }

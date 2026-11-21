@@ -328,27 +328,25 @@ public class ConfigWindow : Window, IDisposable
         accentUnsaved = false;
     }
 
-    // Zoning into a savage, ultimate or extreme asks in chat; the recorder itself never starts
-    // while a scenario is loaded.
     private void DrawFirewallOpcodes()
     {
-        var stored = configuration.ZoneFirewallGameVersion;
         var status = OpcodeUpdater.Downloading ? "Fetching the firewall opcodes..."
-            : configuration.ZoneUpOpcode == 0 || stored != OpcodeUpdater.CurrentVersion ? "No firewall opcodes for this patch: runs can't start."
-            : configuration.ZoneFirewallOpcodesFrom is { Length: > 0 } from ? $"Firewall opcodes: patch {from}'s (this patch has none published yet)."
+            : ZoneControl.OpcodeRefusal is { } refusal ? $"Runs can't start: {refusal}."
+            : configuration.ZoneFirewallOpcodesFrom is { Length: > 0 } from
+                ? $"Firewall opcodes: {(from == "stored" ? "an earlier patch's" : $"patch {from}'s")} (this patch has none published yet)."
             : "Firewall opcodes: this patch's.";
         ImGui.TextWrapped(status);
-        if (ZoneControl.OpcodeRefusal is { } refusal && !OpcodeUpdater.Downloading)
-            ImGui.TextWrapped($"Runs can't start: {refusal}.");
         if (OpcodeUpdater.LastFailure is { } failed && !OpcodeUpdater.Downloading)
             ImGui.TextWrapped($"Last try: {failed}.");
-        ImGui.BeginDisabled(OpcodeUpdater.Downloading || OpcodeUpdater.Instance == null);
+        ImGui.BeginDisabled(OpcodeUpdater.Downloading || OpcodeUpdater.Instance == null || ZoneControl.StayUnderway);
         if (ImGui.Button("Refresh opcodes")) OpcodeUpdater.Instance?.Refresh();
         ImGui.EndDisabled();
         if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
             ImGui.SetTooltip("Fetches the firewall's opcodes from Hyperborea's list again, e.g. once it publishes this patch's.");
     }
 
+    // Zoning into a savage, ultimate or extreme asks in chat; the recorder itself never starts
+    // while a scenario is loaded.
     private void DrawPullRecorder()
     {
         var ask = configuration.AskToRecordPulls;
