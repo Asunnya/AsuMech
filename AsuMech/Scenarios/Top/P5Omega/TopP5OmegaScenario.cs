@@ -20,6 +20,8 @@ public sealed class TopP5OmegaScenario : IMultiplayerReplayable
 {
     public string Name => "Omega";
     public IPhase Phase => TopZone.P5;
+    // UNVERIFIED: never observed; Delta's offset carried on by the usual gaps between the trios.
+    public float BgmSecondsAtStart => 190.54f;
     public bool SupportsSolo => true;
     public bool SupportsMultiplayer => true;
 

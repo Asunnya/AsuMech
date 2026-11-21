@@ -17,6 +17,8 @@ public sealed class TopP5SigmaScenario : IMultiplayerReplayable
 {
     public string Name => "Sigma";
     public IPhase Phase => TopZone.P5;
+    // UNVERIFIED: never observed; Delta's offset carried on by the usual gaps between the trios.
+    public float BgmSecondsAtStart => 98.34f;
     public bool SupportsMultiplayer => true;
 
     public void DrawSettings() => settingsWindow.Draw();

@@ -19,6 +19,7 @@ public sealed class TopP5DeltaScenario : IMultiplayerReplayable
 {
     public string Name => "Delta";
     public IPhase Phase => TopZone.P5;
+    public float BgmSecondsAtStart => 17.89f;
     public bool SupportsMultiplayer => true;
     public void DrawSettings() => settingsWindow.Draw();
     public bool HasPerPlayerSettings => true;
