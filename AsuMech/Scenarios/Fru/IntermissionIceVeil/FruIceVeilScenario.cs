@@ -18,6 +18,7 @@ public sealed class FruIceVeilScenario : IScenario
     public IPhase Phase => FruZone.P2;
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new FruIceVeilAi()];
+    public float BgmSecondsAtStart => 177.3f;
 
     private const float RayTetherSeconds = 5.16f;
     private const float PuddleShowsAfterRay = 0.53f;
@@ -26,6 +27,8 @@ public sealed class FruIceVeilScenario : IScenario
     private const float PuddleFadesAfterShowing = 8.85f;
     private const float PuddleLastsAfterShowing = 12.07f;
     private const float PuddleRadius = 4f;
+    // Straight on from Light Rampant, the Usurper auto-attacks this much longer before Absolute Zero.
+    private const float LongerAfterLightRampant = 4.75f;
 
     private SimWorld world = null!;
     private FruIceVeilState state = null!;
@@ -45,12 +48,16 @@ public sealed class FruIceVeilScenario : IScenario
         veilTethers.Clear();
         Array.Clear(rayTargets);
         puddles.Clear();
+        usurper = null;
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<FruIceVeilState>)AiStrats[idx]).Run(state, world);
 
         world.Events.Add(0f, SpawnUsurperAndGaia);
-        world.Events.Add(0.6f, () => usurper?.SetModelState(4));
-        world.Events.Add(0.6f, () => usurper?.AddStatusParam(TransfigurationStatus, UsurperLightTransformation));
+        if (!world.Continued)
+        {
+            world.Events.Add(0.6f, () => usurper?.SetModelState(4));
+            world.Events.Add(0.6f, () => usurper?.AddStatusParam(TransfigurationStatus, UsurperLightTransformation));
+        }
         world.Events.Add(2f, () => usurper?.Cast(ActionId.AbsoluteZero, animationLock: 2.1f));
         world.Events.Add(11.97f, () => usurper?.SetTargetable(false));
         world.Events.Add(12.65f, () => usurper?.CastFromHelper(Actions.AbsoluteZero, at: new Placement(Vector3.Zero, 0f)));
@@ -86,10 +93,16 @@ public sealed class FruIceVeilScenario : IScenario
         world.Events.Add(IcecrusherAt, Icecrusher);
         world.Events.Add(VeilFallsAt - 0.8f, DespawnCrystals);
         world.Events.Add(VeilFallsAt, VeilFalls);
+        if (world.Continued)
+        {
+            world.Events.Delay(LongerAfterLightRampant);
+            world.Events.Add(0f, SpawnUsurperAndGaia);
+        }
     }
 
     private void SpawnUsurperAndGaia()
     {
+        if (usurper is not null) return;
         usurper = world.SpawnEnemy(new EnemySpawnConfig(
             BNpcBaseId: BNpcBaseId.UsurperP2,
             NameId: BNpcNameId.Usurper,
@@ -98,7 +111,10 @@ public sealed class FruIceVeilScenario : IScenario
             Placement: new Placement(Vector3.Zero, 0f),
             ModelCharaId: ModelCharaId.UsurperLight,
             InitialModeAttributeFlags: 0xFC,
-            LayoutId: LayoutId.UsurperP2));
+            LayoutId: LayoutId.UsurperP2,
+            // Carrying on, she is already in the light form Light Rampant left her in.
+            Statuses: world.Continued ? [new SpawnStatus(TransfigurationStatus, UsurperLightTransformation)] : null,
+            ModelState: world.Continued ? (byte)4 : (byte)0));
         // UNVERIFIED that the Vision's gear is the intermission Gaia's.
         gaia = world.SpawnEnemy(new EnemySpawnConfig(
             BNpcBaseId: BNpcBaseId.GaiaIntermission,
