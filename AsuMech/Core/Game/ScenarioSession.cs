@@ -294,7 +294,8 @@ public sealed class ScenarioSession
         var phase = Scenario.Phase;
         DiagnosticLog.Info($"[Bgm] Suppress scenario BGM: {(Plugin.Config.SuppressBgm ? "on" : "off")}.");
         if (!Plugin.Config.SuppressBgm && phase.Bgm != 0)
-            world.PlayBgm(phase.Bgm, Scenario.BgmSecondsAtStart);
+            // A delayed timeline starts its music earlier by the delay, so the track stays on scenario time.
+            world.PlayBgm(phase.Bgm, MathF.Max(0f, Scenario.BgmSecondsAtStart + MathF.Min(0f, world.Events.Elapsed)));
     }
 
     // The selected preset, or [0] as the default.
