@@ -21,6 +21,7 @@ namespace AsuMech.Scenarios.Umad.P5Exaflares;
 public sealed class UmadP5ExaflaresScenario : IMultiplayerReplayable
 {
     public string Name => "Exaflares";
+    public float BgmSecondsAtStart => 111.73f;
     public IPhase Phase => UmadZone.P5;
     public bool SupportsSolo => true;
     public bool SupportsMultiplayer => true;
@@ -43,6 +44,8 @@ public sealed class UmadP5ExaflaresScenario : IMultiplayerReplayable
     private const float ExaflareHitInterval   = 0.513f; // between rolling hits
     private const int   ExaflareHitCount      = 6;
     private const float SpreadT = 25.09f;
+    // The rest of the real gap after the previous part; retail fills it with Ultima Repeater and two Fell Forces, not modeled.
+    private const float ContinuedWait = 12.6f;
     private const float KefkaAnimationLock = 3.1f;
     private const float HelperAnimationLock = 1.1f;
 
@@ -63,7 +66,6 @@ public sealed class UmadP5ExaflaresScenario : IMultiplayerReplayable
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<UmadP5ExaflaresState>)AiStrats[idx]).Run(state, world);
 
-        world.Events.Add(0f, SpawnKefka);
         world.Events.Add(2.89f, () => { if (kefka is { } boss) world.Map.DirectorUpdate(0x80000027U, 0x25U, 0x2U, 0x1BDBU, boss.EntityId); });
         world.Events.Add(3.0f, () => kefka?.Cast(ActionId.ChaosEnd1, animationLock: KefkaAnimationLock));
 
@@ -86,6 +88,9 @@ public sealed class UmadP5ExaflaresScenario : IMultiplayerReplayable
         world.Events.Add(19.2f, () => kefka?.Cast(ActionId.ChaosEnd2, animationLock: KefkaAnimationLock));
         var spreadSpots = LastRollingHitSpots(rollingHits, 8);
         world.Events.Add(SpreadT, () => ResolveSpread(spreadSpots));
+        if (world.Continued) world.Events.Delay(ContinuedWait);
+        // After the delay, so Kefka stands through the wait.
+        world.Events.Add(0f, SpawnKefka);
     }
 
     public void Tick(float delta, float elapsed)

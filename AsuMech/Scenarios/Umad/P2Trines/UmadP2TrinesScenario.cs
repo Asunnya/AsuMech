@@ -35,6 +35,8 @@ public sealed class UmadP2TrinesScenario : IScenario
     public const float EmbraceAt = 29.34f;
     public const float AeroCastAt = 35.88f;
     public const float EndAt = 41f;
+    // The rest of the real gap after the previous part; retail fills it with auto-attacks after Light of Judgment.
+    private const float ContinuedWait = 4.48f;
 
     public const float CircleRadius = 6f;
 
@@ -76,7 +78,6 @@ public sealed class UmadP2TrinesScenario : IScenario
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<UmadP2TrinesState>)AiStrats[idx]).Run(state, world);
 
-        world.Events.Add(0f, SpawnKefka);
         world.Events.Add(TrineCastAt, () => kefka?.Cast(ActionId.Trine, animationLock: 3.1f));
         for (var s = 0; s < 3; s++)
         {
@@ -94,6 +95,9 @@ public sealed class UmadP2TrinesScenario : IScenario
         world.Events.Add(EmbraceCastAt, () => kefka?.Cast(UmadActions.UltimateEmbrace, party.Get(PartyRole.MainTank)));
         world.Events.Add(AeroCastAt, () => kefka?.Cast(UmadActions.AeroIIIAssault));
         world.Events.Add(EndAt, () => { foreach (var prop in trineProps) prop?.Despawn(); });
+        if (world.Continued) world.Events.Delay(ContinuedWait);
+        // After the delay, so Kefka stands through the wait.
+        world.Events.Add(0f, SpawnKefka);
     }
 
     private void SpawnKefka()
