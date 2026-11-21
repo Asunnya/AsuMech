@@ -16,7 +16,7 @@ public sealed class UwuZone : IZone
     public static readonly Phase Garuda = new(Instance, "P1", GalesWeather, 547);
     public static readonly Phase Ifrit = new(Instance, "P2", HeatWavesWeather, 547);
     public static readonly Phase Titan = new(Instance, "P3", EruptionsWeather, 547);
-    public static readonly Phase Ultima = new(Instance, "P4", 95, 547);
+    public static readonly Phase Ultima = new(Instance, "P4 Ultima", 95, 547);
 
     public string Name => "The Weapon's Refrain";
 
