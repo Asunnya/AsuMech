@@ -20,6 +20,7 @@ public sealed class FruP4CrystallizeTimeScenario : IMultiplayerReplayable
 {
     public string Name => "Crystallize Time";
     public IPhase Phase => FruZone.P4;
+    public float BgmSecondsAtStart => 81f;
     public bool SupportsMultiplayer => true;
     // The strat reacts to the Wyrmclaw and Wyrmfang it sees going, and the Stun holds everyone.
     public bool MirrorsHostStatuses => true;

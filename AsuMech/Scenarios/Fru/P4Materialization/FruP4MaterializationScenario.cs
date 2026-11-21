@@ -13,6 +13,7 @@ public sealed class FruP4MaterializationScenario : IScenario
 {
     public string Name => "Materialization";
     public IPhase Phase => FruZone.P4;
+    // Retail's track starts 8.2 s into this part, but music can't start late, so it plays from the top.
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new FruP4MaterializationAi()];
 

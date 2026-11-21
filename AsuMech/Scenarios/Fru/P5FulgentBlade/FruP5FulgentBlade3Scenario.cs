@@ -7,4 +7,4 @@ public sealed class FruP5FulgentBlade3Scenario() : FruP5FulgentBladeScenario("Fu
     new(26.32f, 0x2D, GaiaBattleTalk),
     new(31.37f, 0x2E, RyneBattleTalk),
     new(36.28f, 0x2F, BNpcNameId.Pandora),
-]);
+], bgmSecondsAtStart: 219.6f);

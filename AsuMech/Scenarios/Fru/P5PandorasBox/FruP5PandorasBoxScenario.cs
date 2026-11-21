@@ -15,6 +15,7 @@ public sealed class FruP5PandorasBoxScenario : IScenario
 {
     public string Name => "Pandora's Box";
     public IPhase Phase => FruZone.P5;
+    public float BgmSecondsAtStart => 110.75f;
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new FruP5PandorasBoxAi()];
 

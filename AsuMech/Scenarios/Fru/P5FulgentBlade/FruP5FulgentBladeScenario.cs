@@ -19,21 +19,23 @@ namespace AsuMech.Scenarios.Fru.P5FulgentBlade;
 // Pandora runs it three times; the later passes only add their battle talk.
 public class FruP5FulgentBladeScenario : IMultiplayerReplayable
 {
-    public FruP5FulgentBladeScenario() : this("Fulgent Blade", []) { }
+    public FruP5FulgentBladeScenario() : this("Fulgent Blade", [], bgmSecondsAtStart: 15.6f) { }
 
     // carriedOnDelay: how much longer Pandora waits to cast when the part carries straight on from
     // the previous one, as retail's gap is longer than the sim's handoff.
-    protected FruP5FulgentBladeScenario(string name, FruBattleTalk[] battleTalk, float carriedOnDelay = 0f)
+    protected FruP5FulgentBladeScenario(string name, FruBattleTalk[] battleTalk, float bgmSecondsAtStart, float carriedOnDelay = 0f)
     {
         Name = name;
         this.battleTalk = battleTalk;
         this.carriedOnDelay = carriedOnDelay;
+        BgmSecondsAtStart = bgmSecondsAtStart;
     }
 
     public string Name { get; }
     private readonly FruBattleTalk[] battleTalk;
     private readonly float carriedOnDelay;
     public IPhase Phase => FruZone.P5;
+    public float BgmSecondsAtStart { get; }
     public bool SupportsSolo => true;
     public bool SupportsMultiplayer => true;
 
