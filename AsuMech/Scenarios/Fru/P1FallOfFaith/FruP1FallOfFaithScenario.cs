@@ -36,6 +36,8 @@ public sealed class FruP1FallOfFaithScenario : IScenario
     private const float ChargeAfterResolve = 2.7f;
     private const float BowShockAfterHit = 0.3f;
     public const float Clear = 70.88f;
+    // Straight on from Turn of the Heavens, Fatebreaker auto-attacks this much longer before Fall of Faith.
+    private const float LongerAfterTurnOfTheHeavens = 2f;
 
     private SimWorld world = null!;
     private FruP1FallOfFaithState state = null!;
@@ -47,6 +49,7 @@ public sealed class FruP1FallOfFaithScenario : IScenario
         world = worldParam;
         state = new FruP1FallOfFaithState(world.Rng, world.Party.PlayerRole, settingsWindow.Overrides);
         Array.Clear(faithCasters);
+        fatebreaker = null;
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<FruP1FallOfFaithState>)AiStrats[idx]).Run(state, world);
 
@@ -74,10 +77,16 @@ public sealed class FruP1FallOfFaithScenario : IScenario
         world.Events.Add(60.93f, SayBattleTalk);
         world.Events.Add(61.09f, () => fatebreaker?.Cast(Actions.BurnishedGloryEnrage));
         world.Events.Add(Clear, () => fatebreaker?.Defeat(corpseFadeDelay: 3f));
+        if (world.Continued)
+        {
+            world.Events.Delay(LongerAfterTurnOfTheHeavens);
+            world.Events.Add(0f, SpawnFatebreaker);
+        }
     }
 
     private void SpawnFatebreaker()
     {
+        if (fatebreaker is not null) return;
         fatebreaker = world.SpawnEnemy(new EnemySpawnConfig(
             BNpcBaseId: BNpcBaseId.Fatebreaker,
             NameId: BNpcNameId.Fatebreaker,
