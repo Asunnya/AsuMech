@@ -15,6 +15,7 @@ public sealed class FruP5PandorasBoxScenario : IScenario
 {
     public string Name => "Pandora's Box";
     public IPhase Phase => FruZone.P5;
+    public float BgmSecondsAtStart => 110.75f;
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new FruP5PandorasBoxAi()];
 
@@ -23,6 +24,8 @@ public sealed class FruP5PandorasBoxScenario : IScenario
     private readonly FruP5PandorasBoxSettingsWindow settingsWindow = new();
 
     private const float LimitBreakBars = 3f;
+    // Carried on from Paradise Regained, Pandora waits this much longer before casting, as in retail.
+    private const float CarriedOnDelay = 2.2f;
 
     private SimWorld world = null!;
     private SimEnemy? pandora;
@@ -34,13 +37,15 @@ public sealed class FruP5PandorasBoxScenario : IScenario
         if (selectedAi is { } idx && idx < AiStrats.Count)
             ((IScenarioAi<FruP5PandorasBoxState>)AiStrats[idx]).Run(state, world);
 
-        world.Events.Add(0f, SpawnActors);
         world.Events.Add(0f, () => world.Party.LimitBreak.Set(LimitBreakBars));
         world.Events.Add(1f, () => pandora?.SetTarget(world.Party.Get(PartyRole.MainTank), follow: false));
         world.Events.Add(1.5f, () => pandora?.KeepFacing(world.Party.Get(PartyRole.MainTank)));
         world.Events.Add(1.5f, () => pandora?.Cast(Actions.PandorasBox));
         world.Events.Add(2.3f, () => new FruBattleTalk(0, 0x22, BNpcNameId.Pandora).Say(world, pandora));
         world.Events.Add(9.33f, () => new FruBattleTalk(0, 0x26, BNpcNameId.Pandora).Say(world, pandora));
+        if (world.Continued) world.Events.Delay(CarriedOnDelay);
+        // Added last, so a delayed part still brings Pandora back at once.
+        world.Events.Add(0f, SpawnActors);
     }
 
     private void SpawnActors()

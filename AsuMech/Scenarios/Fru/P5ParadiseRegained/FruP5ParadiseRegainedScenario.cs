@@ -18,7 +18,7 @@ namespace AsuMech.Scenarios.Fru.P5ParadiseRegained;
 // nobody talks.
 public class FruP5ParadiseRegainedScenario : IMultiplayerReplayable
 {
-    public FruP5ParadiseRegainedScenario() : this("Paradise Regained", firstLinesAt: 37.06f,
+    public FruP5ParadiseRegainedScenario() : this("Paradise Regained", firstLinesAt: 37.06f, bgmSecondsAtStart: 53f,
     [
         new(1.3f, 0x23, BNpcNameId.Pandora),
         new(7.27f, 0x27, RyneBattleTalk),
@@ -27,17 +27,19 @@ public class FruP5ParadiseRegainedScenario : IMultiplayerReplayable
         new(54.86f, 0x2A, RyneBattleTalk),
     ]) { }
 
-    protected FruP5ParadiseRegainedScenario(string name, float firstLinesAt, FruBattleTalk[] battleTalk)
+    protected FruP5ParadiseRegainedScenario(string name, float firstLinesAt, float bgmSecondsAtStart, FruBattleTalk[] battleTalk)
     {
         Name = name;
         this.firstLinesAt = firstLinesAt;
         this.battleTalk = battleTalk;
+        BgmSecondsAtStart = bgmSecondsAtStart;
     }
 
     public string Name { get; }
     private readonly float firstLinesAt;
     private readonly FruBattleTalk[] battleTalk;
     public IPhase Phase => FruZone.P5;
+    public float BgmSecondsAtStart { get; }
     public bool SupportsMultiplayer => true;
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new FruP5ParadiseRegainedAi()];

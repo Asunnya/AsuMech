@@ -18,6 +18,7 @@ public sealed class FruP3UltimateRelativityScenario : IMultiplayerReplayable
 {
     public string Name => "Ultimate Relativity";
     public IPhase Phase => FruZone.P3;
+    public float BgmSecondsAtStart => 34.9f;
     public bool SupportsMultiplayer => true;
     // The Stun holds everyone.
     public bool MirrorsHostStatuses => true;

@@ -16,6 +16,7 @@ public sealed class FruP5ParadiseLostScenario : IScenario
 {
     public string Name => "Paradise Lost";
     public IPhase Phase => FruZone.P5;
+    public float BgmSecondsAtStart => 261f;
     public bool SupportsSolo => true;
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new FruP5ParadiseLostAi()];

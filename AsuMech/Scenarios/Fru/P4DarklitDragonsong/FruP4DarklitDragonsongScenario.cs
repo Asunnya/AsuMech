@@ -20,6 +20,7 @@ public sealed class FruP4DarklitDragonsongScenario : IMultiplayerReplayable
 {
     public string Name => "Darklit Dragonsong";
     public IPhase Phase => FruZone.P4;
+    public float BgmSecondsAtStart => 9.25f;
     public bool SupportsMultiplayer => true;
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new FruP4DarklitDragonsongAi(playerBaitsSomberDance: false), new FruP4DarklitDragonsongAi(playerBaitsSomberDance: true)];

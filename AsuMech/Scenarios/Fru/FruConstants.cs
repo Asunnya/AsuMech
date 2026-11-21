@@ -352,6 +352,7 @@ public static class FruConstants
         public const uint Quietus = 40281;
         public const uint ShockwavePulsar = 40282;
         public const uint ShellCrusherCast = 40286;
+        public const uint BlackHalo = 40290;
         public const uint ShellCrusher = 40287;
         public const uint SpiritTakerCast = 40288;
         public const uint SpiritTaker = 40289;
