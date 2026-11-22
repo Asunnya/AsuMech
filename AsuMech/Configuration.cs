@@ -48,7 +48,7 @@ public class Configuration : IPluginConfiguration
         => RecordingsRelayUrl.Trim() is { Length: > 0 } url
             ? (url, RecordingsRelayToken.Trim() is { Length: > 0 } token ? token : null)
             : (DefaultRecordingsRelay.Url, DefaultRecordingsRelay.Token.Length > 0 ? DefaultRecordingsRelay.Token : null);
-    public bool SuppressBgm { get; set; } = true;
+    public bool SuppressBgm { get; set; } = false;
     public bool EnableMechanicResultMarks { get; set; } = false;
     public bool AutoCollapseWhileRunning { get; set; } = false;
     public bool ShowSpeedControl { get; set; } = false;

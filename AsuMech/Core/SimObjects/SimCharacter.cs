@@ -430,6 +430,13 @@ public abstract partial class SimCharacter : ISimObject, IPositioned
     // Dropped while the actor is still spawning.
     public void Yell(string text, float seconds) => Proxy?.Yell(text, seconds);
 
+    // An NpcYell as retail plays it: the balloon, and its voice when the line has one.
+    public void Yell(string text, float seconds, uint voiceLineId)
+    {
+        Yell(text, seconds);
+        if (voiceLineId != 0) VoiceLine(voiceLineId);
+    }
+
     public virtual void SetTargetable(bool targetable) => ActorControl.SetTargetable(targetable);
 
     public bool Dead { get; private set; }

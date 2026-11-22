@@ -130,6 +130,7 @@ public class DsrConstants
         public const uint Hraesvelgr = 4954;
         public const uint ScarletPrice = 3459;
         public const uint DragonKingThordan = 11319;
+        public const uint WanderingMinstrel = 4494;
     }
 
     public class ActionId
@@ -499,5 +500,91 @@ public class DsrConstants
     {
         public const uint Execution = 111;
         public const uint FaithUnmoving = 169;
+    }
+    // InstanceContentTextData rows the bosses say through MapController.BattleTalk, which also plays the voice.
+    public static class BattleTalkId
+    {
+        public const uint FeebleLight = 32601;
+        public const uint UndoneByMortalWill = 32602;
+        public const uint DrinkDeep = 32604;
+        public const uint SurvivedMyReckoning = 32605;
+        public const uint FinalVerse = 32607;
+        public const uint SurvivedMySong = 32608;
+        public const uint AtLongLast = 32614;
+        public const uint BecomeAGod = 32615;
+        public const uint PurgeTheTainted = 32617;
+        public const uint ConsignTheWicked = 32618;
+        public const uint ScorchTheEarth = 32619;
+        public const uint YourTimeIsCome = 32620;
+        public const uint MinstrelAzysLla = 32623;
+        public const uint MinstrelNidhogg = 32624;
+        public const uint MinstrelHraesvelgr = 32625;
+        public const uint MinstrelNewDivinity = 32626;
+        public const uint TellMe = 32627;
+        public const uint YouAreAFool = 32628;
+    }
+
+    public readonly record struct YellLine(string Text, float Seconds = 3f, uint Voice = 0)
+    {
+        public void By(Core.SimObjects.SimCharacter? speaker) => speaker?.Yell(Text, Seconds, Voice);
+    }
+
+    // NpcYell rows the knights and dragons shout, said through SimCharacter.Yell. The lines DSR reuses
+    // from Heavensward carry no voice here: their voice files were never found.
+    public static class Yells
+    {
+        public static readonly YellLine PowerFillsMe = new("The power! It fills me!");
+        public static readonly YellLine WitnessMe = new("Witness me!");
+        public static readonly YellLine HowWasThat = new("How was that!?");
+        public static readonly YellLine HandleThis = new("Let us see how you handle this!");
+        public static readonly YellLine KnightsToArms = new("My knights! To arms!");
+        public static readonly YellLine ShineMyBlade = new("Shine for me, my blade!");
+        public static readonly YellLine SingMyBlade = new("Sing for me, my blade!");
+        public static readonly YellLine SettleThis = new("Let us settle this\nonce and for all!");
+        public static readonly YellLine WithMeJanlenoux = new("With me, Ser Janlenoux!");
+        public static readonly YellLine EverAndAlways = new("Ever and always, Brother!");
+        public static readonly YellLine TurnYouIntoAsh = new("I will turn you into ash!");
+        public static readonly YellLine JudgmentIsNigh = new("Your judgment is nigh!");
+        public static readonly YellLine SurgingAether = new("Surging aether, become\nsearing light!");
+        public static readonly YellLine FrozenToYourSouls = new("Be frozen to your very souls!");
+        public static readonly YellLine PrepareYourselves = new("Prepare yourselves!");
+        public static readonly YellLine Gahahaha = new("Gahahaha!");
+        public static readonly YellLine HeavensRainDeath = new("Heavens rain death upon you!");
+        public static readonly YellLine Yah = new("Yah!");
+        public static readonly YellLine CutYouToPieces = new("I'll cut you to pieces!");
+        public static readonly YellLine Hahaha = new("Hahaha!");
+        public static readonly YellLine ThisEndsHere = new("This ends here!");
+        public static readonly YellLine DownWithYou = new("Down with you!");
+        public static readonly YellLine FilthyRats = new("Filthy rats!");
+        public static readonly YellLine BegoneWithYou = new("Begone with you!");
+        public static readonly YellLine FinalCurtain = new("And now the final curtain!");
+        public static readonly YellLine MyLanceWillFindYou = new("Scamper all you will.\nMy lance will find you...");
+        public static readonly YellLine OnYourMark = new("Ser Vellguine! On your mark!");
+        public static readonly YellLine Charge = new("Charge!");
+        public static readonly YellLine YouAreMine = new("You are mine!");
+        public static readonly YellLine NoneShallEscape = new("None shall escape!");
+        public static readonly YellLine BegonePests = new("Begone, pests!");
+        public static readonly YellLine RightfulGod = new("You defy the only rightful god!");
+        public static readonly YellLine BloodAndSteel = new("Blood and steel!");
+
+        // UNVERIFIED voices: matched to these rows by the vo_line files' sizes, never heard in game.
+        public static readonly YellLine LookOut = new("Look out!", 3f, 8201638);
+        public static readonly YellLine Fall = new("Fall!", 3f, 8201639);
+        public static readonly YellLine YouAreUnharmed = new("You...you are unharmed? Thank goodness...", 2.5f, 8201640);
+        public static readonly YellLine LoyalServants = new("To me, my loyal servants!", 3f, 8201641);
+        public static readonly YellLine PowerIsMine = new("The power is mine!", 3f, 8201642);
+        public static readonly YellLine GloryIsMine = new("The glory is mine!", 3f, 8201643);
+        public static readonly YellLine PowerIsMineAgain = new("The power is mine!", 3f, 8201644);
+        public static readonly YellLine GloryIsMineAgain = new("The glory is mine!", 3f, 8201645);
+        public static readonly YellLine AllWillPerish = new("All will perish!", 3f, 8201649);
+        public static readonly YellLine Estinien = new("Estinien!", 3f, 8201650);
+        public static readonly YellLine Graaargh = new("Graaaaaarrrghhh!", 3f, 8201652);
+        public static readonly YellLine OneLastFavor = new("I would ask one last favor of you, Warrior of Light...", 3f, 8201653);
+        public static readonly YellLine FinishMe = new("Finish me...", 3f, 8201654);
+        public static readonly YellLine BeastSubdued = new("Now, while I have the beast subdued!", 3f, 8201655);
+        public static readonly YellLine VileDragons = new("Vile dragons! My reign begins with your end!", 3f, 8201657);
+        public static readonly YellLine WhatIsThyBidding = new("What is thy bidding?", 3f, 8201658);
+        public static readonly YellLine InTheNameOfThordan = new("In the name of King Thordan...", 3f, 8201659);
+        public static readonly YellLine GloryToTheFury = new("Glory be to the Fury...", 3f, 8201660);
     }
 }
