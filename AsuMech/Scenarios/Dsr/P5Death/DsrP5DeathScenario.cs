@@ -127,6 +127,7 @@ public sealed class DsrP5DeathScenario : IScenario
         world.Events.Add(startsAt + 0.20f, () => world.Map.DirectorUpdate(ArenaDirector.MapChange, ArenaDirector.ThordanMap));
         world.Events.Add(Death, () => CastSelf(thordan, ActionId.DeathOfTheHeavens, 3.7f));
         world.Events.Add(Death + 3.96f, () => PlayEffect(thordan, ActionId.DeathOfTheHeavens, 1.1f));
+        world.Events.Add(Death + 4.74f, () => Yells.GloryIsMine.By(thordan));
         world.Events.Add(Death + 7.04f, ThordanLeapsOut);
         world.Events.Add(Death + 8.60f, SpawnWarriorAndDiveTeam);
         world.Events.Add(Death + 9.10f, () => { foreach (var k in new[] { guerrique, zephirin, vedrfolnir }) k?.PlayActionTimeline(TimelineId.WarpEnd); });
@@ -134,8 +135,10 @@ public sealed class DsrP5DeathScenario : IScenario
         world.Events.Add(Death + 10.91f, Deathstorm);
         world.Events.Add(Death + 13.14f, () => CastSelf(guerrique, ActionId.HeavyImpactWindup, 4.0f));
         world.Events.Add(Death + 13.14f, () => heavyImpactCaster?.NativeCast(ActionId.HeavyImpact, ActionType.Action, HeavyImpactOmenDelay, 5.7f, false, position: state.WarriorSpot));
+        world.Events.Add(Death + 14.97f, () => Yells.RightfulGod.By(zephirin));
         world.Events.Add(Death + 15.01f, CastStaticDives);
         world.Events.Add(Death + 17.42f, () => PlayEffect(guerrique, ActionId.HeavyImpactWindup, 2.1f));
+        world.Events.Add(Death + 18.00f, () => Yells.Yah.By(guerrique));
         for (var wave = 0; wave < Earthquakes.Length; wave++)
         {
             var w = wave;
@@ -154,8 +157,10 @@ public sealed class DsrP5DeathScenario : IScenario
         world.Events.Add(SymbolsMarked, MarkSymbols);
         world.Events.Add(Death + 29.14f, () => CastSelf(charibert, ActionId.Heavensflame, 6.7f));
         world.Events.Add(Death + 29.14f, () => CastSelf(thordan, ActionId.DragonsGaze, 3.7f));
+        world.Events.Add(Death + 30.22f, () => Yells.BegonePests.By(grinnaux));
         world.Events.Add(Death + 30.26f, () => CastSelf(noudenet, ActionId.HolyMeteor, 7.7f));
         world.Events.Add(Death + 30.26f, () => CastSelf(grinnaux, ActionId.FaithUnmoving, 3.7f));
+        world.Events.Add(Death + 30.27f, () => Yells.HeavensRainDeath.By(noudenet));
         world.Events.Add(Death + 31.06f, () => PlayEffect(vidofnir, ActionId.WingsOfSalvationPuddle, 1.1f));
         world.Events.Add(PuddleOpens, OpenPuddles);
         world.Events.Add(Death + 33.06f, TetherBurningChains);
@@ -163,6 +168,7 @@ public sealed class DsrP5DeathScenario : IScenario
         world.Events.Add(Knockback, FaithUnmoving);
         world.Events.Add(Death + 34.27f, DragonsGaze);
         world.Events.Add(Death + 35.16f, () => world.Map.AddEffect(EyeEffect.Closes, state.EyeSlot));
+        world.Events.Add(Death + 35.35f, () => Yells.BegoneWithYou.By(charibert));
         world.Events.Add(Death + 36.18f, HolyChain);
         world.Events.Add(Death + 36.77f, Heavensflame);
         world.Events.Add(DoomEnds, DoomFalls);

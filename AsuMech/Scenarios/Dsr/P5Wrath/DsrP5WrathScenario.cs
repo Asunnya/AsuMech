@@ -111,18 +111,23 @@ public sealed class DsrP5WrathScenario : IScenario
         world.Events.Add(0.20f, () => world.Map.DirectorUpdate(ArenaDirector.MapChange, ArenaDirector.ThordanMap));
         world.Events.Add(4.27f, () => CastSelf(thordan, ActionId.Incarnation, 3.7f));
         world.Events.Add(4.36f, ThordanEngages);
+        world.Events.Add(8.20f, () => Yells.VileDragons.By(thordan));
         world.Events.Add(8.26f, () => PlayEffect(thordan, ActionId.Incarnation, 1.1f));
+        world.Events.Add(9.01f, () => { Yells.WhatIsThyBidding.By(darkscale); Yells.InTheNameOfThordan.By(vidofnir); Yells.GloryToTheFury.By(vedrfolnir); });
         world.Events.Add(11.41f, () => CastSelf(thordan, ActionId.DragonsEye, 2.7f));
         world.Events.Add(14.20f, DragonsLeave);
         world.Events.Add(14.41f, () => PlayEffect(thordan, ActionId.DragonsEye, 1.1f));
         world.Events.Add(18.55f, AutoAttack);
         world.Events.Add(21.68f, AutoAttack);
+        world.Events.Add(24.78f, () => Yells.LoyalServants.By(thordan));
         world.Events.Add(25.97f, () => PlayEffect(thordan, ActionId.KnightsOfTheRound, 1.1f));
 
         world.Events.Add(Wrath, () => CastSelf(thordan, ActionId.WrathOfTheHeavens, 3.7f));
         world.Events.Add(Wrath + 3.98f, () => PlayEffect(thordan, ActionId.WrathOfTheHeavens, 1.1f));
+        world.Events.Add(Wrath + 4.72f, () => Yells.PowerIsMine.By(thordan));
         world.Events.Add(Wrath + 7.07f, () => thordan?.SetTargetable(false));
         world.Events.Add(Wrath + 8.30f, SpawnDragonsAndKnights);
+        world.Events.Add(Wrath + 8.51f, () => { Yells.NoneShallEscape.By(dragoons[0]); Yells.YouAreMine.By(dragoons[1]); });
         world.Events.Add(Wrath + 8.60f, () => { foreach (var k in new[] { vedrfolnir, dragoons[0], dragoons[1], paulecrain }) k?.PlayActionTimeline(TimelineId.WarpEnd); });
         world.Events.Add(Wrath + 8.60f, () => { darkscale?.PlayActionTimeline(TimelineId.DragonAppear); vidofnir?.PlayActionTimeline(TimelineId.DragonAppear); });
         world.Events.Add(Wrath + 9.79f, TetherDragoonsAndMarkDefamation);
@@ -141,11 +146,13 @@ public sealed class DsrP5WrathScenario : IScenario
         world.Events.Add(Wrath + 18.10f, SpawnEffectCarriers);
         world.Events.Add(Wrath + 18.50f, () => { foreach (var k in new[] { dragoons[0], dragoons[1], paulecrain }) k?.FadeOut(); });
         world.Events.Add(TwistersGone, ClearTwisters);
+        world.Events.Add(Wrath + 22.02f, () => Yells.TurnYouIntoAsh.By(charibert));
         world.Events.Add(MercyLands, MercyCones);
         world.Events.Add(Wrath + 22.17f, () => CastSelf(charibert, ActionId.AltarFlare, 3.2f));
         foreach (var at in EruptionCasts) world.Events.Add(at, CastEruption);
         for (var i = 0; i < LiquidHeavenDrops.Length; i++) world.Events.Add(LiquidHeavenDrops[i], DropLiquidHeaven);
         world.Events.Add(CauterizeCast, CastCauterize);
+        world.Events.Add(Wrath + 24.12f, () => Yells.BloodAndSteel.By(grinnaux));
         world.Events.Add(Wrath + 24.26f, () => CastWithoutOmen(grinnaux, ActionId.EmptyDimension, 4.7f));
         world.Events.Add(Wrath + 29.04f, Cauterize);
         world.Events.Add(EmptyDimensionLands, EmptyDimension);
@@ -154,11 +161,13 @@ public sealed class DsrP5WrathScenario : IScenario
         world.Events.Add(Wrath + 30.33f, () => CastSelf(thordan, ActionId.AncientQuaga, 5.7f));
         world.Events.Add(Wrath + 33.00f, () => { foreach (var k in new[] { charibert, grinnaux, darkscale, vidofnir, vedrfolnir }) k?.FadeOut(); });
         world.Events.Add(Wrath + 36.32f, () => Raidwide(ActionId.AncientQuaga, AncientQuagaDamage));
+        world.Events.Add(Wrath + 40.52f, () => world.Map.BattleTalk(BNpcNameId.Thordan, BattleTalkId.TellMe, 5000));
         world.Events.Add(Wrath + 40.69f, AutoAttack);
         world.Events.Add(Wrath + 42.74f, CastHeavenlyHeel);
         world.Events.Add(Wrath + 46.71f, ResolveHeavenlyHeel);
         foreach (var might in new[] { Wrath + 49.84f, Wrath + 51.48f, Wrath + 53.14f })
             world.Events.Add(might, AscalonsMight);
+        world.Events.Add(Wrath + 55.92f, () => Yells.LoyalServants.By(thordan));
         world.Events.Add(Wrath + 57.10f, () => PlayEffect(thordan, ActionId.KnightsOfTheRound, 1.1f));
         world.Events.Add(Wrath + 59.00f, DespawnAll);
     }
