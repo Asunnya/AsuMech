@@ -101,14 +101,18 @@ public sealed class DsrP3NidhoggScenario : IScenario
         world.Events.Add(0f, SpawnNidhogg);
         world.Events.Add(0f, SpawnWaitingDivers);
         world.Events.Add(0.09f, () => world.Map.DirectorUpdate(ArenaDirector.Layout, 0U, ArenaDirector.NidhoggLayout));
+        world.Events.Add(3.63f, () => world.Map.BattleTalk(BNpcNameId.WanderingMinstrel, BattleTalkId.MinstrelNidhogg, 5000));
         world.Events.Add(4.10f, () => world.Map.DirectorUpdate(ArenaDirector.MapChange, ArenaDirector.KnightsMap));
         world.Events.Add(5.13f, () => world.Map.AddEffect(ArenaDirector.NidhoggSlotOn, ArenaDirector.NidhoggSlot));
         world.Events.Add(6.96f, () => Raidwide(ActionId.FinalChorus, FinalChorusDamage));
+        world.Events.Add(7.92f, () => world.Map.BattleTalk(BNpcNameId.Nidhogg, BattleTalkId.FinalVerse, 4000));
         world.Events.Add(10.00f, NidhoggEngages);
         world.Events.Add(14.10f, AutoAttack);
+        world.Events.Add(13.93f, () => world.Map.BattleTalk(BNpcNameId.Nidhogg, BattleTalkId.SurvivedMySong, 4000));
         world.Events.Add(17.22f, AutoAttack);
         world.Events.Add(20.35f, AutoAttack);
 
+        world.Events.Add(22.36f, () => Yells.AllWillPerish.By(nidhogg));
         world.Events.Add(22.45f, () => nidhogg?.SetTarget(null, follow: false));
         world.Events.Add(22.45f, () => CastSelf(nidhogg, ActionId.DiveFromGrace, 4.7f));
         world.Events.Add(22.45f, MarkLines);

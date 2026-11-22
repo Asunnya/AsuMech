@@ -110,13 +110,18 @@ public sealed class DsrP4EyesScenario : IScenario
         world.Events.Add(5.40f, () => rightEye?.SetHealth(RightEyeMaxHp, RightEyeStartingHealth));
         world.Events.Add(6.00f, SpawnAlphinaud);
         world.Events.Add(6.30f, () => alphinaud?.PlayActionTimeline(TimelineId.AllyAppear));
+        world.Events.Add(7.22f, () => Yells.Estinien.By(alphinaud));
+        world.Events.Add(10.26f, () => Yells.OneLastFavor.By(estinien));
         world.Events.Add(11.90f, SpawnYsayleAndHaurchefant);
         world.Events.Add(12.36f, MarkSouls);
         world.Events.Add(12.45f, () => { ysayle?.PlayActionTimeline(TimelineId.AllyAppear); haurchefant?.PlayActionTimeline(TimelineId.AllyAppear); });
+        world.Events.Add(14.36f, () => Yells.FinishMe.By(estinien));
         world.Events.Add(14.46f, EyesDriftApart);
         world.Events.Add(17.30f, EyesEngage);
         world.Events.Add(17.49f, GrantSouls);
+        world.Events.Add(18.41f, () => Yells.BeastSubdued.By(estinien));
         world.Events.Add(19.30f, () => { ysayle?.FadeOut(); haurchefant?.FadeOut(); });
+        world.Events.Add(24.61f, () => Yells.Graaargh.By(estinien));
         world.Events.Add(24.70f, Resentment);
 
         world.Events.Add(30.02f, () => { CastSelf(leftEye, ActionId.Hatebound, 2.7f); CastSelf(rightEye, ActionId.Hatebound, 2.7f); });
@@ -138,6 +143,7 @@ public sealed class DsrP4EyesScenario : IScenario
         world.Events.Add(85.05f, SteepInRage);
         world.Events.Add(86.30f, () => leftEye?.Defeat());
         world.Events.Add(89.20f, Unbind);
+        world.Events.Add(89.30f, () => world.Map.BattleTalk(BNpcNameId.Nidhogg, BattleTalkId.UndoneByMortalWill, 4000));
         world.Events.Add(92.00f, DespawnAll);
     }
 
