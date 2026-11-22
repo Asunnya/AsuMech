@@ -198,8 +198,10 @@ public sealed class DsrP2ThordanScenario : ISectionedScenario
         world.Events.Add(0f, SpawnThordan);
         world.Events.Add(2f, () => world.Map.LogArena("DSR P2 start"));
         world.Events.Add(2.60f, ThordanEngages);
+        world.Events.Add(2.80f, () => world.Map.BattleTalk(BNpcNameId.WanderingMinstrel, BattleTalkId.MinstrelAzysLla, 5000));
 
         world.Events.Add(6.08f, AutoAttack);
+        world.Events.Add(8.00f, () => world.Map.BattleTalk(BNpcNameId.Thordan, BattleTalkId.FeebleLight, 5000));
         world.Events.Add(9.20f, AutoAttack);
 
         world.Events.Add(11.25f, () => CastSelf(thordan, ActionId.AscalonsMercyConcealed, MercyCastSeconds));
@@ -213,20 +215,26 @@ public sealed class DsrP2ThordanScenario : ISectionedScenario
         world.Events.Add(20.70f, AscalonsMight);
 
         world.Events.Add(23.29f, () => world.Map.DirectorUpdate(ArenaDirector.Layout, 0U, ArenaDirector.WardLayout));
+        world.Events.Add(24.36f, () => Yells.KnightsToArms.By(thordan));
         world.Events.Add(24.50f, ThordanLeapsToCentre);
         world.Events.Add(25.61f, () => PlayEffect(thordan, ActionId.KnightsOfTheRound, 2.1f));
 
         world.Events.Add(27.62f, SpawnKnightRing);
         world.Events.Add(28.73f, () => CastSelf(thordan, ActionId.StrengthOfTheWard, 3.7f));
         world.Events.Add(32.69f, () => PlayEffect(thordan, ActionId.StrengthOfTheWard, 2.1f));
+        world.Events.Add(33.46f, () => Yells.PowerIsMineAgain.By(thordan));
         world.Events.Add(35.76f, () => thordan?.SetTargetable(false));
         world.Events.Add(35.82f, KnightsWarpOut);
         world.Events.Add(37.06f, PlaceDashKnightsAndGuerrique);
+        world.Events.Add(37.07f, () => Yells.MyLanceWillFindYou.By(paulecrain));
+        world.Events.Add(37.07f, () => Yells.OnYourMark.By(ignasse));
+        world.Events.Add(37.07f, () => Yells.Charge.By(vellguine));
         world.Events.Add(39.02f, () => heavyImpactCaster = SpawnHelper(new Placement(state.GuerriqueSpot, 0f), BNpcNameId.Guerrique));
         world.Events.Add(39.38f, () => CastSelf(guerrique, ActionId.HeavyImpactWindup, 4.0f));
         world.Events.Add(39.38f, () => heavyImpactCaster?.NativeCast(ActionId.HeavyImpact, ActionType.Action, StrengthOmenDelay, 5.7f, false, position: state.GuerriqueSpot));
         world.Events.Add(39.38f, () => CastSelf(thordan, ActionId.LightningStorm, 5.4f));
         world.Events.Add(39.38f, CastSpiralThrusts);
+        world.Events.Add(41.31f, () => Yells.Yah.By(guerrique));
         world.Events.Add(43.66f, () => PlayEffect(guerrique, ActionId.HeavyImpactWindup, 2.1f));
         world.Events.Add(45.07f, () => PlayEffect(thordan, ActionId.LightningStorm, 2.1f));
         world.Events.Add(45.36f, ResolveSpiralThrusts);
@@ -245,11 +253,14 @@ public sealed class DsrP2ThordanScenario : ISectionedScenario
         world.Events.Add(52.00f, ResolveMercyCones);
         world.Events.Add(52.11f, SpawnPuddles);
         world.Events.Add(52.39f, MarkDefamations);
+        world.Events.Add(52.40f, () => Yells.PrepareYourselves.By(grinnaux));
         world.Events.Add(52.48f, CastPuddles);
         world.Events.Add(52.58f, ThordanLeapsToWall);
         world.Events.Add(52.89f, () => ResolveHeavyImpact(4));
         world.Events.Add(53.89f, SpawnTowers);
         world.Events.Add(54.23f, CastTowers);
+        world.Events.Add(55.67f, () => Yells.WithMeJanlenoux.By(adelphel));
+        world.Events.Add(55.67f, () => Yells.EverAndAlways.By(janlenoux));
         world.Events.Add(55.79f, () => CastSelf(thordan, ActionId.DragonsRage, 4.4f));
         world.Events.Add(56.84f, TetherShieldBashes);
         world.Events.Add(60.46f, () => PlayEffect(thordan, ActionId.DragonsRage, 2.1f));
@@ -257,9 +268,11 @@ public sealed class DsrP2ThordanScenario : ISectionedScenario
         world.Events.Add(61.40f, DashKnightsLeapOntoDefamations);
         world.Events.Add(61.47f, ResolvePuddles);
         world.Events.Add(61.51f, ResolveSkywardLeaps);
+        world.Events.Add(61.78f, () => Yells.Gahahaha.By(grinnaux));
         world.Events.Add(61.84f, ResolveShieldBashes);
         world.Events.Add(61.89f, ResolveDragonsRage);
         world.Events.Add(62.42f, () => PlayEffect(hermenost, ActionId.ConvictionWindup, 2.1f));
+        world.Events.Add(62.80f, () => Yells.SurgingAether.By(hermenost));
         world.Events.Add(63.54f, () => FadeOut(ignasse, paulecrain, vellguine, grinnaux));
         world.Events.Add(63.94f, () => HolyBladedance(ActionId.HolyBladedanceWindup));
         foreach (var hit in new[] { 64.89f, 65.35f, 65.80f, 66.24f, 66.70f, 67.14f })
@@ -280,6 +293,7 @@ public sealed class DsrP2ThordanScenario : ISectionedScenario
         world.Events.Add(89.38f, AscalonsMight);
 
         world.Events.Add(92.01f, () => world.Map.DirectorUpdate(ArenaDirector.Layout, 0U, ArenaDirector.SanctityLayout));
+        world.Events.Add(92.10f, () => Yells.KnightsToArms.By(thordan));
         world.Events.Add(92.41f, ThordanLeapsToCentre);
         world.Events.Add(93.35f, () => PlayEffect(thordan, ActionId.KnightsOfTheRound, 2.1f));
 
@@ -287,14 +301,18 @@ public sealed class DsrP2ThordanScenario : ISectionedScenario
         world.Events.Add(95.31f, SpawnSanctityKnightRing);
         world.Events.Add(96.47f, () => CastSelf(thordan, ActionId.SanctityOfTheWard, 3.7f));
         world.Events.Add(100.44f, () => PlayEffect(thordan, ActionId.SanctityOfTheWard, 2.1f));
+        world.Events.Add(101.20f, () => Yells.GloryIsMineAgain.By(thordan));
         world.Events.Add(103.55f, () => thordan?.SetTargetable(false));
         world.Events.Add(103.59f, SanctityKnightsWarpOut);
         world.Events.Add(104.39f, PlaceSanctityKnights);
         world.Events.Add(104.88f, () => WarpInPlace(adelphel, janlenoux, zephirin));
+        world.Events.Add(104.88f, () => Yells.SettleThis.By(zephirin));
         world.Events.Add(105.95f, MarkPlungeTargets);
         world.Events.Add(107.06f, () => thordan?.PlayActionTimeline(TimelineId.WarpEnd));
         world.Events.Add(104.78f, () => world.Map.AddEffect(EyeEffect.Opens, state.EyeSlot));
         world.Events.Add(109.11f, () => CastSelf(thordan, ActionId.DragonsGaze, 3.7f));
+        world.Events.Add(113.02f, () => Yells.ShineMyBlade.By(adelphel));
+        world.Events.Add(113.02f, () => Yells.SingMyBlade.By(janlenoux));
         world.Events.Add(113.08f, () => PlayEffect(thordan, ActionId.DragonsGaze, 2.1f));
         world.Events.Add(114.06f, () => SacredSever(state.FirstPlungeTarget));
         world.Events.Add(114.19f, () => world.Map.AddEffect(EyeEffect.Glares, state.EyeSlot));
@@ -309,8 +327,13 @@ public sealed class DsrP2ThordanScenario : ISectionedScenario
         world.Events.Add(120.21f, ThordanLeavesArena);
         world.Events.Add(120.97f, () => FadeOut(zephirin));
 
+        world.Events.Add(122.29f, () => world.Map.BattleTalk(BNpcNameId.Thordan, BattleTalkId.DrinkDeep, 5000));
         world.Events.Add(124.09f, SpawnFirstSanctityTowers);
+        world.Events.Add(124.29f, () => Yells.JudgmentIsNigh.By(hermenost));
+        world.Events.Add(124.34f, () => Yells.HeavensRainDeath.By(noudenet));
+        world.Events.Add(124.38f, () => Yells.TurnYouIntoAsh.By(charibert));
         world.Events.Add(124.41f, MarkMeteorTargets);
+        world.Events.Add(124.43f, () => Yells.FrozenToYourSouls.By(haumeric));
         world.Events.Add(124.45f, () => CastSelf(hermenost, ActionId.FirstConvictionWindup, 8.9f));
         world.Events.Add(124.45f, () => CastSanctityTowers(ActionId.FirstConviction, 11.7f));
         world.Events.Add(124.50f, () => CastSelf(noudenet, ActionId.HolyComet, 11.7f));
@@ -355,6 +378,7 @@ public sealed class DsrP2ThordanScenario : ISectionedScenario
         world.Events.Add(159.38f, () => PlayEffect(thordan, ActionId.UltimateEnd, 2.1f));
         world.Events.Add(167.81f, () => Raidwide(ActionId.UltimateEndHit, UltimateEndDamage));
         world.Events.Add(169.01f, DespawnUltimateEndKnights);
+        world.Events.Add(172.31f, () => world.Map.BattleTalk(BNpcNameId.Thordan, BattleTalkId.SurvivedMyReckoning, 6000));
         world.Events.Add(173.44f, ThordanStepsIntoTheArena);
         world.Events.Add(177.07f, () => CastBroadSwing(0));
         world.Events.Add(180.05f, () => FinishBroadSwingCast(0));
