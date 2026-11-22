@@ -11,7 +11,7 @@ public sealed class FruP1UtopianSkyAi : IScenarioAi<FruP1UtopianSkyState>
     public string Name => "NA · LesBin";
     public string Group => "NA";
 
-    private static readonly float[] CheckDegrees = [0f, 45f, 270f, 90f, 225f, 135f, 315f, 180f];
+    private static readonly float[] CheckDegrees = [0f, 45f, 270f, 180f, 225f, 135f, 315f, 90f];
     private static readonly float[] CheckRadius = [17f, 14f, 17f, 17f, 17f, 17f, 17f, 17f];
     private const float LineEndRadius = 19f;
     private const float HealerLineEndRadius = 12f;

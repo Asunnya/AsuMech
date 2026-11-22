@@ -38,7 +38,7 @@ public class FruP1UtopianSkyScenarioTests
     public void TwoInOneBaitConeDie()
         => UtopianSky(MainTank)
             .TeleportAt(9.8f, to: new(7, 0))
-            .ShouldKill(ActionId.CyclonicBreakBait, MainTank, ShieldHealer);
+            .ShouldKill(ActionId.CyclonicBreakBait, MainTank, OffTank);
 
     [Test]
     public void SinsmiteSpreadsOverlappingDie()

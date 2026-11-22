@@ -20,7 +20,7 @@
       },
       "title": "Cyclonic Break clock spots",
       "cue": "Cyclonic Break cast, boss wreathed in fire or lightning",
-      "rule": "Take your clock spot around the boss: MT close in front (north), OT south, H1 west, H2 east, M1 south-west, M2 south-east, R1 north-west, R2 north-east. Every cone aims at its player, so keep apart.",
+      "rule": "Take your clock spot around the boss: MT close in front (north), OT east, H1 west, H2 south, M1 south-west, M2 south-east, R1 north-west, R2 north-east. Every cone aims at its player, so keep apart.",
       "tolerance": 2.0,
       "skip": false
     },
@@ -32,7 +32,7 @@
       },
       "title": "Dodge the repeat (spread or pairs)",
       "cue": "First Cyclonic Break cones go off",
-      "rule": "The cones fire again where they first hit. Lightning: slide one cone-width clockwise and spread. Fire: meet your partner 8m out between your spots for Sinsmoke pairs: MT with R1, H2 with R2, OT with M2, H1 with M1.",
+      "rule": "The cones fire again where they first hit. Lightning: slide one cone-width clockwise and spread. Fire: meet your partner 8m out between your spots for Sinsmoke pairs: MT with R1, OT with R2, H2 with M2, H1 with M1.",
       "tolerance": 1.5,
       "skip": false
     },
@@ -68,7 +68,7 @@
       },
       "title": "Check your image",
       "cue": "Utopian Sky cast, Powder Mark Trail on the main tank",
-      "rule": "Go out to the wall in your direction and see whether that image raises its gunblade: MT north, R1 north-west, H1 west, M1 south-west, R2 south, M2 south-east, H2 east.",
+      "rule": "Go out to the wall in your direction and see whether that image raises its gunblade: MT north, R1 north-west, H1 west, M1 south-west, H2 south, M2 south-east, R2 east.",
       "roles": {
         "OffTank": {
           "rule": "Check the north-east image from 14m in, so you are the closest player to the MT and take the second Powder Mark hit."
