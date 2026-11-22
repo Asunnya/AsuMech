@@ -231,6 +231,14 @@ public sealed partial class SimWorld : ISimObject, IDisposable
         Announced?.Invoke(text);
     }
 
+    // A boss line as retail prints it, in the NPC announcement channel under the speaker's name.
+    // Peers get it through Announced, as a plain announcement.
+    public void NpcSay(string speaker, string text)
+    {
+        Plugin.ChatGui.Print(new XivChatEntry { Type = XivChatType.NPCDialogueAnnouncements, Name = speaker, Message = text });
+        Announced?.Invoke($"{speaker}: {text}");
+    }
+
     // The run failed without anyone dying, e.g. a puzzle retail only punishes minutes later. Play
     // the mechanic out as retail does; `freeze` when the scenario can't go on from here, which
     // freezes the run 5s later as a death does.

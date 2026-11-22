@@ -2,6 +2,7 @@ using AsuMech.Core.Native.Interfaces;
 using LuminaAction = Lumina.Excel.Sheets.Action;
 using LuminaBNpcBase = Lumina.Excel.Sheets.BNpcBase;
 using LuminaBNpcName = Lumina.Excel.Sheets.BNpcName;
+using LuminaNpcYell = Lumina.Excel.Sheets.NpcYell;
 using LuminaClassJob = Lumina.Excel.Sheets.ClassJob;
 using LuminaKnockback = Lumina.Excel.Sheets.Knockback;
 using LuminaModelChara = Lumina.Excel.Sheets.ModelChara;
@@ -88,6 +89,9 @@ internal sealed class GameData : IGameData
 
     public string? BNpcName(uint nameId)
         => Plugin.DataManager.GetExcelSheet<LuminaBNpcName>().TryGetRow(nameId, out var row) ? NonEmpty(row.Singular.ExtractText()) : null;
+
+    public string? NpcYell(uint rowId)
+        => Plugin.DataManager.GetExcelSheet<LuminaNpcYell>().TryGetRow(rowId, out var row) ? NonEmpty(row.Text.ExtractText()) : null;
 
     public bool WeatherExists(byte weatherId) => Plugin.DataManager.GetExcelSheet<LuminaWeather>().HasRow(weatherId);
 

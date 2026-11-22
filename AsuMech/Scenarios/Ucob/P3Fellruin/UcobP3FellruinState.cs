@@ -12,8 +12,8 @@ public sealed class UcobP3FellruinState
     // Nael's third move is always the Meteor Streams.
     public static readonly NaelQuote[] QuoteChoices =
     [
-        new("From hallowed moon I descend, a rain of stars to bring!", NaelMove.LunarDynamo, NaelMove.RavenDive),
-        new("From on high I descend, the moon and stars to bring!", NaelMove.RavenDive, NaelMove.LunarDynamo),
+        new(6503, "From hallowed moon I descend, a rain of stars to bring!", NaelMove.LunarDynamo, NaelMove.RavenDive),
+        new(6502, "From on high I descend, the moon and stars to bring!", NaelMove.RavenDive, NaelMove.LunarDynamo),
     ];
 
     public const float BossDistance = 10f;

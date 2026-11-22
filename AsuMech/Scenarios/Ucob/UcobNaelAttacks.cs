@@ -8,7 +8,7 @@ using static AsuMech.Scenarios.Ucob.UcobConstants;
 namespace AsuMech.Scenarios.Ucob;
 
 // A quote names, in order, the moves Nael follows it with.
-public sealed record NaelTripleQuote(string Text, params NaelMove[] Moves);
+public sealed record NaelTripleQuote(uint YellRow, string Text, params NaelMove[] Moves);
 
 public static class UcobNaelAttacks
 {

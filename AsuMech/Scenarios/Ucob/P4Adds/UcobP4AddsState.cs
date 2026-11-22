@@ -17,13 +17,13 @@ public sealed class UcobP4AddsState
     // The second quote always opens the other way from the first.
     public static readonly NaelTripleQuote[] InQuotes =
     [
-        new("From hallowed moon I bare iron, in my descent to wield!", LunarDynamo, IronChariot, RavenDive),
-        new("From hallowed moon I descend, upon burning earth to tread!", LunarDynamo, RavenDive, ThermionicBeam),
+        new(6507, "From hallowed moon I bare iron, in my descent to wield!", LunarDynamo, IronChariot, RavenDive),
+        new(6506, "From hallowed moon I descend, upon burning earth to tread!", LunarDynamo, RavenDive, ThermionicBeam),
     ];
     public static readonly NaelTripleQuote[] OutQuotes =
     [
-        new("Unbending iron, take fire and descend!", IronChariot, ThermionicBeam, RavenDive),
-        new("Unbending iron, descend with fiery edge!", IronChariot, RavenDive, ThermionicBeam),
+        new(6504, "Unbending iron, take fire and descend!", IronChariot, ThermionicBeam, RavenDive),
+        new(6505, "Unbending iron, descend with fiery edge!", IronChariot, RavenDive, ThermionicBeam),
     ];
     public static readonly NaelTripleQuote[] QuoteChoices = [.. InQuotes, .. OutQuotes];
 

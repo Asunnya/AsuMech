@@ -88,6 +88,13 @@ public class UcobConstants
         // everything the boss doesn't cast from its own body.
     }
 
+    // InstanceContentTextData rows said through MapController.BattleTalk.
+    public static class BattleTalkId
+    {
+        public const uint StandGuard = 18100;
+        public const uint OnYourKnees = 18101;
+    }
+
     public class BNpcNameId
     {
         public const uint Twintania = 1482;
