@@ -126,6 +126,8 @@ public sealed class DsrP5WrathScenario : IScenario
         world.Events.Add(Wrath + 3.98f, () => PlayEffect(thordan, ActionId.WrathOfTheHeavens, 1.1f));
         world.Events.Add(Wrath + 4.72f, () => Yells.PowerIsMine.By(thordan));
         world.Events.Add(Wrath + 7.07f, () => thordan?.SetTargetable(false));
+        world.Events.Add(Wrath + 7.11f, () => thordan?.PlayActionTimeline(TimelineId.WarpStart));
+        world.Events.Add(Wrath + 7.52f, () => thordan?.SetVisible(false));
         world.Events.Add(Wrath + 8.30f, SpawnDragonsAndKnights);
         world.Events.Add(Wrath + 8.51f, () => { Yells.NoneShallEscape.By(dragoons[0]); Yells.YouAreMine.By(dragoons[1]); });
         world.Events.Add(Wrath + 8.60f, () => { foreach (var k in new[] { vedrfolnir, dragoons[0], dragoons[1], paulecrain }) k?.PlayActionTimeline(TimelineId.WarpEnd); });
@@ -135,9 +137,11 @@ public sealed class DsrP5WrathScenario : IScenario
         world.Events.Add(Wrath + 13.46f, ChainLightning);
         world.Events.Add(Wrath + 14.50f, SpawnMageAndWarrior);
         world.Events.Add(Wrath + 15.00f, () => { charibert?.PlayActionTimeline(TimelineId.WarpEnd); grinnaux?.PlayActionTimeline(TimelineId.WarpEnd); });
+        world.Events.Add(Wrath + 15.83f, () => thordan?.SetVisible(true));
         world.Events.Add(TwistingDiveLands, TwistingDive);
         world.Events.Add(Wrath + 15.90f, () => party.Get(state.Divebomb)?.AttachLockonVfx(LockonId.Divebomb));
         world.Events.Add(Wrath + 15.96f, SpiralPierce);
+        world.Events.Add(Wrath + 16.00f, () => thordan?.PlayActionTimeline(TimelineId.WarpEnd));
         world.Events.Add(Wrath + 16.00f, SkywardLeap);
         world.Events.Add(Wrath + 16.60f, SpawnTwisters);
         world.Events.Add(Wrath + 17.20f, () => { foreach (var (_, obj) in twisters) obj?.SetState(1); });
