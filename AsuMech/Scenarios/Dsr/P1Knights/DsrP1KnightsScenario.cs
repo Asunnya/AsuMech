@@ -138,14 +138,17 @@ public sealed class DsrP1KnightsScenario : IScenario
         world.Events.Add(0f, () => world.Map.DirectorUpdate(ArenaDirector.MapChange, ArenaDirector.KnightsMap));
         world.Events.Add(0f, SpawnKnights);
         world.Events.Add(2f, () => world.Map.LogArena("DSR P1 start"));
+        world.Events.Add(2.05f, () => Yells.PowerFillsMe.By(adelphel));
         world.Events.Add(2.14f, () => CastSelf(adelphel, ActionId.HoliestOfHoly, 3.7f));
         world.Events.Add(6.10f, () => Raidwide(adelphel, ActionId.HoliestOfHoly, HoliestOfHolyDamage));
 
+        world.Events.Add(13.06f, () => Yells.WitnessMe.By(adelphel));
         world.Events.Add(14.17f, TetherShieldBash);
         world.Events.Add(14.26f, () => CastWithoutOmen(grinnaux, ActionId.EmptyDimension, 4.7f));
         world.Events.Add(19.25f, () => ResolveDimension(Dimension.Empty));
         world.Events.Add(19.29f, CastHeavensblaze);
         world.Events.Add(19.29f, ResolveHolyShieldBash);
+        world.Events.Add(20.23f, () => Yells.HowWasThat.By(adelphel));
         world.Events.Add(22.32f, ResolveHolyBladedance);
         world.Events.Add(24.28f, ResolveHeavensblaze);
 
@@ -155,6 +158,8 @@ public sealed class DsrP1KnightsScenario : IScenario
         world.Events.Add(40.48f, SpawnSlashCasters);
         world.Events.Add(40.86f, () => ResolveSlashes(state.FirstSlashTargets));
         world.Events.Add(41.66f, () => MarkSlashPrey(state.SecondSlashTargets));
+        world.Events.Add(41.66f, () => Yells.DownWithYou.By(grinnaux));
+        world.Events.Add(46.69f, () => Yells.Hahaha.By(grinnaux));
         world.Events.Add(47.56f, SpawnSlashCasters);
         world.Events.Add(47.94f, () => ResolveSlashes(state.SecondSlashTargets));
 
@@ -163,6 +168,7 @@ public sealed class DsrP1KnightsScenario : IScenario
         world.Events.Add(52.93f, () => CastSelf(adelphel, ActionId.HoliestOfHoly, 3.7f));
         world.Events.Add(55.83f, () => ResolveFaithUnmoving(botsResist: true));
         world.Events.Add(56.90f, () => Raidwide(adelphel, ActionId.HoliestOfHoly, HoliestOfHolyDamage));
+        world.Events.Add(57.92f, () => Yells.HandleThis.By(adelphel));
         ScheduleShiningBlade([59.09f, 60.15f, 61.22f, 62.29f]);
         world.Events.Add(64.83f, ResolveExecution);
         world.Events.Add(67.74f, ClosePortals);
@@ -190,6 +196,7 @@ public sealed class DsrP1KnightsScenario : IScenario
         world.Events.Add(108.70f, KnightsFall);
         world.Events.Add(110.08f, KnightsRegroupWest);
         world.Events.Add(110.08f, () => zephirin = SpawnKnight(BNpcBaseId.Zephirin, BNpcNameId.Zephirin, ZephirinMaxHp, new Placement(new Vector3(Geometry.ArenaHalfWidth, 0f, 0f), -MathF.PI / 2f), false, EnemyListMode.Never));
+        world.Events.Add(111.00f, () => Yells.ThisEndsHere.By(grinnaux));
         world.Events.Add(112.31f, ResolvePlanarPrison);
         world.Events.Add(112.31f, ZephirinThrowsSpear);
         world.Events.Add(112.62f, SpawnPrisonCircle);
@@ -197,9 +204,11 @@ public sealed class DsrP1KnightsScenario : IScenario
         world.Events.Add(112.84f, () => charibert?.NativeCast(ActionId.PureOfHeart, ActionType.Action, 0f, 35.2f, false, targetId: charibert.GameObjectId));
         world.Events.Add(113.11f, EmpowerCharibert);
         world.Events.Add(114.26f, () => prisonActive = true);
+        world.Events.Add(115.25f, () => Yells.FinalCurtain.By(charibert));
         world.Events.Add(115.28f, () => prisonCircle?.SetState(1));
         world.Events.Add(121.39f, HaurchefantArrives);
         world.Events.Add(122.28f, () => PlayEffect(zephirin, ActionId.SpearOfTheFury, 1.1f, target: haurchefant?.GameObjectId));
+        world.Events.Add(122.29f, () => Yells.Fall.By(zephirin));
         world.Events.Add(122.30f, SpawnSpear);
         for (var pulse = 0; pulse < 7; pulse++)
             world.Events.Add(124.11f + pulse * 1.07f, Shockwave);
