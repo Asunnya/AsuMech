@@ -84,7 +84,7 @@ public class UcobP3FellruinScenarioTests
         Assert.Multiple(() =>
         {
             Assert.That(yell["actor"], Is.EqualTo(nael));
-            Assert.That(yell["detail"], Does.Contain(UcobP3FellruinState.QuoteChoices[quote].Text));
+            Assert.That(yell["detail"].Replace("\n", " "), Does.Contain(UcobP3FellruinState.QuoteChoices[quote].Text));
         });
     }
 

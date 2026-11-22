@@ -15,23 +15,23 @@ public sealed class UcobP2NaelState
     public static readonly NaelQuote[][] QuoteChoices =
     [
         [
-            new("O hallowed moon, take fire and scorch my foes!", NaelMove.LunarDynamo, NaelMove.ThermionicBeam),
-            new("O hallowed moon, shine you the iron path!", NaelMove.LunarDynamo, NaelMove.IronChariot),
+            new(6493, "O hallowed moon, take fire and scorch my foes!", NaelMove.LunarDynamo, NaelMove.ThermionicBeam),
+            new(6492, "O hallowed moon, shine you the iron path!", NaelMove.LunarDynamo, NaelMove.IronChariot),
         ],
         [
-            new("Take fire, O hallowed moon!", NaelMove.ThermionicBeam, NaelMove.LunarDynamo),
-            new("Blazing path, lead me to iron rule!", NaelMove.ThermionicBeam, NaelMove.IronChariot),
+            new(6495, "Take fire, O hallowed moon!", NaelMove.ThermionicBeam, NaelMove.LunarDynamo),
+            new(6494, "Blazing path, lead me to iron rule!", NaelMove.ThermionicBeam, NaelMove.IronChariot),
         ],
         [
-            new("From on high I descend, the hallowed moon to call!", NaelMove.RavenDive, NaelMove.LunarDynamo),
-            new("From on high I descend, the iron path to walk!", NaelMove.RavenDive, NaelMove.IronChariot),
+            new(6497, "From on high I descend, the hallowed moon to call!", NaelMove.RavenDive, NaelMove.LunarDynamo),
+            new(6496, "From on high I descend, the iron path to walk!", NaelMove.RavenDive, NaelMove.IronChariot),
         ],
     ];
 
     public static readonly NaelQuote[] DivebombQuoteChoices =
     [
-        new("Fleeting light! 'Amid a rain of stars, exalt you the red moon!'", NaelMove.MeteorStream, NaelMove.DalamudDive),
-        new("Fleeting light! 'Neath the red moon, scorch you the earth!'", NaelMove.DalamudDive, NaelMove.ThermionicBeam),
+        new(6500, "Fleeting light! 'Amid a rain of stars, exalt you the red moon!'", NaelMove.MeteorStream, NaelMove.DalamudDive),
+        new(6501, "Fleeting light! 'Neath the red moon, scorch you the earth!'", NaelMove.DalamudDive, NaelMove.ThermionicBeam),
     ];
 
     public const float MeteorStreamRadius = 4f;

@@ -19,6 +19,7 @@ internal sealed class DataminingGameData(FakeRsvFunctions rsv) : IGameData
     private static readonly Lazy<Sheet> ModelCharas = Load("ModelChara");
     private static readonly Lazy<Sheet> ModelSkeletons = Load("ModelSkeleton");
     private static readonly Lazy<Sheet> NpcEquips = Load("NpcEquip");
+    private static readonly Lazy<Sheet> NpcYells = Load("NpcYell");
     private static readonly Lazy<Sheet> Omens = Load("Omen");
     private static readonly Lazy<Sheet> Statuses = Load("Status");
     private static readonly Lazy<Sheet> TerritoryTypes = Load("TerritoryType");
@@ -112,6 +113,8 @@ internal sealed class DataminingGameData(FakeRsvFunctions rsv) : IGameData
             : null;
 
     public string? BNpcName(uint nameId) => NonEmpty(Resolve(BNpcNames.Value.Row(nameId)?.Text("Singular")));
+
+    public string? NpcYell(uint rowId) => NonEmpty(NpcYells.Value.Row(rowId)?.Text("Text"));
 
     public bool WeatherExists(byte weatherId) => Weathers.Value.Row(weatherId) is not null;
 

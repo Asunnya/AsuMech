@@ -19,6 +19,9 @@ public interface IGameData
     // Null for a missing row or an empty name.
     string? BNpcName(uint nameId);
 
+    // An NpcYell row's text in the client's language; null for a missing or empty row.
+    string? NpcYell(uint rowId);
+
     bool WeatherExists(byte weatherId);
 
     // Esuna can remove it.

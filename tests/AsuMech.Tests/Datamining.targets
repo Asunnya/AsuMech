@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <DataminingSheet Include="Action;BNpcBase;BNpcName;ClassJob;Condition;ContentFinderCondition;Knockback;ModelChara;ModelSkeleton;NpcEquip;Omen;Status;TerritoryType;Weather" />
+    <DataminingSheet Include="Action;BNpcBase;BNpcName;ClassJob;Condition;ContentFinderCondition;Knockback;ModelChara;ModelSkeleton;NpcEquip;NpcYell;Omen;Status;TerritoryType;Weather" />
   </ItemGroup>
 
   <Target Name="DownloadDataminingSheets" BeforeTargets="BeforeBuild">
