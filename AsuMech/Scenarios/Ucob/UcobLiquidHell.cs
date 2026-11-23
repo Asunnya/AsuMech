@@ -13,8 +13,8 @@ public sealed class UcobLiquidHell(SimWorld world, DamageSolver damage)
     public const float Interval = 1.16f;
     public const float PuddleRadius = 6f;
     public const float PuddleAppears = 0.9f;
-    // It burns from 1.8s after the drop, a while after it shows.
-    public const float PuddleHurts = 1.8f;
+    // It burns from 3.1s after the drop, over 2s after it shows: a baiter can drop two on one spot.
+    public const float PuddleHurts = 3.1f;
     private const float PuddleFades = 11.7f;
     private const float PuddleGone = 12.7f;
     private const float BurnsSeconds = 15f;
