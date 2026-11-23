@@ -9,7 +9,7 @@ namespace AsuMech.Scenarios.Fru;
 
 public static class FruCyclonicBreakDance
 {
-    private static readonly float[] ClockDegrees = [0f, 180f, 270f, 90f, 225f, 135f, 315f, 45f];
+    private static readonly float[] ClockDegrees = [0f, 90f, 270f, 180f, 225f, 135f, 315f, 45f];
     private static readonly float[] SpreadRadius = [5f, 12f, 13f, 15f, 8f, 6f, 12f, 16f];
     private const float PairRadius = 8f;
     private const float HalfCone = 22.5f;

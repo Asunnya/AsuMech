@@ -186,6 +186,7 @@ internal sealed class ToolboxViewer : Window
         Vector2 At(ToolboxObject o) => centre + new Vector2(o.X, o.Z) * px;
         foreach (var o in step.Objects.Where(o => o.Kind == "zone")) DrawZone(draw, o, At(o), px);
         foreach (var o in step.Objects.Where(o => o.Kind == "tether")) DrawTether(draw, o, At(o), px);
+        foreach (var o in step.Objects.Where(o => o.Kind == "arrow")) DrawArrow(draw, o, At(o), px);
         if (config.ToolboxShowWaymarks)
             foreach (var o in step.Objects.Where(o => o.Kind == "waymark")) DrawWaymark(draw, o, At(o), config.ToolboxOpacity);
         var hasAdds = step.Objects.Any(o => o.Kind == "add");
@@ -292,6 +293,20 @@ internal sealed class ToolboxViewer : Window
         var rot = o.Rotation * MathF.PI / 180f;
         var axis = new Vector2(-MathF.Sin(rot), MathF.Cos(rot)) * o.Height * 0.5f * px;
         draw.AddLine(at - axis, at + axis, AsuTheme.U32(ParseColor(o.Color, AsuTheme.Bad)), 2f);
+    }
+
+    // Rotation is clockwise from north, the way the board turned the icon.
+    private static void DrawArrow(ImDrawListPtr draw, ToolboxObject o, Vector2 at, float px)
+    {
+        var rot = o.Rotation * MathF.PI / 180f;
+        var dir = new Vector2(MathF.Sin(rot), -MathF.Cos(rot));
+        var half = dir * o.Height * 0.5f * px;
+        var tip = at + half;
+        var head = Math.Max(4f, o.Height * 0.3f * px);
+        var side = new Vector2(-dir.Y, dir.X) * head * 0.6f;
+        var color = AsuTheme.U32(ParseColor(o.Color, AsuTheme.Text));
+        draw.AddLine(at - half, tip - dir * head * 0.5f, color, 2f);
+        draw.AddTriangleFilled(tip, tip - dir * head + side, tip - dir * head - side, color);
     }
 
     private static void DrawWaymark(ImDrawListPtr draw, ToolboxObject o, Vector2 at, float opacity)

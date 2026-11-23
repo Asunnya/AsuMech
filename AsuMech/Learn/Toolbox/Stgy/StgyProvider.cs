@@ -20,6 +20,9 @@ public sealed class StgyProvider : IRaidplanProvider
     // game draws it is UNVERIFIED, so this calibration carries a warning.
     private const float ArenaRingPx = 174f;
     private const float AssumedArenaYalms = 20f;
+    // UNVERIFIED: the up arrow icon's drawn length at size 100.
+    private const float ArrowPx = 30f;
+    private const int UpArrow = 94;
     private static readonly Vector2 Centre = new(StgyCode.BoardWidth / 2f, StgyCode.BoardHeight / 2f);
 
     private static readonly Dictionary<int, string> RoleSlots = new()
@@ -130,6 +133,11 @@ public sealed class StgyProvider : IRaidplanProvider
                 if (t == 100)
                 {
                     objects.Add(new ToolboxObject("text", $"text{n++}", o.Text ?? "", at.X, at.Y, 0f, 0f, o.Angle, "text", Hex(o)));
+                    continue;
+                }
+                if (t == UpArrow)
+                {
+                    objects.Add(new ToolboxObject("arrow", $"arrow{n++}", "", at.X, at.Y, 0f, ArrowPx * size * scale, o.Angle, "arrow"));
                     continue;
                 }
                 if (StgyTypes.IsAoe(t))
