@@ -79,4 +79,20 @@ public class StgyCodeTests
         Assert.That(converted.Steps.Select(s => s.Label), Is.EqualTo(new[] { "P4 DEBUFFS/SPOTS", "Double Tether DSA" }));
         Assert.That(report.Warnings, Is.Empty.Or.All.Contains("residual"));
     }
+
+    [Test]
+    public void UpArrowsKeepTheirBearing()
+    {
+        var code = PlanRegistry.For("UmadP1TeleTrouncingScenario")[0].Url;
+        var (converted, _) = new StgyProvider().Convert(System.Text.Encoding.UTF8.GetBytes(code), "stgy-tt", new UmadZone().WaymarkPresets[0]);
+        var objects = converted.Steps[0].Objects;
+        var arrows = objects.Where(o => o.Kind == "arrow").ToList();
+        Assert.Multiple(() =>
+        {
+            Assert.That(objects.Where(o => o.Kind == "text").Select(o => o.Label), Has.None.Contains("arrow"));
+            Assert.That(arrows, Has.Count.EqualTo(24));
+            Assert.That(arrows.Select(a => a.Rotation).Distinct(), Is.EquivalentTo(new[] { 0f, 90f, 180f, -90f }));
+            Assert.That(arrows, Has.All.Matches<ToolboxObject>(a => a.Height > 1f));
+        });
+    }
 }
