@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using AsuMech.Core.Game;
 using AsuMech.Core.Game.Geometry;
@@ -12,7 +13,8 @@ public sealed class M12sZone : IZone
 {
     public static readonly M12sZone Instance = new();
     public static readonly Phase P1 = new(Instance, "Phase 1", 108, 0);
-    public static readonly Phase P2 = new(Instance, "Phase 2", 105, 0);
+    public static readonly Phase P2 = new(Instance, "Phase 2", 105, 0,
+        arenaMapEffectOverrides: new Dictionary<byte, ushort> { [0x00] = 0x4000, [0x01] = 1, [0x1F] = 1, [0x20] = 1, [0x21] = 1 });
 
     public string Name => "AAC Heavyweight M4 (Savage)";
 
@@ -28,6 +30,8 @@ public sealed class M12sZone : IZone
     {
         EntranceBarrier = new EntranceBarrier(0, 0, 0, Origin + new Vector3(0f, 0f, 13f), MathF.PI),
         HelperPool = new HelperPool(M12sConstants.BNpcBaseId.Helper, 43),
+        // Every slot rests at 4 at zone-in and on each wipe: Act 3's broken floor comes back whole.
+        MapEffectSnapshot = Enumerable.Repeat((ushort)4, 42).ToArray(),
     };
     public IArenaShape Arena => new RectArena(M12sConstants.Geometry.P1HalfWidth, M12sConstants.Geometry.P1HalfDepth);
 
