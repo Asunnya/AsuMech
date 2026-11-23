@@ -16,7 +16,7 @@ namespace AsuMech.Tests;
 //          setting off Featherlance on touch until 42.97, sweeping round at radius 17 from 20.82.
 //   20.48  Mistral Songs hit the nearest in Chirada's (6,6) and Suparna's (-6,-6) cones; M1 and M2
 //          stand at (-8,10), MT in front of Chirada at (-5.2,8.1) and OT of Suparna at (-5.8,7.6).
-//   21.32  H1 is gaoled at (8,8) until 30.24; the last Eruptions snapshot on it at 23.25.
+//   21.32  H1 is gaoled at (8,8) until 30.00, before Granite Impact's cast ends at 30.12; the last Eruptions snapshot on it at 23.25.
 //   24.81  Feather Rain snapshots on its targets' 22.57 spots, again at 26.80 and 43.17.
 //   25.40  First Light Pillar, under H2.
 //   27.20  Aetherochemical Lasers from Ultima (13.7,-13.7), 8y wide: centre, then right at 31.33
@@ -230,4 +230,31 @@ public class UltimateSuppressionScenarioTests
 
     private static void GiveMainTankThermalLow(ScenarioProbe p, int stacks)
         => p.Member(MainTank)!.AddStatus(StatusId.ThermalLow, stacks: stacks, overrideStacks: true);
+
+    [Test]
+    public void TheGaolBreaksBeforeGraniteImpactGoesOff()
+    {
+        bool? heldBefore = null, heldAfter = null;
+        var run = ScenarioRun.Execute(typeof(UltimateSuppressionScenario), 0, 1, new ScenarioRunOptions
+        {
+            PlayerRole = MainTank,
+            StopAt = 32f,
+            Overrides = o => Pin((UltimateSuppressionStateOverrides)o),
+            Probe = p =>
+            {
+                if (p.Crossed(UltimateSuppressionScenario.GaolBreaksAt - 0.05f)) heldBefore = p.Member(RegenHealer)!.HasStatus(StatusId.Fetters);
+                if (p.Crossed(UltimateSuppressionScenario.GaolBreaksAt + 0.05f)) heldAfter = p.Member(RegenHealer)!.HasStatus(StatusId.Fetters);
+            },
+        });
+        var impacts = ((FakeBattleCharas)AsuMech.Core.Native.Interfaces.Natives.BattleCharas).Timeline.Rows
+            .Where(r => r["kind"] == "ability" && r["id"] == ActionId.GraniteImpact.ToString());
+        Assert.Multiple(() =>
+        {
+            Assert.That(run.Passed, run.ToString);
+            Assert.That(heldBefore, Is.True);
+            Assert.That(heldAfter, Is.False);
+            Assert.That(UltimateSuppressionScenario.GaolBreaksAt, Is.LessThan(UltimateSuppressionScenario.GraniteImpactCastAt + 6.7f));
+            Assert.That(impacts, Is.Empty);
+        });
+    }
 }

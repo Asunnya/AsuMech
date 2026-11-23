@@ -252,8 +252,12 @@ public static class UwuActions
     // -- Titan --
     public static readonly EnemyAction Tumult = Raidwide(ActionId.Tumult, 1.1f, damage: 0.9f);
 
-    // Cancelled before it goes off: the sim always breaks the gaol in time.
-    public static readonly EnemyAction GraniteImpact = new(ActionId.GraniteImpact);
+    // An unbroken gaol kills all eight, its prisoner too. The sim breaks it before the cast ends.
+    public static readonly EnemyAction GraniteImpact = new(ActionId.GraniteImpact)
+    {
+        Effects = [Damage(Lethal)],
+        Timing = new() { DamageDelay = 0.24f },
+    };
 
     public static readonly EnemyAction RockThrow = new(ActionId.RockThrow)
     {

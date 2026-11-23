@@ -29,6 +29,9 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
     // after its effect, so it picks up there instead of casting Suppression again.
     private const float ContinuedFrom = 6.47f;
     private static readonly Placement UltimaAfterAnnihilation = new(new Vector3(0f, 0f, -2.8f), MathF.PI);
+    public const float GraniteImpactCastAt = 23.42f;
+    public const float GaolBreaksAt = 30.00f;
+
     private float startsAt;
 
     private readonly UltimateSuppressionSettingsWindow settingsWindow = new();
@@ -529,7 +532,7 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
 
         world.Events.Add(23.35f, () => graniteGaol!.ActorControl.PopIn());
 
-        world.Events.Add(23.42f, () =>
+        world.Events.Add(GraniteImpactCastAt, () =>
         {
             graniteGaol!.SetVisibleInEnemyList(true);
             graniteGaol!.SetTargetable(true);
@@ -537,8 +540,8 @@ public class UltimateSuppressionScenario : IMultiplayerReplayable
             graniteGaol?.Cast(Actions.GraniteImpact);
         });
 
-        // Gaol gets removed as soon as cast ends, to not give that much of an advantage to the player
-        world.Events.Add(30.24f, () =>
+        // The party breaks the gaol 6.4-6.7s into Granite Impact's 6.7s cast, before it goes off.
+        world.Events.Add(GaolBreaksAt, () =>
         {
             state.PlayerGaol!.SetTargetable(true);
             state.PlayerGaol!.RemoveStatus(StatusId.Fetters);
