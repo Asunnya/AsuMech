@@ -147,4 +147,19 @@ public class DsrP7DragonKingScenarioTests
             .Overrides<DsrP7DragonKingStateOverrides>(Pinned)
             .TeleportAt(94.3f, to: Vector2.Zero)
             .ShouldKill(ActionId.GigaflaresEdgeFirst, CasterDps);
+
+    [Test]
+    public void ThordanSpeaksEachEdgeLineOnceOnItsFirstCast()
+    {
+        var run = ScenarioRun.Execute(typeof(DsrP7DragonKingScenario), 0, 1, new ScenarioRunOptions { Overrides = o => Pinned((DsrP7DragonKingStateOverrides)o) });
+        Assert.That(run.Passed, run.ToString);
+        var talks = ((FakeBattleCharas)AsuMech.Core.Native.Interfaces.Natives.BattleCharas).Timeline.Rows.Where(r => r["kind"] == "battle_talk").ToList();
+        Assert.Multiple(() =>
+        {
+            Assert.That(talks.Select(r => r["id"]), Is.EqualTo(new[] { BattleTalkId.PurgeTheTainted, BattleTalkId.ConsignTheWicked, BattleTalkId.ScorchTheEarth, BattleTalkId.YourTimeIsCome }.Select(id => id.ToString())));
+            Assert.That(talks.Select(r => float.Parse(r["t"], System.Globalization.CultureInfo.InvariantCulture)),
+                Is.EqualTo(new[] { DsrP7DragonKingScenario.ExaflareCasts[0], DsrP7DragonKingScenario.AkhMornCasts[0], DsrP7DragonKingScenario.GigaflareCasts[0], DsrP7DragonKingScenario.MornAfahsEdgeCast }).Within(0.05f));
+            Assert.That(talks.Select(r => r["detail"]), Has.All.StartsWith($"speaker={BNpcNameId.DragonKingThordan} "));
+        });
+    }
 }
