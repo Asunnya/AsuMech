@@ -226,6 +226,7 @@ public sealed class ScenarioCatalog
         new UwuP1GarudaScenario(),
         new UwuP2IfritScenario(),
         new UwuP3TitanScenario(),
+        new UwuP3TitanGaolsScenario(),
         new UltimatePredationScenario(),
         new UltimateAnnihilationScenario(),
         new UltimateSuppressionScenario(),

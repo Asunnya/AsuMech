@@ -246,14 +246,15 @@ public class UltimateSuppressionScenarioTests
                 if (p.Crossed(UltimateSuppressionScenario.GaolBreaksAt + 0.05f)) heldAfter = p.Member(RegenHealer)!.HasStatus(StatusId.Fetters);
             },
         });
-        var impacts = ((FakeBattleCharas)AsuMech.Core.Native.Interfaces.Natives.BattleCharas).Timeline.Rows
-            .Where(r => r["kind"] == "ability" && r["id"] == ActionId.GraniteImpact.ToString());
+        var abilities = ((FakeBattleCharas)AsuMech.Core.Native.Interfaces.Natives.BattleCharas).Timeline.Rows.Where(r => r["kind"] == "ability").ToList();
+        var impacts = abilities.Where(r => r["id"] == ActionId.GraniteImpact.ToString());
         Assert.Multiple(() =>
         {
             Assert.That(run.Passed, run.ToString);
             Assert.That(heldBefore, Is.True);
             Assert.That(heldAfter, Is.False);
             Assert.That(UltimateSuppressionScenario.GaolBreaksAt, Is.LessThan(UltimateSuppressionScenario.GraniteImpactCastAt + 6.7f));
+            Assert.That(abilities, Is.Not.Empty);
             Assert.That(impacts, Is.Empty);
         });
     }

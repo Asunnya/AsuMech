@@ -1,0 +1,139 @@
+{
+  "scenario": "UwuP3TitanGaolsScenario",
+  "casts": [
+    {
+      "actionId": 11113,
+      "name": "Bury",
+      "start": 41.15,
+      "resolve": 41.15,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11114,
+      "name": "Burst",
+      "start": 43.233,
+      "resolve": 46.433002,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11113,
+      "name": "Bury",
+      "start": 49.166,
+      "resolve": 49.166,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11114,
+      "name": "Burst",
+      "start": 51.266,
+      "resolve": 54.466,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11117,
+      "name": "Granite Impact",
+      "start": 53.416,
+      "resolve": 71.116,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11118,
+      "name": "Freefire",
+      "start": 55.116,
+      "resolve": 55.116,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11118,
+      "name": "Freefire",
+      "start": 55.833,
+      "resolve": 55.833,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11118,
+      "name": "Freefire",
+      "start": 56.55,
+      "resolve": 56.55,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11288,
+      "name": "Tumult",
+      "start": 58.416,
+      "resolve": 58.416,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11288,
+      "name": "Tumult",
+      "start": 59.516,
+      "resolve": 59.516,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11288,
+      "name": "Tumult",
+      "start": 60.633,
+      "resolve": 60.633,
+      "occurrence": 3
+    },
+    {
+      "actionId": 11288,
+      "name": "Tumult",
+      "start": 61.75,
+      "resolve": 61.75,
+      "occurrence": 4
+    },
+    {
+      "actionId": 11288,
+      "name": "Tumult",
+      "start": 62.866,
+      "resolve": 62.866,
+      "occurrence": 5
+    },
+    {
+      "actionId": 11288,
+      "name": "Tumult",
+      "start": 63.983,
+      "resolve": 63.983,
+      "occurrence": 6
+    },
+    {
+      "actionId": 11288,
+      "name": "Tumult",
+      "start": 65.083,
+      "resolve": 65.083,
+      "occurrence": 7
+    },
+    {
+      "actionId": 11108,
+      "name": "Weight of the Land",
+      "start": 70.217,
+      "resolve": 72.417,
+      "occurrence": 1
+    },
+    {
+      "actionId": 11109,
+      "name": "Weight of the Land",
+      "start": 70.217,
+      "resolve": 72.917,
+      "occurrence": 2
+    },
+    {
+      "actionId": 11109,
+      "name": "Weight of the Land",
+      "start": 73.251,
+      "resolve": 75.951,
+      "occurrence": 3
+    }
+  ],
+  "names": [
+    "Bury",
+    "Burst",
+    "Granite Impact",
+    "Freefire",
+    "Tumult",
+    "Weight of the Land"
+  ]
+}

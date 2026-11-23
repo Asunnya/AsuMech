@@ -18,9 +18,9 @@ using static AsuMech.Scenarios.Uwu.P3Titan.UwuP3TitanState;
 namespace AsuMech.Scenarios.Uwu.P3Titan;
 
 // Landslides follow Titan's facing at cast start.
-public sealed class UwuP3TitanScenario : IScenario
+public class UwuP3TitanScenario : IScenario
 {
-    public string Name => "Titan";
+    public virtual string Name => "Titan";
     public IPhase Phase => UwuZone.Titan;
 
     public IReadOnlyList<IScenarioAi> AiStrats => [new UwuP3TitanAi()];
@@ -256,6 +256,22 @@ public sealed class UwuP3TitanScenario : IScenario
         world.Events.Add(148.05f, () => AnimateFloor(4, 8));
         world.Events.Add(150.00f, DespawnAll);
 
+        if (GaolsOnly) StartAtTheGaols();
+    }
+
+    // The drill: from Titan turning to his first jump, through the three gaols, to his awakening.
+    protected virtual bool GaolsOnly => false;
+    public const float GaolsFrom = 29.0f;
+    public const float GaolsTo = 73.3f;
+
+    private void StartAtTheGaols()
+    {
+        world.Events.KeepWindow(GaolsFrom, GaolsTo);
+        world.Events.Add(GaolsFrom, () => utils.SpawnArenaFloor());
+        world.Events.Add(GaolsFrom, SpawnTitan);
+        world.Events.Add(GaolsFrom, () => titan?.SetVisible(true));
+        world.Events.Add(GaolsFrom, () => FaceJump(state.FirstJumpBearing));
+        world.Events.Add(GaolsTo, DespawnAll);
     }
 
     public void Tick(float delta, float elapsed)
