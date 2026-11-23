@@ -115,6 +115,10 @@ public sealed class DsrP7DragonKingScenario : IScenario
         world.Events.Add(Targetable, () => thordan?.SetTargetable(true));
         world.Events.Add(Targetable, FaceTheTopOfEnmity);
         world.Events.Add(35.99f, () => world.Map.DirectorUpdate(ArenaDirector.Layout, 1U, ArenaDirector.DragonKingLayout));
+        // UNVERIFIED: no log of P7 carries its dialogue; which Edge each line goes with is a guess.
+        world.Events.Add(ExaflareCasts[0], () => world.Map.BattleTalk(BNpcNameId.DragonKingThordan, BattleTalkId.PurgeTheTainted, 5000));
+        world.Events.Add(AkhMornCasts[0], () => world.Map.BattleTalk(BNpcNameId.DragonKingThordan, BattleTalkId.ConsignTheWicked, 5000));
+        world.Events.Add(GigaflareCasts[0], () => world.Map.BattleTalk(BNpcNameId.DragonKingThordan, BattleTalkId.ScorchTheEarth, 5000));
 
         for (var i = 0; i < EdgeCasts.Length; i++)
         {
@@ -166,6 +170,7 @@ public sealed class DsrP7DragonKingScenario : IScenario
             world.Events.Add(TrinityHits[i], () => Trinity(darkTank));
         }
 
+        world.Events.Add(MornAfahsEdgeCast, () => world.Map.BattleTalk(BNpcNameId.DragonKingThordan, BattleTalkId.YourTimeIsCome, 5000));
         world.Events.Add(MornAfahsEdgeCast, CastMornAfahsEdge);
         world.Events.Add(End, DespawnAll);
         world.Events.KeepWindow(StartAt, End);
